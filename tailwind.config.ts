@@ -7,7 +7,24 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        xirod: ['var(--font-xirod)'],
+        poppins: ['var(--font-poppins)'],
+      },
+      animation: {
+        'scroll-down': 'scroll-down 1.5s ease-in infinite',
+      },
+      keyframes: {
+        'scroll-down': {
+          '0%, 100%': { transform: 'translate3d(-50%, -6px, 0)' },
+          '50%': { transform: 'translate3d(-50%, 6px, 0)' },
+        },
+      },
+      spacing: {
+        15: '3.75rem',
+      },
+    },
   },
   plugins: [],
 };

@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #222222;
+    --headerHeight: 144px;
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    @apply font-poppins;
+  }
+}
+
+@layer components {
+  .nav-item {
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      height: 2px;
+      width: 0;
+      transition: width 0.3s;
+      background: var(--foreground);
+    }
+
+    &.nav-active,
+    &:hover {
+      width: 100%;
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+
+  .page-container {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - var(--headerHeight));;
+    background: linear-gradient(180deg, #ffffff 0%, #EEEEEE 100%);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .page-height {
+    height: calc(100vh - var(--headerHeight));
+  }
+
+  .page-hide {
+    visibility: hidden;
+  }
+}
