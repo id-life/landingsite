@@ -2,8 +2,14 @@ import localFont from 'next/font/local';
 import { Poppins } from 'next/font/google';
 
 const xirod = localFont({
-  src: './fonts/xirod.ttf',
+  src: './fonts/Xirod.ttf',
   variable: '--font-xirod',
+  weight: '100 900',
+});
+
+const migrena = localFont({
+  src: './fonts/Migrena_Grotesque.ttf',
+  variable: '--font-migrena',
   weight: '100 900',
 });
 
@@ -13,4 +19,4 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-export { xirod, poppins };
+export { xirod, poppins, migrena };

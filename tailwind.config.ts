@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         xirod: ['var(--font-xirod)'],
         poppins: ['var(--font-poppins)'],
+        migrena: ['var(--font-migrena)'],
       },
       animation: {
         'scroll-down': 'scroll-down 1.5s ease-in infinite',
