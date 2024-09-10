@@ -51,7 +51,7 @@ export default function Vision() {
       <video
         ref={clipVideoRef}
         className="fore-hide left-0 top-0 h-full w-full object-cover"
-        src="/assets/vision-black.webm"
+        src="/assets/vision-back.webm"
         autoPlay
         muted
         loop

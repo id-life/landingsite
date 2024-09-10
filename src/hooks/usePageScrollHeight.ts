@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 export function usePageScrollHeight() {
-  const [scrollHeight, setScrollHeight] = useState<Map<string, number>>();
   const [scrollY, setScrollY] = useState<number>(0);
+  const [scrollHeight, setScrollHeight] = useState<Map<string, number>>();
   const [scrollPageId, setScrollPageId] = useState<string>(NAV_LIST[0].id);
 
   useEffect(() => {

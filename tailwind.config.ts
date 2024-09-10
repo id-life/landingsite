@@ -23,7 +23,22 @@ const config: Config = {
         },
       },
       spacing: {
+        6.5: '1.625rem',
+        14: '3.5rem',
         15: '3.75rem',
+        17: '4.25rem',
+        18: '4.5rem',
+        22.5: '5.625rem',
+        37: '9.25rem',
+        205: '51.25rem',
+      },
+      colors: {
+        red: {
+          600: '#C11111',
+        },
+      },
+      lineHeight: {
+        12: '3rem',
       },
     },
   },
