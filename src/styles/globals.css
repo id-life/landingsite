@@ -58,8 +58,16 @@
     @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-6xl/[4.5rem];
   }
 
-  .insight-svg {
+  .svg-border {
+    @apply transition-all ease-in duration-300 group-hover:fill-red-600 group-hover:stroke-red-600;
+  }
 
+  .svg-text {
+    @apply transition-all ease-in duration-300 group-hover:fill-red-600;
+  }
+
+  .svg-icon {
+    @apply transition-all ease-in duration-300 group-hover:stroke-red-600;
   }
 }
 
@@ -84,12 +92,5 @@
     background: #222222;
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
   }
-
-
 }
 
-
-.literature_svg__stroke-none {
-  stroke-width: 0;
-  stroke: none!important;
-}

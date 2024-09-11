@@ -8,8 +8,6 @@ export function usePageScrollHeight() {
   const [scrollPageId, setScrollPageId] = useState<string>(NAV_LIST[0].id);
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-
     const nav = document.querySelector('#nav');
     if (!nav) return;
     const map = new Map();
@@ -22,6 +20,7 @@ export function usePageScrollHeight() {
     });
     setScrollHeight(map);
     window.addEventListener('scroll', () => setScrollY(window.scrollY));
+    window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
   }, []);
 
   useDebounce(
