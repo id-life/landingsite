@@ -1,5 +1,5 @@
 import { NAV_LIST } from '@/components/nav/nav';
-import ArrowMarkSVG from '@/../public/svg/arrow-mark.svg?component';
+import ArrowMarkSVG from '@/../public/svgs/arrow-mark.svg?component';
 
 type TrackingItem = {
   cover: string;
@@ -8,15 +8,15 @@ type TrackingItem = {
 
 const Tracking_List: TrackingItem[] = [
   {
-    cover: '/img/tracking-01.webp',
+    cover: '/imgs/tracking-01.webp',
     title: 'Biomarker tracking & diagnostics',
   },
   {
-    cover: '/img/tracking-02.webp',
+    cover: '/imgs/tracking-02.webp',
     title: 'Showroom and industry relations center & PR / GR center',
   },
   {
-    cover: '/img/tracking-03.webp',
+    cover: '/imgs/tracking-03.webp',
     title: 'Vetted interventions & selected supplements',
   },
 ];

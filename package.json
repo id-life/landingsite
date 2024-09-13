@@ -10,19 +10,23 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
+    "@react-three/drei": "4.1.8",
+    "@react-three/fiber": "6.0.14",
     "clsx": "^2.1.1",
     "gsap": "npm:@gsap/business@^3.12.5",
     "jotai": "^2.9.3",
     "next": "14.2.8",
     "react": "^18",
     "react-dom": "^18",
-    "react-use": "^17.5.1"
+    "react-use": "^17.5.1",
+    "three": "0.127.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "0.127.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.8",
     "postcss": "^8",

@@ -5,7 +5,7 @@ import Tracking from '@/app/tracking/Tracking';
 
 export default function Processes() {
   return (
-    <div id={NAV_LIST[1].id} className="page-container p-12">
+    <div id={NAV_LIST[1].id} className="page-container px-12 pt-12">
       <video
         autoPlay
         muted
@@ -13,7 +13,7 @@ export default function Processes() {
         data-speed="0.8"
         className="absolute right-0 top-0 h-full w-full object-cover"
         src="/assets/processes.webm"
-        poster="/img/processes.jpg"
+        poster="/imgs/processes.jpg"
       />
       <div className="relative">
         <div>
@@ -25,9 +25,9 @@ export default function Processes() {
             </div>
             <div>
               <div className="relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600">02</div>
-              <div className="pt-6.5 relative border-b border-l border-red-600 px-3 py-5 text-xl/5 font-semibold text-red-600">
+              <div className="relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600">
                 Translator
-                <img className="absolute bottom-0 left-0 w-5 -rotate-90" src="/svg/arrow-mark.svg" alt="arrow-mark" />
+                <img className="absolute bottom-0 left-0 w-5 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
               </div>
             </div>
             <div>
@@ -36,9 +36,9 @@ export default function Processes() {
             </div>
             <div>
               <div className="relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600">04</div>
-              <div className="pt-6.5 relative border-b border-l border-red-600 px-3 py-5 text-xl/5 font-semibold text-red-600">
+              <div className="relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600">
                 Operator
-                <img className="absolute bottom-0 left-0 w-5 -rotate-90" src="/svg/arrow-mark.svg" alt="arrow-mark" />
+                <img className="absolute bottom-0 left-0 w-5 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
               </div>
             </div>
             <div>
@@ -47,7 +47,7 @@ export default function Processes() {
             </div>
           </div>
           <div className="mt-17">
-            <div className="gap-22.5 flex">
+            <div className="flex gap-22.5">
               <div>
                 <div className="processes-clip px-3.5 py-2 text-xl/5 font-semibold text-white">
                   &nbsp;Focus on early adopters for future

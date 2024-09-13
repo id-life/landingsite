@@ -27,7 +27,7 @@ export default function Nav() {
 
   return (
     <div ref={navRef} id="nav" className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 bg-white p-12">
-      <img className="h-12" src="/svg/logo-title.svg" alt="logo" loading="lazy" />
+      <img className="h-12" src="/svgs/logo-title.svg" alt="logo" loading="lazy" />
       <div className="flex gap-8 text-sm font-semibold">
         {NAV_LIST.map((item) => (
           <div

@@ -43,7 +43,7 @@ export default function Vision() {
       <video
         className="absolute left-0 top-0 h-full w-full object-cover"
         src="/assets/vision.webm"
-        poster="/img/vision.jpg"
+        poster="/imgs/vision.jpg"
         autoPlay
         muted
         loop
@@ -62,10 +62,10 @@ export default function Vision() {
         <p className="font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
-        <img className="absolute left-0 top-0 w-6" src="/svg/arrow-mark.svg" alt="arrow-mark" />
-        <img className="absolute right-0 top-0 w-6 rotate-90" src="/svg/arrow-mark.svg" alt="arrow-mark" />
-        <img className="absolute bottom-0 left-0 w-6 -rotate-90" src="/svg/arrow-mark.svg" alt="arrow-mark" />
-        <img className="absolute bottom-0 right-0 w-6 rotate-180" src="/svg/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute left-0 top-0 w-6" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute right-0 top-0 w-6 rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute bottom-0 left-0 w-6 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute bottom-0 right-0 w-6 rotate-180" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
       </div>
       <div ref={clipTextRef} className="vision-title fore-hide text-white">
         <h2>To Extend</h2>

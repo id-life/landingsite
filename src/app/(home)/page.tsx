@@ -10,6 +10,7 @@ import Partners from '@/app/partners/Partners';
 import Processes from '@/app/processes/Processes';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Intervention from '@/app/intervention/Intervention';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
