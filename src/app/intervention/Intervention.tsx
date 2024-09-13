@@ -1,10 +1,13 @@
-import { Suspense } from 'react';
+import { Suspense, useRef } from 'react';
 import Geo from '@/components/model/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';
 import Effects from '@/components/model/Effect';
+import { OrbitControls } from '@react-three/drei';
 
 export default function Intervention() {
+  const controls = useRef<any>();
+
   return (
     <div id={NAV_LIST[4].id} className="page-height mt-37 px-12">
       <h2 className="page-title">Intervention Center</h2>
@@ -53,6 +56,15 @@ export default function Intervention() {
           <Geo />
         </Suspense>
         <Effects />
+        <OrbitControls
+          autoRotate
+          ref={controls}
+          enableZoom={false}
+          target={[0, -1, 0]}
+          autoRotateSpeed={-0.5}
+          maxPolarAngle={Math.PI / 2}
+          minPolarAngle={Math.PI / 2}
+        />
       </Canvas>
     </div>
   );
