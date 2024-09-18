@@ -51,7 +51,7 @@ export default function Investments() {
   };
 
   return (
-    <div id={NAV_LIST[5].id} className="page-container p-8">
+    <div id={NAV_LIST[5].id} className="page-container border-hide p-8">
       <video
         loop
         muted

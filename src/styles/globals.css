@@ -82,6 +82,10 @@
     background: linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
     border-radius: 18px 18px 0 0;
     overflow: hidden;
+
+    &.border-hide {
+      border-radius: 0;
+    }
   }
 
   .vision-title {
