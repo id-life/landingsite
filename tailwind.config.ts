@@ -34,6 +34,7 @@ const config: Config = {
         32.5: '8.125rem',
         34: '8.5rem',
         37: '9.25rem',
+        51.5: '12.875rem',
         66.5: '16.625rem',
         105: '26.25rem',
         112: '28rem',
@@ -41,6 +42,7 @@ const config: Config = {
       },
       colors: {
         gray: {
+          400: '#9C979D',
           800: '#222222',
         },
         red: {

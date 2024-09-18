@@ -67,10 +67,10 @@ export default function Investments() {
           {investments.map((item) => (
             <div onClick={() => handleInvestmentClick(item)} key={item.title} className="investments-box-border h-105 group">
               <div className="investments-box-content">
-                <div className="flex h-3/5 items-center justify-center">{item.image}</div>
+                <div className="flex h-3/5 items-center justify-center px-5">{item.image}</div>
                 <div className="text-center font-semibold">
                   <h4 className="text-xl/7.5">{item.title}</h4>
-                  <p className="px-8 text-sm">{item.description}</p>
+                  <p className="px-8 text-xs">{item.description}</p>
                 </div>
                 {item.link ? (
                   <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 duration-300 group-hover:rotate-180 group-hover:fill-red-600" />

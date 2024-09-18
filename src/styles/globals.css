@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  outline: none;
+}
+
+
 @layer base {
   :root {
     --background: #f0f0f0;
