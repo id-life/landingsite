@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
+    --background: #f0f0f0;
     --foreground: #222222;
     --headerHeight: 9rem;
   }
@@ -14,7 +14,6 @@
     width: 0;
     background: transparent;
   }
-
   body {
     color: var(--foreground);
     background: var(--background);
@@ -55,7 +54,7 @@
 @layer components {
   .nav-item {
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       bottom: -0.625rem;
@@ -78,9 +77,9 @@
   .page-container {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - var(--headerHeight));;
-    background: linear-gradient(180deg, #ffffff 0%, #EEEEEE 100%);
-    border-radius: 18px;
+    min-height: calc(100vh - var(--headerHeight));
+    background: linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
+    border-radius: 18px 18px 0 0;
     overflow: hidden;
   }
 
@@ -89,15 +88,15 @@
   }
 
   .svg-border {
-    @apply transition-all ease-in duration-300 group-hover:fill-red-600 group-hover:stroke-red-600;
+    @apply transition-all duration-300 ease-in group-hover:fill-red-600 group-hover:stroke-red-600;
   }
 
   .svg-text {
-    @apply transition-all ease-in duration-300 group-hover:fill-red-600;
+    @apply transition-all duration-300 ease-in group-hover:fill-red-600;
   }
 
   .svg-icon {
-    @apply transition-all ease-in duration-300 group-hover:stroke-red-600;
+    @apply transition-all duration-300 ease-in group-hover:stroke-red-600;
   }
 }
 
@@ -111,7 +110,7 @@
   }
 
   .page-title {
-    @apply text-[2.5rem]/[4.5rem] font-xirod uppercase;
+    @apply font-xirod text-[2.5rem]/[4.5rem] uppercase;
   }
 
   .fore-hide {
@@ -122,5 +121,8 @@
     background: #222222;
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
   }
-}
 
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}

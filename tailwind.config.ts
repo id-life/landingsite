@@ -41,6 +41,7 @@ const config: Config = {
         red: {
           600: '#C11111',
         },
+        background: 'var(--background)',
       },
       lineHeight: {
         12: '3rem',

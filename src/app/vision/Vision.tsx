@@ -58,7 +58,7 @@ export default function Vision() {
       />
       <div className="vision-title">
         <h2>To Extend</h2>
-        <h2>Human Healthy Lifespan</h2>
+        <h2 className="text-[4.25rem]/[4.5rem]">Human Healthy Lifespan</h2>
         <p className="font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
@@ -69,7 +69,7 @@ export default function Vision() {
       </div>
       <div ref={clipTextRef} className="vision-title fore-hide text-white">
         <h2>To Extend</h2>
-        <h2>Human Healthy Lifespan</h2>
+        <h2 className="text-[4.25rem]/[4.5rem]">Human Healthy Lifespan</h2>
         <p className="font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
