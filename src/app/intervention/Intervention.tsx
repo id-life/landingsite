@@ -6,10 +6,8 @@ import Effects from '@/components/model/Effect';
 import { OrbitControls } from '@react-three/drei';
 
 export default function Intervention() {
-  const controls = useRef<any>();
-
   return (
-    <div id={NAV_LIST[4].id} className="page-height mt-37 px-12">
+    <div id={NAV_LIST[4].id} className="page-height mt-37 flex flex-col px-12">
       <h2 className="page-title">Intervention Center</h2>
       <p className="font-migrena text-2xl/12 font-bold uppercase">Thailand</p>
       <div className="mt-8 flex gap-7">
@@ -26,6 +24,7 @@ export default function Intervention() {
           &nbsp;Novel interventions
         </div>
       </div>
+      <div className="flex-1"></div>
       <Canvas
         shadows
         dpr={[1, 2]}
@@ -56,15 +55,7 @@ export default function Intervention() {
           <Geo />
         </Suspense>
         <Effects />
-        <OrbitControls
-          autoRotate
-          ref={controls}
-          enableZoom={false}
-          target={[0, -1, 0]}
-          autoRotateSpeed={-0.5}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
-        />
+        <OrbitControls autoRotate enableDamping enableZoom={false} target={[0, 0, 0]} />
       </Canvas>
     </div>
   );

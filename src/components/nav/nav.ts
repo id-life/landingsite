@@ -23,8 +23,4 @@ export const NAV_LIST: NavItem[] = [
     id: 'intervention_page',
     title: 'intervention',
   },
-  {
-    id: 'partners_page',
-    title: 'partners',
-  },
 ];

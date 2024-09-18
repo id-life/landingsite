@@ -6,10 +6,9 @@ import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
-import Partners from '@/app/partners/Partners';
 import Processes from '@/app/processes/Processes';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
@@ -43,7 +42,6 @@ export default function Home() {
       <div className="px-12 pt-36" ref={contentRef}>
         <Vision />
         <Processes />
-        <Partners />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@
   :root {
     --background: #ffffff;
     --foreground: #222222;
-    --headerHeight: 144px;
+    --headerHeight: 9rem;
   }
 
   *::-webkit-scrollbar {
@@ -20,6 +20,36 @@
     background: var(--background);
     @apply font-poppins;
   }
+
+  @media (max-width: 1536px) {
+    html {
+      font-size: 80%;
+    }
+  }
+
+  @media (max-width: 1280px) {
+    html {
+      font-size: 66.67%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    html {
+      font-size: 53.33%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    html {
+      font-size: 40%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    html {
+      font-size: 33.33%;
+    }
+  }
 }
 
 @layer components {
@@ -28,7 +58,7 @@
       content: "";
       position: absolute;
       left: 0;
-      bottom: -10px;
+      bottom: -0.625rem;
       height: 2px;
       width: 0;
       transition: width 0.3s;

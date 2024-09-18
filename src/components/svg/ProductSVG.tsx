@@ -1,13 +1,6 @@
 export default function ProductSVG() {
   return (
-    <svg
-      className="group cursor-pointer"
-      width="400"
-      height="160"
-      viewBox="0 0 400 160"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg className="group cursor-pointer" viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg">
       <mask id="path-1-inside-1_910_2327" fill="white">
         <path fillRule="evenodd" clipRule="evenodd" d="M400 0H34L0 34V160H400V0Z" />
       </mask>
