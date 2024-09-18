@@ -5,7 +5,7 @@ import Tracking from '@/app/tracking/Tracking';
 
 export default function Processes() {
   return (
-    <div id={NAV_LIST[1].id} className="page-container px-12 pt-12">
+    <div id={NAV_LIST[1].id} className="page-container p-12">
       <video
         autoPlay
         muted
