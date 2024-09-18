@@ -7,7 +7,7 @@ import { OrbitControls } from '@react-three/drei';
 
 export default function Intervention() {
   return (
-    <div id={NAV_LIST[4].id} className="page-height mt-37 flex flex-col px-12">
+    <div id={NAV_LIST[4].id} className="page-height mt-[19.625rem] flex flex-col px-12">
       <h2 className="page-title">Regional Intervention Center</h2>
       <p className="font-migrena text-2xl/12 font-bold uppercase">Thailand</p>
       <div className="mt-8 flex gap-7">

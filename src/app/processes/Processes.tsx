@@ -18,7 +18,7 @@ export default function Processes() {
       />
       <div className="relative">
         <div>
-          <h2 className="page-title">Medical in dustry processes</h2>
+          <h2 className="page-title">industry processes</h2>
           <div className="mt-8 grid grid-cols-5">
             <div>
               <div className="relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold">01</div>
@@ -50,13 +50,13 @@ export default function Processes() {
           <div className="mt-17">
             <div className="flex gap-22.5">
               <div>
-                <div className="processes-clip px-3.5 py-2 text-xl/5 font-semibold text-white">
+                <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium text-white">
                   &nbsp;Focus on early adopters for future
                 </div>
                 <p className="mt-3 text-sm font-semibold">Catering to Kindred Spirits, Not the Crowd.</p>
               </div>
               <div>
-                <div className="processes-clip inline-block px-3.5 py-2 text-xl/5 font-semibold text-white">
+                <div className="processes-clip inline-block px-3.5 py-2 text-xl/5 font-medium text-white">
                   &nbsp;Dire lack of operators
                 </div>
                 <p className="mt-3 text-sm font-semibold">
@@ -66,7 +66,7 @@ export default function Processes() {
               </div>
             </div>
             <div className="mt-14">
-              <div className="processes-clip inline-block px-3.5 py-2 text-xl/5 font-semibold text-white">
+              <div className="processes-clip inline-block px-3.5 py-2 text-xl/5 font-medium text-white">
                 &nbsp;Regulatory environment
               </div>
               <p className="mt-3 text-sm font-semibold">Adapting to and Building the Environment.</p>

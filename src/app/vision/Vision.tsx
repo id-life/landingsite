@@ -27,8 +27,8 @@ export default function Vision() {
         const { x, y } = clipPathObj.current;
         const videoRect = clipVideoRef.current.getBoundingClientRect();
         const textRect = clipTextRef.current.getBoundingClientRect();
-        clipVideoRef.current.style.clipPath = `circle(200px at ${x - videoRect.left}px ${y - videoRect.top}px)`;
-        clipTextRef.current.style.clipPath = `circle(200px at ${x - textRect.left}px ${y - textRect.top}px)`;
+        clipVideoRef.current.style.clipPath = `circle(180px at ${x - videoRect.left}px ${y - videoRect.top}px)`;
+        clipTextRef.current.style.clipPath = `circle(180px at ${x - textRect.left}px ${y - textRect.top}px)`;
       },
     });
   });
@@ -60,8 +60,8 @@ export default function Vision() {
       />
       <div className="vision-title">
         <h2>To Extend</h2>
-        <h2 className="text-[4.25rem]/[4.5rem]">Human Healthy Lifespan</h2>
-        <p className="font-migrena text-2xl/10 font-semibold uppercase">
+        <h2 className="text-[3.5rem]/[3.875rem]">Human Healthy Lifespan</h2>
+        <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
         <img className="absolute left-0 top-0 w-6" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
@@ -71,8 +71,8 @@ export default function Vision() {
       </div>
       <div ref={clipTextRef} className="vision-title fore-hide text-white">
         <h2>To Extend</h2>
-        <h2 className="text-[4.25rem]/[4.5rem]">Human Healthy Lifespan</h2>
-        <p className="font-migrena text-2xl/10 font-semibold uppercase">
+        <h2 className="text-[3.5rem]/[3.875rem]">Human Healthy Lifespan</h2>
+        <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
       </div>

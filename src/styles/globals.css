@@ -84,7 +84,7 @@
   }
 
   .vision-title {
-    @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-6xl/[4.5rem];
+    @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-5xl/[3.875rem];
   }
 
   .svg-border {
