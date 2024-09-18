@@ -12,7 +12,7 @@ export default function Processes() {
         loop
         data-speed="0.8"
         className="absolute right-0 top-0 h-full w-full object-cover"
-        src="/assets/processes.webm"
+        src="https://cdn.id.life/processes-01.webm"
         poster="/imgs/processes.jpg"
       />
       <div className="relative">
