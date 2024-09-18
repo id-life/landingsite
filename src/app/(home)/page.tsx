@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <div ref={wrapperRef}>
-      <div className="px-12 pt-36" ref={contentRef}>
+      <div className="pt-34 px-12" ref={contentRef}>
         <Vision />
         <Processes />
         <Investments />

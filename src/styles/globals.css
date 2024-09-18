@@ -6,7 +6,7 @@
   :root {
     --background: #f0f0f0;
     --foreground: #222222;
-    --headerHeight: 9rem;
+    --headerHeight: 8.5rem;
   }
 
   *::-webkit-scrollbar {
