@@ -10,6 +10,7 @@ export default function Processes() {
         autoPlay
         muted
         loop
+        playsInline
         data-speed="0.8"
         className="absolute right-0 top-0 h-full w-full object-cover"
         src="https://cdn.id.life/processes-01.webm"
