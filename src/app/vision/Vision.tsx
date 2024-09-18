@@ -65,10 +65,7 @@ export default function Vision() {
           <LogoSVG className="h-15.5" />
           <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>
         </div>
-        <h2>Til Unlimited Human Healthy Lifespan</h2>
-        <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
-          Knowledge as core competency / Longevity industry is learnable
-        </p>
+        <h2 className="mt-0.5">Til Unlimited Human Healthy Lifespan</h2>
         <img className="absolute left-0 top-0 w-6" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
         <img className="absolute right-0 top-0 w-6 rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
         <img className="absolute bottom-0 left-0 w-6 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
@@ -79,10 +76,7 @@ export default function Vision() {
           <LogoWhiteSVG className="h-15.5" />
           <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>
         </div>
-        <h2>Til Unlimited Human Healthy Lifespan</h2>
-        <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
-          Knowledge as core competency / Longevity industry is learnable
-        </p>
+        <h2 className="mt-0.5">Til Unlimited Human Healthy Lifespan</h2>
       </div>
       <ScrollDown />
     </div>

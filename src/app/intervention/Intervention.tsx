@@ -9,14 +9,17 @@ export default function Intervention() {
   return (
     <div id={NAV_LIST[4].id} className="page-height mt-[16.625rem] flex flex-col p-12">
       <h2 className="page-title">Regional Intervention Center</h2>
-      <p className="font-migrena text-2xl/12 font-bold uppercase">Thailand</p>
-      <div className="mt-8 flex gap-7">
+      <div className="mt-9 flex gap-7">
         <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">&nbsp;Novel interventions</div>
         <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
-          &nbsp;minicircle follistatin gene therapy
+          &nbsp;Minicircle follistatin gene therapy
         </div>
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">&nbsp;Novel interventions</div>
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">&nbsp;Novel interventions</div>
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
+          &nbsp;Licensed and accredited
+        </div>
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
+          &nbsp;Clinic and medical staff
+        </div>
       </div>
       <div className="flex-1"></div>
       <Canvas
