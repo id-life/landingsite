@@ -3,6 +3,7 @@ import Nav from '@/components/nav';
 import type { Metadata } from 'next';
 import Providers from '@/providers/root';
 import { poppins, xirod, migrena } from '@/styles/fonts';
+import '../utils/analytics';
 
 import '@/styles/globals.css';
 

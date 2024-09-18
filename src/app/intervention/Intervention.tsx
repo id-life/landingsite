@@ -1,4 +1,4 @@
-import { Suspense, useRef } from 'react';
+import { Suspense } from 'react';
 import Geo from '@/components/model/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';

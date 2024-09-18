@@ -5,7 +5,6 @@ import { useGLTF, MeshDistortMaterial } from '@react-three/drei';
 
 export default function Model() {
   const group = useRef<THREE.Group>();
-  const shadow = useRef<any>(null);
   const { nodes } = useGLTF('/models/geo.min.glb', true) as any;
 
   useFrame(({ clock }) => {

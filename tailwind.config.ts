@@ -30,7 +30,10 @@ const config: Config = {
         17: '4.25rem',
         18: '4.5rem',
         22.5: '5.625rem',
+        32.5: '8.125rem',
         37: '9.25rem',
+        66.5: '16.625rem',
+        105: '26.25rem',
         112: '28rem',
         205: '51.25rem',
       },
@@ -44,6 +47,7 @@ const config: Config = {
         background: 'var(--background)',
       },
       lineHeight: {
+        7.5: '1.875rem',
         12: '3rem',
       },
     },
