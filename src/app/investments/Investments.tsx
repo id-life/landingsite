@@ -26,7 +26,7 @@ export default function Investments() {
       },
       {
         title: 'Unlimited Bio',
-        description: 'Accelerate clin ical trials',
+        description: 'Accelerate clinical trials',
         image: <img className="w-22.5" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
         link: 'https://unlimit.bio/',
       },
@@ -38,7 +38,7 @@ export default function Investments() {
       },
       {
         title: 'R3 Bio',
-        description: 'Wholebody replaycement',
+        description: 'Wholebody replacement',
         image: <img className="w-32.5" src="/imgs/investments/r3.webp" alt="r3" />,
       },
     ],
