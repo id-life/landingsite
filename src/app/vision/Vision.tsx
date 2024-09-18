@@ -3,7 +3,8 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { NAV_LIST } from '@/components/nav/nav';
 import ScrollDown from '@/components/common/ScrollDown';
-import LogoSVG from '@/components/svg/LogoSVG';
+import LogoSVG from '@/../public/svgs/logo.svg?component';
+import LogoWhiteSVG from '@/../public/svgs/logo-white.svg?component';
 
 export default function Vision() {
   const visionRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,7 @@ export default function Vision() {
       </div>
       <div ref={clipTextRef} className="vision-title fore-hide text-white">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoSVG className="h-15.5" color="white" />
+          <LogoWhiteSVG className="h-15.5" />
           <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>
         </div>
         <h2>Til Unlimited Human Healthy Lifespan</h2>
