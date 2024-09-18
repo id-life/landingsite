@@ -42,7 +42,7 @@ export default function Vision() {
     >
       <video
         className="absolute left-0 top-0 h-full w-full object-cover"
-        src="/assets/vision.webm"
+        src="https://cdn.id.life/vision-01.webm"
         poster="/imgs/vision.jpg"
         autoPlay
         muted
@@ -51,7 +51,7 @@ export default function Vision() {
       <video
         ref={clipVideoRef}
         className="fore-hide left-0 top-0 h-full w-full object-cover"
-        src="/assets/vision-back.webm"
+        src="https://cdn.id.life/vision-back-01.webm"
         autoPlay
         muted
         loop
