@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { NAV_LIST } from '@/components/nav/nav';
 import ScrollDown from '@/components/common/ScrollDown';
+import LogoSVG from '@/components/svg/LogoSVG';
 
 export default function Vision() {
   const visionRef = useRef<HTMLDivElement>(null);
@@ -27,8 +28,8 @@ export default function Vision() {
         const { x, y } = clipPathObj.current;
         const videoRect = clipVideoRef.current.getBoundingClientRect();
         const textRect = clipTextRef.current.getBoundingClientRect();
-        clipVideoRef.current.style.clipPath = `circle(180px at ${x - videoRect.left}px ${y - videoRect.top}px)`;
-        clipTextRef.current.style.clipPath = `circle(180px at ${x - textRect.left}px ${y - textRect.top}px)`;
+        // clipVideoRef.current.style.clipPath = `circle(180px at ${x - videoRect.left}px ${y - videoRect.top}px)`;
+        // clipTextRef.current.style.clipPath = `circle(180px at ${x - textRect.left}px ${y - textRect.top}px)`;
       },
     });
   });
@@ -59,8 +60,11 @@ export default function Vision() {
         loop
       />
       <div className="vision-title">
-        <h2>To Extend</h2>
-        <h2 className="text-[3.5rem]/[3.875rem]">Human Healthy Lifespan</h2>
+        <div className="flex-center gap-[1.3125rem]">
+          <LogoSVG className="h-15.5" />
+          <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>
+        </div>
+        <h2>Til Unlimited Human Healthy Lifespan</h2>
         <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>
@@ -69,9 +73,12 @@ export default function Vision() {
         <img className="absolute bottom-0 left-0 w-6 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
         <img className="absolute bottom-0 right-0 w-6 rotate-180" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
       </div>
-      <div ref={clipTextRef} className="vision-title fore-hide text-white">
-        <h2>To Extend</h2>
-        <h2 className="text-[3.5rem]/[3.875rem]">Human Healthy Lifespan</h2>
+      <div ref={clipTextRef} className="vision-title text-white">
+        <div className="flex-center gap-[1.3125rem]">
+          <LogoSVG className="h-15.5" color="white" />
+          <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>
+        </div>
+        <h2>Til Unlimited Human Healthy Lifespan</h2>
         <p className="mt-3 font-migrena text-2xl/10 font-semibold uppercase">
           Knowledge as core competency / Longevity industry is learnable
         </p>

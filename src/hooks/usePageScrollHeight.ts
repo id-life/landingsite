@@ -12,7 +12,12 @@ export function usePageScrollHeight() {
     if (!nav) return;
     const map = new Map();
 
-    NAV_LIST.forEach((item) => {
+    NAV_LIST.forEach((item, idx) => {
+      if (idx === 0) {
+        // 第一个元素不需要滚动
+        map.set(item.id, 0);
+        return;
+      }
       const elementById = document.getElementById(item.id);
       if (!elementById) return 0;
       const height = elementById.getBoundingClientRect().y - nav.clientHeight;
