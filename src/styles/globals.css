@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: #eeeeee;
+    --background: #f0f0f0;
     --foreground: #222222;
     --headerHeight: 9rem;
   }
@@ -120,5 +120,9 @@
   .processes-clip {
     background: #222222;
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
   }
 }
