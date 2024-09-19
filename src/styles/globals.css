@@ -94,7 +94,7 @@
 
   .vision-title {
     @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-3xl/12;
-    @apply mobile:text-sm/4 mobile:top-0 mobile:w-[calc(100%-1.25rem)] mobile:p-3;
+    @apply mobile:top-0 mobile:w-[calc(100%-1.25rem)] mobile:p-3 mobile:text-sm/4;
   }
 
   .svg-border {
@@ -144,6 +144,7 @@
 
   .page-title {
     @apply font-xirod text-[2.5rem]/[4.5rem] uppercase;
+    @apply mobile:text-base/5;
   }
 
   .fore-hide {
@@ -161,7 +162,7 @@
 
   .submit-btn {
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
-    @apply cursor-pointer relative bg-red-600 text-white text-base/5 font-semibold py-3 w-full;
+    @apply relative w-full cursor-pointer bg-red-600 py-3 text-base/5 font-semibold text-white;
     @apply hover:after:opacity-20;
 
     &::after {
