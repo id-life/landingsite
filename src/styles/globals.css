@@ -176,7 +176,6 @@
       inset: 0;
       background: white;
       opacity: 0;
-      clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
     }
   }
 }
