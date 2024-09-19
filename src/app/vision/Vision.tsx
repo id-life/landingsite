@@ -76,7 +76,7 @@ export default function Vision() {
       {/* 移动端不会触发文字裁剪效果 */}
       <div ref={clipTextRef} className="vision-title fore-hide text-white mobile:hidden">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoSVG className="h-15.5 mobile:h-10.5" />
+          <LogoWhiteSVG className="h-15.5 mobile:h-10.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>}
         </div>
         <h2 className="mt-0.5 mobile:mt-6">Til Unlimited Human Healthy Lifespan</h2>
