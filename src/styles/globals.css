@@ -158,4 +158,19 @@
   .flex-center {
     @apply flex items-center justify-center;
   }
+
+  .submit-btn {
+    clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
+    @apply cursor-pointer relative bg-red-600 text-white text-base/5 font-semibold py-3 w-full;
+    @apply hover:after:opacity-20;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
+    }
+  }
 }

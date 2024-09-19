@@ -30,7 +30,7 @@ export default function Nav() {
   }, [scrollPageId, setCurrentPage]);
 
   return (
-    <div ref={navRef} id="nav" className="bg-background fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-11">
+    <div ref={navRef} id="nav" className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 bg-background p-11">
       <img className="h-12" src="/svgs/logo-title.svg" alt="logo" loading="lazy" />
       <div className="flex gap-8 text-sm font-semibold">
         {NAV_LIST.map((item) => (
@@ -44,15 +44,15 @@ export default function Nav() {
         ))}
       </div>
       <div className="flex h-12 flex-1 justify-end">
-        {/*<div*/}
-        {/*  onClick={() => setOpen(!open)}*/}
-        {/*  className="w-51.5 group relative flex h-12 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600"*/}
-        {/*>*/}
-        {/*  <SubscribeBorderSVG className="absolute left-0 top-0 size-full duration-300 group-hover:stroke-red-600" />*/}
-        {/*  Subscribe*/}
-        {/*</div>*/}
+        <div
+          onClick={() => setOpen(!open)}
+          className="group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600"
+        >
+          <SubscribeBorderSVG className="absolute left-0 top-0 size-full duration-300 group-hover:stroke-red-600" />
+          Subscribe
+        </div>
       </div>
-      <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog />} />
+      <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog handleSubmit={() => setOpen(false)} />} />
     </div>
   );
 }
