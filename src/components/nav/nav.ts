@@ -8,6 +8,10 @@ export const NAV_LIST: NavItem[] = [
     title: 'vision',
   },
   {
+    id: 'investments_page',
+    title: 'investments',
+  },
+  {
     id: 'processes_page',
     title: 'processes',
   },
@@ -22,9 +26,5 @@ export const NAV_LIST: NavItem[] = [
   {
     id: 'intervention_page',
     title: 'intervention',
-  },
-  {
-    id: 'investments_page',
-    title: 'investments',
   },
 ];

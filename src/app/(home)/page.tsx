@@ -40,10 +40,10 @@ export default function Home() {
 
   return (
     <div ref={wrapperRef}>
-      <div className="pt-34 px-12" ref={contentRef}>
+      <div className="px-12 pt-34" ref={contentRef}>
         <Vision />
-        <Processes />
         <Investments />
+        <Processes />
       </div>
     </div>
   );

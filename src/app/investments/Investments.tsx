@@ -51,7 +51,7 @@ export default function Investments() {
   };
 
   return (
-    <div id={NAV_LIST[5].id} className="page-container border-hide p-8">
+    <div id={NAV_LIST[1].id} className="page-container p-8">
       <video
         loop
         muted
@@ -65,7 +65,7 @@ export default function Investments() {
         <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Our Investments</div>
         <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18">
           {investments.map((item) => (
-            <div onClick={() => handleInvestmentClick(item)} key={item.title} className="investments-box-border h-105 group">
+            <div onClick={() => handleInvestmentClick(item)} key={item.title} className="investments-box-border group h-105">
               <div className="investments-box-content">
                 <div className="flex h-3/5 items-center justify-center px-5">{item.image}</div>
                 <div className="text-center font-semibold">
