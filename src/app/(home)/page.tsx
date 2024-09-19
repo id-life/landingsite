@@ -1,20 +1,22 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
+import Processes from '@/app/processes/Processes';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
-import Processes from '@/app/processes/Processes';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import Fund from '@/app/fund/Fund';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useSetAtom } from 'jotai';
+import { useRef } from 'react';
+import Fund from '../fund/Fund';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   useGSAP(
     () => {
@@ -30,17 +32,17 @@ export default function Home() {
           trigger: page,
           start: () => `bottom ${window.innerHeight}`,
           pin: true,
-          pinSpacing: false,
+          pinSpacing: isMobile ? true : false, // 移动端需为true
         });
       });
       setSmoother(smoother);
     },
-    { scope: wrapperRef },
+    { scope: wrapperRef, dependencies: [isMobile] },
   );
 
   return (
     <div ref={wrapperRef}>
-      <div className="px-12 pt-34" ref={contentRef}>
+      <div className="mobile:p-0 px-12 pt-34" ref={contentRef}>
         <Vision />
         <Fund />
         <Processes />

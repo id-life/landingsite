@@ -1,5 +1,7 @@
 'use client';
 
+import CloseSVG from '@/../public/svgs/close.svg?component';
+import { cn } from '@/utils';
 import {
   FloatingFocusManager,
   FloatingOverlay,
@@ -10,8 +12,6 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import clsx from 'clsx';
-import CloseSVG from '@/../public/svgs/close.svg?component';
 import React, { cloneElement, useEffect, useState } from 'react';
 
 type DialogProps = {
@@ -23,6 +23,7 @@ type DialogProps = {
   render: (props: { close: () => void }) => React.ReactNode;
   children?: React.JSX.Element;
   isDismiss?: boolean;
+  showCloseButton?: boolean;
 };
 
 function Dialog({
@@ -34,6 +35,7 @@ function Dialog({
   children,
   onOpenChange,
   isDismiss = false,
+  showCloseButton = true,
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const onChange = (status: boolean) => {
@@ -57,16 +59,26 @@ function Dialog({
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay lockScroll className={clsx('z-[100] grid place-items-center bg-gray-400/50 backdrop-blur', overlayClassName)}>
+          <FloatingOverlay
+            lockScroll
+            className={cn('z-[100] grid place-items-center bg-gray-400/50 backdrop-blur', overlayClassName)}
+          >
             <FloatingFocusManager context={context}>
               <div
-                className={clsx('overflow-visible border border-gray-800 bg-white', className)}
+                className={cn('overflow-visible border border-gray-800 bg-white', className)}
                 {...getFloatingProps({ ref: setFloating })}
               >
-                <div className={clsx('relative min-h-28 min-w-56', contentClassName)}>
-                  <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
-                    <CloseSVG onClick={() => onChange(false)} className="size-3.5" />
-                  </div>
+                <div
+                  className={cn(
+                    'relative min-h-28 min-w-56 mobile:min-h-[20.375rem] mobile:min-w-[18.25rem]',
+                    contentClassName,
+                  )}
+                >
+                  {showCloseButton && (
+                    <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
+                      <CloseSVG onClick={() => onChange(false)} className="size-3.5" />
+                    </div>
+                  )}
                   {render({
                     close: () => onChange(false),
                   })}

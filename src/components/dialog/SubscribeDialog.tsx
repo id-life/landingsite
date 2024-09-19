@@ -3,7 +3,7 @@ type SubscribeDialogProps = {
 };
 export default function SubscribeDialog({ handleSubmit }: SubscribeDialogProps) {
   return (
-    <div className="w-[27.5rem] p-8">
+    <div className="w-[27.5rem] p-8 mobile:w-full">
       <img src="/svgs/email.svg" className="mx-auto h-10" alt="email" />
       <h3 className="text-xl/5.5 mt-4 text-center font-semibold uppercase">subscribe</h3>
       <form

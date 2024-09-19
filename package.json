@@ -20,7 +20,9 @@
     "react": "^18",
     "react-dom": "^18",
     "react-ga4": "^2.1.0",
+    "react-responsive": "^10.0.0",
     "react-use": "^17.5.1",
+    "tailwind-merge": "^2.5.2",
     "three": "0.127.0"
   },
   "devDependencies": {
