@@ -15,6 +15,7 @@ const config: Config = {
         xirod: ['var(--font-xirod)'],
         poppins: ['var(--font-poppins)'],
         migrena: ['var(--font-migrena)'],
+        tt: ['var(--font-tt)'],
       },
       animation: {
         'scroll-down': 'scroll-down 1.5s ease-in infinite',
@@ -26,6 +27,7 @@ const config: Config = {
         },
       },
       spacing: {
+        3.5: '0.875rem',
         6.5: '1.625rem',
         7.5: '1.875rem',
         10.5: '2.625rem',
