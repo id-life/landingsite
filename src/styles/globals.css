@@ -6,12 +6,16 @@
   outline: none;
 }
 
-
 @layer base {
   :root {
     --background: #f0f0f0;
     --foreground: #222222;
     --headerHeight: 8.5rem;
+  }
+  @media screen and (max-width: 768px) {
+    :root {
+      --headerHeight: 5rem;
+    }
   }
 
   *::-webkit-scrollbar {
@@ -26,7 +30,7 @@
     @apply font-poppins;
   }
 
-  @media (max-width: 1536px) {
+  /*@media (max-width: 1536px) {
     html {
       font-size: 80%;
     }
@@ -54,13 +58,13 @@
     html {
       font-size: 33.33%;
     }
-  }
+  } */
 }
 
 @layer components {
   .nav-item {
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       bottom: -0.625rem;
@@ -83,7 +87,7 @@
   .page-container {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - var(--headerHeight));
+    min-height: calc(100dvh - var(--headerHeight));
     background: linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
     border-radius: 18px 18px 0 0;
     overflow: hidden;
@@ -95,6 +99,7 @@
 
   .vision-title {
     @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-3xl/12;
+    @apply mobile:top-0 mobile:w-[calc(100%-2.5rem)] mobile:p-3 mobile:text-sm/5;
   }
 
   .svg-border {
@@ -135,7 +140,7 @@
 
 @layer utilities {
   .page-height {
-    height: calc(100vh - var(--headerHeight));
+    height: calc(100dvh - var(--headerHeight));
   }
 
   .page-hide {
@@ -144,6 +149,7 @@
 
   .page-title {
     @apply font-xirod text-[2.5rem]/[4.5rem] uppercase;
+    @apply mobile:text-base/5;
   }
 
   .fore-hide {
@@ -161,7 +167,7 @@
 
   .submit-btn {
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
-    @apply cursor-pointer relative bg-red-600 text-white text-base/5 font-semibold py-3 w-full;
+    @apply relative w-full cursor-pointer bg-red-600 py-3 text-base/5 font-semibold text-white;
     @apply hover:after:opacity-20;
 
     &::after {

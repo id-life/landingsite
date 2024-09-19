@@ -7,17 +7,19 @@ import { OrbitControls } from '@react-three/drei';
 
 export default function Intervention() {
   return (
-    <div id={NAV_LIST[5].id} className="page-height mt-[16.625rem] flex flex-col p-12">
+    <div id={NAV_LIST[5].id} className="page-height mt-[16.625rem] flex flex-col p-12 mobile:mt-56 mobile:p-0">
       <h2 className="page-title">Regional Intervention Center</h2>
-      <div className="mt-9 flex gap-7">
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">&nbsp;Novel interventions</div>
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
+      <div className="mt-9 flex gap-7 mobile:mt-6 mobile:grid mobile:grid-cols-2 mobile:gap-3">
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white mobile:text-[.625rem]/3">
+          &nbsp;Novel interventions
+        </div>
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white mobile:text-[.625rem]/3">
           &nbsp;Minicircle follistatin gene therapy
         </div>
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white mobile:text-[.625rem]/3">
           &nbsp;Licensed and accredited
         </div>
-        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white">
+        <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white mobile:text-[.625rem]/3">
           &nbsp;Clinic and medical staff
         </div>
       </div>

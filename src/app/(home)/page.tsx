@@ -1,15 +1,15 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
+import Processes from '@/app/processes/Processes';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
-import Processes from '@/app/processes/Processes';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import Fund from '@/app/fund/Fund';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useSetAtom } from 'jotai';
+import { useRef } from 'react';
+import Fund from '../fund/Fund';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <div ref={wrapperRef}>
-      <div className="px-12 pt-34" ref={contentRef}>
+      <div className="px-12 pt-34 mobile:p-0 mobile:pt-20" ref={contentRef}>
         <Vision />
         <Fund />
         <Processes />

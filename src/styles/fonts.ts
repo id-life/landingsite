@@ -13,10 +13,16 @@ const migrena = localFont({
   weight: '100 900',
 });
 
+const ttLakes = localFont({
+  src: './fonts/TTLakes-DemiBold.otf',
+  variable: '--font-tt',
+  weight: '100 900',
+});
+
 const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-poppins',
 });
 
-export { xirod, poppins, migrena };
+export { xirod, poppins, ttLakes, migrena };
