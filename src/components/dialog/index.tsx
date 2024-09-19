@@ -59,7 +59,10 @@ function Dialog({
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay lockScroll className={cn('z-[100] grid place-items-center bg-gray-400/50', overlayClassName)}>
+          <FloatingOverlay
+            lockScroll
+            className={cn('z-[100] grid place-items-center bg-gray-400/50 backdrop-blur', overlayClassName)}
+          >
             <FloatingFocusManager context={context}>
               <div
                 className={cn('overflow-visible border border-gray-800 bg-white', className)}

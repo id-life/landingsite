@@ -57,6 +57,7 @@ const config: Config = {
         background: 'var(--background)',
       },
       lineHeight: {
+        5.5: '1.375rem',
         7.5: '1.875rem',
         12: '3rem',
       },

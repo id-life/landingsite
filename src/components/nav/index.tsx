@@ -63,7 +63,7 @@ export default function Nav() {
           {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
         </div>
       </div>
-      <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog />} />
+      <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog handleSubmit={() => setOpen(false)} />} />
       <MobileNavDialog />
     </div>
   );
