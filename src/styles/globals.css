@@ -87,7 +87,7 @@
   .page-container {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - var(--headerHeight));
+    min-height: calc(100dvh - var(--headerHeight));
     background: linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
     border-radius: 18px 18px 0 0;
     overflow: hidden;
@@ -140,7 +140,7 @@
 
 @layer utilities {
   .page-height {
-    height: calc(100vh - var(--headerHeight));
+    height: calc(100dvh - var(--headerHeight));
   }
 
   .page-hide {
