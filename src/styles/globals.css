@@ -94,7 +94,7 @@
 
   .vision-title {
     @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-3xl/12;
-    @apply mobile:top-0 mobile:w-[calc(100%-1.25rem)] mobile:p-3 mobile:text-sm/4;
+    @apply mobile:top-0 mobile:w-[calc(100%-2.5rem)] mobile:p-3 mobile:text-sm/4;
   }
 
   .svg-border {

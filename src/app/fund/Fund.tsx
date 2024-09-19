@@ -52,7 +52,7 @@ export default function Fund() {
 
   return (
     // calc(100vh - var(--headerHeight))
-    <div id={NAV_LIST[1].id} className="page-container p-8">
+    <div id={NAV_LIST[1].id} className="page-container p-8 mobile:p-5">
       <video
         loop
         muted
