@@ -42,7 +42,7 @@ export default function Vision() {
       ref={visionRef}
       id={NAV_LIST[0].id}
       onMouseMove={(event) => handleMouseMove(event)}
-      className="page-container page-height"
+      className="page-container page-height mobile:h-auto"
     >
       <video
         className="absolute left-0 top-0 h-full w-full object-cover"
@@ -74,7 +74,7 @@ export default function Vision() {
         <img className="mobile:w-3 absolute bottom-0 right-0 w-6 rotate-180" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
       </div>
       {/* 移动端不会触发文字裁剪效果 */}
-      <div ref={clipTextRef} className="vision-title fore-hide text-white">
+      <div ref={clipTextRef} className="vision-title mobile:hidden fore-hide text-white">
         <div className="flex-center gap-[1.3125rem]">
           <LogoSVG className="mobile:h-10.5 h-15.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>}
