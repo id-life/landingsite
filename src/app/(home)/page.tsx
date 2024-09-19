@@ -10,13 +10,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
 import { useRef } from 'react';
 import Fund from '../fund/Fund';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
 
   useGSAP(
     () => {
@@ -32,17 +30,17 @@ export default function Home() {
           trigger: page,
           start: () => `bottom ${window.innerHeight}`,
           pin: true,
-          pinSpacing: isMobile ? true : false, // 移动端需为true
+          pinSpacing: false,
         });
       });
       setSmoother(smoother);
     },
-    { scope: wrapperRef, dependencies: [isMobile] },
+    { scope: wrapperRef },
   );
 
   return (
     <div ref={wrapperRef}>
-      <div className="px-12 pt-34 mobile:p-0" ref={contentRef}>
+      <div className="px-12 pt-34 mobile:p-0 mobile:pt-20" ref={contentRef}>
         <Vision />
         <Fund />
         <Processes />

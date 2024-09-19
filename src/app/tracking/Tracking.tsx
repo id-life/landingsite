@@ -23,9 +23,9 @@ const Tracking_List: TrackingItem[] = [
 
 export default function Tracking() {
   return (
-    <div id={NAV_LIST[4].id} className="mt-[16.625rem] p-12 mobile:mt-52 mobile:p-0">
+    <div id={NAV_LIST[4].id} className="mt-[16.625rem] p-12 mobile:mt-56 mobile:p-0">
       <h2 className="page-title">Tracking Center</h2>
-      <p className="font-migrena text-2xl/12 font-bold uppercase mobile:text-sm/4">Singapore</p>
+      <p className="font-migrena text-2xl/12 font-bold uppercase mobile:text-sm/5">Singapore</p>
       <div className="mt-12">
         <div className="flex h-112 w-3/4 gap-5 mobile:w-full mobile:flex-col mobile:gap-2.5">
           {Tracking_List.map((item, index) => (

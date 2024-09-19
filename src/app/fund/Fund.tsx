@@ -51,8 +51,7 @@ export default function Fund() {
   };
 
   return (
-    // calc(100vh - var(--headerHeight))
-    <div id={NAV_LIST[1].id} className="page-container p-8 mobile:p-5">
+    <div id={NAV_LIST[1].id} className="page-container page-height p-8 mobile:p-5">
       <video
         loop
         muted
@@ -64,7 +63,7 @@ export default function Fund() {
       />
       <div className="relative flex h-full w-full flex-col items-center justify-center">
         <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-base/5">Portfolio</div>
-        <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:overflow-auto mobile:px-0 mobile:pb-10">
+        <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (
             <div onClick={() => handleFundClick(item)} key={item.title} className="fund-box-border group h-105 mobile:h-36">
               <div className="fund-box-content">

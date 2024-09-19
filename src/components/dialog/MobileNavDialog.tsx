@@ -20,6 +20,9 @@ export default function MobileNavDialog() {
   const handleNavClick = (item: NavItem) => {
     smoother?.scrollTo(scrollHeight?.get(item.id) ?? 0, true);
     setCurrentPage(item);
+    setTimeout(() => {
+      setOpen(false);
+    }, 10);
   };
 
   return (
