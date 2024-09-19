@@ -64,22 +64,22 @@ export default function Vision() {
       />
       <div className="vision-title">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoSVG className="mobile:h-10.5 h-15.5" />
+          <LogoSVG className="h-15.5 mobile:h-10.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>}
         </div>
-        <h2 className="mobile:mt-6 mt-0.5">Til Unlimited Human Healthy Lifespan</h2>
-        <img className="mobile:w-3 absolute left-0 top-0 w-6" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-        <img className="mobile:w-3 absolute right-0 top-0 w-6 rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-        <img className="mobile:w-3 absolute bottom-0 left-0 w-6 -rotate-90" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-        <img className="mobile:w-3 absolute bottom-0 right-0 w-6 rotate-180" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <h2 className="mt-0.5 mobile:mt-6">Til Unlimited Human Healthy Lifespan</h2>
+        <img className="absolute left-0 top-0 w-6 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute right-0 top-0 w-6 rotate-90 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute bottom-0 left-0 w-6 -rotate-90 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+        <img className="absolute bottom-0 right-0 w-6 rotate-180 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
       </div>
       {/* 移动端不会触发文字裁剪效果 */}
-      <div ref={clipTextRef} className="vision-title mobile:hidden fore-hide text-white">
+      <div ref={clipTextRef} className="vision-title fore-hide text-white mobile:hidden">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoSVG className="mobile:h-10.5 h-15.5" />
+          <LogoSVG className="h-15.5 mobile:h-10.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>}
         </div>
-        <h2 className="mobile:mt-6 mt-0.5">Til Unlimited Human Healthy Lifespan</h2>
+        <h2 className="mt-0.5 mobile:mt-6">Til Unlimited Human Healthy Lifespan</h2>
       </div>
       <ScrollDown />
     </div>
