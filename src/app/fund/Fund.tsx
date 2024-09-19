@@ -2,15 +2,15 @@ import { useMemo } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 
-type InvestmentItem = {
+type FundItem = {
   title: string;
   description: string;
   image: JSX.Element;
   link?: string;
 };
 
-export default function Investments() {
-  const investments = useMemo<InvestmentItem[]>(
+export default function Fund() {
+  const funds = useMemo<FundItem[]>(
     () => [
       {
         title: 'VitaDAO',
@@ -45,7 +45,7 @@ export default function Investments() {
     [],
   );
 
-  const handleInvestmentClick = (item: InvestmentItem) => {
+  const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
@@ -62,11 +62,11 @@ export default function Investments() {
         className="absolute left-0 top-0 h-full w-full object-cover"
       />
       <div className="relative flex h-full w-full flex-col items-center justify-center">
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Our Investments</div>
+        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18">
-          {investments.map((item) => (
-            <div onClick={() => handleInvestmentClick(item)} key={item.title} className="investments-box-border group h-105">
-              <div className="investments-box-content">
+          {funds.map((item) => (
+            <div onClick={() => handleFundClick(item)} key={item.title} className="fund-box-border group h-105">
+              <div className="fund-box-content">
                 <div className="flex h-3/5 items-center justify-center px-5">{item.image}</div>
                 <div className="text-center font-semibold">
                   <h4 className="text-xl/7.5">{item.title}</h4>

@@ -9,7 +9,7 @@ import { smootherAtom } from '@/atoms/scroll';
 import Processes from '@/app/processes/Processes';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import Investments from '@/app/investments/Investments';
+import Fund from '@/app/fund/Fund';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
@@ -42,7 +42,7 @@ export default function Home() {
     <div ref={wrapperRef}>
       <div className="px-12 pt-34" ref={contentRef}>
         <Vision />
-        <Investments />
+        <Fund />
         <Processes />
       </div>
     </div>

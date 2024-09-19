@@ -109,7 +109,7 @@
     @apply transition-all duration-300 ease-in group-hover:stroke-red-600;
   }
 
-  .investments-box-border {
+  .fund-box-border {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,7 +124,7 @@
     }
   }
 
-  .investments-box-content {
+  .fund-box-content {
     position: relative;
     width: calc(100% - 2px);
     height: calc(100% - 2px);
