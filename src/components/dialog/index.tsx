@@ -63,7 +63,12 @@ function Dialog({
                 className={clsx('overflow-visible border border-gray-800 bg-white', className)}
                 {...getFloatingProps({ ref: setFloating })}
               >
-                <div className={clsx('relative min-h-28 min-w-56', contentClassName)}>
+                <div
+                  className={clsx(
+                    'mobile:min-h-[20.375rem] mobile:min-w-[18.25rem] relative min-h-28 min-w-56',
+                    contentClassName,
+                  )}
+                >
                   <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
                     <CloseSVG onClick={() => onChange(false)} className="size-3.5" />
                   </div>

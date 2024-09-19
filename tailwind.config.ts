@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        mobile: { max: '768px' },
+      },
       fontFamily: {
         xirod: ['var(--font-xirod)'],
         poppins: ['var(--font-poppins)'],
@@ -25,6 +28,7 @@ const config: Config = {
       spacing: {
         6.5: '1.625rem',
         7.5: '1.875rem',
+        10.5: '2.625rem',
         14: '3.5rem',
         15: '3.75rem',
         15.5: '3.875rem',
