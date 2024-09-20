@@ -149,7 +149,7 @@
 
   .page-title {
     @apply font-xirod text-[2.5rem]/[4.5rem] uppercase;
-    @apply whitespace-pre-wrap mobile:-mr-1 mobile:text-xl/7.5;
+    @apply whitespace-pre-wrap mobile:-mr-3 mobile:text-xl/7.5;
   }
 
   .fore-hide {
