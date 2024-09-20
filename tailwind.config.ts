@@ -59,6 +59,7 @@ const config: Config = {
           600: '#318135',
         },
         background: 'var(--background)',
+        foreground: 'var(--foreground)',
       },
       lineHeight: {
         3.5: '0.875rem',

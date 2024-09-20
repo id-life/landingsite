@@ -1,15 +1,16 @@
 'use client';
 
-import Processes from '@/app/processes/Processes';
-import Vision from '@/app/vision/Vision';
-import { smootherAtom } from '@/atoms/scroll';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useSetAtom } from 'jotai';
 import { useRef } from 'react';
+import gsap from 'gsap';
 import Fund from '../fund/Fund';
+import { useSetAtom } from 'jotai';
+import { useGSAP } from '@gsap/react';
+import Vision from '@/app/vision/Vision';
+import Processes from '@/app/processes/Processes';
+import { smootherAtom } from '@/atoms/scroll';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+
+const ease = 'power3.out';
 
 export default function Home() {
   const setSmoother = useSetAtom(smootherAtom);
@@ -25,17 +26,31 @@ export default function Home() {
         effects: true,
         smoothTouch: 0.1,
       });
-      gsap.utils.toArray<HTMLDivElement>('.page-container').forEach((page) => {
-        ScrollTrigger.create({
-          trigger: page,
-          start: () => `bottom ${window.innerHeight}`,
-          pin: true,
-          pinSpacing: false,
-        });
-      });
       setSmoother(smoother);
+
+      const root = document.documentElement;
+      const background = getComputedStyle(root).getPropertyValue('--background');
+      const foreground = getComputedStyle(root).getPropertyValue('--foreground');
+
+      gsap.utils.toArray<HTMLDivElement>('.page-container').forEach((page, index) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: page,
+            start: () => `bottom ${window.innerHeight}`,
+            pin: true,
+            pinSpacing: false,
+            scrub: true,
+          },
+        });
+        tl.to(page, { opacity: 0, ease });
+        if (index === 0) {
+          tl.to(root, { '--background': foreground, '--foreground': background, ease }, 0);
+        } else {
+          tl.to(root, { '--background': background, '--foreground': foreground, ease }, 0);
+        }
+      });
     },
-    { scope: wrapperRef },
+    { scope: document.body },
   );
 
   return (
