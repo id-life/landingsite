@@ -25,31 +25,31 @@ export default function Fund() {
       {
         title: 'VitaDAO',
         description: 'New funding paradigm for unlikely bio projects',
-        image: <img className="w-48 mobile:w-24" src="/imgs/investments/vita.webp" alt="vita" />,
+        image: <img className="w-50 mobile:w-[6.5625rem]" src="/imgs/investments/vita.webp" alt="vita" />,
         link: 'https://www.vitadao.com/',
       },
       {
         title: 'Vitalia',
         description: 'Accelerated longevity startups Special economic zone',
-        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/vitalia.webp" alt="vita" />,
+        image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vita" />,
         link: 'https://vitalia.city/',
       },
       {
         title: 'Unlimited Bio',
         description: 'Accelerate clinical trials',
-        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
+        image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
         link: 'https://unlimit.bio/',
       },
       {
         title: 'BiohackerDAO',
         description: 'Decentralized self-enhancement experiments and monetizes data',
-        image: <img className="w-66.5 mobile:w-32" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
+        image: <img className="w-[18.25rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
         link: 'https://biohackerdao.com/',
       },
       {
         title: 'R3 Bio',
         description: 'Wholebody replacement',
-        image: <img className="w-32.5 mobile:w-16" src="/imgs/investments/r3.webp" alt="r3" />,
+        image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
       },
     ],
     [],
@@ -69,23 +69,26 @@ export default function Fund() {
           <div className="particle-mask"></div>
         </div>
         <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-base/5">Portfolio</div>
-        <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
+        <p className="font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm">
+          Access To cutting-edge products, exclusive events, and a network of innovators
+        </p>
+        <div className="mt-12 grid w-full grid-cols-5 mobile:mt-9 mobile:grid-cols-2 mobile:pb-10">
           {funds.map((item) => (
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}
-              className="fund-box-border group h-105 text-background mobile:h-36"
+              className="text-foreground h-100 group transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
             >
-              <div className="fund-box-content">
-                <div className="flex h-3/5 items-center justify-center px-5 mobile:h-1/2 mobile:px-3">{item.image}</div>
-                <div className="text-center font-semibold">
-                  <h4 className="text-xl/7.5 mobile:text-xs/4">{item.title}</h4>
-                  <p className="px-8 text-xs mobile:px-2 mobile:text-[.5rem]/3">{item.description}</p>
-                </div>
-                {item.link ? (
-                  <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 duration-300 group-hover:rotate-180 group-hover:fill-red-600 mobile:bottom-2 mobile:w-2.5" />
-                ) : null}
+              <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.8125rem]">{item.image}</div>
+              {/* <div className="hidden group-hover:block"> */}
+              <div className="text-center font-semibold">
+                <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
+                <p className="mobile:text-[.625rem]/3.5 mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0">{item.description}</p>
               </div>
+              {item.link ? (
+                <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 fill-none duration-300 group-hover:rotate-180 group-hover:fill-white mobile:bottom-2 mobile:w-2.5" />
+              ) : null}
+              {/* </div> */}
             </div>
           ))}
         </div>
