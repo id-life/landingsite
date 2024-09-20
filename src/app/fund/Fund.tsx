@@ -64,7 +64,7 @@ export default function Fund() {
         className="absolute left-0 top-0 h-full w-full object-cover"
       />
       <div className="relative flex h-full w-full flex-col items-center justify-center">
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:pt-3 mobile:text-xl/7.5">Portfolio</div>
+        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
 
         {isMobile && (
           <p className="text-sm/5 font-bold capitalize mobile:mt-1.5">
