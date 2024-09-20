@@ -27,14 +27,14 @@ export default function Tracking() {
       <h2 className="page-title">Tracking Center</h2>
       <p className="font-migrena text-2xl/12 font-bold uppercase mobile:text-sm/5">Singapore</p>
       <div className="mt-12">
-        <div className="flex h-112 w-3/4 gap-5 mobile:w-full mobile:flex-col mobile:gap-2.5">
+        <div className="flex h-112 w-3/4 gap-5 mobile:h-auto mobile:w-full mobile:flex-col mobile:gap-2.5">
           {Tracking_List.map((item, index) => (
             <div
               key={index}
               className="group relative flex-1 cursor-pointer border-r border-gray-800 shadow duration-500 hover:basis-1/2"
             >
               <ArrowMarkSVG className="absolute left-0 top-0 w-7.5 fill-gray-800 duration-500 group-hover:fill-red-600 mobile:w-3" />
-              <img className="h-full object-cover object-left" src={item.cover} alt="tracking-01" />
+              <img className="h-full object-cover object-left mobile:h-auto" src={item.cover} alt="tracking-01" />
               <div className="mobile: absolute bottom-0 left-0 w-full truncate bg-red-600/80 p-5 text-xl/5 font-semibold capitalize text-white mobile:p-1 mobile:text-[.625rem]/3">
                 {item.title}
               </div>
