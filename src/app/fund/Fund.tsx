@@ -1,7 +1,12 @@
-import { useMemo } from 'react';
-import { NAV_LIST } from '@/components/nav/nav';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
+import { currentPageAtom } from '@/atoms';
+import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMounted } from '@/hooks/useIsMounted';
+import { cn } from '@/utils';
+import { useAtomValue } from 'jotai';
+import Script from 'next/script';
+import { useEffect, useMemo, useState } from 'react';
 
 type FundItem = {
   title: string;
@@ -11,7 +16,10 @@ type FundItem = {
 };
 
 export default function Fund() {
-  const isMobile = useIsMobile();
+  const [p5Loaded, setP5Loaded] = useState(false);
+  console.log('p5Loaded', p5Loaded);
+  const currentPage = useAtomValue(currentPageAtom);
+  const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
   const funds = useMemo<FundItem[]>(
     () => [
       {
@@ -54,7 +62,12 @@ export default function Fund() {
 
   return (
     <div id={NAV_LIST[1].id} className="page-container bg-fund page-height p-8 text-white mobile:p-5">
-      <div className="relative flex h-full w-full flex-col items-center justify-center">
+      <Script async src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" onLoad={() => setP5Loaded(true)} />
+      {p5Loaded && <Script src="/js/particle-gl.js" />}
+      <div className="relative flex h-full w-full select-none flex-col items-center justify-center">
+        <div id="particle-container" className={cn({ active })}>
+          <div className="particle-mask"></div>
+        </div>
         <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-base/5">Portfolio</div>
         <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (

@@ -1,3 +1,5 @@
+@import './webgl.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,7 +70,7 @@
     }
 
     &.bg-fund {
-      background: var(--background);
+      background: linear-gradient(77deg, rgba(193, 17, 17, 0) 25.39%, rgba(193, 17, 17, 0.3) 100%);
     }
   }
 

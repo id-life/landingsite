@@ -1,8 +1,8 @@
-import { clsx } from 'clsx';
 import Nav from '@/components/nav';
-import type { Metadata } from 'next';
 import Providers from '@/providers/root';
-import { poppins, xirod, migrena, ttLakes } from '@/styles/fonts';
+import { migrena, poppins, ttLakes, xirod } from '@/styles/fonts';
+import { clsx } from 'clsx';
+import type { Metadata } from 'next';
 import '../utils/analytics';
 
 import '@/styles/globals.css';
