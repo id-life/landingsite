@@ -35,7 +35,7 @@ export default function Tracking() {
             >
               <ArrowMarkSVG className="absolute left-0 top-0 w-7.5 fill-gray-800 duration-500 group-hover:fill-red-600 mobile:w-3" />
               <img className="h-full object-cover object-left mobile:h-auto" src={item.cover} alt="tracking-01" />
-              <div className="mobile: absolute bottom-0 left-0 w-full truncate bg-red-600/80 p-5 text-xl/5 font-semibold capitalize text-white mobile:p-1 mobile:text-[.625rem]/3">
+              <div className="mobile: mobile:text-sm/3.5 absolute bottom-0 left-0 w-full truncate bg-red-600/80 p-5 text-xl/5 font-semibold capitalize text-white mobile:p-1">
                 {item.title}
               </div>
             </div>

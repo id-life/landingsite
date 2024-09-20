@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type FundItem = {
   title: string;
@@ -10,6 +11,7 @@ type FundItem = {
 };
 
 export default function Fund() {
+  const isMobile = useIsMobile();
   const funds = useMemo<FundItem[]>(
     () => [
       {
@@ -51,7 +53,7 @@ export default function Fund() {
   };
 
   return (
-    <div id={NAV_LIST[1].id} className="page-container page-height p-8 mobile:p-5">
+    <div id={NAV_LIST[1].id} className="page-container page-height p-8 mobile:px-5">
       <video
         loop
         muted
@@ -62,15 +64,21 @@ export default function Fund() {
         className="absolute left-0 top-0 h-full w-full object-cover"
       />
       <div className="relative flex h-full w-full flex-col items-center justify-center">
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-base/5">Portfolio</div>
+        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:pt-3 mobile:text-xl/7.5">Portfolio</div>
+
+        {isMobile && (
+          <p className="text-sm/5 font-bold capitalize mobile:mt-1.5">
+            Access To cutting-edge products, exclusive events, and a network of innovators
+          </p>
+        )}
         <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (
             <div onClick={() => handleFundClick(item)} key={item.title} className="fund-box-border group h-105 mobile:h-36">
               <div className="fund-box-content">
                 <div className="flex h-3/5 items-center justify-center px-5 mobile:h-1/2 mobile:px-3">{item.image}</div>
                 <div className="text-center font-semibold">
-                  <h4 className="text-xl/7.5 mobile:text-xs/4">{item.title}</h4>
-                  <p className="px-8 text-xs mobile:px-2 mobile:text-[.5rem]/3">{item.description}</p>
+                  <h4 className="text-xl/7.5 mobile:text-sm/5">{item.title}</h4>
+                  <p className="mobile:text-[.5625rem]/3.5 px-8 text-xs mobile:px-2">{item.description}</p>
                 </div>
                 {item.link ? (
                   <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 duration-300 group-hover:rotate-180 group-hover:fill-red-600 mobile:bottom-2 mobile:w-2.5" />

@@ -42,10 +42,10 @@ export default function Vision() {
       ref={visionRef}
       id={NAV_LIST[0].id}
       onMouseMove={(event) => handleMouseMove(event)}
-      className="page-container page-height mobile:overflow-visible"
+      className="page-container page-height mobile:overflow-visible mobile:bg-background mobile:bg-none"
     >
       <video
-        className="absolute left-0 top-0 h-full w-full object-cover"
+        className="absolute left-0 top-0 h-full w-full object-cover mobile:top-[11.125rem] mobile:h-[calc(100%_-_11.125rem)]"
         src="https://cdn.id.life/vision-01.webm"
         poster="/imgs/vision.jpg"
         autoPlay
@@ -55,7 +55,7 @@ export default function Vision() {
       />
       <video
         ref={clipVideoRef}
-        className="fore-hide left-0 top-0 h-full w-full object-cover"
+        className="fore-hide absolute left-0 top-0 h-full w-full object-cover mobile:top-[11.125rem] mobile:h-[calc(100%_-_11.125rem)]"
         src="https://cdn.id.life/vision-back-01.webm"
         autoPlay
         playsInline
@@ -67,7 +67,7 @@ export default function Vision() {
           <LogoSVG className="h-15.5 mobile:h-10.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>}
         </div>
-        <h2 className="mt-0.5 mobile:mt-6">Til Unlimited Human Healthy Lifespan</h2>
+        <h2 className="mt-0.5 whitespace-pre-wrap mobile:mt-6">Til Unlimited {isMobile ? '\n' : ''}Human Healthy Lifespan</h2>
         <img className="absolute left-0 top-0 w-6 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
         <img className="absolute right-0 top-0 w-6 rotate-90 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
         <img className="absolute bottom-0 left-0 w-6 -rotate-90 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
@@ -79,7 +79,7 @@ export default function Vision() {
           <LogoWhiteSVG className="h-15.5 mobile:h-10.5" />
           {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>}
         </div>
-        <h2 className="mt-0.5 mobile:mt-6">Til Unlimited Human Healthy Lifespan</h2>
+        <h2 className="mt-0.5 whitespace-pre-wrap mobile:mt-6">Til Unlimited {isMobile ? '\n' : ''}Human Healthy Lifespan</h2>
       </div>
       <ScrollDown />
     </div>
