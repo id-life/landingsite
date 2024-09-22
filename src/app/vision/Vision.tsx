@@ -64,8 +64,14 @@ export default function Vision() {
       />
       <div className="vision-title">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoSVG className="h-15.5 mobile:h-10.5" />
-          {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>}
+          {isMobile ? (
+            <MobileLogoTextSVG className="h-10.5" />
+          ) : (
+            <>
+              <LogoSVG className="h-15.5 mobile:h-10.5" />
+              <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>
+            </>
+          )}
         </div>
         <h2 className="mt-0.5 whitespace-pre-wrap mobile:mt-6">Til Unlimited {isMobile ? '\n' : ''}Human Healthy Lifespan</h2>
         <img className="absolute left-0 top-0 w-6 mobile:w-3" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
@@ -76,8 +82,14 @@ export default function Vision() {
       {/* 移动端不会触发文字裁剪效果 */}
       <div ref={clipTextRef} className="vision-title fore-hide text-white mobile:hidden">
         <div className="flex-center gap-[1.3125rem]">
-          <LogoWhiteSVG className="h-15.5 mobile:h-10.5" />
-          {isMobile ? <MobileLogoTextSVG /> : <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>}
+          {isMobile ? (
+            <MobileLogoTextSVG className="h-10.5" />
+          ) : (
+            <>
+              <LogoWhiteSVG className="h-15.5 mobile:h-10.5" />
+              <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>
+            </>
+          )}
         </div>
         <h2 className="mt-0.5 whitespace-pre-wrap mobile:mt-6">Til Unlimited {isMobile ? '\n' : ''}Human Healthy Lifespan</h2>
       </div>

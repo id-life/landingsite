@@ -1,31 +1,22 @@
-import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { useAtom, useAtomValue } from 'jotai';
-import Dialog from '.';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
-import SubscribeDialog from './SubscribeDialog';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { useState } from 'react';
-import { NAV_LIST, NavItem } from '../nav/nav';
+import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
 import { cn } from '@/utils';
-import { smootherAtom } from '@/atoms/scroll';
+import { useAtom, useSetAtom } from 'jotai';
+import { useState } from 'react';
+import Dialog from '.';
+import { NAV_LIST, NavItem } from '../nav/nav';
+import SubscribeDialog from './SubscribeDialog';
 
 export default function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-  const smoother = useAtomValue(smootherAtom);
+  const [currentPage] = useAtom(currentPageAtom);
+  const setNavigateTo = useSetAtom(navigateToAtom);
 
   const handleNavClick = (item: NavItem) => {
-    const clientHeight = document.querySelector('#nav')?.clientHeight;
-    if (item.id === NAV_LIST[0].id) {
-      smoother?.scrollTo(0, true);
-    } else {
-      smoother?.scrollTo(`#${item.id}`, true, `top ${clientHeight}px`);
-    }
-    setCurrentPage(item);
-    setTimeout(() => {
-      setOpen(false);
-    }, 10);
+    setOpen(false);
+    setNavigateTo(item);
   };
 
   return (

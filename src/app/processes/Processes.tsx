@@ -7,7 +7,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 export default function Processes() {
   const isMobile = useIsMobile();
   return (
-    <div id={NAV_LIST[2].id} className="page-container p-12 mobile:px-5 mobile:py-0">
+    <div id={NAV_LIST[2].id} className="page-container !pt-32 mobile:px-5">
       <video
         autoPlay
         muted
@@ -23,18 +23,18 @@ export default function Processes() {
           <h2 className="page-title mobile:pt-10">industry processes</h2>
           <div className="mt-8 grid grid-cols-5 md:mt-4 mobile:mt-6 mobile:grid-cols-3 mobile:gap-y-5">
             <div>
-              <div className="mobile:text-sm/3.5 relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5 mobile:w-4 mobile:-translate-x-[0.4rem]">
+              <div className="relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5 mobile:w-4 mobile:-translate-x-[0.4rem] mobile:text-sm/3.5">
                 01
               </div>
-              <div className="mobile:text-sm/3.5 border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2">
+              <div className="border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2 mobile:text-sm/3.5">
                 Researcher
               </div>
             </div>
             <div>
-              <div className="mobile:text-sm/3.5 relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600 mobile:mb-1.5">
+              <div className="relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600 mobile:mb-1.5 mobile:text-sm/3.5">
                 02
               </div>
-              <div className="mobile:text-sm/3.5 relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600 mobile:mt-0 mobile:px-1 mobile:py-2">
+              <div className="relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600 mobile:mt-0 mobile:px-1 mobile:py-2 mobile:text-sm/3.5">
                 Translator
                 <img
                   className="absolute bottom-0 left-0 w-5 -rotate-90 mobile:w-2.5"
@@ -44,18 +44,18 @@ export default function Processes() {
               </div>
             </div>
             <div>
-              <div className="mobile:text-sm/3.5 relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5">
+              <div className="relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5 mobile:text-sm/3.5">
                 03
               </div>
-              <div className="mobile:text-sm/3.5 mt-2.5 border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2">
+              <div className="mt-2.5 border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2 mobile:text-sm/3.5">
                 Manufacturer
               </div>
             </div>
             <div>
-              <div className="mobile:text-sm/3.5 relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600 mobile:mb-1.5">
+              <div className="relative mb-1.5 w-8 -translate-x-3.5 text-center text-xl/5 font-bold text-red-600 mobile:mb-1.5 mobile:text-sm/3.5">
                 04
               </div>
-              <div className="mobile:text-sm/3.5 relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600 mobile:mt-0 mobile:px-1 mobile:py-2">
+              <div className="relative border-b border-l border-red-600 px-3 py-5 pt-6.5 text-xl/5 font-semibold text-red-600 mobile:mt-0 mobile:px-1 mobile:py-2 mobile:text-sm/3.5">
                 Operator
                 <img
                   className="absolute bottom-0 left-0 w-5 -rotate-90 mobile:w-2.5"
@@ -65,10 +65,10 @@ export default function Processes() {
               </div>
             </div>
             <div>
-              <div className="mobile:text-sm/3.5 relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5">
+              <div className="relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5 mobile:text-sm/3.5">
                 05
               </div>
-              <div className="mobile:text-sm/3.5 mt-2.5 border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2">
+              <div className="mt-2.5 border-b border-l border-black px-3 py-5 pt-4 text-xl/5 font-semibold mobile:mt-0 mobile:px-1 mobile:py-2 mobile:text-sm/3.5">
                 Consumer
               </div>
             </div>
@@ -76,7 +76,7 @@ export default function Processes() {
           <div className="mt-17 mobile:mt-12">
             <div className="flex gap-22.5 mobile:flex-col mobile:gap-9">
               <div>
-                <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium text-white mobile:px-2.5 mobile:py-1 mobile:text-sm/5">
+                <div className="processes-clip inline-block px-3.5 py-2 text-xl/5 font-medium text-white mobile:px-2.5 mobile:py-1 mobile:text-sm/5">
                   &nbsp;Focus on early adopters for future
                 </div>
                 <p className="mt-3 text-sm font-semibold mobile:mt-1.5 mobile:text-xs/5">

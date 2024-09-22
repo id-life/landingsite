@@ -1,3 +1,5 @@
+@import './webgl.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,9 +11,12 @@
 @layer base {
   :root {
     --background: #f0f0f0;
-    --foreground: #222222;
+    --foreground: #000000;
+    --nav: #f0f0f0;
+    --gradient: #c1111100;
     --headerHeight: 8.5rem;
   }
+
   @media screen and (max-width: 768px) {
     :root {
       --headerHeight: 5rem;
@@ -25,40 +30,11 @@
   }
 
   body {
-    color: var(--foreground);
-    background: var(--background);
+    color: #222222;
+    background-color: var(--background);
+    background-image: linear-gradient(77deg, #00000000 25.39%, var(--gradient) 100%);
     @apply font-poppins;
   }
-
-  /*@media (max-width: 1536px) {
-    html {
-      font-size: 80%;
-    }
-  }
-
-  @media (max-width: 1280px) {
-    html {
-      font-size: 66.67%;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    html {
-      font-size: 53.33%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    html {
-      font-size: 40%;
-    }
-  }
-
-  @media (max-width: 640px) {
-    html {
-      font-size: 33.33%;
-    }
-  } */
 }
 
 @layer components {
@@ -95,6 +71,10 @@
     &.border-hide {
       border-radius: 0;
     }
+
+    &.bg-fund {
+      background: var(--nav);
+    }
   }
 
   .vision-title {
@@ -112,29 +92,6 @@
 
   .svg-icon {
     @apply transition-all duration-300 ease-in group-hover:stroke-red-600;
-  }
-
-  .fund-box-border {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #1e1e1e;
-    transition: all 0.3s;
-    cursor: pointer;
-    clip-path: polygon(2.125rem 0, 100% 0, 100% 100%, 0 100%, 0 2.125rem);
-
-    &:hover {
-      background: #c11111;
-      transform: translateY(-0.75rem);
-    }
-  }
-
-  .fund-box-content {
-    position: relative;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
-    background: #ffffff;
-    clip-path: polygon(2.125rem 0, 100% 0, 100% 100%, 0 100%, 0 2.125rem);
   }
 }
 
