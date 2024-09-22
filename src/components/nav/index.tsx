@@ -16,7 +16,6 @@ import Dialog from '../dialog';
 
 export default function Nav() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-  const navRef = useRef<HTMLDivElement>(null);
   const smoother = useAtomValue(smootherAtom);
   const { scrollHeight, scrollPageId } = usePageScrollHeight();
   const [open, setOpen] = useState<boolean>(false);
@@ -35,9 +34,8 @@ export default function Nav() {
 
   return (
     <div
-      ref={navRef}
       id="nav"
-      className="text-foreground fixed left-0 top-0 z-50 flex w-full items-center gap-15 bg-background p-11 mobile:gap-0 mobile:p-5"
+      className="text-foreground bg-nav fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-11 mobile:gap-0 mobile:p-5"
     >
       <img className="h-12 mobile:h-6" src="/svgs/logo-title.svg" alt="logo" loading="lazy" />
       <div className="flex gap-8 text-sm font-semibold mobile:hidden">

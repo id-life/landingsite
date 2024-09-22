@@ -10,6 +10,8 @@
   :root {
     --background: #f0f0f0;
     --foreground: #000000;
+    --nav: #f0f0f0;
+    --gradient: #c1111100;
     --headerHeight: 8.5rem;
   }
 
@@ -27,7 +29,8 @@
 
   body {
     color: #222222;
-    background: var(--background);
+    background-color: var(--background);
+    background-image: linear-gradient(77deg, #00000000 25.39%, var(--gradient) 100%);
     @apply font-poppins;
   }
 }
@@ -68,7 +71,7 @@
     }
 
     &.bg-fund {
-      background: var(--background);
+      background: var(--nav);
     }
   }
 
