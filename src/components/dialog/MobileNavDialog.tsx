@@ -8,17 +8,20 @@ import { useState } from 'react';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import { cn } from '@/utils';
 import { smootherAtom } from '@/atoms/scroll';
-import { usePageScrollHeight } from '@/hooks/usePageScrollHeight';
 
 export default function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubOpen] = useState(false);
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const smoother = useAtomValue(smootherAtom);
-  const { scrollHeight, scrollPageId } = usePageScrollHeight();
 
   const handleNavClick = (item: NavItem) => {
-    smoother?.scrollTo(scrollHeight?.get(item.id) ?? 0, true);
+    const clientHeight = document.querySelector('#nav')?.clientHeight;
+    if (item.id === NAV_LIST[0].id) {
+      smoother?.scrollTo(0, true);
+    } else {
+      smoother?.scrollTo(`#${item.id}`, true, `top ${clientHeight}px`);
+    }
     setCurrentPage(item);
     setTimeout(() => {
       setOpen(false);
@@ -46,10 +49,10 @@ export default function MobileNavDialog() {
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
           <Dialog open={subsOpen} onOpenChange={setSubOpen} render={() => <SubscribeDialog />} />
-          <div className="font-tt mt-16">
+          <div className="mt-16 font-tt">
             {NAV_LIST.map((item) => (
               <div onClick={() => handleNavClick(item)} className={cn('flex-center py-6 text-white')} key={item.id}>
-                <div className="text-sm/3.5 relative w-fit text-center font-semibold uppercase">
+                <div className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
                   {item.title}
                   {currentPage.id === item.id && <div className="absolute inset-x-0 -bottom-2.5 h-px w-full bg-white" />}
                 </div>
