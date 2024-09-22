@@ -43,6 +43,12 @@ export default function Fund() {
         description: 'Wholebody replacement',
         image: <img className="w-32.5 mobile:w-16" src="/imgs/investments/r3.webp" alt="r3" />,
       },
+      {
+        title: 'Mito Health',
+        description: 'AI Powered Concierge Doctor',
+        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
+        link: 'https://mitohealth.com/',
+      },
     ],
     [],
   );
@@ -71,14 +77,14 @@ export default function Fund() {
             Access To cutting-edge products, exclusive events, and a network of innovators
           </p>
         )}
-        <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
+        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (
             <div onClick={() => handleFundClick(item)} key={item.title} className="fund-box-border group h-105 mobile:h-36">
               <div className="fund-box-content">
                 <div className="flex h-3/5 items-center justify-center px-5 mobile:h-1/2 mobile:px-3">{item.image}</div>
                 <div className="text-center font-semibold">
                   <h4 className="text-xl/7.5 mobile:text-sm/5">{item.title}</h4>
-                  <p className="mobile:text-[.5625rem]/3.5 px-8 text-xs mobile:px-2">{item.description}</p>
+                  <p className="px-8 text-xs mobile:px-2 mobile:text-[.5625rem]/3.5">{item.description}</p>
                 </div>
                 {item.link ? (
                   <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 duration-300 group-hover:rotate-180 group-hover:fill-red-600 mobile:bottom-2 mobile:w-2.5" />
