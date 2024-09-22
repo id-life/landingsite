@@ -1,14 +1,14 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import Fund from '../fund/Fund';
-import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
-import Vision from '@/app/vision/Vision';
 import Processes from '@/app/processes/Processes';
+import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useSetAtom } from 'jotai';
+import { useRef } from 'react';
+import Fund from '../fund/Fund';
 
 const ease = 'power3.out';
 

@@ -59,33 +59,33 @@ function Dialog({
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay
-            lockScroll
-            className={cn('z-[100] grid place-items-center bg-gray-400/50 backdrop-blur', overlayClassName)}
-          >
+          <>
+            <FloatingOverlay lockScroll className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} />
             <FloatingFocusManager context={context}>
-              <div
-                className={cn('overflow-visible border border-gray-800 bg-white', className)}
-                {...getFloatingProps({ ref: setFloating })}
-              >
+              <div className="fixed inset-0 z-[100] grid place-items-center">
                 <div
-                  className={cn(
-                    'relative min-h-28 min-w-56 mobile:min-h-[20.375rem] mobile:min-w-[18.25rem]',
-                    contentClassName,
-                  )}
+                  className={cn('overflow-visible border border-gray-800 bg-white', className)}
+                  {...getFloatingProps({ ref: setFloating })}
                 >
-                  {showCloseButton && (
-                    <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
-                      <CloseSVG onClick={() => onChange(false)} className="size-3.5" />
-                    </div>
-                  )}
-                  {render({
-                    close: () => onChange(false),
-                  })}
+                  <div
+                    className={cn(
+                      'relative min-h-28 min-w-56 mobile:min-h-[20.375rem] mobile:min-w-[18.25rem]',
+                      contentClassName,
+                    )}
+                  >
+                    {showCloseButton && (
+                      <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
+                        <CloseSVG onClick={() => onChange(false)} className="size-3.5" />
+                      </div>
+                    )}
+                    {render({
+                      close: () => onChange(false),
+                    })}
+                  </div>
                 </div>
               </div>
             </FloatingFocusManager>
-          </FloatingOverlay>
+          </>
         )}
       </FloatingPortal>
     </>

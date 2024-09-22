@@ -2,11 +2,10 @@ import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import Script from 'next/script';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type FundItem = {
   title: string;
@@ -58,12 +57,6 @@ export default function Fund() {
         image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
         link: 'https://mitohealth.com/',
       },
-      {
-        title: 'Mito Health',
-        description: 'AI Powered Concierge Doctor',
-        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
-        link: 'https://mitohealth.com/',
-      },
     ],
     [],
   );
@@ -86,7 +79,7 @@ export default function Fund() {
         src="https://cdn.id.life/investment-01.webm"
         className="absolute left-0 top-0 h-full w-full object-cover"
       /> */}
-      <div className="relative flex h-full w-full flex-col items-center justify-center">
+      <div className="relative flex h-full w-full flex-col items-center justify-center mobile:h-auto">
         <div id="particle-container" className={cn({ active })}>
           <div className="particle-mask"></div>
         </div>
@@ -96,18 +89,18 @@ export default function Fund() {
             Access To cutting-edge products, exclusive events, and a network of innovators
           </p>
         )}
-        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
+        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}
-              className="text-foreground h-100 group transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
+              className="group h-100 text-foreground transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.8125rem]">{item.image}</div>
               {/* <div className="hidden group-hover:block"> */}
               <div className="text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                <p className="mobile:text-[.625rem]/3.5 mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0">{item.description}</p>
+                <p className="mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0 mobile:text-[.625rem]/3.5">{item.description}</p>
               </div>
               {item.link ? (
                 <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 fill-none duration-300 group-hover:rotate-180 group-hover:fill-white mobile:bottom-2 mobile:w-2.5" />
