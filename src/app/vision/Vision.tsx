@@ -55,7 +55,7 @@ export default function Vision() {
       />
       <video
         ref={clipVideoRef}
-        className="fore-hide absolute left-0 top-0 h-full w-full object-cover mobile:top-[11.125rem] mobile:h-[calc(100%_-_11.125rem)]"
+        className="fore-hide absolute left-0 top-0 h-full w-full object-cover mobile:top-[12.125rem] mobile:h-[calc(100%_-_12.125rem)]"
         src="https://cdn.id.life/vision-back-01.webm"
         autoPlay
         playsInline
