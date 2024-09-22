@@ -70,15 +70,6 @@ export default function Fund() {
     <div id={NAV_LIST[1].id} className="page-container page-height bg-fund p-8 text-white mobile:px-5">
       <Script async src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" onLoad={() => setP5Loaded(true)} />
       {p5Loaded && <Script src="/js/particle-gl.js" />}
-      {/* <video
-        loop
-        muted
-        autoPlay
-        playsInline
-        poster="/imgs/investment.jpg"
-        src="https://cdn.id.life/investment-01.webm"
-        className="absolute left-0 top-0 h-full w-full object-cover"
-      /> */}
       <div className="relative flex h-full w-full flex-col items-center justify-center mobile:h-auto">
         <div id="particle-container" className={cn({ active })}>
           <div className="particle-mask"></div>
@@ -94,10 +85,9 @@ export default function Fund() {
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}
-              className="group h-100 text-foreground transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
+              className="h-100 text-foreground group transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.8125rem]">{item.image}</div>
-              {/* <div className="hidden group-hover:block"> */}
               <div className="text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
                 <p className="mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0 mobile:text-[.625rem]/3.5">{item.description}</p>
@@ -105,7 +95,6 @@ export default function Fund() {
               {item.link ? (
                 <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 fill-none duration-300 group-hover:rotate-180 group-hover:fill-white mobile:bottom-2 mobile:w-2.5" />
               ) : null}
-              {/* </div> */}
             </div>
           ))}
         </div>
