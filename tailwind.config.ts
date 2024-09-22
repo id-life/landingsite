@@ -62,6 +62,7 @@ const config: Config = {
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        nav: 'var(--nav)',
       },
       lineHeight: {
         3.5: '0.875rem',
