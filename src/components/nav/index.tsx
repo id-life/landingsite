@@ -18,12 +18,17 @@ export default function Nav() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const navRef = useRef<HTMLDivElement>(null);
   const smoother = useAtomValue(smootherAtom);
-  const { scrollHeight, scrollPageId } = usePageScrollHeight();
+  const { scrollPageId } = usePageScrollHeight();
   const [open, setOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
 
   const handleNavClick = (item: NavItem) => {
-    smoother?.scrollTo(scrollHeight?.get(item.id) ?? 0, true);
+    const clientHeight = document.querySelector('#nav')?.clientHeight;
+    if (item.id === NAV_LIST[0].id) {
+      smoother?.scrollTo(0, true);
+    } else {
+      smoother?.scrollTo(`#${item.id}`, true, `top ${clientHeight}px`);
+    }
     setCurrentPage(item);
   };
 

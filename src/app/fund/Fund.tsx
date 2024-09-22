@@ -16,6 +16,7 @@ type FundItem = {
 };
 
 export default function Fund() {
+  const isMobile = useIsMobile();
   const [p5Loaded, setP5Loaded] = useState(false);
   console.log('p5Loaded', p5Loaded);
   const currentPage = useAtomValue(currentPageAtom);
@@ -51,6 +52,18 @@ export default function Fund() {
         description: 'Wholebody replacement',
         image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
       },
+      {
+        title: 'Mito Health',
+        description: 'AI Powered Concierge Doctor',
+        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
+        link: 'https://mitohealth.com/',
+      },
+      {
+        title: 'Mito Health',
+        description: 'AI Powered Concierge Doctor',
+        image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
+        link: 'https://mitohealth.com/',
+      },
     ],
     [],
   );
@@ -61,18 +74,29 @@ export default function Fund() {
   };
 
   return (
-    <div id={NAV_LIST[1].id} className="page-container bg-fund page-height p-8 text-white mobile:p-5">
+    <div id={NAV_LIST[1].id} className="page-container page-height bg-fund p-8 text-white mobile:px-5">
       <Script async src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" onLoad={() => setP5Loaded(true)} />
       {p5Loaded && <Script src="/js/particle-gl.js" />}
-      <div className="relative flex h-full w-full select-none flex-col items-center justify-center">
+      {/* <video
+        loop
+        muted
+        autoPlay
+        playsInline
+        poster="/imgs/investment.jpg"
+        src="https://cdn.id.life/investment-01.webm"
+        className="absolute left-0 top-0 h-full w-full object-cover"
+      /> */}
+      <div className="relative flex h-full w-full flex-col items-center justify-center">
         <div id="particle-container" className={cn({ active })}>
           <div className="particle-mask"></div>
         </div>
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-base/5">Portfolio</div>
-        <p className="font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm">
-          Access To cutting-edge products, exclusive events, and a network of innovators
-        </p>
-        <div className="mt-12 grid w-full grid-cols-5 mobile:mt-9 mobile:grid-cols-2 mobile:pb-10">
+        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
+        {isMobile && (
+          <p className="text-sm/5 font-bold capitalize mobile:mt-1.5">
+            Access To cutting-edge products, exclusive events, and a network of innovators
+          </p>
+        )}
+        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-4 mobile:px-0 mobile:pb-10">
           {funds.map((item) => (
             <div
               onClick={() => handleFundClick(item)}
