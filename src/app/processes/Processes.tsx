@@ -7,7 +7,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 export default function Processes() {
   const isMobile = useIsMobile();
   return (
-    <div id={NAV_LIST[2].id} className="page-container !pt-32 mobile:px-5">
+    <div id={NAV_LIST[2].id} className="page-container pt-32 mobile:px-5 mobile:pt-9">
       <video
         autoPlay
         muted
@@ -20,7 +20,7 @@ export default function Processes() {
       />
       <div className="relative">
         <div>
-          <h2 className="page-title mobile:pt-10">industry processes</h2>
+          <h2 className="page-title">industry processes</h2>
           <div className="mt-8 grid grid-cols-5 md:mt-4 mobile:mt-6 mobile:grid-cols-3 mobile:gap-y-5">
             <div>
               <div className="relative mb-4 w-8 -translate-x-3.5 text-center text-xl/5 font-bold mobile:mb-1.5 mobile:w-4 mobile:-translate-x-[0.4rem] mobile:text-sm/3.5">

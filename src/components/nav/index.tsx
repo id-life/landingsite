@@ -1,7 +1,6 @@
 'use client';
 
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
-import MenuOpenSVG from '@/../public/svgs/menu-open.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -12,6 +11,7 @@ import { useState } from 'react';
 import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
+import MenuOpenSVG from '../svg/MenuOpenSVG';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -23,7 +23,7 @@ export default function Nav() {
   return (
     <div
       id="nav"
-      className="text-foreground bg-nav fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-11 mobile:gap-0 mobile:p-5"
+      className="bg-nav fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-11 text-foreground mobile:gap-0 mobile:p-5"
     >
       <img className="h-12 mobile:h-6" src="/svgs/logo-title.svg" alt="logo" loading="lazy" />
       <div className="flex gap-8 text-sm font-semibold mobile:hidden">

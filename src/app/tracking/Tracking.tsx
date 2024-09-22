@@ -25,8 +25,8 @@ const Tracking_List: TrackingItem[] = [
 
 export default function Tracking() {
   return (
-    <div id={NAV_LIST[4].id} className="mt-[16.625rem] p-12 mobile:mt-56 mobile:p-0">
-      <h2 className="page-title mobile:pt-14">Tracking Center</h2>
+    <div id={NAV_LIST[4].id} className="mt-[16.625rem] p-12 mobile:mt-56 mobile:p-0 mobile:pt-9">
+      <h2 className="page-title">Tracking Center</h2>
       <p className="font-migrena text-2xl/12 font-bold uppercase mobile:mt-1.5 mobile:text-sm/5 mobile:capitalize">Singapore</p>
       <div className="mt-12 mobile:mt-6">
         <div className="flex h-112 w-3/4 gap-5 mobile:h-auto mobile:w-full mobile:flex-col mobile:gap-4">
@@ -37,7 +37,7 @@ export default function Tracking() {
             >
               <ArrowMarkSVG className="absolute left-0 top-0 w-7.5 fill-gray-800 duration-500 group-hover:fill-red-600 mobile:w-5 mobile:group-hover:fill-gray-800" />
               <img className="h-full object-cover object-left mobile:h-37 mobile:w-full" src={item.cover} alt="tracking-01" />
-              <div className="mobile:text-sm/3.5 absolute bottom-0 left-0 w-full truncate bg-red-600/80 p-5 text-xl/5 font-semibold capitalize text-white mobile:bg-gray-800/80 mobile:py-3 mobile:pl-3.5">
+              <div className="absolute bottom-0 left-0 w-full truncate bg-red-600/80 p-5 text-xl/5 font-semibold capitalize text-white mobile:bg-gray-800/80 mobile:py-3 mobile:pl-3.5 mobile:text-sm/3.5">
                 {item.title}
               </div>
             </div>
