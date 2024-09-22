@@ -1,11 +1,12 @@
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { currentPageAtom } from '@/atoms';
+import DynamicParticleGL from '@/components/gl/DynamicParticleGL';
+import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
-import Script from 'next/script';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 type FundItem = {
   title: string;
@@ -16,10 +17,9 @@ type FundItem = {
 
 export default function Fund() {
   const isMobile = useIsMobile();
-  const [p5Loaded, setP5Loaded] = useState(false);
-  console.log('p5Loaded', p5Loaded);
   const currentPage = useAtomValue(currentPageAtom);
   const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+
   const funds = useMemo<FundItem[]>(
     () => [
       {
@@ -60,16 +60,13 @@ export default function Fund() {
     ],
     [],
   );
-
   const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
-
   return (
     <div id={NAV_LIST[1].id} className="page-container page-height bg-fund p-8 text-white mobile:px-5">
-      <Script async src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js" onLoad={() => setP5Loaded(true)} />
-      {p5Loaded && <Script src="/js/particle-gl.js" />}
+      <ParticleGL activeAnim={active} />
       <div className="relative flex h-full w-full flex-col items-center justify-center mobile:h-auto">
         <div id="particle-container" className={cn({ active })}>
           <div className="particle-mask"></div>
@@ -85,7 +82,7 @@ export default function Fund() {
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}
-              className="h-100 text-foreground group transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
+              className="group h-100 text-foreground transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.8125rem]">{item.image}</div>
               <div className="text-center font-semibold">
