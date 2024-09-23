@@ -9,10 +9,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   let sourceImg: P5.Image;
   const allParticles: any[] = [];
   const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const scaleNum = IS_MOBILE ? 1.3 : 2.2;
+  const scaleNum = IS_MOBILE ? 1.2 : 2.2;
   const loadPercentage = 0.0007;
   const closeEnoughTarget = 100;
-  const resolution = IS_MOBILE ? 20 : 5;
+  const resolution = IS_MOBILE ? 15 : 5;
   const speed = 3;
   const particleSize = IS_MOBILE ? 6 : 8;
   const mouseSize = 50;
@@ -162,7 +162,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
       this.currentSize = p5.lerp(this.currentSize, targetSize, 0.1);
       p5.strokeWeight(this.currentSize);
-
       p5.point(this.pos.x, this.pos.y);
     }
 

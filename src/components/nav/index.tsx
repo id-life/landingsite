@@ -23,9 +23,15 @@ export default function Nav() {
   return (
     <div
       id="nav"
-      className="bg-nav fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-11 text-foreground mobile:gap-0 mobile:p-5"
+      className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 bg-nav p-11 text-foreground mobile:gap-0 mobile:p-5"
     >
-      <img className="h-12 mobile:h-6" src="/svgs/logo-title.svg" alt="logo" loading="lazy" />
+      <img
+        className="h-12 cursor-pointer mobile:h-6"
+        src="/svgs/logo-title.svg"
+        alt="logo"
+        loading="lazy"
+        onClick={() => handleNavClick(NAV_LIST[0])}
+      />
       <div className="flex gap-8 text-sm font-semibold mobile:hidden">
         {NAV_LIST.map((item) => (
           <div

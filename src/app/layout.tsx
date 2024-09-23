@@ -9,7 +9,7 @@ import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'IMMORTAL DRAGONS',
-  description: 'Committed to human longevity - Til Unlimited Human Healthy Lifespan.',
+  description: 'Committed to Human Longevity - Til Unlimited Human Healthy Lifespan.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'IMMORTAL DRAGONS',
-    description: 'Committed to human longevity - Til Unlimited Human Healthy Lifespan.',
+    description: 'Committed to Human Longevity - Til Unlimited Human Healthy Lifespan.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover.webp',
