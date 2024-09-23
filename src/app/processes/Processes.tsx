@@ -7,14 +7,14 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 export default function Processes() {
   const isMobile = useIsMobile();
   return (
-    <div id={NAV_LIST[2].id} className="page-container pt-32 mobile:px-5 mobile:pt-9">
+    <div id={NAV_LIST[2].id} className="page-container bg-gray-200 bg-none px-12 pt-32 mobile:px-5 mobile:pt-9">
       <video
         autoPlay
         muted
         loop
         playsInline
         data-speed="0.8"
-        className="absolute right-0 top-0 h-full w-full object-cover"
+        className="absolute right-0 top-0 w-full"
         src="https://cdn.id.life/processes-01.webm"
         poster="/imgs/processes.jpg"
       />

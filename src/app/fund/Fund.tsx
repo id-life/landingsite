@@ -13,6 +13,7 @@ type FundItem = {
   description: string;
   image: JSX.Element;
   link?: string;
+  bgOpacity: number;
 };
 
 export default function Fund() {
@@ -27,35 +28,41 @@ export default function Fund() {
         description: 'New funding paradigm for unlikely bio projects',
         image: <img className="w-50 mobile:w-[6.5625rem]" src="/imgs/investments/vita.webp" alt="vita" />,
         link: 'https://www.vitadao.com/',
+        bgOpacity: 0.06,
       },
       {
         title: 'Vitalia',
         description: 'Accelerated longevity startups Special economic zone',
         image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vita" />,
         link: 'https://vitalia.city/',
+        bgOpacity: 0.1,
       },
       {
         title: 'Unlimited Bio',
         description: 'Accelerate clinical trials',
         image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
         link: 'https://unlimit.bio/',
+        bgOpacity: 0.1,
       },
       {
         title: 'BiohackerDAO',
         description: 'Decentralized self-enhancement experiments and monetizes data',
         image: <img className="w-[18.25rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
         link: 'https://biohackerdao.com/',
+        bgOpacity: 0.06,
       },
       {
         title: 'R3 Bio',
         description: 'Wholebody replacement',
         image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
+        bgOpacity: 0.06,
       },
       {
         title: 'Mito Health',
         description: 'AI Powered Concierge Doctor',
         image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
         link: 'https://mitohealth.com/',
+        bgOpacity: 0.1,
       },
     ],
     [],
@@ -78,16 +85,22 @@ export default function Fund() {
           </p>
         )}
         <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
-          {funds.map((item) => (
+          {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}
-              className="group h-100 text-foreground transition-colors duration-300 hover:bg-black/10 hover:backdrop-blur-2xl mobile:h-37"
+              className={cn(
+                'group h-100 text-foreground transition-colors duration-300 mobile:h-[7.25rem]',
+                isMobile ? 'backdrop-blur-xl' : 'hover:bg-white/10 hover:backdrop-blur-xl',
+              )}
+              style={isMobile ? { background: `rgba(255,255,255,${item?.bgOpacity})` } : {}}
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.8125rem]">{item.image}</div>
               <div className="text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                <p className="mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0 mobile:text-[.625rem]/3.5">{item.description}</p>
+                {!isMobile && (
+                  <p className="mt-3 px-4 text-xs/5 mobile:mt-1.5 mobile:px-0 mobile:text-[.625rem]/3.5">{item.description}</p>
+                )}
               </div>
               {item.link ? (
                 <ArrowSVG className="absolute bottom-5 left-1/2 w-5 -translate-x-1/2 fill-none duration-300 group-hover:rotate-180 group-hover:fill-white mobile:bottom-2 mobile:w-2.5" />

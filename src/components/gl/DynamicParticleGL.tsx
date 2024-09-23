@@ -162,7 +162,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
       this.currentSize = p5.lerp(this.currentSize, targetSize, 0.1);
       p5.strokeWeight(this.currentSize);
-
       p5.point(this.pos.x, this.pos.y);
     }
 
