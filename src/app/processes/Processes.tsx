@@ -7,7 +7,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 export default function Processes() {
   const isMobile = useIsMobile();
   return (
-    <div id={NAV_LIST[2].id} className="page-container pt-32 mobile:px-5 mobile:pt-9">
+    <div id={NAV_LIST[2].id} className="page-container px-12 pt-32 mobile:px-5 mobile:pt-9">
       <video
         autoPlay
         muted
