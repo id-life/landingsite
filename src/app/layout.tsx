@@ -8,7 +8,27 @@ import '../utils/analytics';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Immortal Dragons',
+  title: 'IMMORTAL DRAGONS',
+  description: 'Committed to human longevity - Til Unlimited Human Healthy Lifespan.',
+  keywords: [
+    'Longevity',
+    'anti-aging',
+    'life extension',
+    'investment fund',
+    'innovation',
+    'biotech',
+    'pharmaceutical',
+    'healthcare',
+  ],
+  openGraph: {
+    title: 'IMMORTAL DRAGONS',
+    description: 'Committed to human longevity - Til Unlimited Human Healthy Lifespan.',
+    images: [
+      {
+        url: 'https://cdn.id.life/id-life-cover.webp',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
