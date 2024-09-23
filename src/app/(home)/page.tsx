@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Fund from '../fund/Fund';
 
 const ease = 'power2.out';
@@ -23,7 +23,7 @@ export default function Home() {
       content: contentRef.current,
       smooth: 1,
       effects: true,
-      smoothTouch: 0.1,
+      smoothTouch: 0.05,
     });
     setSmoother(smoother);
 
@@ -55,46 +55,50 @@ export default function Home() {
           0,
         );
       } else {
-        tl.to(
-          root,
-          {
-            ease,
-            '--background': background,
-            '--foreground': foreground,
-            '--nav': background,
-            '--gradient': '#c1111100',
-          },
-          0,
-        );
+        tl.to(root, {
+          ease,
+          '--background': background,
+          '--foreground': foreground,
+          '--nav': background,
+          '--gradient': '#c1111100',
+        });
       }
     });
+  });
 
+  useEffect(() => {
+    const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
     const pagesY = pages.map((page) => page.getBoundingClientRect().y);
     const navHeight = document.querySelector('#nav')?.clientHeight ?? 0;
-
+    let currentPageIndex = 0;
     let timer: NodeJS.Timeout;
     let isScrolling = false;
-    window.addEventListener('wheel', () => {
+    let startY = window.scrollY;
+    window.addEventListener('scroll', () => {
       clearTimeout(timer);
-      timer = setTimeout(() => handleScrollEnd(), 120);
+      timer = setTimeout(() => handleScrollEnd(), 80);
     });
 
     const handleScrollEnd = () => {
+      const deltaY = window.scrollY - startY;
       if (isScrolling) return;
-      const reversePageY = pagesY.find((pageY) => Math.abs(window.scrollY + navHeight - pageY) < 200);
-      if (reversePageY) {
-        isScrolling = true;
-        gsap.to(window, {
-          scrollTo: { y: reversePageY - navHeight, autoKill: false },
-          ease,
-          duration: 0.6,
-          onComplete: () => {
-            isScrolling = false;
-          },
-        });
-      }
+      let direction = deltaY > 0 ? 1 : -1;
+      if (Math.abs(deltaY) < 100) direction = 0;
+      if (currentPageIndex + direction < 0 || currentPageIndex + direction >= pages.length) return;
+      currentPageIndex += direction;
+      isScrolling = true;
+
+      gsap.to(window, {
+        scrollTo: { y: pagesY[currentPageIndex] - navHeight, autoKill: false },
+        duration: 0.3,
+        ease: 'power3.out',
+        onComplete: () => {
+          isScrolling = false;
+          startY = window.scrollY;
+        },
+      });
     };
-  });
+  }, []);
 
   return (
     <div ref={wrapperRef}>

@@ -34,15 +34,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, 'antialiased')}
-        suppressHydrationWarning
-      >
-        <Providers>
-          <Nav />
-          {children}
-        </Providers>
-      </body>
+    <body
+      className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, 'antialiased')}
+      suppressHydrationWarning
+    >
+    <Providers>
+      <Nav/>
+      {children}
+    </Providers>
+    </body>
     </html>
   );
 }

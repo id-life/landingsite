@@ -11,6 +11,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 export default function Vision() {
   const visionRef = useRef<HTMLDivElement>(null);
   const clipVideoRef = useRef<HTMLVideoElement>(null);
+  const backVideoRef = useRef<HTMLVideoElement>(null);
   const clipTextRef = useRef<HTMLDivElement>(null);
   const clipPathObj = useRef({ x: 0, y: 0 });
   const { contextSafe } = useGSAP({ scope: visionRef });
@@ -37,14 +38,24 @@ export default function Vision() {
     });
   });
 
+  const handleVideoPlay = () => {
+    if (!backVideoRef.current) return;
+    if (!clipVideoRef.current) return;
+    const diff = Math.abs(backVideoRef.current.currentTime - clipVideoRef.current.currentTime);
+    if (diff < 0.2) return;
+    clipVideoRef.current.currentTime = backVideoRef.current.currentTime;
+  };
+
   return (
     <div
       ref={visionRef}
       id={NAV_LIST[0].id}
+      onMouseEnter={handleVideoPlay}
       onMouseMove={(event) => handleMouseMove(event)}
       className="page-container page-height"
     >
       <video
+        ref={backVideoRef}
         className="absolute left-0 top-0 h-full w-full object-cover mobile:top-[11.125rem] mobile:h-[calc(100%_-_11.125rem)]"
         src="https://cdn.id.life/vision-01.webm"
         poster="/imgs/vision.jpg"
