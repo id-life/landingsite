@@ -13,6 +13,8 @@ import {
   useRole,
 } from '@floating-ui/react';
 import React, { cloneElement, useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { smootherAtom } from '@/atoms/scroll';
 
 type DialogProps = {
   className?: string;
@@ -38,6 +40,7 @@ function Dialog({
   showCloseButton = true,
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
+  const smoother = useAtomValue(smootherAtom);
   const onChange = (status: boolean) => {
     setIsOpen(status);
     onOpenChange?.(status);
@@ -54,13 +57,18 @@ function Dialog({
     setIsOpen(passedOpen);
   }, [passedOpen]);
 
+  useEffect(() => {
+    if (!smoother) return;
+    smoother.paused(isOpen);
+  }, [isOpen, smoother]);
+
   return (
     <>
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
       <FloatingPortal>
         {isOpen && (
           <>
-            <FloatingOverlay lockScroll className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} />
+            <FloatingOverlay className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} />
             <FloatingFocusManager context={context}>
               <div className="fixed inset-0 z-[100] grid place-items-center">
                 <div

@@ -52,12 +52,6 @@ export default function Fund() {
         bgOpacity: 0.06,
       },
       {
-        title: 'R3 Bio',
-        description: 'Wholebody replacement',
-        image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
-        bgOpacity: 0.06,
-      },
-      {
         title: 'Mito Health',
         description: 'AI Powered Concierge Doctor',
         image: <img className="w-22.5 mobile:w-12" src="/imgs/investments/mito.jpg" alt="mito" />,
@@ -84,8 +78,8 @@ export default function Fund() {
             Access To cutting-edge products, exclusive events, and a network of innovators
           </p>
         )}
-        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
-          {funds.map((item, index) => (
+        <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-6 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+          {funds.map((item) => (
             <div
               onClick={() => handleFundClick(item)}
               key={item.title}

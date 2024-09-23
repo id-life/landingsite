@@ -42,7 +42,7 @@ export default function Vision() {
       ref={visionRef}
       id={NAV_LIST[0].id}
       onMouseMove={(event) => handleMouseMove(event)}
-      className="page-container page-height mobile:overflow-visible mobile:bg-background mobile:bg-none"
+      className="page-container page-height"
     >
       <video
         className="absolute left-0 top-0 h-full w-full object-cover mobile:top-[11.125rem] mobile:h-[calc(100%_-_11.125rem)]"
