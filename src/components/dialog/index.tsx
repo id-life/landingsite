@@ -11,8 +11,9 @@ import {
   useFloating,
   useInteractions,
   useRole,
+  useTransitionStyles,
 } from '@floating-ui/react';
-import React, { cloneElement, useEffect, useState } from 'react';
+import React, { cloneElement, useCallback, useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { smootherAtom } from '@/atoms/scroll';
 
@@ -26,6 +27,7 @@ type DialogProps = {
   children?: React.JSX.Element;
   isDismiss?: boolean;
   showCloseButton?: boolean;
+  anim?: 'fade' | 'slide' | 'none';
 };
 
 function Dialog({
@@ -38,6 +40,7 @@ function Dialog({
   onOpenChange,
   isDismiss = false,
   showCloseButton = true,
+  anim = 'fade',
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const smoother = useAtomValue(smootherAtom);
@@ -49,6 +52,34 @@ function Dialog({
   const { refs, context } = useFloating({ open: isOpen, onOpenChange: onChange });
   const { setReference, setFloating } = refs;
   const dismiss = useDismiss(context, { enabled: isDismiss, outsidePressEvent: 'mousedown' });
+
+  const getTransitionStyles = useCallback(() => {
+    switch (anim) {
+      case 'none':
+        return {};
+      case 'fade':
+        return {
+          initial: {
+            opacity: 0,
+          },
+          open: {
+            opacity: 1,
+          },
+        };
+      case 'slide':
+        return {
+          initial: {
+            opacity: 0,
+            clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+          },
+          open: {
+            opacity: 1,
+            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
+          },
+        };
+    }
+  }, [anim]);
+  const { isMounted, styles } = useTransitionStyles(context, getTransitionStyles());
 
   const { getReferenceProps, getFloatingProps } = useInteractions([useClick(context), useRole(context), dismiss]);
 
@@ -66,11 +97,11 @@ function Dialog({
     <>
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
       <FloatingPortal>
-        {isOpen && (
+        {isMounted && (
           <>
-            <FloatingOverlay className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} />
+            <FloatingOverlay className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} style={styles} />
             <FloatingFocusManager context={context}>
-              <div className="fixed inset-0 z-[100] grid place-items-center">
+              <div className="fixed inset-0 z-[100] grid place-items-center" style={styles}>
                 <div
                   className={cn('overflow-visible border border-gray-800 bg-white', className)}
                   {...getFloatingProps({ ref: setFloating })}

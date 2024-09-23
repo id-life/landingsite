@@ -21,6 +21,7 @@ export default function MobileNavDialog() {
 
   return (
     <Dialog
+      anim="slide"
       isDismiss
       showCloseButton={false}
       overlayClassName="bg-black/60 backdrop-blur-sm"
