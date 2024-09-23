@@ -2,11 +2,15 @@ import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
 import { cn } from '@/utils';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import SubscribeDialog from './SubscribeDialog';
+
+gsap.registerPlugin(useGSAP);
 
 export default function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
@@ -14,10 +18,27 @@ export default function MobileNavDialog() {
   const [currentPage] = useAtom(currentPageAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
 
-  const handleNavClick = (item: NavItem) => {
-    setOpen(false);
-    setNavigateTo(item);
+  const startAnim = (isOpen: boolean) => {
+    if (isOpen) {
+      gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
+      gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
+    } else {
+      gsap.set('.mobile-nav-item', { y: 0 });
+      gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
+    }
   };
+
+  const handleNavClick = (item: NavItem) => {
+    startAnim(false);
+    setTimeout(() => {
+      setOpen(false);
+      setNavigateTo(item);
+    }, 300);
+  };
+
+  useEffect(() => {
+    setTimeout(() => startAnim(open), 300);
+  }, [open]);
 
   return (
     <Dialog
@@ -43,7 +64,11 @@ export default function MobileNavDialog() {
           <Dialog open={subsOpen} onOpenChange={setSubOpen} render={() => <SubscribeDialog />} />
           <div className="mt-16 font-tt">
             {NAV_LIST.map((item) => (
-              <div onClick={() => handleNavClick(item)} className={cn('flex-center py-6 text-white')} key={item.id}>
+              <div
+                onClick={() => handleNavClick(item)}
+                className={cn('flex-center mobile-nav-item relative py-6 text-white opacity-0')}
+                key={item.id}
+              >
                 <div className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
                   {item.title}
                   {currentPage.id === item.id && <div className="absolute inset-x-0 -bottom-2.5 h-px w-full bg-white" />}
