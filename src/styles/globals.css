@@ -32,7 +32,7 @@
   body {
     color: #222222;
     background-color: var(--background);
-    background-image: linear-gradient(77deg, #00000000 25.39%, var(--gradient) 100%);
+    background-image: linear-gradient(85deg, #00000000 30%, var(--gradient) 100%);
     @apply font-poppins;
   }
 }
