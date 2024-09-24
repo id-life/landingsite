@@ -15,7 +15,7 @@ export default function Processes() {
         playsInline
         data-speed="0.8"
         className="absolute right-0 top-0 w-full"
-        src="https://cdn.id.life/processes-01.webm"
+        src="https://cdn.id.life/processes-02.webm"
         poster="/imgs/processes.jpg"
       />
       <div className="relative">
