@@ -79,7 +79,7 @@ export default function Contact() {
                       defaultChecked
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-founder" className="text-xs/5">
+                    <label htmlFor="contact-founder" className="text-xs/5 font-semibold">
                       Founder
                     </label>
                   </div>
@@ -91,7 +91,7 @@ export default function Contact() {
                       id="contact-investor"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-investor" className="text-xs/5">
+                    <label htmlFor="contact-investor" className="text-xs/5 font-semibold">
                       Investor
                     </label>
                   </div>
@@ -103,7 +103,7 @@ export default function Contact() {
                       id="contact-media"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-media" className="text-xs/5">
+                    <label htmlFor="contact-media" className="text-xs/5 font-semibold">
                       Media
                     </label>
                   </div>
@@ -115,7 +115,7 @@ export default function Contact() {
                       id="contact-advocates"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-advocates" className="text-xs/5 px-1">
+                    <label htmlFor="contact-advocates" className="text-xs/5 px-1 font-semibold">
                       Advocates
                     </label>
                   </div>
@@ -128,7 +128,7 @@ export default function Contact() {
                   placeholder="Note"
                   rows={5}
                   cols={33}
-                  className="w-full resize-none text-xs/5"
+                  className="w-full resize-none text-xs/5 font-semibold"
                 />
               </div>
               <div className="submit-btn mx-auto mt-7.5 max-w-55 !py-0">
