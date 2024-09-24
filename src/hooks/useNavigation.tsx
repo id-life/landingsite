@@ -4,12 +4,14 @@ import { useCallback, useEffect } from 'react';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { smootherAtom } from '@/atoms/scroll';
 import { usePageScrollHeight } from './usePageScrollHeight';
+import { useSwitchPage } from '@/hooks/useSwitchPage';
 
 export function useNavigation() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const smoother = useAtomValue(smootherAtom);
   const { scrollPageId } = usePageScrollHeight();
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
+  const { onChangeCurrentPage } = useSwitchPage();
 
   const handleNavClick = useCallback(
     (item: NavItem) => {
@@ -19,9 +21,11 @@ export function useNavigation() {
       } else {
         smoother?.scrollTo(`#${item.id}`, true, `top ${clientHeight}px`);
       }
+      const index = NAV_LIST.findIndex((i) => i.id === item.id);
+      onChangeCurrentPage(index > 2 ? 2 : index);
       setCurrentPage(item);
     },
-    [smoother, setCurrentPage],
+    [onChangeCurrentPage, setCurrentPage, smoother],
   );
 
   useEffect(() => {
