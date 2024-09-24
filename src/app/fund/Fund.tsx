@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
+import Contact from '@/components/fund/Contact';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import ParticleGL from '@/components/gl/ParticleGL';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
@@ -114,6 +115,7 @@ export default function Fund() {
             </div>
           ))}
         </div>
+        <Contact />
       </div>
     </div>
   );
