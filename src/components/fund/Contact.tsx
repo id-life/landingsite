@@ -40,7 +40,7 @@ export default function Contact() {
         open={open}
         onOpenChange={setOpen}
         render={() => (
-          <div className="w-[27.5rem] p-7.5 mobile:w-full">
+          <div className="w-[27.5rem] p-7.5 mobile:w-full mobile:p-4">
             <img src="/svgs/email.svg" className="mx-auto h-10" alt="email" />
             <h3 className="mt-4 text-center text-xl/5.5 font-semibold uppercase">CONTACT US</h3>
             <form id="contact-form" className="mt-8 grid gap-5" onSubmit={onFormSubmit}>
@@ -49,7 +49,7 @@ export default function Contact() {
               <input type="hidden" name="amp;f_id" value="00e918e1f0" />
               <div className="border-2 border-gray-800 p-3">
                 <input
-                  className="w-full text-sm font-semibold"
+                  className="w-full text-xs/5 font-semibold"
                   placeholder="Name"
                   type="text"
                   name="NAME"
@@ -59,7 +59,7 @@ export default function Contact() {
               </div>
               <div className="border-2 border-gray-800 p-3">
                 <input
-                  className="w-full text-sm font-semibold"
+                  className="w-full text-xs/5 font-semibold"
                   placeholder="Email"
                   type="email"
                   name="EMAIL"
@@ -68,7 +68,7 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <p className="text-sm font-semibold">Which best describes you?</p>
+                <p className="text-xs/5 font-semibold">Which best describes you?</p>
                 <div className="mt-3 grid grid-cols-4 gap-3">
                   <div className="relative cursor-pointer py-3 text-center">
                     <input
@@ -79,7 +79,9 @@ export default function Contact() {
                       defaultChecked
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-founder">Founder</label>
+                    <label htmlFor="contact-founder" className="text-xs/5">
+                      Founder
+                    </label>
                   </div>
                   <div className="relative cursor-pointer py-3 text-center">
                     <input
@@ -89,7 +91,9 @@ export default function Contact() {
                       id="contact-investor"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-investor">Investor</label>
+                    <label htmlFor="contact-investor" className="text-xs/5">
+                      Investor
+                    </label>
                   </div>
                   <div className="relative cursor-pointer py-3 text-center">
                     <input
@@ -99,7 +103,9 @@ export default function Contact() {
                       id="contact-media"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-media">Media</label>
+                    <label htmlFor="contact-media" className="text-xs/5">
+                      Media
+                    </label>
                   </div>
                   <div className="relative cursor-pointer py-3 text-center">
                     <input
@@ -109,12 +115,21 @@ export default function Contact() {
                       id="contact-advocates"
                       className="cursor-pointer appearance-none after:absolute after:inset-0 after:border-2 after:border-gray-800 checked:after:border-red-600 checked:after:text-red-600"
                     />
-                    <label htmlFor="contact-advocates">Advocates</label>
+                    <label htmlFor="contact-advocates" className="text-xs/5 px-1">
+                      Advocates
+                    </label>
                   </div>
                 </div>
               </div>
               <div className="border-2 border-gray-800 p-3">
-                <textarea id="story" name="MSG" placeholder="Note" rows={5} cols={33} className="w-full resize-none" />
+                <textarea
+                  id="story"
+                  name="MSG"
+                  placeholder="Note"
+                  rows={5}
+                  cols={33}
+                  className="w-full resize-none text-xs/5"
+                />
               </div>
               <div className="submit-btn mx-auto mt-7.5 max-w-55 !py-0">
                 {isSubmitting ? (
