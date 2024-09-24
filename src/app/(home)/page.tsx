@@ -73,14 +73,14 @@ export default function Home() {
     let currentPageIndex = 0;
     let timer: NodeJS.Timeout;
     let isScrolling = false;
-    let startY = window.scrollY;
-    window.addEventListener('scroll', () => {
+    let deltaY = 0;
+    window.addEventListener('wheel', (event) => {
+      deltaY += event.deltaY;
       clearTimeout(timer);
       timer = setTimeout(() => handleScrollEnd(), 80);
     });
 
     const handleScrollEnd = () => {
-      const deltaY = window.scrollY - startY;
       if (isScrolling) return;
       let direction = deltaY > 0 ? 1 : -1;
       if (Math.abs(deltaY) < 100) direction = 0;
@@ -94,7 +94,7 @@ export default function Home() {
         ease: 'power3.out',
         onComplete: () => {
           isScrolling = false;
-          startY = window.scrollY;
+          deltaY = 0;
         },
       });
     };
