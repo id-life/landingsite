@@ -10,7 +10,8 @@ export function useSwitchPage() {
   const touchDeltaYRef = useRef<number>(0);
   const isScrollingRef = useRef<boolean>(false);
   const currentPageIndexRef = useRef<number>(0);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const wheelTimerRef = useRef<NodeJS.Timeout>();
+  const scrollTimerRef = useRef<NodeJS.Timeout>();
   const pagesRef = useRef<HTMLDivElement[]>([]);
   const pagesYRef = useRef<number[]>([]);
   const smoothingRef = useRef<boolean>(false);
@@ -61,8 +62,8 @@ export function useSwitchPage() {
 
     function handleWheelEvent(event: WheelEvent) {
       deltaYRef.current += event.deltaY;
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => handleSwitchPage(), 80);
+      clearTimeout(wheelTimerRef.current);
+      wheelTimerRef.current = setTimeout(() => handleSwitchPage(), 80);
     }
 
     function handleTouchstartEvent(event: TouchEvent) {
@@ -76,30 +77,33 @@ export function useSwitchPage() {
     }
 
     function handleScrollEndEvent() {
-      if (smoothingRef.current) {
-        smoothingRef.current = false;
-        if (currentPageIndexRef.current === 2) {
-          const currentEle = pagesRef.current[currentPageIndexRef.current];
-          const currentY = currentEle.getBoundingClientRect().y;
-          if (currentY > 20) {
-            gsap.to(window, {
-              scrollTo: { y: pagesYRef.current[currentPageIndexRef.current] - navHeight, autoKill: false },
-              duration: 0.3,
-              ease: 'power3.out',
-              onComplete: () => {
-                isScrollingRef.current = false;
-                deltaYRef.current = 0;
-              },
-            });
+      clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => {
+        if (smoothingRef.current) {
+          smoothingRef.current = false;
+          if (currentPageIndexRef.current === 2) {
+            const currentEle = pagesRef.current[currentPageIndexRef.current];
+            const currentY = currentEle.getBoundingClientRect().y;
+            if (currentY > 20) {
+              gsap.to(window, {
+                scrollTo: { y: pagesYRef.current[currentPageIndexRef.current] - navHeight, autoKill: false },
+                duration: 0.3,
+                ease: 'power3.out',
+                onComplete: () => {
+                  isScrollingRef.current = false;
+                  deltaYRef.current = 0;
+                },
+              });
+            }
           }
         }
-      }
+      }, 80);
     }
 
     if (isMobile) {
       content.addEventListener('touchstart', handleTouchstartEvent);
       content.addEventListener('touchend', handleTouchEndEvent);
-      window.addEventListener('scrollend', handleScrollEndEvent);
+      window.addEventListener('scroll', handleScrollEndEvent);
     } else {
       content.addEventListener('wheel', handleWheelEvent);
     }
@@ -108,7 +112,7 @@ export function useSwitchPage() {
       content.removeEventListener('wheel', handleWheelEvent);
       content.removeEventListener('touchstart', handleTouchstartEvent);
       content.removeEventListener('touchend', handleTouchEndEvent);
-      window.removeEventListener('scrollend', handleScrollEndEvent);
+      window.removeEventListener('scroll', handleScrollEndEvent);
     };
   }, [isMobile]);
 
