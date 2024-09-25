@@ -10,13 +10,13 @@ export default function Model() {
   useFrame(({ clock }) => {
     if (!group.current) return;
     const t = (1 + Math.sin(clock.getElapsedTime() * 1.5)) / 2;
-    group.current.position.y = t / 3;
+    group.current.position.y = t / 4 - 0.2;
   });
 
   return (
     <group dispose={null}>
-      <group position={[0, 0, 0]} scale={5} ref={(ref: any) => (group.current = ref)}>
-        <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
+      <group position={[0, 0, 0]} ref={(ref: any) => (group.current = ref)}>
+        <mesh geometry={nodes.geo.geometry}>
           <MeshDistortMaterial color="#ffffff" flatShading roughness={1} metalness={0.5} factor={15} speed={5} />
         </mesh>
         <mesh geometry={nodes.geo.geometry}>

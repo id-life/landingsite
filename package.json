@@ -12,8 +12,8 @@
     "@floating-ui/react": "^0.26.24",
     "@gsap/react": "^2.1.1",
     "@p5-wrapper/react": "^4.4.2",
-    "@react-three/drei": "4.1.8",
-    "@react-three/fiber": "6.0.14",
+    "@react-three/drei": "9.0.3",
+    "@react-three/fiber": "8.0.27",
     "@types/p5": "^1.7.6",
     "clsx": "^2.1.1",
     "gsap": "npm:@gsap/business@^3.12.5",
@@ -26,14 +26,14 @@
     "react-responsive": "^10.0.0",
     "react-use": "^17.5.1",
     "tailwind-merge": "^2.5.2",
-    "three": "0.127.0"
+    "three": "0.149.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/three": "0.127.0",
+    "@types/three": "0.149.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.8",
     "postcss": "^8",

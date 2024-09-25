@@ -27,7 +27,7 @@ export default function Intervention() {
         <Canvas
           shadows
           dpr={[1, 2]}
-          camera={{ position: [0, 0, 10], far: 1000 }}
+          camera={{ position: [0, 0, 2], far: 1000 }}
           gl={{ powerPreference: 'high-performance', depth: false }}
         >
           <pointLight position={[-10, -10, -10]} intensity={1} />
