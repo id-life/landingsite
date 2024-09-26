@@ -1,7 +1,7 @@
 /**  @author vergil Wang */
 
 import * as THREE from 'three';
-import { Pass } from 'three/examples/jsm/postprocessing/Pass';
+import { Pass } from 'three-stdlib';
 
 const WaterShader = {
   uniforms: {
@@ -62,7 +62,7 @@ class WaterPass extends Pass {
     });
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.scene = new THREE.Scene();
-    this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2));
+    this.quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
     this.quad.frustumCulled = false; // Avoid getting clipped
     this.scene.add(this.quad);
     this.factor = 0;
