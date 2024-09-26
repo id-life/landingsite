@@ -1,4 +1,5 @@
 @import './webgl.css';
+@import './geo.css';
 
 @tailwind base;
 @tailwind components;

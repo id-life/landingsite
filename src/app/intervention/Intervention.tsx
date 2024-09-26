@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import React, { Suspense, useRef } from 'react';
 import Geo from '@/components/model/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -6,6 +6,8 @@ import Effects from '@/components/model/Effect';
 import { OrbitControls } from '@react-three/drei';
 
 export default function Intervention() {
+  const controls = useRef<any>();
+
   return (
     <div id={NAV_LIST[5].id} className="mt-56 px-12 mobile:mt-56 mobile:p-0 mobile:pt-9">
       <h2 className="page-title">Regional Intervention Center</h2>
@@ -51,10 +53,10 @@ export default function Intervention() {
             shadow-mapSize-height={1024}
           />
           <Suspense fallback={null}>
-            <Geo />
+            <Geo controlsRef={controls} />
           </Suspense>
           <Effects />
-          <OrbitControls autoRotate enableDamping enableZoom={false} target={[0, 0, 0]} />
+          <OrbitControls ref={controls} autoRotate autoRotateSpeed={1} enableDamping enableZoom={false} target={[0, 0, 0]} />
         </Canvas>
       </div>
     </div>
