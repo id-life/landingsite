@@ -1,12 +1,22 @@
-import React, { Suspense, useRef } from 'react';
-import Geo from '@/components/model/Geo';
+'use clinet';
+
+import React, { Suspense, useRef, useState } from 'react';
+import Geo, { ModelRef } from '@/components/model/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';
 import Effects from '@/components/model/Effect';
 import { OrbitControls } from '@react-three/drei';
+import { GeoData, GeoLabel } from '@/components/model/config';
+import ChartWrapper from '@/components/charts/ChartWrapper';
+import InterventionChart from '@/components/charts/InterventionChart';
+import SupplementChart from '@/components/charts/SupplementChart';
+import BiomarkerChart from '@/components/charts/BiomarkerChart';
 
 export default function Intervention() {
   const controls = useRef<any>();
+  const geoRef = useRef<ModelRef>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [geoLabel, setGeoLabel] = useState<GeoData | undefined>(undefined);
 
   return (
     <div id={NAV_LIST[5].id} className="mt-56 px-12 mobile:mt-56 mobile:p-0 mobile:pt-9">
@@ -25,7 +35,7 @@ export default function Intervention() {
           &nbsp;Clinic and medical staff
         </div>
       </div>
-      <div className="page-height mt-12">
+      <div className="page-height relative mt-12">
         <Canvas
           shadows
           dpr={[1, 2]}
@@ -53,12 +63,37 @@ export default function Intervention() {
             shadow-mapSize-height={1024}
           />
           <Suspense fallback={null}>
-            <Geo controlsRef={controls} />
+            <Geo
+              ref={(ref) => {
+                ref && (geoRef.current = ref);
+              }}
+              controlsRef={controls}
+              onLabelClick={(item) => {
+                setGeoLabel(item);
+                setIsOpen(true);
+              }}
+            />
           </Suspense>
           <Effects />
           <OrbitControls ref={controls} autoRotate autoRotateSpeed={1} enableDamping enableZoom={false} target={[0, 0, 0]} />
         </Canvas>
       </div>
+      <ChartWrapper
+        open={isOpen}
+        onOpenChange={(status) => {
+          if (!status) {
+            geoRef.current?.onChartClose();
+          }
+          setIsOpen(status);
+        }}
+        render={() => (
+          <div className="h-full w-full">
+            {geoLabel?.id === GeoLabel.Intervention && <InterventionChart />}
+            {geoLabel?.id === GeoLabel.Supplement && <SupplementChart />}
+            {geoLabel?.id === GeoLabel.Biomarker && <BiomarkerChart />}
+          </div>
+        )}
+      />
     </div>
   );
 }

@@ -1,38 +1,21 @@
 import gsap from 'gsap';
 import { clsx } from 'clsx';
 import * as THREE from 'three';
-import React, { useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { GEO_DATA, GeoData } from '@/components/model/config';
 import { Html, MeshDistortMaterial, useGLTF } from '@react-three/drei';
 
-type GeoData = {
-  title: string;
-  position: THREE.Vector3;
-  groupPosition: THREE.Vector3;
-  cameraPosition: THREE.Vector3;
+export type ModelProps = {
+  controlsRef: { current?: any };
+  onLabelClick?: (item: GeoData) => void;
 };
-const GEO_DATA: GeoData[] = [
-  {
-    title: 'Vetted & Novel Interventions',
-    position: new THREE.Vector3(1, 1, 0),
-    groupPosition: new THREE.Vector3(0, -1.4, 0),
-    cameraPosition: new THREE.Vector3(1.82, -0.72, -0.37),
-  },
-  {
-    title: 'Supplements',
-    position: new THREE.Vector3(-0.5 - 0.5, 0.87),
-    groupPosition: new THREE.Vector3(0, -1.4, 0),
-    cameraPosition: new THREE.Vector3(-1.72, -0.99, 0.17),
-  },
-  {
-    title: 'Biomarker Tracking',
-    position: new THREE.Vector3(-0.5 - 0.5, -0.87),
-    groupPosition: new THREE.Vector3(1, -0.4, -0.1),
-    cameraPosition: new THREE.Vector3(-0.06, -1.99, 0.01),
-  },
-];
 
-export default function Model({ controlsRef }: { controlsRef: { current?: any } }) {
+export type ModelRef = {
+  onChartClose: () => void;
+};
+
+const Model = forwardRef<ModelRef, ModelProps>(({ controlsRef, onLabelClick }, ref) => {
   const group = useRef<THREE.Group>();
   const { camera } = useThree();
   const { nodes } = useGLTF('/models/geo.min.glb', true) as any;
@@ -67,6 +50,10 @@ export default function Model({ controlsRef }: { controlsRef: { current?: any } 
       x: item.cameraPosition.x,
       y: item.cameraPosition.y,
       z: item.cameraPosition.z,
+      onComplete: () => {
+        setSelectedItem(item);
+        onLabelClick?.(item);
+      },
     });
   };
 
@@ -92,6 +79,7 @@ export default function Model({ controlsRef }: { controlsRef: { current?: any } 
       z: 0,
       onComplete: () => {
         controlsRef.current.autoRotate = true;
+        setSelectedItem(undefined);
       },
     });
   };
@@ -100,12 +88,16 @@ export default function Model({ controlsRef }: { controlsRef: { current?: any } 
     if (controlsRef.current.autoRotate) {
       _cameraPosRef.current = camera.position.clone();
       handleGoToItemLabel(item);
-      setSelectedItem(item);
     } else {
       handleReverseClick();
-      setSelectedItem(undefined);
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    onChartClose() {
+      handleReverseClick();
+    },
+  }));
 
   return (
     <group ref={(ref: any) => (group.current = ref)}>
@@ -115,21 +107,22 @@ export default function Model({ controlsRef }: { controlsRef: { current?: any } 
       <mesh geometry={nodes.geo.geometry}>
         <meshBasicMaterial wireframe />
       </mesh>
-      {GEO_DATA.map((item, index) => {
-        return (
-          <Html key={index} position={item.position}>
-            <div
-              onClick={() => handleItemClick(item)}
-              className={clsx('relative cursor-pointer', { hidden: selectedItem && selectedItem !== item })}
-            >
-              <div className="w-full text-nowrap rounded-xl bg-white/50 px-6 py-3.5 text-xl font-bold uppercase">
-                {item.title}
-              </div>
-              <div className="geo-point relative left-1/2 mt-3 h-4 w-4 -translate-x-1/2 rounded-full bg-gray-800" />
+      {GEO_DATA.map((item, index) => (
+        <Html key={index} position={item.position}>
+          <div
+            onClick={() => handleItemClick(item)}
+            className={clsx('relative cursor-pointer', { hidden: selectedItem && selectedItem !== item })}
+          >
+            <div className="w-full text-nowrap rounded-xl bg-white/50 px-6 py-3.5 text-xl font-bold uppercase">
+              {item.title}
             </div>
-          </Html>
-        );
-      })}
+            <div className="geo-point relative left-1/2 mt-3 h-4 w-4 -translate-x-1/2 rounded-full bg-gray-800" />
+          </div>
+        </Html>
+      ))}
     </group>
   );
-}
+});
+
+Model.displayName = 'Model';
+export default Model;
