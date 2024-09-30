@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       screens: {
         mobile: { max: '768px' },
+        tablet: { min: '768px', max: '1540px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],
@@ -52,6 +53,7 @@ const config: Config = {
       colors: {
         gray: {
           200: '#D4D4D4',
+          350: '#999999',
           400: '#9C979D',
           800: '#222222',
         },

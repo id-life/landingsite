@@ -8,23 +8,23 @@ export const NAV_LIST: NavItem[] = [
     title: 'vision',
   },
   {
-    id: 'fund_page',
-    title: 'fund',
+    id: 'portfolio_page',
+    title: 'portfolio',
   },
   {
-    id: 'processes_page',
-    title: 'processes',
+    id: 'value_page',
+    title: 'value',
   },
-  {
-    id: 'insight_page',
-    title: 'insight',
-  },
-  {
-    id: 'tracking_page',
-    title: 'tracking',
-  },
-  {
-    id: 'intervention_page',
-    title: 'intervention',
-  },
+  // {
+  //   id: 'insight_page',
+  //   title: 'insight',
+  // },
+  // {
+  //   id: 'tracking_page',
+  //   title: 'center',
+  // },
+  // {
+  //   id: 'intervention_page',
+  //   title: 'intervention',
+  // },
 ];
