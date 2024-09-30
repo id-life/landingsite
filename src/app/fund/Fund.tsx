@@ -12,6 +12,7 @@ import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 
 type FundItem = {
   title: string;
+  subTitle?: string;
   description: string;
   image: JSX.Element;
   link?: string;
@@ -20,6 +21,7 @@ type FundItem = {
 const funds: FundItem[] = [
   {
     title: 'VitaDAO',
+    subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
     image: <img className="w-50 mobile:w-[6.5625rem]" src="/imgs/investments/vita.webp" alt="vita" />,
     link: 'https://www.vitadao.com/',
@@ -107,6 +109,7 @@ export default function Fund() {
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
               <div className="text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
+                {item?.subTitle ? <p className="text-gray-350 text-xs/5 font-semibold">{item.subTitle}</p> : null}
                 {!isMobile && <p className="fund-desc mt-3 px-4 text-xs/5">{item.description}</p>}
               </div>
               {item.link ? (
