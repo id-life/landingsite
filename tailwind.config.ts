@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       screens: {
         mobile: { max: '768px' },
+        tablet: { max: '1540px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],

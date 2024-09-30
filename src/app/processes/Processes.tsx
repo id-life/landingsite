@@ -104,8 +104,8 @@ export default function Processes() {
           </div>
         </div> */}
         {/* <Insight /> */}
-        <Tracking />
-        <Intervention />
+        {/* <Tracking />
+        <Intervention /> */}
       </div>
     </div>
   );

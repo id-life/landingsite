@@ -4,39 +4,56 @@ import { FormEvent, useState } from 'react';
 import Dialog from '@/components/dialog';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import jsonp from '@/utils/jsonp';
+import CopySVG from '@/../public/svgs/copy-btn.svg?component';
+import { useCopyToClipboard } from 'react-use';
 
 export default function Contact() {
-  const [open, setOpen] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isSubmitting) return;
-    const formData = new FormData(event.currentTarget);
-    const params = new URLSearchParams();
-    formData.forEach((value: any, key) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setOpen(false);
-        setIsSubmitted(false);
-      }, 600);
-    });
-  };
+  const [clicked, setClicked] = useState<boolean>(false);
+  const [state, copyToClipboard] = useCopyToClipboard();
+  // const [open, setOpen] = useState<boolean>(false);
+  // const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  // const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   if (isSubmitting) return;
+  //   const formData = new FormData(event.currentTarget);
+  //   const params = new URLSearchParams();
+  //   formData.forEach((value: any, key) => params.append(key, value));
+  //   const querystring = params.toString();
+  //   setIsSubmitting(true);
+  //   jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+  //     setIsSubmitting(false);
+  //     setIsSubmitted(true);
+  //     setTimeout(() => {
+  //       setOpen(false);
+  //       setIsSubmitted(false);
+  //     }, 600);
+  //   });
+  // };
 
   return (
     <>
       <div
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (!clicked) {
+            setClicked(true);
+            return;
+          }
+          copyToClipboard('contact@id.life');
+        }}
         className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 hover:text-red-600 mobile:w-32 mobile:text-xs/5"
       >
         <SubscribeBorderSVG className="absolute inset-0 left-0 top-0 stroke-foreground duration-300 group-hover:stroke-red-600" />
-        CONTACT US
+        {clicked ? (
+          <div className="flex-center gap-4">
+            <span className="w-36">contact@id.life</span>
+            <CopySVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+          </div>
+        ) : (
+          <>CONTACT US</>
+        )}
       </div>
-      <Dialog
+      {/* <Dialog
         open={open}
         onOpenChange={setOpen}
         render={() => (
@@ -147,7 +164,7 @@ export default function Contact() {
             </form>
           </div>
         )}
-      />
+      /> */}
     </>
   );
 }

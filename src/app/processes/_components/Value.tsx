@@ -17,6 +17,33 @@ const loop1Tags = tags.concat(tags);
 // tags 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
 const tags2 = tags.slice(-3).concat(tags.slice(0, -3)); // 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
 const loop2Tags = tags2.concat(tags2);
+
+const commonList: { tag: string; desc: string }[] = [
+  {
+    tag: 'Regulation and ethics',
+    desc: 'the FDA + big pharma + big insurance tripolar structure is bad (e.g. pro treatment over cure, pro stagnant over approval)',
+  },
+  {
+    tag: "It's learnable and therefore ",
+    desc: 'participation from new comers are meaningful. Just like rocket science',
+  },
+  {
+    tag: 'Selfish rich boys',
+    desc: 'natural mechanism / rapid spread / own money+body+risk',
+  },
+  {
+    tag: 'How about dictators',
+    desc: 'perpendicular and irrelevant',
+  },
+  {
+    tag: 'If the experiment fails, people will die',
+    desc: 'reverse is more true, without longevity breakthrough people are dying everyday',
+  },
+  {
+    tag: 'Positive impact on society of longer healthspan',
+    desc: "longer term decisions and projects, trip to Mars doesn't seem long anymore",
+  },
+];
 export default function Value() {
   const tagsRef1 = useRef<HTMLDivElement>(null);
   const tagsRef2 = useRef<HTMLDivElement>(null);
@@ -78,7 +105,7 @@ export default function Value() {
   }, [containerWidth]);
 
   return (
-    <div className="text-gray-800">
+    <div className="pb-[11.25rem] text-gray-800">
       <h3 className="font-migrena text-3xl font-bold uppercase">
         <span className="text-2xl/9">The Life Formula</span>
         <br />
@@ -114,9 +141,24 @@ export default function Value() {
           {loop2Tags?.length ? loop2Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
         </div>
       </div>
+      {/* Purpose-driven */}
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">
-        Purpose-driven fund - To extend human healthy lifespan
+        Purpose - driven fund - To extend human healthy lifespan
       </h3>
+      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white">
+        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap">
+          <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
+          <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
+          <li>{`Support the portfolio with business acumen, strategy, and commercialization.`}</li>
+          <li>{`Audacity / moonshots / bold bets`}</li>
+          <li>{`Flexibility to accommodate founders - whatever it takes`}</li>
+        </ul>
+      </div>
+      {/* Common Criticisms */}
+      <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">Common Criticisms</h3>
+      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12">
+        {commonList?.length ? commonList.map(({ tag, desc }, idx) => <CommonItem key={idx} tag={tag} desc={desc} />) : null}
+      </div>
     </div>
   );
 }
@@ -130,6 +172,18 @@ function TagItem({ children }: { children?: JSX.Element | string }) {
     >
       <div className="absolute -left-6.5 -top-6.5 h-10 w-10 rotate-45 border border-gray-800 transition duration-300 group-hover:border-red-600"></div>
       <p className="px-3.5 py-2 text-base/5 font-semibold transition duration-300 group-hover:text-red-600">{children}</p>
+    </div>
+  );
+}
+
+function CommonItem({ tag, desc }: { tag: string; desc: string }) {
+  return (
+    <div className="relative z-0">
+      <div className="flex w-min flex-col items-center gap-2">
+        <TagItem>{tag}</TagItem>
+        <img className="h-7.5" src="/svgs/arrow-down-red.svg" alt="" />
+      </div>
+      <p className="mt-1 text-sm font-semibold capitalize">{desc}</p>
     </div>
   );
 }
