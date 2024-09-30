@@ -3,11 +3,12 @@ import Intervention from '@/app/intervention/Intervention';
 import Insight from '@/app/insight/Insight';
 import Tracking from '@/app/tracking/Tracking';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import Value from './_components/Value';
 
 export default function Processes() {
   const isMobile = useIsMobile();
   return (
-    <div id={NAV_LIST[2].id} className="page-container bg-gray-200 bg-none px-12 pt-32 mobile:px-5 mobile:pt-9">
+    <div id={NAV_LIST[2].id} className="page-container bg-gray-200 bg-none px-12 pt-24 mobile:px-5 mobile:pt-9">
       <video
         autoPlay
         muted
@@ -19,7 +20,8 @@ export default function Processes() {
         poster="/imgs/processes.jpg"
       />
       <div className="relative">
-        <div>
+        <Value />
+        {/* <div>
           <h2 className="page-title">industry processes</h2>
           <div className="mt-8 grid grid-cols-5 md:mt-4 mobile:mt-6 mobile:grid-cols-3 mobile:gap-y-5">
             <div>
@@ -100,8 +102,8 @@ export default function Processes() {
               <p className="mt-3 text-sm font-semibold mobile:text-xs/5">Adapting to and Building the Environment.</p>
             </div>
           </div>
-        </div>
-        <Insight />
+        </div> */}
+        {/* <Insight /> */}
         <Tracking />
         <Intervention />
       </div>

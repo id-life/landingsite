@@ -119,6 +119,10 @@
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
   }
 
+  .value-tag-border-clip {
+    clip-path: polygon(100% 0%, 100% 0, 100% 100%, 0 100%, 0 16px, 16px 0);
+  }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
