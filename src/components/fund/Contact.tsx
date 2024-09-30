@@ -5,6 +5,7 @@ import Dialog from '@/components/dialog';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import jsonp from '@/utils/jsonp';
 import CopySVG from '@/../public/svgs/copy-btn.svg?component';
+import CheckmarkSVG from '@/../public/svgs/checkmark.svg?component';
 import { useCopyToClipboard } from 'react-use';
 
 export default function Contact() {
@@ -47,7 +48,11 @@ export default function Contact() {
         {clicked ? (
           <div className="flex-center gap-4">
             <span className="w-36">contact@id.life</span>
-            <CopySVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+            {state.value ? (
+              <CheckmarkSVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+            ) : (
+              <CopySVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+            )}
           </div>
         ) : (
           <>CONTACT US</>
