@@ -105,7 +105,7 @@ export default function Value() {
   }, [containerWidth]);
 
   return (
-    <div className="pb-[11.25rem] text-gray-800">
+    <div className="pb-[11.25rem] text-gray-800 mobile:pb-0">
       {/* <h3 className="font-migrena text-3xl font-bold uppercase">
         <span className="text-2xl/9">The Life Formula</span>
         <br />
@@ -118,42 +118,43 @@ export default function Value() {
         <p className="max-w-[32.5rem]">Time to focus on amplifying the other side of the equation</p>
       </div>*/}
       <div className="flex flex-wrap whitespace-nowrap font-migrena">
-        <div className="relative mb-14 mr-12 pl-6">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2.5" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase">Aging is a disease, and it can be cured</p>
+        <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">Aging is a disease, and it can be cured</p>
         </div>
-        <div className="relative mb-14 pl-6">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2.5" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase">
+        <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">
             {"Longevity is right. It's righteous. Justice. Most important thing"}
           </p>
         </div>
       </div>
-      <p className="font-migrena text-3xl/12 font-bold uppercase">{'What is worth seeing? '}</p>
+      <p className="font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">{'What is worth seeing? '}</p>
       <div ref={containerRef} className="mt-5 w-full overflow-hidden">
-        <div ref={tagsRef1} className="flex gap-7.5 whitespace-nowrap">
+        <div ref={tagsRef1} className="flex gap-7.5 whitespace-nowrap mobile:gap-4">
           {loop1Tags?.length ? loop1Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
         </div>
-        <div ref={tagsRef2} className="mt-6 flex gap-7.5 whitespace-nowrap">
+        <div ref={tagsRef2} className="mt-6 flex gap-7.5 whitespace-nowrap mobile:mt-4 mobile:gap-4">
           {loop2Tags?.length ? loop2Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
         </div>
       </div>
       {/* Purpose-driven */}
-      <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">
+      <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">
         Purpose - driven fund - To extend human healthy lifespan
       </h3>
-      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white backdrop-blur-md">
-        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1">
+      <div className="mobile:text-xs/4.5 -mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5">
+        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
           <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
           <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
           <li>{`Support the portfolio with business acumen, strategy, and commercialization.`}</li>
           <li>{`Audacity / moonshots / bold bets`}</li>
           <li>{`Flexibility to accommodate founders - whatever it takes`}</li>
+          <li>{`Let the first group of investors and companies to make money`}</li>
         </ul>
       </div>
       {/* Common Criticisms */}
-      <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">Common Criticisms</h3>
-      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:grid-cols-1">
+      <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">Common Criticisms</h3>
+      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:mt-6 mobile:grid-cols-1 mobile:gap-5">
         {commonList?.length ? commonList.map(({ tag, desc }, idx) => <CommonItem key={idx} tag={tag} desc={desc} />) : null}
       </div>
     </div>
@@ -168,7 +169,9 @@ function TagItem({ children }: { children?: JSX.Element | string }) {
       )}
     >
       <div className="absolute -left-6.5 -top-6.5 h-10 w-10 rotate-45 border border-gray-800 transition duration-300 group-hover:border-red-600"></div>
-      <p className="px-3.5 py-2 text-base/5 font-semibold transition duration-300 group-hover:text-red-600">{children}</p>
+      <p className="px-3.5 py-2 text-base/5 font-semibold transition duration-300 group-hover:text-red-600 mobile:px-3.5 mobile:py-1 mobile:text-xs/5">
+        {children}
+      </p>
     </div>
   );
 }
@@ -178,9 +181,9 @@ function CommonItem({ tag, desc }: { tag: string; desc: string }) {
     <div className="relative z-0">
       <div className="flex w-min flex-col items-center gap-2">
         <TagItem>{tag}</TagItem>
-        <img className="h-7.5" src="/svgs/arrow-down-red.svg" alt="" />
+        <img className="h-7.5 mobile:h-6" src="/svgs/arrow-down-red.svg" alt="" />
       </div>
-      <p className="mt-1 text-sm font-semibold capitalize">{desc}</p>
+      <p className="mobile:text-xs/4.5 mt-1 text-sm font-semibold capitalize">{desc}</p>
     </div>
   );
 }
