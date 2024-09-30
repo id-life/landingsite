@@ -106,17 +106,17 @@ export default function Value() {
 
   return (
     <div className="pb-[11.25rem] text-gray-800">
-      <h3 className="font-migrena text-3xl font-bold uppercase">
+      {/* <h3 className="font-migrena text-3xl font-bold uppercase">
         <span className="text-2xl/9">The Life Formula</span>
         <br />
         {"Life's Weight = (Experience + Emotions) × Lifespan"}
-      </h3>
+      </h3> 
       <div className="mb-14 mt-7.5 flex max-w-[67.5rem] flex-wrap gap-10 text-base/6 font-semibold capitalize">
         <p className="max-w-[32.5rem]">
           Humanity has invested heavily in enhancing experience and emotions, achieving remarkable breakthroughs
         </p>
         <p className="max-w-[32.5rem]">Time to focus on amplifying the other side of the equation</p>
-      </div>
+      </div>*/}
       <div className="flex flex-wrap whitespace-nowrap font-migrena">
         <div className="relative mb-14 mr-12 pl-6">
           <img className="absolute left-0 top-0 w-4 mobile:w-2.5" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
@@ -129,10 +129,7 @@ export default function Value() {
           </p>
         </div>
       </div>
-      <div className="relative pl-6">
-        <img className="absolute left-0 top-0 w-4 mobile:w-2.5" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-        <p className="font-migrena text-2xl/12 font-bold uppercase">{'What is worth seeing? '}</p>
-      </div>
+      <p className="font-migrena text-3xl/12 font-bold uppercase">{'What is worth seeing? '}</p>
       <div ref={containerRef} className="mt-5 w-full overflow-hidden">
         <div ref={tagsRef1} className="flex gap-7.5 whitespace-nowrap">
           {loop1Tags?.length ? loop1Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
@@ -145,8 +142,8 @@ export default function Value() {
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">
         Purpose - driven fund - To extend human healthy lifespan
       </h3>
-      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white">
-        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap">
+      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white backdrop-blur-md">
+        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1">
           <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
           <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
           <li>{`Support the portfolio with business acumen, strategy, and commercialization.`}</li>
@@ -156,7 +153,7 @@ export default function Value() {
       </div>
       {/* Common Criticisms */}
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase">Common Criticisms</h3>
-      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12">
+      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:grid-cols-1">
         {commonList?.length ? commonList.map(({ tag, desc }, idx) => <CommonItem key={idx} tag={tag} desc={desc} />) : null}
       </div>
     </div>
