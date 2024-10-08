@@ -4,12 +4,13 @@ import P5 from 'p5';
 type MySketchProps = SketchProps & {
   activeAnim: boolean;
 };
+
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
   // console.log('sketch 函数开始执行');
   let sourceImg: P5.Image;
   const allParticles: any[] = [];
   const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const scaleNum = IS_MOBILE ? 1.2 : 2.2;
+  const scaleNum = IS_MOBILE ? 0.8 : 2.2;
   const loadPercentage = 0.0007;
   const closeEnoughTarget = 100;
   const resolution = IS_MOBILE ? 15 : 5;
@@ -38,12 +39,13 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     return pos;
   }
+
   /**
-      particle.js https://openprocessing.org/sketch/2097742 
-      A particle that uses a seek behaviour to move to its target.
-      @param {number} x
-      @param {number} y
-      */
+   particle.js https://openprocessing.org/sketch/2097742
+   A particle that uses a seek behaviour to move to its target.
+   @param {number} x
+   @param {number} y
+   */
   class Particle {
     pos: P5.Vector;
     vel: P5.Vector;
@@ -87,6 +89,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       this.noiseOffsetY = p5.random(1000); // 噪声偏移量Y
       // console.log('this.pos', this.pos);
     }
+
     public move() {
       // 添加基于噪声的轻微扰动
       const noiseScale = 0.005; // 噪声的缩放系数
@@ -147,6 +150,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       this.noiseOffsetX += 0.01;
       this.noiseOffsetY += 0.01;
     }
+
     public draw() {
       if (!activeAnim) return;
       this.currentColor = p5.lerpColor(this.currentColor, this.endColor, this.colorBlendRate);
@@ -187,7 +191,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
   p5.setup = () => {
     // console.log('p5.setup 开始执行');
-    const canvas = p5.createCanvas(1280, 750);
+    const ratio = 1280 / 750;
+    const width = IS_MOBILE ? window.innerHeight - 10 : 1280;
+    const height = width / ratio;
+    const canvas = p5.createCanvas(width, height);
     canvas.parent('particle-container');
     sourceImg.resize(sourceImg.width * scaleNum, sourceImg.height * scaleNum);
     resetImage();
@@ -253,6 +260,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     // console.log(`创建了 ${allParticles.length} 个粒子`);
   }
+
   p5.draw = () => {
     if (!activeAnim) return;
     p5.clear();
