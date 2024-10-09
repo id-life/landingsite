@@ -129,7 +129,7 @@ export default function Value() {
         <span className="text-2xl/9">The Life Formula</span>
         <br />
         {"Life's Weight = (Experience + Emotions) × Lifespan"}
-      </h3> 
+      </h3>
       <div className="mb-14 mt-7.5 flex max-w-[67.5rem] flex-wrap gap-10 text-base/6 font-semibold capitalize">
         <p className="max-w-[32.5rem]">
           Humanity has invested heavily in enhancing experience and emotions, achieving remarkable breakthroughs
@@ -179,7 +179,7 @@ export default function Value() {
         Purpose - driven fund - To extend human healthy lifespan
       </h3>
       <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5 mobile:text-xs/4.5">
-        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
+        <ul className="grid list-inside list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
           <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
           <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
           <li>{`Support the portfolio with business acumen, strategy, and commercialization.`}</li>
@@ -196,6 +196,7 @@ export default function Value() {
     </div>
   );
 }
+
 function TagItem({ children }: { children?: JSX.Element | string }) {
   return (
     <div
