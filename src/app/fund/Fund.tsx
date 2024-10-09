@@ -92,9 +92,9 @@ export default function Fund() {
           <div className="particle-mask"></div>
         </div>
         <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <p className="text-center font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm/5">
+        {/* <p className="text-center font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm/5">
           Access To cutting-edge products, exclusive events, and a network of innovators
-        </p>
+        </p> */}
         <div className="mt-12 grid w-full grid-cols-5 gap-7.5 px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
@@ -109,7 +109,7 @@ export default function Fund() {
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
               <div className="text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                {item?.subTitle ? <p className="text-gray-350 text-xs/5 font-semibold">{item.subTitle}</p> : null}
+                {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
                 {!isMobile && <p className="fund-desc mt-3 px-4 text-xs/5">{item.description}</p>}
               </div>
               {item.link ? (
