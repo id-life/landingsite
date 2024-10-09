@@ -2,6 +2,8 @@ import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useEffect, useMemo, useRef } from 'react';
 import { useMeasure } from 'react-use';
+import _ from 'lodash-es';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 const tags = [
   'Stem Cell Therapy',
@@ -13,10 +15,19 @@ const tags = [
   'Biomarker Tracking',
   'Anti-aging Drugs',
 ];
-const loop1Tags = tags.concat(tags);
+const tagsCN = [
+  '干细胞疗法',
+  '器官培育和移植',
+  '基因治疗与基因编辑',
+  '端粒延长',
+  '衰老细胞清除',
+  '代谢调节和营养干预',
+  '生物标志物监测',
+  '衰老逆转药物',
+];
 // tags 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
 const tags2 = tags.slice(-3).concat(tags.slice(0, -3)); // 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
-const loop2Tags = tags2.concat(tags2);
+const tags2CN = tagsCN.slice(-3).concat(tagsCN.slice(0, -3)); // 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
 
 const commonList: { tag: string; desc: string }[] = [
   {
@@ -45,10 +56,18 @@ const commonList: { tag: string; desc: string }[] = [
   },
 ];
 export default function Value() {
+  const isMounted = useIsMounted();
+  const loop1Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
+  const loop2Tags = useMemo(() => _.shuffle(tags2.concat(tags2CN)), []);
+  const loop3Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
+  const loop4Tags = useMemo(() => _.shuffle(tags2.concat(tags2CN)), []);
+
   const tagsRef1 = useRef<HTMLDivElement>(null);
   const tagsRef2 = useRef<HTMLDivElement>(null);
+
   const animationRef1 = useRef<GSAPTimeline | null>(null);
   const animationRef2 = useRef<GSAPTimeline | null>(null); // 添加第二个动画引用
+
   const [containerRef, { width: containerWidth }] = useMeasure<HTMLDivElement>();
   useEffect(() => {
     const tagsElement1 = tagsRef1.current;
@@ -120,29 +139,46 @@ export default function Value() {
       <div className="flex flex-wrap whitespace-nowrap font-migrena">
         <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
           <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">Aging is a disease, and it can be cured</p>
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">Raising Global Awareness for Longevity</p>
         </div>
         <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
           <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">
-            {"Longevity is right. It's righteous. Justice. Most important thing"}
-          </p>
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'The Righteous Path of Longevity Research'}</p>
+        </div>
+        <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Building the Longevity Capital Flywheel'}</p>
         </div>
       </div>
       <p className="font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">{'What is worth seeing? '}</p>
-      <div ref={containerRef} className="mt-5 w-full overflow-hidden">
-        <div ref={tagsRef1} className="flex gap-7.5 whitespace-nowrap mobile:gap-4">
-          {loop1Tags?.length ? loop1Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
-        </div>
-        <div ref={tagsRef2} className="mt-6 flex gap-7.5 whitespace-nowrap mobile:mt-4 mobile:gap-4">
+      {isMounted && (
+        <div ref={containerRef} className="mt-5 w-full overflow-hidden">
+          <div ref={tagsRef1} className="flex flex-col gap-10">
+            <div className="mb-4 flex gap-7.5 whitespace-nowrap mobile:gap-4">
+              {loop1Tags?.length ? loop1Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
+            </div>
+            <div className="hidden gap-7.5 whitespace-nowrap mobile:flex mobile:gap-4">
+              {loop3Tags?.length ? loop3Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
+            </div>
+          </div>
+          <div ref={tagsRef2} className="mt-0 flex flex-col gap-14 mobile:-mt-18">
+            <div className="flex gap-7.5 whitespace-nowrap mobile:gap-4">
+              {loop2Tags?.length ? loop2Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
+            </div>
+            <div className="hidden gap-7.5 whitespace-nowrap mobile:flex mobile:gap-4">
+              {loop4Tags?.length ? loop4Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
+            </div>
+          </div>
+          {/* <div ref={tagsRef2} className="mt-6 flex gap-7.5 whitespace-nowrap mobile:mt-4 mobile:gap-4">
           {loop2Tags?.length ? loop2Tags.map((str, idx) => <TagItem key={idx}>{str}</TagItem>) : null}
+        </div> */}
         </div>
-      </div>
+      )}
       {/* Purpose-driven */}
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">
         Purpose - driven fund - To extend human healthy lifespan
       </h3>
-      <div className="mobile:text-xs/4.5 -mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5">
+      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5 mobile:text-xs/4.5">
         <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
           <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
           <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
@@ -154,7 +190,7 @@ export default function Value() {
       </div>
       {/* Common Criticisms */}
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">Common Criticisms</h3>
-      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:mt-6 mobile:grid-cols-1 mobile:gap-5">
+      <div className="mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:mt-6 mobile:grid-cols-1 mobile:gap-5 tablet:grid-cols-2">
         {commonList?.length ? commonList.map(({ tag, desc }, idx) => <CommonItem key={idx} tag={tag} desc={desc} />) : null}
       </div>
     </div>
@@ -183,7 +219,7 @@ function CommonItem({ tag, desc }: { tag: string; desc: string }) {
         <TagItem>{tag}</TagItem>
         <img className="h-7.5 mobile:h-6" src="/svgs/arrow-down-red.svg" alt="" />
       </div>
-      <p className="mobile:text-xs/4.5 mt-1 text-sm font-semibold capitalize">{desc}</p>
+      <p className="mt-1 text-sm font-semibold capitalize mobile:text-xs/4.5">{desc}</p>
     </div>
   );
 }
