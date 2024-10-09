@@ -110,7 +110,7 @@ export default function Value() {
         <span className="text-2xl/9">The Life Formula</span>
         <br />
         {"Life's Weight = (Experience + Emotions) × Lifespan"}
-      </h3> 
+      </h3>
       <div className="mb-14 mt-7.5 flex max-w-[67.5rem] flex-wrap gap-10 text-base/6 font-semibold capitalize">
         <p className="max-w-[32.5rem]">
           Humanity has invested heavily in enhancing experience and emotions, achieving remarkable breakthroughs
@@ -142,8 +142,8 @@ export default function Value() {
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">
         Purpose - driven fund - To extend human healthy lifespan
       </h3>
-      <div className="mobile:text-xs/4.5 -mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm font-semibold capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5">
-        <ul className="grid list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
+      <div className="-mx-12 mt-6 bg-gray-800/60 px-12 py-7.5 text-sm capitalize text-white backdrop-blur-md mobile:-mx-5 mobile:px-5 mobile:text-xs/4.5">
+        <ul className="grid list-inside list-disc grid-cols-4 gap-16 gap-y-7.5 whitespace-pre-wrap mobile:grid-cols-1 mobile:gap-6">
           <li>{`We attract as much resources, capital, talent, attention, into longevity`}</li>
           <li>{`Combine the best from West and East - from capital, to researcher and founder`}</li>
           <li>{`Support the portfolio with business acumen, strategy, and commercialization.`}</li>
@@ -154,12 +154,13 @@ export default function Value() {
       </div>
       {/* Common Criticisms */}
       <h3 className="mt-[11.25rem] font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">Common Criticisms</h3>
-      <div className="tablet:grid-cols-2 mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:mt-6 mobile:grid-cols-1 mobile:gap-5">
+      <div className="mt-12 grid grid-cols-4 gap-x-16 gap-y-12 mobile:mt-6 mobile:grid-cols-1 mobile:gap-5 tablet:grid-cols-2">
         {commonList?.length ? commonList.map(({ tag, desc }, idx) => <CommonItem key={idx} tag={tag} desc={desc} />) : null}
       </div>
     </div>
   );
 }
+
 function TagItem({ children }: { children?: JSX.Element | string }) {
   return (
     <div
@@ -183,7 +184,7 @@ function CommonItem({ tag, desc }: { tag: string; desc: string }) {
         <TagItem>{tag}</TagItem>
         <img className="h-7.5 mobile:h-6" src="/svgs/arrow-down-red.svg" alt="" />
       </div>
-      <p className="mobile:text-xs/4.5 mt-1 text-sm font-semibold capitalize">{desc}</p>
+      <p className="mt-1 text-sm font-semibold capitalize mobile:text-xs/4.5">{desc}</p>
     </div>
   );
 }
