@@ -7,6 +7,7 @@ import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
+import { isMobile } from 'react-device-detect';
 import Processes from '@/app/processes/Processes';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
@@ -28,7 +29,6 @@ export default function Home() {
     setSmoother(smoother);
 
     const root = document.documentElement;
-    const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const background = getComputedStyle(root).getPropertyValue('--background');
     const foreground = getComputedStyle(root).getPropertyValue('--foreground');
     const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
@@ -37,7 +37,7 @@ export default function Home() {
         scrollTrigger: {
           trigger: page,
           start: () => `bottom ${window.innerHeight}`,
-          pin: !IS_MOBILE,
+          pin: !isMobile,
           pinSpacing: false,
           scrub: true,
         },

@@ -1,7 +1,7 @@
 #particle-container {
   pointer-events: none;
   opacity: 0;
-  position: fixed;
+  position: absolute;
   top: calc(50% - 3rem);
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -9,14 +9,15 @@
 }
 
 #particle-container .particle-mask {
-  /* background-color: ; */
   position: absolute;
   inset: 0;
 }
+
 #particle-container.active {
   opacity: 0.8;
   pointer-events: auto;
 }
+
 @media screen and (max-width: 768px) {
   #particle-container {
     pointer-events: none;
