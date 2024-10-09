@@ -7,6 +7,7 @@ import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
+import { isMobile } from 'react-device-detect';
 import Processes from '@/app/processes/Processes';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
@@ -36,7 +37,7 @@ export default function Home() {
         scrollTrigger: {
           trigger: page,
           start: () => `bottom ${window.innerHeight}`,
-          pin: true,
+          pin: !isMobile,
           pinSpacing: false,
           scrub: true,
         },
