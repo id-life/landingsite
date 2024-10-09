@@ -28,6 +28,7 @@ export default function Home() {
     setSmoother(smoother);
 
     const root = document.documentElement;
+    const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const background = getComputedStyle(root).getPropertyValue('--background');
     const foreground = getComputedStyle(root).getPropertyValue('--foreground');
     const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
@@ -36,7 +37,7 @@ export default function Home() {
         scrollTrigger: {
           trigger: page,
           start: () => `bottom ${window.innerHeight}`,
-          pin: true,
+          pin: !IS_MOBILE,
           pinSpacing: false,
           scrub: true,
         },
