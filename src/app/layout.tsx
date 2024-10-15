@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'IMMORTAL DRAGONS',
-    description: 'Committed to Human Longevity - Til Unlimited Human Healthy Lifespan.',
+    description: 'Til Unlimited Human Healthy Lifespan.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover.webp',
