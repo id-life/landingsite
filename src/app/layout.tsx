@@ -9,7 +9,7 @@ import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'IMMORTAL DRAGONS',
-  description: 'Committed to Human Longevity - Til Unlimited Human Healthy Lifespan.',
+  description: 'Til Unlimited Human Healthy Lifespan.',
   keywords: [
     'Longevity',
     'anti-aging',
