@@ -6,24 +6,26 @@ import _ from 'lodash-es';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 const tags = [
-  'Stem Cell Therapy',
-  'Organ Cultivation and Transplantation',
-  'Gene Therapy and Gene Editing',
-  'Telomere Extension',
-  'Senolytics',
-  'Metabolic Modulation and Nutritional Interventions',
+  'AI Drug Discovery',
   'Biomarker Tracking',
-  'Anti-aging Drugs',
+  'Stem Cell Therapy',
+  'Gene Therapy',
+  'Whole Body Replacement',
+  'Regulatory Innovation',
+  'Decentralized biopower',
+  'Programmable biology',
+  'Global scientific collaboration',
 ];
 const tagsCN = [
+  '人工智能药物发现',
+  '生物标志物追踪',
   '干细胞疗法',
-  '器官培育和移植',
-  '基因治疗与基因编辑',
-  '端粒延长',
-  '衰老细胞清除',
-  '代谢调节和营养干预',
-  '生物标志物监测',
-  '衰老逆转药物',
+  '基因疗法',
+  '全身替换',
+  '监管创新',
+  '去中心化的生物力量',
+  '可编程生物学',
+  '全球科学合作',
 ];
 // tags 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
 const tags2 = tags.slice(-3).concat(tags.slice(0, -3)); // 从倒数第三个开始到结尾，在从开头到倒数第三个的数组
@@ -31,30 +33,31 @@ const tags2CN = tagsCN.slice(-3).concat(tagsCN.slice(0, -3)); // 从倒数第三
 
 const commonList: { tag: string; desc: string }[] = [
   {
-    tag: 'Regulation and ethics',
-    desc: 'the FDA + big pharma + big insurance tripolar structure is bad (e.g. pro treatment over cure, pro stagnant over approval)',
+    tag: 'Raising Awareness',
+    desc: "Promoting longevity, anti-aging, and biotech as essential for humanity's future by spreading information and garnering attention, talent, and resources.",
   },
   {
-    tag: "It's learnable and therefore ",
-    desc: 'participation from new comers are meaningful. Just like rocket science',
+    tag: 'Global Advocacy',
+    desc: 'By advocating and advertising, the goal is to shift global focus toward longevity research as a crucial moral endeavor.',
   },
   {
-    tag: 'Selfish rich boys',
-    desc: 'natural mechanism / rapid spread / own money+body+risk',
+    tag: 'Moral Justification',
+    desc: 'Longevity research aims to reduce global suffering, fostering long-term societal benefits such as sustainability.',
   },
   {
-    tag: 'How about dictators',
-    desc: 'perpendicular and irrelevant',
+    tag: 'Criticism Addressed',
+    desc: 'Criticisms of longevity research have been thoroughly analyzed and resolved, reinforcing the movement’s validity.',
   },
   {
-    tag: 'If the experiment fails, people will die',
-    desc: 'reverse is more true, without longevity breakthrough people are dying everyday',
+    tag: 'Reinvestment Cycle',
+    desc: 'Successful founders and investors reinvesting into the industry creates a positive feedback loop for growth.',
   },
   {
-    tag: 'Positive impact on society of longer healthspan',
-    desc: "longer term decisions and projects, trip to Mars doesn't seem long anymore",
+    tag: 'Monetization for Growth',
+    desc: 'Supporting companies seeking monetization ensures the continuous flow of capital, fueling future innovations in longevity.',
   },
 ];
+
 export default function Value() {
   const isMounted = useIsMounted();
   const loop1Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
@@ -139,15 +142,23 @@ export default function Value() {
       <div className="flex flex-wrap whitespace-nowrap font-migrena">
         <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
           <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">Raising Global Awareness for Longevity</p>
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">
+            Immortal Dragons is a purpose-driven longevity fund
+          </p>
         </div>
         <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
           <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'The Righteous Path of Longevity Research'}</p>
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Raising Global Awareness for Longevity'}</p>
+        </div>
+        <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <p className="w-[42.6875rem] text-2xl/12 font-bold uppercase mobile:w-auto mobile:text-sm/5">
+            {'Justifying the Moral Imperative of Longevity'}
+          </p>
         </div>
         <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
           <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
-          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Building the Longevity Capital Flywheel'}</p>
+          <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Building the Longevity Reinvestment Flywheel'}</p>
         </div>
       </div>
       <p className="font-migrena text-3xl/12 font-bold uppercase mobile:text-xl/6">{'What is worth seeing? '}</p>

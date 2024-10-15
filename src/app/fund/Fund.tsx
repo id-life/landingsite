@@ -20,6 +20,12 @@ type FundItem = {
 
 const funds: FundItem[] = [
   {
+    title: 'Healthspan Capital',
+    description: 'The most active longevity fund in space.',
+    image: <img className="w-20 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    link: 'https://www.healthspancapital.vc/',
+  },
+  {
     title: 'VitaDAO',
     subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
@@ -37,12 +43,6 @@ const funds: FundItem[] = [
     description: 'Accelerate clinical trials',
     image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
     link: 'https://unlimit.bio/',
-  },
-  {
-    title: 'Healthspan Capital',
-    description: 'The most active longevity fund in space.',
-    image: <img className="w-20 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
-    link: 'https://www.healthspancapital.vc/',
   },
   {
     title: 'BiohackerDAO',
