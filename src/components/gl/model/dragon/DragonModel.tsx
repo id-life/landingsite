@@ -11,19 +11,12 @@ gsap.registerPlugin(useGSAP);
 const InitRotation = Math.PI / 2;
 
 export function DragonModel(props: {}) {
-  const { viewport } = useThree();
   const { events } = useThree();
   const { nodes } = useGLTF('/models/logo.glb');
   const modelRef = useRef<THREE.Group>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [autoSwing, setAutoSwing] = useState(false);
   const rotationRef = useRef(InitRotation);
-  const [scale, setScale] = useState(0.12);
-
-  useEffect(() => {
-    const newScale = Math.min(0.12, 0.12 * (viewport?.width / 10));
-    setScale(newScale);
-  }, [viewport?.width]);
 
   useFrame(({ clock }) => {
     if (!modelRef.current) return;
@@ -79,7 +72,7 @@ export function DragonModel(props: {}) {
   );
 
   return (
-    <group {...(bind() as any)} ref={modelRef} {...props} scale={scale} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
+    <group {...(bind() as any)} ref={modelRef} {...props} scale={0.12} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
           resolution={1024}
