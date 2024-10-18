@@ -29,15 +29,17 @@ export default function Vision() {
         className="absolute bottom-24 left-1/2 w-[35.625rem] -translate-x-1/2"
       />
       {/* pieces of decoration */}
-      <div className="absolute left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-black" />
-      <div className="absolute left-10 top-[calc(50%_+_14rem)] h-2 w-9 bg-black" />
-      <div className="absolute right-10 top-[calc(50%_+_14rem)] h-4 w-4 bg-black" />
-      <div className="absolute right-[13.5rem] top-[calc(50%_-_14rem)] h-4 w-4 bg-black" />
-      <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2">
-        <VisionDecorationBottomScrollSVG className="h-12" />
-        <p className="font-migrena text-xl/6 font-bold uppercase">SCROLL</p>
+      <div className="group absolute inset-0 -z-10">
+        <div className="absolute left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-black" />
+        <div className="absolute left-10 top-[calc(50%_+_14rem)] h-2 w-9 bg-black" />
+        <div className="absolute right-10 top-[calc(50%_+_14rem)] h-4 w-4 bg-black" />
+        <div className="absolute right-[13.5rem] top-[calc(50%_-_14rem)] h-4 w-4 bg-black" />
+        <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-2">
+          <VisionDecorationBottomScrollSVG className="h-12" />
+          <p className="font-migrena text-xl/6 font-bold uppercase">SCROLL</p>
+        </div>
+        <VisionDecorationCircleSVG className="absolute right-10 top-[calc(50%_-_14rem)] h-4 w-4" />
       </div>
-      <VisionDecorationCircleSVG className="absolute right-10 top-[calc(50%_-_14rem)] h-4 w-4" />
     </div>
   );
 }

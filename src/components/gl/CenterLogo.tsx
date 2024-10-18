@@ -1,12 +1,19 @@
-import React, { useRef } from 'react';
-import gsap from 'gsap';
-import * as THREE from 'three';
 import { Center, Svg } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
+import gsap from 'gsap';
+import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 
 export default function CenterLogo() {
-  const { pointer } = useThree();
+  const { pointer, viewport } = useThree();
   const groupRef = useRef<THREE.Group>(null);
+
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const newScale = Math.min(1, (1 * viewport?.width) / 10);
+    setScale(newScale);
+  }, [viewport?.width]);
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -19,7 +26,7 @@ export default function CenterLogo() {
   });
 
   return (
-    <Center ref={groupRef} position={[0, 0, -5]}>
+    <Center ref={groupRef} scale={scale} position={[0, 0, -5]}>
       <Svg scale={0.06} src="/svgs/logo-new.svg" fillMaterial={{ transparent: false }} />
     </Center>
   );
