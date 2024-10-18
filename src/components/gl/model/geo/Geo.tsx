@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { GEO_DATA, GeoData } from '@/components/model/config';
+import { GEO_DATA, GeoData } from '@/components/gl/model/geo/config';
 import { Html, MeshDistortMaterial, useGLTF } from '@react-three/drei';
 
 export type ModelProps = {

@@ -1,12 +1,12 @@
 'use clinet';
 
 import React, { Suspense, useRef, useState } from 'react';
-import Geo, { ModelRef } from '@/components/model/Geo';
+import Geo, { ModelRef } from '@/components/gl/model/geo/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';
-import Effects from '@/components/model/Effect';
+import Effects from '@/components/gl/model/geo/Effect';
 import { OrbitControls } from '@react-three/drei';
-import { GeoData, GeoLabel } from '@/components/model/config';
+import { GeoData, GeoLabel } from '@/components/gl/model/geo/config';
 import ChartWrapper from '@/components/charts/ChartWrapper';
 import InterventionChart from '@/components/charts/InterventionChart';
 import SupplementChart from '@/components/charts/SupplementChart';
