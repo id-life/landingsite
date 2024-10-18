@@ -1,10 +1,10 @@
-import { useGSAP } from '@gsap/react';
-import { useGLTF } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useGesture } from '@use-gesture/react';
-import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
 import * as THREE from 'three';
+import { useGSAP } from '@gsap/react';
+import { useGesture } from '@use-gesture/react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 
 gsap.registerPlugin(useGSAP);
 
@@ -81,33 +81,14 @@ export function DragonModel(props: {}) {
   return (
     <group {...(bind() as any)} ref={modelRef} {...props} scale={scale} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh geometry={(nodes.logo as any).geometry}>
-        <meshPhysicalMaterial
-          {...{
-            color: '0xffffff',
-            roughness: 0.3,
-            metalness: 0.15,
-            sheen: 0,
-            sheenColor: 0,
-            sheenRoughness: 1,
-            emissive: 0,
-            specularIntensity: 1,
-            specularColor: 16777215,
-            clearcoat: 0,
-            clearcoatRoughness: 0,
-            dispersion: 0,
-            iridescence: 0,
-            iridescenceIOR: 1.3,
-            iridescenceThicknessRange: [100, 400],
-            anisotropy: 0,
-            anisotropyRotation: 0,
-            envMapIntensity: 1,
-            reflectivity: 0.8333333333333338,
-            transmission: 1,
-            thickness: 10,
-            attenuationColor: 16777215,
-            side: 2,
-            blendColor: 0,
-          }}
+        <MeshTransmissionMaterial
+          resolution={1024}
+          background={new THREE.Color('0xffffff')}
+          roughness={0.3}
+          metalness={0.1}
+          chromaticAberration={0.4}
+          transmission={0.8}
+          thickness={10}
         />
       </mesh>
     </group>

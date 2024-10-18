@@ -11,6 +11,8 @@ export default function Vision() {
     <div className="page-container">
       <div className="absolute left-0 top-0 size-full">
         <Canvas camera={{ position: [0, 0, 10], fov: 40 }} gl={{ alpha: true, antialias: true }}>
+          <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
+          <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
           <Suspense>
             <CenterLogo />
             <DragonModel />
