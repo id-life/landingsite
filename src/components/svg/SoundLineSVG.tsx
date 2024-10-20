@@ -12,7 +12,7 @@ export default function SoundLineSVG({ className, isOff }: { className?: string;
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="var(--background)" stopOpacity="0" />
-          <stop offset=".505" stopColor="var(--background)f" />
+          <stop offset=".505" stopColor="var(--background)" />
           <stop offset="1" stopColor="var(--background)" stopOpacity="0" />
         </linearGradient>
       </defs>
