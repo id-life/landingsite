@@ -6,6 +6,7 @@ import VisionDecorationRightBottomSVG from '@/../public/svgs/vision/vision-decor
 import VisionDecorationBottomScrollSVG from '@/../public/svgs/vision/vision-decoration-2.svg?component';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import VisionGL from '@/components/gl/VisionGL';
+import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 
 export default function Vision() {
   return (

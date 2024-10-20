@@ -12,6 +12,7 @@ import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
+import ToggleSoundButton from '../common/ToggleSoundButton';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -57,6 +58,7 @@ export default function Nav() {
       </div>
       <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog handleSubmit={() => setOpen(false)} />} />
       <MobileNavDialog />
+      <ToggleSoundButton className="fixed bottom-10 right-10 z-10 mobile:hidden" />
     </div>
   );
 }
