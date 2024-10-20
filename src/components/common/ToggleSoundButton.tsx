@@ -54,14 +54,6 @@ export default function ToggleSoundButton({ className }: { className?: string })
         'group flex cursor-pointer items-center gap-0.5 rounded-full bg-foreground px-2 py-1 transition duration-300 hover:scale-110',
         className,
       )}
-      onMouseEnter={() => {
-        tl1Ref?.current && tl1Ref.current?.pause();
-        tl2Ref?.current && tl2Ref.current?.pause();
-      }} // 鼠标悬停时播放动画
-      onMouseLeave={() => {
-        tl1Ref?.current && tl1Ref.current?.resume();
-        tl2Ref?.current && tl2Ref.current?.resume();
-      }} // 鼠标离开时暂停动画
       onClick={() => {
         setSoundOff((pre) => !pre);
       }}
