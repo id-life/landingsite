@@ -8,17 +8,16 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { clsx } from 'clsx';
 import { useAtom, useAtomValue } from 'jotai';
 import { useState } from 'react';
+import ToggleSoundButton from '../common/ToggleSoundButton';
 import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
-import ToggleSoundButton from '../common/ToggleSoundButton';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
   const [open, setOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
-
   const { handleNavClick } = useNavigation();
 
   return (
