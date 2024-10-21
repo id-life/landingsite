@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { useSetAtom } from 'jotai';
+import Fund from '@/app/fund/Fund';
 import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
 import { smootherAtom } from '@/atoms/scroll';
@@ -27,6 +28,7 @@ export default function Home() {
     <div ref={wrapperRef}>
       <div id="content" ref={contentRef}>
         <Vision />
+        <Fund />
       </div>
     </div>
   );

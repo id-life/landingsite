@@ -7,21 +7,21 @@ export function usePageScrollHeight() {
   const [scrollHeight, setScrollHeight] = useState<Map<string, number>>();
   const [scrollPageId, setScrollPageId] = useState<string>(NAV_LIST[0].id);
 
-  useEffect(() => {
-    const nav = document.querySelector('#nav');
-    if (!nav) return;
-    const map = new Map();
-
-    NAV_LIST.forEach((item) => {
-      const elementById = document.getElementById(item.id);
-      if (!elementById) return 0;
-      const height = elementById.getBoundingClientRect().y - nav.clientHeight;
-      map.set(item.id, height);
-    });
-    setScrollHeight(map);
-    window.addEventListener('scroll', () => setScrollY(window.scrollY));
-    window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
-  }, []);
+  // useEffect(() => {
+  //   const nav = document.querySelector('#nav');
+  //   if (!nav) return;
+  //   const map = new Map();
+  //
+  //   NAV_LIST.forEach((item) => {
+  //     const elementById = document.getElementById(item.id);
+  //     if (!elementById) return 0;
+  //     const height = elementById.getBoundingClientRect().y - nav.clientHeight;
+  //     map.set(item.id, height);
+  //   });
+  //   setScrollHeight(map);
+  //   window.addEventListener('scroll', () => setScrollY(window.scrollY));
+  //   window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
+  // }, []);
 
   useDebounce(
     () => {

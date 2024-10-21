@@ -1,12 +1,8 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import CenterLogo from '@/components/gl/CenterLogo';
-import { DragonModel } from '@/components/gl/model/dragon/DragonModel';
+import React from 'react';
 import VisionDecorationRightBottomSVG from '@/../public/svgs/vision/vision-decoration-1.svg?component';
 import VisionDecorationBottomScrollSVG from '@/../public/svgs/vision/vision-decoration-2.svg?component';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import VisionGL from '@/components/gl/VisionGL';
-import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 
 export default function Vision() {
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { useGSAP } from '@gsap/react';
@@ -76,7 +76,7 @@ export function DragonModel(props: {}) {
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
           resolution={1024}
-          background={new THREE.Color('0xffffff')}
+          background={new THREE.Color(0xffffff)}
           roughness={0.3}
           metalness={0.1}
           chromaticAberration={0.4}

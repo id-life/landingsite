@@ -1,5 +1,5 @@
-import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useState } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
 import CenterLogo from './CenterLogo';
 import { DragonModel } from './model/dragon/DragonModel';
 

@@ -33,8 +33,11 @@
   body {
     color: #222222;
     /*background-color: var(--background);*/
-    background-image: url(/svgs/bg-pot.svg), linear-gradient(to bottom right, #FFFFFF, #CBD6EA);
     @apply font-poppins;
+  }
+
+  .base-background {
+    background-image: url(/svgs/bg-pot.svg), linear-gradient(to bottom right, #FFFFFF, #CBD6EA);
   }
 }
 

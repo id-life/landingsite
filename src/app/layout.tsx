@@ -1,7 +1,8 @@
+import { clsx } from 'clsx';
 import Nav from '@/components/nav';
 import Providers from '@/providers/root';
+import Background from '@/components/common/Background';
 import { migrena, poppins, ttLakes, xirod } from '@/styles/fonts';
-import { clsx } from 'clsx';
 import type { Metadata } from 'next';
 import '../utils/analytics';
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           <Nav />
           {children}
+          <Background />
         </Providers>
       </body>
     </html>
