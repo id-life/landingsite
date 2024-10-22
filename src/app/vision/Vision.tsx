@@ -1,15 +1,12 @@
 import React from 'react';
+import { NAV_LIST } from '@/components/nav/nav';
 import VisionDecorationRightBottomSVG from '@/../public/svgs/vision/vision-decoration-1.svg?component';
 import VisionDecorationBottomScrollSVG from '@/../public/svgs/vision/vision-decoration-2.svg?component';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
-import VisionGL from '@/components/gl/VisionGL';
 
 export default function Vision() {
   return (
-    <div className="page-container">
-      <div className="absolute left-0 top-0 size-full">
-        <VisionGL />
-      </div>
+    <div id={NAV_LIST[0].id} className="page-container">
       <div className="absolute bottom-10 left-10 flex select-none items-center gap-1.5">
         <VisionDecorationRightBottomSVG className="h-12" />
         <p className="whitespace-pre-wrap font-poppins text-base/4.5 font-bold uppercase text-black">

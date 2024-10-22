@@ -14,14 +14,9 @@
     --background: #f0f0f0;
     --foreground: #000000;
     --nav: #f0f0f0;
-    --gradient: #c1111100;
-    --headerHeight: 8.5rem;
-  }
-
-  @media screen and (max-width: 768px) {
-    :root {
-      --headerHeight: 5rem;
-    }
+    --gradient-from: #FFFFFF;
+    --gradient-to: #CBD6EA;
+    --backgroun-point: #FFFFFF7F;
   }
 
   *::-webkit-scrollbar {
@@ -32,12 +27,17 @@
 
   body {
     color: #222222;
-    /*background-color: var(--background);*/
+    background: var(--background);
     @apply font-poppins;
   }
 
-  .base-background {
-    background-image: url(/svgs/bg-pot.svg), linear-gradient(to bottom right, #FFFFFF, #CBD6EA);
+  .base-background1 {
+    background-image: linear-gradient(90deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+  }
+
+  .base-background2 {
+    background-image: radial-gradient(#FFFFFF7F 2px, transparent 0px);
+    background-size: 8px 8px;
   }
 }
 
@@ -73,10 +73,6 @@
     &.border-hide {
       border-radius: 0;
     }
-
-    &.bg-fund {
-      background: var(--nav);
-    }
   }
 
   .vision-title {
@@ -99,7 +95,7 @@
 
 @layer utilities {
   .page-height {
-    height: calc(100dvh - var(--headerHeight));
+    height: 100dvh;
   }
 
   .page-hide {

@@ -70,6 +70,8 @@ export default function Fund() {
     window.open(item.link, '_blank');
   };
 
+  useGSAP(() => gsap.to('#vision-canvas', { autoAlpha: active ? 0 : 1 }), { dependencies: [active] });
+
   useGSAP(
     () => {
       if (isMobile) return;

@@ -1,28 +1,36 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { useGSAP } from '@gsap/react';
 import { useGesture } from '@use-gesture/react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 gsap.registerPlugin(useGSAP);
 
 const InitRotation = Math.PI / 2;
 
 export function DragonModel(props: {}) {
-  const { events } = useThree();
+  const { events, size } = useThree();
   const { nodes } = useGLTF('/models/logo.glb');
   const modelRef = useRef<THREE.Group>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [autoSwing, setAutoSwing] = useState(false);
   const rotationRef = useRef(InitRotation);
+  const smootherRef = useRef(ScrollSmoother.get());
+  const backgroundRef = useRef(new THREE.Color(0xffffff));
 
   useFrame(({ clock }) => {
-    if (!modelRef.current) return;
+    if (!modelRef.current || !smootherRef.current) return;
     if (autoSwing && !isDragging) {
       modelRef.current.rotation.y = rotationRef.current + Math.sin(clock.elapsedTime) * 0.1;
     }
+    const scrollTop = smootherRef.current.scrollTop();
+    const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 1, 193 / 255);
+    const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 1, 17 / 255);
+    const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 1, 17 / 255);
+    backgroundRef.current.setRGB(r, g, b);
   });
 
   const bind = useGesture(
@@ -76,7 +84,7 @@ export function DragonModel(props: {}) {
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
           resolution={1024}
-          background={new THREE.Color(0xffffff)}
+          background={backgroundRef.current}
           roughness={0.3}
           metalness={0.1}
           chromaticAberration={0.4}

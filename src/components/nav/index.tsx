@@ -13,6 +13,7 @@ import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
+import LogoSVG from '@/components/svg/LogoSVG';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -25,13 +26,9 @@ export default function Nav() {
       id="nav"
       className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5"
     >
-      <img
-        className="h-10 cursor-pointer mobile:h-5"
-        src="/svgs/logo-new.svg"
-        alt="logo"
-        loading="lazy"
-        onClick={() => handleNavClick(NAV_LIST[0])}
-      />
+      <div onClick={() => handleNavClick(NAV_LIST[0])}>
+        <LogoSVG className="h-10 cursor-pointer mobile:h-5" />
+      </div>
       <div className="flex gap-8 text-sm font-semibold mobile:hidden">
         {NAV_LIST.map((item) => (
           <div

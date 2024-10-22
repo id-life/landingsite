@@ -1,8 +1,7 @@
 import gsap from 'gsap';
 import { isMobile } from 'react-device-detect';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useAtomValue } from 'jotai';
-import { smootherAtom } from '@/atoms/scroll';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 const scrollLimit = 100;
 
@@ -16,7 +15,6 @@ export function useSwitchPage() {
   const pagesRef = useRef<HTMLDivElement[]>([]);
   const pagesYRef = useRef<number[]>([]);
   const smoothingRef = useRef<boolean>(false);
-  const smoother = useAtomValue(smootherAtom);
 
   const onChangeCurrentPage = useCallback((pageIndex: number) => {
     currentPageIndexRef.current = pageIndex;
@@ -32,6 +30,7 @@ export function useSwitchPage() {
   useEffect(() => {
     const content = document.getElementById('content');
     const navHeight = document.getElementById('nav')?.clientHeight ?? 0;
+    const smoother = ScrollSmoother.get();
     if (!content || !smoother) return;
 
     function handleSwitchPage() {
@@ -121,7 +120,7 @@ export function useSwitchPage() {
     } else {
       content.addEventListener('wheel', handleWheelEvent);
     }
-  }, [smoother]);
+  }, []);
 
   return useMemo(() => ({ onChangeCurrentPage }), [onChangeCurrentPage]);
 }

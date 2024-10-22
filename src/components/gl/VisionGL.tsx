@@ -23,7 +23,12 @@ function VisionGLGroup() {
 
 export default function VisionGL() {
   return (
-    <Canvas camera={{ position: [0, 0, 10], fov: 40 }} gl={{ alpha: true, antialias: true }}>
+    <Canvas
+      id="vision-canvas"
+      style={{ position: 'fixed', zIndex: 1 }}
+      camera={{ position: [0, 0, 10], fov: 40 }}
+      gl={{ alpha: true, antialias: true }}
+    >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense>

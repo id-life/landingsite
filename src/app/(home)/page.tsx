@@ -1,35 +1,57 @@
 'use client';
 
-import { useRef } from 'react';
-import { useSetAtom } from 'jotai';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
 import Fund from '@/app/fund/Fund';
 import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
-import { smootherAtom } from '@/atoms/scroll';
+import VisionGL from '@/components/gl/VisionGL';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 export default function Home() {
-  const setSmoother = useSetAtom(smootherAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const smoother = ScrollSmoother.create({
+    ScrollSmoother.create({
       wrapper: wrapperRef.current,
       content: contentRef.current,
       smooth: 1,
       effects: true,
       smoothTouch: 0.1,
     });
-    setSmoother(smoother);
+
+    const root = document.documentElement;
+    const background = getComputedStyle(root).getPropertyValue('--background');
+    const foreground = getComputedStyle(root).getPropertyValue('--foreground');
+    const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
+    pages.forEach((page) => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: page,
+          start: () => `bottom ${window.innerHeight}`,
+          scrub: true,
+        },
+      });
+      tl.to('.base-background2', { opacity: 0 }, 0);
+      tl.to(root, {
+        '--gradient-from': '#000000',
+        '--gradient-to': '#c111114c',
+        '--background': foreground,
+        '--foreground': background,
+      });
+    });
   });
 
   return (
-    <div ref={wrapperRef}>
-      <div id="content" ref={contentRef}>
-        <Vision />
-        <Fund />
+    <>
+      <VisionGL />
+      <div ref={wrapperRef}>
+        <div id="content" ref={contentRef}>
+          <Vision />
+          <Fund />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
