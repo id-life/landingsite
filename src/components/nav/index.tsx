@@ -7,8 +7,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { useNavigation } from '@/hooks/useNavigation';
 import { clsx } from 'clsx';
 import { useAtom, useAtomValue } from 'jotai';
-import { useState } from 'react';
-import ToggleSoundButton from '../common/ToggleSoundButton';
+import React, { useState } from 'react';
 import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
@@ -54,7 +53,6 @@ export default function Nav() {
       </div>
       <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog handleSubmit={() => setOpen(false)} />} />
       <MobileNavDialog />
-      <ToggleSoundButton className="fixed bottom-10 right-10 z-10 mobile:hidden" />
     </div>
   );
 }

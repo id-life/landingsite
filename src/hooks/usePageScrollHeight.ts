@@ -1,35 +1,28 @@
 import { NAV_LIST } from '@/components/nav/nav';
 import { useEffect, useMemo, useState } from 'react';
-import { useDebounce } from 'react-use';
 
 export function usePageScrollHeight() {
-  const [scrollY, setScrollY] = useState<number>(0);
-  const [scrollHeight, setScrollHeight] = useState<Map<string, number>>();
   const [scrollPageId, setScrollPageId] = useState<string>(NAV_LIST[0].id);
 
   useEffect(() => {
-    const map = new Map();
-
-    NAV_LIST.forEach((item) => {
+    const offsetTop: [string, number][] = NAV_LIST.map((item) => {
       const elementById = document.getElementById(item.id);
-      console.log('elementById: ', elementById);
-      if (!elementById) return 0;
-      const height = elementById.getBoundingClientRect().y;
-      map.set(item.id, height);
+      return [item.id, elementById?.offsetTop ?? -200];
     });
-    setScrollHeight(map);
-    window.addEventListener('scroll', () => setScrollY(window.scrollY));
+    console.log('offsetTop: ', offsetTop);
+    window.addEventListener('scroll', () => {
+      const offsetTop: [string, number][] = NAV_LIST.map((item) => {
+        const elementById = document.getElementById(item.id);
+        return [item.id, elementById?.offsetTop ?? -200];
+      });
+      offsetTop.forEach(([key, value]) => {
+        if (window.scrollY + 100 >= value) {
+          setScrollPageId(key);
+        }
+      });
+    });
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
   }, []);
 
-  useDebounce(
-    () => {
-      if (!scrollHeight) return;
-      scrollHeight.forEach((value, key) => scrollY + 10 >= value && setScrollPageId(key));
-    },
-    100,
-    [scrollY],
-  );
-
-  return useMemo(() => ({ scrollHeight, scrollPageId }), [scrollHeight, scrollPageId]);
+  return useMemo(() => ({ scrollPageId }), [scrollPageId]);
 }

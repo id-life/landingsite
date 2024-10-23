@@ -64,13 +64,39 @@ export default function Fund() {
   const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fundRefs = useRef<HTMLDivElement[]>([]);
+  const pageShowRef = useRef<gsap.core.Timeline>();
 
   const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
 
-  useGSAP(() => gsap.to('#vision-canvas', { autoAlpha: active ? 0 : 1 }), { dependencies: [active] });
+  useGSAP(
+    () => {
+      if (active) {
+        gsap.to('#vision-canvas', { autoAlpha: 0, opacity: 0 });
+        pageShowRef.current?.timeScale(1);
+        pageShowRef.current?.play();
+      } else {
+        gsap.to('#vision-canvas', { autoAlpha: 1, opacity: 1 });
+        pageShowRef.current?.timeScale(2);
+        pageShowRef.current?.reverse();
+      }
+    },
+    { dependencies: [active] },
+  );
+
+  useGSAP(
+    () => {
+      const timeline = gsap.timeline({ paused: true });
+      timeline.from('.page2-title', { delay: 1, y: (_, target) => target.offsetHeight, opacity: 0 });
+      const funds = gsap.utils.toArray<HTMLDivElement>('.page2-fund');
+      funds.forEach((fund) => timeline.from(fund, { y: fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=0.4'));
+      timeline.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, opacity: 0 }, '-=0.4');
+      pageShowRef.current = timeline;
+    },
+    { scope: wrapperRef },
+  );
 
   useGSAP(
     () => {
@@ -95,11 +121,10 @@ export default function Fund() {
         <div id="particle-container" className={cn({ active })}>
           <div className="particle-mask"></div>
         </div>
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        {/* <p className="text-center font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm/5">
-          Access To cutting-edge products, exclusive events, and a network of innovators
-        </p> */}
-        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="overflow-hidden">
+          <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
+        </div>
+        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
@@ -108,7 +133,7 @@ export default function Fund() {
                 if (!element) return;
                 fundRefs.current[index] = element;
               }}
-              className="relative h-72 cursor-pointer text-foreground mobile:h-37"
+              className="page2-fund relative h-72 cursor-pointer text-foreground mobile:h-37"
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
               <div className="text-center font-semibold">
@@ -122,7 +147,9 @@ export default function Fund() {
             </div>
           ))}
         </div>
-        <Contact />
+        <div className="page2-contact">
+          <Contact />
+        </div>
       </div>
     </div>
   );

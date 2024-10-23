@@ -11,10 +11,10 @@ export const NAV_LIST: NavItem[] = [
     id: 'portfolio_page',
     title: 'portfolio',
   },
-  {
-    id: 'value_page',
-    title: 'value',
-  },
+  // {
+  //   id: 'value_page',
+  //   title: 'value',
+  // },
   // {
   //   id: 'insight_page',
   //   title: 'insight',

@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react';
 import Vision from '@/app/vision/Vision';
 import VisionGL from '@/components/gl/VisionGL';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { NAV_LIST } from '@/components/nav/nav';
 
 export default function Home() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -24,22 +25,23 @@ export default function Home() {
     const root = document.documentElement;
     const background = getComputedStyle(root).getPropertyValue('--background');
     const foreground = getComputedStyle(root).getPropertyValue('--foreground');
-    const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
-    pages.forEach((page) => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: page,
-          start: () => `bottom ${window.innerHeight}`,
-          scrub: true,
-        },
-      });
-      tl.to('.base-background2', { opacity: 0 }, 0);
-      tl.to(root, {
-        '--gradient-from': '#000000',
-        '--gradient-to': '#c111114c',
-        '--background': foreground,
-        '--foreground': background,
-      });
+    // Vision
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[0].id}`,
+        start: 'bottom top',
+        end: () => `+=${window.innerHeight / 2}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: true,
+      },
+    });
+    tl.to('.base-background2', { opacity: 0 }, 0);
+    tl.to(root, {
+      '--gradient-from': '#000000',
+      '--gradient-to': '#c111114c',
+      '--background': foreground,
+      '--foreground': background,
     });
   });
 

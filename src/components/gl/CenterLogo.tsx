@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { Center, Svg } from '@react-three/drei';

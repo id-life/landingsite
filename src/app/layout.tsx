@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import '../utils/analytics';
 
 import '@/styles/globals.css';
+import FixedUI from '@/components/common/FixedUI';
 
 export const metadata: Metadata = {
   title: 'IMMORTAL DRAGONS',
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           <Nav />
           {children}
+          <FixedUI />
           <Background />
         </Providers>
       </body>
