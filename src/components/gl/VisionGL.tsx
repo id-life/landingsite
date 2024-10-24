@@ -1,9 +1,9 @@
-import { Suspense, useEffect, useState } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-import CenterLogo from './CenterLogo';
-import { DragonModel } from './model/dragon/DragonModel';
+import { useEffect, useState } from 'react';
+import { useThree } from '@react-three/fiber';
+import CenterLogo from './model/vision/CenterLogo';
+import DragonModel from './model/vision/DragonModel';
 
-function VisionGLGroup() {
+export default function VisionGL() {
   const { viewport } = useThree();
 
   const [scale, setScale] = useState(1);
@@ -18,22 +18,5 @@ function VisionGLGroup() {
       <CenterLogo />
       <DragonModel />
     </group>
-  );
-}
-
-export default function VisionGL() {
-  return (
-    <Canvas
-      id="vision-canvas"
-      style={{ position: 'fixed', zIndex: 1 }}
-      camera={{ position: [0, 0, 10], fov: 40 }}
-      gl={{ alpha: true, antialias: true }}
-    >
-      <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
-      <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-      <Suspense>
-        <VisionGLGroup />
-      </Suspense>
-    </Canvas>
   );
 }

@@ -1,7 +1,7 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -61,42 +61,46 @@ const funds: FundItem[] = [
 export default function Fund() {
   const isMobile = useIsMobile();
   const currentPage = useAtomValue(currentPageAtom);
-  const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  // const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  const activeRef = useRef<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fundRefs = useRef<HTMLDivElement[]>([]);
-  const pageShowRef = useRef<gsap.core.Timeline>();
-
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
 
-  useGSAP(
-    () => {
-      if (active) {
-        gsap.to('#vision-canvas', { autoAlpha: 0, opacity: 0 });
-        pageShowRef.current?.timeScale(1);
-        pageShowRef.current?.play();
-      } else {
-        gsap.to('#vision-canvas', { autoAlpha: 1, opacity: 1 });
-        pageShowRef.current?.timeScale(2);
-        pageShowRef.current?.reverse();
-      }
-    },
-    { dependencies: [active] },
-  );
-
-  useGSAP(
-    () => {
-      const timeline = gsap.timeline({ paused: true });
-      timeline.from('.page2-title', { delay: 1, y: (_, target) => target.offsetHeight, opacity: 0 });
-      const funds = gsap.utils.toArray<HTMLDivElement>('.page2-fund');
-      funds.forEach((fund) => timeline.from(fund, { y: fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=0.4'));
-      timeline.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, opacity: 0 }, '-=0.4');
-      pageShowRef.current = timeline;
-    },
-    { scope: wrapperRef },
-  );
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[1].id}`,
+        start: 'top top',
+        end: '+=300%',
+        pin: true,
+        pinSpacing: true,
+        scrub: true,
+        onEnter: () => {
+          setCurrentPage(NAV_LIST[1]);
+        },
+        onEnterBack: () => {
+          setCurrentPage(NAV_LIST[1]);
+        },
+      },
+    });
+    const funds = gsap.utils.toArray<HTMLDivElement>('.page2-fund');
+    tl.to(activeRef, { current: true });
+    tl.to('#vision-canvas', { autoAlpha: 0, opacity: 0, duration: 1, delay: 0.5 });
+    tl.from('.page2-title', { delay: 0.5, y: (_, target) => target.offsetHeight, opacity: 0 });
+    funds.forEach((fund) => tl.from(fund, { y: fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=40%'));
+    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, opacity: 0 }, '-=40%');
+    tl.to('.page2-title', { delay: 0.5, y: (_, target) => -target.offsetHeight, opacity: 0 });
+    funds.forEach((fund) => tl.to(fund, { y: -fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=40%'));
+    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, opacity: 0 }, '-=40%');
+    tl.to('#particle-gl', { opacity: 0 });
+    tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
+    tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
+  });
 
   useGSAP(
     () => {
@@ -116,10 +120,12 @@ export default function Fund() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && <ParticleGL activeAnim={true} />}
+      {activeRef.current && <ParticleGL activeAnim={true} />}
       <div className="relative flex h-screen flex-col items-center justify-center">
-        <div id="particle-container" className={cn({ active })}>
-          <div className="particle-mask"></div>
+        <div id="particle-gl">
+          <div id="particle-container" className={cn({ active: activeRef.current })}>
+            <div className="particle-mask"></div>
+          </div>
         </div>
         <div className="overflow-hidden">
           <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>

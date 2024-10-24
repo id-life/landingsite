@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { NAV_LIST } from '@/components/nav/nav';
 import VisionDecorationBottomScrollSVG from '@/../public/svgs/vision/vision-decoration-2.svg?component';
 
 export default function Vision() {
+  const wrapperRef = useRef(null);
+  const visionBottomRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.to(visionBottomRef.current, {
+        opacity: 0,
+        scrollTrigger: { toggleActions: 'play none none reverse' },
+      });
+    },
+    { scope: wrapperRef },
+  );
   return (
-    <div id={NAV_LIST[0].id} className="page-container">
+    <div ref={wrapperRef} id={NAV_LIST[0].id} className="page-container">
       {/* pieces of decoration */}
-      <div className="group absolute inset-0 -z-10 select-none">
+      <div ref={visionBottomRef} className="group absolute inset-0 -z-10 select-none">
         <img
           src="/imgs/vision-decoration-text.png"
           draggable={false}

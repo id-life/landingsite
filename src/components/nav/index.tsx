@@ -7,7 +7,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { useNavigation } from '@/hooks/useNavigation';
 import { clsx } from 'clsx';
 import { useAtom, useAtomValue } from 'jotai';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dialog from '../dialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import SubscribeDialog from '../dialog/SubscribeDialog';
@@ -19,6 +19,10 @@ export default function Nav() {
   const [open, setOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const { handleNavClick } = useNavigation();
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
+  }, []);
 
   return (
     <div
