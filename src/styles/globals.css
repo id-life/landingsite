@@ -74,6 +74,10 @@
       min-height: 300vh;
     }
 
+    &.value {
+      min-height: 500vh;
+    }
+
   }
 
   .vision-title {

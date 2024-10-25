@@ -90,7 +90,7 @@ export default function Fund() {
     });
     const funds = gsap.utils.toArray<HTMLDivElement>('.page2-fund');
     tl.to(activeRef, { current: true });
-    tl.to('#vision-canvas', { autoAlpha: 0, opacity: 0, duration: 1, delay: 0.5 });
+    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 1, delay: 0.5 });
     tl.from('.page2-title', { delay: 0.5, y: (_, target) => target.offsetHeight, opacity: 0 });
     funds.forEach((fund) => tl.from(fund, { y: fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=40%'));
     tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, opacity: 0 }, '-=40%');

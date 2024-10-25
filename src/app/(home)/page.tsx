@@ -61,7 +61,7 @@ export default function Home() {
       '--foreground': '#000000',
     });
     valueTL.to('.base-background2', { opacity: 1 });
-    valueTL.to('#vision-canvas', { autoAlpha: 1, opacity: 1, duration: 1, delay: 0.5 });
+    valueTL.to('#vision-canvas', { zIndex: 1, opacity: 1, duration: 1, delay: 0.5 });
   });
 
   return (

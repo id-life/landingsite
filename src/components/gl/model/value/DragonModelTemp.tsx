@@ -1,15 +1,14 @@
 import * as THREE from 'three';
-import React, { useRef } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 
 const InitRotation = Math.PI / 2;
 
-export default function DragonModelTemp(props: {}) {
-  const { nodes } = useGLTF('/models/logo.glb');
-  const modelRef = useRef<THREE.Group>(null);
+const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
+  const {nodes} = useGLTF('/models/logo.glb');
 
   return (
-    <group ref={modelRef} {...props} scale={0.13} position={[0, -10, 0]} rotation={[0, InitRotation, 0]}>
+    <group ref={ref} {...props} scale={0.13} position={[0, -10, 0]} rotation={[0, InitRotation, 0]}>
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
           resolution={1024}
@@ -23,4 +22,7 @@ export default function DragonModelTemp(props: {}) {
       </mesh>
     </group>
   );
-}
+});
+DragonModelTemp.displayName = 'DragonModelTemp';
+
+export default DragonModelTemp;

@@ -24,9 +24,9 @@ export default function DragonModel(props: {}) {
       modelRef.current.rotation.y = rotationRef.current + Math.sin(clock.elapsedTime) * 0.1;
     }
     const scrollTop = smootherRef.current.scrollTop();
-    const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.3, 1, 193 / 255);
-    const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.3, 1, 17 / 255);
-    const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.3, 1, 17 / 255);
+    const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 193 / 255);
+    const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
+    const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
     backgroundRef.current.setRGB(r, g, b);
   });
 
