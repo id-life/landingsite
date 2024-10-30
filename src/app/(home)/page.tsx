@@ -62,6 +62,7 @@ export default function Home() {
     });
     valueTL.to('.base-background2', { opacity: 1 });
     valueTL.to('#vision-canvas', { zIndex: 1, opacity: 1, duration: 1, delay: 0.5 });
+    valueTL.to('#page-value-1', { opacity: 1 });
   });
 
   return (
