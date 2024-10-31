@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { cn } from '@/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -60,9 +60,7 @@ const funds: FundItem[] = [
 
 export default function Fund() {
   const isMobile = useIsMobile();
-  const currentPage = useAtomValue(currentPageAtom);
-  // const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
-  const activeRef = useRef<boolean>(false);
+  const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fundRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -82,21 +80,35 @@ export default function Fund() {
         scrub: true,
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
+          setActive(true);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[1]);
+          setActive(true);
+        },
+        onLeaveBack: () => {
+          setActive(false);
         },
       },
     });
-    const funds = gsap.utils.toArray<HTMLDivElement>('.page2-fund');
-    tl.to(activeRef, { current: true });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 1, delay: 0.5 });
-    tl.from('.page2-title', { delay: 0.5, y: (_, target) => target.offsetHeight, opacity: 0 });
-    funds.forEach((fund) => tl.from(fund, { y: fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=40%'));
-    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, opacity: 0 }, '-=40%');
-    tl.to('.page2-title', { delay: 0.5, y: (_, target) => -target.offsetHeight, opacity: 0 });
-    funds.forEach((fund) => tl.to(fund, { y: -fund.offsetHeight / 3, opacity: 0, ease: 'power3.out' }, '-=40%'));
-    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, opacity: 0 }, '-=40%');
+    tl.from('.page2-title', {
+      delay: 0.5,
+      y: (_, target) => target.offsetHeight,
+      rotateX: 45,
+      rotateY: 15,
+      opacity: 0,
+    });
+    tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
+    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
+    tl.to('.page2-title', {
+      delay: 0.5,
+      y: (_, target) => -target.offsetHeight,
+      rotateX: -45,
+      rotateY: 15,
+      opacity: 0,
+    });
+    tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
+    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
     tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
@@ -120,17 +132,15 @@ export default function Fund() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {activeRef.current && <ParticleGL activeAnim={true} />}
+      {active && <ParticleGL activeAnim={active} />}
       <div className="relative flex h-screen flex-col items-center justify-center">
         <div id="particle-gl">
-          <div id="particle-container" className={cn({ active: activeRef.current })}>
+          <div id="particle-container" className={cn({ active })}>
             <div className="particle-mask"></div>
           </div>
         </div>
-        <div className="overflow-hidden">
-          <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        </div>
-        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
+        <div className="page2-fund mt-12 grid w-full grid-cols-6 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
@@ -139,7 +149,7 @@ export default function Fund() {
                 if (!element) return;
                 fundRefs.current[index] = element;
               }}
-              className="page2-fund relative h-72 cursor-pointer text-foreground mobile:h-37"
+              className="relative h-72 cursor-pointer text-foreground mobile:h-37"
             >
               <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
               <div className="text-center font-semibold">

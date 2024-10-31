@@ -1,21 +1,22 @@
 import React, { forwardRef, Ref, useEffect } from 'react';
 import * as THREE from 'three';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { MeshTransmissionMaterial } from '@/utils/three/meshTransmissionMaterial';
+import { MeshTransmissionMaterial } from '@pmndrs/vanilla';
 
 const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
   const { scene, animations } = useGLTF('/models/animal1.glb');
   const { actions, names } = useAnimations(animations, scene);
 
   useEffect(() => {
-    const material = Object.assign(new MeshTransmissionMaterial(10), {
-      resolution: 1024,
-      background: new THREE.Color(0xffffff),
+    const material = new MeshTransmissionMaterial({
       roughness: 0.3,
-      metalness: 0.1,
-      chromaticAberration: 0.4,
+      chromaticAberration: 1,
+      samples: 10,
+      anisotropicBlur: 1,
+      attenuationDistance: 2,
+      transmissionSampler: true,
       transmission: 0.8,
-      thickness: 10,
+      thickness: 0.5,
     });
     scene.traverse((child: any) => {
       if (child.isMesh) {

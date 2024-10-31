@@ -86,7 +86,7 @@ export default function DragonModel(props: {}) {
     <group {...(bind() as any)} ref={modelRef} {...props} scale={0.13} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
-          resolution={1024}
+          resolution={256}
           background={backgroundRef.current}
           roughness={0.3}
           metalness={0.1}
