@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
+import FixedCard from '@/app/value/FixedCard';
+import FixedValue from '@/app/value/FixedValue';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import VisionDecorationRightBottomSVG from '@/../public/svgs/vision/vision-decoration-1.svg?component';
-import FixedValue from '@/app/value/FixedValue';
 
 export default function FixedUI() {
   return (
@@ -22,6 +23,7 @@ export default function FixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300" />
       <ToggleSoundButton className="fixed bottom-10 right-10 z-10 mobile:hidden" />
       <FixedValue />
+      <FixedCard />
     </>
   );
 }

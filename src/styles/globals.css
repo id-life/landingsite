@@ -142,4 +142,17 @@
       opacity: 0;
     }
   }
+
+  .clip-box {
+    background: #222222CC;
+    transform-style: preserve-3d;
+    transform: rotateX(15deg) rotateY(-15deg);
+    transition: transform 0.5s ease;
+    cursor: pointer;
+    clip-path: polygon(1.125rem 0, 100% 0, 100% calc(100% - 1.125rem), calc(100% - 1.125rem) 100%, 0 100%, 0 1.125rem);
+
+    &:hover {
+      transform: rotateX(0deg) rotateY(0deg) scale(1.1) translateY(-30px);
+    }
+  }
 }

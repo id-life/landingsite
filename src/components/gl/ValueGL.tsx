@@ -92,6 +92,7 @@ export default function ValueGL() {
         camera.lookAt(0, modelRef.current.position.y, 0);
       },
     });
+    tl.fromTo('#page-value-card', { y: '15rem' }, { x: '100%', y: 0, duration: 5 });
     tl.to('#value-end-1', { opacity: 1 }).to('#value-end-1', { opacity: 0 });
     tl.to('#value-end-2', { opacity: 1 });
   });

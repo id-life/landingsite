@@ -4,7 +4,7 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import { MeshTransmissionMaterial } from '@pmndrs/vanilla';
 
 const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
-  const { scene, animations } = useGLTF('/models/animal1.glb');
+  const { scene, animations } = useGLTF('/models/animal2.glb');
   const { actions, names } = useAnimations(animations, scene);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
       attenuationDistance: 2,
       transmissionSampler: true,
       transmission: 0.8,
-      thickness: 0.5,
+      thickness: 0.1,
     });
     scene.traverse((child: any) => {
       if (child.isMesh) {
@@ -26,12 +26,12 @@ const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [scene]);
 
   useEffect(() => {
-    actions[names[0]]?.reset().play();
+    actions[names[1]]?.reset().play();
   }, [actions, names]);
 
   return (
     <group ref={ref} {...props} position={[0, -10, 0]}>
-      <group scale={0.13} position={[2, -2, 0]} rotation={[0, Math.PI / 2, 0]}>
+      <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
     </group>
