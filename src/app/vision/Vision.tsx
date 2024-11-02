@@ -80,7 +80,7 @@ export default function Vision() {
           ) : (
             <>
               <LogoSVG className="h-15.5 mobile:h-10.5" />
-              <h2 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h2>
+              <h1 className="text-[3.5rem]/[3.875rem] text-red-600">IMMORTAL DRAGONS</h1>
             </>
           )}
         </div>
@@ -98,7 +98,7 @@ export default function Vision() {
           ) : (
             <>
               <LogoWhiteSVG className="h-15.5 mobile:h-10.5" />
-              <h2 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h2>
+              <h1 className="text-[3.5rem]/[3.875rem]">IMMORTAL DRAGONS</h1>
             </>
           )}
         </div>
