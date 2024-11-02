@@ -1,5 +1,6 @@
 import Nav from '@/components/nav';
 import Providers from '@/providers/root';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { migrena, poppins, ttLakes, xirod } from '@/styles/fonts';
 import { clsx } from 'clsx';
 import type { Metadata } from 'next';
@@ -34,6 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-NZKZJ38H" />
       <body
         className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, 'antialiased')}
         suppressHydrationWarning

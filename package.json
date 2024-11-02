@@ -11,6 +11,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
     "@gsap/react": "^2.1.1",
+    "@next/third-parties": "^15.0.2",
     "@p5-wrapper/react": "^4.4.2",
     "@react-three/drei": "9.0.3",
     "@react-three/fiber": "8.0.27",
