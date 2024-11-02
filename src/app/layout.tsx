@@ -1,11 +1,11 @@
+import { clsx } from 'clsx';
 import Nav from '@/components/nav';
 import Providers from '@/providers/root';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { migrena, poppins, ttLakes, xirod } from '@/styles/fonts';
-import { clsx } from 'clsx';
 import type { Metadata } from 'next';
-import '../utils/analytics';
 
+import '../utils/analytics';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'IMMORTAL DRAGONS',
+    siteName: 'IMMORTAL DRAGONS',
     description: 'Til Unlimited Human Healthy Lifespan.',
     images: [
       {
@@ -30,6 +31,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'IMMORTAL DRAGONS',
+  url: 'https://www.id.life/',
+  description: 'Til Unlimited Human Healthy Lifespan.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -40,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, 'antialiased')}
         suppressHydrationWarning
       >
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
           <Nav />
           {children}
