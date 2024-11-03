@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
+import { FluidEffect } from './effects/FluidEffect';
 
 export default function ThreeWrapper() {
   return (
@@ -9,7 +10,11 @@ export default function ThreeWrapper() {
       id="vision-canvas"
       style={{ position: 'fixed', zIndex: 1 }}
       camera={{ position: [0, 0, 10], fov: 40 }}
-      gl={{ alpha: true, antialias: true }}
+      gl={{
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      }}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
@@ -19,6 +24,7 @@ export default function ThreeWrapper() {
       <Suspense>
         <ValueGL />
       </Suspense>
+      <FluidEffect />
     </Canvas>
   );
 }
