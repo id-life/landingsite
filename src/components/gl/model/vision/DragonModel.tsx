@@ -88,7 +88,7 @@ export default function DragonModel(props: {}) {
         <MeshTransmissionMaterial
           resolution={256}
           background={backgroundRef.current}
-          roughness={0.3}
+          roughness={0.4}
           metalness={0.1}
           chromaticAberration={0.4}
           transmission={0.8}
