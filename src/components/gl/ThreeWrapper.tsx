@@ -28,7 +28,7 @@ export default function ThreeWrapper() {
       </Suspense>
 
       <EffectComposer>
-        <Fluid {...{ ...config, showBackground: false, fluidColor: '#000' }} />
+        <Fluid showBackground={false} rainbow={true} radius={0.07} />
       </EffectComposer>
     </Canvas>
   );
