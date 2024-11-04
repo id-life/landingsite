@@ -1,8 +1,9 @@
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
-import { FluidEffect } from './effects/FluidEffect';
+import { Canvas } from '@react-three/fiber';
+import { EffectComposer } from '@react-three/postprocessing';
+import { Fluid } from '@whatisjery/react-fluid-distortion';
+import { Suspense } from 'react';
 
 export default function ThreeWrapper() {
   return (
@@ -24,7 +25,10 @@ export default function ThreeWrapper() {
       <Suspense>
         <ValueGL />
       </Suspense>
-      <FluidEffect />
+
+      <EffectComposer>
+        <Fluid showBackground={false} fluidColor="#000" />
+      </EffectComposer>
     </Canvas>
   );
 }
