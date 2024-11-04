@@ -7,7 +7,7 @@ import { MeshTransmissionMaterial, MeshDiscardMaterial } from '@pmndrs/vanilla';
 const backsideThickness = 1.5;
 const thickness = 5;
 
-const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
+const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   const { scene, animations } = useGLTF('/models/animal2.glb');
   const { actions, names } = useAnimations(animations, scene);
   const meshRef = useRef<THREE.Mesh[]>([]);
@@ -72,6 +72,6 @@ const DragonModelTemp = forwardRef((props, ref: Ref<THREE.Group>) => {
     </group>
   );
 });
-DragonModelTemp.displayName = 'DragonModelTemp';
+AnimalModel.displayName = 'DragonModelTemp';
 
-export default DragonModelTemp;
+export default AnimalModel;

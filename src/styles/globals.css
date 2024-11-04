@@ -144,15 +144,23 @@
   }
 
   .clip-box {
-    background: #222222CC;
-    transform-style: preserve-3d;
-    transform: rotateX(15deg) rotateY(-15deg);
+    background: #22222299;
     transition: transform 0.5s ease;
+    perspective-origin: right;
     cursor: pointer;
-    clip-path: polygon(1.125rem 0, 100% 0, 100% calc(100% - 1.125rem), calc(100% - 1.125rem) 100%, 0 100%, 0 1.125rem);
+    /*clip-path: polygon(1.125rem 0, 100% 0, 100% calc(100% - 1.125rem), calc(100% - 1.125rem) 100%, 0 100%, 0 1.125rem);*/
 
     &:hover {
-      transform: rotateX(0deg) rotateY(0deg) scale(1.1) translateY(-30px);
+      transform: scale(1.1) translateY(-30px);
     }
+  }
+
+  .page-value-card {
+    transform: translateX(-120%) rotateY(-5deg) rotateX(5deg) rotateZ(-2deg);
+  }
+
+  .page-value-container {
+    perspective: 2000px;
+    perspective-origin: top right;
   }
 }

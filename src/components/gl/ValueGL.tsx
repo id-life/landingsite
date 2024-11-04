@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { useThree } from '@react-three/fiber';
 import { Center, Svg } from '@react-three/drei';
 import { NAV_LIST } from '@/components/nav/nav';
-import DragonModelTemp from '@/components/gl/model/value/DragonModelTemp';
+import AnimalModel from '@/components/gl/model/value/AnimalModel';
 
 const radius = 10;
 
@@ -92,7 +92,7 @@ export default function ValueGL() {
         camera.lookAt(0, modelRef.current.position.y, 0);
       },
     });
-    tl.fromTo('#page-value-card', { y: '15rem' }, { x: '100%', y: 0, duration: 5 });
+    tl.to('.page-value-card', { x: '100%', duration: 5 });
     tl.to('#value-end-1', { opacity: 1 }).to('#value-end-1', { opacity: 0 });
     tl.to('#value-end-2', { opacity: 1 });
   });
@@ -111,7 +111,7 @@ export default function ValueGL() {
       <Center ref={svgRef} position={[-1.728, -48.639, -6.911]} rotation={[-1.107, -0.262, -0.478]}>
         <Svg scale={0.013} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <DragonModelTemp ref={modelRef} />
+      <AnimalModel ref={modelRef} />
     </group>
   );
 }

@@ -90,7 +90,7 @@ export default function Fund() {
         },
       },
     });
-    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 1, delay: 0.5 });
+    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
     tl.from('.page2-title', {
       delay: 0.5,
       y: (_, target) => target.offsetHeight,

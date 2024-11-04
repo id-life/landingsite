@@ -14,7 +14,10 @@ type CardItemProps = {
 
 function CardItem({ cover, title, desc, createTime, className, style }: CardItemProps) {
   return (
-    <div style={style} className={clsx('page-value-card-item clip-box relative w-[23.125rem] backdrop-blur', className)}>
+    <div
+      style={style}
+      className={clsx('page-value-card-item clip-box relative w-[23.125rem] shadow-lg backdrop-blur', className)}
+    >
       <div className="h-[13.5rem] w-full">
         <img src={cover} className="h-full object-cover" alt="cover" />
       </div>
@@ -70,17 +73,12 @@ export default function FixedCard() {
     [],
   );
   return (
-    <div id="page-value-card" className="fixed -translate-x-full top-1/3 z-20 flex gap-4">
-      {content.map((item, index) => (
-        <CardItem
-          style={{ bottom: `${2 * index}rem` }}
-          key={index}
-          cover={item.cover}
-          title={item.title}
-          desc={item.desc}
-          createTime={item.createTime}
-        />
-      ))}
+    <div className="page-value-container fixed top-1/3 z-20">
+      <div className="page-value-card flex gap-8">
+        {content.map((item, index) => (
+          <CardItem key={index} cover={item.cover} title={item.title} desc={item.desc} createTime={item.createTime} />
+        ))}
+      </div>
     </div>
   );
 }
