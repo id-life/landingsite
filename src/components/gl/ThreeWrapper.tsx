@@ -2,10 +2,11 @@ import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { Fluid } from '@whatisjery/react-fluid-distortion';
+import { Fluid, useConfig } from '@whatisjery/react-fluid-distortion';
 import { Suspense } from 'react';
 
 export default function ThreeWrapper() {
+  const config = useConfig();
   return (
     <Canvas
       id="vision-canvas"
@@ -27,7 +28,7 @@ export default function ThreeWrapper() {
       </Suspense>
 
       <EffectComposer>
-        <Fluid showBackground={false} fluidColor="#000" />
+        <Fluid {...{ ...config, showBackground: false, fluidColor: '#000' }} />
       </EffectComposer>
     </Canvas>
   );
