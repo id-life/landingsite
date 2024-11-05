@@ -6,11 +6,6 @@ import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { useConfig } from './fluid/hooks/useConfig';
 
-const opts = {
-  showBackground: false,
-  rainbow: true,
-  radius: 0.07,
-};
 export default function ThreeWrapper() {
   const config = useConfig();
   return (
@@ -34,7 +29,7 @@ export default function ThreeWrapper() {
       </Suspense>
 
       <EffectComposer>
-        <Fluid {...{ ...config, ...opts }} />
+        <Fluid {...config} />
       </EffectComposer>
     </Canvas>
   );
