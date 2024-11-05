@@ -144,23 +144,19 @@
   }
 
   .clip-box {
+    position: relative;
     background: #22222299;
-    transition: transform 0.5s ease;
-    perspective-origin: right;
     cursor: pointer;
-    /*clip-path: polygon(1.125rem 0, 100% 0, 100% calc(100% - 1.125rem), calc(100% - 1.125rem) 100%, 0 100%, 0 1.125rem);*/
+    transform: rotateY(-5deg) rotateX(8deg);
 
     &:hover {
-      transform: scale(1.1) translateY(-30px);
+      transform: rotateY(-5deg) rotateX(8deg) scale(1.1) translateY(-30px);
     }
   }
 
   .page-value-card {
-    transform: translateX(-120%) rotateY(-5deg) rotateX(5deg) rotateZ(-2deg);
-  }
-
-  .page-value-container {
     perspective: 2000px;
-    perspective-origin: top right;
+    perspective-origin: center right;
+    transform: translateX(-120%);
   }
 }

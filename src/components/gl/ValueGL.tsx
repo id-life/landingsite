@@ -92,7 +92,9 @@ export default function ValueGL() {
         camera.lookAt(0, modelRef.current.position.y, 0);
       },
     });
-    tl.to('.page-value-card', { x: '100%', duration: 5 });
+    tl.set('.page-value-card', { x: '-30%' });
+    tl.fromTo('.page-value-card-item', { left: '-=100%' }, { left: `+=220%`, duration: 5 });
+    tl.set('.page-value-card', { x: '100%' });
     tl.to('#value-end-1', { opacity: 1 }).to('#value-end-1', { opacity: 0 });
     tl.to('#value-end-2', { opacity: 1 });
   });

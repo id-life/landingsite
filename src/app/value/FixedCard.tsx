@@ -73,12 +73,10 @@ export default function FixedCard() {
     [],
   );
   return (
-    <div className="page-value-container fixed top-1/3 z-20">
-      <div className="page-value-card flex gap-8">
-        {content.map((item, index) => (
-          <CardItem key={index} cover={item.cover} title={item.title} desc={item.desc} createTime={item.createTime} />
-        ))}
-      </div>
+    <div className="page-value-card fixed top-1/3 z-20 flex gap-8">
+      {content.map((item, index) => (
+        <CardItem key={index} cover={item.cover} title={item.title} desc={item.desc} createTime={item.createTime} />
+      ))}
     </div>
   );
 }
