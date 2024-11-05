@@ -1,7 +1,7 @@
 // remake from https://github.com/whatisjery/react-fluid-distortion
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
 import { useCallback, useMemo, useRef } from 'react';
-import { Camera, Color, Mesh, Scene, Texture, Vector2, Vector3 } from 'three';
+import { Camera, Color, DoubleSide, Mesh, Scene, Texture, Vector2, Vector3 } from 'three';
 import { ShaderPass } from 'three/examples/jsm/Addons.js';
 import { Effect as FluidEffect } from './effect';
 import { useFBOs } from './hooks/useFBOs';
@@ -55,13 +55,14 @@ export const Fluid = ({
 
   const FBOs = useFBOs();
   const materials = useMaterials();
-  const { onPointerMove, splatStack } = usePointer({ force });
+  const { splatStack } = usePointer({ force });
 
   const setShaderMaterial = useCallback(
     (name: keyof ReturnType<typeof useMaterials>) => {
       if (!meshRef.current) return;
 
       meshRef.current.material = materials[name];
+      meshRef.current.material.side = DoubleSide;
       meshRef.current.material.needsUpdate = true;
     },
     [materials],
@@ -165,8 +166,9 @@ export const Fluid = ({
   return (
     <>
       {createPortal(
-        <mesh ref={meshRef} onPointerMove={onPointerMove} scale={[size.width, size.height, 1]}>
+        <mesh ref={meshRef} scale={[size.width, size.height, 1]}>
           <planeGeometry args={[2, 2, 10, 10]} />
+          <shaderMaterial side={DoubleSide} transparent={true} depthWrite={false} />
         </mesh>,
         bufferScene,
       )}

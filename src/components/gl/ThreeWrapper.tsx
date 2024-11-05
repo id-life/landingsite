@@ -20,7 +20,7 @@ export default function ThreeWrapper() {
         antialias: true,
         powerPreference: 'high-performance',
       }}
-      eventSource={isMounted ? document.documentElement : undefined}
+      // eventSource={isMounted ? document.body : undefined}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
