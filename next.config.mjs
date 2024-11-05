@@ -24,6 +24,14 @@ const nextConfig = {
         use: '@svgr/webpack',
         resourceQuery: /component/, // *.svg?component
       },
+      // 添加 GLSL 文件的处理规则
+      {
+        test: /\.(glsl|vert|frag)$/,
+        use: [
+          'raw-loader',
+          'glslify-loader'
+        ]
+      }
     ];
     return config;
   },

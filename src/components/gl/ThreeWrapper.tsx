@@ -2,9 +2,15 @@ import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { Fluid, useConfig } from '@whatisjery/react-fluid-distortion';
 import { Suspense } from 'react';
+import { Fluid } from './fluid/Fluid';
+import { useConfig } from './fluid/hooks/useConfig';
 
+const opts = {
+  showBackground: false,
+  rainbow: true,
+  radius: 0.07,
+};
 export default function ThreeWrapper() {
   const config = useConfig();
   return (
@@ -28,7 +34,7 @@ export default function ThreeWrapper() {
       </Suspense>
 
       <EffectComposer>
-        <Fluid showBackground={false} rainbow={true} radius={0.07} />
+        <Fluid {...{ ...config, ...opts }} />
       </EffectComposer>
     </Canvas>
   );
