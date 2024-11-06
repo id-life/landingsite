@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import Nav from '@/components/nav';
 import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
-import { migrena, poppins, ttLakes, xirod } from '@/styles/fonts';
+import { migrena, oxanium, poppins, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata } from 'next';
 import '../utils/analytics';
 
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body
-        className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, 'antialiased')}
+        className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, oxanium.variable, 'antialiased')}
         suppressHydrationWarning
       >
         <Providers>

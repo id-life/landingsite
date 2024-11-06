@@ -4,11 +4,12 @@ import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import SubscribeDialog from './SubscribeDialog';
+import { isSubscribeShowAtom } from '@/atoms/footer';
 
 gsap.registerPlugin(useGSAP);
 
@@ -17,6 +18,7 @@ export default function MobileNavDialog() {
   const [subsOpen, setSubOpen] = useState(false);
   const [currentPage] = useAtom(currentPageAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
+  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
 
   const startAnim = (isOpen: boolean) => {
     if (isOpen) {
@@ -36,6 +38,19 @@ export default function MobileNavDialog() {
     }, 300);
   };
 
+  const onSubscribeClick = () => {
+    if (isSubscribeShow) {
+      gsap.to('.footer-box-clip', {
+        x: 10,
+        repeat: 5,
+        yoyo: true,
+        duration: 0.1,
+      });
+    } else {
+      setSubOpen(true);
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => startAnim(open), 300);
   }, [open]);
@@ -53,7 +68,7 @@ export default function MobileNavDialog() {
         <div className="flex w-full flex-col">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <div
-              onClick={() => setSubOpen(true)}
+              onClick={onSubscribeClick}
               className="group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-white duration-300 group-hover:stroke-red-600" />

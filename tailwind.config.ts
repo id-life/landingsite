@@ -17,6 +17,7 @@ const config: Config = {
         poppins: ['var(--font-poppins)'],
         migrena: ['var(--font-migrena)'],
         tt: ['var(--font-tt)'],
+        oxanium: ['var(--font-oxanium)'],
       },
       animation: {
         'scroll-down': 'scroll-down 1.5s ease-in infinite',

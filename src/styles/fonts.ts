@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import { Poppins } from 'next/font/google';
+import { Oxanium } from 'next/font/google';
 
 const xirod = localFont({
   src: './fonts/Xirod.ttf',
@@ -25,4 +26,10 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-export { xirod, poppins, ttLakes, migrena };
+const oxanium = Oxanium({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-oxanium',
+});
+
+export { xirod, poppins, ttLakes, migrena, oxanium };

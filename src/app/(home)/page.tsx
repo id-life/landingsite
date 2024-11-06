@@ -11,6 +11,7 @@ import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
+import Footer from '@/app/footer/Footer';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -72,6 +73,7 @@ export default function Home() {
           <Vision />
           <Fund />
           <Value />
+          <Footer />
         </div>
       </div>
     </>
