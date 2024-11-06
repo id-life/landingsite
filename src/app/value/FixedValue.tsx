@@ -39,29 +39,28 @@ export default function FixedValue() {
           <p className="mt-4 w-[29.125rem] text-base font-semibold">{item.content}</p>
         </div>
       ))}
-      <div id="value-end-1" className="fixed left-10 top-1/4 z-10 w-[27.1875rem] opacity-0">
-        <h2 className="text-3xl font-bold uppercase">Purpose - driven fund - To extend human healthy lifespan</h2>
-        <p className="mt-10 text-xl/5 font-bold uppercase">
-          We attract as much resources, capital, talent, attention, into longevity
-        </p>
-        <p className="mt-10 text-xl/5 font-bold uppercase">
-          Combine the best from West and East - from capital, to researcher and founder
-        </p>
-        <p className="mt-7.5 text-xl/5 font-bold uppercase">
-          Support the portfolio with business acumen, strategy, and commercialization
-        </p>
-        <p className="mt-7.5 text-xl/5 font-bold uppercase">Audacity / moonshots / bold bets</p>
+      <div id="value-end-1" className="fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 opacity-0">
+        <h2 className="text-3xl font-bold uppercase">Promising Early-Stage Ventures</h2>
+        <ul className="list-mark-red-disc mt-9 flex flex-col gap-7.5 text-xl/5 font-bold uppercase">
+          <li>Partnering with Pre-Seed to Series A startups under $100m valuations, fueling growth from concept to impact.</li>
+          <li>Prioritizing talent, bold visions, and maximum human benefit over incremental gains and cautious approaches.</li>
+        </ul>
       </div>
-      <div id="value-end-2" className="fixed right-10 top-1/4 z-10 grid gap-6 opacity-0">
-        <div className="submit-btn !py-2.5 px-3.5">Stem Cell Therapy</div>
-        <div className="submit-btn !py-2.5 px-3.5">Global Scientific Collaboration</div>
-        <div className="submit-btn !py-2.5 px-3.5">Whole Body Replacement</div>
-        <div className="submit-btn !py-2.5 px-3.5">Gene Therapy</div>
-        <div className="submit-btn !py-2.5 px-3.5">Programmable Biology</div>
-        <div className="submit-btn !py-2.5 px-3.5">Regulatory Innovation</div>
-        <div className="submit-btn !py-2.5 px-3.5">AI Drug Discovery</div>
-        <div className="submit-btn !py-2.5 px-3.5">Decentralized Biopower</div>
-      </div>
+      <ul
+        id="value-end-2"
+        className="list-mark-red-disc fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right text-xl/5 font-bold uppercase opacity-0"
+      >
+        <li>
+          East/West Access: Deep roots in both East and West, unlocking markets, capital, research institutions, and more.
+        </li>
+        <li>
+          Industry Expertise: Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.
+        </li>
+        <li>
+          Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact over short-term
+          gains.
+        </li>
+      </ul>
     </>
   );
 }
