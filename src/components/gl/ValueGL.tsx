@@ -6,6 +6,7 @@ import { useThree } from '@react-three/fiber';
 import { Center, Svg } from '@react-three/drei';
 import { NAV_LIST } from '@/components/nav/nav';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { useControls } from 'leva';
 
 const radius = 10;
 
@@ -13,6 +14,29 @@ export default function ValueGL() {
   const { camera } = useThree();
   const modelRef = useRef<THREE.Group>(null);
   const svgRef = useRef<THREE.Group>(null);
+
+  const title1Controls = useControls('Title 1', {
+    position: [-2, -9.2, -5],
+    scale: { value: 0.01, min: 0.001, max: 0.1, step: 0.001 },
+  });
+
+  const title2Controls = useControls('Title 2', {
+    position: [2, -19.2, 15],
+    rotation: [0, -Math.PI, 0],
+    scale: { value: 0.015, min: 0.001, max: 0.1, step: 0.001 },
+  });
+
+  const title3Controls = useControls('Title 3', {
+    position: [-8.305, -28, -6.327],
+    rotation: [0, 0.6283, 0],
+    scale: { value: 0.013, min: 0.001, max: 0.1, step: 0.001 },
+  });
+
+  const title4Controls = useControls('Title 4', {
+    position: [-1.728, -48.639, -6.911],
+    rotation: [-1.107, -0.262, -0.478],
+    scale: { value: 0.013, min: 0.001, max: 0.1, step: 0.001 },
+  });
 
   useGSAP(() => {
     if (!modelRef.current) return;
@@ -101,17 +125,17 @@ export default function ValueGL() {
 
   return (
     <group>
-      <Center position={[-2, -9.2, -5]}>
-        <Svg scale={0.01} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
+      <Center position={title1Controls.position}>
+        <Svg scale={title1Controls.scale} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center position={[2, -19.2, 15]} rotation={[0, -Math.PI, 0]}>
-        <Svg scale={0.015} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
+      <Center position={title2Controls.position} rotation={title2Controls.rotation}>
+        <Svg scale={title2Controls.scale} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center position={[-8.305, -28, -6.327]} rotation={[0, 0.6283, 0]}>
-        <Svg scale={0.013} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
+      <Center position={title3Controls.position} rotation={title3Controls.rotation}>
+        <Svg scale={title3Controls.scale} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center ref={svgRef} position={[-1.728, -48.639, -6.911]} rotation={[-1.107, -0.262, -0.478]}>
-        <Svg scale={0.013} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
+      <Center ref={svgRef} position={title4Controls.position} rotation={title4Controls.rotation}>
+        <Svg scale={title4Controls.scale} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <AnimalModel ref={modelRef} />
     </group>

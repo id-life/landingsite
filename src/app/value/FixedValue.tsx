@@ -39,7 +39,10 @@ export default function FixedValue() {
           <p className="mt-4 w-[29.125rem] text-base font-semibold">{item.content}</p>
         </div>
       ))}
-      <div id="value-end-1" className="fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 opacity-0 invisible">
+      <div
+        id="value-end-1"
+        className="invisible fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 font-oxanium opacity-0"
+      >
         <h2 className="text-3xl font-bold uppercase">Promising Early-Stage Ventures</h2>
         <ul className="list-mark-red-disc mt-9 flex flex-col gap-7.5 text-xl/5 font-bold uppercase">
           <li>Partnering with Pre-Seed to Series A startups under $100m valuations, fueling growth from concept to impact.</li>
@@ -48,7 +51,7 @@ export default function FixedValue() {
       </div>
       <ul
         id="value-end-2"
-        className="list-mark-red-disc fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right text-xl/5 font-bold uppercase opacity-0 invisible"
+        className="list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right font-oxanium text-xl/5 font-bold uppercase opacity-0"
       >
         <li>
           East/West Access: Deep roots in both East and West, unlocking markets, capital, research institutions, and more.
