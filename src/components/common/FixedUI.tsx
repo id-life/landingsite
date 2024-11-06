@@ -17,7 +17,7 @@ export default function FixedUI() {
       <div className="fixed bottom-10 left-10 flex select-none items-center gap-1.5">
         <VisionDecorationRightBottomSVG className="h-12 fill-foreground transition duration-300" />
         <p className="whitespace-pre-wrap font-poppins text-base/4.5 font-bold uppercase text-foreground transition duration-300">
-          {'Our goal is to increase global\nawareness of longevity'}
+          {'Catalysing Longevity Revolution'}
         </p>
       </div>
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300" />

@@ -6,25 +6,27 @@ type ValueContentItem = {
 const VALUE_CONTENT: ValueContentItem[] = [
   {
     id: 'page-value-1',
-    title: 'Raising Awareness',
+    title: 'A New Dawn',
     content:
-      'Promoting longevity, anti-aging, and biotech as essential for humanity&apos;s future by spreading information and garnering attention, talent, and resources',
+      'Emerging Breakthroughs In Science And Medicine Will Make Radically Longer Healthier Lifespans For All We Are Dedicated To Making That World A Reality',
   },
   {
     id: 'page-value-2',
-    title: 'Global Advocacy',
+    title: 'Advocacy And Evangelism',
     content:
-      'By advocating and advertising, the goal is to shift global focus toward longevity research as a crucial moral endeavor',
+      'Help The World Understand The Paramount Importance Of Developing Life Extension Technologies Mobilizing Global Awareness Talent And Resources In The Process',
   },
   {
     id: 'page-value-3',
-    title: 'Moral Justification',
-    content: 'Longevity research aims to reduce global suffering, fostering long-term societal benefits such as sustainability',
+    title: 'A Moral Endeavor',
+    content:
+      'Longer Healthier Lives And Less Suffering From Dementia Heart Disease And Other Age Related Conditions Are Inherently Moral Goals Do All We Can To Usher In Such A World',
   },
   {
     id: 'page-value-4',
-    title: 'Criticism Addressed',
-    content: 'Criticisms of longevity research have been thoroughly analyzed and resolved, reinforcing the movement’s validity',
+    title: 'A Virtuous Cycle',
+    content:
+      'The Longevity Revolution Will Start With Bold Early Investments Creating A Virtuous Cycle Where Each Breakthrough Accelerates Progress And Attracts Further Talent Believers And Resources To The Cause',
   },
 ];
 

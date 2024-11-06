@@ -24,10 +24,10 @@ export default function Vision() {
         <img
           src="/imgs/vision-decoration-text.png"
           draggable={false}
-          className="absolute top-[calc(100vh_-_8rem)] left-1/2 w-[35.625rem] -translate-x-1/2"
+          className="absolute left-1/2 top-[calc(100vh_-_8rem)] w-[35.625rem] -translate-x-1/2"
           alt="Til Unlimited Human Healthy Lifespan"
         />
-        <div className="absolute top-[calc(100vh_-_5rem)] left-1/2 flex -translate-x-1/2 items-center gap-2">
+        <div className="absolute left-1/2 top-[calc(100vh_-_5rem)] flex -translate-x-1/2 items-center gap-2">
           <VisionDecorationBottomScrollSVG className="h-12" />
           <p className="font-migrena text-xl/6 font-bold uppercase">SCROLL</p>
         </div>
