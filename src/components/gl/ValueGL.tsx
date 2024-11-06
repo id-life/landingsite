@@ -121,6 +121,8 @@ export default function ValueGL() {
     tl.set('.page-value-card', { x: '100%' });
     tl.to('#value-end-1', { autoAlpha: 1 });
     tl.to('#value-end-2', { autoAlpha: 1 });
+    tl.to('#value-end-1', { autoAlpha: 0 });
+    tl.to('#value-end-2', { autoAlpha: 0 }, '<');
   });
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { clsx } from 'clsx';
 import Dialog from '../dialog';
@@ -15,30 +15,54 @@ import MobileNavDialog from '../dialog/MobileNavDialog';
 import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import { useThrottle } from '@/hooks/useThrottle';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
-  const [open, setOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const { handleNavClick } = useNavigation();
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
+  const playingRef = useRef<boolean>(false);
+  const timelineRef = useRef(gsap.timeline({ paused: true }));
 
   const onSubscribeClick = () => {
     if (isSubscribeShow) {
+      if (playingRef.current) return;
+      playingRef.current = true;
       gsap.to('.footer-box-clip', {
         x: 10,
         repeat: 5,
         yoyo: true,
         duration: 0.1,
+        onComplete: () => {
+          playingRef.current = false;
+        },
       });
     } else {
-      setOpen(true);
+      timelineRef.current.play();
+      setIsSubscribeShow(true);
     }
   };
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
+    setTimeout(() => {
+      timelineRef.current.to('.page-footer', { bottom: '2.25rem' });
+      timelineRef.current.to('.footer-box-clip', { width: '40rem', height: '11.5rem' }, '<');
+    }, 300);
   }, []);
+
+  const handleScroll = useThrottle(() => {
+    if (isSubscribeShow && !timelineRef.current.reversed()) {
+      timelineRef.current.reverse();
+      setIsSubscribeShow(false);
+    }
+  }, 300);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <div
@@ -71,7 +95,6 @@ export default function Nav() {
           {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
         </div>
       </div>
-      <Dialog open={open} onOpenChange={setOpen} render={() => <SubscribeDialog handleSubmit={() => setOpen(false)} />} />
       <MobileNavDialog />
     </div>
   );

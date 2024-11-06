@@ -17,6 +17,7 @@ export default function Footer() {
   const subscribeRef = useRef<HTMLDivElement>(null);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
   const portalNode = useFloatingPortalNode();
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
@@ -34,23 +35,22 @@ export default function Footer() {
   useGSAP(
     () => {
       if (!portalNode) return;
-      gsap.to(subscribeRef.current, {
-        bottom: '2.25rem',
+      const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: 'top bottom',
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
-            gsap.from('.footer-box-clip', { width: 0, height: 0 });
             setIsSubscribeShow(true);
           },
           onLeaveBack: () => {
             setIsSubscribeShow(false);
           },
         },
-        duration: 1,
       });
+      timeline.to(subscribeRef.current, { bottom: '2.25rem' });
+      timeline.to('.footer-box-clip', { width: '40rem', height: '11.5rem' }, '<');
     },
     { dependencies: [portalNode] },
   );
@@ -59,8 +59,8 @@ export default function Footer() {
     <>
       <div ref={wrapperRef} className="h-48" />
       <FloatingPortal>
-        <div ref={subscribeRef} className="fixed -bottom-50 z-20 flex h-48 w-full items-center justify-center">
-          <div className="footer-box-clip w-[40rem] bg-red-600 px-7.5 py-9 text-white">
+        <div ref={subscribeRef} className="page-footer fixed -bottom-50 z-20 flex h-48 w-full items-center justify-center">
+          <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white">
             <h3 className="font-oxanium text-3xl font-bold uppercase">SUBSCRIBE</h3>
             <form id="subscribe-form" className="mt-8 flex gap-4 px-2" onSubmit={onFormSubmit}>
               <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />

@@ -60,7 +60,7 @@ export default function FixedValue() {
           Industry Expertise: Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.
         </li>
         <li>
-          Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact over short-term
+          Founder Focused: Strategic partners, prioritizing founders&apos; visions and long-term societal impact over short-term
           gains.
         </li>
       </ul>
