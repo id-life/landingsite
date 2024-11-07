@@ -76,13 +76,13 @@ export default function Fund() {
         start: 'top top',
         end: '+=300%',
         pin: true,
-        pinSpacing: true,
         scrub: true,
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
           setActive(true);
         },
         onEnterBack: () => {
+          setCurrentPage(NAV_LIST[1]);
           setActive(true);
         },
         onLeaveBack: () => {

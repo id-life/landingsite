@@ -43,8 +43,8 @@ export default function Home() {
     const valueTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
-        start: 'top bottom+=400',
-        end: '+=500',
+        start: 'top bottom',
+        end: 'top center',
         scrub: true,
         onEnter: () => {
           setCurrentPage(NAV_LIST[2]);
@@ -61,8 +61,6 @@ export default function Home() {
       '--foreground': '#000000',
     });
     valueTL.to('.base-background2', { opacity: 1 });
-    valueTL.to('#vision-canvas', { zIndex: 1, opacity: 1, duration: 1, delay: 0.5 });
-    valueTL.to('#page-value-1', { opacity: 1 });
   });
 
   return (

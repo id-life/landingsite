@@ -6,15 +6,25 @@ import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { useControls } from 'leva';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 const radius = 10;
 
 export default function ValueGL() {
   const { camera } = useThree();
   const modelRef = useRef<THREE.Group>(null);
+  const title1Ref = useRef<THREE.Group>(null);
   const svgRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    const a = new Vector3(14070.4516, 1462.5514, 2632.3473);
+    const b = new Vector3(-887.4285, 2757.5785, -7273.9886);
+    const direction = new Vector3().subVectors(b, a).normalize();
+    const v = new Vector3().addVectors(new Vector3(0, -10, 10), direction.multiplyScalar(15));
+    console.log('v: ', v);
+  }, []);
 
   const title1Controls = useControls(
     'Title 1',
@@ -84,7 +94,6 @@ export default function ValueGL() {
   );
 
   useGSAP(() => {
-    if (!modelRef.current) return;
     gsap.set(camera.position, {
       y: -10,
       immediateRender: false,
@@ -94,6 +103,52 @@ export default function ValueGL() {
         toggleActions: 'play none none reverse',
       },
     });
+    gsap.to('#vision-canvas', {
+      zIndex: 1,
+      opacity: 1,
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[2].id}`,
+        start: 'top center',
+        toggleActions: 'play none none reverse',
+        onEnter: () => {
+          if (!modelRef.current) return;
+          if (!title1Ref.current) return;
+          gsap.from(title1Ref.current.position, {
+            x: 5,
+            y: -15,
+            z: -10,
+            duration: 1.2,
+            ease: 'power3.out',
+          });
+          gsap.from(title1Ref.current.rotation, {
+            x: -Math.PI / 4,
+            y: -Math.PI / 4,
+            z: Math.PI / 4,
+            duration: 1.2,
+            ease: 'power3.out',
+          });
+          gsap.from(modelRef.current.position, {
+            x: 5,
+            y: -15,
+            z: -10,
+            duration: 0.8,
+            ease: 'power3.out',
+          });
+          gsap.from(modelRef.current.rotation, {
+            x: Math.PI / 4,
+            y: Math.PI / 4,
+            z: Math.PI / 4,
+            duration: 0.8,
+            ease: 'power3.out',
+          });
+        },
+      },
+    });
+  });
+
+  useGSAP(() => {
+    if (!title1Ref.current) return;
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
@@ -102,10 +157,17 @@ export default function ValueGL() {
         scrub: true,
       },
     });
-    tl.to('#page-value-1', { opacity: 0 });
-    // VALUE-2
+    tl.to(title1Ref.current.position, {
+      x: -8,
+      z: -6,
+      duration: 2,
+      ease: 'none',
+    });
+    tl.to('#page-value-1', { opacity: 1 }, '<');
     tl.to(camera.position, {
       y: -20,
+      duration: 5,
+      ease: 'none',
       onUpdate: () => {
         if (!modelRef.current) return;
         const progress = THREE.MathUtils.mapLinear(camera.position.y, -10, -20, 0, 1);
@@ -116,15 +178,14 @@ export default function ValueGL() {
         camera.position.z = z;
         modelRef.current.position.y = camera.position.y;
         camera.lookAt(0, modelRef.current.position.y, 0);
-        // console.log('camera', camera.position);
-        // console.log('model', modelRef.current?.position);
       },
     });
-
-    tl.to('#page-value-2', { opacity: 1 }).to('#page-value-2', { opacity: 0 });
-    // VALUE-3
+    tl.to('#page-value-1', { opacity: 0 }, '<+=1');
+    tl.to('#page-value-2', { opacity: 1 }, '-=1');
     tl.to(camera.position, {
       y: -28,
+      duration: 5,
+      ease: 'none',
       onUpdate: () => {
         if (!modelRef.current) return;
         const progress = THREE.MathUtils.mapLinear(camera.position.y, -20, -28, 1, 1.8);
@@ -135,31 +196,31 @@ export default function ValueGL() {
         camera.position.z = z;
         modelRef.current.position.y = camera.position.y;
         camera.lookAt(0, modelRef.current.position.y, 0);
-        // console.log('camera', camera.position);
-        // console.log('model', modelRef.current?.position);
       },
     });
-    tl.to('#page-value-3', { opacity: 1 }).to('#page-value-3', { opacity: 0 });
-    // VALUE-4
+    tl.to('#page-value-2', { opacity: 0 }, '<+=1');
+    tl.to('#page-value-3', { opacity: 1 }, '-=1');
     tl.to(camera.position, {
       y: -30,
       z: 5,
       x: -3,
+      duration: 5,
+      ease: 'none',
       onUpdate: () => {
         if (!modelRef.current) return;
         const positionY = THREE.MathUtils.mapLinear(camera.position.y, -28, -30, -28, -40);
         modelRef.current.position.setY(positionY);
         camera.lookAt(0, modelRef.current.position.y, 0);
-        // console.log('camera', camera.position);
-        // console.log('model', modelRef.current?.position);
       },
     });
-    tl.to('#page-value-4', { opacity: 1 }).to('#page-value-4', { opacity: 0 });
-    // VALUE-END
+    tl.to('#page-value-3', { opacity: 0 }, '<+=1');
+    tl.to('#page-value-4', { opacity: 1 }, '-=1');
     tl.to(camera.position, {
       y: -60,
       z: -5,
       x: -3,
+      duration: 5,
+      ease: 'none',
       onUpdate: () => {
         if (!modelRef.current) return;
         const positionY = THREE.MathUtils.mapLinear(camera.position.y, -30, -60, -40, -70);
@@ -167,6 +228,7 @@ export default function ValueGL() {
         camera.lookAt(0, modelRef.current.position.y, 0);
       },
     });
+    tl.to('#page-value-4', { opacity: 0 }, '<+=1');
     tl.set('.page-value-card', { x: '-30%' });
     tl.fromTo('.page-value-card-item', { left: '-=100%' }, { left: `+=220%`, duration: 5 });
     tl.set('.page-value-card', { x: '100%' });
@@ -212,7 +274,7 @@ export default function ValueGL() {
 
   return (
     <group>
-      <Center position={title1Position}>
+      <Center ref={title1Ref} position={title1Position}>
         <Svg scale={title1Controls.scale} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <Center position={title2Position} rotation={title2Controls.rotation}>
