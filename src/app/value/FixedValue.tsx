@@ -1,7 +1,10 @@
+import { cn } from '@/utils';
+
 type ValueContentItem = {
   id: string;
   title: string;
   content: string;
+  className?: string;
 };
 const VALUE_CONTENT: ValueContentItem[] = [
   {
@@ -15,6 +18,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'As an Evangelist',
     content:
       'We Help The World Come To A Better Understanding Of Life Extension Technologies Galvanizing Global Consciousness Talents Resources In The Process.',
+    className: 'text-right',
   },
   {
     id: 'page-value-3',
@@ -27,6 +31,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'A Virtuous Cycle',
     content:
       'We Stand With Bold Early Investments Where Breakthroughs Accelerate The Cause Bringing Further Talents Supporters And Resources.',
+    className: 'text-right',
   },
 ];
 
@@ -34,7 +39,11 @@ export default function FixedValue() {
   return (
     <>
       {VALUE_CONTENT.map((item) => (
-        <div key={item.id} id={item.id} className="page-value-item fixed bottom-40 right-20 z-10 opacity-0">
+        <div
+          key={item.id}
+          id={item.id}
+          className={cn('page-value-item fixed bottom-40 right-20 z-10 opacity-0', item?.className)}
+        >
           <h3 className="text-xl/6 font-semibold">{item.title}</h3>
           <p className="mt-4 w-[29.125rem] text-base font-semibold">{item.content}</p>
         </div>
