@@ -8,25 +8,25 @@ const VALUE_CONTENT: ValueContentItem[] = [
     id: 'page-value-1',
     title: 'A New Dawn',
     content:
-      'Emerging Breakthroughs In Science And Medicine Will Make Radically Longer Healthier Lifespans For All We Are Dedicated To Making That World A Reality',
+      'Our Dedication Is A World Where Emerging Breakthroughs In Science And Medicine Enable Flourishing Lifespans For All.',
   },
   {
     id: 'page-value-2',
-    title: 'Advocacy And Evangelism',
+    title: 'As an Evangelist',
     content:
-      'Help The World Understand The Paramount Importance Of Developing Life Extension Technologies Mobilizing Global Awareness Talent And Resources In The Process',
+      'We Help The World Come To A Better Understanding Of Life Extension Technologies Galvanizing Global Consciousness Talents Resources In The Process.',
   },
   {
     id: 'page-value-3',
     title: 'A Moral Endeavor',
     content:
-      'Longer Healthier Lives And Less Suffering From Dementia Heart Disease And Other Age Related Conditions Are Inherently Moral Goals Do All We Can To Usher In Such A World',
+      'We Pursue Longer Healthier Lives And Less Suffering From Age Related Ailments Endeavoring All Our Might To Bring This Vision To Reality.',
   },
   {
     id: 'page-value-4',
     title: 'A Virtuous Cycle',
     content:
-      'The Longevity Revolution Will Start With Bold Early Investments Creating A Virtuous Cycle Where Each Breakthrough Accelerates Progress And Attracts Further Talent Believers And Resources To The Cause',
+      'We Stand With Bold Early Investments Where Breakthroughs Accelerate The Cause Bringing Further Talents Supporters And Resources.',
   },
 ];
 
@@ -45,8 +45,8 @@ export default function FixedValue() {
       >
         <h2 className="text-3xl font-bold uppercase">Promising Early-Stage Ventures</h2>
         <ul className="list-mark-red-disc mt-9 flex flex-col gap-7.5 text-xl/5 font-bold uppercase">
-          <li>Partnering with Pre-Seed to Series A startups under $100m valuations, fueling growth from concept to impact.</li>
-          <li>Prioritizing talent, bold visions, and maximum human benefit over incremental gains and cautious approaches.</li>
+          <li>Partnering with Pre-Seed to Series-A startups under $100m valuations.</li>
+          <li>Prioritizing talents, bold visions and impactful human benefits.</li>
         </ul>
       </div>
       <ul
@@ -54,15 +54,12 @@ export default function FixedValue() {
         className="list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right font-oxanium text-xl/5 font-bold uppercase opacity-0"
       >
         <li>
-          East/West Access: Deep roots in both East and West, unlocking markets, capital, research institutions, and more.
+          East/West Access: Deep roots in both East and West, a conduit that bridges market, capital, institutions and more.
         </li>
         <li>
           Industry Expertise: Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.
         </li>
-        <li>
-          Founder Focused: Strategic partners, prioritizing founders&apos; visions and long-term societal impact over short-term
-          gains.
-        </li>
+        <li>Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact.</li>
       </ul>
     </>
   );
