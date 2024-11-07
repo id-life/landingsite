@@ -68,7 +68,7 @@ export default function FixedValue() {
         <li>
           Industry Expertise: Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.
         </li>
-        <li>Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact.</li>
+        <li>{"Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact."}</li>
       </ul>
     </>
   );
