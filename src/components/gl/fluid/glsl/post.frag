@@ -18,7 +18,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     vec4 texture = texture2D(inputBuffer, distortedUv);
     
     // 降低强度使效果更柔和
-    float intensity = length(fluidColor) * uIntensity * 0.5;
+    float intensity = length(fluidColor) * uIntensity * 0.3;
     
     // 使用原始颜色但降低饱和度
     vec3 selectedColor = mix(texture.rgb, uColor * length(fluidColor), 0.3);
@@ -36,16 +36,16 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
     if(uShowBackground == 0.0) {
         // 使用更柔和的混合
-        outputColor = mix(texture, colorForFluidEffect, intensity * 0.8);
+        outputColor = mix(texture, colorForFluidEffect, intensity * 0.5);
         return;
     }
 
     // 降低混合强度
-    vec4 computedFluidColor = mix(texture, colorForFluidEffect, uBlend * 0.8);
+    vec4 computedFluidColor = mix(texture, colorForFluidEffect, uBlend * 0.5);
 
     vec4 finalColor;
     if(texture.a < 0.1) {
-        finalColor = mix(computedBgColor, colorForFluidEffect, intensity * 0.58);
+        finalColor = mix(computedBgColor, colorForFluidEffect, intensity * 0.5);
     } else {
         finalColor = mix(computedFluidColor, computedBgColor, 1.0 - texture.a);
     }
