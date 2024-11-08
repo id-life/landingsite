@@ -20,12 +20,6 @@ type FundItem = {
 
 const funds: FundItem[] = [
   {
-    title: 'Healthspan Capital',
-    description: 'The most active longevity fund in space.',
-    image: <img className="w-20 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
-    link: 'https://www.healthspancapital.vc/',
-  },
-  {
     title: 'VitaDAO',
     subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
@@ -45,6 +39,12 @@ const funds: FundItem[] = [
     link: 'https://unlimit.bio/',
   },
   {
+    title: 'Healthspan Capital',
+    description: 'The most active longevity fund in space.',
+    image: <img className="w-20 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    link: 'https://www.healthspancapital.vc/',
+  },
+  {
     title: 'BiohackerDAO',
     description: 'Decentralized self-enhancement experiments and monetizes data',
     image: <img className="w-[18.25rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
@@ -55,6 +55,11 @@ const funds: FundItem[] = [
     description: 'AI Powered Concierge Doctor',
     image: <img className="w-22.5 mobile:w-[4.6875rem]" src="/imgs/investments/mito.webp" alt="mito" />,
     link: 'https://mitohealth.com/',
+  },
+  {
+    title: 'R3 Bio',
+    description: 'Wholebody replacement',
+    image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
   },
 ];
 
@@ -101,7 +106,7 @@ export default function Fund() {
         {/* <p className="text-center font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm/5">
           Access To cutting-edge products, exclusive events, and a network of innovators
         </p> */}
-        <div className="mt-12 grid w-full grid-cols-6 gap-7.5 px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="mt-12 grid w-full grid-cols-7 gap-7.5 px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
