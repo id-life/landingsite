@@ -28,7 +28,7 @@ export default function Nav() {
       <img
         className="h-12 cursor-pointer mobile:h-6"
         src="/svgs/logo-title.svg"
-        alt="logo"
+        alt="IMMORTAL DRAGONS"
         loading="lazy"
         onClick={() => handleNavClick(NAV_LIST[0])}
       />

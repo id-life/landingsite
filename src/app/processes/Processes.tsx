@@ -41,7 +41,7 @@ export default function Processes() {
                 <img
                   className="absolute bottom-0 left-0 w-5 -rotate-90 mobile:w-2.5"
                   src="/svgs/arrow-mark.svg"
-                  alt="arrow-mark"
+                  alt=""
                 />
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function Processes() {
                 <img
                   className="absolute bottom-0 left-0 w-5 -rotate-90 mobile:w-2.5"
                   src="/svgs/arrow-mark.svg"
-                  alt="arrow-mark"
+                  alt=""
                 />
               </div>
             </div>

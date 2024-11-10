@@ -141,23 +141,23 @@ export default function Value() {
       </div>*/}
       <div className="flex flex-wrap whitespace-nowrap font-migrena">
         <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="" />
           <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">
             Immortal Dragons is a purpose-driven longevity fund
           </p>
         </div>
         <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="" />
           <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Raising Global Awareness for Longevity'}</p>
         </div>
         <div className="relative mb-14 mr-12 pl-6 mobile:mb-12 mobile:mr-0 mobile:pl-3">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="" />
           <p className="w-[42.6875rem] text-2xl/12 font-bold uppercase mobile:w-auto mobile:text-sm/5">
             {'Justifying the Moral Imperative of Longevity'}
           </p>
         </div>
         <div className="relative mb-14 pl-6 mobile:mb-12 mobile:pl-3">
-          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="arrow-mark" />
+          <img className="absolute left-0 top-0 w-4 mobile:w-2" src="/svgs/arrow-mark.svg" alt="" />
           <p className="text-2xl/12 font-bold uppercase mobile:text-sm/5">{'Building the Longevity Reinvestment Flywheel'}</p>
         </div>
       </div>
