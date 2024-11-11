@@ -8,7 +8,7 @@ const backsideThickness = 1.5;
 const thickness = 5;
 
 const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
-  const { scene, animations } = useGLTF('/models/animal2.glb');
+  const { scene, animations } = useGLTF('https://cdn.id.life/animal2.glb');
   const { actions, names } = useAnimations(animations, scene);
   const meshRef = useRef<THREE.Mesh[]>([]);
   const materialRef = useRef<JSX.IntrinsicElements['meshTransmissionMaterial']>(new MeshTransmissionMaterial({ samples: 4 }));
