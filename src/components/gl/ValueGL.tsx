@@ -81,7 +81,7 @@ export default function ValueGL() {
         max: 0.1,
         step: 0.0001,
       },
-      rotation: [-3.084, 0.404, 3.119],
+      rotation: [-2.156, 0.114, 2.972],
     },
     { collapsed: true },
   );
@@ -212,21 +212,25 @@ export default function ValueGL() {
     tl.to(
       title4Ref.current.position,
       {
-        x: -11.288,
-        y: -9.833,
-        z: 6.025,
+        x: -0.794,
+        y: -15.797,
+        z: 3.842,
         duration: 8,
         ease: 'power3.inOut',
+        onComplete: () => {
+          title4Ref.current?.quaternion.copy(camera.quaternion);
+          console.log('title4Ref.current:', title4Ref.current);
+        },
       },
       '<',
     );
-    tl.to(modelRef.current.position, { x: -2, y: -10, z: -2, duration: 8, ease: 'power3.inOut' }, '<');
+    tl.to(modelRef.current.position, { x: 0, y: -10, z: 0, duration: 8, ease: 'power3.inOut' }, '<');
     tl.to(
       camera.position,
       {
-        x: 4.505,
-        y: -9.39,
-        z: -10.506,
+        x: 1.409,
+        y: 0.291,
+        z: -6.821,
         duration: 8,
         ease: 'power3.inOut',
         onUpdate: () => {
@@ -272,15 +276,15 @@ export default function ValueGL() {
     title3Controls?.upDistance,
   );
 
-  console.log('title3Position: ', title3Position);
-
   const title4Position = getExtendedPointWithOffset(
-    new THREE.Vector3(4.505, -9.39, -10.506), // camera
+    new THREE.Vector3(1.409, 0.291, -6.821), // camera
     new THREE.Vector3(0, -10, 0), // model
     title4Controls?.forwardDistance,
     title4Controls?.sideDistance,
     title4Controls?.upDistance,
   );
+
+  console.log('title3Position: ', title4Position);
 
   return (
     <group>
