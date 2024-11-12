@@ -22,9 +22,9 @@ export default function ValueGL() {
   const title1Controls = useControls(
     'Title 1',
     {
-      forwardDistance: { value: 6, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 1.5, min: -10, max: 10, step: 0.1 },
-      upDistance: { value: 1.5, min: -10, max: 10, step: 0.1 },
+      forwardDistance: { value: 4.4, min: 0, max: 100, step: 0.1 },
+      sideDistance: { value: 0.5, min: -10, max: 10, step: 0.1 },
+      upDistance: { value: 0.8, min: -10, max: 10, step: 0.1 },
       scale: {
         value: 0.0107,
         min: 0.001,
@@ -151,24 +151,16 @@ export default function ValueGL() {
         scrub: true,
       },
     });
-    tl.to(title1Ref.current.position, {
-      x: -5,
-      y: -8.5,
-      z: -6,
-      duration: 3,
-      ease: 'none',
-    });
-    tl.to('#page-value-1', { opacity: 1 }, '<');
-    tl.to(title1Ref.current.position, { z: -20, ease: 'none', duration: 5 });
-    tl.to(modelRef.current.position, { x: 2, y: -10, z: -2, duration: 5 }, '<');
+    tl.to(title1Ref.current.position, { z: -20, ease: 'power3.inOut', duration: 8 });
+    tl.to(modelRef.current.position, { x: 2, y: -10, z: -2, ease: 'power3.inOut', duration: 8 }, '<');
     tl.to(
       camera.position,
       {
         x: -7.6,
         y: -10.12,
         z: -7.52,
-        duration: 5,
-        ease: 'none',
+        duration: 8,
+        ease: 'power3.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
@@ -176,42 +168,33 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to('#page-value-1', { opacity: 0 }, '<1');
-    tl.to(title2Ref.current.position, {
-      x: 12.031,
-      y: -9.388,
-      z: 2.057,
-      duration: 3,
-      ease: 'none',
-    });
-    tl.to('#page-value-2', { opacity: 1 }, '<');
     tl.to(title2Ref.current.position, {
       x: 21.249,
       y: -19.776,
       z: 6.958,
-      ease: 'none',
-      duration: 5,
+      ease: 'power3.inOut',
+      duration: 8,
     });
     tl.to(
       title3Ref.current.position,
       {
-        x: -1.098,
-        y: -3.917,
-        z: 10.478,
-        ease: 'none',
-        duration: 5,
+        x: 3.896,
+        y: -5.184,
+        z: 7.881,
+        ease: 'power3.inOut',
+        duration: 8,
       },
       '<',
     );
-    tl.to(modelRef.current.position, { x: -2, y: -10, z: 0, duration: 5 }, '<');
+    tl.to(modelRef.current.position, { x: -2, y: -10, z: 0, ease: 'power3.inOut', duration: 8 }, '<');
     tl.to(
       camera.position,
       {
         x: -0.783,
         y: -15.326,
         z: -9.022,
-        duration: 5,
-        ease: 'none',
+        duration: 8,
+        ease: 'power3.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
@@ -219,21 +202,12 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to('#page-value-2', { opacity: 0 }, '<1');
-    tl.to(title3Ref.current.position, {
-      x: 5.876,
-      y: -3.917,
-      z: 9.873,
-      duration: 3,
-      ease: 'none',
-    });
-    tl.to('#page-value-3', { opacity: 1 }, '<');
     tl.to(title3Ref.current.position, {
       x: 11.08,
       y: 12.395,
       z: 12.016,
-      duration: 5,
-      ease: 'none',
+      duration: 8,
+      ease: 'power3.inOut',
     });
     tl.to(
       title4Ref.current.position,
@@ -241,20 +215,20 @@ export default function ValueGL() {
         x: -11.288,
         y: -9.833,
         z: 6.025,
-        duration: 5,
-        ease: 'none',
+        duration: 8,
+        ease: 'power3.inOut',
       },
       '<',
     );
-    tl.to(modelRef.current.position, { x: -2, y: -10, z: -2, duration: 5 }, '<');
+    tl.to(modelRef.current.position, { x: -2, y: -10, z: -2, duration: 8, ease: 'power3.inOut' }, '<');
     tl.to(
       camera.position,
       {
         x: 4.505,
         y: -9.39,
         z: -10.506,
-        duration: 5,
-        ease: 'none',
+        duration: 8,
+        ease: 'power3.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
@@ -262,15 +236,6 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to('#page-value-3', { opacity: 0 }, '<1');
-    tl.to(title4Ref.current.position, {
-      x: -2.097,
-      y: -9.832,
-      z: 9.966,
-      duration: 3,
-      ease: 'none',
-    });
-    tl.to('#page-value-4', { opacity: 1 }, '<');
     // tl.to('#page-value-4', { opacity: 0 }, '<+=1');
     // tl.set('.page-value-card', { x: '-30%' });
     // tl.fromTo('.page-value-card-item', { left: '-=100%' }, { left: `+=220%`, duration: 5 });
