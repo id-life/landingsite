@@ -9,8 +9,8 @@ import '../utils/analytics';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'IMMORTAL DRAGONS',
-  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to the unlimited human healthy lifespan.',
+  title: 'Immortal Dragons',
+  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -20,12 +20,12 @@ export const metadata: Metadata = {
     'biotech',
     'pharmaceutical',
     'healthcare',
-    'IMMORTAL DRAGONS',
+    'Immortal Dragons',
   ],
   openGraph: {
-    title: 'IMMORTAL DRAGONS',
-    siteName: 'IMMORTAL DRAGONS',
-    description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to the unlimited human healthy lifespan.',
+    title: 'Immortal Dragons',
+    siteName: 'Immortal Dragons',
+    description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover.webp',
@@ -40,8 +40,8 @@ const jsonLd = {
   image: 'https://cdn.id.life/id-life-cover.webp',
   url: 'https://www.id.life/',
   logo: 'https://cdn.id.life/id-logo-circle.png',
-  name: 'IMMORTAL DRAGONS',
-  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to the unlimited human healthy lifespan.',
+  name: 'Immortal Dragons',
+  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
   email: 'contact@id.life',
   address: {
     '@type': 'PostalAddress',
@@ -61,7 +61,7 @@ const jsonLd = {
     'biotech',
     'pharmaceutical',
     'healthcare',
-    'IMMORTAL DRAGONS',
+    'Immortal Dragons',
   ],
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
