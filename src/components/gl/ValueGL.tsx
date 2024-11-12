@@ -8,6 +8,7 @@ import gsap from 'gsap';
 import { useControls } from 'leva';
 import { useRef } from 'react';
 import * as THREE from 'three';
+import { modelPosition } from 'three/webgpu';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
@@ -38,11 +39,11 @@ export default function ValueGL() {
   const title2Controls = useControls(
     'Title 2',
     {
-      forwardDistance: { value: 10, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 2.8, min: -10, max: 10, step: 0.1 },
+      forwardDistance: { value: 9, min: 0, max: 100, step: 0.1 },
+      sideDistance: { value: 4.9, min: -10, max: 10, step: 0.1 },
       upDistance: { value: 0.5, min: -10, max: 10, step: 0.1 },
       scale: {
-        value: 0.0117,
+        value: 0.0136,
         min: 0.001,
         max: 0.1,
         step: 0.0001,
@@ -97,6 +98,8 @@ export default function ValueGL() {
         toggleActions: 'play none none reverse',
       },
     });
+    console.log('camera 0: ', camera.position);
+    console.log('model 0: ', modelRef.current?.position);
     gsap.to('#vision-canvas', {
       zIndex: 1,
       opacity: 1,
@@ -152,7 +155,18 @@ export default function ValueGL() {
       },
     });
     tl.to(title1Ref.current.position, { z: -20, ease: 'power3.inOut', duration: 8 });
-    tl.to(modelRef.current.position, { x: 2, y: -10, z: -2, ease: 'power3.inOut', duration: 8 }, '<');
+    // {"forwardDistance":-1.4}{"sideDistance":-2}{"upDistance":-0.7000000000000001}
+    console.log(
+      'title2 model pos:',
+      getExtendedPointWithOffset(
+        new THREE.Vector3(0, -10, 11), // camera
+        new THREE.Vector3(0, -10, 0), // model
+        -1.7,
+        -2,
+        -0.7,
+      ),
+    );
+    tl.to(modelRef.current.position, { x: -2, y: -10.7, z: 1.7, ease: 'power3.inOut', duration: 8 }, '<');
     tl.to(
       camera.position,
       {
@@ -164,6 +178,7 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
+          // console.log('camera 1: ', camera.position);
         },
       },
       '<',
@@ -198,6 +213,8 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
+          // console.log('camera 2: ', camera.position);
+          // console.log('model 2: ', modelRef.current.position);
         },
       },
       '<',
@@ -219,7 +236,7 @@ export default function ValueGL() {
         ease: 'power3.inOut',
         onComplete: () => {
           title4Ref.current?.quaternion.copy(camera.quaternion);
-          console.log('title4Ref.current:', title4Ref.current);
+          // console.log('title4Ref.current:', title4Ref.current);
         },
       },
       '<',
@@ -236,6 +253,8 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
+          // console.log('camera 3: ', camera.position);
+          // console.log('model 3: ', modelRef.current.position);
         },
       },
       '<',
@@ -262,14 +281,14 @@ export default function ValueGL() {
 
   const title2Position = getExtendedPointWithOffset(
     new THREE.Vector3(-7.6, -10.12, -7.52), // camera
-    new THREE.Vector3(0, -10, 0), // model
+    new THREE.Vector3(2, -10, -2), // model
     title2Controls?.forwardDistance,
     title2Controls?.sideDistance,
     title2Controls?.upDistance,
   );
 
   const title3Position = getExtendedPointWithOffset(
-    new THREE.Vector3(-0.783, -15.326, -9.022), // camera
+    new THREE.Vector3(-0.794, -15.797, 3.842), // camera
     new THREE.Vector3(0, -10, 0), // model
     title3Controls?.forwardDistance,
     title3Controls?.sideDistance,
