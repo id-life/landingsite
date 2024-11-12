@@ -27,15 +27,15 @@ export default function FixedUI() {
       <div className="fixed-top fixed right-[13.5rem] top-[calc(50%_-_14rem)] h-4 w-4 bg-foreground transition duration-300" />
       <VerticalCarousel slideDown itemHeight={48} duration={3} transition={0.6} className="fixed bottom-10 left-10 w-[25rem]">
         <CarouselItem
-          text="Our goal is to increase global awareness of longevity"
+          text="Setting forth unlimited human healthy lifespan"
           icon={<VisionDecorationLogo_1 className="h-12 w-12 fill-foreground" />}
         />
         <CarouselItem
-          text="Igniting Longevity Revolution"
+          text="Bringing global awareness of longevity"
           icon={<VisionDecorationLogo_2 className="h-12 w-12 fill-foreground" />}
         />
         <CarouselItem
-          text="Catalysing Longevity Revolution"
+          text="Harnessing collective recognition of the significance of Longevity"
           icon={<VisionDecorationLogo_3 className="h-12 w-12 fill-foreground" />}
         />
       </VerticalCarousel>
