@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
 import { MeshTransmissionMaterial, MeshDiscardMaterial } from '@pmndrs/vanilla';
+import { useControls } from 'leva';
 
 const backsideThickness = 1.5;
 const thickness = 5;
@@ -17,6 +18,14 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   const [background] = useState(() => new THREE.Color('white'));
   const fboMain = useFBO(256, 256);
   const fboBack = useFBO(256, 256);
+
+  const controls = useControls(
+    'Model',
+    {
+      position: [0, -10, 0],
+    },
+    { collapsed: true },
+  );
 
   useEffect(() => {
     if (!scene) return;
@@ -65,7 +74,7 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props} position={[0, -10, 0]}>
+    <group ref={ref} {...props} position={controls.position}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>

@@ -9,6 +9,8 @@ import { useControls } from 'leva';
 import { useRef } from 'react';
 import * as THREE from 'three';
 
+const centerPoint = new THREE.Vector3(0, -10, 0);
+
 export default function ValueGL() {
   const { camera } = useThree();
   const modelRef = useRef<THREE.Group>(null);
@@ -62,7 +64,7 @@ export default function ValueGL() {
         max: 0.1,
         step: 0.0001,
       },
-      rotation: [2.514, -0.597, 2.754],
+      rotation: [2.608, -0.075, 3.098],
     },
     { collapsed: true },
   );
@@ -140,7 +142,7 @@ export default function ValueGL() {
   });
 
   useGSAP(() => {
-    if (!title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
+    if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
@@ -158,6 +160,7 @@ export default function ValueGL() {
     });
     tl.to('#page-value-1', { opacity: 1 }, '<');
     tl.to(title1Ref.current.position, { z: -20, ease: 'none', duration: 5 });
+    tl.to(modelRef.current.position, { x: 2, y: -10, z: -2, duration: 5 }, '<');
     tl.to(
       camera.position,
       {
@@ -168,7 +171,7 @@ export default function ValueGL() {
         ease: 'none',
         onUpdate: () => {
           if (!modelRef.current) return;
-          camera.lookAt(modelRef.current.position);
+          camera.lookAt(centerPoint);
         },
       },
       '<',
@@ -192,45 +195,58 @@ export default function ValueGL() {
     tl.to(
       title3Ref.current.position,
       {
-        x: 1.415,
-        y: -5.043,
-        z: 10.23,
+        x: -1.098,
+        y: -3.917,
+        z: 10.478,
         ease: 'none',
         duration: 5,
       },
       '<',
     );
+    tl.to(modelRef.current.position, { x: -2, y: -10, z: 0, duration: 5 }, '<');
     tl.to(
       camera.position,
       {
-        x: -5.015,
-        y: -14.33,
-        z: -5.966,
+        x: -0.783,
+        y: -15.326,
+        z: -9.022,
         duration: 5,
         ease: 'none',
         onUpdate: () => {
           if (!modelRef.current) return;
-          camera.lookAt(modelRef.current.position);
+          camera.lookAt(centerPoint);
         },
       },
       '<',
     );
     tl.to('#page-value-2', { opacity: 0 }, '<1');
     tl.to(title3Ref.current.position, {
-      x: 10.218,
-      y: -5.243,
-      z: 2.831,
+      x: 5.876,
+      y: -3.917,
+      z: 9.873,
       duration: 3,
       ease: 'none',
     });
     tl.to('#page-value-3', { opacity: 1 }, '<');
-    tl.to(title4Ref.current.position, {
-      x: -11.288,
-      y: -9.833,
-      z: 6.025,
+    tl.to(title3Ref.current.position, {
+      x: 11.08,
+      y: 12.395,
+      z: 12.016,
       duration: 5,
       ease: 'none',
     });
+    tl.to(
+      title4Ref.current.position,
+      {
+        x: -11.288,
+        y: -9.833,
+        z: 6.025,
+        duration: 5,
+        ease: 'none',
+      },
+      '<',
+    );
+    tl.to(modelRef.current.position, { x: -2, y: -10, z: -2, duration: 5 }, '<');
     tl.to(
       camera.position,
       {
@@ -241,7 +257,7 @@ export default function ValueGL() {
         ease: 'none',
         onUpdate: () => {
           if (!modelRef.current) return;
-          camera.lookAt(modelRef.current.position);
+          camera.lookAt(centerPoint);
         },
       },
       '<',
@@ -284,12 +300,14 @@ export default function ValueGL() {
   );
 
   const title3Position = getExtendedPointWithOffset(
-    new THREE.Vector3(-5.015, -14.33, -5.966), // camera
+    new THREE.Vector3(-0.783, -15.326, -9.022), // camera
     new THREE.Vector3(0, -10, 0), // model
     title3Controls?.forwardDistance,
     title3Controls?.sideDistance,
     title3Controls?.upDistance,
   );
+
+  console.log('title3Position: ', title3Position);
 
   const title4Position = getExtendedPointWithOffset(
     new THREE.Vector3(4.505, -9.39, -10.506), // camera
