@@ -1,7 +1,5 @@
 import { NAV_LIST } from '@/components/nav/nav';
 import ArrowMarkSVG from '@/../public/svgs/arrow-mark.svg?component';
-import { cn } from '@/utils';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 type TrackingItem = {
   cover: string;

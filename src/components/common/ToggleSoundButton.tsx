@@ -27,7 +27,8 @@ export default function ToggleSoundButton({ className }: { className?: string })
 
   const handleUserInteraction = useCallback(() => {
     if (!audioRef.current || canAutoPlay) return;
-    audioRef.current.play();
+    audioRef.current.volume = 0.3;
+    audioRef.current.play().then();
     window.removeEventListener('click', handleUserInteraction);
   }, [canAutoPlay]);
 

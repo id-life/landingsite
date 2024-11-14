@@ -1,6 +1,5 @@
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { Suspense } from 'react';
@@ -8,7 +7,6 @@ import { Fluid } from './fluid/Fluid';
 import { useConfig } from './fluid/hooks/useConfig';
 
 export default function ThreeWrapper() {
-  const isMounted = useIsMounted();
   const config = useConfig();
   return (
     <Canvas
@@ -20,7 +18,6 @@ export default function ThreeWrapper() {
         antialias: true,
         powerPreference: 'high-performance',
       }}
-      // eventSource={isMounted ? document.body : undefined}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />

@@ -250,20 +250,25 @@ export default function ValueGL() {
     );
     tl.to('#page-value-4', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#value-end-1', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to(camera.position, {
-      x: 1.84,
-      y: -7.943,
-      z: -6.87,
-      duration: 8,
-      ease: 'none',
-      onUpdate: () => {
-        if (!modelRef.current) return;
-        camera.lookAt(centerPoint);
+    tl.to(modelRef.current.position, { x: 0, y: -10.5, z: 0, duration: 8, ease: 'none' });
+    tl.to(
+      camera.position,
+      {
+        x: 1.84,
+        y: -7.943,
+        z: -6.87,
+        duration: 8,
+        ease: 'none',
+        onUpdate: () => {
+          if (!modelRef.current) return;
+          camera.lookAt(centerPoint);
+        },
       },
-    });
+      '<',
+    );
     tl.to('#value-end-2', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to('#value-end-1', { autoAlpha: 0 });
-    tl.to('#value-end-2', { autoAlpha: 0 }, '<');
+    tl.to('#value-end-1', { autoAlpha: 0, duration: 3.5, ease: 'none' });
+    tl.to('#value-end-2', { autoAlpha: 0, duration: 3.5, ease: 'none' }, '<');
   });
 
   // a=camera b=model c=titleSvg

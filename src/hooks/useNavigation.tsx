@@ -20,7 +20,8 @@ export function useNavigation() {
       end: 'top top',
       onEnter: () => {
         if (isNavScrollingRef.current) return;
-        gsap.to(window, { scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -500 } });
+        const height = window.innerHeight;
+        gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
       },
     });
   });
