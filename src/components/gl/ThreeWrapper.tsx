@@ -4,10 +4,8 @@ import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
-import { useConfig } from './fluid/hooks/useConfig';
 
 export default function ThreeWrapper() {
-  const config = useConfig();
   return (
     <Canvas
       id="vision-canvas"
@@ -29,7 +27,7 @@ export default function ThreeWrapper() {
       </Suspense>
 
       <EffectComposer>
-        <Fluid {...config} />
+        <Fluid />
       </EffectComposer>
     </Canvas>
   );

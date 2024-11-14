@@ -5,7 +5,6 @@ import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
-import { useControls } from 'leva';
 import { useRef } from 'react';
 import * as THREE from 'three';
 
@@ -18,72 +17,6 @@ export default function ValueGL() {
   const title2Ref = useRef<THREE.Group>(null);
   const title3Ref = useRef<THREE.Group>(null);
   const title4Ref = useRef<THREE.Group>(null);
-
-  const title1Controls = useControls(
-    'Title 1',
-    {
-      forwardDistance: { value: 4.4, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 0, min: -10, max: 10, step: 0.1 },
-      upDistance: { value: 0.8, min: -10, max: 10, step: 0.1 },
-      scale: {
-        value: 0.0107,
-        min: 0.001,
-        max: 0.1,
-        step: 0.0001,
-      },
-    },
-    { collapsed: true },
-  );
-  const title2Controls = useControls(
-    'Title 2',
-    {
-      forwardDistance: { value: 9, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: -1, min: -10, max: 10, step: 0.1 },
-      upDistance: { value: 0.8, min: -10, max: 10, step: 0.1 },
-      scale: {
-        value: 0.0136,
-        min: 0.001,
-        max: 0.1,
-        step: 0.0001,
-      },
-      rotation: [0, -2.4, 0],
-    },
-    { collapsed: true },
-  );
-
-  const title3Controls = useControls(
-    'Title 3',
-    {
-      forwardDistance: { value: 10, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 10, min: -20, max: 20, step: 0.1 },
-      upDistance: { value: 10, min: -10, max: 10, step: 0.1 },
-      scale: {
-        value: 0.0121,
-        min: 0.001,
-        max: 0.1,
-        step: 0.0001,
-      },
-      rotation: [2.608, -0.075, 3.098],
-    },
-    { collapsed: true },
-  );
-
-  const title4Controls = useControls(
-    'Title 4',
-    {
-      forwardDistance: { value: 30, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 8, min: -10, max: 10, step: 0.1 },
-      upDistance: { value: 0.7, min: -10, max: 10, step: 0.1 },
-      scale: {
-        value: 0.0143,
-        min: 0.001,
-        max: 0.1,
-        step: 0.0001,
-      },
-      rotation: [-2.156, 0.114, 2.972],
-    },
-    { collapsed: true },
-  );
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -276,48 +209,48 @@ export default function ValueGL() {
   const title1Position = getExtendedPointWithOffset(
     new THREE.Vector3(0, -10, 11), // camera
     new THREE.Vector3(0, -10, 0), // model
-    title1Controls?.forwardDistance,
-    title1Controls?.sideDistance,
-    title1Controls?.upDistance,
+    4.4,
+    0,
+    0.8,
   );
 
   const title2Position = getExtendedPointWithOffset(
     new THREE.Vector3(-7.6, -10.12, -7.52), // camera
     new THREE.Vector3(0, -10, 0), // model
-    title2Controls?.forwardDistance,
-    title2Controls?.sideDistance,
-    title2Controls?.upDistance,
+    9,
+    -1,
+    0.8,
   );
 
   const title3Position = getExtendedPointWithOffset(
     new THREE.Vector3(-0.794, -15.797, 3.842), // camera
     new THREE.Vector3(0, -10, 0), // model
-    title3Controls?.forwardDistance,
-    title3Controls?.sideDistance,
-    title3Controls?.upDistance,
+    10,
+    10,
+    10,
   );
 
   const title4Position = getExtendedPointWithOffset(
     new THREE.Vector3(1.409, 0.291, -6.821), // camera
     new THREE.Vector3(0, -10, 0), // model
-    title4Controls?.forwardDistance,
-    title4Controls?.sideDistance,
-    title4Controls?.upDistance,
+    30,
+    8,
+    0.7,
   );
 
   return (
     <group>
       <Center ref={title1Ref} position={title1Position}>
-        <Svg scale={title1Controls.scale} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
+        <Svg scale={0.0107} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center ref={title2Ref} position={title2Position} rotation={title2Controls.rotation}>
-        <Svg scale={title2Controls.scale} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
+      <Center ref={title2Ref} position={title2Position} rotation={[0, -2.4, 0]}>
+        <Svg scale={0.0136} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center ref={title3Ref} position={title3Position} rotation={title3Controls.rotation}>
-        <Svg scale={title3Controls.scale} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
+      <Center ref={title3Ref} position={title3Position} rotation={[2.608, -0.075, 3.098]}>
+        <Svg scale={0.0121} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
       </Center>
-      <Center ref={title4Ref} position={title4Position} rotation={title4Controls.rotation}>
-        <Svg scale={title4Controls.scale} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
+      <Center ref={title4Ref} position={title4Position} rotation={[-2.156, 0.114, 2.972]}>
+        <Svg scale={0.0143} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <AnimalModel ref={modelRef} />
     </group>
