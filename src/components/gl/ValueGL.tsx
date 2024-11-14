@@ -8,7 +8,6 @@ import gsap from 'gsap';
 import { useControls } from 'leva';
 import { useRef } from 'react';
 import * as THREE from 'three';
-import { modelPosition } from 'three/webgpu';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
@@ -24,7 +23,7 @@ export default function ValueGL() {
     'Title 1',
     {
       forwardDistance: { value: 4.4, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 0.5, min: -10, max: 10, step: 0.1 },
+      sideDistance: { value: 0, min: -10, max: 10, step: 0.1 },
       upDistance: { value: 0.8, min: -10, max: 10, step: 0.1 },
       scale: {
         value: 0.0107,
@@ -35,13 +34,12 @@ export default function ValueGL() {
     },
     { collapsed: true },
   );
-
   const title2Controls = useControls(
     'Title 2',
     {
       forwardDistance: { value: 9, min: 0, max: 100, step: 0.1 },
-      sideDistance: { value: 4.9, min: -10, max: 10, step: 0.1 },
-      upDistance: { value: 0.5, min: -10, max: 10, step: 0.1 },
+      sideDistance: { value: -1, min: -10, max: 10, step: 0.1 },
+      upDistance: { value: 0.8, min: -10, max: 10, step: 0.1 },
       scale: {
         value: 0.0136,
         min: 0.001,
@@ -88,60 +86,43 @@ export default function ValueGL() {
   );
 
   useGSAP(() => {
-    gsap.set(camera.position, {
-      y: -10,
-      z: 11,
+    const tl = gsap.timeline({
       immediateRender: false,
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
-        start: 'top bottom+=400',
-        toggleActions: 'play none none reverse',
+        start: 'top bottom+=500',
+        end: 'top top',
+        scrub: true,
       },
     });
-    console.log('camera 0: ', camera.position);
-    console.log('model 0: ', modelRef.current?.position);
-    gsap.to('#vision-canvas', {
-      zIndex: 1,
-      opacity: 1,
-      immediateRender: false,
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[2].id}`,
-        start: 'top center',
-        toggleActions: 'play none none reverse',
-        onEnter: () => {
-          if (!modelRef.current) return;
-          if (!title1Ref.current) return;
-          gsap.from(title1Ref.current.position, {
-            x: 5,
-            y: -15,
-            z: -10,
-            duration: 1.2,
-            ease: 'power3.out',
-          });
-          gsap.from(title1Ref.current.rotation, {
-            x: -Math.PI / 4,
-            y: -Math.PI / 4,
-            z: Math.PI / 4,
-            duration: 1.2,
-            ease: 'power3.out',
-          });
-          gsap.from(modelRef.current.position, {
-            x: 5,
-            y: -15,
-            z: -10,
-            duration: 0.8,
-            ease: 'power3.out',
-          });
-          gsap.from(modelRef.current.rotation, {
-            x: Math.PI / 4,
-            y: Math.PI / 4,
-            z: Math.PI / 4,
-            duration: 0.8,
-            ease: 'power3.out',
-          });
-        },
+    tl.to(camera.position, { y: -10, z: 11 });
+    tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
+    if (!title1Ref.current || !modelRef.current) return;
+    tl.fromTo(
+      title1Ref.current.position,
+      { x: 5, y: -20, z: -10 },
+      {
+        x: 0,
+        y: -9.2,
+        z: -4.4,
+        ease: 'power1.out',
       },
-    });
+      '<10%',
+    );
+    tl.fromTo(
+      title1Ref.current.rotation,
+      { x: -Math.PI / 4, y: -Math.PI / 4, z: Math.PI / 4 },
+      { x: 0, y: 0, z: 0, ease: 'power1.out' },
+      '<',
+    );
+    tl.fromTo(modelRef.current.position, { x: 5, y: -15, z: -10 }, { x: 0, y: -10, z: 0, ease: 'power3.out' }, '<');
+    tl.fromTo(
+      modelRef.current.rotation,
+      { x: Math.PI / 4, y: Math.PI / 4, z: Math.PI / 4 },
+      { x: 0, y: 0, z: 0, ease: 'power3.out' },
+      '<',
+    );
+    tl.to('#page-value-1', { opacity: 1 }, '<30%');
   });
 
   useGSAP(() => {
@@ -155,18 +136,7 @@ export default function ValueGL() {
       },
     });
     tl.to(title1Ref.current.position, { z: -20, ease: 'power3.inOut', duration: 8 });
-    // {"forwardDistance":-1.4}{"sideDistance":-2}{"upDistance":-0.7000000000000001}
-    console.log(
-      'title2 model pos:',
-      getExtendedPointWithOffset(
-        new THREE.Vector3(0, -10, 11), // camera
-        new THREE.Vector3(0, -10, 0), // model
-        -1.7,
-        -2,
-        -0.7,
-      ),
-    );
-    tl.to(modelRef.current.position, { x: -2, y: -10.7, z: 1.7, ease: 'power3.inOut', duration: 8 }, '<');
+    tl.to(modelRef.current.position, { x: -1, y: -10, z: 0, ease: 'power3.inOut', duration: 8 }, '<');
     tl.to(
       camera.position,
       {
@@ -178,15 +148,16 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
-          // console.log('camera 1: ', camera.position);
         },
       },
       '<',
     );
+    tl.to('#page-value-1', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    tl.to('#page-value-2', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title2Ref.current.position, {
-      x: 21.249,
-      y: -19.776,
-      z: 6.958,
+      x: 39.056,
+      y: -19.551,
+      z: 21.611,
       ease: 'power3.inOut',
       duration: 8,
     });
@@ -201,7 +172,7 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to(modelRef.current.position, { x: -2, y: -10, z: 0, ease: 'power3.inOut', duration: 8 }, '<');
+    tl.to(modelRef.current.position, { x: 1, y: -12, z: -2, ease: 'power3.inOut', duration: 8 }, '<');
     tl.to(
       camera.position,
       {
@@ -213,12 +184,12 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
-          // console.log('camera 2: ', camera.position);
-          // console.log('model 2: ', modelRef.current.position);
         },
       },
       '<',
     );
+    tl.to('#page-value-2', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    tl.to('#page-value-3', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title3Ref.current.position, {
       x: 11.08,
       y: 12.395,
@@ -234,10 +205,6 @@ export default function ValueGL() {
         z: 3.842,
         duration: 8,
         ease: 'power3.inOut',
-        onComplete: () => {
-          title4Ref.current?.quaternion.copy(camera.quaternion);
-          // console.log('title4Ref.current:', title4Ref.current);
-        },
       },
       '<',
     );
@@ -253,20 +220,50 @@ export default function ValueGL() {
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
-          // console.log('camera 3: ', camera.position);
-          // console.log('model 3: ', modelRef.current.position);
         },
       },
       '<',
     );
-    // tl.to('#page-value-4', { opacity: 0 }, '<+=1');
-    // tl.set('.page-value-card', { x: '-30%' });
-    // tl.fromTo('.page-value-card-item', { left: '-=100%' }, { left: `+=220%`, duration: 5 });
-    // tl.set('.page-value-card', { x: '100%' });
-    // tl.to('#value-end-1', { autoAlpha: 1 });
-    // tl.to('#value-end-2', { autoAlpha: 1 });
-    // tl.to('#value-end-1', { autoAlpha: 0 });
-    // tl.to('#value-end-2', { autoAlpha: 0 }, '<');
+    tl.to('#page-value-3', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    tl.to(title4Ref.current.position, {
+      x: -10.236,
+      y: -30.144,
+      z: 13.849,
+      duration: 8,
+      ease: 'power3.inOut',
+    });
+    tl.to(
+      camera.position,
+      {
+        x: 2.8,
+        y: -7.863,
+        z: -10.55,
+        duration: 8,
+        ease: 'power3.inOut',
+        onUpdate: () => {
+          if (!modelRef.current) return;
+          camera.lookAt(centerPoint);
+        },
+      },
+      '<',
+    );
+    tl.to('#page-value-4', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    tl.to('#value-end-1', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    tl.to(camera.position, {
+      x: 1.84,
+      y: -7.943,
+      z: -6.87,
+      duration: 8,
+      ease: 'none',
+      onUpdate: () => {
+        if (!modelRef.current) return;
+        camera.lookAt(centerPoint);
+      },
+    });
+    tl.to('#value-end-2', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    tl.to('#value-end-1', { autoAlpha: 0 });
+    tl.to('#value-end-2', { autoAlpha: 0 }, '<');
   });
 
   // a=camera b=model c=titleSvg
@@ -281,7 +278,7 @@ export default function ValueGL() {
 
   const title2Position = getExtendedPointWithOffset(
     new THREE.Vector3(-7.6, -10.12, -7.52), // camera
-    new THREE.Vector3(2, -10, -2), // model
+    new THREE.Vector3(0, -10, 0), // model
     title2Controls?.forwardDistance,
     title2Controls?.sideDistance,
     title2Controls?.upDistance,
@@ -302,8 +299,6 @@ export default function ValueGL() {
     title4Controls?.sideDistance,
     title4Controls?.upDistance,
   );
-
-  console.log('title3Position: ', title4Position);
 
   return (
     <group>
