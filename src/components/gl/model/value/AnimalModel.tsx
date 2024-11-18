@@ -65,13 +65,14 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props} position={[0, -10, 0]}>
+    <group ref={ref} {...props}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
     </group>
   );
 });
+
 AnimalModel.displayName = 'DragonModelTemp';
 
 export default AnimalModel;
