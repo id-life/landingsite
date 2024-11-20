@@ -42,15 +42,20 @@ export default function FixedValue() {
         <div
           key={item.id}
           id={item.id}
-          className={cn('page-value-item fixed bottom-40 right-20 z-10 opacity-0', item?.className)}
+          className={cn(
+            'page-value-item fixed bottom-40 right-20 z-10 opacity-0 mobile:bottom-[12.8vw] mobile:right-[6.4vw]',
+            item?.className,
+          )}
         >
-          <h3 className="text-xl/6 font-semibold">{item.title}</h3>
-          <p className="mt-4 w-[29.125rem] text-base font-semibold">{item.content}</p>
+          <h3 className="text-xl/6 font-semibold mobile:text-base/5">{item.title}</h3>
+          <p className="mt-4 w-[29.125rem] text-base font-semibold mobile:mt-[1.28vw] mobile:w-[50vw] mobile:text-sm/4">
+            {item.content}
+          </p>
         </div>
       ))}
       <div
         id="value-end-1"
-        className="font-oxanium invisible fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 opacity-0"
+        className="invisible fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 font-oxanium opacity-0"
       >
         <h2 className="text-3xl font-bold uppercase">Promising Early-Stage Ventures</h2>
         <ul className="list-mark-red-disc mt-9 flex flex-col gap-7.5 text-xl/5 font-bold uppercase">
@@ -60,7 +65,7 @@ export default function FixedValue() {
       </div>
       <ul
         id="value-end-2"
-        className="list-mark-red-disc font-oxanium invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right text-xl/5 font-bold uppercase opacity-0"
+        className="list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right font-oxanium text-xl/5 font-bold uppercase opacity-0"
       >
         <li>
           East/West Access: Deep roots in both East and West, a conduit that bridges market, capital, institutions and more.

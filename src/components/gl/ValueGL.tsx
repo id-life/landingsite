@@ -1,12 +1,13 @@
+import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
@@ -23,6 +24,7 @@ export default function ValueGL() {
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
   const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
+  const isMobile = useIsMobile();
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -176,10 +178,15 @@ export default function ValueGL() {
 
   return (
     <group>
-      <Center ref={title1Ref} position={new THREE.Vector3(...Object.values(page1Config.from.title.position))}>
+      <Center
+        scale={isMobile ? 0.3 : 1}
+        ref={title1Ref}
+        position={new THREE.Vector3(...Object.values(page1Config.from.title.position))}
+      >
         <Svg scale={0.0107} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <Center
+        scale={isMobile ? 0.3 : 1}
         ref={title2Ref}
         position={new THREE.Vector3(...Object.values(page2Config.from.title.position))}
         rotation={[0, -2.4, 0]}
@@ -187,6 +194,7 @@ export default function ValueGL() {
         <Svg scale={0.0136} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <Center
+        scale={isMobile ? 0.3 : 1}
         ref={title3Ref}
         position={new THREE.Vector3(...Object.values(page3Config.from.title.position))}
         rotation={[2.608, -0.075, 3.098]}
@@ -194,6 +202,7 @@ export default function ValueGL() {
         <Svg scale={0.0121} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
       </Center>
       <Center
+        scale={isMobile ? 0.3 : 1}
         ref={title4Ref}
         position={new THREE.Vector3(...Object.values(page4Config.from.title.position))}
         rotation={[-2.156, 0.114, 2.972]}
