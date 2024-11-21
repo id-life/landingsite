@@ -133,7 +133,7 @@ export default function Fund() {
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
       {active && <ParticleGL activeAnim={active} />}
-      <div className="relative flex h-screen flex-col items-center justify-center">
+      <div className="relative flex h-screen flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           <div id="particle-container" className={cn({ active })}>
             <div className="particle-mask"></div>

@@ -45,23 +45,25 @@ export default function FixedUI() {
   const isMobile = useIsMobile();
   return (
     <>
-      <div className="fixed-top fixed left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-foreground transition duration-300 mobile:hidden" />
-      <div className="fixed-bottom fixed left-10 top-[calc(50%_+_14rem)] h-2 w-9 bg-foreground transition duration-300 mobile:hidden" />
-      <div className="fixed-bottom fixed right-10 top-[calc(50%_+_14rem)] h-4 w-4 bg-foreground transition duration-300 mobile:hidden" />
-      <div className="fixed-top fixed right-[13.5rem] top-[calc(50%_-_14rem)] h-4 w-4 bg-foreground transition duration-300 mobile:hidden" />
-      <VerticalCarousel
-        slideDown
-        itemHeight={isMobile ? 24 : 48}
-        duration={10}
-        transition={0.6}
-        className="fixed bottom-10 left-10 w-[25rem] mobile:bottom-[3.2vw] mobile:left-[3.2vw] mobile:w-auto"
-      >
-        {CAROUSEL_ITEMS.map((item) => (
-          <CarouselItem key={item.text} {...item} />
-        ))}
-      </VerticalCarousel>
-      <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-[3.2vw] mobile:h-[1.28vw] mobile:w-[1.28vw]" />
-      <ToggleSoundButton className="fixed bottom-10 right-10 z-10 mobile:hidden" />
+      <div className="fixed-top fixed left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-foreground transition duration-300 mobile:left-5 mobile:top-[7.5rem] mobile:h-1 mobile:w-3" />
+      <div className="fixed-bottom fixed left-10 top-[calc(50%_+_16rem)] h-2 w-9 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:left-5 mobile:top-auto mobile:h-1 mobile:w-4.5" />
+      <div className="fixed-bottom fixed right-10 top-[calc(50%_+_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:right-5 mobile:top-auto mobile:h-2" />
+      <div className="fixed-top fixed right-[13.5rem] top-[calc(50%_-_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:right-[6.75rem] mobile:top-[7.5rem] mobile:h-2" />
+      <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
+      {!isMobile && (
+        <VerticalCarousel
+          slideDown
+          itemHeight={isMobile ? 24 : 48}
+          duration={10}
+          transition={0.6}
+          className="fixed bottom-10 left-10 w-[25rem] mobile:bottom-[3.2vw] mobile:left-[3.2vw] mobile:w-auto"
+        >
+          {CAROUSEL_ITEMS.map((item) => (
+            <CarouselItem key={item.text} {...item} />
+          ))}
+        </VerticalCarousel>
+      )}
+      {!isMobile && <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />}
       <FixedValue />
       <FixedCard />
     </>
