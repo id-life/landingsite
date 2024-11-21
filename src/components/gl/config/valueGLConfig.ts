@@ -76,7 +76,7 @@ export const VALUE_GL_CONFIG = [
     },
     to: {
       camera: { position: { x: 1.84, y: -7.943, z: -6.87 } },
-      model: { position: { x: 0, y: -10.5, z: 0 } },
+      model: { position: { x: 0, y: -10.5, z: 0 }, mobilePos: { x: -0.5, y: -10.8, z: 2 } },
     },
   },
 ] as const;

@@ -14,9 +14,9 @@
     --background: #f0f0f0;
     --foreground: #000000;
     --nav: #f0f0f0;
-    --gradient-from: #FFFFFF;
-    --gradient-to: #CBD6EA;
-    --backgroun-point: #FFFFFF7F;
+    --gradient-from: #ffffff;
+    --gradient-to: #cbd6ea;
+    --backgroun-point: #ffffff7f;
   }
 
   *::-webkit-scrollbar {
@@ -36,7 +36,7 @@
   }
 
   .base-background2 {
-    background-image: radial-gradient(#FFFFFF7F 2px, transparent 0px);
+    background-image: radial-gradient(#ffffff7f 2px, transparent 0px);
     background-size: 8px 8px;
   }
 }
@@ -77,11 +77,10 @@
     &.value {
       min-height: 800vh;
     }
-
   }
 
   .list-mark-red-disc li {
-    @apply marker:text-red-600 marker:content-['->_'] list-inside list-disc marker:text-2xl/5;
+    @apply list-inside list-disc marker:text-2xl/5 marker:text-red-600 marker:content-['->_'] mobile:marker:text-base/5;
   }
 
   .vision-title {

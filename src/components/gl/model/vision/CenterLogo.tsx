@@ -4,12 +4,13 @@ import * as THREE from 'three';
 import { Center, Svg } from '@react-three/drei';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function CenterLogo() {
   const { pointer, size } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const smootherRef = useRef(ScrollSmoother.get());
-
+  const isMobile = useIsMobile();
   useFrame(() => {
     if (!groupRef.current || !smootherRef.current) return;
     const positionX = THREE.MathUtils.mapLinear(pointer.x, -1, 1, -0.15, 0.15);
@@ -28,7 +29,7 @@ export default function CenterLogo() {
   });
 
   return (
-    <Center ref={groupRef} position={[0, 0, -5]}>
+    <Center scale={isMobile ? 0.65 : 1} ref={groupRef} position={[0, 0, -5]}>
       <Svg scale={0.06} src="/svgs/logo-new.svg" fillMaterial={{ transparent: false }} />
     </Center>
   );

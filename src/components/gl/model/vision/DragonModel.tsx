@@ -6,6 +6,7 @@ import { useGesture } from '@use-gesture/react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const InitRotation = Math.PI / 2;
 
@@ -17,6 +18,7 @@ export default function DragonModel(props: {}) {
   const rotationRef = useRef(InitRotation);
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
+  const isMobile = useIsMobile();
 
   useFrame(({ clock }) => {
     if (!modelRef.current || !smootherRef.current) return;
@@ -83,7 +85,14 @@ export default function DragonModel(props: {}) {
   );
 
   return (
-    <group {...(bind() as any)} ref={modelRef} {...props} scale={0.13} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
+    <group
+      {...(bind() as any)}
+      ref={modelRef}
+      {...props}
+      scale={isMobile ? 0.1 : 0.13}
+      position={[0, 0, 0]}
+      rotation={[0, InitRotation, 0]}
+    >
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
           resolution={256}
