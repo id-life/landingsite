@@ -80,7 +80,7 @@
   }
 
   .list-mark-red-disc li {
-    @apply list-inside list-disc marker:text-2xl/5 marker:text-red-600 marker:content-['->_'] mobile:marker:text-base/5;
+    @apply list-inside list-disc marker:text-2xl/5 marker:text-red-600 marker:content-['->_'] mobile:marker:text-xs/3.5;
   }
 
   .vision-title {

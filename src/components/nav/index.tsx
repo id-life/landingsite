@@ -16,6 +16,7 @@ import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { useThrottle } from '@/hooks/useThrottle';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -24,7 +25,7 @@ export default function Nav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const playingRef = useRef<boolean>(false);
   const timelineRef = useRef(gsap.timeline({ paused: true }));
-
+  const isMobile = useIsMobile();
   const onSubscribeClick = () => {
     if (isSubscribeShow) {
       if (playingRef.current) return;
@@ -46,10 +47,9 @@ export default function Nav() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
-    setTimeout(() => {
-      timelineRef.current.to('.page-footer', { bottom: '2.25rem' });
-      timelineRef.current.to('.footer-box-clip', { width: '40rem', height: '11.5rem' }, '<');
-    }, 300);
+    return () => {
+      window.removeEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
+    };
   }, []);
 
   const handleScroll = useThrottle(() => {
