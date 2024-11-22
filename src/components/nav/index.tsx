@@ -1,19 +1,19 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { clsx } from 'clsx';
-import MenuOpenSVG from '../svg/MenuOpenSVG';
-import { useAtom, useAtomValue } from 'jotai';
-import LogoSVG from '@/components/svg/LogoSVG';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useThrottle } from '@/hooks/useThrottle';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import { useNavigation } from '@/hooks/useNavigation';
-import MobileNavDialog from '../dialog/MobileNavDialog';
-import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
+import { isSubscribeShowAtom } from '@/atoms/footer';
+import { NAV_LIST } from '@/components/nav/nav';
+import LogoSVG from '@/components/svg/LogoSVG';
+import { useNavigation } from '@/hooks/useNavigation';
+import { useThrottle } from '@/hooks/useThrottle';
+import { clsx } from 'clsx';
+import gsap from 'gsap';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useRef } from 'react';
+import MobileNavDialog from '../dialog/MobileNavDialog';
+import MenuOpenSVG from '../svg/MenuOpenSVG';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);

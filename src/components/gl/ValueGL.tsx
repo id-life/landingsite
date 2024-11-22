@@ -26,46 +26,49 @@ export default function ValueGL() {
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
 
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        immediateRender: false,
-        trigger: `#${NAV_LIST[2].id}`,
-        start: 'top bottom+=500',
-        end: 'top top',
-        scrub: true,
-      },
-    });
-    tl.to(camera.position, { ...page1Config.to.camera.position });
-    tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
-    if (!title1Ref.current || !modelRef.current) return;
-    tl.fromTo(
-      title1Ref.current.position,
-      { ...page1Config.from.title.position },
-      { ...page1Config.to.title.position, ease: 'power1.out' },
-      '<10%',
-    );
-    tl.fromTo(
-      title1Ref.current.rotation,
-      { ...page1Config.from.title.rotation },
-      { ...page1Config.to.title.rotation, ease: 'power1.out' },
-      '<',
-    );
-    tl.fromTo(
-      modelRef.current.position,
-      { ...page1Config.from.model.position },
-      { ...page1Config.to.model.position, ease: 'power3.out' },
-      '<',
-    );
-    tl.fromTo(
-      modelRef.current.rotation,
-      { ...page1Config.from.model.rotation },
-      { ...page1Config.to.model.rotation, ease: 'power3.out' },
-      '<',
-    );
-    tl.to('#page-value-1', { opacity: 1 }, '<30%');
-    tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
-  });
+  useGSAP(
+    () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          immediateRender: false,
+          trigger: `#${NAV_LIST[2].id}`,
+          start: 'top bottom+=500',
+          end: 'top top',
+          scrub: true,
+        },
+      });
+      tl.to(camera.position, { ...page1Config.to.camera.position });
+      tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
+      if (!title1Ref.current || !modelRef.current) return;
+      tl.fromTo(
+        title1Ref.current.position,
+        { ...page1Config.from.title.position },
+        { ...page1Config.to.title.position, ease: 'power1.out' },
+        '<10%',
+      );
+      tl.fromTo(
+        title1Ref.current.rotation,
+        { ...page1Config.from.title.rotation },
+        { ...page1Config.to.title.rotation, ease: 'power1.out' },
+        '<',
+      );
+      tl.fromTo(
+        modelRef.current.position,
+        { ...page1Config.from.model.position },
+        { ...(isMobile ? page1Config.to.model.mobilePos : page1Config.to.model.position), ease: 'power3.out' },
+        '<',
+      );
+      tl.fromTo(
+        modelRef.current.rotation,
+        { ...page1Config.from.model.rotation },
+        { ...(isMobile ? page1Config.to.model.mobileRot : page1Config.to.model.rotation), ease: 'power3.out' },
+        '<',
+      );
+      tl.to('#page-value-1', { opacity: 1 }, '<30%');
+      tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
+    },
+    { dependencies: [isMobile] },
+  );
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
@@ -78,7 +81,16 @@ export default function ValueGL() {
       },
     });
     tl.to(title1Ref.current.position, { ...page2Config.to.prevTitle.position, ease: 'power3.inOut', duration: 8 });
-    tl.to(modelRef.current.position, { ...page2Config.to.model.position, ease: 'power3.inOut', duration: 8 }, '<');
+    tl.to(
+      modelRef.current.position,
+      { ...(isMobile ? page2Config.to.model.mobilePos : page2Config.to.model.position), ease: 'power3.inOut', duration: 8 },
+      '<',
+    );
+    tl.to(
+      modelRef.current.rotation,
+      { ...(isMobile ? page2Config.to.model.mobileRot : page2Config.to.model.rotation), ease: 'power3.inOut', duration: 8 },
+      '<',
+    );
     tl.to(
       camera.position,
       {
@@ -110,7 +122,16 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to(modelRef.current.position, { ...page3Config.to.model.position, ease: 'power3.inOut', duration: 8 }, '<');
+    tl.to(
+      modelRef.current.position,
+      { ...(isMobile ? page3Config.to.model.mobilePos : page3Config.to.model.position), ease: 'power3.inOut', duration: 8 },
+      '<',
+    );
+    tl.to(
+      modelRef.current.rotation,
+      { ...(isMobile ? page3Config.to.model.mobileRot : page3Config.to.model.rotation), ease: 'power3.inOut', duration: 8 },
+      '<',
+    );
     tl.to(
       camera.position,
       {
@@ -130,7 +151,16 @@ export default function ValueGL() {
     tl.to('#value-3-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title3Ref.current.position, { ...page4Config.to.prevTitle.position, duration: 8, ease: 'power3.inOut' });
     tl.to(title4Ref.current.position, { ...page4Config.to.title.position, duration: 8, ease: 'power3.inOut' }, '<');
-    tl.to(modelRef.current.position, { ...page4Config.to.model.position, duration: 8, ease: 'power3.inOut' }, '<');
+    tl.to(
+      modelRef.current.position,
+      { ...(isMobile ? page4Config.to.model.mobilePos : page4Config.to.model.position), duration: 8, ease: 'power3.inOut' },
+      '<',
+    );
+    tl.to(
+      modelRef.current.rotation,
+      { ...(isMobile ? page4Config.to.model.mobileRot : page4Config.to.model.rotation), duration: 8, ease: 'power3.inOut' },
+      '<',
+    );
     tl.to(
       camera.position,
       {
@@ -168,6 +198,11 @@ export default function ValueGL() {
     tl.to('#value-end-1', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(modelRef.current.position, {
       ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
+      duration: 8,
+      ease: 'none',
+    });
+    tl.to(modelRef.current.rotation, {
+      ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
       duration: 8,
       ease: 'none',
     });

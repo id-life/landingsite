@@ -29,7 +29,7 @@ export default function CenterLogo() {
   });
 
   return (
-    <Center scale={isMobile ? 0.65 : 1} ref={groupRef} position={[0, 0, -5]}>
+    <Center scale={isMobile ? 0.7 : 1} ref={groupRef} position={[0, 0, -5]}>
       <Svg scale={0.06} src="/svgs/logo-new.svg" fillMaterial={{ transparent: false }} />
     </Center>
   );
