@@ -145,7 +145,7 @@ export default function Fund() {
           </div>
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund mt-12 grid w-full grid-cols-6 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="page2-fund mt-12 grid w-full grid-cols-7 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
