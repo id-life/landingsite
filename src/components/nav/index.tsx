@@ -1,22 +1,19 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { clsx } from 'clsx';
-import Dialog from '../dialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
 import { useAtom, useAtomValue } from 'jotai';
 import LogoSVG from '@/components/svg/LogoSVG';
 import { NAV_LIST } from '@/components/nav/nav';
+import { useThrottle } from '@/hooks/useThrottle';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { useNavigation } from '@/hooks/useNavigation';
-import SubscribeDialog from '../dialog/SubscribeDialog';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { useThrottle } from '@/hooks/useThrottle';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -25,7 +22,7 @@ export default function Nav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const playingRef = useRef<boolean>(false);
   const timelineRef = useRef(gsap.timeline({ paused: true }));
-  const isMobile = useIsMobile();
+
   const onSubscribeClick = () => {
     if (isSubscribeShow) {
       if (playingRef.current) return;
