@@ -161,13 +161,13 @@ export default function Fund() {
                 if (!element) return;
                 fundRefs.current[index] = element;
               }}
-              className="relative w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
+              className="relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
             >
               <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
               <div className="mt-4 text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
                 {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
-                {!isMobile && <p className="fund-desc mt-3 w-60 px-4 mx-auto text-xs/5">{item.description}</p>}
+                {!isMobile && <p className="fund-desc mx-auto mt-3 w-60 text-xs/5">{item.description}</p>}
               </div>
               {item.link ? (
                 <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
