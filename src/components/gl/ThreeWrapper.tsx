@@ -25,7 +25,6 @@ export default function ThreeWrapper() {
       <Suspense>
         <ValueGL />
       </Suspense>
-
       <EffectComposer>
         <Fluid />
       </EffectComposer>
