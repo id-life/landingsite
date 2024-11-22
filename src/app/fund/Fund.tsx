@@ -29,37 +29,44 @@ const funds: FundItem[] = [
   {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
-    image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vita" />,
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vita" />,
     link: 'https://vitalia.city/',
   },
   {
     title: 'Unlimited Bio',
     description: 'Accelerate clinical trials',
-    image: <img className="w-[4.875rem] mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
     link: 'https://unlimit.bio/',
   },
   {
     title: 'Healthspan Capital',
     description: 'The most active longevity fund in space.',
-    image: <img className="w-20 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
     link: 'https://www.healthspancapital.vc/',
   },
   {
     title: 'BiohackerDAO',
     description: 'Decentralized self-enhancement experiments and monetizes data',
-    image: <img className="w-[18.25rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
+    image: <img className="w-[15.3125rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
     link: 'https://biohackerdao.com/',
   },
   {
     title: 'Mito Health',
     description: 'AI Powered Concierge Doctor',
-    image: <img className="w-22.5 mobile:w-[4.6875rem]" src="/imgs/investments/mito.webp" alt="mito" />,
+    image: <img className="w-36 mobile:w-[4.6875rem]" src="/imgs/investments/mito.webp" alt="mito" />,
     link: 'https://mitohealth.com/',
   },
   {
     title: 'R3 Bio',
     description: 'Wholebody replacement',
-    image: <img className="w-[8.9375rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
+    image: <img className="w-[8.75rem] mobile:w-[4.6875rem]" src="/imgs/investments/r3.webp" alt="r3" />,
+  },
+  {
+    title: 'BIO Protocol',
+    subTitle: 'via VITA allocation convert',
+    description: 'A new home for Decentralized Biotech',
+    image: <img className="w-[9.6875rem] mobile:w-[4.84rem]" src="/imgs/investments/bio.webp" alt="vita" />,
+    link: 'http://bio.xyz/',
   },
 ];
 
@@ -145,7 +152,7 @@ export default function Fund() {
           </div>
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund mt-12 grid w-full grid-cols-7 gap-7.5 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="page2-fund my-12 grid grid-cols-4 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
@@ -154,13 +161,13 @@ export default function Fund() {
                 if (!element) return;
                 fundRefs.current[index] = element;
               }}
-              className="relative h-72 cursor-pointer text-foreground mobile:h-37"
+              className="relative w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
             >
-              <div className="flex h-[8.875rem] items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
-              <div className="text-center font-semibold">
+              <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
+              <div className="mt-4 text-center font-semibold">
                 <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
                 {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
-                {!isMobile && <p className="fund-desc mt-3 px-4 text-xs/5">{item.description}</p>}
+                {!isMobile && <p className="fund-desc mt-3 w-60 px-4 mx-auto text-xs/5">{item.description}</p>}
               </div>
               {item.link ? (
                 <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
