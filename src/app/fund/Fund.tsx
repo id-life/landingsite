@@ -20,6 +20,12 @@ type FundItem = {
 
 const funds: FundItem[] = [
   {
+    title: 'Healthspan Capital',
+    description: 'The most active longevity fund in space.',
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    link: 'https://www.healthspancapital.vc/',
+  },
+  {
     title: 'VitaDAO',
     subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
@@ -29,7 +35,7 @@ const funds: FundItem[] = [
   {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
-    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vita" />,
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
     link: 'https://vitalia.city/',
   },
   {
@@ -37,12 +43,6 @@ const funds: FundItem[] = [
     description: 'Accelerate clinical trials',
     image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
     link: 'https://unlimit.bio/',
-  },
-  {
-    title: 'Healthspan Capital',
-    description: 'The most active longevity fund in space.',
-    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
-    link: 'https://www.healthspancapital.vc/',
   },
   {
     title: 'BiohackerDAO',
@@ -65,8 +65,14 @@ const funds: FundItem[] = [
     title: 'BIO Protocol',
     subTitle: 'via VITA allocation convert',
     description: 'A new home for Decentralized Biotech',
-    image: <img className="w-[9.6875rem] mobile:w-[4.84rem]" src="/imgs/investments/bio.webp" alt="vita" />,
+    image: <img className="w-[9.6875rem] mobile:w-[4.84rem]" src="/imgs/investments/bio.webp" alt="bio" />,
     link: 'http://bio.xyz/',
+  },
+  {
+    title: 'Longevity.Technology',
+    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/longevity.webp" alt="longevity" />,
+    link: 'https://longevity.technology/',
   },
 ];
 
@@ -133,8 +139,14 @@ export default function Fund() {
       fundRefs.current.forEach((div) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
-        tl.from(div.querySelector('.fund-desc'), { opacity: 0, translateY: '50%' });
-        tl.from(div.querySelector('.fund-arrow'), { opacity: 0, translateY: '50%' }, '<50%');
+        const desc = div.querySelector('.fund-desc');
+        const arrow = div.querySelector('.fund-arrow');
+        if (desc) {
+          tl.from(desc, { opacity: 0, translateY: '50%' });
+        }
+        if (arrow) {
+          tl.from(arrow, { opacity: 0, translateY: '50%' }, '<50%');
+        }
         div.addEventListener('mouseenter', () => tl.play());
         div.addEventListener('mouseleave', () => tl.reverse());
       });
@@ -152,28 +164,53 @@ export default function Fund() {
           </div>
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund my-12 grid grid-cols-4 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
-          {funds.map((item, index) => (
-            <div
-              onClick={() => handleFundClick(item)}
-              key={item.title}
-              ref={(element) => {
-                if (!element) return;
-                fundRefs.current[index] = element;
-              }}
-              className="relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
-            >
-              <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
-              <div className="mt-4 text-center font-semibold">
-                <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
-                {!isMobile && <p className="fund-desc mx-auto mt-3 w-60 text-xs/5">{item.description}</p>}
+        <div className="page2-fund my-12 overflow-hidden px-18 mobile:mt-7.5 mobile:gap-0 mobile:px-0 mobile:pb-10">
+          <div className="grid grid-cols-4 mobile:grid-cols-2">
+            {funds.slice(0, 4).map((item, index) => (
+              <div
+                onClick={() => handleFundClick(item)}
+                key={item.title}
+                ref={(element) => {
+                  if (!element) return;
+                  fundRefs.current[index] = element;
+                }}
+                className="relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
+              >
+                <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
+                <div className="mt-4 text-center font-semibold">
+                  <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
+                  {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
+                  {!isMobile && <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{item.description}</p>}
+                </div>
+                {item.link ? (
+                  <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
+                ) : null}
               </div>
-              {item.link ? (
-                <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
-              ) : null}
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="grid grid-cols-5 mobile:grid-cols-2">
+            {funds.slice(4).map((item, index) => (
+              <div
+                onClick={() => handleFundClick(item)}
+                key={item.title}
+                ref={(element) => {
+                  if (!element) return;
+                  fundRefs.current[4 + index] = element;
+                }}
+                className="relative h-60 w-[19rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
+              >
+                <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
+                <div className="mt-4 text-center font-semibold">
+                  <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
+                  {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
+                  {!isMobile && <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{item.description}</p>}
+                </div>
+                {item.link ? (
+                  <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
+                ) : null}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="page2-contact">
           <Contact />
