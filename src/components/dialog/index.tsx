@@ -13,9 +13,8 @@ import {
   useRole,
   useTransitionStyles,
 } from '@floating-ui/react';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import React, { cloneElement, useCallback, useEffect, useState } from 'react';
-import { useAtomValue } from 'jotai';
-import { smootherAtom } from '@/atoms/scroll';
 
 type DialogProps = {
   className?: string;
@@ -43,7 +42,6 @@ function Dialog({
   anim = 'fade',
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
-  const smoother = useAtomValue(smootherAtom);
   const onChange = (status: boolean) => {
     setIsOpen(status);
     onOpenChange?.(status);
@@ -89,9 +87,10 @@ function Dialog({
   }, [passedOpen]);
 
   useEffect(() => {
+    const smoother = ScrollSmoother.get();
     if (!smoother) return;
     smoother.paused(isOpen);
-  }, [isOpen, smoother]);
+  }, [isOpen]);
 
   return (
     <>

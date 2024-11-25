@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  transpilePackages: ['three'],
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));
     config.module.rules = [
@@ -23,6 +24,14 @@ const nextConfig = {
         use: '@svgr/webpack',
         resourceQuery: /component/, // *.svg?component
       },
+      // 添加 GLSL 文件的处理规则
+      {
+        test: /\.(glsl|vert|frag)$/,
+        use: [
+          'raw-loader',
+          'glslify-loader'
+        ]
+      }
     ];
     return config;
   },

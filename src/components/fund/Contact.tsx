@@ -42,7 +42,7 @@ export default function Contact() {
           }
           copyToClipboard('contact@id.life');
         }}
-        className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 hover:text-red-600 mobile:absolute mobile:bottom-1 mobile:w-44 mobile:text-xs/5"
+        className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 hover:text-red-600 mobile:absolute mobile:-bottom-3 mobile:w-44 mobile:-translate-x-1/2 mobile:text-xs/5"
       >
         <SubscribeBorderSVG
           preserveAspectRatio="none"

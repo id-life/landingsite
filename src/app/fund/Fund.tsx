@@ -1,7 +1,7 @@
-import { useMemo, useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -72,15 +72,59 @@ const funds: FundItem[] = [
 
 export default function Fund() {
   const isMobile = useIsMobile();
-  const currentPage = useAtomValue(currentPageAtom);
-  const active = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fundRefs = useRef<HTMLDivElement[]>([]);
-
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[1].id}`,
+        start: 'top top',
+        end: '+=300%',
+        pin: true,
+        scrub: true,
+        onEnter: () => {
+          setCurrentPage(NAV_LIST[1]);
+          setActive(true);
+        },
+        onEnterBack: () => {
+          setCurrentPage(NAV_LIST[1]);
+          setActive(true);
+        },
+        onLeaveBack: () => {
+          setActive(false);
+        },
+      },
+    });
+    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
+    tl.from('.page2-title', {
+      delay: 0.5,
+      y: (_, target) => target.offsetHeight,
+      rotateX: 45,
+      rotateY: 15,
+      opacity: 0,
+    });
+    tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
+    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
+    tl.to('.page2-title', {
+      delay: 0.5,
+      y: (_, target) => -target.offsetHeight,
+      rotateX: -45,
+      rotateY: 15,
+      opacity: 0,
+    });
+    tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
+    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
+    tl.to('#particle-gl', { opacity: 0 });
+    tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
+    tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
+  });
 
   useGSAP(
     () => {
@@ -99,21 +143,16 @@ export default function Fund() {
   );
 
   return (
-    <div
-      ref={wrapperRef}
-      id={NAV_LIST[1].id}
-      className="page-container page-height bg-fund p-8 text-white mobile:px-5 mobile:pt-0"
-    >
-      {active && <ParticleGL activeAnim={true} />}
-      <div className="relative flex h-full w-full flex-col items-center justify-center mobile:h-auto">
-        <div id="particle-container" className={cn({ active })}>
-          <div className="particle-mask"></div>
+    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
+      {active && <ParticleGL activeAnim={active} />}
+      <div className="relative flex h-screen flex-col items-center justify-center mobile:translate-y-6">
+        <div id="particle-gl">
+          <div id="particle-container" className={cn({ active })}>
+            <div className="particle-mask"></div>
+          </div>
         </div>
-        <div className="font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        {/* <p className="text-center font-migrena text-xl/7.5 font-bold capitalize mobile:mt-1.5 mobile:text-sm/5">
-          Access To cutting-edge products, exclusive events, and a network of innovators
-        </p> */}
-        <div className="my-12 grid grid-cols-4 px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
+        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
+        <div className="page2-fund my-12 grid grid-cols-4 overflow-hidden px-18 mobile:mt-7.5 mobile:grid-cols-2 mobile:gap-0 mobile:px-0 mobile:pb-10">
           {funds.map((item, index) => (
             <div
               onClick={() => handleFundClick(item)}
@@ -136,7 +175,9 @@ export default function Fund() {
             </div>
           ))}
         </div>
-        <Contact />
+        <div className="page2-contact">
+          <Contact />
+        </div>
       </div>
     </div>
   );

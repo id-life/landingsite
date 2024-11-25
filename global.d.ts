@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
-import { ReactThreeFiber } from "@react-three/fiber";
-import { EffectComposer, RenderPass, ShaderPass } from "three-stdlib";
+import { ReactThreeFiber } from '@react-three/fiber';
+import { ShaderPass } from 'three-stdlib';
 
 declare global {
   export type Component<P = {}> = FC<ComponentType & P>;

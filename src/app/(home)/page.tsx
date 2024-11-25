@@ -1,79 +1,85 @@
 'use client';
 
-import { useRef } from 'react';
+import React from 'react';
 import gsap from 'gsap';
-import Fund from '../fund/Fund';
-import { useSetAtom } from 'jotai';
+import Fund from '@/app/fund/Fund';
 import { useGSAP } from '@gsap/react';
+import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
-import { smootherAtom } from '@/atoms/scroll';
-import { isMobile } from 'react-device-detect';
-import Processes from '@/app/processes/Processes';
+import { useSetAtom } from 'jotai/index';
+import { currentPageAtom } from '@/atoms';
+import { NAV_LIST } from '@/components/nav/nav';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-
-const ease = 'power2.out';
+import ThreeWrapper from '@/components/gl/ThreeWrapper';
+import Footer from '@/app/footer/Footer';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
-  const setSmoother = useSetAtom(smootherAtom);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const setCurrentPage = useSetAtom(currentPageAtom);
+  const isMobile = useIsMobile();
 
-  useGSAP(() => {
-    const smoother = ScrollSmoother.create({
-      wrapper: wrapperRef.current,
-      content: contentRef.current,
-      smooth: 1,
-      effects: true,
-      smoothTouch: 0.1,
-    });
-    setSmoother(smoother);
-
-    const root = document.documentElement;
-    const background = getComputedStyle(root).getPropertyValue('--background');
-    const foreground = getComputedStyle(root).getPropertyValue('--foreground');
-    const pages = gsap.utils.toArray<HTMLDivElement>('.page-container');
-    pages.forEach((page, index) => {
-      const tl = gsap.timeline({
+  useGSAP(
+    () => {
+      ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: true, smoothTouch: 0.1 });
+      const root = document.documentElement;
+      const visionTL = gsap.timeline({
         scrollTrigger: {
-          trigger: page,
-          start: () => `bottom ${window.innerHeight}`,
-          pin: !isMobile,
-          pinSpacing: false,
+          trigger: `#${NAV_LIST[0].id}`,
+          start: 'center top',
+          end: 'bottom top',
           scrub: true,
+          onEnter: () => {
+            setCurrentPage(NAV_LIST[0]);
+          },
+          onEnterBack: () => {
+            setCurrentPage(NAV_LIST[0]);
+          },
         },
       });
-      tl.to(page, { opacity: 0, ease }, 0);
-      if (index === 0) {
-        tl.to(
-          root,
-          {
-            ease,
-            '--background': foreground,
-            '--foreground': background,
-            '--nav': '#00000000',
-            '--gradient': '#c111114c',
+      if (isMobile) visionTL.to(['.fixed-top', '.fixed-bottom'], { opacity: 0 });
+      visionTL.to('.base-background2', { opacity: 0 });
+      visionTL.to(root, {
+        '--gradient-from': '#000000',
+        '--gradient-to': '#C111114C',
+        '--background': '#000000',
+        '--foreground': '#F0F0F0',
+      });
+      const valueTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: `#${NAV_LIST[2].id}`,
+          start: 'top bottom+=500',
+          end: 'top center',
+          scrub: true,
+          onEnter: () => {
+            setCurrentPage(NAV_LIST[2]);
           },
-          0,
-        );
-      } else {
-        tl.to(root, {
-          ease,
-          '--background': background,
-          '--foreground': foreground,
-          '--nav': background,
-          '--gradient': '#c1111100',
-        });
-      }
-    });
-  });
+          onEnterBack: () => {
+            setCurrentPage(NAV_LIST[2]);
+          },
+        },
+      });
+      valueTL.to(root, {
+        '--gradient-from': '#FFFFFF',
+        '--gradient-to': '#CBD6EA',
+        '--background': '#F0F0F0',
+        '--foreground': '#000000',
+      });
+      valueTL.to('.base-background2', { opacity: 1 });
+    },
+    { dependencies: [isMobile] },
+  );
 
   return (
-    <div ref={wrapperRef}>
-      <div id="content" className="px-12 pt-34 mobile:p-0 mobile:pt-20" ref={contentRef}>
-        <Vision />
-        <Fund />
-        <Processes />
+    <>
+      <ThreeWrapper />
+      <div id="wrapper">
+        <div id="content">
+          <Vision />
+          <Fund />
+          <Value />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

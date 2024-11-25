@@ -17,6 +17,7 @@ const config: Config = {
         poppins: ['var(--font-poppins)'],
         migrena: ['var(--font-migrena)'],
         tt: ['var(--font-tt)'],
+        oxanium: ['var(--font-oxanium)'],
       },
       animation: {
         'scroll-down': 'scroll-down 1.5s ease-in infinite',
@@ -29,6 +30,7 @@ const config: Config = {
       },
       spacing: {
         3.5: '0.875rem',
+        4.5: '1.125rem',
         6.5: '1.625rem',
         7.5: '1.875rem',
         10.5: '2.625rem',
@@ -59,6 +61,7 @@ const config: Config = {
           800: '#222222',
         },
         red: {
+          500: '#BB1212',
           600: '#C11111',
         },
         green: {
@@ -66,7 +69,6 @@ const config: Config = {
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        nav: 'var(--nav)',
       },
       lineHeight: {
         3.5: '0.875rem',

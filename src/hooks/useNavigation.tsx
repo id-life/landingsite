@@ -1,38 +1,55 @@
-import { navigateToAtom, currentPageAtom } from '@/atoms';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { useAtom, useSetAtom } from 'jotai';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
-import { smootherAtom } from '@/atoms/scroll';
-import { usePageScrollHeight } from './usePageScrollHeight';
-import { useSwitchPage } from '@/hooks/useSwitchPage';
+import { navigateToAtom, currentPageAtom } from '@/atoms';
 
 export function useNavigation() {
+  const isNavScrollingRef = useRef(false);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const smoother = useAtomValue(smootherAtom);
-  const { scrollPageId } = usePageScrollHeight();
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
-  const { onChangeCurrentPage } = useSwitchPage();
+
+  useGSAP(() => {
+    ScrollTrigger.create({
+      trigger: `#${NAV_LIST[1].id}`,
+      start: 'top bottom',
+      endTrigger: `#${NAV_LIST[1].id}`,
+      end: 'top top',
+      onEnter: () => {
+        if (isNavScrollingRef.current) return;
+        const height = window.innerHeight;
+        gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
+      },
+    });
+  });
 
   const handleNavClick = useCallback(
     (item: NavItem) => {
-      const clientHeight = document.querySelector('#nav')?.clientHeight;
+      const smoother = ScrollSmoother.get();
+      if (!smoother) return;
       if (item.id === NAV_LIST[0].id) {
-        smoother?.scrollTo(0, true);
-      } else {
-        smoother?.scrollTo(`#${item.id}`, true, `top ${clientHeight}px`);
+        isNavScrollingRef.current = true;
+        smoother?.scrollTo(`#${item.id}`, true);
+        setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
-      const index = NAV_LIST.findIndex((i) => i.id === item.id);
-      onChangeCurrentPage(index > 2 ? 2 : index);
+      if (item.id === NAV_LIST[1].id) {
+        isNavScrollingRef.current = true;
+        smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
+        requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
+        setTimeout(() => (isNavScrollingRef.current = false), 500);
+      }
+      if (item.id === NAV_LIST[2].id) {
+        isNavScrollingRef.current = true;
+        smoother?.scrollTo(`#${item.id}`, true);
+        setTimeout(() => (isNavScrollingRef.current = false), 500);
+      }
       setCurrentPage(item);
     },
-    [onChangeCurrentPage, setCurrentPage, smoother],
+    [setCurrentPage],
   );
-
-  useEffect(() => {
-    const item = NAV_LIST.find((item) => item.id === scrollPageId);
-    if (!item) return;
-    setCurrentPage(item);
-  }, [scrollPageId, setCurrentPage]);
 
   useEffect(() => {
     if (navigateTo) {
@@ -40,6 +57,7 @@ export function useNavigation() {
       setCurrentPage(navigateTo);
       setNavigateTo(null);
     }
-  }, [handleNavClick, navigateTo, setCurrentPage, setNavigateTo, smoother]);
+  }, [handleNavClick, navigateTo, setCurrentPage, setNavigateTo]);
+
   return { handleNavClick };
 }
