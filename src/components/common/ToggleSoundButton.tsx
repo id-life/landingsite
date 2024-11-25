@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SoundLineItem() {
   return (
@@ -19,6 +20,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
   const tl1Ref = useRef<GSAPTimeline | null>(null);
   const tl2Ref = useRef<GSAPTimeline | null>(null);
   const [soundOff, setSoundOff] = useLocalStorage(STORAGE_KEY.SOUND_OFF, false);
+  const isMounted = useIsMounted();
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [canAutoPlay, setCanAutoPlay] = useState(true);
@@ -44,6 +46,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
   }, [handleUserInteraction]);
 
   useEffect(() => {
+    if (!isMounted) return;
     if (audioRef.current) {
       soundOff ? audioRef.current.pause() : audioRef.current.play();
     }
@@ -73,7 +76,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
         speed: 0.2,
       });
     }
-  }, [soundOff]);
+  }, [isMounted, soundOff]);
 
   return (
     <>
@@ -83,7 +86,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
           className,
         )}
         onClick={() => {
-          setSoundOff((pre) => !pre);
+          setSoundOff(!soundOff);
         }}
       >
         <div className="relative flex h-5 w-10 items-center overflow-hidden">
