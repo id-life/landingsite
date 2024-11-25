@@ -15,7 +15,7 @@ import * as THREE from 'three';
 const InitRotation = Math.PI / 2;
 const mobileLoopAnim = VISION_GL_CONFIG.mobileLoopAnim;
 export default function DragonModel(props: {}) {
-  const { camera, events, size } = useThree();
+  const { camera, events, size, clock } = useThree();
   const { nodes } = useGLTF('/models/logo.glb');
   const modelRef = useRef<THREE.Group>(null);
   const tlRef = useRef<gsap.core.Timeline>();
@@ -83,6 +83,7 @@ export default function DragonModel(props: {}) {
         ease: 'power3.out',
         duration: 1.5,
         onComplete: () => {
+          clock.start();
           autoSwingRef.current = true;
         },
       });
@@ -120,7 +121,7 @@ export default function DragonModel(props: {}) {
       tlRef.current?.pause();
       camera.quaternion.identity(); // 重置相机方向为默认值
     }
-  }, [isMobile, currentPage]);
+  }, [isMobile, currentPage, camera]);
 
   return (
     <group

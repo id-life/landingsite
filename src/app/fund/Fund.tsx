@@ -47,7 +47,7 @@ const funds: FundItem[] = [
   {
     title: 'BiohackerDAO',
     description: 'Decentralized self-enhancement experiments and monetizes data',
-    image: <img className="w-[15.3125rem] mobile:w-[9.5625rem]" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
+    image: <img className="w-19.5 mobile:w-10" src="/imgs/investments/biohacker.webp" alt="biohacker" />,
     link: 'https://biohackerdao.com/',
   },
   {
