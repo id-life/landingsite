@@ -13,6 +13,7 @@ import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ReactNode } from 'react';
 import VerticalCarousel from './VerticalCarousel';
+import { ClientOnly } from './ClientOnly';
 
 const CAROUSEL_ITEMS = [
   {
@@ -63,7 +64,11 @@ export default function FixedUI() {
           ))}
         </VerticalCarousel>
       )}
-      {!isMobile && <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />}
+      {!isMobile && (
+        <ClientOnly>
+          <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
+        </ClientOnly>
+      )}
       <FixedValue />
       <FixedCard />
     </>

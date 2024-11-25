@@ -6,5 +6,3 @@ export const currentPageAtom = atom<NavItem>(NAV_LIST[0]);
 export const mobileNavOpenAtom = atom<boolean>(false);
 
 export const navigateToAtom = atom<NavItem | null>(null);
-
-export const soundOffAtom = atom<boolean>(false);

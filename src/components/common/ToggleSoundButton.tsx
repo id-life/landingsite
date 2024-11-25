@@ -1,10 +1,9 @@
-import { soundOffAtom } from '@/atoms';
+import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
-import { useAtom } from 'jotai';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
-import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SoundLineItem() {
   return (
@@ -19,8 +18,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
   const list2Ref = useRef<HTMLUListElement>(null);
   const tl1Ref = useRef<GSAPTimeline | null>(null);
   const tl2Ref = useRef<GSAPTimeline | null>(null);
-  const [soundOff, setSoundOff] = useAtom(soundOffAtom);
-  const isMounted = useIsMounted();
+  const [soundOff, setSoundOff] = useLocalStorage(STORAGE_KEY.SOUND_OFF, false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [canAutoPlay, setCanAutoPlay] = useState(true);
@@ -33,8 +31,6 @@ export default function ToggleSoundButton({ className }: { className?: string })
   }, [canAutoPlay]);
 
   useEffect(() => {
-    if (!isMounted) return;
-
     audioRef.current?.play().catch(() => {
       setCanAutoPlay(false);
       console.log('autoplay error');
@@ -45,7 +41,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
     return () => {
       window.removeEventListener('click', handleUserInteraction);
     };
-  }, [isMounted, handleUserInteraction]);
+  }, [handleUserInteraction]);
 
   useEffect(() => {
     if (audioRef.current) {
