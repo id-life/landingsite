@@ -1,10 +1,10 @@
 import { STORAGE_KEY } from '@/constants/storage';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
-import { useIsMounted } from '@/hooks/useIsMounted';
 
 function SoundLineItem() {
   return (
@@ -33,6 +33,8 @@ export default function ToggleSoundButton({ className }: { className?: string })
   }, [canAutoPlay]);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     audioRef.current?.play().catch(() => {
       setCanAutoPlay(false);
       console.log('autoplay error');
@@ -43,10 +45,9 @@ export default function ToggleSoundButton({ className }: { className?: string })
     return () => {
       window.removeEventListener('click', handleUserInteraction);
     };
-  }, [handleUserInteraction]);
+  }, [handleUserInteraction, isMounted]);
 
   useEffect(() => {
-    if (!isMounted) return;
     if (audioRef.current) {
       soundOff ? audioRef.current.pause() : audioRef.current.play();
     }
@@ -76,7 +77,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
         speed: 0.2,
       });
     }
-  }, [isMounted, soundOff]);
+  }, [soundOff]);
 
   return (
     <>
