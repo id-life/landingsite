@@ -120,6 +120,7 @@ export default function DragonModel(props: {}) {
     } else {
       tlRef.current?.pause();
       camera.quaternion.identity(); // 重置相机方向为默认值
+      camera.position.set(0, 0, 10);
     }
   }, [isMobile, currentPage, camera]);
 
