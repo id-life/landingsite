@@ -1,14 +1,16 @@
-import { useRef, useState } from 'react';
-import gsap from 'gsap';
-import { cn } from '@/utils';
-import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
-import { currentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
-import Contact from '@/components/fund/Contact';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import ParticleGL from '@/components/gl/ParticleGL';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
+import { currentPageAtom } from '@/atoms';
+import { fundLogoParticleIndexAtom } from '@/atoms/app';
+import Contact from '@/components/fund/Contact';
+import ParticleGL from '@/components/gl/ParticleGL';
+import { NAV_LIST } from '@/components/nav/nav';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { cn } from '@/utils';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { useAtom, useSetAtom } from 'jotai';
+import { throttle } from 'lodash-es';
+import { useRef, useState } from 'react';
 
 type FundItem = {
   title: string;
@@ -16,6 +18,7 @@ type FundItem = {
   description: string;
   image: JSX.Element;
   link?: string;
+  particleIdx?: number;
 };
 
 const funds: FundItem[] = [
@@ -31,6 +34,7 @@ const funds: FundItem[] = [
     description: 'New funding paradigm for unlikely bio projects',
     image: <img className="w-50 mobile:w-[6.5625rem]" src="/imgs/investments/vita.webp" alt="vita" />,
     link: 'https://www.vitadao.com/',
+    particleIdx: 1,
   },
   {
     title: 'Vitalia',
@@ -82,6 +86,8 @@ export default function Fund() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fundRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
+  const [imageIdx, setImageIdx] = useAtom(fundLogoParticleIndexAtom);
+
   const handleFundClick = (item: FundItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
@@ -136,7 +142,12 @@ export default function Fund() {
     () => {
       if (isMobile) return;
       if (!fundRefs.current.length) return;
-      fundRefs.current.forEach((div) => {
+      // 创建节流后的setImageIdx函数
+      const throttledSetImageIdx = throttle((index: number) => {
+        setImageIdx(index);
+      }, 200); // 500ms的节流时间
+
+      fundRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
         const desc = div.querySelector('.fund-desc');
@@ -147,8 +158,14 @@ export default function Fund() {
         if (arrow) {
           tl.from(arrow, { opacity: 0, translateY: '50%' }, '<50%');
         }
-        div.addEventListener('mouseenter', () => tl.play());
-        div.addEventListener('mouseleave', () => tl.reverse());
+        div.addEventListener('mouseenter', () => {
+          throttledSetImageIdx(funds[idx]?.particleIdx ?? 0);
+          tl.play();
+        });
+        div.addEventListener('mouseleave', () => {
+          throttledSetImageIdx(0);
+          tl.reverse();
+        });
       });
     },
     { scope: wrapperRef, dependencies: [isMobile] },
@@ -156,7 +173,7 @@ export default function Fund() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && <ParticleGL activeAnim={active} />}
+      {active && <ParticleGL activeAnim={active} imageIdx={imageIdx} />}
       <div className="relative flex h-screen flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           <div id="particle-container" className={cn({ active })}>
@@ -215,6 +232,18 @@ export default function Fund() {
         <div className="page2-contact">
           <Contact />
         </div>
+        {/* <div
+          className="cursor-pointer bg-red-400 p-2"
+          onClick={() => setImageIdx(imageIdx - 1 >= 0 ? imageIdx - 1 : fundLogoLength - 1)}
+        >
+          上一张
+        </div>
+        <div
+          className="cursor-pointer bg-red-400 p-2"
+          onClick={() => setImageIdx(imageIdx + 1 < fundLogoLength ? imageIdx + 1 : 0)}
+        >
+          下一张
+        </div> */}
       </div>
     </div>
   );

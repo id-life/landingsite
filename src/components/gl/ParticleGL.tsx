@@ -5,8 +5,8 @@ const DynamicReactP5Wrapper = dynamic(() => import('./DynamicParticleGL').then((
   ssr: false,
 });
 
-const ParticleGL = ({ activeAnim }: { activeAnim?: boolean }) => {
-  return <DynamicReactP5Wrapper activeAnim={activeAnim} />;
+const ParticleGL = ({ activeAnim, imageIdx }: { activeAnim?: boolean; imageIdx: number }) => {
+  return <DynamicReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} />;
 };
 
 export default ParticleGL;
