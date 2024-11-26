@@ -4,7 +4,7 @@ import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
