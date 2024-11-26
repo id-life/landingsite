@@ -67,15 +67,15 @@
   .page-container {
     position: relative;
     width: 100%;
-    min-height: 150vh;
+    min-height: 150dvh;
     overflow: hidden;
 
     &.fund {
-      min-height: 300vh;
+      min-height: 300dvh;
     }
 
     &.value {
-      min-height: 800vh;
+      min-height: 800dvh;
     }
   }
 
