@@ -33,31 +33,31 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     resolution?: number;
   }[] = [
     {
+      url: '/imgs/particle/0.png',
       scaleNum: IS_MOBILE ? 0.8 : 2.2,
       resize: [512, 300],
-      url: '/imgs/particle/0.png',
     },
     {
       url: '/imgs/particle/1.png',
-      loadPercentage: 0.004,
       resize: [600, 600],
       scaleNum: 1.3,
+      loadPercentage: 0.004,
     },
     {
+      url: '/imgs/particle/2.png',
       scaleNum: IS_MOBILE ? 1 : 1.2,
       resize: [310, 250],
-      url: '/imgs/particle/2.png',
     },
     {
       url: '/imgs/particle/3.png',
       scaleNum: IS_MOBILE ? 1 : 1.2,
       resize: [860, 82],
-      loadPercentage: 0.03,
+      loadPercentage: 0.007,
     },
     {
       url: '/imgs/particle/4.png',
       resize: [600, 600],
-      loadPercentage: 0.01,
+      loadPercentage: 0.003,
     },
     {
       url: '/imgs/particle/5.png',
@@ -282,6 +282,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     }
     // console.log('开始重置图像 2 idx:', isAnimating, idx);
     isAnimating = true;
+
     const {
       scaleNum = defaultConfig.scaleNum,
       loadPercentage = defaultConfig.loadPercentage,
@@ -345,6 +346,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       for (let i = 0; i < preParticleIndexes.length; i++) {
         const index = preParticleIndexes[i];
         allParticles[index].kill();
+        allParticles[index].endColor = p5.color(0);
       }
     }
 
