@@ -33,7 +33,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
   }, [canAutoPlay]);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || soundOff) return;
 
     audioRef.current?.play().catch(() => {
       setCanAutoPlay(false);
@@ -45,7 +45,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
     return () => {
       window.removeEventListener('click', handleUserInteraction);
     };
-  }, [handleUserInteraction, isMounted]);
+  }, [handleUserInteraction, isMounted, soundOff]);
 
   useEffect(() => {
     if (audioRef.current) {

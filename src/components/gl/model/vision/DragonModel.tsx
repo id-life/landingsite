@@ -20,7 +20,8 @@ export default function DragonModel(props: {}) {
   const modelRef = useRef<THREE.Group>(null);
   const tlRef = useRef<gsap.core.Timeline>();
   const autoSwingRef = useRef(false);
-  const rotationRef = useRef(InitRotation);
+  const isRecoveringRef = useRef(false);
+  const rotationRef = useRef({ y: InitRotation, x: 0 });
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const isMobile = useIsMobile();
@@ -29,7 +30,7 @@ export default function DragonModel(props: {}) {
   useFrame(({ clock }) => {
     if (!modelRef.current || !smootherRef.current) return;
     if (autoSwingRef.current) {
-      modelRef.current.rotation.y = rotationRef.current + Math.sin(clock.elapsedTime) * 0.1;
+      modelRef.current.rotation.y = rotationRef.current.y + Math.sin(clock.elapsedTime) * 0.1;
     }
     const scrollTop = smootherRef.current.scrollTop();
     const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 193 / 255);
@@ -43,21 +44,30 @@ export default function DragonModel(props: {}) {
       onHover: ({ last }) => {
         events.connected.style.cursor = last ? 'auto' : 'grab';
       },
-      onDrag: ({ active, movement: [x] }) => {
-        if (!modelRef.current) return;
+      onDrag: ({ active, movement: [x, y] }) => {
+        if (!modelRef.current || isRecoveringRef.current) return;
         if (active) {
           autoSwingRef.current = false;
           events.connected.style.cursor = 'grabbing';
-          modelRef.current.rotation.y = rotationRef.current + x / 100;
+          modelRef.current.rotation.y = rotationRef.current.y + x / 150;
+          modelRef.current.rotation.x = rotationRef.current.x + y / 150;
+          clock.stop();
         } else {
           autoSwingRef.current = false;
+          isRecoveringRef.current = true;
           events.connected.style.cursor = 'grab';
-          const r = modelRef.current.rotation.y + InitRotation - (modelRef.current.rotation.y % (Math.PI * 2));
-          rotationRef.current = r;
+          const rY = modelRef.current.rotation.y + InitRotation - (modelRef.current.rotation.y % (Math.PI * 2));
+          const rX = modelRef.current.rotation.x - (modelRef.current.rotation.x % (Math.PI * 2));
+          rotationRef.current.y = rY;
+          rotationRef.current.x = rX;
           gsap.to(modelRef.current.rotation, {
-            y: r,
+            y: rY,
+            x: rX,
+            duration: 1.5,
             onComplete: () => {
               autoSwingRef.current = true;
+              isRecoveringRef.current = false;
+              clock.start();
             },
           });
         }
@@ -135,12 +145,12 @@ export default function DragonModel(props: {}) {
     >
       <mesh geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial
-          resolution={256}
+          resolution={512}
           background={backgroundRef.current}
-          roughness={0.4}
+          roughness={0}
           metalness={0.1}
-          chromaticAberration={0.4}
-          transmission={0.8}
+          chromaticAberration={0.5}
+          transmission={1}
           thickness={10}
         />
       </mesh>

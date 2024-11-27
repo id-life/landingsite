@@ -2,13 +2,18 @@ import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
+import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 
 const backsideThickness = 1.5;
 const thickness = 5;
 
+const randomIndex = Math.floor(Math.random() * 2);
+
+const gltfConfig = ANIMAL_CONFIG[randomIndex];
+
 const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
-  const { scene, animations } = useGLTF('https://cdn.id.life/animal2.glb');
+  const { scene, animations } = useGLTF(gltfConfig.path);
   const { actions, names } = useAnimations(animations, scene);
   const meshRef = useRef<THREE.Mesh[]>([]);
   const [discardMaterial] = useState(() => new MeshDiscardMaterial());
@@ -20,17 +25,11 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
     if (!scene) return;
     scene.traverse((child: any) => {
       if (child.isMesh) {
-        if (['JF_skin_in', 'Object_12'].includes(child.name)) {
+        const mesh = gltfConfig.mesh.find((mesh) => mesh.name === child.name);
+        if (mesh) {
           const material = new MeshTransmissionMaterial({ samples: 4 });
-          material.reflectivity = 0.04;
-          material.anisotropy = 0.5;
-          child.material = material;
-          meshRef.current.push(child);
-        }
-        if (['Object_14'].includes(child.name)) {
-          const material = new MeshTransmissionMaterial({ samples: 4 });
-          material.reflectivity = 0.1;
-          material.anisotropy = 0.5;
+          material.reflectivity = mesh.reflectivity;
+          material.anisotropy = mesh.anisotropy;
           child.material = material;
           meshRef.current.push(child);
         }
@@ -39,7 +38,7 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [scene]);
 
   useEffect(() => {
-    actions[names[1]]?.reset().play();
+    actions[names[gltfConfig.animation]]?.reset().play();
   }, [actions, names]);
 
   useFrame(({ clock, gl, scene, camera }) => {
@@ -75,7 +74,7 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props}>
+    <group ref={ref} {...props} scale={gltfConfig.scale}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
