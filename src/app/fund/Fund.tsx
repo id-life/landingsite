@@ -18,7 +18,6 @@ type FundItem = {
   description: string;
   image: JSX.Element;
   link?: string;
-  particleIdx?: number;
 };
 
 const funds: FundItem[] = [
@@ -34,7 +33,6 @@ const funds: FundItem[] = [
     description: 'New funding paradigm for unlikely bio projects',
     image: <img className="w-50 mobile:w-[6.5625rem]" src="/imgs/investments/vita.webp" alt="vita" />,
     link: 'https://www.vitadao.com/',
-    particleIdx: 1,
   },
   {
     title: 'Vitalia',
@@ -159,7 +157,7 @@ export default function Fund() {
           tl.from(arrow, { opacity: 0, translateY: '50%' }, '<50%');
         }
         div.addEventListener('mouseenter', () => {
-          throttledSetImageIdx(funds[idx]?.particleIdx ?? 0);
+          throttledSetImageIdx(idx + 1);
           tl.play();
         });
         div.addEventListener('mouseleave', () => {

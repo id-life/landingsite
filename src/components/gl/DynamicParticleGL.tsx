@@ -7,15 +7,17 @@ type MySketchProps = SketchProps & {
   activeAnim: boolean;
   imageIdx: number;
 };
-
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
   // console.log('sketch 函数开始执行');
   const sourceImgs: P5.Image[] = [];
   const allParticles: any[] = [];
   const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const loadPercentage = 0.0007;
+  const defaultConfig = {
+    scaleNum: 1,
+    loadPercentage: 0.0007,
+    resolution: IS_MOBILE ? 15 : 5,
+  };
   const closeEnoughTarget = 100;
-  const resolution = IS_MOBILE ? 15 : 5;
   const speed = 3;
   const particleSize = IS_MOBILE ? 6 : 8;
   const mouseSize = 50;
@@ -23,16 +25,60 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   let activeAnim = false;
   let isAnimating = false;
   let pendingImageIdx: number | null = null;
-  const sourceImgInfos = [
+  const sourceImgInfos: {
+    scaleNum?: number;
+    resize?: number[];
+    url: string;
+    loadPercentage?: number;
+    resolution?: number;
+  }[] = [
     {
       scaleNum: IS_MOBILE ? 0.8 : 2.2,
       resize: [512, 300],
-      url: '/imgs/particle/logo-1.png',
+      url: '/imgs/particle/0.png',
+    },
+    {
+      url: '/imgs/particle/1.png',
+      loadPercentage: 0.004,
+      resize: [600, 600],
+      scaleNum: 1.3,
     },
     {
       scaleNum: IS_MOBILE ? 1 : 1.2,
       resize: [310, 250],
-      url: '/imgs/particle/logo-2.png',
+      url: '/imgs/particle/2.png',
+    },
+    {
+      url: '/imgs/particle/3.png',
+      scaleNum: IS_MOBILE ? 1 : 1.2,
+      resize: [860, 82],
+      loadPercentage: 0.03,
+    },
+    {
+      url: '/imgs/particle/4.png',
+      resize: [600, 600],
+      loadPercentage: 0.01,
+    },
+    {
+      url: '/imgs/particle/5.png',
+      resize: [600, 600],
+      loadPercentage: 0.01,
+    },
+    {
+      url: '/imgs/particle/6.png',
+      resize: [600, 576],
+      loadPercentage: 0.005,
+    },
+    {
+      url: '/imgs/particle/7.png',
+      resize: [300, 300],
+      scaleNum: 1,
+      loadPercentage: 0.005,
+    },
+    {
+      url: '/imgs/particle/8.png',
+      resize: [600, 600],
+      loadPercentage: 0.005,
     },
   ];
 
@@ -203,8 +249,10 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     // console.log('p5.preload 开始执行');
     for (let i = 0; i < sourceImgInfos.length; i++) {
       const img = p5.loadImage(sourceImgInfos[i].url);
-      const [width, height] = sourceImgInfos[i].resize;
-      img.resize(width, height);
+      const [width, height] = sourceImgInfos[i]?.resize ?? [0, 0];
+      const scaleNum = sourceImgInfos[i]?.scaleNum ?? defaultConfig.scaleNum;
+      if (width && height) img.resize(width * scaleNum, height * scaleNum);
+      else img.resize(img.width * scaleNum, img.height * scaleNum);
       sourceImgs.push(img);
     }
     // console.log('p5.preload 执行完毕');
@@ -229,16 +277,21 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     }
     // console.log('开始重置图像 2 idx:', isAnimating, idx);
     isAnimating = true;
+    const {
+      scaleNum = defaultConfig.scaleNum,
+      loadPercentage = defaultConfig.loadPercentage,
+      resolution = defaultConfig.resolution,
+      resize = [0, 0],
+    } = sourceImgInfos[idx] ?? {};
     const sourceImg = sourceImgs[idx];
-    const scaleNum = sourceImgInfos[idx].scaleNum;
-    const [sourceImgWidth, sourceImgHeight] = sourceImgInfos[idx].resize;
-    sourceImg.resize(sourceImgWidth * scaleNum, sourceImgHeight * scaleNum);
+    const [sourceImgWidth, sourceImgHeight] = resize;
+    if (sourceImgWidth) sourceImg.resize(sourceImgWidth * scaleNum, sourceImgHeight * scaleNum);
     sourceImg.loadPixels();
     // console.log(`图像尺寸: ${sourceImg.width}x${sourceImg.height}`);
     // console.log(`loadPercentage: ${loadPercentage}, resolution: ${resolution}`);
 
     // Create an array of indexes from particle array.
-    let preParticleIndexes = allParticles.map((_, index) => index);
+    const preParticleIndexes = allParticles.map((_, index) => index);
 
     let pixelIndex = 0;
 
