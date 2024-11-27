@@ -17,7 +17,7 @@ import { ClientOnly } from './ClientOnly';
 
 const CAROUSEL_ITEMS = [
   {
-    text: 'Setting forth unlimited human healthy lifespan',
+    text: 'Immortal Dragons is a purpose-driven longevity fund',
     icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
