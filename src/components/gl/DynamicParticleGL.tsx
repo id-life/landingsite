@@ -80,6 +80,11 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       resize: [600, 600],
       loadPercentage: 0.005,
     },
+    {
+      url: '/imgs/particle/9.png',
+      resize: [600, 600],
+      loadPercentage: 0.003,
+    },
   ];
 
   p5.updateWithProps = (props) => {
