@@ -44,6 +44,7 @@ const config: Config = {
         32.5: '8.125rem',
         34: '8.5rem',
         37: '9.25rem',
+        42: '10.5rem',
         50: '12.5rem',
         51.5: '12.875rem',
         55: '13.75rem',
@@ -66,6 +67,9 @@ const config: Config = {
         },
         green: {
           600: '#318135',
+        },
+        yellow: {
+          800: '#FFD12C',
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',

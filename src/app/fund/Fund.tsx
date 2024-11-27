@@ -140,12 +140,12 @@ export default function Fund() {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
         const desc = div.querySelector('.fund-desc');
-        const arrow = div.querySelector('.fund-arrow');
+        const subtitle = div.querySelector('.fund-subtitle');
         if (desc) {
           tl.from(desc, { opacity: 0, translateY: '50%' });
         }
-        if (arrow) {
-          tl.from(arrow, { opacity: 0, translateY: '50%' }, '<50%');
+        if (subtitle) {
+          tl.from(subtitle, { opacity: 0, translateY: '50%' }, '<50%');
         }
         div.addEventListener('mouseenter', () => tl.play());
         div.addEventListener('mouseleave', () => tl.reverse());
@@ -178,13 +178,14 @@ export default function Fund() {
               >
                 <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
                 <div className="mt-4 text-center font-semibold">
-                  <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                  {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
+                  <h4 className="font-oxanium text-base/6 mobile:text-sm/5">{item.title}</h4>
                   {!isMobile && <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{item.description}</p>}
+                  {item.subTitle && (
+                    <div className="fund-subtitle mx-auto mt-3 w-44 rounded-full bg-yellow-800/30 py-1.5 text-xs/3 font-semibold text-yellow-800">
+                      {item.subTitle}
+                    </div>
+                  )}
                 </div>
-                {item.link ? (
-                  <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
-                ) : null}
               </div>
             ))}
           </div>
@@ -201,13 +202,14 @@ export default function Fund() {
               >
                 <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{item.image}</div>
                 <div className="mt-4 text-center font-semibold">
-                  <h4 className="text-base/6 mobile:text-sm/5">{item.title}</h4>
-                  {item?.subTitle ? <p className="text-xs/5 font-semibold text-gray-350">{item.subTitle}</p> : null}
+                  <h4 className="font-oxanium text-base/6 mobile:text-sm/5">{item.title}</h4>
                   {!isMobile && <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{item.description}</p>}
+                  {item.subTitle && (
+                    <div className="fund-subtitle mx-auto mt-3 w-44 rounded-full bg-yellow-800/30 py-1.5 text-xs/3 font-semibold text-yellow-800">
+                      {item.subTitle}
+                    </div>
+                  )}
                 </div>
-                {item.link ? (
-                  <ArrowSVG className="fund-arrow mx-auto mt-4 w-5 rotate-180 fill-foreground mobile:mt-2 mobile:w-3" />
-                ) : null}
               </div>
             ))}
           </div>
