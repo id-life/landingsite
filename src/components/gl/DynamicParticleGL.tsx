@@ -40,50 +40,51 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     {
       url: '/imgs/particle/1.png',
       resize: [600, 600],
-      scaleNum: 1.3,
-      loadPercentage: 0.004,
+      scaleNum: 0.8,
+      loadPercentage: 0.005,
     },
     {
       url: '/imgs/particle/2.png',
-      scaleNum: IS_MOBILE ? 1 : 1.2,
+      scaleNum: IS_MOBILE ? 1 : 1.5,
       resize: [310, 250],
     },
     {
       url: '/imgs/particle/3.png',
       scaleNum: IS_MOBILE ? 1 : 1.2,
       resize: [860, 82],
-      loadPercentage: 0.007,
+      loadPercentage: 0.004,
     },
     {
       url: '/imgs/particle/4.png',
       resize: [600, 600],
-      loadPercentage: 0.003,
+      loadPercentage: 0.0012,
     },
     {
       url: '/imgs/particle/5.png',
       resize: [600, 600],
-      loadPercentage: 0.01,
+      loadPercentage: 0.004,
+      scaleNum: 0.9,
     },
     {
       url: '/imgs/particle/6.png',
       resize: [600, 576],
-      loadPercentage: 0.005,
     },
     {
       url: '/imgs/particle/7.png',
       resize: [300, 300],
-      scaleNum: 1,
-      loadPercentage: 0.005,
+      scaleNum: 1.4,
+      loadPercentage: 0.002,
     },
     {
       url: '/imgs/particle/8.png',
       resize: [600, 600],
-      loadPercentage: 0.005,
+      scaleNum: 0.7,
     },
     {
       url: '/imgs/particle/9.png',
-      resize: [600, 600],
-      loadPercentage: 0.003,
+      resize: [600, 536],
+      scaleNum: 0.7,
+      loadPercentage: 0.0012,
     },
   ];
 
