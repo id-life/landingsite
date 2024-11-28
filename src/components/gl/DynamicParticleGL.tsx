@@ -6,9 +6,12 @@ export const fundLogoLength = 2;
 type MySketchProps = SketchProps & {
   activeAnim: boolean;
   imageIdx: number;
+  id?: string;
 };
 function sketch(p5: P5CanvasInstance<MySketchProps>) {
   // console.log('sketch 函数开始执行');
+  let id = 'particle-container';
+  let canvas: P5.Renderer;
   const sourceImgs: P5.Image[] = [];
   const allParticles: any[] = [];
   const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -40,7 +43,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     {
       url: '/imgs/particle/1.png',
       resize: [600, 600],
-      scaleNum: 0.8,
+      scaleNum: IS_MOBILE ? 0.4 : 0.8,
       loadPercentage: 0.005,
     },
     {
@@ -50,40 +53,42 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     },
     {
       url: '/imgs/particle/3.png',
-      scaleNum: IS_MOBILE ? 1 : 1.2,
       resize: [860, 82],
       loadPercentage: 0.004,
+      scaleNum: IS_MOBILE ? 0.5 : 1.2,
     },
     {
       url: '/imgs/particle/4.png',
       resize: [600, 600],
       loadPercentage: 0.0012,
+      scaleNum: IS_MOBILE ? 0.5 : 1,
     },
     {
       url: '/imgs/particle/5.png',
       resize: [600, 600],
       loadPercentage: 0.004,
-      scaleNum: 0.9,
+      scaleNum: IS_MOBILE ? 0.45 : 0.9,
     },
     {
       url: '/imgs/particle/6.png',
       resize: [600, 576],
+      scaleNum: IS_MOBILE ? 0.5 : 1,
     },
     {
       url: '/imgs/particle/7.png',
       resize: [300, 300],
-      scaleNum: 1.4,
+      scaleNum: IS_MOBILE ? 0.7 : 1.4,
       loadPercentage: 0.002,
     },
     {
       url: '/imgs/particle/8.png',
       resize: [600, 600],
-      scaleNum: 0.7,
+      scaleNum: IS_MOBILE ? 0.35 : 0.7,
     },
     {
       url: '/imgs/particle/9.png',
       resize: [600, 536],
-      scaleNum: 0.7,
+      scaleNum: IS_MOBILE ? 0.35 : 0.7,
       loadPercentage: 0.0012,
     },
   ];
@@ -94,6 +99,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       activeAnim = true;
     } else activeAnim = false;
     setImageIdx(props?.imageIdx || 0);
+    id = props?.id ?? 'particle-container';
+    if (canvas) canvas?.parent(id);
   };
 
   function generateRandomPos(x: number, y: number, mag: number) {
@@ -269,8 +276,8 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     const ratio = 1280 / 750;
     const width = IS_MOBILE ? window.innerHeight - 10 : 1280;
     const height = width / ratio;
-    const canvas = p5.createCanvas(width, height);
-    canvas.parent('particle-container');
+    canvas = p5.createCanvas(width, height);
+    canvas.parent(id);
     setImageIdx(0);
   };
 
@@ -384,8 +391,16 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   return p5;
 }
 
-const DynamicParticleGL = ({ activeAnim, imageIdx }: { activeAnim?: boolean; imageIdx: number }) => {
-  return <ReactP5Wrapper sketch={sketch} activeAnim={activeAnim} imageIdx={imageIdx} />;
+const DynamicParticleGL = ({
+  activeAnim,
+  imageIdx,
+  id = 'particle-container',
+}: {
+  activeAnim?: boolean;
+  imageIdx: number;
+  id?: string;
+}) => {
+  return <ReactP5Wrapper sketch={sketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };
 
 export default DynamicParticleGL;
