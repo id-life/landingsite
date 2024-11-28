@@ -2,7 +2,7 @@
 
 import React from 'react';
 import gsap from 'gsap';
-import Fund from '@/app/fund/Fund';
+import Portfolio from '@/app/portfolio/Portfolio';
 import { useGSAP } from '@gsap/react';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
@@ -75,7 +75,7 @@ export default function Home() {
       <div id="wrapper">
         <div id="content">
           <Vision />
-          <Fund />
+          <Portfolio />
           <Value />
           <Footer />
         </div>

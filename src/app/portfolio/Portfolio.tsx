@@ -5,12 +5,11 @@ import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import Contact from '@/components/fund/Contact';
+import Contact from '@/components/portfolio/Contact';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import ParticleGL from '@/components/gl/ParticleGL';
-import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 
-type FundItem = {
+type PortfolioItem = {
   title: string;
   subTitle?: string;
   description: string;
@@ -18,7 +17,7 @@ type FundItem = {
   link?: string;
 };
 
-const funds: FundItem[] = [
+const portfolio: PortfolioItem[] = [
   {
     title: 'Healthspan Capital',
     description: 'The most active longevity fund in space.',
@@ -76,13 +75,13 @@ const funds: FundItem[] = [
   },
 ];
 
-export default function Fund() {
+export default function Portfolio() {
   const isMobile = useIsMobile();
   const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const fundRefs = useRef<HTMLDivElement[]>([]);
+  const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const handleFundClick = (item: FundItem) => {
+  const handlePortfolioClick = (item: PortfolioItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
@@ -135,8 +134,8 @@ export default function Fund() {
   useGSAP(
     () => {
       if (isMobile) return;
-      if (!fundRefs.current.length) return;
-      fundRefs.current.forEach((div) => {
+      if (!portfolioRefs.current.length) return;
+      portfolioRefs.current.forEach((div) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
         const desc = div.querySelector('.fund-desc');
@@ -166,13 +165,13 @@ export default function Fund() {
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
         <div className="page2-fund my-12 overflow-hidden px-18 mobile:mt-7.5 mobile:gap-0 mobile:px-0 mobile:pb-10">
           <div className="grid grid-cols-4 mobile:grid-cols-2">
-            {funds.slice(0, 4).map((item, index) => (
+            {portfolio.slice(0, 4).map((item, index) => (
               <div
-                onClick={() => handleFundClick(item)}
+                onClick={() => handlePortfolioClick(item)}
                 key={item.title}
                 ref={(element) => {
                   if (!element) return;
-                  fundRefs.current[index] = element;
+                  portfolioRefs.current[index] = element;
                 }}
                 className="relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
               >
@@ -190,13 +189,13 @@ export default function Fund() {
             ))}
           </div>
           <div className="grid grid-cols-5 mobile:grid-cols-2">
-            {funds.slice(4).map((item, index) => (
+            {portfolio.slice(4).map((item, index) => (
               <div
-                onClick={() => handleFundClick(item)}
+                onClick={() => handlePortfolioClick(item)}
                 key={item.title}
                 ref={(element) => {
                   if (!element) return;
-                  fundRefs.current[4 + index] = element;
+                  portfolioRefs.current[4 + index] = element;
                 }}
                 className="relative h-60 w-[19rem] cursor-pointer pt-3 text-foreground mobile:h-37 mobile:w-auto"
               >
