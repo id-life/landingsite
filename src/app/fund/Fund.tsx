@@ -181,7 +181,7 @@ export default function Fund() {
                   <h4 className="font-oxanium text-base/6 mobile:text-sm/5">{item.title}</h4>
                   {!isMobile && <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{item.description}</p>}
                   {item.subTitle && (
-                    <div className="fund-subtitle mx-auto mt-3 w-44 rounded-full bg-yellow-800/30 py-1.5 text-xs/3 font-semibold text-yellow-800">
+                    <div className="fund-subtitle mx-auto mt-3 w-44 py-1.5 text-xs/3 font-semibold text-gray-350">
                       {item.subTitle}
                     </div>
                   )}
