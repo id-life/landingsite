@@ -140,10 +140,24 @@ export default function Fund() {
     () => {
       if (isMobile) return;
       if (!fundRefs.current.length) return;
+
+      let isMouseInFundArea = false;
+      const wrapper = wrapperRef.current?.querySelector('.page2-fund');
+
       // 创建节流后的setImageIdx函数
       const throttledSetImageIdx = throttle((index: number) => {
         setImageIdx(index);
-      }, 200); // 500ms的节流时间
+      }, 200);
+
+      // 添加整个基金区域的鼠标事件监听
+      wrapper?.addEventListener('mouseenter', () => {
+        isMouseInFundArea = true;
+      });
+
+      wrapper?.addEventListener('mouseleave', () => {
+        isMouseInFundArea = false;
+        throttledSetImageIdx(0);
+      });
 
       fundRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
@@ -161,8 +175,11 @@ export default function Fund() {
           tl.play();
         });
         div.addEventListener('mouseleave', () => {
-          throttledSetImageIdx(0);
           tl.reverse();
+          // 只有当鼠标真正离开整个基金区域时才重置图片索引
+          if (!isMouseInFundArea) {
+            throttledSetImageIdx(0);
+          }
         });
       });
     },
