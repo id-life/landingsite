@@ -1,19 +1,18 @@
 import { currentPageAtom } from '@/atoms';
-import { fundLogoParticleIndexAtom } from '@/atoms/app';
-import Contact from '@/components/fund/Contact';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
+import Contact from '@/components/portfolio/Contact';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
-import { throttle } from 'lodash-es';
-import { forwardRef, useRef, useState, useEffect } from 'react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { useIsMounted } from '@/hooks/useIsMounted';
+import { useSetAtom } from 'jotai';
+import { throttle } from 'lodash-es';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
-type FundItem = {
+type PortfolioItem = {
   title: string;
   subTitle?: string;
   description: string;
@@ -21,7 +20,7 @@ type FundItem = {
   link?: string;
 };
 
-const funds: FundItem[] = [
+const portfolio: PortfolioItem[] = [
   {
     title: 'Healthspan Capital',
     description: 'The most active longevity fund in space.',
@@ -93,12 +92,12 @@ export default function Fund() {
   const isMounted = useIsMounted();
   const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const fundRefs = useRef<HTMLDivElement[]>([]);
+  const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
-  const [imageIdx, setImageIdx] = useAtom(fundLogoParticleIndexAtom);
-  const handleFundClick = (item: FundItem) => {
+  const [imageIdx, setImageIdx] = useState(0);
+  const handleFundClick = (item: PortfolioItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   };
@@ -151,7 +150,7 @@ export default function Fund() {
   useGSAP(
     () => {
       if (isMobile) return;
-      if (!fundRefs.current.length) return;
+      if (!portfolioRefs.current.length) return;
 
       let isMouseInFundArea = false;
       const wrapper = wrapperRef.current?.querySelector('.page2-fund');
@@ -171,7 +170,7 @@ export default function Fund() {
         throttledSetImageIdx(0);
       });
 
-      fundRefs.current.forEach((div, idx) => {
+      portfolioRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
         const desc = div.querySelector('.fund-desc');
@@ -221,7 +220,7 @@ export default function Fund() {
         const currentScroll = self.scrollY();
         const itemHeight = itemPairHeight / 2; // 单个item的高度
         const targetIndex = Math.round(currentScroll / itemHeight);
-        const maxIndex = funds.length - 2; // 最大索引改为总长度-2
+        const maxIndex = portfolio.length - 2; // 最大索引改为总长度-2
         const finalIndex = Math.min(Math.max(0, targetIndex), maxIndex);
 
         gsap.to(container, {
@@ -277,16 +276,16 @@ export default function Fund() {
               className="grid h-[70dvh] snap-y snap-mandatory grid-cols-1 gap-px overflow-auto"
               style={{ scrollSnapType: 'y mandatory' }}
             >
-              {funds.map((item, index) => (
+              {portfolio.map((item, index) => (
                 <div key={item.title} className="h-[35dvh] snap-start" style={{ scrollSnapAlign: 'start' }}>
-                  <FundItem
+                  <PortfolioItem
                     title={item.title}
                     description={item.description}
                     image={item.image}
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
-                      fundRefs.current[index] = element;
+                      portfolioRefs.current[index] = element;
                     }}
                   />
                 </div>
@@ -295,8 +294,8 @@ export default function Fund() {
           ) : (
             <>
               <div className="grid grid-cols-4">
-                {funds.slice(0, 4).map((item, index) => (
-                  <FundItem
+                {portfolio.slice(0, 4).map((item, index) => (
+                  <PortfolioItem
                     key={item.title}
                     title={item.title}
                     description={item.description}
@@ -304,14 +303,14 @@ export default function Fund() {
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
-                      fundRefs.current[index] = element;
+                      portfolioRefs.current[index] = element;
                     }}
                   />
                 ))}
               </div>
               <div className="grid grid-cols-5">
-                {funds.slice(4).map((item, index) => (
-                  <FundItem
+                {portfolio.slice(4).map((item, index) => (
+                  <PortfolioItem
                     key={item.title}
                     title={item.title}
                     description={item.description}
@@ -319,7 +318,7 @@ export default function Fund() {
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
-                      fundRefs.current[4 + index] = element;
+                      portfolioRefs.current[4 + index] = element;
                     }}
                   />
                 ))}
@@ -335,7 +334,7 @@ export default function Fund() {
   );
 }
 
-interface FundItemProps {
+interface PortfolioItemProps {
   title: string;
   subTitle?: string;
   description: string;
@@ -345,7 +344,7 @@ interface FundItemProps {
   className?: string;
 }
 
-export const FundItem = forwardRef<HTMLDivElement, FundItemProps>(
+export const PortfolioItem = forwardRef<HTMLDivElement, PortfolioItemProps>(
   ({ title, subTitle, description, image, onClick, className }, ref) => {
     return (
       <div
@@ -369,4 +368,4 @@ export const FundItem = forwardRef<HTMLDivElement, FundItemProps>(
   },
 );
 
-FundItem.displayName = 'FundItem';
+PortfolioItem.displayName = 'PortfolioItem';
