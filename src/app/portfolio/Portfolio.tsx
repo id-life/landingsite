@@ -90,6 +90,7 @@ const portfolio: PortfolioItem[] = [
 export default function Fund() {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
+  const [isEntered, setIsEntered] = useState(false);
   const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
@@ -120,6 +121,15 @@ export default function Fund() {
         },
         onLeaveBack: () => {
           setActive(false);
+        },
+        onUpdate: (self) => {
+          console.log('progress:', self.progress);
+          // 当滚动进度超过200%时设置isEntered为true
+          if (self.progress >= 0.5) {
+            setIsEntered(true);
+          } else {
+            setIsEntered(false);
+          }
         },
       },
     });
@@ -200,7 +210,7 @@ export default function Fund() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isMobile || !scrollContainerRef.current || !isMounted) return;
+    if (!isMobile || !scrollContainerRef.current || !isMounted || !isEntered) return;
 
     const throttledSetMobileImage1Idx = throttle((index: number) => {
       setMobileImageIdx1(index);
@@ -225,7 +235,7 @@ export default function Fund() {
 
         gsap.to(container, {
           scrollTop: finalIndex * itemHeight,
-          duration: 0.2,
+          duration: 0.3,
           ease: 'power2.out',
           onUpdate: () => {
             // 更新为连续的两个索引
@@ -239,7 +249,7 @@ export default function Fund() {
     return () => {
       observer.kill();
     };
-  }, [isMobile, isMounted]);
+  }, [isMobile, isMounted, isEntered]);
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
@@ -251,7 +261,7 @@ export default function Fund() {
         />
       )}
       {isMobile && active && <ParticleGL activeAnim={active} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}
-      <div className="relative flex h-screen flex-col items-center justify-center mobile:translate-y-6">
+      <div className="relative flex h-[100dvh] flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           {isMobile ? (
             <>
@@ -351,7 +361,7 @@ export const PortfolioItem = forwardRef<HTMLDivElement, PortfolioItemProps>(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35dvh] mobile:w-auto mobile:flex-col mobile:pt-[2dvh]',
+          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35dvh] mobile:w-[100dvw] mobile:flex-col mobile:pt-[2dvh]',
           className,
         )}
       >
