@@ -95,8 +95,8 @@ export default function Fund() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
-  const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
+  const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
+  const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const [imageIdx, setImageIdx] = useState(0);
   const handleFundClick = (item: PortfolioItem) => {
     if (!item.link) return;
@@ -104,6 +104,72 @@ export default function Fund() {
   };
 
   useGSAP(() => {
+    if (!isMounted) return;
+    if (isMobile) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: `#${NAV_LIST[1].id}`,
+          start: 'top top',
+          end: '+=300%',
+          pin: true,
+          scrub: true,
+          onEnter: () => {
+            setCurrentPage(NAV_LIST[1]);
+            setActive(true);
+          },
+          onEnterBack: () => {
+            setCurrentPage(NAV_LIST[1]);
+            setActive(true);
+          },
+          onLeaveBack: () => {
+            setActive(false);
+          },
+          onUpdate: (self) => {
+            // 当滚动进度超过200%时设置isEntered为true
+            if (!isMobile) return;
+            if (self.progress >= 0.5 && self.progress <= 0.8) {
+              setIsEntered(true);
+            } else {
+              setIsEntered(false);
+            }
+          },
+        },
+      });
+      // 进
+      tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 0.2 }, '<');
+      tl.from(
+        '.page2-title',
+        {
+          delay: 0.5,
+          y: (_, target) => target.offsetHeight,
+          rotateX: 45,
+          rotateY: 15,
+          opacity: 0,
+        },
+        '<0.3',
+      );
+      tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
+      tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
+      // 出
+      tl.to(
+        '.page2-title',
+        {
+          delay: 0.5,
+          y: (_, target) => -target.offsetHeight,
+          rotateX: -45,
+          rotateY: 15,
+          opacity: 0,
+        },
+        '>0.3',
+      );
+      tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
+      tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
+      tl.to('#particle-gl', { opacity: 0 }, '<');
+      tl.to('.fixed-top', { top: 'calc(50% - 20rem)' }, '<');
+      tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
+      return;
+    }
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[1].id}`,
@@ -155,12 +221,11 @@ export default function Fund() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
     tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
-  });
+  }, [isMounted, isMobile]);
 
   useGSAP(
     () => {
-      if (isMobile) return;
-      if (!portfolioRefs.current.length) return;
+      if (isMobile || !portfolioRefs.current.length) return;
 
       let isMouseInFundArea = false;
       const wrapper = wrapperRef.current?.querySelector('.page2-fund');
@@ -223,6 +288,8 @@ export default function Fund() {
     const container = scrollContainerRef.current;
     const itemPairHeight = window.innerHeight * 0.7; // 70vh
 
+    throttledSetMobileImage1Idx(1);
+    throttledSetMobileImage2Idx(2);
     const observer = ScrollTrigger.observe({
       target: container,
       type: 'scroll',
@@ -252,23 +319,23 @@ export default function Fund() {
   }, [isMobile, isMounted, isEntered]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
+    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
       {active && (
         <ParticleGL
-          activeAnim={active}
+          activeAnim={isMobile ? isEntered : active}
           imageIdx={isMobile ? mobileImageIdx1 : imageIdx}
           id={isMobile ? 'particle-container-mobile-1' : 'particle-container'}
         />
       )}
-      {isMobile && active && <ParticleGL activeAnim={active} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}
+      {isMobile && active && <ParticleGL activeAnim={isEntered} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}
       <div className="relative flex h-[100dvh] flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           {isMobile ? (
             <>
-              <div id="particle-container-mobile-1" className={cn({ active })}>
+              <div id="particle-container-mobile-1" className={cn({ active: isEntered })}>
                 <div className="particle-mask"></div>
               </div>
-              <div id="particle-container-mobile-2" className={cn({ active })}>
+              <div id="particle-container-mobile-2" className={cn({ active: isEntered })}>
                 <div className="particle-mask"></div>
               </div>
             </>
@@ -283,7 +350,10 @@ export default function Fund() {
           {isMobile ? (
             <div
               ref={scrollContainerRef}
-              className="grid h-[70dvh] snap-y snap-mandatory grid-cols-1 gap-px overflow-auto"
+              className={cn(
+                'grid h-[70dvh] snap-y snap-mandatory grid-cols-1',
+                isEntered ? 'overflow-auto' : 'overflow-hidden',
+              )}
               style={{ scrollSnapType: 'y mandatory' }}
             >
               {portfolio.map((item, index) => (
@@ -361,7 +431,7 @@ export const PortfolioItem = forwardRef<HTMLDivElement, PortfolioItemProps>(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35dvh] mobile:w-[100dvw] mobile:flex-col mobile:pt-[2dvh]',
+          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35dvh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
           className,
         )}
       >
