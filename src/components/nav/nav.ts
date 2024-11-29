@@ -15,16 +15,4 @@ export const NAV_LIST: NavItem[] = [
     id: 'value_page',
     title: 'value',
   },
-  // {
-  //   id: 'insight_page',
-  //   title: 'insight',
-  // },
-  // {
-  //   id: 'tracking_page',
-  //   title: 'center',
-  // },
-  // {
-  //   id: 'intervention_page',
-  //   title: 'intervention',
-  // },
 ];
