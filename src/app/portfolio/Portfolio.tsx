@@ -10,7 +10,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 type PortfolioItem = {
   title: string;
@@ -98,6 +98,8 @@ export default function Portfolio() {
   const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const [imageIdx, setImageIdx] = useState(0);
+  const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
+
   const handleFundClick = (item: PortfolioItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
@@ -110,7 +112,7 @@ export default function Portfolio() {
         scrollTrigger: {
           trigger: `#${NAV_LIST[1].id}`,
           start: 'top top',
-          end: '+=300%',
+          end: '+=200%',
           pin: true,
           scrub: true,
           onEnter: () => {
@@ -127,10 +129,7 @@ export default function Portfolio() {
           onUpdate: (self) => {
             // 当滚动进度超过200%时设置isEntered为true
             if (!isMobile) return;
-            if (
-              self.progress >= 0.5
-              // && self.progress <= 0.8
-            ) {
+            if (self.progress >= 0.42) {
               setIsEntered(true);
             } else {
               setIsEntered(false);
@@ -282,8 +281,6 @@ export default function Portfolio() {
     const container = scrollContainerRef.current;
     const itemPairHeight = window.innerHeight * 0.7; // 70vh
 
-    throttledSetMobileImage1Idx(1);
-    throttledSetMobileImage2Idx(2);
     const observer = ScrollTrigger.observe({
       target: container,
       type: 'scroll',
@@ -300,7 +297,6 @@ export default function Portfolio() {
           duration: 0.3,
           ease: 'power2.out',
           onUpdate: () => {
-            // 更新为连续的两个索引
             throttledSetMobileImage1Idx(finalIndex + 1);
             throttledSetMobileImage2Idx(finalIndex + 2);
           },
@@ -313,16 +309,25 @@ export default function Portfolio() {
     };
   }, [isMobile, isMounted]);
 
+  useEffect(() => {
+    if (isMobile && showParticle) {
+      setMobileImageIdx1(1);
+      setMobileImageIdx2(2);
+    }
+  }, [isMobile, showParticle]);
+
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
       {active && (
         <ParticleGL
-          activeAnim={isMobile ? isEntered : active}
+          activeAnim={showParticle}
           imageIdx={isMobile ? mobileImageIdx1 : imageIdx}
           id={isMobile ? 'particle-container-mobile-1' : 'particle-container'}
         />
       )}
-      {isMobile && active && <ParticleGL activeAnim={isEntered} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}
+      {isMobile && active && (
+        <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />
+      )}
       <div className="relative flex h-[100dvh] flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           {isMobile ? (

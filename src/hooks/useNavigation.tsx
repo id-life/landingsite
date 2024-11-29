@@ -6,11 +6,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { navigateToAtom, currentPageAtom } from '@/atoms';
+import { useIsMobile } from './useIsMobile';
 
 export function useNavigation() {
   const isNavScrollingRef = useRef(false);
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
+  const isMobile = useIsMobile();
 
   useGSAP(() => {
     ScrollTrigger.create({
@@ -37,8 +39,14 @@ export function useNavigation() {
       }
       if (item.id === NAV_LIST[1].id) {
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
-        requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
+        if (isMobile) {
+          const height = window.innerHeight;
+          gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
+        } else {
+          smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
+
+          requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
+        }
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
       if (item.id === NAV_LIST[2].id) {
@@ -48,7 +56,7 @@ export function useNavigation() {
       }
       setCurrentPage(item);
     },
-    [setCurrentPage],
+    [isMobile, setCurrentPage],
   );
 
   useEffect(() => {
