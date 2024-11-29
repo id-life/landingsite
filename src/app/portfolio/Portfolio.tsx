@@ -87,7 +87,7 @@ const portfolio: PortfolioItem[] = [
   },
 ];
 
-export default function Fund() {
+export default function Portfolio() {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
   const [isEntered, setIsEntered] = useState(false);
@@ -127,7 +127,10 @@ export default function Fund() {
           onUpdate: (self) => {
             // 当滚动进度超过200%时设置isEntered为true
             if (!isMobile) return;
-            if (self.progress >= 0.5 && self.progress <= 0.8) {
+            if (
+              self.progress >= 0.5
+              // && self.progress <= 0.8
+            ) {
               setIsEntered(true);
             } else {
               setIsEntered(false);
@@ -146,7 +149,7 @@ export default function Fund() {
           rotateY: 15,
           opacity: 0,
         },
-        '<0.3',
+        '<',
       );
       tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
       tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
@@ -187,15 +190,6 @@ export default function Fund() {
         },
         onLeaveBack: () => {
           setActive(false);
-        },
-        onUpdate: (self) => {
-          console.log('progress:', self.progress);
-          // 当滚动进度超过200%时设置isEntered为true
-          if (self.progress >= 0.5) {
-            setIsEntered(true);
-          } else {
-            setIsEntered(false);
-          }
         },
       },
     });
@@ -275,15 +269,15 @@ export default function Fund() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isMobile || !scrollContainerRef.current || !isMounted || !isEntered) return;
+    if (!isMobile || !scrollContainerRef.current || !isMounted) return;
 
     const throttledSetMobileImage1Idx = throttle((index: number) => {
       setMobileImageIdx1(index);
-    }, 200);
+    }, 50);
 
     const throttledSetMobileImage2Idx = throttle((index: number) => {
       setMobileImageIdx2(index);
-    }, 200);
+    }, 50);
 
     const container = scrollContainerRef.current;
     const itemPairHeight = window.innerHeight * 0.7; // 70vh
@@ -294,10 +288,11 @@ export default function Fund() {
       target: container,
       type: 'scroll',
       onStop: (self) => {
+        if (self.scrollY() >= container.scrollHeight - container.clientHeight) return;
         const currentScroll = self.scrollY();
-        const itemHeight = itemPairHeight / 2; // 单个item的高度
+        const itemHeight = itemPairHeight / 2;
         const targetIndex = Math.round(currentScroll / itemHeight);
-        const maxIndex = portfolio.length - 2; // 最大索引改为总长度-2
+        const maxIndex = portfolio.length - 2;
         const finalIndex = Math.min(Math.max(0, targetIndex), maxIndex);
 
         gsap.to(container, {
@@ -316,7 +311,7 @@ export default function Fund() {
     return () => {
       observer.kill();
     };
-  }, [isMobile, isMounted, isEntered]);
+  }, [isMobile, isMounted]);
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
