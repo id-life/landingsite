@@ -44,7 +44,6 @@ export function useNavigation() {
           gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
         } else {
           smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
-
           requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
         }
         setTimeout(() => (isNavScrollingRef.current = false), 500);

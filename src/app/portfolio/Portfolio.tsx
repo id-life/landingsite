@@ -7,10 +7,14 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { Swiper as SwiperType } from 'swiper';
+import { FreeMode } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+SwiperType.use([FreeMode]);
 
 type PortfolioItem = {
   title: string;
@@ -99,6 +103,7 @@ export default function Portfolio() {
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
+  const swiperRef = useRef<SwiperType>();
 
   const handleFundClick = (item: PortfolioItem) => {
     if (!item.link) return;
@@ -127,9 +132,8 @@ export default function Portfolio() {
             setActive(false);
           },
           onUpdate: (self) => {
-            // 当滚动进度超过200%时设置isEntered为true
             if (!isMobile) return;
-            if (self.progress >= 0.42) {
+            if (self.progress >= 0.42 && self.progress <= 0.7) {
               setIsEntered(true);
             } else {
               setIsEntered(false);
@@ -265,49 +269,11 @@ export default function Portfolio() {
     { scope: wrapperRef, dependencies: [isMobile] },
   );
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isMobile || !scrollContainerRef.current || !isMounted) return;
-
-    const throttledSetMobileImage1Idx = throttle((index: number) => {
-      setMobileImageIdx1(index);
-    }, 50);
-
-    const throttledSetMobileImage2Idx = throttle((index: number) => {
-      setMobileImageIdx2(index);
-    }, 50);
-
-    const container = scrollContainerRef.current;
-    const itemPairHeight = window.innerHeight * 0.7; // 70vh
-
-    const observer = ScrollTrigger.observe({
-      target: container,
-      type: 'scroll',
-      onStop: (self) => {
-        if (self.scrollY() >= container.scrollHeight - container.clientHeight) return;
-        const currentScroll = self.scrollY();
-        const itemHeight = itemPairHeight / 2;
-        const targetIndex = Math.round(currentScroll / itemHeight);
-        const maxIndex = portfolio.length - 2;
-        const finalIndex = Math.min(Math.max(0, targetIndex), maxIndex);
-
-        gsap.to(container, {
-          scrollTop: finalIndex * itemHeight,
-          duration: 0.3,
-          ease: 'power2.out',
-          onUpdate: () => {
-            throttledSetMobileImage1Idx(finalIndex + 1);
-            throttledSetMobileImage2Idx(finalIndex + 2);
-          },
-        });
-      },
-    });
-
-    return () => {
-      observer.kill();
-    };
-  }, [isMobile, isMounted]);
+  const handleSlideChange = (swiper: SwiperType) => {
+    const index = swiper.activeIndex;
+    setMobileImageIdx1(index + 1);
+    setMobileImageIdx2(index + 2);
+  };
 
   useEffect(() => {
     if (isMobile && showParticle) {
@@ -315,6 +281,19 @@ export default function Portfolio() {
       setMobileImageIdx2(2);
     }
   }, [isMobile, showParticle]);
+
+  // 添加 useEffect 来控制滚动
+  useEffect(() => {
+    if (isEntered) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isEntered]);
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
@@ -348,16 +327,42 @@ export default function Portfolio() {
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
         <div className="page2-fund my-12 overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
           {isMobile ? (
-            <div
-              ref={scrollContainerRef}
-              className={cn(
-                'grid h-[70dvh] snap-y snap-mandatory grid-cols-1',
-                isEntered ? 'overflow-auto' : 'overflow-hidden',
-              )}
-              style={{ scrollSnapType: 'y mandatory' }}
+            <Swiper
+              direction="vertical"
+              slidesPerView={2}
+              spaceBetween={0}
+              className="h-[70dvh]"
+              onBeforeInit={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              onSlideChange={handleSlideChange}
+              freeMode={{
+                enabled: true,
+                sticky: true, // 添加这个让它能对齐到最近的slide
+                momentumBounce: true, // 添加反弹效果
+                momentumRatio: 0.5, // 降低动量比率使滑动不会太滑
+                momentumVelocityRatio: 0.5, // 降低速度比率
+                minimumVelocity: 0.1, // 设置最小速度阈值
+              }}
+              onTouchEnd={(swiper) => {
+                // 检查是否在顶部且有向上拖动的动作
+                if (swiper.isBeginning && swiper.touches.diff > 50) {
+                  gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: { y: `#${NAV_LIST[0].id}` },
+                  });
+                }
+                // 检查是否在底部且有向下拖动的动作
+                if (swiper.isEnd && swiper.touches.diff < -50) {
+                  gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: { y: `#${NAV_LIST[2].id}` },
+                  });
+                }
+              }}
             >
               {portfolio.map((item, index) => (
-                <div key={item.title} className="h-[35dvh] snap-start" style={{ scrollSnapAlign: 'start' }}>
+                <SwiperSlide key={item.title} className="h-[35dvh]">
                   <PortfolioItem
                     title={item.title}
                     description={item.description}
@@ -368,9 +373,9 @@ export default function Portfolio() {
                       portfolioRefs.current[index] = element;
                     }}
                   />
-                </div>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           ) : (
             <>
               <div className="grid grid-cols-4">

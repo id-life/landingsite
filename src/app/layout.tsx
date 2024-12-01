@@ -8,8 +8,8 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 
 import '../utils/analytics';
+import 'swiper/css';
 import '@/styles/globals.css';
-
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',

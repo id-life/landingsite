@@ -35,6 +35,13 @@ export default function ValueGL() {
           start: 'top bottom+=500',
           end: 'top top',
           scrub: true,
+          onUpdate: (self) => {
+            if (!isMobile) return;
+            if (self?.direction < 0) {
+              const height = window.innerHeight;
+              gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 } });
+            }
+          },
         },
       });
       tl.to(camera.position, { ...page1Config.to.camera.position });
