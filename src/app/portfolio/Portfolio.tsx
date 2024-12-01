@@ -95,6 +95,7 @@ export default function Portfolio() {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
   const [isEntered, setIsEntered] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
@@ -271,16 +272,17 @@ export default function Portfolio() {
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
+    setActiveIndex(index);
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
   };
 
   useEffect(() => {
     if (isMobile && showParticle) {
-      setMobileImageIdx1(1);
-      setMobileImageIdx2(2);
+      setMobileImageIdx1(activeIndex + 1);
+      setMobileImageIdx2(activeIndex + 2);
     }
-  }, [isMobile, showParticle]);
+  }, [isMobile, showParticle, activeIndex]);
 
   // 添加 useEffect 来控制滚动
   useEffect(() => {
