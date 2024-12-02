@@ -2,10 +2,8 @@
 
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { NAV_LIST } from '@/components/nav/nav';
 import LogoSVGen from '@/components/svg/LogoSVGen';
 import LogoSVGcn from '@/components/svg/LogoSVGcn';
-import { useNavigation } from '@/hooks/useNavigation';
 import { useRef } from 'react';
 
 export enum LogoType {
@@ -14,7 +12,6 @@ export enum LogoType {
 }
 
 export default function Logo() {
-  const { handleNavClick } = useNavigation();
   const currentLogoRef = useRef(LogoType.EN);
   const intervalRef = useRef<NodeJS.Timeout>();
 
@@ -38,7 +35,6 @@ export default function Logo() {
     if (intervalRef.current) clearInterval(intervalRef.current);
     switchLogo();
     intervalRef.current = setInterval(() => switchLogo(), 8000);
-    handleNavClick(NAV_LIST[0]);
   };
 
   return (
