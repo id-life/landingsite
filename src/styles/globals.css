@@ -71,7 +71,7 @@
     overflow: hidden;
 
     &.fund {
-      min-height: 300dvh;
+      @apply mobile:min-h-[200dvh];
     }
 
     &.value {

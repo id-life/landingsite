@@ -8,7 +8,29 @@
   z-index: -1;
 }
 
-#particle-container .particle-mask {
+#particle-container-mobile-1 {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+#particle-container-mobile-2 {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+#particle-container .particle-mask,
+#particle-container-mobile-1 .particle-mask,
+#particle-container-mobile-2 .particle-mask {
   position: absolute;
   inset: 0;
 }
@@ -18,16 +40,10 @@
   pointer-events: auto;
 }
 
-@media screen and (max-width: 768px) {
-  #particle-container {
-    pointer-events: none;
-    opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    z-index: -1;
-  }
+#particle-container-mobile-1.active,
+#particle-container-mobile-2.active {
+  opacity: 0.5;
+  pointer-events: auto;
 }
 
 #p5_loading {
