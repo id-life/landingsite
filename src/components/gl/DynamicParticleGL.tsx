@@ -298,6 +298,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
       resize = [0, 0],
     } = sourceImgInfos[idx] ?? {};
     const sourceImg = sourceImgs[idx];
+    if (!sourceImg) return;
     const [sourceImgWidth, sourceImgHeight] = resize;
     if (sourceImgWidth) sourceImg.resize(sourceImgWidth * scaleNum, sourceImgHeight * scaleNum);
     sourceImg.loadPixels();
