@@ -1,18 +1,25 @@
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
-import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { useCallback, useMemo, useRef } from 'react';
+import * as THREE from 'three';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { useThree } from '@react-three/fiber';
+import { Center, Svg } from '@react-three/drei';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useGSAP } from '@gsap/react';
-import { Center, Svg } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
-import gsap from 'gsap';
-import { useMemo, useRef } from 'react';
-import * as THREE from 'three';
+import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
+
+export type Position = {
+  x: number;
+  y: number;
+  z: number;
+};
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
+const defaultWidth = 1912;
 
 export default function ValueGL() {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
   const modelRef = useRef<THREE.Group>(null);
   const title1Ref = useRef<THREE.Group>(null);
   const title2Ref = useRef<THREE.Group>(null);
@@ -25,6 +32,18 @@ export default function ValueGL() {
   const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
+
+  const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
+
+  const getScalePosition = useCallback(
+    (pos: Position) => {
+      const backScale = 1 / scaleRatio;
+      return { x: pos.x * backScale, y: pos.y * backScale, z: pos.z * backScale };
+    },
+    [scaleRatio],
+  );
+
+  const getVectorPosition = useCallback((pos: Position) => new THREE.Vector3(pos.x, pos.y, pos.z), []);
 
   useGSAP(
     () => {
@@ -49,8 +68,8 @@ export default function ValueGL() {
       if (!title1Ref.current || !modelRef.current) return;
       tl.fromTo(
         title1Ref.current.position,
-        { ...page1Config.from.title.position },
-        { ...page1Config.to.title.position, ease: 'power1.out' },
+        { ...getScalePosition(page1Config.from.title.position) },
+        { ...getScalePosition(page1Config.to.title.position), ease: 'power1.out' },
         '<10%',
       );
       tl.fromTo(
@@ -62,13 +81,16 @@ export default function ValueGL() {
       tl.fromTo(
         modelRef.current.position,
         { ...page1Config.from.model.position },
-        { ...(isMobile ? page1Config.to.model.mobilePos : page1Config.to.model.position), ease: 'power3.out' },
+        {
+          ...(isMobile ? page1Config.to.model.mobilePos : page1Config.to.model.position),
+          ease: 'power3.out',
+        },
         '<',
       );
       tl.fromTo(
         modelRef.current.rotation,
         { ...page1Config.from.model.rotation },
-        { ...(isMobile ? page1Config.to.model.mobileRot : page1Config.to.model.rotation), ease: 'power3.out' },
+        { ...page1Config.to.model.rotation, ease: 'power3.out' },
         '<',
       );
       tl.to('#page-value-1', { opacity: 1 }, '<30%');
@@ -87,15 +109,27 @@ export default function ValueGL() {
         scrub: true,
       },
     });
-    tl.to(title1Ref.current.position, { ...page2Config.to.prevTitle.position, ease: 'power3.inOut', duration: 8 });
+    tl.to(title1Ref.current.position, {
+      ...getScalePosition(page2Config.to.prevTitle.position),
+      ease: 'power3.inOut',
+      duration: 8,
+    });
     tl.to(
       modelRef.current.position,
-      { ...(isMobile ? page2Config.to.model.mobilePos : page2Config.to.model.position), ease: 'power3.inOut', duration: 8 },
+      {
+        ...(isMobile ? page2Config.to.model.mobilePos : page2Config.to.model.position),
+        ease: 'power3.inOut',
+        duration: 8,
+      },
       '<',
     );
     tl.to(
       modelRef.current.rotation,
-      { ...(isMobile ? page2Config.to.model.mobileRot : page2Config.to.model.rotation), ease: 'power3.inOut', duration: 8 },
+      {
+        ...page2Config.to.model.rotation,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
       '<',
     );
     tl.to(
@@ -116,14 +150,14 @@ export default function ValueGL() {
     tl.to('#page-value-2', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to('#value-2-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title2Ref.current.position, {
-      ...page3Config.to.prevTitle.position,
+      ...getScalePosition(page3Config.to.prevTitle.position),
       ease: 'power3.inOut',
       duration: 8,
     });
     tl.to(
       title3Ref.current.position,
       {
-        ...page3Config.to.title.position,
+        ...getScalePosition(page3Config.to.title.position),
         ease: 'power3.inOut',
         duration: 8,
       },
@@ -131,12 +165,20 @@ export default function ValueGL() {
     );
     tl.to(
       modelRef.current.position,
-      { ...(isMobile ? page3Config.to.model.mobilePos : page3Config.to.model.position), ease: 'power3.inOut', duration: 8 },
+      {
+        ...(isMobile ? page3Config.to.model.mobilePos : page3Config.to.model.position),
+        ease: 'power3.inOut',
+        duration: 8,
+      },
       '<',
     );
     tl.to(
       modelRef.current.rotation,
-      { ...(isMobile ? page3Config.to.model.mobileRot : page3Config.to.model.rotation), ease: 'power3.inOut', duration: 8 },
+      {
+        ...(isMobile ? page3Config.to.model.mobileRot : page3Config.to.model.rotation),
+        ease: 'power3.inOut',
+        duration: 8,
+      },
       '<',
     );
     tl.to(
@@ -156,16 +198,36 @@ export default function ValueGL() {
     tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#page-value-3', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to('#value-3-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to(title3Ref.current.position, { ...page4Config.to.prevTitle.position, duration: 8, ease: 'power3.inOut' });
-    tl.to(title4Ref.current.position, { ...page4Config.to.title.position, duration: 8, ease: 'power3.inOut' }, '<');
+    tl.to(title3Ref.current.position, {
+      ...getScalePosition(page4Config.to.prevTitle.position),
+      duration: 8,
+      ease: 'power3.inOut',
+    });
+    tl.to(
+      title4Ref.current.position,
+      {
+        ...getScalePosition(page4Config.to.title.position),
+        duration: 8,
+        ease: 'power3.inOut',
+      },
+      '<',
+    );
     tl.to(
       modelRef.current.position,
-      { ...(isMobile ? page4Config.to.model.mobilePos : page4Config.to.model.position), duration: 8, ease: 'power3.inOut' },
+      {
+        ...(isMobile ? page4Config.to.model.mobilePos : page4Config.to.model.position),
+        duration: 8,
+        ease: 'power3.inOut',
+      },
       '<',
     );
     tl.to(
       modelRef.current.rotation,
-      { ...(isMobile ? page4Config.to.model.mobileRot : page4Config.to.model.rotation), duration: 8, ease: 'power3.inOut' },
+      {
+        ...(isMobile ? page4Config.to.model.mobileRot : page4Config.to.model.rotation),
+        duration: 8,
+        ease: 'power3.inOut',
+      },
       '<',
     );
     tl.to(
@@ -186,7 +248,11 @@ export default function ValueGL() {
 
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to(title4Ref.current.position, { ...page5Config.to.prevTitle.position, duration: 8, ease: 'power3.inOut' });
+    tl.to(title4Ref.current.position, {
+      ...getScalePosition(page5Config.to.prevTitle.position),
+      duration: 8,
+      ease: 'power3.inOut',
+    });
     tl.to(
       camera.position,
       {
@@ -234,34 +300,27 @@ export default function ValueGL() {
 
   return (
     <group>
-      <group visible={!isMobile}>
-        <Center
-          scale={isMobile ? 0.2 : 1}
-          ref={title1Ref}
-          position={new THREE.Vector3(...Object.values(page1Config.from.title.position))}
-        >
+      <group scale={scaleRatio} visible={!isMobile}>
+        <Center ref={title1Ref} position={getVectorPosition(getScalePosition(page1Config.from.title.position))}>
           <Svg scale={0.0107} src="/svgs/value/title1.svg" fillMaterial={{ transparent: false }} />
         </Center>
         <Center
-          scale={isMobile ? 0.2 : 1}
           ref={title2Ref}
-          position={new THREE.Vector3(...Object.values(page2Config.from.title.position))}
+          position={getVectorPosition(getScalePosition(page2Config.from.title.position))}
           rotation={[0, -2.4, 0]}
         >
           <Svg scale={0.0136} src="/svgs/value/title2.svg" fillMaterial={{ transparent: false }} />
         </Center>
         <Center
-          scale={isMobile ? 0.2 : 1}
           ref={title3Ref}
-          position={new THREE.Vector3(...Object.values(page3Config.from.title.position))}
+          position={getVectorPosition(getScalePosition(page3Config.from.title.position))}
           rotation={[2.608, -0.075, 3.098]}
         >
           <Svg scale={0.0121} src="/svgs/value/title3.svg" fillMaterial={{ transparent: false }} />
         </Center>
         <Center
-          scale={isMobile ? 0.2 : 1}
           ref={title4Ref}
-          position={new THREE.Vector3(...Object.values(page4Config.from.title.position))}
+          position={getVectorPosition(getScalePosition(page4Config.from.title.position))}
           rotation={[-2.156, 0.114, 2.972]}
         >
           <Svg scale={0.0143} src="/svgs/value/title4.svg" fillMaterial={{ transparent: false }} />
