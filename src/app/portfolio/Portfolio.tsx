@@ -367,9 +367,7 @@ function Portfolio() {
               {portfolio.map((item, index) => (
                 <SwiperSlide key={item.title} className="h-[35dvh]">
                   <PortfolioItem
-                    title={item.title}
-                    description={item.description}
-                    image={item.image}
+                    item={item}
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
@@ -385,9 +383,7 @@ function Portfolio() {
                 {portfolio.slice(0, 4).map((item, index) => (
                   <PortfolioItem
                     key={item.title}
-                    title={item.title}
-                    description={item.description}
-                    image={item.image}
+                    item={item}
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
@@ -400,9 +396,7 @@ function Portfolio() {
                 {portfolio.slice(4).map((item, index) => (
                   <PortfolioItem
                     key={item.title}
-                    title={item.title}
-                    description={item.description}
-                    image={item.image}
+                    item={item}
                     onClick={() => handleFundClick(item)}
                     ref={(element) => {
                       if (!element) return;
@@ -423,17 +417,15 @@ function Portfolio() {
 }
 
 interface PortfolioItemProps {
-  title: string;
-  subTitle?: string;
-  description: string;
-  image: JSX.Element;
+  item: PortfolioItem;
   link?: string;
   onClick: () => void;
   className?: string;
 }
 
 export const PortfolioItem = memo(
-  forwardRef<HTMLDivElement, PortfolioItemProps>(({ title, subTitle, description, image, onClick, className }, ref) => {
+  forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onClick, className }, ref) => {
+    const { title, subTitle, description, image } = item;
     return (
       <div
         ref={ref}
