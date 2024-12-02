@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { Canvas } from '@react-three/fiber';
-import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { Html, useProgress } from '@react-three/drei';
 import { EffectComposer } from '@react-three/postprocessing';
