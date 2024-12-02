@@ -14,170 +14,171 @@ import advectionFrag from '../glsl/advection.frag';
 import vorticityFrag from '../glsl/vorticity.frag';
 
 export const useMaterials = (): { [key: string]: ShaderMaterial } => {
-    const size = useThree((s) => s.size);
+  const size = useThree((s) => s.size);
 
-    const shaderMaterials = useMemo(() => {
-        const advection = new ShaderMaterial({
-            uniforms: {
-                uVelocity: {
-                    value: new Texture(),
-                },
-                uSource: {
-                    value: new Texture(),
-                },
-                dt: {
-                    value: 0.016,
-                },
-                uDissipation: {
-                    value: 1.0,
-                },
-                texelSize: { value: new Vector2() },
-            },
-            fragmentShader: advectionFrag,
-        });
+  const shaderMaterials = useMemo(() => {
+    const advection = new ShaderMaterial({
+      uniforms: {
+        uVelocity: {
+          value: new Texture(),
+        },
+        uSource: {
+          value: new Texture(),
+        },
+        dt: {
+          value: 0.016,
+        },
+        uDissipation: {
+          value: 1.0,
+        },
+        texelSize: { value: new Vector2() },
+      },
+      vertexShader: baseVertex,
+      fragmentShader: advectionFrag,
+    });
 
-        const clear = new ShaderMaterial({
-            uniforms: {
-                uTexture: {
-                    value: new Texture(),
-                },
-                uClearValue: {
-                    value: OPTS.pressure,
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: clearFrag,
-        });
+    const clear = new ShaderMaterial({
+      uniforms: {
+        uTexture: {
+          value: new Texture(),
+        },
+        uClearValue: {
+          value: OPTS.pressure,
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: clearFrag,
+    });
 
-        const curl = new ShaderMaterial({
-            uniforms: {
-                uVelocity: {
-                    value: new Texture(),
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: curlFrag,
-        });
+    const curl = new ShaderMaterial({
+      uniforms: {
+        uVelocity: {
+          value: new Texture(),
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: curlFrag,
+    });
 
-        const divergence = new ShaderMaterial({
-            uniforms: {
-                uVelocity: {
-                    value: new Texture(),
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: divergenceFrag,
-        });
+    const divergence = new ShaderMaterial({
+      uniforms: {
+        uVelocity: {
+          value: new Texture(),
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: divergenceFrag,
+    });
 
-        const gradientSubstract = new ShaderMaterial({
-            uniforms: {
-                uPressure: {
-                    value: new Texture(),
-                },
-                uVelocity: {
-                    value: new Texture(),
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: gradientSubstractFrag,
-        });
+    const gradientSubstract = new ShaderMaterial({
+      uniforms: {
+        uPressure: {
+          value: new Texture(),
+        },
+        uVelocity: {
+          value: new Texture(),
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: gradientSubstractFrag,
+    });
 
-        const pressure = new ShaderMaterial({
-            uniforms: {
-                uPressure: {
-                    value: new Texture(),
-                },
-                uDivergence: {
-                    value: new Texture(),
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: pressureFrag,
-        });
+    const pressure = new ShaderMaterial({
+      uniforms: {
+        uPressure: {
+          value: new Texture(),
+        },
+        uDivergence: {
+          value: new Texture(),
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: pressureFrag,
+    });
 
-        const splat = new ShaderMaterial({
-            uniforms: {
-                uTarget: {
-                    value: new Texture(),
-                },
-                aspectRatio: {
-                    value: size.width / size.height,
-                },
-                uColor: {
-                    value: new Vector3(),
-                },
-                uPointer: {
-                    value: new Vector2(),
-                },
-                uRadius: {
-                    value: OPTS.radius / 100.0,
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: splatFrag,
-        });
+    const splat = new ShaderMaterial({
+      uniforms: {
+        uTarget: {
+          value: new Texture(),
+        },
+        aspectRatio: {
+          value: size.width / size.height,
+        },
+        uColor: {
+          value: new Vector3(),
+        },
+        uPointer: {
+          value: new Vector2(),
+        },
+        uRadius: {
+          value: OPTS.radius / 100.0,
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: splatFrag,
+    });
 
-        const vorticity = new ShaderMaterial({
-            uniforms: {
-                uVelocity: {
-                    value: new Texture(),
-                },
-                uCurl: {
-                    value: new Texture(),
-                },
-                uCurlValue: {
-                    value: OPTS.curl,
-                },
-                dt: {
-                    value: 0.016,
-                },
-                texelSize: {
-                    value: new Vector2(),
-                },
-            },
-            fragmentShader: vorticityFrag,
-        });
+    const vorticity = new ShaderMaterial({
+      uniforms: {
+        uVelocity: {
+          value: new Texture(),
+        },
+        uCurl: {
+          value: new Texture(),
+        },
+        uCurlValue: {
+          value: OPTS.curl,
+        },
+        dt: {
+          value: 0.016,
+        },
+        texelSize: {
+          value: new Vector2(),
+        },
+      },
+      fragmentShader: vorticityFrag,
+    });
 
-        return {
-            splat,
-            curl,
-            clear,
-            divergence,
-            pressure,
-            gradientSubstract,
-            advection,
-            vorticity,
-        };
-    }, [size]);
+    return {
+      splat,
+      curl,
+      clear,
+      divergence,
+      pressure,
+      gradientSubstract,
+      advection,
+      vorticity,
+    };
+  }, [size]);
 
-    useEffect(() => {
-        for (const material of Object.values(shaderMaterials)) {
-            const aspectRatio = size.width / (size.height + 400);
+  useEffect(() => {
+    for (const material of Object.values(shaderMaterials)) {
+      const aspectRatio = size.width / (size.height + 400);
 
-            material.uniforms.texelSize.value.set(1 / (OPTS.simRes * aspectRatio), 1 / OPTS.simRes);
-            material.vertexShader = baseVertex;
-            material.depthTest = false;
-            material.depthWrite = false;
-        }
+      material.uniforms.texelSize.value.set(1 / (OPTS.simRes * aspectRatio), 1 / OPTS.simRes);
+      material.vertexShader = baseVertex;
+      material.depthTest = false;
+      material.depthWrite = false;
+    }
 
-        return () => {
-            for (const material of Object.values(shaderMaterials)) {
-                material.dispose();
-            }
-        };
-    }, [shaderMaterials, size]);
+    return () => {
+      for (const material of Object.values(shaderMaterials)) {
+        material.dispose();
+      }
+    };
+  }, [shaderMaterials, size]);
 
-    return shaderMaterials;
+  return shaderMaterials;
 };
