@@ -5,10 +5,11 @@ import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import SubscribeDialog from './SubscribeDialog';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 gsap.registerPlugin(useGSAP);
 
@@ -17,6 +18,7 @@ export default function MobileNavDialog() {
   const [subsOpen, setSubOpen] = useState(false);
   const [currentPage] = useAtom(currentPageAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
+  const isMobile = useIsMobile();
 
   const startAnim = (isOpen: boolean) => {
     if (isOpen) {
@@ -37,8 +39,9 @@ export default function MobileNavDialog() {
   };
 
   useEffect(() => {
+    if (!isMobile) return;
     setTimeout(() => startAnim(open), 300);
-  }, [open]);
+  }, [open, isMobile]);
 
   return (
     <Dialog

@@ -25,10 +25,10 @@ function Loader() {
         />
         <defs>
           <linearGradient id="paint_linear" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#C11111" />
-            <stop offset={`${progress.toFixed(2)}%`} stop-color="#C11111" />
-            <stop offset={`${progress.toFixed(2)}%`} stop-color="#CCCCCC" />
-            <stop offset="100%" stop-color="#CCCCCC" />
+            <stop offset="0%" stopColor="#C11111" />
+            <stop offset={`${progress.toFixed(2)}%`} stopColor="#C11111" />
+            <stop offset={`${progress.toFixed(2)}%`} stopColor="#CCCCCC" />
+            <stop offset="100%" stopColor="#CCCCCC" />
           </linearGradient>
         </defs>
       </svg>

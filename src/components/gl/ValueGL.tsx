@@ -94,7 +94,7 @@ export default function ValueGL() {
         '<',
       );
       tl.to('#page-value-1', { opacity: 1 }, '<30%');
-      tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
+      if (isMobile) tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
     },
     { dependencies: [isMobile] },
   );
@@ -146,9 +146,9 @@ export default function ValueGL() {
       '<',
     );
     tl.to('#page-value-1', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-1-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    if (isMobile) tl.to('#value-1-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#page-value-2', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to('#value-2-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    if (isMobile) tl.to('#value-2-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title2Ref.current.position, {
       ...getScalePosition(page3Config.to.prevTitle.position),
       ease: 'power3.inOut',
@@ -195,9 +195,9 @@ export default function ValueGL() {
       '<',
     );
     tl.to('#page-value-2', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    if (isMobile) tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#page-value-3', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to('#value-3-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    if (isMobile) tl.to('#value-3-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title3Ref.current.position, {
       ...getScalePosition(page4Config.to.prevTitle.position),
       duration: 8,
@@ -244,10 +244,10 @@ export default function ValueGL() {
       '<',
     );
     tl.to('#page-value-3', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-3-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    if (isMobile) tl.to('#value-3-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
 
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(title4Ref.current.position, {
       ...getScalePosition(page5Config.to.prevTitle.position),
       duration: 8,
@@ -267,7 +267,7 @@ export default function ValueGL() {
       '<',
     );
     tl.to('#page-value-4', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#value-end-1', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     tl.to(modelRef.current.position, {
       ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
