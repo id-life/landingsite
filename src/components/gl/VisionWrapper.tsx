@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { Canvas } from '@react-three/fiber';
-import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { Html, useProgress } from '@react-three/drei';
 import { EffectComposer } from '@react-three/postprocessing';
@@ -25,10 +24,10 @@ function Loader() {
         />
         <defs>
           <linearGradient id="paint_linear" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#C11111" />
-            <stop offset={`${progress.toFixed(2)}%`} stop-color="#C11111" />
-            <stop offset={`${progress.toFixed(2)}%`} stop-color="#CCCCCC" />
-            <stop offset="100%" stop-color="#CCCCCC" />
+            <stop offset="0%" stopColor="#C11111" />
+            <stop offset={`${progress.toFixed(2)}%`} stopColor="#C11111" />
+            <stop offset={`${progress.toFixed(2)}%`} stopColor="#CCCCCC" />
+            <stop offset="100%" stopColor="#CCCCCC" />
           </linearGradient>
         </defs>
       </svg>

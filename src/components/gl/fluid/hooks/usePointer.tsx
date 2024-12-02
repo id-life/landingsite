@@ -1,4 +1,4 @@
-import { ThreeEvent, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { useCallback, useRef, useEffect } from 'react';
 import { Vector2 } from 'three';
 
@@ -41,12 +41,54 @@ export const usePointer = ({ force }: { force: number }) => {
     [force, size.height, size.width, splatStack],
   );
 
+  const createRadialSplats = useCallback(
+    (x: number, y: number, numSplats = 16) => {
+      const baseRadius = force * 16;
+      const numLayers = 8;
+
+      splatStack.push({
+        mouseX: x / size.width,
+        mouseY: 1.0 - y / size.height,
+        velocityX: 0,
+        velocityY: 0,
+      });
+
+      for (let layer = 1; layer <= numLayers; layer++) {
+        const layerRadius = baseRadius * (layer / numLayers);
+
+        for (let i = 0; i < numSplats; i++) {
+          const angle = (i * 2 * Math.PI) / numSplats;
+          const randomOffset = (Math.random() - 0.5) * 2;
+          const velocityX = Math.cos(angle + randomOffset) * layerRadius;
+          const velocityY = Math.sin(angle + randomOffset) * layerRadius;
+
+          splatStack.push({
+            mouseX: x / size.width,
+            mouseY: 1.0 - y / size.height,
+            velocityX: velocityX * (1 + Math.random() * 16),
+            velocityY: velocityY * (1 + Math.random() * 16),
+          });
+        }
+      }
+    },
+    [force, size.width, size.height, splatStack],
+  );
+
+  const onPointerDown = useCallback(
+    (event: PointerEvent) => {
+      createRadialSplats(event.clientX, event.clientY);
+    },
+    [createRadialSplats],
+  );
+
   useEffect(() => {
     document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerdown', onPointerDown);
     return () => {
       document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [onPointerMove]);
+  }, [onPointerDown, onPointerMove]);
 
   return { splatStack };
 };

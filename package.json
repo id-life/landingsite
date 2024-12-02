@@ -11,6 +11,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
     "@gsap/react": "^2.1.1",
+    "@million/lint": "^1.0.13",
     "@next/third-parties": "^15.0.2",
     "@p5-wrapper/react": "^4.4.2",
     "@pmndrs/vanilla": "^1.19.3",

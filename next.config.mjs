@@ -1,3 +1,4 @@
+import MillionLint from '@million/lint';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -27,14 +28,14 @@ const nextConfig = {
       // 添加 GLSL 文件的处理规则
       {
         test: /\.(glsl|vert|frag)$/,
-        use: [
-          'raw-loader',
-          'glslify-loader'
-        ]
-      }
+        use: ['raw-loader', 'glslify-loader'],
+      },
     ];
     return config;
   },
 };
 
-export default nextConfig;
+export default MillionLint.next({
+  enabled: true,
+  rsc: true,
+})(nextConfig);

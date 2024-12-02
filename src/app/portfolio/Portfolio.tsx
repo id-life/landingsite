@@ -9,10 +9,11 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { memo } from 'react';
 
 SwiperType.use([FreeMode]);
 
@@ -91,7 +92,7 @@ const portfolio: PortfolioItem[] = [
   },
 ];
 
-export default function Portfolio() {
+function Portfolio() {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
   const [isEntered, setIsEntered] = useState(false);
@@ -106,10 +107,10 @@ export default function Portfolio() {
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
   const swiperRef = useRef<SwiperType>();
 
-  const handleFundClick = (item: PortfolioItem) => {
+  const handleFundClick = useCallback((item: PortfolioItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
-  };
+  }, []);
 
   useGSAP(() => {
     if (!isMounted) return;
@@ -431,8 +432,8 @@ interface PortfolioItemProps {
   className?: string;
 }
 
-export const PortfolioItem = forwardRef<HTMLDivElement, PortfolioItemProps>(
-  ({ title, subTitle, description, image, onClick, className }, ref) => {
+export const PortfolioItem = memo(
+  forwardRef<HTMLDivElement, PortfolioItemProps>(({ title, subTitle, description, image, onClick, className }, ref) => {
     return (
       <div
         ref={ref}
@@ -452,7 +453,9 @@ export const PortfolioItem = forwardRef<HTMLDivElement, PortfolioItemProps>(
         </div>
       </div>
     );
-  },
+  }),
 );
 
 PortfolioItem.displayName = 'PortfolioItem';
+
+export default Portfolio;

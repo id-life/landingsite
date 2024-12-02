@@ -12,6 +12,7 @@ const WaterShader = {
     resolution: { type: 'v2', value: null },
   },
   vertexShader: `varying vec2 vUv;
+    varying vec2 vL;
     void main(){  
       vUv = uv; 
       vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
