@@ -1,19 +1,19 @@
 'use client';
 
+import gsap from 'gsap';
+import { clsx } from 'clsx';
+import Logo from '@/components/nav/Logo';
+import { useEffect, useRef } from 'react';
+import MenuOpenSVG from '../svg/MenuOpenSVG';
+import { useAtom, useAtomValue } from 'jotai';
+import { NAV_LIST } from '@/components/nav/nav';
+import { useThrottle } from '@/hooks/useThrottle';
+import { isSubscribeShowAtom } from '@/atoms/footer';
+import { useNavigation } from '@/hooks/useNavigation';
+import MobileNavDialog from '../dialog/MobileNavDialog';
+import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import { NAV_LIST } from '@/components/nav/nav';
-import LogoSVG from '@/components/svg/LogoSVG';
-import { useNavigation } from '@/hooks/useNavigation';
-import { useThrottle } from '@/hooks/useThrottle';
-import { clsx } from 'clsx';
-import gsap from 'gsap';
-import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useRef } from 'react';
-import MobileNavDialog from '../dialog/MobileNavDialog';
-import MenuOpenSVG from '../svg/MenuOpenSVG';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -67,9 +67,7 @@ export default function Nav() {
       id="nav"
       className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5"
     >
-      <div onClick={() => handleNavClick(NAV_LIST[0])}>
-        <LogoSVG className="h-10 cursor-pointer mobile:h-5" />
-      </div>
+      <Logo />
       <div className="flex gap-8 text-sm font-semibold mobile:hidden">
         {NAV_LIST.map((item) => (
           <div
