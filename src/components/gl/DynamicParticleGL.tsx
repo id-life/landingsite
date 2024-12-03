@@ -371,7 +371,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   p5.draw = () => {
     if (!activeAnim) return;
     p5.clear();
-    let len = allParticles.length;
+    const len = allParticles.length;
     for (let i = len - 1; i >= 0; i--) {
       const particle = allParticles[i];
       particle.move();
