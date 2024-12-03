@@ -20,15 +20,19 @@ function MobileNavDialog() {
   const setNavigateTo = useSetAtom(navigateToAtom);
   const isMobile = useIsMobile();
 
-  const startAnim = useCallback((isOpen: boolean) => {
-    if (isOpen) {
-      gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-      gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
-    } else {
-      gsap.set('.mobile-nav-item', { y: 0 });
-      gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
-    }
-  }, []);
+  const startAnim = useCallback(
+    (isOpen: boolean) => {
+      if (!isMobile) return;
+      if (isOpen) {
+        gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
+        gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
+      } else {
+        gsap.set('.mobile-nav-item', { y: 0 });
+        gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
+      }
+    },
+    [isMobile],
+  );
 
   const handleNavClick = useCallback(
     (item: NavItem) => {
@@ -42,9 +46,8 @@ function MobileNavDialog() {
   );
 
   useEffect(() => {
-    if (!isMobile) return;
     setTimeout(() => startAnim(open), 300);
-  }, [open, isMobile]);
+  }, [open]);
 
   return (
     <Dialog

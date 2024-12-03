@@ -450,4 +450,4 @@ export const PortfolioItem = memo(
 
 PortfolioItem.displayName = 'PortfolioItem';
 
-export default Portfolio;
+export default memo(Portfolio);
