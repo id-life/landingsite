@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { useThree } from '@react-three/fiber';
-import { Center, Svg } from '@react-three/drei';
+import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
+import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import AnimalModel from '@/components/gl/model/value/AnimalModel';
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
+import { useGSAP } from '@gsap/react';
+import { Center, Svg } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import gsap from 'gsap';
+import { useCallback, useMemo, useRef } from 'react';
+import * as THREE from 'three';
 
 export type Position = {
   x: number;
@@ -32,7 +32,7 @@ export default function ValueGL() {
   const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
-
+  const isAnimating = useRef(false);
   const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
 
   const getScalePosition = useCallback(
@@ -55,10 +55,19 @@ export default function ValueGL() {
           end: 'top top',
           scrub: true,
           onUpdate: (self) => {
-            if (!isMobile) return;
+            if (!isMobile || isAnimating.current) return;
+            // console.log({ p: self.progress, d: self.direction, self });
             if (self?.direction < 0) {
+              // console.log('scroll');
+              isAnimating.current = true;
               const height = window.innerHeight;
-              gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 } });
+              gsap.to(window, {
+                duration: 1.5,
+                scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
+                onComplete: () => {
+                  isAnimating.current = false;
+                },
+              });
             }
           },
         },
