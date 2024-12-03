@@ -1,8 +1,8 @@
-import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, Ref, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
-import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
+import { ANIMAL_CONFIG, useFBOs } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 
 const backsideThickness = 1.5;
@@ -18,8 +18,7 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   const meshRef = useRef<THREE.Mesh[]>([]);
   const [discardMaterial] = useState(() => new MeshDiscardMaterial());
   const [background] = useState(() => new THREE.Color('white'));
-  const fboMain = useFBO(256, 256);
-  const fboBack = useFBO(256, 256);
+  const fbos = useFBOs(gltfConfig.mesh.length);
 
   useEffect(() => {
     if (!scene) return;
@@ -42,7 +41,7 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [actions, names]);
 
   useFrame(({ clock, gl, scene, camera }) => {
-    meshRef.current.forEach((mesh: any) => {
+    meshRef.current.forEach((mesh: any, index: number) => {
       mesh.material.time = clock.getElapsedTime();
       const oldTone = gl.toneMapping;
       const oldBg = scene.background;
@@ -52,20 +51,20 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
       scene.background = background;
       mesh.material = discardMaterial;
 
-      gl.setRenderTarget(fboBack);
+      gl.setRenderTarget(fbos[index][1]);
       gl.render(scene, camera);
       mesh.material = oldMaterial;
-      mesh.material.buffer = fboBack.texture;
+      mesh.material.buffer = fbos[index][1].texture;
       mesh.material.thickness = backsideThickness;
       mesh.material.side = THREE.BackSide;
 
-      gl.setRenderTarget(fboMain);
+      gl.setRenderTarget(fbos[index][0]);
       gl.render(scene, camera);
 
       mesh.material = oldMaterial;
       mesh.material.thickness = thickness;
       mesh.material.side = THREE.FrontSide;
-      mesh.material.buffer = fboMain.texture;
+      mesh.material.buffer = fbos[index][0].texture;
 
       scene.background = oldBg;
       gl.setRenderTarget(null);
