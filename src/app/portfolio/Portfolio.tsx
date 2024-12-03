@@ -299,7 +299,7 @@ function Portfolio() {
   }, [isEntered]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
+    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
       {active && (
         <ParticleGL
           activeAnim={showParticle}
@@ -450,4 +450,4 @@ export const PortfolioItem = memo(
 
 PortfolioItem.displayName = 'PortfolioItem';
 
-export default Portfolio;
+export default memo(Portfolio);

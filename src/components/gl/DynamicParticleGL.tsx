@@ -13,7 +13,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   let id = 'particle-container';
   let canvas: P5.Renderer;
   const sourceImgs: P5.Image[] = [];
-  const allParticles: any[] = [];
+  let allParticles: Particle[] = [];
   const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const defaultConfig = {
     scaleNum: 1,
@@ -310,8 +310,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
 
     let pixelIndex = 0;
 
-    const imgWidth = sourceImg.width,
-      imgHeight = sourceImg.height;
+    const [imgWidth, imgHeight] = [sourceImg.width, sourceImg.height];
     // console.log('imgWidth', imgWidth, 'imgHeight', imgHeight);
     // Go through each pixel of the image.
     for (let y = 0; y < imgHeight; y++) {
@@ -351,8 +350,9 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     }
     // console.log('particleIndexes', particleIndexes, ' allParticles', allParticles);
     // Kill off any left over particles that aren't assigned to anything.
-    if (preParticleIndexes.length > 0) {
-      for (let i = 0; i < preParticleIndexes.length; i++) {
+    const preLen = preParticleIndexes.length;
+    if (preLen > 0) {
+      for (let i = 0; i < preLen; i++) {
         const index = preParticleIndexes[i];
         allParticles[index].kill();
         allParticles[index].endColor = p5.color(0);
@@ -366,28 +366,19 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         setImageIdx(pendingImageIdx);
         pendingImageIdx = null;
       }
-    }, 1000); // 等待1秒后允许下一次切换
-    // console.log(`创建了 ${allParticles.length} 个粒子`);
+    }, 1000);
   }
   p5.draw = () => {
     if (!activeAnim) return;
     p5.clear();
-
-    for (let i = allParticles.length - 1; i > -1; i--) {
-      allParticles[i].move();
-      allParticles[i].draw();
-
-      if (allParticles[i].isKilled && allParticles[i].isOutOfBounds()) {
-        allParticles.splice(i, 1);
-      }
+    const len = allParticles.length;
+    for (let i = len - 1; i >= 0; i--) {
+      const particle = allParticles[i];
+      particle.move();
+      particle.draw();
     }
-
-    // if (p5.frameCount % 60 === 0) {
-    // console.log(`当前粒子数量: ${allParticles.length}`);
-    // }
+    allParticles = allParticles.filter((particle) => !particle.isKilled && !particle.isOutOfBounds());
   };
-
-  // 其他辅助函数和 Particle 类的定义...
 
   return p5;
 }

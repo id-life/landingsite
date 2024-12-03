@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { useAtom, useSetAtom } from 'jotai';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { currentPageAtom, navigateToAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
-import { navigateToAtom, currentPageAtom } from '@/atoms';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAtom, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
 import { useIsMobile } from './useIsMobile';
 
 export function useNavigation() {
@@ -34,7 +34,15 @@ export function useNavigation() {
       if (!smoother) return;
       if (item.id === NAV_LIST[0].id) {
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${item.id}`, true);
+        if (isMobile) {
+          gsap.to(window, {
+            duration: 1.5,
+            scrollTo: {
+              y: `#${NAV_LIST[0].id}`,
+              offsetY: 0,
+            },
+          });
+        } else smoother?.scrollTo(`#${item.id}`, true);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
       if (item.id === NAV_LIST[1].id) {
@@ -50,7 +58,17 @@ export function useNavigation() {
       }
       if (item.id === NAV_LIST[2].id) {
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${item.id}`, true);
+        if (isMobile) {
+          gsap.to(window, {
+            duration: 1.5,
+            scrollTo: {
+              y: `#${NAV_LIST[2].id}`,
+              offsetY: 0,
+            },
+          });
+        } else {
+          smoother?.scrollTo(`#${item.id}`, true);
+        }
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
       setCurrentPage(item);

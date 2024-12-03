@@ -47,7 +47,7 @@ export default function Home() {
       const valueTL = gsap.timeline({
         scrollTrigger: {
           trigger: `#${NAV_LIST[2].id}`,
-          start: 'top bottom+=500',
+          start: 'top bottom+=400',
           end: 'top center',
           scrub: true,
           onEnter: () => {
