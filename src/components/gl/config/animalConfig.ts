@@ -1,3 +1,7 @@
+import { useFBO } from '@react-three/drei';
+import { useMemo } from 'react';
+import * as THREE from 'three';
+
 type Mesh = {
   name: string;
   reflectivity: number;
@@ -27,3 +31,26 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
     ],
   },
 ] as const;
+
+export function useFBOs(length: number) {
+  return useMemo(
+    () =>
+      Array(length)
+        .fill(undefined)
+        .map((_) => [
+          new THREE.WebGLRenderTarget(256, 256, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            type: THREE.HalfFloatType,
+            samples: 0,
+          }),
+          new THREE.WebGLRenderTarget(256, 256, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            type: THREE.HalfFloatType,
+            samples: 0,
+          }),
+        ]),
+    [length],
+  );
+}
