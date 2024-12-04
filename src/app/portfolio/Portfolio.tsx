@@ -310,7 +310,7 @@ function Portfolio() {
       {isMobile && active && (
         <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />
       )}
-      <div className="relative flex h-[100dvh] flex-col items-center justify-center mobile:translate-y-6">
+      <div className="relative flex h-[100svh] flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           {isMobile ? (
             <>
@@ -334,7 +334,7 @@ function Portfolio() {
               direction="vertical"
               slidesPerView={2}
               spaceBetween={0}
-              className="h-[70dvh]"
+              className="h-[70svh]"
               onBeforeInit={(swiper) => {
                 swiperRef.current = swiper;
               }}
@@ -365,7 +365,7 @@ function Portfolio() {
               }}
             >
               {portfolio.map((item, index) => (
-                <SwiperSlide key={item.title} className="h-[35dvh]">
+                <SwiperSlide key={item.title} className="h-[35svh]">
                   <PortfolioItem
                     item={item}
                     onClick={() => handleFundClick(item)}
@@ -431,7 +431,7 @@ export const PortfolioItem = memo(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35dvh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
+          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
           className,
         )}
       >
