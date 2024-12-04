@@ -67,16 +67,16 @@
   .page-container {
     position: relative;
     width: 100%;
-    min-height: 150dvh;
+    min-height: 150svh;
     overflow: hidden;
 
     &.fund {
-      min-height: 300dvh;
-      @apply mobile:min-h-[200dvh];
+      min-height: 300svh;
+      @apply mobile:min-h-[200svh];
     }
 
     &.value {
-      min-height: 800dvh;
+      min-height: 800svh;
     }
   }
 
@@ -104,7 +104,7 @@
 
 @layer utilities {
   .page-height {
-    height: 100dvh;
+    height: 100svh;
   }
 
   .page-hide {
