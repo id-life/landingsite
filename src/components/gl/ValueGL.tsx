@@ -109,6 +109,177 @@ export default function ValueGL() {
     { dependencies: [isMobile] },
   );
 
+  const createPage1SvgAnim = (tl: GSAPTimeline) => {
+    if (isMobile) return; // 移动端是另一套动画
+    const svg1 = scene.getObjectByName('title1-svg') as THREE.Object3D;
+    const svg1Cn = scene.getObjectByName('title1-cn-svg') as THREE.Object3D;
+
+    // 设置初始状态
+    svg1Cn.translateY(0.6); // 偏移
+    svg1?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 1; // 设置初始透明度为1
+      }
+    });
+    svg1Cn?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 0; // 设置初始透明度为0
+      }
+    });
+
+    let materialCount = 0;
+    // 红字消失变换为中文
+    svg1?.traverse((child) => {
+      if ((child as any).material) {
+        materialCount++;
+        if (materialCount < 14) return;
+        const material = (child as any).material;
+        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+      }
+    });
+    materialCount = 0;
+    const svg1CnAnimGroup = gsap.timeline();
+    svg1Cn?.traverse((child) => {
+      materialCount++;
+      if (materialCount < 16) return;
+      const material = (child as any).material;
+      svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+    });
+    tl.add(svg1CnAnimGroup, '-=3.5');
+  };
+
+  const createPage2SvgAnim = (tl: GSAPTimeline) => {
+    if (isMobile) return; // 移动端是另一套动画
+    const svg2 = scene.getObjectByName('title2-svg') as THREE.Object3D;
+    const svg2Cn = scene.getObjectByName('title2-cn-svg') as THREE.Object3D;
+    // 设置初始状态
+    // svg2Cn.translateY(0.6); // 偏移
+    svg2?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 1; // 设置初始透明度为1
+      }
+    });
+    svg2Cn?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 0; // 设置初始透明度为0
+      }
+    });
+    let materialCount = 0;
+    // 红字消失变换为中文
+    svg2?.traverse((child) => {
+      if ((child as any).material) {
+        materialCount++;
+        if (materialCount < 11 || materialCount > 20) return;
+        const material = (child as any).material;
+        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+      }
+    });
+    materialCount = 0;
+    const svg2CnAnimGroup = gsap.timeline();
+    svg2Cn?.traverse((child) => {
+      materialCount++;
+      if (materialCount < 11 || materialCount > 30) return;
+      const material = (child as any).material;
+      svg2CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+    });
+    tl.add(svg2CnAnimGroup, '-=6');
+  };
+
+  const createPage3SvgAnim = (tl: GSAPTimeline) => {
+    if (isMobile) return; // 移动端是另一套动画
+
+    const svg3 = scene.getObjectByName('title3-svg') as THREE.Object3D;
+    const svg3Cn = scene.getObjectByName('title3-cn-svg') as THREE.Object3D;
+    // 设置初始状态
+    // svg2Cn.translateY(0.6); // 偏移
+    svg3?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 1; // 设置初始透明度为1
+      }
+    });
+    svg3Cn?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 0; // 设置初始透明度为0
+      }
+    });
+    let materialCount = 0;
+    // 红字消失变换为中文
+    svg3?.traverse((child) => {
+      if ((child as any).material) {
+        materialCount++;
+        if (materialCount < 25) return;
+        const material = (child as any).material;
+        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+      }
+    });
+    materialCount = 0;
+    const svg3CnAnimGroup = gsap.timeline();
+    svg3Cn?.traverse((child) => {
+      materialCount++;
+      if (materialCount < 25) return;
+      const material = (child as any).material;
+      svg3CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+    });
+    tl.add(svg3CnAnimGroup, '-=6');
+  };
+
+  const createPage4SvgAnim = (tl: GSAPTimeline) => {
+    if (isMobile) return; // 移动端是另一套动画
+    const svg4 = scene.getObjectByName('title4-svg') as THREE.Object3D;
+    const svg4Cn = scene.getObjectByName('title4-cn-svg') as THREE.Object3D;
+    // 设置初始状态
+    svg4Cn.translateY(0.5); // 偏移
+    svg4Cn.translateX(4); // 偏移
+    svg4?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 1; // 设置初始透明度为1
+      }
+    });
+    svg4Cn?.traverse((child) => {
+      if ((child as any).material) {
+        const material = (child as any).material;
+        material.transparent = true;
+        material.opacity = 0; // 设置初始透明度为0
+      }
+    });
+    let materialCount = 0;
+    // 红字消失变换为中文
+    svg4?.traverse((child) => {
+      if ((child as any).material) {
+        materialCount++;
+        if (materialCount >= 15) return;
+        const material = (child as any).material;
+        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+      }
+    });
+    // console.log('1', materialCount);
+    materialCount = 0;
+    const svg4CnAnimGroup = gsap.timeline();
+    svg4Cn?.traverse((child) => {
+      materialCount++;
+      if (materialCount > 7) return;
+      const material = (child as any).material;
+      svg4CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+    });
+    tl.add(svg4CnAnimGroup, '-=3.5');
+    // console.log('2', materialCount);
+  };
+
+  // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
     if (!title1Ref.current || !modelRef.current) return;
     tl.to(title1Ref.current.position, {
@@ -274,170 +445,22 @@ export default function ValueGL() {
     });
 
     // page1~2之间的 svg切换动画，红字消失变换为中文
-    const svg1 = scene.getObjectByName('title1-svg') as THREE.Object3D;
-    const svg1Cn = scene.getObjectByName('title1-cn-svg') as THREE.Object3D;
-    // 设置初始状态
-    svg1Cn.translateY(0.6); // 偏移
-    svg1?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 1; // 设置初始透明度为1
-      }
-    });
-    svg1Cn?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 0; // 设置初始透明度为0
-      }
-    });
-
-    let materialCount = 0;
-    // 红字消失变换为中文
-    svg1?.traverse((child) => {
-      if ((child as any).material) {
-        materialCount++;
-        if (materialCount < 14) return;
-        const material = (child as any).material;
-        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
-      }
-    });
-    materialCount = 0;
-    const svg1CnAnimGroup = gsap.timeline();
-    svg1Cn?.traverse((child) => {
-      materialCount++;
-      if (materialCount < 16) return;
-      const material = (child as any).material;
-      svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
-    });
-    tl.add(svg1CnAnimGroup, '-=3.5');
-
+    createPage1SvgAnim(tl);
     // page1 to page2
     createPage1CrossAnim(tl);
 
     // page2~3之间的 svg切换动画，红字消失变换为中文
-    const svg2 = scene.getObjectByName('title2-svg') as THREE.Object3D;
-    const svg2Cn = scene.getObjectByName('title2-cn-svg') as THREE.Object3D;
-    // 设置初始状态
-    // svg2Cn.translateY(0.6); // 偏移
-    svg2?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 1; // 设置初始透明度为1
-      }
-    });
-    svg2Cn?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 0; // 设置初始透明度为0
-      }
-    });
-    materialCount = 0;
-    // 红字消失变换为中文
-    svg2?.traverse((child) => {
-      if ((child as any).material) {
-        materialCount++;
-        if (materialCount < 11 || materialCount > 20) return;
-        const material = (child as any).material;
-        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
-      }
-    });
-    materialCount = 0;
-    const svg2CnAnimGroup = gsap.timeline();
-    svg2Cn?.traverse((child) => {
-      materialCount++;
-      if (materialCount < 11 || materialCount > 30) return;
-      const material = (child as any).material;
-      svg2CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
-    });
-    tl.add(svg2CnAnimGroup, '-=6');
+    createPage2SvgAnim(tl);
     // page2 to page3
     createPage2CrossAnim(tl);
 
-    // page2~3之间的 svg切换动画，红字消失变换为中文
-    const svg3 = scene.getObjectByName('title3-svg') as THREE.Object3D;
-    const svg3Cn = scene.getObjectByName('title3-cn-svg') as THREE.Object3D;
-    // 设置初始状态
-    // svg2Cn.translateY(0.6); // 偏移
-    svg3?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 1; // 设置初始透明度为1
-      }
-    });
-    svg3Cn?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 0; // 设置初始透明度为0
-      }
-    });
-    materialCount = 0;
-    // 红字消失变换为中文
-    svg3?.traverse((child) => {
-      if ((child as any).material) {
-        materialCount++;
-        if (materialCount < 25) return;
-        const material = (child as any).material;
-        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
-      }
-    });
-    materialCount = 0;
-    const svg3CnAnimGroup = gsap.timeline();
-    svg3Cn?.traverse((child) => {
-      materialCount++;
-      if (materialCount < 25) return;
-      const material = (child as any).material;
-      svg3CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
-    });
-    tl.add(svg3CnAnimGroup, '-=6');
+    // page3~4之间的 svg切换动画，红字消失变换为中文
+    createPage3SvgAnim(tl);
     // page3 to page4
     createPage3CrossAnim(tl);
-    // page2~3之间的 svg切换动画，红字消失变换为中文
-    const svg4 = scene.getObjectByName('title4-svg') as THREE.Object3D;
-    const svg4Cn = scene.getObjectByName('title4-cn-svg') as THREE.Object3D;
-    // 设置初始状态
-    svg4Cn.translateY(0.5); // 偏移
-    svg4Cn.translateX(4); // 偏移
-    svg4?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 1; // 设置初始透明度为1
-      }
-    });
-    svg4Cn?.traverse((child) => {
-      if ((child as any).material) {
-        const material = (child as any).material;
-        material.transparent = true;
-        material.opacity = 0; // 设置初始透明度为0
-      }
-    });
-    materialCount = 0;
-    // 红字消失变换为中文
-    svg4?.traverse((child) => {
-      if ((child as any).material) {
-        materialCount++;
-        if (materialCount >= 15) return;
-        const material = (child as any).material;
-        tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
-      }
-    });
-    // console.log('1', materialCount);
-    materialCount = 0;
-    const svg4CnAnimGroup = gsap.timeline();
-    svg4Cn?.traverse((child) => {
-      materialCount++;
-      if (materialCount > 7) return;
-      const material = (child as any).material;
-      svg4CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
-    });
-    tl.add(svg4CnAnimGroup, '-=7');
-    // console.log('2', materialCount);
+
+    // page4之后的 svg切换动画，红字消失变换为中文
+    createPage4SvgAnim(tl);
 
     // End
     tl.to(title4Ref.current.position, {
