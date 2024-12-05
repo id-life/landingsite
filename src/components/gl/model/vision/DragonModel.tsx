@@ -46,6 +46,8 @@ export default function DragonModel(props: {}) {
       },
       onDrag: ({ active, movement: [x, y] }) => {
         if (!modelRef.current || isRecoveringRef.current) return;
+        if (!smootherRef.current) return;
+        smootherRef.current.paused(active);
         if (active) {
           autoSwingRef.current = false;
           events.connected.style.cursor = 'grabbing';
@@ -73,7 +75,7 @@ export default function DragonModel(props: {}) {
         }
       },
     },
-    { drag: { filterTaps: true } },
+    { drag: { filterTaps: true, preventScroll: true } },
   );
 
   useGSAP(
