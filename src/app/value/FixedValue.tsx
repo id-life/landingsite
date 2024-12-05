@@ -1,13 +1,18 @@
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 
 type ValueContentItem = {
   id: string;
   title: string;
   content: string;
+  cn: {
+    title: string;
+    content: string;
+  };
   mobileSVGElement: JSX.Element;
   className?: string;
+  buttonClass?: string;
 };
 const VALUE_CONTENT: ValueContentItem[] = [
   {
@@ -15,6 +20,10 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'A New Dawn',
     content:
       'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
+    cn: {
+      title: '曙光',
+      content: '我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
+    },
     mobileSVGElement: (
       <h2
         id="value-1-svg-mobile"
@@ -30,7 +39,12 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'As an Evangelist',
     content:
       'We help the world come to a better understanding of life extension technologies, galvanizing global consciousness, talents & resources in the process.',
+    cn: {
+      title: '传播与共识',
+      content: '我们致力于成为生命延长技术的布道者，在促进全球共识、汇聚全球智慧与资源方面发挥关键作用',
+    },
     className: 'text-right mobile:text-left',
+    buttonClass: 'ml-auto',
     mobileSVGElement: (
       <h2
         id="value-2-svg-mobile"
@@ -47,6 +61,10 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'A Moral Endeavor',
     content:
       'We pursue longer, healthier lives and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality.',
+    cn: {
+      title: '卓越的道德探索',
+      content: '我们矢志追求生命的延展与健康的永驻，化解年龄相关疾病带来的苦痛，全力以赴实现这一崇高愿景',
+    },
     mobileSVGElement: (
       <h2
         id="value-3-svg-mobile"
@@ -62,7 +80,12 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'A Virtuous Cycle',
     content:
       'We stand with bold early investments, where breakthroughs accelerate the cause, bringing further talents, supporters and resources.',
+    cn: {
+      title: '胆量与发展并进',
+      content: '我们坚持前瞻性的大胆投资，每一次突破都将加速推进事业，吸引更多英才、支持者与资源汇聚',
+    },
     className: 'text-right mobile:text-left',
+    buttonClass: 'ml-auto',
     mobileSVGElement: (
       <h2
         id="value-4-svg-mobile"
@@ -75,8 +98,63 @@ const VALUE_CONTENT: ValueContentItem[] = [
   },
 ];
 
+const END_CONTENT_1 = {
+  en: {
+    title: 'Promising Early-Stage Ventures',
+    items: [
+      'Partnering with Pre-Seed to Series-A startups under $100m valuations.',
+      'Prioritizing talents, bold visions and impactful human benefits.',
+    ],
+  },
+  cn: {
+    title: '聚焦早期企业投资',
+    items: ['与估值1亿美元以下的种子轮至A轮企业合作', '重点关注优秀人才、远大愿景和积极的社会影响'],
+  },
+};
+
+const END_CONTENT_2 = {
+  en: [
+    {
+      title: 'East/West Access',
+      content: 'Deep roots in both East and West, a conduit that bridges market, capital, institutions and more.',
+    },
+    {
+      title: 'Industry Expertise',
+      content: 'Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.',
+    },
+    {
+      title: 'Founder Focused',
+      content: "Strategic partners, prioritizing founders' visions and long-term societal impact.",
+    },
+  ],
+  cn: [
+    {
+      title: '贯通东西:\n',
+      content: '立足东西方市场，打通市场、资本、\n机构等多维资源',
+    },
+    {
+      title: '专注领域:\n',
+      content: '聚焦长寿生物科技，链接专家、人才\n及核心支持',
+    },
+    {
+      title: '以创始人为本:\n',
+      content: '携手创业者，共创长期社会价值',
+    },
+  ],
+};
+
 export default function FixedValue() {
   const isMobile = useIsMobile();
+  const [isCN, setIsCN] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsCN((prev) => !prev);
+    }, 8000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
       {VALUE_CONTENT.map((item) => (
@@ -85,38 +163,65 @@ export default function FixedValue() {
           <div
             id={item.id}
             className={cn(
-              'page-value-item fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-15',
+              'page-value-item pointer-events-none fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-15',
               item?.className,
             )}
           >
-            <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{item.title}</h3>
+            <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{isCN ? item.cn.title : item.title}</h3>
             <p className="mt-4 w-[29.125rem] text-base font-semibold mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
-              {item.content}
+              {isCN ? item.cn.content : item.content}
             </p>
+            <div className={cn('pointer-events-auto mt-3 flex w-24 items-center gap-2 uppercase', item?.buttonClass)}>
+              <button
+                onClick={() => setIsCN(false)}
+                className={cn(
+                  'flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 text-sm/3.5 font-bold text-gray-800 mobile:gap-2 mobile:px-1.5 mobile:py-1 mobile:text-xs/3',
+                  { 'bg-red-600 text-white': !isCN },
+                )}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setIsCN(true)}
+                className={cn(
+                  'flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 text-sm/3.5 font-bold text-gray-800 mobile:gap-2 mobile:px-1.5 mobile:py-1 mobile:text-xs/3',
+                  { 'bg-red-600 text-white': isCN },
+                )}
+              >
+                CN
+              </button>
+            </div>
           </div>
         </Fragment>
       ))}
       <div
         id="value-end-1"
-        className="invisible fixed left-10 top-1/2 z-10 w-[27.1875rem] -translate-y-1/2 font-oxanium opacity-0 mobile:inset-x-5 mobile:top-[6.25rem] mobile:w-full mobile:transform-none"
+        className="invisible fixed left-10 top-1/2 z-10 w-[28.125rem] -translate-y-1/2 font-oxanium opacity-0 mobile:inset-x-5 mobile:top-[6.25rem] mobile:w-full mobile:transform-none"
       >
-        <h2 className="text-3xl font-bold uppercase mobile:text-sm/4">Promising Early-Stage Ventures</h2>
+        <h2 className="text-3xl font-bold uppercase mobile:text-sm/4">
+          {isCN ? END_CONTENT_1.cn.title : END_CONTENT_1.en.title}
+        </h2>
         <ul className="list-mark-red-disc mt-9 flex flex-col gap-7.5 text-xl/5 font-bold uppercase mobile:mt-3 mobile:gap-2.5 mobile:text-xs/3.5">
-          <li>Partnering with Pre-Seed to Series-A startups under $100m valuations.</li>
-          <li>Prioritizing talents, bold visions and impactful human benefits.</li>
+          {(isCN ? END_CONTENT_1.cn.items : END_CONTENT_1.en.items).map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
         </ul>
       </div>
       <ul
         id="value-end-2"
-        className="list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-7.5 text-right font-oxanium text-xl/5 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-5 mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-left mobile:text-xs/3.5"
+        className={cn(
+          'list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-5 mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
+          { 'w-auto': isCN },
+        )}
       >
-        <li>
-          East/West Access: Deep roots in both East and West, a conduit that bridges market, capital, institutions and more.
-        </li>
-        <li>
-          Industry Expertise: Sole focus on longevity biotech, linking partners with experts, top talent, and essential support.
-        </li>
-        <li>{"Founder Focused: Strategic partners, prioritizing founders' visions and long-term societal impact."}</li>
+        {(isCN ? END_CONTENT_2.cn : END_CONTENT_2.en).map((item, index) => (
+          <li key={index}>
+            {item.title}
+            <span className="mt-5 inline-block text-base/5 font-medium mobile:mt-1 mobile:text-[.625rem]/3">
+              {item.content}
+            </span>
+          </li>
+        ))}
       </ul>
     </>
   );
