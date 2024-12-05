@@ -1,7 +1,8 @@
+import CnBtnSVG from '@/components/svg/CnBtnSVG';
+import EnBtnSVG from '@/components/svg/EnBtnSVG';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { Fragment, useState, useEffect } from 'react';
-
 type ValueContentItem = {
   id: string;
   title: string;
@@ -163,7 +164,7 @@ export default function FixedValue() {
           <div
             id={item.id}
             className={cn(
-              'page-value-item pointer-events-none fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-15',
+              'page-value-item bilingual-font pointer-events-none fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-15',
               item?.className,
             )}
           >
@@ -171,24 +172,12 @@ export default function FixedValue() {
             <p className="mt-4 w-[29.125rem] text-base font-semibold mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
               {isCN ? item.cn.content : item.content}
             </p>
-            <div className={cn('pointer-events-auto mt-3 flex w-24 items-center gap-2 uppercase', item?.buttonClass)}>
-              <button
-                onClick={() => setIsCN(false)}
-                className={cn(
-                  'flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 text-sm/3.5 font-bold text-gray-800 mobile:gap-2 mobile:px-1.5 mobile:py-1 mobile:text-xs/3',
-                  { 'bg-red-600 text-white': !isCN },
-                )}
-              >
-                EN
+            <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
+              <button onClick={() => setIsCN(false)}>
+                <EnBtnSVG active={!isCN} />
               </button>
-              <button
-                onClick={() => setIsCN(true)}
-                className={cn(
-                  'flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 text-sm/3.5 font-bold text-gray-800 mobile:gap-2 mobile:px-1.5 mobile:py-1 mobile:text-xs/3',
-                  { 'bg-red-600 text-white': isCN },
-                )}
-              >
-                CN
+              <button onClick={() => setIsCN(true)} className="-ml-2.5">
+                <CnBtnSVG active={isCN} />
               </button>
             </div>
           </div>
@@ -196,7 +185,7 @@ export default function FixedValue() {
       ))}
       <div
         id="value-end-1"
-        className="invisible fixed left-10 top-1/2 z-10 w-[28.125rem] -translate-y-1/2 font-oxanium opacity-0 mobile:inset-x-5 mobile:top-[6.25rem] mobile:w-full mobile:transform-none"
+        className="bilingual-font invisible fixed left-10 top-1/2 z-10 w-[28.125rem] -translate-y-1/2 opacity-0 mobile:inset-x-5 mobile:top-[6.25rem] mobile:w-full mobile:transform-none"
       >
         <h2 className="text-3xl font-bold uppercase mobile:text-sm/4">
           {isCN ? END_CONTENT_1.cn.title : END_CONTENT_1.en.title}
@@ -210,7 +199,7 @@ export default function FixedValue() {
       <ul
         id="value-end-2"
         className={cn(
-          'list-mark-red-disc invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-5 mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
+          'list-mark-red-disc bilingual-font invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-5 mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
           { 'w-auto': isCN },
         )}
       >

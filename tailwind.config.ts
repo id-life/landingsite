@@ -18,6 +18,7 @@ const config: Config = {
         migrena: ['var(--font-migrena)'],
         tt: ['var(--font-tt)'],
         oxanium: ['var(--font-oxanium)'],
+        'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
       },
       animation: {
         'scroll-down': 'scroll-down 1.5s ease-in infinite',

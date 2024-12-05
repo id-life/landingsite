@@ -32,4 +32,18 @@ const oxanium = Oxanium({
   variable: '--font-oxanium',
 });
 
-export { xirod, poppins, ttLakes, migrena, oxanium };
+const sourceHanSansCN = localFont({
+  src: [
+    {
+      path: './fonts/SourceHanSansCN-Bold-min.ttf',
+      weight: '700',
+    },
+    {
+      path: './fonts/SourceHanSansCN-Medium-min.ttf',
+      weight: '500',
+    },
+  ],
+  variable: '--font-source-han-sans-cn',
+});
+
+export { xirod, poppins, ttLakes, migrena, oxanium, sourceHanSansCN };
