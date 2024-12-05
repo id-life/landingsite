@@ -278,7 +278,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
     const height = width / ratio;
     canvas = p5.createCanvas(width, height);
     canvas.parent(id);
-    setImageIdx(0);
+    if (!IS_MOBILE) setImageIdx(0);
   };
 
   function setImageIdx(idx: number) {
@@ -358,7 +358,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         allParticles[index].endColor = p5.color(0);
       }
     }
-
     // 在粒子设置完成后，检查是否有待处理的图像切换
     setTimeout(() => {
       isAnimating = false;

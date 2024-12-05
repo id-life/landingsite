@@ -9,11 +9,10 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { memo } from 'react';
 
 SwiperType.use([FreeMode]);
 
@@ -101,8 +100,8 @@ function Portfolio() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
-  const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
+  const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
+  const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
   const swiperRef = useRef<SwiperType>();
@@ -133,14 +132,6 @@ function Portfolio() {
           onLeaveBack: () => {
             setActive(false);
           },
-          onUpdate: (self) => {
-            if (!isMobile) return;
-            if (self.progress >= 0.42 && self.progress <= 0.7) {
-              setIsEntered(true);
-            } else {
-              setIsEntered(false);
-            }
-          },
         },
       });
       // 进
@@ -156,7 +147,18 @@ function Portfolio() {
         },
         '<',
       );
-      tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
+      tl.from(
+        '.page2-fund',
+        {
+          y: (_, target) => target.offsetHeight / 3,
+          rotateX: 45,
+          rotateY: 15,
+          opacity: 0,
+        },
+        '<',
+      );
+      tl.add(() => setIsEntered(false));
+      tl.add(() => setIsEntered(true));
       tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
       // 出
       tl.to(
@@ -170,7 +172,18 @@ function Portfolio() {
         },
         '>0.3',
       );
-      tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
+      tl.to(
+        '.page2-fund',
+        {
+          y: (_, target) => -target.offsetHeight / 3,
+          rotateX: -45,
+          rotateY: 15,
+          opacity: 0,
+        },
+        '<',
+      );
+      tl.add(() => setIsEntered(true));
+      tl.add(() => setIsEntered(false));
       tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
       tl.to('#particle-gl', { opacity: 0 }, '<');
       tl.to('.fixed-top', { top: 'calc(50% - 20rem)' }, '<');
@@ -277,13 +290,15 @@ function Portfolio() {
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
   };
+  // console.log({ mobileImageIdx1, mobileImageIdx2, isEntered, activeIndex });
 
   useEffect(() => {
-    if (isMobile && showParticle) {
+    if (!isMobile) return;
+    if (isEntered) {
       setMobileImageIdx1(activeIndex + 1);
       setMobileImageIdx2(activeIndex + 2);
     }
-  }, [isMobile, showParticle, activeIndex]);
+  }, [isMobile, activeIndex, isEntered]);
 
   // 添加 useEffect 来控制滚动
   useEffect(() => {
@@ -300,16 +315,9 @@ function Portfolio() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && (
-        <ParticleGL
-          activeAnim={showParticle}
-          imageIdx={isMobile ? mobileImageIdx1 : imageIdx}
-          id={isMobile ? 'particle-container-mobile-1' : 'particle-container'}
-        />
-      )}
-      {isMobile && active && (
-        <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />
-      )}
+      {!isMobile && active && <ParticleGL activeAnim={active} imageIdx={imageIdx} id="particle-container" />}
+      {isMobile && <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx1} id="particle-container-mobile-1" />}
+      {isMobile && <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}
       <div className="relative flex h-[100svh] flex-col items-center justify-center mobile:translate-y-6">
         <div id="particle-gl">
           {isMobile ? (
