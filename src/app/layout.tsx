@@ -3,7 +3,7 @@ import Nav from '@/components/nav';
 import Providers from '@/providers/root';
 import FixedUI from '@/components/common/FixedUI';
 import Background from '@/components/common/Background';
-import { migrena, oxanium, poppins, ttLakes, xirod } from '@/styles/fonts';
+import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 
@@ -72,7 +72,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <GoogleTagManager gtmId="GTM-NZKZJ38H" />
       <body
-        className={clsx(xirod.variable, poppins.variable, migrena.variable, ttLakes.variable, oxanium.variable, 'antialiased')}
+        className={clsx(
+          xirod.variable,
+          poppins.variable,
+          migrena.variable,
+          ttLakes.variable,
+          oxanium.variable,
+          sourceHanSansCN.variable,
+          'antialiased',
+        )}
         suppressHydrationWarning
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

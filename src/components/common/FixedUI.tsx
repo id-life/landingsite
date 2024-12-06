@@ -14,10 +14,13 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { ReactNode } from 'react';
 import VerticalCarousel from './VerticalCarousel';
 import { ClientOnly } from './ClientOnly';
-
 const CAROUSEL_ITEMS = [
   {
     text: 'Immortal Dragons is a purpose-driven longevity fund',
+    icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
+    text: '破解永生密码',
     icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
@@ -25,7 +28,15 @@ const CAROUSEL_ITEMS = [
     icon: <VisionDecorationLogo_2 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
+    text: '解码生命永恒密码',
+    icon: <VisionDecorationLogo_2 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
     text: 'Catalysing longevity revolution',
+    icon: <VisionDecorationLogo_3 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
+    text: '突破衰老科学边界',
     icon: <VisionDecorationLogo_3 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
@@ -33,11 +44,23 @@ const CAROUSEL_ITEMS = [
     icon: <VisionDecorationLogo_4 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
+    text: '重塑人类寿命极限',
+    icon: <VisionDecorationLogo_4 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
     text: 'Bringing global awareness of longevity',
     icon: <VisionDecorationLogo_5 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
   {
+    text: '连接全球创新网络',
+    icon: <VisionDecorationLogo_5 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
     text: 'Harnessing collective recognition of the significance of Longevity',
+    icon: <VisionDecorationLogo_6 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
+  },
+  {
+    text: '加速长寿技术革命',
     icon: <VisionDecorationLogo_6 className="h-12 w-12 fill-foreground mobile:h-6 mobile:w-6" />,
   },
 ];

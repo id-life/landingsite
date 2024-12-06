@@ -1,3 +1,4 @@
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThree } from '@react-three/fiber';
 import { useCallback, useRef, useEffect } from 'react';
 import { Vector2 } from 'three';
@@ -13,33 +14,9 @@ export const usePointer = ({ force }: { force: number }) => {
   const size = useThree((three) => three.size);
 
   const splatStack: SplatStack[] = useRef([]).current;
-
+  const isMobile = useIsMobile();
   const lastMouse = useRef<Vector2>(new Vector2());
   const hasMoved = useRef<boolean>(false);
-
-  const onPointerMove = useCallback(
-    (event: PointerEvent) => {
-      const deltaX = event.clientX - lastMouse.current.x;
-      const deltaY = event.clientY - lastMouse.current.y;
-
-      if (!hasMoved.current) {
-        hasMoved.current = true;
-        lastMouse.current.set(event.clientX, event.clientY);
-      }
-
-      lastMouse.current.set(event.clientX, event.clientY);
-
-      if (!hasMoved.current) return;
-
-      splatStack.push({
-        mouseX: event.clientX / size.width,
-        mouseY: 1.0 - event.clientY / size.height,
-        velocityX: deltaX * force,
-        velocityY: -deltaY * force,
-      });
-    },
-    [force, size.height, size.width, splatStack],
-  );
 
   const createRadialSplats = useCallback(
     (x: number, y: number, numSplats = 16) => {
@@ -74,6 +51,30 @@ export const usePointer = ({ force }: { force: number }) => {
     [force, size.width, size.height, splatStack],
   );
 
+  const onPointerMove = useCallback(
+    (event: PointerEvent) => {
+      const deltaX = event.clientX - lastMouse.current.x;
+      const deltaY = event.clientY - lastMouse.current.y;
+
+      if (!hasMoved.current) {
+        hasMoved.current = true;
+        lastMouse.current.set(event.clientX, event.clientY);
+      }
+
+      lastMouse.current.set(event.clientX, event.clientY);
+
+      if (!hasMoved.current) return;
+
+      splatStack.push({
+        mouseX: event.clientX / size.width,
+        mouseY: 1.0 - event.clientY / size.height,
+        velocityX: deltaX * force,
+        velocityY: -deltaY * force,
+      });
+    },
+    [force, size.height, size.width, splatStack],
+  );
+
   const onPointerDown = useCallback(
     (event: PointerEvent) => {
       createRadialSplats(event.clientX, event.clientY);
@@ -81,14 +82,56 @@ export const usePointer = ({ force }: { force: number }) => {
     [createRadialSplats],
   );
 
+  const onTouchMove = useCallback(
+    (event: TouchEvent) => {
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - lastMouse.current.x;
+      const deltaY = touch.clientY - lastMouse.current.y;
+
+      if (!hasMoved.current) {
+        hasMoved.current = true;
+        lastMouse.current.set(touch.clientX, touch.clientY);
+      }
+
+      lastMouse.current.set(touch.clientX, touch.clientY);
+
+      if (!hasMoved.current) return;
+
+      splatStack.push({
+        mouseX: touch.clientX / size.width,
+        mouseY: 1.0 - touch.clientY / size.height,
+        velocityX: deltaX * force,
+        velocityY: -deltaY * force,
+      });
+    },
+    [force, size.height, size.width, splatStack],
+  );
+
+  // const onTouchStart = useCallback(
+  //   (event: TouchEvent) => {
+  //     const touch = event.touches[0];
+  //     createRadialSplats(touch.clientX, touch.clientY);
+  //   },
+  //   [createRadialSplats],
+  // );
+
   useEffect(() => {
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => {
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [onPointerDown, onPointerMove]);
+    if (isMobile) {
+      document.addEventListener('touchmove', onTouchMove);
+      // document.addEventListener('touchstart', onTouchStart);
+      return () => {
+        document.removeEventListener('touchmove', onTouchMove);
+        // document.removeEventListener('touchstart', onTouchStart);
+      };
+    } else {
+      document.addEventListener('pointermove', onPointerMove);
+      document.addEventListener('pointerdown', onPointerDown);
+      return () => {
+        document.removeEventListener('pointermove', onPointerMove);
+        document.removeEventListener('pointerdown', onPointerDown);
+      };
+    }
+  }, [onPointerDown, onPointerMove, onTouchMove, isMobile]);
 
   return { splatStack };
 };

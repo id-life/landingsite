@@ -71,7 +71,6 @@
     overflow: hidden;
 
     &.fund {
-      min-height: 300svh;
       @apply mobile:min-h-[200svh];
     }
 
@@ -99,6 +98,11 @@
 
   .svg-icon {
     @apply transition-all duration-300 ease-in group-hover:stroke-red-600;
+  }
+
+  .bilingual-font {
+    /* 设置字体优先级：先尝试 Oxanium (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
+    font-family: var(--font-oxanium), var(--font-source-han-sans-cn), sans-serif;
   }
 }
 

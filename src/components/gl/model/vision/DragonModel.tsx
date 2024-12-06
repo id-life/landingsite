@@ -46,6 +46,8 @@ export default function DragonModel(props: {}) {
       },
       onDrag: ({ active, movement: [x, y] }) => {
         if (!modelRef.current || isRecoveringRef.current) return;
+        if (!smootherRef.current) return;
+        smootherRef.current.paused(active);
         if (active) {
           autoSwingRef.current = false;
           events.connected.style.cursor = 'grabbing';
@@ -73,7 +75,7 @@ export default function DragonModel(props: {}) {
         }
       },
     },
-    { drag: { filterTaps: true } },
+    { drag: { filterTaps: true, preventScroll: true } },
   );
 
   useGSAP(
@@ -100,39 +102,39 @@ export default function DragonModel(props: {}) {
     },
     { scope: modelRef },
   );
-  useGSAP(() => {
-    if (!isMobile) return;
-    const tl = gsap.timeline({
-      repeat: -1,
-      smoothChildTiming: true, // 添加平滑过渡
-      defaults: { duration: 4, ease: 'linear' },
-      onUpdate: () => {
-        if (!camera) return;
-        camera.lookAt(0, 0, 0);
-      },
-    });
-    tl.to(camera.position, mobileLoopAnim.camera.position[0])
-      .to(camera.position, mobileLoopAnim.camera.position[1])
-      .to(camera.position, mobileLoopAnim.camera.position[2])
-      .to(camera.position, mobileLoopAnim.camera.position[3])
-      .to(camera.position, { x: 0, y: 0, z: 10 });
-    tlRef.current = tl;
-    return () => {
-      tl.kill();
-    };
-  }, [camera, isMobile]);
+  // useGSAP(() => {
+  //   if (!isMobile) return;
+  //   const tl = gsap.timeline({
+  //     repeat: -1,
+  //     smoothChildTiming: true, // 添加平滑过渡
+  //     defaults: { duration: 4, ease: 'linear' },
+  //     onUpdate: () => {
+  //       if (!camera) return;
+  //       camera.lookAt(0, 0, 0);
+  //     },
+  //   });
+  //   // tl.to(camera.position, mobileLoopAnim.camera.position[0])
+  //   //   .to(camera.position, mobileLoopAnim.camera.position[1])
+  //   //   .to(camera.position, mobileLoopAnim.camera.position[2])
+  //   //   .to(camera.position, mobileLoopAnim.camera.position[3])
+  //   //   .to(camera.position, { x: 0, y: 0, z: 10 });
+  //   // tlRef.current = tl;
+  //   return () => {
+  //     tl.kill();
+  //   };
+  // }, [camera, isMobile]);
 
-  useEffect(() => {
-    if (!isMobile) return;
-    if (currentPage.id === NAV_LIST[0].id) {
-      tlRef.current?.play();
-      camera.lookAt(0, 0, 0);
-    } else {
-      tlRef.current?.pause();
-      camera.quaternion.identity(); // 重置相机方向为默认值
-      camera.position.set(0, 0, 10);
-    }
-  }, [isMobile, currentPage, camera]);
+  // useEffect(() => {
+  //   if (!isMobile) return;
+  //   if (currentPage.id === NAV_LIST[0].id) {
+  //     tlRef.current?.play();
+  //     camera.lookAt(0, 0, 0);
+  //   } else {
+  //     tlRef.current?.pause();
+  //     camera.quaternion.identity(); // 重置相机方向为默认值
+  //     camera.position.set(0, 0, 10);
+  //   }
+  // }, [isMobile, currentPage, camera]);
 
   return (
     <group

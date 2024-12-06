@@ -32,6 +32,12 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
           child.material = material;
           meshRef.current.push(child);
         }
+        if (child.name === 'Object_14') {
+          child.material.emissive = new THREE.Color('#CCCCCC').convertLinearToSRGB();
+          child.material.opacity = 0.2;
+          child.material.transparent = true;
+          child.material.emissiveIntensity = true;
+        }
       }
     });
   }, [scene]);

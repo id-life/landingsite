@@ -1,22 +1,26 @@
 'use client';
 
-import React from 'react';
-import gsap from 'gsap';
+import Footer from '@/app/footer/Footer';
 import Portfolio from '@/app/portfolio/Portfolio';
-import { useGSAP } from '@gsap/react';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
-import { useSetAtom } from 'jotai/index';
 import { currentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
-import Footer from '@/app/footer/Footer';
+import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useSetAtom } from 'jotai/index';
+import { useCallback } from 'react';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const isMobile = useIsMobile();
+
+  const enableScroll = useCallback(() => {
+    if (isMobile) document.body.style.overflow = '';
+  }, [isMobile]);
 
   useGSAP(
     () => {
@@ -30,9 +34,11 @@ export default function Home() {
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[0]);
+            enableScroll();
           },
           onEnterBack: () => {
             setCurrentPage(NAV_LIST[0]);
+            enableScroll();
           },
         },
       });
@@ -47,7 +53,7 @@ export default function Home() {
       const valueTL = gsap.timeline({
         scrollTrigger: {
           trigger: `#${NAV_LIST[2].id}`,
-          start: 'top bottom+=400',
+          start: isMobile ? 'top bottom+=500' : 'top bottom+=400',
           end: 'top center',
           scrub: true,
           onEnter: () => {
@@ -66,7 +72,7 @@ export default function Home() {
       });
       valueTL.to('.base-background2', { opacity: 1 });
     },
-    { dependencies: [isMobile] },
+    { dependencies: [isMobile, enableScroll] },
   );
 
   return (
