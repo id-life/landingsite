@@ -27,7 +27,7 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
     animation: 2,
     mesh: [
       { name: 'Object_12', reflectivity: 0.04, anisotropy: 0.5 },
-      { name: 'Object_14', reflectivity: 0.1, anisotropy: 0.5 },
+      // { name: 'Object_14', reflectivity: 0.1, anisotropy: 0.5 },
     ],
   },
 ] as const;
