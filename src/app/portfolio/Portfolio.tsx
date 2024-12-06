@@ -314,7 +314,7 @@ function Portfolio() {
   }, [isEntered]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
+    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
       {!isMobile && active && <ParticleGL activeAnim={active} imageIdx={imageIdx} id="particle-container" />}
       {isMobile && <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx1} id="particle-container-mobile-1" />}
       {isMobile && <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />}

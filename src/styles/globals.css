@@ -71,7 +71,6 @@
     overflow: hidden;
 
     &.fund {
-      min-height: 300svh;
       @apply mobile:min-h-[200svh];
     }
 
