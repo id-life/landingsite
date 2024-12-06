@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 export type Position = {
@@ -25,7 +25,6 @@ export default function ValueGL() {
   const title2Ref = useRef<THREE.Group>(null);
   const title3Ref = useRef<THREE.Group>(null);
   const title4Ref = useRef<THREE.Group>(null);
-
   const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
   const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
@@ -33,8 +32,13 @@ export default function ValueGL() {
   const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
-  const isAnimating = useRef(false);
+  const canAnimatingRef = useRef(true);
   const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
+  const timer1Ref = useRef<NodeJS.Timeout | null>(null);
+
+  const enableScroll = useCallback(() => {
+    if (isMobile) document.body.style.overflow = '';
+  }, [isMobile]);
 
   const getScalePosition = useCallback(
     (pos: Position) => {
@@ -50,23 +54,31 @@ export default function ValueGL() {
     () => {
       const tl = gsap.timeline({
         scrollTrigger: {
-          immediateRender: false,
+          immediateRender: isMobile,
           trigger: `#${NAV_LIST[2].id}`,
-          start: 'top bottom+=500',
+          start: isMobile ? 'top bottom+=400' : 'top bottom+=500',
           end: 'top top',
           scrub: true,
+          onEnter: () => {
+            if (!isMobile) return;
+            canAnimatingRef.current = false;
+            if (timer1Ref.current) clearTimeout(timer1Ref.current);
+            timer1Ref.current = setTimeout(() => {
+              canAnimatingRef.current = true;
+            }, 3000);
+          },
+          onLeave: () => {
+            if (timer1Ref.current) clearTimeout(timer1Ref.current);
+          },
           onUpdate: (self) => {
-            if (!isMobile || isAnimating.current) return;
-            // console.log({ p: self.progress, d: self.direction, self });
-            if (self?.direction < 0) {
-              // console.log('scroll');
-              isAnimating.current = true;
+            if (!isMobile) return;
+            if (canAnimatingRef.current && self?.direction < 0) {
               const height = window.innerHeight;
               gsap.to(window, {
                 duration: 1.5,
                 scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
                 onComplete: () => {
-                  isAnimating.current = false;
+                  canAnimatingRef.current = false;
                 },
               });
             }
@@ -100,7 +112,7 @@ export default function ValueGL() {
       tl.fromTo(
         modelRef.current.rotation,
         { ...page1Config.from.model.rotation },
-        { ...page1Config.to.model.rotation, ease: 'power3.out' },
+        { ...page1Config.to.model.rotation, ease: 'power3.out', onComplete: enableScroll },
         '<',
       );
       tl.to('#page-value-1', { opacity: 1 }, '<30%');
@@ -432,6 +444,15 @@ export default function ValueGL() {
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
   };
+
+  // 清理计时器
+  useEffect(() => {
+    return () => {
+      if (timer1Ref.current) {
+        clearTimeout(timer1Ref.current);
+      }
+    };
+  }, []);
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;

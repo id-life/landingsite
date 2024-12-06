@@ -107,6 +107,14 @@ function Portfolio() {
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
   const swiperRef = useRef<SwiperType>();
 
+  const enableScroll = useCallback(() => {
+    if (isMobile) document.body.style.overflow = '';
+  }, [isMobile]);
+
+  const disableScroll = useCallback(() => {
+    if (isMobile) document.body.style.overflow = 'hidden';
+  }, [isMobile]);
+
   const handleFundClick = useCallback((item: PortfolioItem) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
@@ -295,15 +303,9 @@ function Portfolio() {
   // 添加 useEffect 来控制滚动
   useEffect(() => {
     if (isEntered) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      disableScroll();
     }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isEntered]);
+  }, [disableScroll, isEntered]);
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
@@ -357,6 +359,7 @@ function Portfolio() {
               onTouchEnd={(swiper) => {
                 // 检查是否在顶部且有向上拖动的动作
                 if (swiper.isBeginning && swiper.touches.diff > 50) {
+                  enableScroll();
                   gsap.to(window, {
                     duration: 1.5,
                     scrollTo: { y: `#${NAV_LIST[0].id}` },
@@ -366,7 +369,7 @@ function Portfolio() {
                 if (swiper.isEnd && swiper.touches.diff < -50) {
                   gsap.to(window, {
                     duration: 1.5,
-                    scrollTo: { y: `#${NAV_LIST[2].id}` },
+                    scrollTo: { y: `#${NAV_LIST[2].id}`, offsetY: 10 },
                   });
                 }
               }}
