@@ -363,6 +363,28 @@ export default function ValueGL() {
       '<',
     );
     tl.to(
+      modelRef.current.children[0].position,
+      {
+        x: 0,
+        y: 0,
+        z: -12,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
+    tl.to(
+      modelRef.current.children[1].position,
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
+    tl.to(
       modelRef.current.rotation,
       {
         ...(isMobile ? page3Config.to.model.mobileRot : page3Config.to.model.rotation),

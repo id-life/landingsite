@@ -77,7 +77,7 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props} scale={gltfConfig.scale}>
+    <group ref={ref} {...props} scale={gltfConfig.scale} position={[0, -10, 0]}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
