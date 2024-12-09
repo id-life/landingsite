@@ -135,6 +135,22 @@ export default function DragonModel(props: {}) {
         transmission: 1,
         roughness: 0.0,
         thickness: 10,
+        ior: 1,
+        chromaticAberration: 1,
+        anisotropy: 1,
+        distortion: 1,
+        distortionScale: 1,
+        temporalDistortion: 0.1,
+        clearcoat: 1,
+        metalness: 0,
+        onUpdate: () => {
+          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
+        },
+      })
+      .to(transmissionConfigRef.current, {
+        transmission: 1,
+        roughness: 0.0,
+        thickness: 10,
         ior: 3.16,
         chromaticAberration: 1,
         anisotropy: 1,
@@ -156,22 +172,6 @@ export default function DragonModel(props: {}) {
         anisotropy: 0,
         distortion: 1,
         distortionScale: 0.3,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.0,
-        thickness: 10,
-        ior: 1,
-        chromaticAberration: 1,
-        anisotropy: 1,
-        distortion: 1,
-        distortionScale: 1,
         temporalDistortion: 0.1,
         clearcoat: 1,
         metalness: 0,
