@@ -29,7 +29,7 @@ export default function DragonModel(props: {}) {
     anisotropy: 0.1,
     distortion: 0,
     distortionScale: 0.5,
-    temporalDistortion: 0,
+    temporalDistortion: 0.1,
     clearcoat: 0,
     metalness: 0.1,
   });
@@ -113,7 +113,7 @@ export default function DragonModel(props: {}) {
   useGSAP(() => {
     if (!meshRef.current) return;
     const mesh = meshRef.current.material as any;
-    const timeline = gsap.timeline({ repeat: -1, delay: 4, repeatDelay: 4, defaults: { ease: 'none', duration: 8 } });
+    const timeline = gsap.timeline({ repeat: -1, delay: 1, repeatDelay: 2, defaults: { ease: 'none', duration: 8 } });
     timeline
       .to(transmissionConfigRef.current, {
         transmission: 1,
@@ -156,7 +156,7 @@ export default function DragonModel(props: {}) {
         anisotropy: 0,
         distortion: 1,
         distortionScale: 0.3,
-        temporalDistortion: 0.06,
+        temporalDistortion: 0.1,
         clearcoat: 1,
         metalness: 0,
         onUpdate: () => {
@@ -172,7 +172,23 @@ export default function DragonModel(props: {}) {
         anisotropy: 1,
         distortion: 1,
         distortionScale: 1,
-        temporalDistortion: 0.2,
+        temporalDistortion: 0.1,
+        clearcoat: 1,
+        metalness: 0,
+        onUpdate: () => {
+          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
+        },
+      })
+      .to(transmissionConfigRef.current, {
+        transmission: 1,
+        roughness: 0.0,
+        thickness: 10,
+        ior: 1,
+        chromaticAberration: 1,
+        anisotropy: 1,
+        distortion: 1,
+        distortionScale: 1,
+        temporalDistortion: 0.1,
         clearcoat: 1,
         metalness: 0,
         onUpdate: () => {
@@ -188,7 +204,7 @@ export default function DragonModel(props: {}) {
         anisotropy: 0.1,
         distortion: 0,
         distortionScale: 0.5,
-        temporalDistortion: 0,
+        temporalDistortion: 0.1,
         clearcoat: 0,
         metalness: 0.1,
         onUpdate: () => {
