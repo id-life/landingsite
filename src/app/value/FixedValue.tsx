@@ -205,7 +205,7 @@ export default function FixedValue() {
             )}
           >
             <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{isCN ? item.cn.title : item.title}</h3>
-            <p className="mt-4 w-[29.125rem] text-base font-semibold mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
+            <p className="bilingual-font mt-4 w-[29.125rem] text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
               {isCN ? item.cn.content : item.content}
             </p>
             <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
