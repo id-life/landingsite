@@ -1,14 +1,15 @@
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
-import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import gsap from 'gsap';
+import * as THREE from 'three';
+import { useGSAP } from '@gsap/react';
+import { SplitText } from 'gsap/SplitText';
+import { useThree } from '@react-three/fiber';
+import { Center, Svg } from '@react-three/drei';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useGSAP } from '@gsap/react';
-import { Center, Svg } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
-import gsap from 'gsap';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { SplitText } from 'gsap/SplitText';
+import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
+import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 
 gsap.registerPlugin(SplitText);
 
@@ -20,6 +21,9 @@ export type Position = {
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 const defaultWidth = 1912;
+
+const randomIndex = Math.floor(Math.random() * 2);
+const modelConfig = MODEL_CONFIG[randomIndex];
 
 export default function ValueGL() {
   const { camera, size, scene } = useThree();
@@ -434,9 +438,9 @@ export default function ValueGL() {
     tl.to(
       modelRef.current.children[0].position,
       {
-        x: 0,
-        y: 0,
-        z: -12,
+        x: modelConfig.pos1[0].x,
+        y: modelConfig.pos1[0].y,
+        z: modelConfig.pos1[0].z,
         ease: 'power3.inOut',
         duration: 8,
       },
@@ -445,9 +449,9 @@ export default function ValueGL() {
     tl.to(
       modelRef.current.children[1].position,
       {
-        x: 0,
-        y: 0,
-        z: 0,
+        x: modelConfig.pos1[1].x,
+        y: modelConfig.pos1[1].y,
+        z: modelConfig.pos1[1].z,
         ease: 'power3.inOut',
         duration: 8,
       },
@@ -547,6 +551,9 @@ export default function ValueGL() {
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
+    modelRef.current.children[0].position.copy(modelConfig.init[0]);
+    modelRef.current.children[1].position.copy(modelConfig.init[1]);
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,

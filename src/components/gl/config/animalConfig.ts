@@ -32,25 +32,13 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
   },
 ] as const;
 
-export function useFBOs(length: number) {
-  return useMemo(
-    () =>
-      Array(length)
-        .fill(undefined)
-        .map((_) => [
-          new THREE.WebGLRenderTarget(256, 256, {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            type: THREE.HalfFloatType,
-            samples: 0,
-          }),
-          new THREE.WebGLRenderTarget(256, 256, {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            type: THREE.HalfFloatType,
-            samples: 0,
-          }),
-        ]),
-    [length],
-  );
-}
+export const MODEL_CONFIG = [
+  {
+    init: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 0)],
+    pos1: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
+  },
+  {
+    init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, 0, 0)],
+    pos1: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12)],
+  },
+];
