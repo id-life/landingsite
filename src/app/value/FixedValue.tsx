@@ -1,7 +1,9 @@
+import { isCNAtom } from '@/atoms/geo';
 import CnBtnSVG from '@/components/svg/CnBtnSVG';
 import EnBtnSVG from '@/components/svg/EnBtnSVG';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
+import { useAtom } from 'jotai';
 import { Fragment, useState, useEffect } from 'react';
 type ValueContentItem = {
   id: string;
@@ -115,11 +117,19 @@ const VALUE_CONTENT: ValueContentItem[] = [
         id="value-4-svg-mobile"
         className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-1/4 flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">{'A Virtuous\nCycle'}</span>
-        <span className="value-text-cn bilingual-font absolute left-0 top-20 text-[5rem]/[5rem] font-bold text-red-500">
+        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">
+          A Virtuous
+          <br />
+          Cycle
+        </span>
+        <span className="value-text-cn bilingual-font absolute inset-x-0 top-8 text-center text-[5rem]/[5rem] font-bold text-red-500">
           良性飞轮
         </span>
-        <span className="value-text-en">{'behind\nAudacity'}</span>
+        <span className="value-text-en">
+          behind
+          <br />
+          Audacity
+        </span>
       </h2>
     ),
   },
@@ -172,7 +182,7 @@ const END_CONTENT_2 = {
 
 export default function FixedValue() {
   const isMobile = useIsMobile();
-  const [isCN, setIsCN] = useState(false);
+  const [isCN, setIsCN] = useAtom(isCNAtom);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -180,7 +190,7 @@ export default function FixedValue() {
     }, 8000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isCN, setIsCN]);
 
   return (
     <>

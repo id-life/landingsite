@@ -6,6 +6,10 @@ import VisionGL from '@/components/gl/VisionGL';
 import { Html, useProgress } from '@react-three/drei';
 import { EffectComposer } from '@react-three/postprocessing';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useThrottle } from '@/hooks/useThrottle';
+import { isCNAtom } from '@/atoms/geo';
+import { useSetAtom } from 'jotai';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -37,6 +41,14 @@ function Loader() {
 }
 
 export default function ThreeWrapper() {
+  const setIsCN = useSetAtom(isCNAtom);
+  const isMobile = useIsMobile();
+
+  const handleClick = useThrottle(() => {
+    if (!isMobile) return;
+    setIsCN((prev) => !prev);
+  }, 200);
+
   return (
     <Canvas
       id="vision-canvas"
@@ -47,6 +59,7 @@ export default function ThreeWrapper() {
         antialias: true,
         powerPreference: 'high-performance',
       }}
+      onClick={handleClick}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
