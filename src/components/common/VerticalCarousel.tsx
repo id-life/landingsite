@@ -1,6 +1,6 @@
-import { useEffect, useRef, ReactNode, useMemo } from 'react';
-import gsap from 'gsap';
 import { cn } from '@/utils';
+import gsap from 'gsap';
+import { ReactNode, useEffect, useMemo, useRef } from 'react';
 
 interface VerticalCarouselProps {
   children: ReactNode[];
@@ -9,6 +9,7 @@ interface VerticalCarouselProps {
   duration?: number; // 停留时间(秒)
   transition?: number; // 过渡时间(秒)
   slideDown?: boolean; // 添加新属性：控制最后一个的时候是否向下滑动
+  itemClassName?: string;
 }
 
 export default function VerticalCarousel({
@@ -18,8 +19,13 @@ export default function VerticalCarousel({
   duration = 3,
   transition = 0.6,
   slideDown = false, // 添加新参数
+  itemClassName,
 }: VerticalCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const itemClass = useMemo(() => {
+    return cn('mobile:flex mobile:flex-col mobile:items-center mobile:justify-center', itemClassName);
+  }, [itemClassName]);
 
   const items = useMemo(
     () => (slideDown ? children.concat(children?.length ? children[0] : []) : children),
@@ -113,11 +119,15 @@ export default function VerticalCarousel({
     <div className={cn('overflow-hidden', className)} style={{ height: itemHeight }}>
       <div ref={containerRef} className="flex flex-col">
         {children.map((child, index) => (
-          <div key={index} style={{ height: itemHeight }}>
+          <div key={index} className={itemClass} style={{ height: itemHeight }}>
             {child}
           </div>
         ))}
-        {slideDown && <div style={{ height: itemHeight }}>{children[0]}</div>}
+        {slideDown && (
+          <div className={itemClass} style={{ height: itemHeight }}>
+            {children[0]}
+          </div>
+        )}
       </div>
     </div>
   );
