@@ -30,9 +30,10 @@ export default function Vision() {
         </div>
         {isMobile && (
           <VerticalCarousel
+            isShuffle
             slideDown
             itemHeight={isMobile ? 36 : 48}
-            duration={10}
+            duration={5}
             transition={0.6}
             className="fixed-logo absolute mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
           >

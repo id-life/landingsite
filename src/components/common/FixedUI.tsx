@@ -77,6 +77,7 @@ export default function FixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
       {!isMobile && (
         <VerticalCarousel
+          isShuffle
           slideDown
           itemHeight={isMobile ? 36 : 48}
           duration={10}

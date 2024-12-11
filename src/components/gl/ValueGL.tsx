@@ -626,10 +626,11 @@ export default function ValueGL() {
       },
       '<',
     );
-    if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 3.5, ease: 'power3.out' }, '<');
-    tl.to('#value-end-2', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-    tl.to('#value-end-1', { autoAlpha: 0, duration: 3.5, ease: 'none' });
-    tl.to('#value-end-2', { autoAlpha: 0, duration: 3.5, ease: 'none' }, '<');
+    if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'power3.out' }, '<');
+    tl.to('#value-end-2', { autoAlpha: 1, duration: 5, ease: 'power3.out' }, '-=3.5');
+    tl.to({}, { duration: 10 }); // 停顿
+    tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
+    tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
 
   return (

@@ -149,7 +149,17 @@ const END_CONTENT_1 = {
   },
 };
 
-const END_CONTENT_2 = {
+const END_CONTENT_2: {
+  en: {
+    title: string;
+    content: string;
+  }[];
+  cn: {
+    title: string;
+    content: string;
+    mobileContent?: string;
+  }[];
+} = {
   en: [
     {
       title: 'East/West Access',
@@ -168,10 +178,12 @@ const END_CONTENT_2 = {
     {
       title: '贯通东西:\n',
       content: '立足东西方市场，打通市场、资本、\n机构等多维资源',
+      mobileContent: '立足东西方市场，打通市场、资本、机构等多维资源',
     },
     {
       title: '专注领域:\n',
       content: '聚焦长寿生物科技，链接专家、人才\n及核心支持',
+      mobileContent: '聚焦长寿生物科技，链接专家、人才及核心支持',
     },
     {
       title: '以创始人为本:\n',
@@ -239,14 +251,23 @@ export default function FixedValue() {
           { 'w-auto': isCN },
         )}
       >
-        {(isCN ? END_CONTENT_2.cn : END_CONTENT_2.en).map((item, index) => (
-          <li key={index}>
-            {item.title}
-            <span className="mt-5 inline-block text-base/5 font-semibold mobile:mt-1 mobile:text-[.625rem]/3">
-              {item.content}
-            </span>
-          </li>
-        ))}
+        {isCN
+          ? END_CONTENT_2.cn.map((item, index) => (
+              <li key={index}>
+                {item.title}
+                <span className="mt-5 inline-block text-base/5 font-semibold mobile:mt-1 mobile:text-[.625rem]/3">
+                  {isMobile ? (item?.mobileContent ?? item.content) : item.content}
+                </span>
+              </li>
+            ))
+          : END_CONTENT_2.en.map((item, index) => (
+              <li key={index}>
+                {item.title}
+                <span className="mt-5 inline-block text-base/5 font-semibold mobile:mt-1 mobile:text-[.625rem]/3">
+                  {item.content}
+                </span>
+              </li>
+            ))}
       </ul>
     </>
   );

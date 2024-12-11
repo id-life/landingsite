@@ -1,7 +1,8 @@
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { ReactNode, useEffect, useMemo, useRef } from 'react';
-
+import { shuffle } from 'lodash-es';
+import { useIsMounted } from '@/hooks/useIsMounted';
 interface VerticalCarouselProps {
   children: ReactNode[];
   className?: string;
@@ -9,6 +10,7 @@ interface VerticalCarouselProps {
   duration?: number; // 停留时间(秒)
   transition?: number; // 过渡时间(秒)
   slideDown?: boolean; // 添加新属性：控制最后一个的时候是否向下滑动
+  isShuffle?: boolean; // 添加新属性：是否打乱顺序
   itemClassName?: string;
 }
 
@@ -19,18 +21,23 @@ export default function VerticalCarousel({
   duration = 3,
   transition = 0.6,
   slideDown = false, // 添加新参数
+  isShuffle = false, // 添加默认值
   itemClassName,
 }: VerticalCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const isMounted = useIsMounted();
   const itemClass = useMemo(() => {
     return cn('mobile:flex mobile:flex-col mobile:items-center mobile:justify-center', itemClassName);
   }, [itemClassName]);
 
-  const items = useMemo(
-    () => (slideDown ? children.concat(children?.length ? children[0] : []) : children),
-    [slideDown, children],
-  );
+  const items = useMemo(() => {
+    if (!isMounted) return children;
+    let result = [...children];
+    if (isShuffle) {
+      result = shuffle(result);
+    }
+    return slideDown ? result.concat(result?.length ? result[0] : []) : result;
+  }, [children, isMounted, isShuffle, slideDown]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -118,14 +125,14 @@ export default function VerticalCarousel({
   return (
     <div className={cn('overflow-hidden', className)} style={{ height: itemHeight }}>
       <div ref={containerRef} className="flex flex-col">
-        {children.map((child, index) => (
+        {items.map((child, index) => (
           <div key={index} className={itemClass} style={{ height: itemHeight }}>
             {child}
           </div>
         ))}
         {slideDown && (
           <div className={itemClass} style={{ height: itemHeight }}>
-            {children[0]}
+            {items[0]}
           </div>
         )}
       </div>
