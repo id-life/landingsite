@@ -24,7 +24,7 @@ export default function Vision() {
   return (
     <div ref={wrapperRef} id={NAV_LIST[0].id} className="page-container">
       <div ref={visionBottomRef} className="group pointer-events-none absolute inset-0 -z-10 select-none">
-        <div className="absolute left-1/2 top-[calc(100svh_-_6rem)] -translate-x-1/2 items-center gap-2 mobile:top-[calc(100svh_-_4.625rem)] mobile:rounded-lg mobile:px-1.5 mobile:py-2">
+        <div className="absolute left-1/2 top-[calc(100svh_-_6rem)] -translate-x-1/2 items-center gap-2 mobile:top-[calc(100svh_-5.625rem)] mobile:rounded-lg mobile:px-1.5 mobile:py-2">
           <VisionDecorationBottomScrollSVG className="mx-auto h-12 w-10 mobile:h-9 mobile:w-7.5" />
           <p className="font-migrena text-xl/6 font-bold uppercase mobile:text-xs/5">SCROLL</p>
         </div>
@@ -35,7 +35,7 @@ export default function Vision() {
             itemHeight={isMobile ? 36 : 48}
             duration={5}
             transition={0.6}
-            className="fixed-logo absolute mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
+            className="fixed-logo pointer-events-none absolute inset-x-0 top-[calc(50svh_+_8.5rem)] w-auto -translate-y-1/2"
           >
             {CAROUSEL_ITEMS.map((item) => (
               <CarouselItem key={item.text} {...item} />
