@@ -22,7 +22,7 @@ export type Position = {
 const centerPoint = new THREE.Vector3(0, -10, 0);
 const defaultWidth = 1912;
 
-const randomIndex = Math.floor(Math.random() * 2);
+const randomIndex = Math.floor(Math.random() * 6);
 const modelConfig = MODEL_CONFIG[randomIndex];
 
 export default function ValueGL() {
@@ -458,6 +458,17 @@ export default function ValueGL() {
       '<',
     );
     tl.to(
+      modelRef.current.children[2].position,
+      {
+        x: modelConfig.pos1[2].x,
+        y: modelConfig.pos1[2].y,
+        z: modelConfig.pos1[2].z,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
+    tl.to(
       modelRef.current.rotation,
       {
         ...(isMobile ? page3Config.to.model.mobileRot : page3Config.to.model.rotation),
@@ -553,6 +564,7 @@ export default function ValueGL() {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
     modelRef.current.children[0].position.copy(modelConfig.init[0]);
     modelRef.current.children[1].position.copy(modelConfig.init[1]);
+    modelRef.current.children[2].position.copy(modelConfig.init[2]);
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -587,6 +599,39 @@ export default function ValueGL() {
       duration: 8,
       ease: 'power3.inOut',
     });
+    tl.to(
+      modelRef.current.children[0].position,
+      {
+        x: modelConfig.pos2[0].x,
+        y: modelConfig.pos2[0].y,
+        z: modelConfig.pos2[0].z,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
+    tl.to(
+      modelRef.current.children[1].position,
+      {
+        x: modelConfig.pos2[1].x,
+        y: modelConfig.pos2[1].y,
+        z: modelConfig.pos2[1].z,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
+    tl.to(
+      modelRef.current.children[2].position,
+      {
+        x: modelConfig.pos2[2].x,
+        y: modelConfig.pos2[2].y,
+        z: modelConfig.pos2[2].z,
+        ease: 'power3.inOut',
+        duration: 8,
+      },
+      '<',
+    );
     tl.to(
       camera.position,
       {

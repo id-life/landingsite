@@ -25,20 +25,45 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
     path: 'https://cdn.id.life/animal3.glb',
     scale: 1.1,
     animation: 2,
-    mesh: [
-      { name: 'Object_12', reflectivity: 0.04, anisotropy: 0.5 },
-      // { name: 'Object_14', reflectivity: 0.1, anisotropy: 0.5 },
-    ],
+    mesh: [{ name: 'Object_12', reflectivity: 0.04, anisotropy: 0.5 }],
+  },
+  {
+    path: 'https://cdn.id.life/animal4.glb',
+    scale: 40,
+    animation: 0,
+    mesh: [{ name: 'Object_11', reflectivity: 0.04, anisotropy: 0.5 }],
   },
 ] as const;
 
 export const MODEL_CONFIG = [
   {
-    init: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 0)],
-    pos1: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
+    init: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 0), new THREE.Vector3(-10, -10, -10)],
+    pos1: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0), new THREE.Vector3(-10, -10, -10)],
+    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
   },
   {
-    init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, 0, 0)],
-    pos1: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12)],
+    init: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 0), new THREE.Vector3(-10, -10, -10)],
+    pos1: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, -10, -10), new THREE.Vector3(0, 0, 0)],
+    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12)],
+  },
+  {
+    init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 10)],
+    pos1: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, -10, 10)],
+    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
+  },
+  {
+    init: [new THREE.Vector3(0, -10, -5), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 10)],
+    pos1: [new THREE.Vector3(0, -10, -5), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
+    pos2: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12)],
+  },
+  {
+    init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, -10, 0), new THREE.Vector3(0, 0, 0)],
+    pos1: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12)],
+    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12)],
+  },
+  {
+    init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, -10, 0), new THREE.Vector3(0, 0, 0)],
+    pos1: [new THREE.Vector3(0, -10, -5), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12)],
+    pos2: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12)],
   },
 ];
