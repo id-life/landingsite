@@ -29,7 +29,7 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
   },
   {
     path: 'https://cdn.id.life/animal4.glb',
-    scale: 40,
+    scale: 55,
     animation: 0,
     mesh: [{ name: 'Object_11', reflectivity: 0.04, anisotropy: 0.5 }],
   },
