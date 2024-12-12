@@ -39,8 +39,8 @@ export default function Logo() {
 
   return (
     <div className="relative h-10 w-55" onClick={handleClick}>
-      <LogoSVGen className="absolute left-0 top-0 h-full cursor-pointer mobile:h-5" />
-      <LogoSVGcn className="absolute left-0 top-0 h-full cursor-pointer opacity-0 mobile:h-5" />
+      <LogoSVGen className="absolute left-0 top-0 h-full cursor-pointer mobile:top-1/2 mobile:h-5 mobile:-translate-y-1/2" />
+      <LogoSVGcn className="absolute left-0 top-1/2 h-7.5 -translate-y-1/2 cursor-pointer opacity-0 mobile:h-5" />
     </div>
   );
 }
