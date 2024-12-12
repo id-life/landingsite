@@ -72,7 +72,10 @@ export default function Nav() {
         {NAV_LIST.map((item) => (
           <div
             onClick={() => handleNavClick(item)}
-            className={clsx('nav-item relative cursor-pointer uppercase', currentPage.id === item.id && 'nav-active')}
+            className={clsx(
+              'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',
+              currentPage.id === item.id && 'nav-active',
+            )}
             key={item.id}
           >
             {item.title}

@@ -1,7 +1,9 @@
+import { isCNAtom } from '@/atoms/geo';
 import CnBtnSVG from '@/components/svg/CnBtnSVG';
 import EnBtnSVG from '@/components/svg/EnBtnSVG';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
+import { useAtom } from 'jotai';
 import { Fragment, useState, useEffect } from 'react';
 type ValueContentItem = {
   id: string;
@@ -30,8 +32,15 @@ const VALUE_CONTENT: ValueContentItem[] = [
         id="value-1-svg-mobile"
         className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap font-oxanium font-semibold uppercase opacity-0"
       >
-        <span className="text-[3.625rem]/[3.625rem] text-red-500">A purpose-driven</span>
-        <span className="text-[3.125rem]/[3.125rem]">longevity fund</span>
+        <span className="value-text-en whitespace-pre-wrap text-[3.625rem]/[3.625rem] text-red-500">
+          A purpose-
+          <br />
+          driven
+        </span>
+        <span className="value-text-cn bilingual-font absolute left-0 top-8 text-[5rem]/[5rem] font-bold text-red-500">
+          使命驱动
+        </span>
+        <span className="value-text-en text-[3.125rem]/[3.125rem]">longevity fund</span>
       </h2>
     ),
   },
@@ -51,9 +60,16 @@ const VALUE_CONTENT: ValueContentItem[] = [
         id="value-2-svg-mobile"
         className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-1/3 flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span>Discovering</span>
-        <span className="text-[3.625rem]/[3.625rem] text-red-500">Champions</span>
-        <span className="whitespace-pre-wrap">{'in\nLongevity Biotech'}</span>
+        <span className="value-text-en">Discovering</span>
+        <span className="value-text-en mt-5 text-[3.625rem]/[3.625rem] tracking-tight text-red-500">Champions</span>
+        <span className="value-text-cn bilingual-font absolute left-0 top-18 text-[5rem]/[5rem] font-bold text-red-500">
+          领军
+        </span>
+        <span className="value-text-en mt-5 whitespace-pre-wrap">
+          in
+          <br />
+          Longevity Biotech
+        </span>
       </h2>
     ),
   },
@@ -71,8 +87,17 @@ const VALUE_CONTENT: ValueContentItem[] = [
         id="value-3-svg-mobile"
         className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span>{'Longevity\nBiotech\nIs A'}</span>
-        <span className="text-[3.625rem]/[3.625rem] text-red-500">{'Moral\nImperative'}</span>
+        <span className="value-text-en">
+          Longevity
+          <br />
+          Biotech
+          <br />
+          Is A
+        </span>
+        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">{'Moral\nImperative'}</span>
+        <span className="value-text-cn bilingual-font absolute left-0 top-40 text-[5rem]/[5rem] font-bold text-red-500">
+          必然
+        </span>
       </h2>
     ),
   },
@@ -92,8 +117,19 @@ const VALUE_CONTENT: ValueContentItem[] = [
         id="value-4-svg-mobile"
         className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-1/4 flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span className="text-[3.625rem]/[3.625rem] text-red-500">{'A Virtuous\nCycle'}</span>
-        <span>{'behind\nAudacity'}</span>
+        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">
+          A Virtuous
+          <br />
+          Cycle
+        </span>
+        <span className="value-text-cn bilingual-font absolute inset-x-0 top-8 text-center text-[5rem]/[5rem] font-bold text-red-500">
+          良性飞轮
+        </span>
+        <span className="value-text-en">
+          behind
+          <br />
+          Audacity
+        </span>
       </h2>
     ),
   },
@@ -113,7 +149,17 @@ const END_CONTENT_1 = {
   },
 };
 
-const END_CONTENT_2 = {
+const END_CONTENT_2: {
+  en: {
+    title: string;
+    content: string;
+  }[];
+  cn: {
+    title: string;
+    content: string;
+    mobileContent?: string;
+  }[];
+} = {
   en: [
     {
       title: 'East/West Access',
@@ -132,10 +178,12 @@ const END_CONTENT_2 = {
     {
       title: '贯通东西:\n',
       content: '立足东西方市场，打通市场、资本、\n机构等多维资源',
+      mobileContent: '立足东西方市场，打通市场、资本、机构等多维资源',
     },
     {
       title: '专注领域:\n',
       content: '聚焦长寿生物科技，链接专家、人才\n及核心支持',
+      mobileContent: '聚焦长寿生物科技，链接专家、人才及核心支持',
     },
     {
       title: '以创始人为本:\n',
@@ -146,7 +194,7 @@ const END_CONTENT_2 = {
 
 export default function FixedValue() {
   const isMobile = useIsMobile();
-  const [isCN, setIsCN] = useState(false);
+  const [isCN, setIsCN] = useAtom(isCNAtom);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -154,7 +202,7 @@ export default function FixedValue() {
     }, 8000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isCN, setIsCN]);
 
   return (
     <>
@@ -169,7 +217,7 @@ export default function FixedValue() {
             )}
           >
             <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{isCN ? item.cn.title : item.title}</h3>
-            <p className="mt-4 w-[29.125rem] text-base font-semibold mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
+            <p className="bilingual-font mt-4 w-[29.125rem] text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
               {isCN ? item.cn.content : item.content}
             </p>
             <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
@@ -203,14 +251,23 @@ export default function FixedValue() {
           { 'w-auto': isCN },
         )}
       >
-        {(isCN ? END_CONTENT_2.cn : END_CONTENT_2.en).map((item, index) => (
-          <li key={index}>
-            {item.title}
-            <span className="mt-5 inline-block text-base/5 font-medium mobile:mt-1 mobile:text-[.625rem]/3">
-              {item.content}
-            </span>
-          </li>
-        ))}
+        {isCN
+          ? END_CONTENT_2.cn.map((item, index) => (
+              <li key={index}>
+                {item.title}
+                <span className="mt-5 inline-block text-base/5 font-semibold mobile:mt-1 mobile:text-[.625rem]/3">
+                  {isMobile ? (item?.mobileContent ?? item.content) : item.content}
+                </span>
+              </li>
+            ))
+          : END_CONTENT_2.en.map((item, index) => (
+              <li key={index}>
+                {item.title}
+                <span className="mt-5 inline-block text-base/5 font-semibold mobile:mt-1 mobile:text-[.625rem]/3">
+                  {item.content}
+                </span>
+              </li>
+            ))}
       </ul>
     </>
   );

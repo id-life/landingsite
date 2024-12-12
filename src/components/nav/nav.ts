@@ -5,14 +5,14 @@ export type NavItem = {
 export const NAV_LIST: NavItem[] = [
   {
     id: 'vision_page',
-    title: 'vision',
+    title: 'mission 使命',
   },
   {
     id: 'portfolio_page',
-    title: 'portfolio',
+    title: 'portfolio 投资',
   },
   {
     id: 'value_page',
-    title: 'value',
+    title: 'value 信念',
   },
 ];

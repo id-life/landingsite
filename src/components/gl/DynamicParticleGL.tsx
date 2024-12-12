@@ -22,7 +22,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   };
   const closeEnoughTarget = 100;
   const speed = 3;
-  const particleSize = IS_MOBILE ? 6 : 8;
+  const particleSize = IS_MOBILE ? 4 : 8;
   const mouseSize = 50;
   const scaleRatio = 1;
   let activeAnim = false;
