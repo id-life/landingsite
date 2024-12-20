@@ -32,13 +32,13 @@ export default function Vision() {
           <VerticalCarousel
             isShuffle
             slideDown
-            itemHeight={36}
+            itemHeight={40}
             duration={5}
             transition={0.6}
             className="fixed-logo pointer-events-none absolute inset-x-0 top-[calc(50svh_+_8.5rem)] w-auto -translate-y-1/2"
           >
             {CAROUSEL_ITEMS.map((item) => (
-              <CarouselItem key={item.text} {...item} />
+              <CarouselItem key={item.cnText ?? item.text} {...item} />
             ))}
           </VerticalCarousel>
         )}

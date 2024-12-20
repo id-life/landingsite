@@ -13,8 +13,8 @@ export default function LogoSVGcn({ className }: { className?: string }) {
       <path d="M90.6299 10.875V22.7387H94.1698V10.875H90.6299Z" fill="var(--foreground)" />
       <path d="M101.571 21.4205V10.875H105.111V21.4205H101.571Z" fill="var(--foreground)" />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M137.901 8.89774V10.875H124.707V18.4546H146.108V19.7727H123.098V23.3977H155.601V19.7727H153.992V17.3012C153.992 13.7521 151.182 10.875 147.717 10.875H141.441V8.89774H155.601V5.27274H141.441V3.29547H137.901V5.27274H123.098V8.89774H137.901ZM151.096 19.7727V17.3012C151.096 15.3901 149.583 13.8409 147.717 13.8409H127.604V15.4887H149.004V19.7727H151.096Z"
         fill="var(--foreground)"
       />
