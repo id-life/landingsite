@@ -32,7 +32,7 @@ export default function Vision() {
           <VerticalCarousel
             isShuffle
             slideDown
-            itemHeight={isMobile ? 36 : 48}
+            itemHeight={36}
             duration={5}
             transition={0.6}
             className="fixed-logo pointer-events-none absolute inset-x-0 top-[calc(50svh_+_8.5rem)] w-auto -translate-y-1/2"

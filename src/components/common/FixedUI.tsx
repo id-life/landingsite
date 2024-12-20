@@ -79,8 +79,8 @@ export default function FixedUI() {
         <VerticalCarousel
           isShuffle
           slideDown
-          itemHeight={isMobile ? 36 : 48}
-          duration={10}
+          itemHeight={48}
+          duration={5}
           transition={0.6}
           className="fixed bottom-10 left-10 w-[25rem] mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
         >
