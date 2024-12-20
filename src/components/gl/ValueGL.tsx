@@ -23,7 +23,7 @@ const centerPoint = new THREE.Vector3(0, -10, 0);
 const defaultWidth = 1912;
 
 const randomIndex = Math.floor(Math.random() * 6);
-const modelConfig = MODEL_CONFIG[randomIndex];
+const modelConfig = MODEL_CONFIG[2];
 
 export default function ValueGL() {
   const { camera, size, scene } = useThree();
