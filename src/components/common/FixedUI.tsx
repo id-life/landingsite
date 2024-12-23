@@ -20,7 +20,7 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   {
     text: 'Immortal Dragons is a purpose-driven longevity fund',
     icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
-    textClass: 'mobile:w-[16.25rem]',
+    textClass: 'mobile:w-[16.25rem] w-[18.125rem]',
   },
   {
     cnText: '破解永生密码',
@@ -45,7 +45,7 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   {
     text: 'Setting forth unlimited human healthy lifespan',
     icon: <VisionDecorationLogo_4 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
-    textClass: 'mobile:w-[15.125rem]',
+    textClass: 'mobile:w-[15.125rem] w-[17.25rem]',
   },
   {
     cnText: '重塑人类寿命极限',
@@ -54,7 +54,7 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   {
     text: 'Bringing global awareness of longevity',
     icon: <VisionDecorationLogo_5 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
-    textClass: 'mobile:w-[13.625rem]',
+    textClass: 'mobile:w-[13.625rem] w-[17.125rem]',
   },
   {
     cnText: '连接全球创新网络',
@@ -63,7 +63,7 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   {
     text: 'Harnessing collective recognition of the significance of Longevity',
     icon: <VisionDecorationLogo_6 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
-    textClass: 'mobile:w-[17.375rem]',
+    textClass: 'mobile:w-[17.375rem w-[19.875rem]',
   },
   {
     cnText: '加速长寿技术革命',
@@ -119,18 +119,11 @@ export function CarouselItem({
   const content = useMemo(() => {
     if (text)
       return (
-        <p className={cn('line-clamp-2 text-base/4.5 mobile:text-center mobile:text-sm/4.5 mobile:font-bold', textClass)}>
-          {text}
-        </p>
+        <p className={cn('line-clamp-2 text-center text-base/4.5 mobile:text-sm/4.5 mobile:font-bold', textClass)}>{text}</p>
       );
     if (cnText)
       return (
-        <p
-          className={cn(
-            'bilingual-font line-clamp-2 text-xl/6 mobile:text-center mobile:text-base/5 mobile:font-bold',
-            textClass,
-          )}
-        >
+        <p className={cn('bilingual-font line-clamp-2 text-center text-xl/6 mobile:text-base/5 mobile:font-bold', textClass)}>
           {cnText}
         </p>
       );
