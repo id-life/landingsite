@@ -19,10 +19,9 @@ export const usePointer = ({ force }: { force: number }) => {
   const hasMoved = useRef<boolean>(false);
 
   const createRadialSplats = useCallback(
-    (x: number, y: number, numSplats = 16) => {
-      const baseRadius = force * 16;
+    (x: number, y: number, numSplats = 16, forceRatio = 16) => {
+      const baseRadius = force * forceRatio;
       const numLayers = 8;
-
       splatStack.push({
         mouseX: x / size.width,
         mouseY: 1.0 - y / size.height,
@@ -107,21 +106,21 @@ export const usePointer = ({ force }: { force: number }) => {
     [force, size.height, size.width, splatStack],
   );
 
-  // const onTouchStart = useCallback(
-  //   (event: TouchEvent) => {
-  //     const touch = event.touches[0];
-  //     createRadialSplats(touch.clientX, touch.clientY);
-  //   },
-  //   [createRadialSplats],
-  // );
+  const onTouchStart = useCallback(
+    (event: TouchEvent) => {
+      const touch = event.touches[0];
+      createRadialSplats(touch.clientX, touch.clientY, 3, 4);
+    },
+    [createRadialSplats],
+  );
 
   useEffect(() => {
     if (isMobile) {
       document.addEventListener('touchmove', onTouchMove);
-      // document.addEventListener('touchstart', onTouchStart);
+      document.addEventListener('touchstart', onTouchStart);
       return () => {
         document.removeEventListener('touchmove', onTouchMove);
-        // document.removeEventListener('touchstart', onTouchStart);
+        document.removeEventListener('touchstart', onTouchStart);
       };
     } else {
       document.addEventListener('pointermove', onPointerMove);
@@ -131,7 +130,7 @@ export const usePointer = ({ force }: { force: number }) => {
         document.removeEventListener('pointerdown', onPointerDown);
       };
     }
-  }, [onPointerDown, onPointerMove, onTouchMove, isMobile]);
+  }, [onPointerDown, onPointerMove, onTouchMove, isMobile, onTouchStart]);
 
   return { splatStack };
 };
