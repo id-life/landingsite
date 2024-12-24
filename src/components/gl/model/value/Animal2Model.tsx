@@ -1,9 +1,11 @@
-import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
-import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
+import { model2VisibleAtom } from '@/atoms/geo';
 import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
+import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useAtomValue } from 'jotai';
+import { forwardRef, memo, Ref, useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 
 const backsideThickness = 1.5;
 const thickness = 5;
@@ -18,6 +20,7 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const [background] = useState(() => new THREE.Color('white'));
   const fboMain = useFBO(256, 256);
   const fboBack = useFBO(256, 256);
+  const visible = useAtomValue(model2VisibleAtom);
 
   useEffect(() => {
     if (!scene) return;
@@ -42,6 +45,9 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [actions, names]);
 
   useFrame(({ clock, gl, scene, camera }) => {
+    // 当不可见时跳过渲染循环
+    if (!visible) return;
+
     meshRef.current.forEach((mesh: any) => {
       mesh.material.time = clock.getElapsedTime();
       const oldTone = gl.toneMapping;
@@ -74,7 +80,7 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props} scale={gltfConfig.scale}>
+    <group ref={ref} {...props} scale={gltfConfig.scale} visible={visible}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
@@ -84,4 +90,4 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
 
 Animal2Model.displayName = 'Animal2Model';
 
-export default Animal2Model;
+export default memo(Animal2Model);

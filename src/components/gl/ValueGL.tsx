@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import gsap from 'gsap';
-import * as THREE from 'three';
-import { useGSAP } from '@gsap/react';
-import { SplitText } from 'gsap/SplitText';
-import { useThree } from '@react-three/fiber';
-import { Center, Svg } from '@react-three/drei';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { model2VisibleAtom, model3VisibleAtom, model4VisibleAtom } from '@/atoms/geo';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
+import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { NAV_LIST } from '@/components/nav/nav';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useGSAP } from '@gsap/react';
+import { Center, Svg } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import { useAtom, useSetAtom } from 'jotai';
+import { throttle } from 'lodash-es';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
 
 gsap.registerPlugin(SplitText);
 
@@ -42,6 +45,9 @@ export default function ValueGL() {
   const canAnimatingRef = useRef(true);
   const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
   const timer1Ref = useRef<NodeJS.Timeout | null>(null);
+  const [model2Visible, setModel2Visible] = useAtom(model2VisibleAtom);
+  const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
+  const [model4Visible, setModel4Visible] = useAtom(model4VisibleAtom);
 
   const enableScroll = useCallback(() => {
     if (isMobile) document.body.style.overflow = '';
@@ -412,10 +418,36 @@ export default function ValueGL() {
 
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
     if (!title2Ref.current || !title3Ref.current || !modelRef.current) return;
+
+    const throttleSetModel3Visible = throttle(() => {
+      if (model3Visible) return;
+      console.log('model 小精灵出现');
+      setModel2Visible(false);
+      setModel3Visible(true);
+      setModel4Visible(false);
+    }, 500);
+    const throttleSetModel2Visible = throttle(() => {
+      if (model2Visible) return;
+      console.log('model 水母出现');
+      setModel2Visible(true);
+      setModel3Visible(false);
+      setModel4Visible(false);
+    }, 500);
+
     tl.to(title2Ref.current.position, {
       ...getScalePosition(page3Config.to.prevTitle.position),
       ease: 'power3.inOut',
       duration: 8,
+      onUpdate() {
+        // console.log('progress:', this.progress());
+        const progress = this.progress();
+        if (progress > 0.5) {
+          throttleSetModel3Visible();
+        }
+        if (progress < 0.5) {
+          throttleSetModel2Visible();
+        }
+      },
     });
     tl.to(
       title3Ref.current.position,
@@ -490,7 +522,6 @@ export default function ValueGL() {
       },
       '<',
     );
-
     tl.to('#page-value-2', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     if (isMobile) tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#page-value-3', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
@@ -499,6 +530,7 @@ export default function ValueGL() {
 
   const createPage3CrossAnim = (tl: GSAPTimeline) => {
     if (!title3Ref.current || !title4Ref.current || !modelRef.current) return;
+
     tl.to(title3Ref.current.position, {
       ...getScalePosition(page4Config.to.prevTitle.position),
       duration: 8,
@@ -594,6 +626,20 @@ export default function ValueGL() {
     createPage4SvgAnim(tl);
 
     // End
+    // const throttleSetModel4Visible = throttle(() => {
+    //   // if (model4Visible) return;
+    //   console.log('model 海马出现');
+    //   setModel2Visible(false);
+    //   setModel3Visible(false);
+    //   setModel4Visible(true);
+    // }, 500);
+    // const throttleSetModel2Visible = throttle(() => {
+    //   // if (model2Visible) return;
+    //   console.log('model 水母出现');
+    //   setModel2Visible(true);
+    //   setModel3Visible(false);
+    //   setModel4Visible(false);
+    // }, 500);
     tl.to(title4Ref.current.position, {
       ...getScalePosition(page5Config.to.prevTitle.position),
       duration: 8,
@@ -607,6 +653,12 @@ export default function ValueGL() {
         z: modelConfig.pos2[0].z,
         ease: 'power3.inOut',
         duration: 8,
+        // onUpdate() {
+        //   const progress = this.progress();
+        //   console.log('progress', progress);
+        //   if (progress < 0.5) throttleSetModel2Visible();
+        //   if (progress > 0.5) throttleSetModel4Visible();
+        // },
       },
       '<',
     );
