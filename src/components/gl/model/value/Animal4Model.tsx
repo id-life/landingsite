@@ -6,6 +6,7 @@ import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 import { model4VisibleAtom } from '@/atoms/geo';
 import { useAtomValue } from 'jotai';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const backsideThickness = 1.5;
 const thickness = 5;
@@ -21,6 +22,7 @@ const Animal4Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const fboMain = useFBO(256, 256);
   const fboBack = useFBO(256, 256);
   const visible = useAtomValue(model4VisibleAtom);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (!scene) return;
@@ -83,7 +85,7 @@ const Animal4Model = forwardRef((props, ref: Ref<THREE.Group>) => {
 
   return (
     <group ref={ref} {...props} visible={visible} scale={gltfConfig.scale}>
-      <group rotation={[0, Math.PI / 2, 0]} position={[0, 0.01, 0]}>
+      <group rotation={[0, Math.PI / 2, 0]} position={[isMobile ? 0 : -0.02, 0.01, 0]}>
         <primitive object={scene}></primitive>
       </group>
     </group>

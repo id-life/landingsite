@@ -49,9 +49,13 @@ export default function ValueGL() {
   const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
   const [model4Visible, setModel4Visible] = useAtom(model4VisibleAtom);
 
+  const disableScroll = useCallback(() => {
+    document.body.style.overflow = 'hidden';
+  }, []);
+
   const enableScroll = useCallback(() => {
-    if (isMobile) document.body.style.overflow = '';
-  }, [isMobile]);
+    document.body.style.overflow = '';
+  }, []);
 
   const getScalePosition = useCallback(
     (pos: Position) => {
@@ -125,7 +129,13 @@ export default function ValueGL() {
       tl.fromTo(
         modelRef.current.rotation,
         { ...page1Config.from.model.rotation },
-        { ...page1Config.to.model.rotation, ease: 'power3.out', onComplete: enableScroll },
+        {
+          ...page1Config.to.model.rotation,
+          ease: 'power3.out',
+          onComplete: () => {
+            if (isMobile) enableScroll();
+          },
+        },
         '<',
       );
       tl.to('#page-value-1', { opacity: 1 }, '<30%');
@@ -195,7 +205,18 @@ export default function ValueGL() {
     } else {
       const svg1 = scene.getObjectByName('title1-svg') as THREE.Object3D;
       const svg1Cn = scene.getObjectByName('title1-cn-svg') as THREE.Object3D;
-
+      const changeTL = gsap.timeline({
+        paused: true,
+        immediateRender: false,
+        onComplete: () => {
+          console.log('complete');
+          enableScroll();
+        },
+        onReverseComplete: () => {
+          console.log('reverse complete');
+          enableScroll();
+        },
+      });
       // 设置初始状态
       svg1Cn.translateY(0.6); // 偏移
       svg1?.traverse((child) => {
@@ -220,7 +241,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 14) return;
           const material = (child as any).material;
-          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -229,9 +250,25 @@ export default function ValueGL() {
         materialCount++;
         if (materialCount < 16) return;
         const material = (child as any).material;
-        svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+        svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      tl.add(svg1CnAnimGroup, '-=3.5');
+      changeTL.add(svg1CnAnimGroup, '-=1');
+      tl.to(
+        {},
+        {
+          duration: 5,
+          onComplete: () => {
+            disableScroll();
+            changeTL.play();
+          },
+          onReverseComplete: () => {
+            console.log('reverse start');
+            disableScroll();
+            changeTL.reverse();
+          },
+        },
+      );
+      tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -239,6 +276,17 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 2);
     } else {
+      const changeTL = gsap.timeline({
+        paused: true,
+        immediateRender: false,
+        onComplete: () => {
+          enableScroll();
+        },
+        onReverseComplete: () => {
+          enableScroll();
+        },
+      });
+
       const svg2 = scene.getObjectByName('title2-svg') as THREE.Object3D;
       const svg2Cn = scene.getObjectByName('title2-cn-svg') as THREE.Object3D;
       // 设置初始状态
@@ -264,7 +312,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 11 || materialCount > 20) return;
           const material = (child as any).material;
-          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -273,9 +321,24 @@ export default function ValueGL() {
         materialCount++;
         if (materialCount < 11 || materialCount > 30) return;
         const material = (child as any).material;
-        svg2CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+        svg2CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.1 });
       });
-      tl.add(svg2CnAnimGroup, '-=6');
+      changeTL.add(svg2CnAnimGroup, '-=1.2');
+      tl.to(
+        {},
+        {
+          duration: 5,
+          onComplete: () => {
+            disableScroll();
+            changeTL.play();
+          },
+          onReverseComplete: () => {
+            disableScroll();
+            changeTL.reverse();
+          },
+        },
+      );
+      tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -283,6 +346,17 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 3);
     } else {
+      const changeTL = gsap.timeline({
+        paused: true,
+        immediateRender: false,
+        onComplete: () => {
+          enableScroll();
+        },
+        onReverseComplete: () => {
+          enableScroll();
+        },
+      });
+
       const svg3 = scene.getObjectByName('title3-svg') as THREE.Object3D;
       const svg3Cn = scene.getObjectByName('title3-cn-svg') as THREE.Object3D;
       // 设置初始状态
@@ -308,7 +382,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 25) return;
           const material = (child as any).material;
-          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -317,9 +391,24 @@ export default function ValueGL() {
         materialCount++;
         if (materialCount < 25) return;
         const material = (child as any).material;
-        svg3CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+        svg3CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      tl.add(svg3CnAnimGroup, '-=6');
+      changeTL.add(svg3CnAnimGroup, '-=1.4');
+      tl.to(
+        {},
+        {
+          duration: 5,
+          onComplete: () => {
+            disableScroll();
+            changeTL.play();
+          },
+          onReverseComplete: () => {
+            disableScroll();
+            changeTL.reverse();
+          },
+        },
+      );
+      tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -327,6 +416,16 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 4);
     } else {
+      const changeTL = gsap.timeline({
+        paused: true,
+        immediateRender: false,
+        onComplete: () => {
+          enableScroll();
+        },
+        onReverseComplete: () => {
+          enableScroll();
+        },
+      });
       const svg4 = scene.getObjectByName('title4-svg') as THREE.Object3D;
       const svg4Cn = scene.getObjectByName('title4-cn-svg') as THREE.Object3D;
       // 设置初始状态
@@ -353,7 +452,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount >= 15) return;
           const material = (child as any).material;
-          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.5 });
+          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.15 });
         }
       });
       // console.log('1', materialCount);
@@ -363,10 +462,24 @@ export default function ValueGL() {
         materialCount++;
         if (materialCount > 7) return;
         const material = (child as any).material;
-        svg4CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 1 });
+        svg4CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      tl.add(svg4CnAnimGroup, '-=3.5');
-      // console.log('2', materialCount);
+      changeTL.add(svg4CnAnimGroup, '-=0.2');
+      tl.to(
+        {},
+        {
+          duration: 5,
+          onComplete: () => {
+            disableScroll();
+            changeTL.play();
+          },
+          onReverseComplete: () => {
+            disableScroll();
+            changeTL.reverse();
+          },
+        },
+      );
+      tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -642,7 +755,7 @@ export default function ValueGL() {
     // }, 500);
     tl.to(title4Ref.current.position, {
       ...getScalePosition(page5Config.to.prevTitle.position),
-      duration: 8,
+      duration: 3,
       ease: 'power3.inOut',
     });
     tl.to(
@@ -652,7 +765,7 @@ export default function ValueGL() {
         y: modelConfig.pos2[0].y,
         z: modelConfig.pos2[0].z,
         ease: 'power3.inOut',
-        duration: 8,
+        duration: 3,
         // onUpdate() {
         //   const progress = this.progress();
         //   console.log('progress', progress);
@@ -669,7 +782,7 @@ export default function ValueGL() {
         y: modelConfig.pos2[1].y,
         z: modelConfig.pos2[1].z,
         ease: 'power3.inOut',
-        duration: 8,
+        duration: 3,
       },
       '<',
     );
@@ -680,7 +793,7 @@ export default function ValueGL() {
         y: modelConfig.pos2[2].y,
         z: modelConfig.pos2[2].z,
         ease: 'power3.inOut',
-        duration: 8,
+        duration: 3,
       },
       '<',
     );
@@ -688,7 +801,7 @@ export default function ValueGL() {
       camera.position,
       {
         ...page5Config.to.camera.position,
-        duration: 8,
+        duration: 3,
         ease: 'power3.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
@@ -697,24 +810,23 @@ export default function ValueGL() {
       },
       '<',
     );
-    tl.to('#page-value-4', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-end-1', { autoAlpha: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    tl.to('#page-value-4', { opacity: 0, duration: 3, ease: 'power3.in' }, '<');
+    // if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to(modelRef.current.position, {
       ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
-      duration: 8,
+      duration: 4,
       ease: 'none',
     });
     tl.to(modelRef.current.rotation, {
       ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
-      duration: 8,
+      duration: 4,
       ease: 'none',
     });
     tl.to(
       camera.position,
       {
         ...page6Config.to.camera.position,
-        duration: 8,
+        duration: 4,
         ease: 'none',
         onUpdate: () => {
           if (!modelRef.current) return;
@@ -723,11 +835,12 @@ export default function ValueGL() {
       },
       '<',
     );
-    if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'power3.out' }, '<');
-    tl.to('#value-end-2', { autoAlpha: 1, duration: 5, ease: 'power3.out' }, '-=3.5');
-    tl.to({}, { duration: 10 }); // 停顿
-    tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
-    tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
+    tl.to('#value-end-1', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
+    // if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'power3.out' }, '<');
+    tl.to('#value-end-2', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
+    // tl.to({}, { duration: 10 }); // 停顿
+    // tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
+    // tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
 
   return (
