@@ -5,6 +5,7 @@ import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useScrollLock } from '@/hooks/useScrollLock';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
@@ -12,7 +13,7 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(SplitText);
@@ -26,7 +27,6 @@ export type Position = {
 const centerPoint = new THREE.Vector3(0, -10, 0);
 const defaultWidth = 1912;
 
-const randomIndex = Math.floor(Math.random() * 6);
 const modelConfig = MODEL_CONFIG[2];
 
 export default function ValueGL() {
@@ -43,13 +43,14 @@ export default function ValueGL() {
   const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
-  const canAnimatingRef = useRef(true);
+  // const canAnimatingRef = useRef(true);
   const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
-  const timer1Ref = useRef<NodeJS.Timeout | null>(null);
+  // const timer1Ref = useRef<NodeJS.Timeout | null>(null);
   const [model2Visible, setModel2Visible] = useAtom(model2VisibleAtom);
   const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
   const [model4Visible, setModel4Visible] = useAtom(model4VisibleAtom);
   const setValuePageIndex = useSetAtom(valuePageIndexAtom);
+  const { lockScroll, unlockScroll } = useScrollLock();
 
   const disableScroll = useCallback(() => {
     document.body.style.overflow = 'hidden';
@@ -79,28 +80,7 @@ export default function ValueGL() {
           end: 'top top',
           scrub: true,
           onEnter: () => {
-            if (!isMobile) return;
-            canAnimatingRef.current = false;
-            if (timer1Ref.current) clearTimeout(timer1Ref.current);
-            timer1Ref.current = setTimeout(() => {
-              canAnimatingRef.current = true;
-            }, 3000);
-          },
-          onLeave: () => {
-            if (timer1Ref.current) clearTimeout(timer1Ref.current);
-          },
-          onUpdate: (self) => {
-            if (!isMobile) return;
-            if (canAnimatingRef.current && self?.direction < 0) {
-              const height = window.innerHeight;
-              gsap.to(window, {
-                duration: 1.5,
-                scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
-                onComplete: () => {
-                  canAnimatingRef.current = false;
-                },
-              });
-            }
+            if (isMobile) lockScroll('up');
           },
         },
       });
@@ -140,8 +120,14 @@ export default function ValueGL() {
         },
         '<',
       );
-      tl.to('#page-value-1', { opacity: 1 }, '<30%');
-      if (isMobile) tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
+      tl.to(
+        '#page-value-1',
+        {
+          opacity: 1,
+        },
+        '<30%',
+      );
+      if (isMobile) tl.to('#value-1-svg-mobile', { opacity: 1, onComplete: () => lockScroll('up') }, '<30%');
     },
     { dependencies: [isMobile] },
   );
@@ -184,6 +170,12 @@ export default function ValueGL() {
       y: -50,
       duration: 0.8,
       stagger: 0.02,
+      onComplete: () => {
+        if (isMobile) unlockScroll();
+      },
+      onReverseComplete: () => {
+        if (isMobile) lockScroll('up');
+      },
     })
       // 中文淡入
       .fromTo(
@@ -714,15 +706,6 @@ export default function ValueGL() {
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
   };
-
-  // 清理计时器
-  useEffect(() => {
-    return () => {
-      if (timer1Ref.current) {
-        clearTimeout(timer1Ref.current);
-      }
-    };
-  }, []);
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;

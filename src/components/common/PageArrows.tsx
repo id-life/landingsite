@@ -3,6 +3,8 @@ import { currentPageAtom, currentPageIndexAtom, navigateToAtom, valuePageIndexAt
 import { cn } from '@/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
+import gsap from 'gsap';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface PageArrowsProps {
   className?: string;
@@ -39,6 +41,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const currentPage = useAtomValue(currentPageAtom);
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
+  const isMobile = useIsMobile();
 
   return (
     <div
@@ -48,6 +51,14 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       )}
       onClick={() => {
         onClick?.();
+        if (isMobile && currentPageIndex === 2) {
+          const height = window.innerHeight;
+          gsap.to(window, {
+            duration: 1.5,
+            scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
+          });
+          return;
+        }
         setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
       }}
     >
