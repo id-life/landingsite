@@ -9,3 +9,6 @@ export const currentPageIndexAtom = selectAtom(currentPageAtom, (page) => NAV_LI
 export const mobileNavOpenAtom = atom<boolean>(false);
 
 export const navigateToAtom = atom<NavItem | null>(null);
+
+// value 页面进度条
+export const valuePageIndexAtom = atom<number>(0);

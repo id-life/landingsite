@@ -1,3 +1,4 @@
+import { valuePageIndexAtom } from '@/atoms';
 import { model2VisibleAtom, model3VisibleAtom, model4VisibleAtom } from '@/atoms/geo';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
@@ -48,6 +49,7 @@ export default function ValueGL() {
   const [model2Visible, setModel2Visible] = useAtom(model2VisibleAtom);
   const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
   const [model4Visible, setModel4Visible] = useAtom(model4VisibleAtom);
+  const setValuePageIndex = useSetAtom(valuePageIndexAtom);
 
   const disableScroll = useCallback(() => {
     document.body.style.overflow = 'hidden';
@@ -496,6 +498,12 @@ export default function ValueGL() {
         ...(isMobile ? page2Config.to.model.mobilePos : page2Config.to.model.position),
         ease: 'power3.inOut',
         duration: 8,
+        onStart: () => {
+          setValuePageIndex(0);
+        },
+        onComplete: () => {
+          setValuePageIndex(1);
+        },
       },
       '<',
     );
@@ -576,6 +584,12 @@ export default function ValueGL() {
         ...(isMobile ? page3Config.to.model.mobilePos : page3Config.to.model.position),
         ease: 'power3.inOut',
         duration: 8,
+        onStart: () => {
+          setValuePageIndex(1);
+        },
+        onComplete: () => {
+          setValuePageIndex(2);
+        },
       },
       '<',
     );
@@ -663,6 +677,12 @@ export default function ValueGL() {
         ...(isMobile ? page4Config.to.model.mobilePos : page4Config.to.model.position),
         duration: 8,
         ease: 'power3.inOut',
+        onStart: () => {
+          setValuePageIndex(2);
+        },
+        onComplete: () => {
+          setValuePageIndex(3);
+        },
       },
       '<',
     );
@@ -788,7 +808,7 @@ export default function ValueGL() {
     tl.to(
       modelRef.current.children[2].position,
       {
-        x: modelConfig.pos2[2].x,
+        x: isMobile ? 0 : modelConfig.pos2[2].x,
         y: modelConfig.pos2[2].y,
         z: modelConfig.pos2[2].z,
         ease: 'power3.inOut',
@@ -810,11 +830,17 @@ export default function ValueGL() {
       '<',
     );
     tl.to('#page-value-4', { opacity: 0, duration: 3, ease: 'power3.in' }, '<');
-    // if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to(modelRef.current.position, {
       ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
       duration: 4,
       ease: 'none',
+      onStart: () => {
+        setValuePageIndex(3);
+      },
+      onComplete: () => {
+        setValuePageIndex(4);
+      },
     });
     tl.to(modelRef.current.rotation, {
       ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
@@ -838,8 +864,8 @@ export default function ValueGL() {
     // if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'power3.out' }, '<');
     tl.to('#value-end-2', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
     // tl.to({}, { duration: 10 }); // 停顿
-    // tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
-    // tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
+    if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
+    if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
 
   return (
