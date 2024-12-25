@@ -209,11 +209,11 @@ export default function ValueGL() {
         paused: true,
         immediateRender: false,
         onComplete: () => {
-          console.log('complete');
+          // console.log('complete');
           enableScroll();
         },
         onReverseComplete: () => {
-          console.log('reverse complete');
+          // console.log('reverse complete');
           enableScroll();
         },
       });
@@ -262,7 +262,6 @@ export default function ValueGL() {
             changeTL.play();
           },
           onReverseComplete: () => {
-            console.log('reverse start');
             disableScroll();
             changeTL.reverse();
           },
@@ -534,14 +533,14 @@ export default function ValueGL() {
 
     const throttleSetModel3Visible = throttle(() => {
       if (model3Visible) return;
-      console.log('model 小精灵出现');
+      // console.log('model 小精灵出现');
       setModel2Visible(false);
       setModel3Visible(true);
       setModel4Visible(false);
     }, 500);
     const throttleSetModel2Visible = throttle(() => {
       if (model2Visible) return;
-      console.log('model 水母出现');
+      // console.log('model 水母出现');
       setModel2Visible(true);
       setModel3Visible(false);
       setModel4Visible(false);

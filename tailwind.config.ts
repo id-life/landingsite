@@ -21,12 +21,40 @@ const config: Config = {
         'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
       },
       animation: {
-        'scroll-down': 'scroll-down 1.5s ease-in infinite',
+        'ripple-1': 'ripple-1 2s infinite 0.5s',
+        'ripple-2': 'ripple-2 2s infinite 1s',
+        'ripple-3': 'ripple-3 2s infinite 1.5s',
       },
       keyframes: {
-        'scroll-down': {
-          '0%, 100%': { transform: 'translate3d(-50%, -6px, 0)' },
-          '50%': { transform: 'translate3d(-50%, 6px, 0)' },
+        'ripple-1': {
+          '0%': {
+            transform: 'scale(1, 1)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'scale(1.5, 1.85)',
+            opacity: '0',
+          },
+        },
+        'ripple-2': {
+          '0%': {
+            transform: 'scale(1, 1)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'scale(1.5, 1.85)',
+            opacity: '0',
+          },
+        },
+        'ripple-3': {
+          '0%': {
+            transform: 'scale(1, 1)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'scale(1.5, 1.85)',
+            opacity: '0',
+          },
         },
       },
       spacing: {
