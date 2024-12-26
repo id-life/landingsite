@@ -546,7 +546,7 @@ export default function ValueGL() {
     if (!title2Ref.current || !title3Ref.current || !modelRef.current) return;
 
     const throttleSetModel3Visible = throttle(() => {
-      console.log('model 小精灵出现');
+      // console.log('model 小精灵出现');
       if (title2Ref.current) title2Ref.current.visible = false;
       if (model3Visible) return;
       setModel2Visible(false);
@@ -554,7 +554,7 @@ export default function ValueGL() {
       setModel4Visible(false);
     }, 500);
     const throttleSetModel2Visible = throttle(() => {
-      console.log('model 水母出现');
+      // console.log('model 水母出现');
       if (title2Ref.current) title2Ref.current.visible = true;
       if (model2Visible) return;
       setModel2Visible(true);
@@ -735,9 +735,9 @@ export default function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        onUpdate: (self) => {
-          console.log('self progress:', self?.progress);
-        },
+        // onUpdate: (self) => {
+        // console.log('self progress:', self?.progress);
+        // },
       },
     });
 
@@ -873,7 +873,7 @@ export default function ValueGL() {
 
   useEffect(() => {
     if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
-    console.log('valuePageNavigateTo', valuePageNavigateTo);
+    // console.log('valuePageNavigateTo', valuePageNavigateTo);
 
     const mobileProgressMap = {
       0: 0,
