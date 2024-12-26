@@ -12,3 +12,6 @@ export const navigateToAtom = atom<NavItem | null>(null);
 
 // value 页面进度条
 export const valuePageIndexAtom = atom<number>(0);
+export const valuePageNavigateToAtom = atom<number | null>(null);
+
+export const isScrollingAtom = atom<boolean>(false);

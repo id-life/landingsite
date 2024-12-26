@@ -208,12 +208,12 @@ export default function FixedValue() {
           <div
             id={item.id}
             className={cn(
-              'page-value-item bilingual-font pointer-events-none fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem]',
+              'page-value-item bilingual-font-poppins pointer-events-none fixed bottom-[6.25rem] right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem]',
               item?.className,
             )}
           >
             <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{item.title}</h3>
-            <p className="bilingual-font mt-4 w-[31rem] whitespace-pre-wrap text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
+            <p className="bilingual-font-poppins mt-4 w-[31rem] whitespace-pre-wrap text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
               {item.content}
             </p>
             {/* <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>

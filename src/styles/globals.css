@@ -105,6 +105,10 @@
     /* 设置字体优先级：先尝试 Oxanium (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
     font-family: var(--font-oxanium), var(--font-source-han-sans-cn), sans-serif;
   }
+  .bilingual-font-poppins {
+    /* 设置字体优先级：先尝试 poppins (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
+    font-family: var(--font-poppins), var(--font-source-han-sans-cn), sans-serif;
+  }
 }
 
 @layer utilities {

@@ -1,7 +1,7 @@
 import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
-import { currentPageAtom, currentPageIndexAtom, navigateToAtom, valuePageIndexAtom } from '@/atoms';
+import { currentPageAtom, currentPageIndexAtom, navigateToAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
 import { cn } from '@/utils';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import gsap from 'gsap';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -17,7 +17,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
     <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {currentPage.id !== NAV_LIST[2].id && <ArrowItem />}
+        {(currentPage.id !== NAV_LIST[2].id || valuePageIndex !== 4) && <ArrowItem />}
       </div>
       {/* 五个细长方块进度条 */}
       {currentPage.id === NAV_LIST[2].id && (
@@ -42,6 +42,8 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
   const isMobile = useIsMobile();
+  const valuePageIndex = useAtomValue(valuePageIndexAtom);
+  const setValuePageNavigateTo = useSetAtom(valuePageNavigateToAtom);
 
   return (
     <div
@@ -51,12 +53,22 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       )}
       onClick={() => {
         onClick?.();
-        if (isMobile && currentPageIndex === 2) {
+        if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
           const height = window.innerHeight;
           gsap.to(window, {
             duration: 1.5,
             scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
           });
+          return;
+        }
+        if (currentPageIndex === 2) {
+          if (valuePageIndex === 0 && isUp) {
+            // 小进度开头
+            setNavigateTo(NAV_LIST[1]);
+            return;
+          }
+          // 小进度结尾
+          setValuePageNavigateTo(valuePageIndex + (isUp ? -1 : 1));
           return;
         }
         setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);

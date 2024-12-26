@@ -1,4 +1,4 @@
-import { valuePageIndexAtom } from '@/atoms';
+import { currentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
 import { model2VisibleAtom, model3VisibleAtom, model4VisibleAtom } from '@/atoms/geo';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
@@ -10,13 +10,15 @@ import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
 
 export type Position = {
   x: number;
@@ -50,7 +52,11 @@ export default function ValueGL() {
   const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
   const [model4Visible, setModel4Visible] = useAtom(model4VisibleAtom);
   const setValuePageIndex = useSetAtom(valuePageIndexAtom);
+  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
+
+  const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const { lockScroll, unlockScroll } = useScrollLock();
+  const isScrollingRef = useRef(false);
 
   const disableScroll = useCallback(() => {
     document.body.style.overflow = 'hidden';
@@ -252,10 +258,12 @@ export default function ValueGL() {
         {
           duration: 5,
           onComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.play();
           },
           onReverseComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.reverse();
           },
@@ -322,10 +330,12 @@ export default function ValueGL() {
         {
           duration: 5,
           onComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.play();
           },
           onReverseComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.reverse();
           },
@@ -392,10 +402,12 @@ export default function ValueGL() {
         {
           duration: 5,
           onComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.play();
           },
           onReverseComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.reverse();
           },
@@ -463,10 +475,12 @@ export default function ValueGL() {
         {
           duration: 5,
           onComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.play();
           },
           onReverseComplete: () => {
+            if (isScrollingRef?.current) return;
             disableScroll();
             changeTL.reverse();
           },
@@ -491,10 +505,10 @@ export default function ValueGL() {
         ease: 'power3.inOut',
         duration: 8,
         onStart: () => {
-          setValuePageIndex(0);
+          if (!isScrollingRef.current) setValuePageIndex(0);
         },
         onComplete: () => {
-          setValuePageIndex(1);
+          if (!isScrollingRef.current) setValuePageIndex(1);
         },
       },
       '<',
@@ -532,15 +546,17 @@ export default function ValueGL() {
     if (!title2Ref.current || !title3Ref.current || !modelRef.current) return;
 
     const throttleSetModel3Visible = throttle(() => {
+      console.log('model 小精灵出现');
+      if (title2Ref.current) title2Ref.current.visible = false;
       if (model3Visible) return;
-      // console.log('model 小精灵出现');
       setModel2Visible(false);
       setModel3Visible(true);
       setModel4Visible(false);
     }, 500);
     const throttleSetModel2Visible = throttle(() => {
+      console.log('model 水母出现');
+      if (title2Ref.current) title2Ref.current.visible = true;
       if (model2Visible) return;
-      // console.log('model 水母出现');
       setModel2Visible(true);
       setModel3Visible(false);
       setModel4Visible(false);
@@ -577,10 +593,10 @@ export default function ValueGL() {
         ease: 'power3.inOut',
         duration: 8,
         onStart: () => {
-          setValuePageIndex(1);
+          if (!isScrollingRef.current) setValuePageIndex(1);
         },
         onComplete: () => {
-          setValuePageIndex(2);
+          if (!isScrollingRef.current) setValuePageIndex(2);
         },
       },
       '<',
@@ -670,10 +686,10 @@ export default function ValueGL() {
         duration: 8,
         ease: 'power3.inOut',
         onStart: () => {
-          setValuePageIndex(2);
+          if (!isScrollingRef.current) setValuePageIndex(2);
         },
         onComplete: () => {
-          setValuePageIndex(3);
+          if (!isScrollingRef.current) setValuePageIndex(3);
         },
       },
       '<',
@@ -702,7 +718,6 @@ export default function ValueGL() {
     );
     tl.to('#page-value-3', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     if (isMobile) tl.to('#value-3-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
   };
@@ -715,10 +730,14 @@ export default function ValueGL() {
 
     const tl = gsap.timeline({
       scrollTrigger: {
+        id: 'valueTimeline',
         trigger: `#${NAV_LIST[2].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
+        onUpdate: (self) => {
+          console.log('self progress:', self?.progress);
+        },
       },
     });
 
@@ -755,6 +774,7 @@ export default function ValueGL() {
     //   setModel3Visible(false);
     //   setModel4Visible(false);
     // }, 500);
+
     tl.to(title4Ref.current.position, {
       ...getScalePosition(page5Config.to.prevTitle.position),
       duration: 3,
@@ -819,10 +839,10 @@ export default function ValueGL() {
       duration: 4,
       ease: 'none',
       onStart: () => {
-        setValuePageIndex(3);
+        if (!isScrollingRef.current) setValuePageIndex(3);
       },
       onComplete: () => {
-        setValuePageIndex(4);
+        if (!isScrollingRef.current) setValuePageIndex(4);
       },
     });
     tl.to(modelRef.current.rotation, {
@@ -850,6 +870,45 @@ export default function ValueGL() {
     if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
     if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
+
+  useEffect(() => {
+    if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
+    console.log('valuePageNavigateTo', valuePageNavigateTo);
+
+    const mobileProgressMap = {
+      0: 0,
+      1: 0.224,
+      2: 0.437,
+      3: 0.65,
+      4: 0.85,
+    };
+
+    const progressMap = {
+      0: 0,
+      1: 0.25,
+      2: 0.485,
+      3: 0.77,
+      4: 1,
+    };
+
+    const progress = (isMobile ? mobileProgressMap : progressMap)[valuePageNavigateTo as keyof typeof progressMap];
+    if (progress !== undefined) {
+      const st = ScrollTrigger.getById('valueTimeline');
+      if (st) {
+        isScrollingRef.current = true;
+        gsap.to(window, {
+          duration: 1,
+          scrollTo: st.start + (st.end - st.start) * progress,
+          onComplete: () => {
+            isScrollingRef.current = false;
+            enableScroll();
+          },
+        });
+      }
+    }
+    setValuePageIndex(valuePageNavigateTo);
+    setValuePageNavigateTo(null);
+  }, [currentPageIndex, valuePageNavigateTo, isMobile]);
 
   return (
     <group>
