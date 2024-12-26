@@ -155,6 +155,12 @@ export default function ValueGL() {
       tl.from([value1TextRedEn.chars, value1TextNormalEn.chars], {
         opacity: 1,
         y: 0,
+        onComplete: () => {
+          if (isMobile) unlockScroll();
+        },
+        onReverseComplete: () => {
+          if (isMobile) lockScroll('up');
+        },
       });
     } else
       tl.fromTo(
@@ -176,12 +182,6 @@ export default function ValueGL() {
       y: -50,
       duration: 0.8,
       stagger: 0.02,
-      onComplete: () => {
-        if (isMobile) unlockScroll();
-      },
-      onReverseComplete: () => {
-        if (isMobile) lockScroll('up');
-      },
     })
       // 中文淡入
       .fromTo(
