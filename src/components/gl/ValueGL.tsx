@@ -908,7 +908,7 @@ export default function ValueGL() {
     }
     setValuePageIndex(valuePageNavigateTo);
     setValuePageNavigateTo(null);
-  }, [currentPageIndex, valuePageNavigateTo, isMobile]);
+  }, [currentPageIndex, valuePageNavigateTo, isMobile, setValuePageIndex, setValuePageNavigateTo, enableScroll]);
 
   return (
     <group>

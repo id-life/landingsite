@@ -5,6 +5,9 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import gsap from 'gsap';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { throttle } from 'lodash-es';
+import { useCallback } from 'react';
+import { useThrottle } from '@/hooks/useThrottle';
 
 interface PageArrowsProps {
   className?: string;
@@ -45,34 +48,36 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const valuePageIndex = useAtomValue(valuePageIndexAtom);
   const setValuePageNavigateTo = useSetAtom(valuePageNavigateToAtom);
 
+  const handleClick = useThrottle(() => {
+    onClick?.();
+    if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
+      const height = window.innerHeight;
+      gsap.to(window, {
+        duration: 1.5,
+        scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
+      });
+      return;
+    }
+    if (currentPageIndex === 2) {
+      if (valuePageIndex === 0 && isUp) {
+        // 小进度开头
+        setNavigateTo(NAV_LIST[1]);
+        return;
+      }
+      // 小进度结尾
+      setValuePageNavigateTo(valuePageIndex + (isUp ? -1 : 1));
+      return;
+    }
+    setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
+  }, 500);
+
   return (
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
         currentPage.id === NAV_LIST[1].id ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
-      onClick={() => {
-        onClick?.();
-        if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
-          const height = window.innerHeight;
-          gsap.to(window, {
-            duration: 1.5,
-            scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
-          });
-          return;
-        }
-        if (currentPageIndex === 2) {
-          if (valuePageIndex === 0 && isUp) {
-            // 小进度开头
-            setNavigateTo(NAV_LIST[1]);
-            return;
-          }
-          // 小进度结尾
-          setValuePageNavigateTo(valuePageIndex + (isUp ? -1 : 1));
-          return;
-        }
-        setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-      }}
+      onClick={handleClick}
     >
       <ArrowDownSVG className={cn('h-5 w-5 fill-white', { 'rotate-180': isUp })} />
     </div>
