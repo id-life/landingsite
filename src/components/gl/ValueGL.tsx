@@ -252,7 +252,7 @@ export default function ValueGL() {
         const material = (child as any).material;
         svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      tl.add(svg1CnAnimGroup, '-=1');
+      tl.add(svg1CnAnimGroup, '-=1.5');
       // tl.to(
       //   {},
       //   {
@@ -497,9 +497,6 @@ export default function ValueGL() {
       ...getScalePosition(page2Config.to.prevTitle.position),
       ease: 'power3.inOut',
       duration: 8,
-      // onUpdate: (self) => {
-      //   console.log('update', self?.progress);
-      // },
     });
     tl.to(
       modelRef.current.position,
