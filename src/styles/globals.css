@@ -180,4 +180,14 @@
   .footer-submit-clip {
     clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0 100%, 0 0.75rem);
   }
+  .scroll-button-ripple-init {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 0.7px solid black;
+    border-radius: 9999px;
+    width: 122px;
+    height: 40px;
+  }
 }

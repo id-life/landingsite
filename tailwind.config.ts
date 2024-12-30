@@ -20,43 +20,6 @@ const config: Config = {
         oxanium: ['var(--font-oxanium)'],
         'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
       },
-      animation: {
-        'ripple-1': 'ripple-1 2s infinite 0.5s',
-        'ripple-2': 'ripple-2 2s infinite 1s',
-        'ripple-3': 'ripple-3 2s infinite 1.5s',
-      },
-      keyframes: {
-        'ripple-1': {
-          '0%': {
-            transform: 'scale(1, 1)',
-            opacity: '1',
-          },
-          '100%': {
-            transform: 'scale(1.5, 1.85)',
-            opacity: '0',
-          },
-        },
-        'ripple-2': {
-          '0%': {
-            transform: 'scale(1, 1)',
-            opacity: '1',
-          },
-          '100%': {
-            transform: 'scale(1.5, 1.85)',
-            opacity: '0',
-          },
-        },
-        'ripple-3': {
-          '0%': {
-            transform: 'scale(1, 1)',
-            opacity: '1',
-          },
-          '100%': {
-            transform: 'scale(1.5, 1.85)',
-            opacity: '0',
-          },
-        },
-      },
       spacing: {
         3.5: '0.875rem',
         4.5: '1.125rem',
