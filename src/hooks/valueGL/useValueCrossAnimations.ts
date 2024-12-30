@@ -33,6 +33,8 @@ export const useValueCrossAnimations = ({
   const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
+  const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
+
   const { getScalePosition } = useValueCalcPosition();
 
   const [model2Visible, setModel2Visible] = useAtom(model2VisibleAtom);
@@ -271,10 +273,77 @@ export const useValueCrossAnimations = ({
     tl.to('#page-value-4', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
     if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
   };
+
+  const createPage4CrossAnim = (tl: GSAPTimeline) => {
+    if (!title4Ref.current || !modelRef.current) return;
+    // 第四页到第五页的过渡动画
+    tl.to(title4Ref.current.position, {
+      ...getScalePosition(page5Config.to.prevTitle.position),
+      duration: 3,
+      ease: 'power3.inOut',
+    });
+
+    // 移动模型的三个部分到新位置
+    // 第一个部分 水母
+    tl.to(
+      modelRef.current.children[0].position,
+      {
+        x: modelConfig.pos2[0].x,
+        y: modelConfig.pos2[0].y,
+        z: modelConfig.pos2[0].z,
+        ease: 'power3.inOut',
+        duration: 3,
+      },
+      '<',
+    );
+    // 第二个部分 小精灵 由于不再随机了所以 这块注释掉了，若后续又需要随机了再加回来。
+    // tl.to(
+    //   modelRef.current.children[1].position,
+    //   {
+    //     x: modelConfig.pos2[1].x,
+    //     y: modelConfig.pos2[1].y,
+    //     z: modelConfig.pos2[1].z,
+    //     ease: 'power3.inOut',
+    //     duration: 3,
+    //   },
+    //   '<',
+    // );
+    // 第三个模型 海马（移动端x坐标特殊处理）
+    tl.to(
+      modelRef.current.children[2].position,
+      {
+        x: isMobile ? 0 : modelConfig.pos2[2].x,
+        y: modelConfig.pos2[2].y,
+        z: modelConfig.pos2[2].z,
+        ease: 'power3.inOut',
+        duration: 3,
+      },
+      '<',
+    );
+    // 移动相机并保持注视中心点
+    tl.to(
+      camera.position,
+      {
+        ...page5Config.to.camera.position,
+        duration: 3,
+        ease: 'power3.inOut',
+        onUpdate: () => {
+          if (!modelRef.current) return;
+          camera.lookAt(centerPoint);
+        },
+      },
+      '<',
+    );
+
+    // 淡出第4页右下角内容
+    tl.to('#page-value-4', { opacity: 0, duration: 3, ease: 'power3.in' }, '<');
+    // 移动端特殊处理：淡出SVG
+    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+  };
   return {
-    getScalePosition,
     createPage1CrossAnim,
     createPage2CrossAnim,
     createPage3CrossAnim,
+    createPage4CrossAnim,
   };
 };

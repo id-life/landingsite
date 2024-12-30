@@ -27,16 +27,16 @@ const modelConfig = MODEL_CONFIG[2];
 export const VALUE_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
-    1: 0.224,
-    2: 0.437,
-    3: 0.65,
+    1: 0.245,
+    2: 0.475,
+    3: 0.704,
     4: 0.85,
   },
   desktop: {
     0: 0,
-    1: 0.22,
-    2: 0.455,
-    3: 0.67,
+    1: 0.25,
+    2: 0.486,
+    3: 0.742,
     4: 1,
   },
 } as const;
@@ -52,7 +52,6 @@ export default function ValueGL() {
   const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
-  const page5Config = useMemo(() => VALUE_GL_CONFIG[4], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
   const setValuePageIndex = useSetAtom(valuePageIndexAtom);
@@ -62,9 +61,12 @@ export default function ValueGL() {
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const { lockScroll, unlockScroll } = useScrollLock();
   const isScrollingRef = useRef(false);
-  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim, createPage4SvgAnim } = useValueSVGAnimations();
+  const enableScroll = useCallback(() => {
+    document.body.style.overflow = '';
+  }, []);
 
-  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim } = useValueCrossAnimations({
+  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim, createPage4SvgAnim } = useValueSVGAnimations();
+  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim, createPage4CrossAnim } = useValueCrossAnimations({
     title1Ref,
     title2Ref,
     title3Ref,
@@ -72,10 +74,6 @@ export default function ValueGL() {
     modelRef,
     isScrollingRef,
   });
-
-  // const enableScroll = useCallback(() => {
-  //   document.body.style.overflow = '';
-  // }, []);
 
   const { scaleRatio, getScalePosition, getVectorPosition } = useValueCalcPosition();
 
@@ -120,6 +118,9 @@ export default function ValueGL() {
         {
           ...page1Config.to.model.rotation,
           ease: 'power3.out',
+          onComplete: () => {
+            if (isMobile) enableScroll();
+          },
         },
         '<',
       );
@@ -148,6 +149,9 @@ export default function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
+        onUpdate: (self) => {
+          console.log('progress ', self?.progress);
+        },
       },
     });
 
@@ -158,8 +162,11 @@ export default function ValueGL() {
       }
     });
     tl.add(() => {
-      if (isMobile) unlockScroll();
-    }, '+=0.01');
+      if (isMobile) {
+        console.log('isMobile anim end unlock');
+        unlockScroll();
+      }
+    }, '+=0.1');
 
     // page1~2之间的 svg切换动画，红字消失变换为中文
     createPage1SvgAnim(tl);
@@ -178,82 +185,10 @@ export default function ValueGL() {
 
     // page4之后的 svg切换动画，红字消失变换为中文
     createPage4SvgAnim(tl);
+    createPage4CrossAnim(tl);
 
     // End
-    // const throttleSetModel4Visible = throttle(() => {
-    //   // if (model4Visible) return;
-    //   console.log('model 海马出现');
-    //   setModel2Visible(false);
-    //   setModel3Visible(false);
-    //   setModel4Visible(true);
-    // }, 500);
-    // const throttleSetModel2Visible = throttle(() => {
-    //   // if (model2Visible) return;
-    //   console.log('model 水母出现');
-    //   setModel2Visible(true);
-    //   setModel3Visible(false);
-    //   setModel4Visible(false);
-    // }, 500);
-
-    tl.to(title4Ref.current.position, {
-      ...getScalePosition(page5Config.to.prevTitle.position),
-      duration: 3,
-      ease: 'power3.inOut',
-    });
-    tl.to(
-      modelRef.current.children[0].position,
-      {
-        x: modelConfig.pos2[0].x,
-        y: modelConfig.pos2[0].y,
-        z: modelConfig.pos2[0].z,
-        ease: 'power3.inOut',
-        duration: 3,
-        // onUpdate()r {
-        //   const progress = this.progress();
-        //   console.log('progress', progress);
-        //   if (progress < 0.5) throttleSetModel2Visible();
-        //   if (progress > 0.5) throttleSetModel4Visible();
-        // },
-      },
-      '<',
-    );
-    tl.to(
-      modelRef.current.children[1].position,
-      {
-        x: modelConfig.pos2[1].x,
-        y: modelConfig.pos2[1].y,
-        z: modelConfig.pos2[1].z,
-        ease: 'power3.inOut',
-        duration: 3,
-      },
-      '<',
-    );
-    tl.to(
-      modelRef.current.children[2].position,
-      {
-        x: isMobile ? 0 : modelConfig.pos2[2].x,
-        y: modelConfig.pos2[2].y,
-        z: modelConfig.pos2[2].z,
-        ease: 'power3.inOut',
-        duration: 3,
-      },
-      '<',
-    );
-    tl.to(
-      camera.position,
-      {
-        ...page5Config.to.camera.position,
-        duration: 3,
-        ease: 'power3.inOut',
-        onUpdate: () => {
-          if (!modelRef.current) return;
-          camera.lookAt(centerPoint);
-        },
-      },
-      '<',
-    );
-    tl.to('#page-value-4', { opacity: 0, duration: 3, ease: 'power3.in' }, '<');
-    if (isMobile) tl.to('#value-4-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
+    // 移动整个模型到最终位置（第五页到第六页的过渡）
     tl.to(modelRef.current.position, {
       ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
       duration: 4,
@@ -265,11 +200,15 @@ export default function ValueGL() {
         if (!isScrollingRef.current) setValuePageIndex(4);
       },
     });
-    tl.to(modelRef.current.rotation, {
-      ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
-      duration: 4,
-      ease: 'none',
-    });
+    tl.to(
+      modelRef.current.rotation,
+      {
+        ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
+        duration: 4,
+        ease: 'none',
+      },
+      '<',
+    );
     tl.to(
       camera.position,
       {
@@ -283,10 +222,12 @@ export default function ValueGL() {
       },
       '<',
     );
+
+    // 显示结束文字
     tl.to('#value-end-1', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
-    // if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'power3.out' }, '<');
     tl.to('#value-end-2', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
-    // tl.to({}, { duration: 10 }); // 停顿
+
+    // 移动端特殊处理，文字消失再出 SUBSCRIBE
     if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
     if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
@@ -303,13 +244,14 @@ export default function ValueGL() {
           scrollTo: st.start + (st.end - st.start) * progress,
           onComplete: () => {
             isScrollingRef.current = false;
+            enableScroll();
           },
         });
       }
       setValuePageIndex(valuePageNavigateTo);
       setValuePageNavigateTo(null);
     }
-  }, [currentPageIndex, valuePageNavigateTo, isMobile, setValuePageIndex, setValuePageNavigateTo, progressMap]);
+  }, [currentPageIndex, valuePageNavigateTo, isMobile, setValuePageIndex, setValuePageNavigateTo, progressMap, enableScroll]);
 
   return (
     <group>
