@@ -9,17 +9,18 @@ import VisionDecorationLogo_5 from '@/../public/svgs/vision/vision-decoration-lo
 import VisionDecorationLogo_6 from '@/../public/svgs/vision/vision-decoration-logo-6.svg?component';
 import FixedCard from '@/app/value/FixedCard';
 import FixedValue from '@/app/value/FixedValue';
+import { currentPageAtom } from '@/atoms';
+import { globalLoadedAtom } from '@/atoms/geo';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { ReactNode, useMemo } from 'react';
-import { ClientOnly } from './ClientOnly';
-import VerticalCarousel from './VerticalCarousel';
 import { cn } from '@/utils';
-import ScrollButton from './ScrollButton';
-import { currentPageAtom } from '@/atoms';
 import { useAtomValue } from 'jotai';
+import { ReactNode, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
+import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
+import ScrollButton from './ScrollButton';
+import VerticalCarousel from './VerticalCarousel';
 
 export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; textClass?: string }[] = [
   {
@@ -79,6 +80,8 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
 export default function FixedUI() {
   const isMobile = useIsMobile();
   const currentPage = useAtomValue(currentPageAtom);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
+  if (!globalLoaded) return null;
   return (
     <>
       {currentPage.id === NAV_LIST[0].id ? (
