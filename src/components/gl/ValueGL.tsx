@@ -149,9 +149,9 @@ export default function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        onUpdate: (self) => {
-          console.log('progress ', self?.progress);
-        },
+        // onUpdate: (self) => {
+        //   console.log('progress ', self?.progress);
+        // },
       },
     });
 
