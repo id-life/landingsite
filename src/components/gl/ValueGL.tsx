@@ -205,18 +205,18 @@ export default function ValueGL() {
     } else {
       const svg1 = scene.getObjectByName('title1-svg') as THREE.Object3D;
       const svg1Cn = scene.getObjectByName('title1-cn-svg') as THREE.Object3D;
-      const changeTL = gsap.timeline({
-        paused: true,
-        immediateRender: false,
-        onComplete: () => {
-          // console.log('complete');
-          enableScroll();
-        },
-        onReverseComplete: () => {
-          // console.log('reverse complete');
-          enableScroll();
-        },
-      });
+      // const changeTL = gsap.timeline({
+      //   paused: true,
+      //   immediateRender: false,
+      //   onComplete: () => {
+      //     // console.log('complete');
+      //     enableScroll();
+      //   },
+      //   onReverseComplete: () => {
+      //     // console.log('reverse complete');
+      //     enableScroll();
+      //   },
+      // });
       // 设置初始状态
       svg1Cn.translateY(0.6); // 偏移
       svg1?.traverse((child) => {
@@ -241,7 +241,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 14) return;
           const material = (child as any).material;
-          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
+          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -252,24 +252,24 @@ export default function ValueGL() {
         const material = (child as any).material;
         svg1CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      changeTL.add(svg1CnAnimGroup, '-=1');
-      tl.to(
-        {},
-        {
-          duration: 5,
-          onComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.play();
-          },
-          onReverseComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.reverse();
-          },
-        },
-      );
-      tl.to({}, { duration: 5 }); // 停顿
+      tl.add(svg1CnAnimGroup, '-=1');
+      // tl.to(
+      //   {},
+      //   {
+      //     duration: 5,
+      //     onComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.play();
+      //     },
+      //     onReverseComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.reverse();
+      //     },
+      //   },
+      // );
+      // tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -277,16 +277,16 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 2);
     } else {
-      const changeTL = gsap.timeline({
-        paused: true,
-        immediateRender: false,
-        onComplete: () => {
-          enableScroll();
-        },
-        onReverseComplete: () => {
-          enableScroll();
-        },
-      });
+      // const changeTL = gsap.timeline({
+      //   paused: true,
+      //   immediateRender: false,
+      //   onComplete: () => {
+      //     enableScroll();
+      //   },
+      //   onReverseComplete: () => {
+      //     enableScroll();
+      //   },
+      // });
 
       const svg2 = scene.getObjectByName('title2-svg') as THREE.Object3D;
       const svg2Cn = scene.getObjectByName('title2-cn-svg') as THREE.Object3D;
@@ -313,7 +313,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 11 || materialCount > 20) return;
           const material = (child as any).material;
-          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
+          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -324,24 +324,24 @@ export default function ValueGL() {
         const material = (child as any).material;
         svg2CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.1 });
       });
-      changeTL.add(svg2CnAnimGroup, '-=1.2');
-      tl.to(
-        {},
-        {
-          duration: 5,
-          onComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.play();
-          },
-          onReverseComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.reverse();
-          },
-        },
-      );
-      tl.to({}, { duration: 5 }); // 停顿
+      tl.add(svg2CnAnimGroup, '-=1.2');
+      // tl.to(
+      //   {},
+      //   {
+      //     duration: 5,
+      //     onComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.play();
+      //     },
+      //     onReverseComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.reverse();
+      //     },
+      //   },
+      // );
+      // tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -349,16 +349,16 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 3);
     } else {
-      const changeTL = gsap.timeline({
-        paused: true,
-        immediateRender: false,
-        onComplete: () => {
-          enableScroll();
-        },
-        onReverseComplete: () => {
-          enableScroll();
-        },
-      });
+      // const changeTL = gsap.timeline({
+      //   paused: true,
+      //   immediateRender: false,
+      //   onComplete: () => {
+      //     enableScroll();
+      //   },
+      //   onReverseComplete: () => {
+      //     enableScroll();
+      //   },
+      // });
 
       const svg3 = scene.getObjectByName('title3-svg') as THREE.Object3D;
       const svg3Cn = scene.getObjectByName('title3-cn-svg') as THREE.Object3D;
@@ -385,7 +385,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount < 25) return;
           const material = (child as any).material;
-          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
+          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.1 });
         }
       });
       materialCount = 0;
@@ -396,24 +396,24 @@ export default function ValueGL() {
         const material = (child as any).material;
         svg3CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      changeTL.add(svg3CnAnimGroup, '-=1.4');
-      tl.to(
-        {},
-        {
-          duration: 5,
-          onComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.play();
-          },
-          onReverseComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.reverse();
-          },
-        },
-      );
-      tl.to({}, { duration: 5 }); // 停顿
+      tl.add(svg3CnAnimGroup, '-=1.4');
+      // tl.to(
+      //   {},
+      //   {
+      //     duration: 5,
+      //     onComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.play();
+      //     },
+      //     onReverseComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.reverse();
+      //     },
+      //   },
+      // );
+      // tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -421,16 +421,16 @@ export default function ValueGL() {
     if (isMobile) {
       createMobileTextAnim(tl, 4);
     } else {
-      const changeTL = gsap.timeline({
-        paused: true,
-        immediateRender: false,
-        onComplete: () => {
-          enableScroll();
-        },
-        onReverseComplete: () => {
-          enableScroll();
-        },
-      });
+      // const changeTL = gsap.timeline({
+      //   paused: true,
+      //   immediateRender: false,
+      //   onComplete: () => {
+      //     enableScroll();
+      //   },
+      //   onReverseComplete: () => {
+      //     enableScroll();
+      //   },
+      // });
       const svg4 = scene.getObjectByName('title4-svg') as THREE.Object3D;
       const svg4Cn = scene.getObjectByName('title4-cn-svg') as THREE.Object3D;
       // 设置初始状态
@@ -457,7 +457,7 @@ export default function ValueGL() {
           materialCount++;
           if (materialCount >= 15) return;
           const material = (child as any).material;
-          changeTL.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.15 });
+          tl.to(material, { opacity: 0, ease: 'power3.inOut', duration: 0.15 });
         }
       });
       // console.log('1', materialCount);
@@ -469,24 +469,24 @@ export default function ValueGL() {
         const material = (child as any).material;
         svg4CnAnimGroup.to(material, { opacity: 1, ease: 'power3.inOut', duration: 0.2 });
       });
-      changeTL.add(svg4CnAnimGroup, '-=0.2');
-      tl.to(
-        {},
-        {
-          duration: 5,
-          onComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.play();
-          },
-          onReverseComplete: () => {
-            if (isScrollingRef?.current) return;
-            disableScroll();
-            changeTL.reverse();
-          },
-        },
-      );
-      tl.to({}, { duration: 5 }); // 停顿
+      tl.add(svg4CnAnimGroup, '-=1.2');
+      // tl.to(
+      //   {},
+      //   {
+      //     duration: 5,
+      //     onComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.play();
+      //     },
+      //     onReverseComplete: () => {
+      //       if (isScrollingRef?.current) return;
+      //       disableScroll();
+      //       changeTL.reverse();
+      //     },
+      //   },
+      // );
+      // tl.to({}, { duration: 5 }); // 停顿
     }
   };
 
@@ -497,6 +497,9 @@ export default function ValueGL() {
       ...getScalePosition(page2Config.to.prevTitle.position),
       ease: 'power3.inOut',
       duration: 8,
+      // onUpdate: (self) => {
+      //   console.log('update', self?.progress);
+      // },
     });
     tl.to(
       modelRef.current.position,
@@ -735,9 +738,9 @@ export default function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        // onUpdate: (self) => {
-        // console.log('self progress:', self?.progress);
-        // },
+        onUpdate: (self) => {
+          console.log('self progress:', self?.progress);
+        },
       },
     });
 
@@ -788,7 +791,7 @@ export default function ValueGL() {
         z: modelConfig.pos2[0].z,
         ease: 'power3.inOut',
         duration: 3,
-        // onUpdate() {
+        // onUpdate()r {
         //   const progress = this.progress();
         //   console.log('progress', progress);
         //   if (progress < 0.5) throttleSetModel2Visible();
@@ -885,9 +888,9 @@ export default function ValueGL() {
 
     const progressMap = {
       0: 0,
-      1: 0.25,
-      2: 0.485,
-      3: 0.77,
+      1: 0.22,
+      2: 0.455,
+      3: 0.67,
       4: 1,
     };
 
