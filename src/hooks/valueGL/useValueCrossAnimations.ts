@@ -56,11 +56,11 @@ export const useValueCrossAnimations = ({
         ...(isMobile ? page2Config.to.model.mobilePos : page2Config.to.model.position),
         ease: 'power3.inOut',
         duration: 8,
-        onStart: () => {
-          if (!isScrollingRef.current) setValuePageIndex(0);
-        },
         onComplete: () => {
           if (!isScrollingRef.current) setValuePageIndex(1);
+        },
+        onReverseComplete: () => {
+          if (!isScrollingRef.current) setValuePageIndex(0);
         },
       },
       '<',
@@ -144,11 +144,12 @@ export const useValueCrossAnimations = ({
         ...(isMobile ? page3Config.to.model.mobilePos : page3Config.to.model.position),
         ease: 'power3.inOut',
         duration: 8,
-        onStart: () => {
-          if (!isScrollingRef.current) setValuePageIndex(1);
-        },
+
         onComplete: () => {
           if (!isScrollingRef.current) setValuePageIndex(2);
+        },
+        onReverseComplete: () => {
+          if (!isScrollingRef.current) setValuePageIndex(1);
         },
       },
       '<',
@@ -237,11 +238,11 @@ export const useValueCrossAnimations = ({
         ...(isMobile ? page4Config.to.model.mobilePos : page4Config.to.model.position),
         duration: 8,
         ease: 'power3.inOut',
-        onStart: () => {
-          if (!isScrollingRef.current) setValuePageIndex(2);
-        },
         onComplete: () => {
           if (!isScrollingRef.current) setValuePageIndex(3);
+        },
+        onReverseComplete: () => {
+          if (!isScrollingRef.current) setValuePageIndex(2);
         },
       },
       '<',
