@@ -10,13 +10,13 @@ import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations
 import { useValueSVGAnimations } from '@/hooks/valueGL/useValueSVGAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, memo } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
@@ -41,7 +41,23 @@ export const VALUE_PROGRESS_CONFIG = {
   },
 } as const;
 
-export default function ValueGL() {
+type TitleProps = {
+  titleRef: React.RefObject<THREE.Group>;
+  position: THREE.Vector3;
+  rotation?: THREE.Euler;
+  scale: number;
+  titleName: string;
+};
+const TitleSVG = memo(({ titleRef, position, rotation, scale, titleName }: TitleProps) => (
+  <Center ref={titleRef} position={position} rotation={rotation}>
+    <Svg scale={scale} name={`${titleName}-svg`} src={`/svgs/value/${titleName}.svg`} />
+    <Svg scale={scale} name={`${titleName}-cn-svg`} src={`/svgs/value/${titleName}-cn.svg`} />
+  </Center>
+));
+
+TitleSVG.displayName = 'TitleSVG';
+
+function ValueGL() {
   const { camera } = useThree();
   const modelRef = useRef<THREE.Group>(null);
   const title1Ref = useRef<THREE.Group>(null);
@@ -76,6 +92,40 @@ export default function ValueGL() {
   });
 
   const { scaleRatio, getScalePosition, getVectorPosition } = useValueCalcPosition();
+
+  const titlesConfig: TitleProps[] = useMemo(
+    () => [
+      {
+        titleRef: title1Ref,
+        position: getVectorPosition(getScalePosition(page1Config.from.title.position)),
+        rotation: undefined,
+        scale: 0.0107,
+        titleName: 'title1',
+      },
+      {
+        titleRef: title2Ref,
+        position: getVectorPosition(getScalePosition(page2Config.from.title.position)),
+        rotation: new THREE.Euler(0, -2.4, 0),
+        scale: 0.0136,
+        titleName: 'title2',
+      },
+      {
+        titleRef: title3Ref,
+        position: getVectorPosition(getScalePosition(page3Config.from.title.position)),
+        rotation: new THREE.Euler(2.608, -0.075, 3.098),
+        scale: 0.0121,
+        titleName: 'title3',
+      },
+      {
+        titleRef: title4Ref,
+        position: getVectorPosition(getScalePosition(page4Config.from.title.position)),
+        rotation: new THREE.Euler(-2.156, 0.114, 2.972),
+        scale: 0.0143,
+        titleName: 'title4',
+      },
+    ],
+    [page1Config, page2Config, page3Config, page4Config, getVectorPosition, getScalePosition],
+  );
 
   useGSAP(
     () => {
@@ -149,6 +199,7 @@ export default function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
+        immediateRender: isMobile,
         // onUpdate: (self) => {
         //   console.log('progress ', self?.progress);
         // },
@@ -245,47 +296,35 @@ export default function ValueGL() {
           onComplete: () => {
             isScrollingRef.current = false;
             enableScroll();
+            if (valuePageNavigateTo === 0 && title1Ref.current)
+              gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
           },
         });
       }
       setValuePageIndex(valuePageNavigateTo);
       setValuePageNavigateTo(null);
     }
-  }, [currentPageIndex, valuePageNavigateTo, isMobile, setValuePageIndex, setValuePageNavigateTo, progressMap, enableScroll]);
+  }, [
+    currentPageIndex,
+    valuePageNavigateTo,
+    isMobile,
+    progressMap,
+    setValuePageIndex,
+    setValuePageNavigateTo,
+    enableScroll,
+    getScalePosition,
+    page1Config.to.title.position,
+  ]);
 
   return (
     <group>
       <group scale={scaleRatio} visible={!isMobile}>
-        <Center ref={title1Ref} position={getVectorPosition(getScalePosition(page1Config.from.title.position))}>
-          <Svg scale={0.0107} name="title1-svg" src="/svgs/value/title1.svg" />
-          <Svg scale={0.0107} name="title1-cn-svg" src="/svgs/value/title1-cn.svg" />
-        </Center>
-        <Center
-          ref={title2Ref}
-          position={getVectorPosition(getScalePosition(page2Config.from.title.position))}
-          rotation={[0, -2.4, 0]}
-        >
-          <Svg scale={0.0136} name="title2-svg" src="/svgs/value/title2.svg" />
-          <Svg scale={0.0136} name="title2-cn-svg" src="/svgs/value/title2-cn.svg" />
-        </Center>
-        <Center
-          ref={title3Ref}
-          position={getVectorPosition(getScalePosition(page3Config.from.title.position))}
-          rotation={[2.608, -0.075, 3.098]}
-        >
-          <Svg scale={0.0121} name="title3-svg" src="/svgs/value/title3.svg" />
-          <Svg scale={0.0121} name="title3-cn-svg" src="/svgs/value/title3-cn.svg" />
-        </Center>
-        <Center
-          ref={title4Ref}
-          position={getVectorPosition(getScalePosition(page4Config.from.title.position))}
-          rotation={[-2.156, 0.114, 2.972]}
-        >
-          <Svg scale={0.0143} name="title4-svg" src="/svgs/value/title4.svg" />
-          <Svg scale={0.0143} name="title4-cn-svg" src="/svgs/value/title4-cn.svg" />
-        </Center>
+        {titlesConfig.map((config, index) => (
+          <TitleSVG key={config.titleName} {...config} />
+        ))}
       </group>
       <AnimalModel ref={modelRef} />
     </group>
   );
 }
+export default memo(ValueGL);
