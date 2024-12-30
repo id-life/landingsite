@@ -262,10 +262,14 @@ function Portfolio() {
       portfolioRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
+        const title = div.querySelector('.fund-title');
         const desc = div.querySelector('.fund-desc');
         const subtitle = div.querySelector('.fund-subtitle');
+        if (title) {
+          tl.to(title, { fontSize: '26px', fontWeight: 600, lineHeight: '30px', textDecoration: 'underline' });
+        }
         if (desc) {
-          tl.from(desc, { opacity: 0, translateY: '50%' });
+          tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
         }
         if (subtitle) {
           tl.from(subtitle, { opacity: 0, translateY: '50%' }, '<50%');
@@ -431,10 +435,11 @@ interface PortfolioItemProps {
   link?: string;
   onClick: () => void;
   className?: string;
+  isHover?: boolean;
 }
 
 export const PortfolioItem = memo(
-  forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onClick, className }, ref) => {
+  forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onClick, className, isHover }, ref) => {
     const { title, subTitle, description, image } = item;
     return (
       <div
@@ -447,7 +452,7 @@ export const PortfolioItem = memo(
       >
         <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{image}</div>
         <div className="mt-4 text-center font-semibold">
-          <h4 className="font-oxanium text-base/6 mobile:text-xl/6">{title}</h4>
+          <h4 className="fund-title font-oxanium text-base/6 mobile:text-xl/6">{title}</h4>
           <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{description}</p>
           {subTitle && (
             <div className="fund-subtitle mx-auto mt-3 w-44 py-1.5 text-xs/3 font-semibold text-gray-350">{subTitle}</div>
