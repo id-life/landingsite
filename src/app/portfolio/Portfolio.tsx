@@ -1,4 +1,4 @@
-import { currentPageAtom } from '@/atoms';
+import { currentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -7,7 +7,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -106,6 +106,8 @@ function Portfolio() {
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
   const swiperRef = useRef<SwiperType>();
+  const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
+  const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
 
   const enableScroll = useCallback(() => {
     if (isMobile) document.body.style.overflow = '';
@@ -295,7 +297,14 @@ function Portfolio() {
     setActiveIndex(index);
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
+    setMobilePortfolioPageIndex(index);
   };
+
+  useEffect(() => {
+    if (!isMobile || mobilePortfolioPageNavigateTo === null) return;
+    swiperRef.current?.slideTo(mobilePortfolioPageNavigateTo);
+    setMobilePortfolioPageNavigateTo(null);
+  }, [isMobile, mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo]);
 
   useEffect(() => {
     if (isMobile && showParticle) {

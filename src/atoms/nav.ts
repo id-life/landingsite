@@ -10,6 +10,10 @@ export const mobileNavOpenAtom = atom<boolean>(false);
 
 export const navigateToAtom = atom<NavItem | null>(null);
 
+// 移动端 portfolio 轮播页面进度条
+export const mobilePortfolioPageIndexAtom = atom<number>(0);
+export const mobilePortfolioPageNavigateToAtom = atom<number | null>(null);
+
 // value 页面进度条
 export const valuePageIndexAtom = atom<number>(0);
 export const valuePageNavigateToAtom = atom<number | null>(null);

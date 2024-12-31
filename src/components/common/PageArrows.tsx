@@ -1,13 +1,19 @@
 import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
-import { currentPageAtom, currentPageIndexAtom, navigateToAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import {
+  currentPageAtom,
+  currentPageIndexAtom,
+  mobilePortfolioPageIndexAtom,
+  mobilePortfolioPageNavigateToAtom,
+  navigateToAtom,
+  valuePageIndexAtom,
+  valuePageNavigateToAtom,
+} from '@/atoms';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
+import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
-import gsap from 'gsap';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { throttle } from 'lodash-es';
-import { useCallback } from 'react';
-import { useThrottle } from '@/hooks/useThrottle';
 
 interface PageArrowsProps {
   className?: string;
@@ -47,10 +53,13 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const isMobile = useIsMobile();
   const valuePageIndex = useAtomValue(valuePageIndexAtom);
   const setValuePageNavigateTo = useSetAtom(valuePageNavigateToAtom);
+  const [mobilePortfolioPageIndex, setMobilePortfolioPageIndex] = useAtom(mobilePortfolioPageIndexAtom);
+  const setMobilePortfolioPageNavigateTo = useSetAtom(mobilePortfolioPageNavigateToAtom);
 
   const handleClick = useThrottle(() => {
     onClick?.();
     if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
+      // 移动端 需要特殊处理
       const height = window.innerHeight;
       gsap.to(window, {
         duration: 1.5,
@@ -58,9 +67,23 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       });
       return;
     }
+    if (isMobile && currentPageIndex === 1) {
+      if (isUp && mobilePortfolioPageIndex === 0) {
+        // 开头 往上翻
+        setNavigateTo(NAV_LIST[0]);
+        return;
+      }
+      if (!isUp && mobilePortfolioPageIndex === 7) {
+        // 结尾 往下翻
+        setNavigateTo(NAV_LIST[2]);
+        return;
+      }
+      setMobilePortfolioPageNavigateTo(mobilePortfolioPageIndex + (isUp ? -1 : 1));
+      return;
+    }
     if (currentPageIndex === 2) {
       if (valuePageIndex === 0 && isUp) {
-        // 小进度开头
+        // 小进度开头 往上翻
         setNavigateTo(NAV_LIST[1]);
         return;
       }
