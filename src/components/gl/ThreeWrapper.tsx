@@ -11,6 +11,8 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { Suspense, useEffect } from 'react';
 import { Fluid } from './fluid/Fluid';
+import { Perf } from 'r3f-perf';
+import { useControls } from 'leva';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -56,6 +58,15 @@ export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
 
+  const { showPerf } = useControls(
+    {
+      showPerf: false,
+    },
+    {
+      hidden: process.env.NODE_ENV === 'production',
+    },
+  );
+
   const handleClick = useThrottle(() => {
     if (!isMobile) return;
     setIsCN((prev) => !prev);
@@ -73,6 +84,7 @@ export default function ThreeWrapper() {
       }}
       onClick={handleClick}
     >
+      {showPerf && <Perf position="top-left" />}
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense fallback={<Loader />}>
