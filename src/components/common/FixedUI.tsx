@@ -164,11 +164,23 @@ export function CarouselItem({
   const content = useMemo(() => {
     if (text)
       return (
-        <p className={cn('line-clamp-2 text-center text-base/4.5 mobile:text-sm/4.5 mobile:font-bold', textClass)}>{text}</p>
+        <p
+          className={cn(
+            'line-clamp-2 text-left text-base/4.5 mobile:text-center mobile:text-sm/4.5 mobile:font-bold',
+            textClass,
+          )}
+        >
+          {text}
+        </p>
       );
     if (cnText)
       return (
-        <p className={cn('bilingual-font line-clamp-2 text-center text-xl/6 mobile:text-base/5 mobile:font-bold', textClass)}>
+        <p
+          className={cn(
+            'bilingual-font line-clamp-2 text-left text-xl/6 mobile:text-center mobile:text-base/5 mobile:font-bold',
+            textClass,
+          )}
+        >
           {cnText}
         </p>
       );
