@@ -69,7 +69,7 @@ export default function Footer() {
           className="page-footer fixed -bottom-50 z-20 flex h-48 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
           <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
-            <h3 className="text-3x font-oxanium font-bold uppercase mobile:text-2xl/7.5">SUBSCRIBE</h3>
+            <h3 className="font-oxanium text-3xl font-bold uppercase mobile:text-2xl/7.5">SUBSCRIBE</h3>
             <form
               id="subscribe-form"
               className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
