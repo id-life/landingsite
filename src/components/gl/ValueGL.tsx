@@ -210,13 +210,13 @@ function ValueGL() {
 
     tl.add(() => {
       if (isMobile) {
-        console.log('isMobile anim start lock');
+        // console.log('isMobile anim start lock');
         lockScroll('up');
       }
     });
     tl.add(() => {
       if (isMobile) {
-        console.log('isMobile anim end unlock');
+        // console.log('isMobile anim end unlock');
         unlockScroll();
       }
     }, '+=0.1');
@@ -285,7 +285,6 @@ function ValueGL() {
     if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
 
-  console.log('valuePageNavigateTo', valuePageNavigateTo);
   useEffect(() => {
     if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
@@ -295,10 +294,9 @@ function ValueGL() {
         if (st) {
           isScrollingRef.current = true;
           gsap.to(window, {
-            duration: 1,
+            duration: 0.5,
             scrollTo: st.end,
             onComplete: () => {
-              console.log('scroll to footer end');
               isScrollingRef.current = false;
               enableScroll();
             },

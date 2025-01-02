@@ -14,6 +14,7 @@ import MobileNavDialog from '../dialog/MobileNavDialog';
 import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import { globalLoadedAtom } from '@/atoms/geo';
 
 export default function Nav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -22,6 +23,7 @@ export default function Nav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const playingRef = useRef<boolean>(false);
   const timelineRef = useRef(gsap.timeline({ paused: true }));
+  const globalLoaded = useAtomValue(globalLoadedAtom);
 
   const onSubscribeClick = () => {
     if (isSubscribeShow) {
@@ -62,6 +64,7 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  if (!globalLoaded) return null;
   return (
     <div
       id="nav"

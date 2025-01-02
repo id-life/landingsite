@@ -51,7 +51,7 @@ export default function Footer() {
           },
         },
       });
-      timeline.to(subscribeRef.current, { bottom: isMobile ? '1rem' : '2.25rem' });
+      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '6rem' });
       timeline.to(
         '.footer-box-clip',
         isMobile ? { width: '100%', height: 'auto' } : { width: '40rem', height: '11.5rem' },
@@ -67,7 +67,7 @@ export default function Footer() {
       <FloatingPortal>
         <div
           ref={subscribeRef}
-          className="page-footer fixed -bottom-50 z-20 flex h-48 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
+          className="page-footer fixed -bottom-40 z-20 flex h-48 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
           <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
             <h3 className="font-oxanium text-3xl font-bold uppercase mobile:text-2xl/7.5">SUBSCRIBE</h3>
