@@ -20,15 +20,6 @@ const config: Config = {
         oxanium: ['var(--font-oxanium)'],
         'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
       },
-      animation: {
-        'scroll-down': 'scroll-down 1.5s ease-in infinite',
-      },
-      keyframes: {
-        'scroll-down': {
-          '0%, 100%': { transform: 'translate3d(-50%, -6px, 0)' },
-          '50%': { transform: 'translate3d(-50%, 6px, 0)' },
-        },
-      },
       spacing: {
         3.5: '0.875rem',
         4.5: '1.125rem',

@@ -9,12 +9,18 @@ import VisionDecorationLogo_5 from '@/../public/svgs/vision/vision-decoration-lo
 import VisionDecorationLogo_6 from '@/../public/svgs/vision/vision-decoration-logo-6.svg?component';
 import FixedCard from '@/app/value/FixedCard';
 import FixedValue from '@/app/value/FixedValue';
+import { currentPageAtom } from '@/atoms';
+import { globalLoadedAtom } from '@/atoms/geo';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { ReactNode, useMemo } from 'react';
-import { ClientOnly } from './ClientOnly';
-import VerticalCarousel from './VerticalCarousel';
 import { cn } from '@/utils';
+import { useAtomValue } from 'jotai';
+import { ReactNode, useMemo } from 'react';
+import { NAV_LIST } from '../nav/nav';
+import { ClientOnly } from './ClientOnly';
+import PageArrows from './PageArrows';
+import ScrollButton from './ScrollButton';
+import VerticalCarousel from './VerticalCarousel';
 
 export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; textClass?: string }[] = [
   {
@@ -73,14 +79,53 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
 
 export default function FixedUI() {
   const isMobile = useIsMobile();
+  const currentPage = useAtomValue(currentPageAtom);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
   return (
     <>
-      <div className="fixed-top fixed left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-foreground transition duration-300 mobile:left-5 mobile:top-[7.5rem] mobile:h-1 mobile:w-3" />
-      <div className="fixed-bottom fixed left-10 top-[calc(50%_+_16rem)] h-2 w-9 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:left-5 mobile:top-auto mobile:h-1 mobile:w-4.5" />
-      <div className="fixed-bottom fixed right-10 top-[calc(50%_+_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:right-5 mobile:top-auto mobile:h-2" />
-      <div className="fixed-top fixed right-[13.5rem] top-[calc(50%_-_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:right-[6.75rem] mobile:top-[7.5rem] mobile:h-2" />
-      <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
-      {!isMobile && (
+      {globalLoaded ? (
+        currentPage.id === NAV_LIST[0].id ? (
+          <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
+        ) : (
+          <PageArrows
+            className={cn(
+              'fixed left-1/2 -translate-x-1/2',
+              currentPage.id === NAV_LIST[2].id ? 'bottom-5 mobile:bottom-6' : 'bottom-11 mobile:bottom-6',
+            )}
+          />
+        )
+      ) : null}
+      <div
+        className={cn(
+          'fixed-top fixed left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-foreground transition duration-300 mobile:left-5 mobile:top-[7.5rem] mobile:h-1 mobile:w-3',
+          !globalLoaded && 'opacity-0',
+        )}
+      />
+      <div
+        className={cn(
+          'fixed-bottom fixed left-10 top-[calc(50%_+_16rem)] h-2 w-9 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:left-5 mobile:top-auto mobile:h-1 mobile:w-4.5',
+          !globalLoaded && 'opacity-0',
+        )}
+      />
+      <div
+        className={cn(
+          'fixed-bottom fixed right-10 top-[calc(50%_+_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:right-5 mobile:top-auto mobile:h-2',
+          !globalLoaded && 'opacity-0',
+        )}
+      />
+      <div
+        className={cn(
+          'fixed-top fixed right-[13.5rem] top-[calc(50%_-_14rem)] aspect-square h-4 bg-foreground transition duration-300 mobile:right-[6.75rem] mobile:top-[7.5rem] mobile:h-2',
+          !globalLoaded && 'opacity-0',
+        )}
+      />
+      <VisionDecorationCircleSVG
+        className={cn(
+          'fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2',
+          !globalLoaded && 'opacity-0',
+        )}
+      />
+      {globalLoaded && !isMobile && (
         <VerticalCarousel
           isShuffle
           slideDown
@@ -94,7 +139,7 @@ export default function FixedUI() {
           ))}
         </VerticalCarousel>
       )}
-      {!isMobile && (
+      {globalLoaded && !isMobile && (
         <ClientOnly>
           <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
         </ClientOnly>

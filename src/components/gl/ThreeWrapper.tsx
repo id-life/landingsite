@@ -1,19 +1,26 @@
-import { Suspense, useEffect } from 'react';
-import { Fluid } from './fluid/Fluid';
-import { Canvas } from '@react-three/fiber';
+import { globalLoadedAtom, isCNAtom } from '@/atoms/geo';
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useThrottle } from '@/hooks/useThrottle';
+import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html, useProgress } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useThrottle } from '@/hooks/useThrottle';
-import { isCNAtom } from '@/atoms/geo';
 import { useSetAtom } from 'jotai';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
+import { Suspense, useEffect } from 'react';
+import { Fluid } from './fluid/Fluid';
 
 function Loader() {
   const { progress, active } = useProgress();
+  const setGlobalLoaded = useSetAtom(globalLoadedAtom);
+  // 设置全局加载完成
+  useEffect(() => {
+    if (!active) {
+      setGlobalLoaded(true);
+    }
+  }, [active, setGlobalLoaded]);
 
   useEffect(() => {
     const smoother = ScrollSmoother.get();
@@ -49,6 +56,10 @@ export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
 
+  // const { showPerf } = useControls({
+  //   showPerf: false,
+  // });
+
   const handleClick = useThrottle(() => {
     if (!isMobile) return;
     setIsCN((prev) => !prev);
@@ -66,6 +77,7 @@ export default function ThreeWrapper() {
       }}
       onClick={handleClick}
     >
+      {/* {showPerf && <Perf position="top-left" />} */}
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense fallback={<Loader />}>

@@ -1,4 +1,4 @@
-import { currentPageAtom } from '@/atoms';
+import { currentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -7,7 +7,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -106,6 +106,8 @@ function Portfolio() {
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => (isMobile ? isEntered : active), [isMobile, isEntered, active]);
   const swiperRef = useRef<SwiperType>();
+  const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
+  const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
 
   const enableScroll = useCallback(() => {
     if (isMobile) document.body.style.overflow = '';
@@ -262,10 +264,14 @@ function Portfolio() {
       portfolioRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
+        const title = div.querySelector('.fund-title');
         const desc = div.querySelector('.fund-desc');
         const subtitle = div.querySelector('.fund-subtitle');
+        if (title) {
+          tl.to(title, { fontSize: '26px', fontWeight: 600, lineHeight: '30px', textDecoration: 'underline' });
+        }
         if (desc) {
-          tl.from(desc, { opacity: 0, translateY: '50%' });
+          tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
         }
         if (subtitle) {
           tl.from(subtitle, { opacity: 0, translateY: '50%' }, '<50%');
@@ -291,7 +297,14 @@ function Portfolio() {
     setActiveIndex(index);
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
+    setMobilePortfolioPageIndex(index);
   };
+
+  useEffect(() => {
+    if (!isMobile || mobilePortfolioPageNavigateTo === null) return;
+    swiperRef.current?.slideTo(mobilePortfolioPageNavigateTo);
+    setMobilePortfolioPageNavigateTo(null);
+  }, [isMobile, mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo]);
 
   useEffect(() => {
     if (isMobile && showParticle) {
@@ -319,7 +332,7 @@ function Portfolio() {
       {isMobile && active && (
         <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />
       )}
-      <div className="relative flex h-[100svh] flex-col items-center justify-center mobile:translate-y-6">
+      <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <div id="particle-gl">
           {isMobile ? (
             <>
@@ -343,7 +356,7 @@ function Portfolio() {
               direction="vertical"
               slidesPerView={2}
               spaceBetween={0}
-              className="h-[70svh]"
+              className="h-[60svh]"
               onBeforeInit={(swiper) => {
                 swiperRef.current = swiper;
               }}
@@ -375,7 +388,7 @@ function Portfolio() {
               }}
             >
               {portfolio.map((item, index) => (
-                <SwiperSlide key={item.title} className="h-[35svh]">
+                <SwiperSlide key={item.title} className="h-[30svh]">
                   <PortfolioItem
                     item={item}
                     onClick={() => handleFundClick(item)}
@@ -431,23 +444,24 @@ interface PortfolioItemProps {
   link?: string;
   onClick: () => void;
   className?: string;
+  isHover?: boolean;
 }
 
 export const PortfolioItem = memo(
-  forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onClick, className }, ref) => {
+  forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onClick, className, isHover }, ref) => {
     const { title, subTitle, description, image } = item;
     return (
       <div
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[35svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
+          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[30svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
           className,
         )}
       >
         <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{image}</div>
         <div className="mt-4 text-center font-semibold">
-          <h4 className="font-oxanium text-base/6 mobile:text-xl/6">{title}</h4>
+          <h4 className="fund-title font-oxanium text-base/6 mobile:text-xl/6">{title}</h4>
           <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{description}</p>
           {subTitle && (
             <div className="fund-subtitle mx-auto mt-3 w-44 py-1.5 text-xs/3 font-semibold text-gray-350">{subTitle}</div>

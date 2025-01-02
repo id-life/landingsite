@@ -1,12 +1,15 @@
-import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, memo, Ref, useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
 import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
+import { model3VisibleAtom } from '@/atoms/geo';
+import { useAtomValue } from 'jotai';
 
 const backsideThickness = 1.5;
 const thickness = 5;
+const FBO_RESOLUTION = 64;
 
 const gltfConfig = ANIMAL_CONFIG[1];
 
@@ -14,10 +17,12 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const { scene, animations } = useGLTF(gltfConfig.path);
   const { actions, names } = useAnimations(animations, scene);
   const meshRef = useRef<THREE.Mesh[]>([]);
-  const [discardMaterial] = useState(() => new MeshDiscardMaterial());
-  const [background] = useState(() => new THREE.Color('white'));
-  const fboMain = useFBO(256, 256);
-  const fboBack = useFBO(256, 256);
+
+  const [discardMaterial, background] = useMemo(() => [new MeshDiscardMaterial(), new THREE.Color('white')], []);
+
+  const fboMain = useFBO(FBO_RESOLUTION, FBO_RESOLUTION);
+  const fboBack = useFBO(FBO_RESOLUTION, FBO_RESOLUTION);
+  const visible = useAtomValue(model3VisibleAtom);
 
   useEffect(() => {
     if (!scene) return;
@@ -45,6 +50,9 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [actions, names]);
 
   useFrame(({ clock, gl, scene, camera }) => {
+    // 当不可见时跳过渲染循环
+    if (!visible) return;
+
     meshRef.current.forEach((mesh: any) => {
       mesh.material.time = clock.getElapsedTime();
       const oldTone = gl.toneMapping;
@@ -64,7 +72,6 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
 
       gl.setRenderTarget(fboMain);
       gl.render(scene, camera);
-
       mesh.material = oldMaterial;
       mesh.material.thickness = thickness;
       mesh.material.side = THREE.FrontSide;
@@ -77,7 +84,7 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   });
 
   return (
-    <group ref={ref} {...props} scale={gltfConfig.scale}>
+    <group ref={ref} {...props} visible={visible} scale={gltfConfig.scale}>
       <group rotation={[0, Math.PI / 2, 0]}>
         <primitive object={scene}></primitive>
       </group>
@@ -87,4 +94,4 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
 
 Animal3Model.displayName = 'Animal3Model';
 
-export default Animal3Model;
+export default memo(Animal3Model);

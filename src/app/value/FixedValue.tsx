@@ -9,7 +9,7 @@ type ValueContentItem = {
   id: string;
   title: string;
   content: string;
-  cn: {
+  cn?: {
     title: string;
     content: string;
   };
@@ -20,13 +20,9 @@ type ValueContentItem = {
 const VALUE_CONTENT: ValueContentItem[] = [
   {
     id: 'page-value-1',
-    title: 'A New Dawn',
+    title: 'A New Dawn 曙光',
     content:
-      'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
-    cn: {
-      title: '曙光',
-      content: '我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
-    },
+      'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.\n我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     mobileSVGElement: (
       <h2
         id="value-1-svg-mobile"
@@ -46,19 +42,19 @@ const VALUE_CONTENT: ValueContentItem[] = [
   },
   {
     id: 'page-value-2',
-    title: 'As an Evangelist',
+    title: 'As an Evangelist 传播与共识',
     content:
-      'We help the world come to a better understanding of life extension technologies, galvanizing global consciousness, talents & resources in the process.',
-    cn: {
-      title: '传播与共识',
-      content: '我们致力于成为生命延长技术的布道者，在促进全球共识、汇聚全球智慧与资源方面发挥关键作用',
-    },
+      'We help the world come to a better understanding of life extension technologies, galvanizing global consciousness, talents & resources in the process.\n我们致力于成为生命延长技术的布道者，在促进全球共识、汇聚全球智慧与资源方面发挥关键作用',
+    // cn: {
+    //   title: '',
+    //   content: '',
+    // },
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
       <h2
         id="value-2-svg-mobile"
-        className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-1/3 flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
+        className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-40 flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
         <span className="value-text-en">Discovering</span>
         <span className="value-text-en mt-5 text-[3.625rem]/[3.625rem] tracking-tight text-red-500">Champions</span>
@@ -75,13 +71,13 @@ const VALUE_CONTENT: ValueContentItem[] = [
   },
   {
     id: 'page-value-3',
-    title: 'A Moral Endeavor',
+    title: 'A Moral Endeavor 卓越的道德探索',
     content:
-      'We pursue longer, healthier lives and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality.',
-    cn: {
-      title: '卓越的道德探索',
-      content: '我们矢志追求生命的延展与健康的永驻，化解年龄相关疾病带来的苦痛，全力以赴实现这一崇高愿景',
-    },
+      'We pursue longer, healthier lives and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality.\n我们矢志追求生命的延展与健康的永驻，化解年龄相关疾病带来的苦痛，全力以赴实现这一崇高愿景',
+    // cn: {
+    //   title: '',
+    //   content: '',
+    // },
     mobileSVGElement: (
       <h2
         id="value-3-svg-mobile"
@@ -103,19 +99,19 @@ const VALUE_CONTENT: ValueContentItem[] = [
   },
   {
     id: 'page-value-4',
-    title: 'A Virtuous Cycle',
+    title: 'A Virtuous Cycle 胆量与发展并进',
     content:
-      'We stand with bold early investments, where breakthroughs accelerate the cause, bringing further talents, supporters and resources.',
-    cn: {
-      title: '胆量与发展并进',
-      content: '我们坚持前瞻性的大胆投资，每一次突破都将加速推进事业，吸引更多英才、支持者与资源汇聚',
-    },
+      'We stand with bold early investments, where breakthroughs accelerate the cause, bringing further talents, supporters and resources.\n我们坚持前瞻性的大胆投资，每一次突破都将加速推进事业，吸引更多英才、支持者与资源汇聚',
+    // cn: {
+    //   title: '',
+    //   content: '',
+    // },
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
       <h2
         id="value-4-svg-mobile"
-        className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-1/4 flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
+        className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-28 flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
         <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">
           A Virtuous
@@ -212,22 +208,22 @@ export default function FixedValue() {
           <div
             id={item.id}
             className={cn(
-              'page-value-item bilingual-font pointer-events-none fixed bottom-40 right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-15',
+              'page-value-item bilingual-font-poppins pointer-events-none fixed bottom-[6.25rem] right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem]',
               item?.className,
             )}
           >
-            <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{isCN ? item.cn.title : item.title}</h3>
-            <p className="bilingual-font mt-4 w-[29.125rem] text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
-              {isCN ? item.cn.content : item.content}
+            <h3 className="text-xl/6 font-semibold mobile:text-sm/3.5">{item.title}</h3>
+            <p className="bilingual-font-poppins mt-4 w-[31rem] whitespace-pre-wrap text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
+              {item.content}
             </p>
-            <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
+            {/* <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
               <button onClick={() => setIsCN(false)}>
                 <EnBtnSVG active={!isCN} />
               </button>
               <button onClick={() => setIsCN(true)} className="-ml-2.5">
                 <CnBtnSVG active={isCN} />
               </button>
-            </div>
+            </div> */}
           </div>
         </Fragment>
       ))}
@@ -247,7 +243,7 @@ export default function FixedValue() {
       <ul
         id="value-end-2"
         className={cn(
-          'list-mark-red-disc bilingual-font invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-5 mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
+          'list-mark-red-disc bilingual-font invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem] mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
           { 'w-auto': isCN },
         )}
       >

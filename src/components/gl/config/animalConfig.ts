@@ -49,7 +49,7 @@ export const MODEL_CONFIG = [
   {
     init: [new THREE.Vector3(0, -10, 10), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 10)],
     pos1: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, -10, 10)],
-    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, 0)],
+    pos2: [new THREE.Vector3(0, 0, -12), new THREE.Vector3(0, 0, -12), new THREE.Vector3(1, 0.01, 0)],
   },
   {
     init: [new THREE.Vector3(0, -10, -5), new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -10, 10)],

@@ -105,6 +105,10 @@
     /* 设置字体优先级：先尝试 Oxanium (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
     font-family: var(--font-oxanium), var(--font-source-han-sans-cn), sans-serif;
   }
+  .bilingual-font-poppins {
+    /* 设置字体优先级：先尝试 poppins (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
+    font-family: var(--font-poppins), var(--font-source-han-sans-cn), sans-serif;
+  }
 }
 
 @layer utilities {
@@ -175,5 +179,15 @@
 
   .footer-submit-clip {
     clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0 100%, 0 0.75rem);
+  }
+  .scroll-button-ripple-init {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 0.7px solid black;
+    border-radius: 9999px;
+    width: 122px;
+    height: 40px;
   }
 }
