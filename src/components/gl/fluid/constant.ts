@@ -32,7 +32,7 @@ export const OPTS = {
   rainbow: true,
 
   // 染料分辨率 - 控制流体渲染的精细程度
-  dyeRes: 256,
+  dyeRes: 512,
   // 模拟分辨率 - 控制流体物理模拟的精细程度
   simRes: 128,
 } as const;
