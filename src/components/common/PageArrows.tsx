@@ -26,9 +26,9 @@ export default function PageArrows({ className }: PageArrowsProps) {
     <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {(currentPage.id !== NAV_LIST[2].id || valuePageIndex !== 4) && <ArrowItem />}
+        {(currentPage.id !== NAV_LIST[2].id || valuePageIndex !== 5) && <ArrowItem />}
       </div>
-      {/* 五个细长方块进度条 */}
+      {/* 5个细长方块进度条 */}
       {currentPage.id === NAV_LIST[2].id && (
         <div className="flex-center order-2 gap-3 mobile:order-1">
           {VALUE_PAGE_INDEX_LIST.map((_, index) => (

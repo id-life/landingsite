@@ -31,6 +31,7 @@ export const VALUE_PROGRESS_CONFIG = {
     2: 0.475,
     3: 0.704,
     4: 0.85,
+    5: 1, // 出邮箱
   },
   desktop: {
     0: 0,
@@ -38,6 +39,7 @@ export const VALUE_PROGRESS_CONFIG = {
     2: 0.486,
     3: 0.742,
     4: 1,
+    5: 1, // 出邮箱
   },
 } as const;
 
@@ -283,23 +285,40 @@ function ValueGL() {
     if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
   }, [isMobile]);
 
+  console.log('valuePageNavigateTo', valuePageNavigateTo);
   useEffect(() => {
     if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
-      const st = ScrollTrigger.getById('valueTimeline');
-      if (st) {
-        isScrollingRef.current = true;
-        gsap.to(window, {
-          duration: 1,
-          scrollTo: st.start + (st.end - st.start) * progress,
-          onComplete: () => {
-            isScrollingRef.current = false;
-            enableScroll();
-            if (valuePageNavigateTo === 0 && title1Ref.current)
-              gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
-          },
-        });
+      if (valuePageNavigateTo === 5) {
+        const st = ScrollTrigger.getById('footerTimeline');
+        if (st) {
+          isScrollingRef.current = true;
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: st.end,
+            onComplete: () => {
+              console.log('scroll to footer end');
+              isScrollingRef.current = false;
+              enableScroll();
+            },
+          });
+        }
+      } else {
+        const st = ScrollTrigger.getById('valueTimeline');
+        if (st) {
+          isScrollingRef.current = true;
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: st.start + (st.end - st.start) * progress,
+            onComplete: () => {
+              isScrollingRef.current = false;
+              enableScroll();
+              if (valuePageNavigateTo === 0 && title1Ref.current)
+                gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
+            },
+          });
+        }
       }
       setValuePageIndex(valuePageNavigateTo);
       setValuePageNavigateTo(null);

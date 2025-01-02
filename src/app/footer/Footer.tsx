@@ -38,6 +38,7 @@ export default function Footer() {
       if (!portalNode) return;
       const timeline = gsap.timeline({
         scrollTrigger: {
+          id: 'footerTimeline',
           trigger: wrapperRef.current,
           start: 'top bottom',
           end: 'bottom bottom',
