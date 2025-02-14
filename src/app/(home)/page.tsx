@@ -1,7 +1,6 @@
 'use client';
 
 import Footer from '@/app/footer/Footer';
-import Portfolio from '@/app/portfolio/Portfolio';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
@@ -12,15 +11,12 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai/index';
-import { useCallback } from 'react';
+import MobilePortfolio from '../portfolio/_components/MobilePortfolio';
+import Portfolio from '../portfolio/_components/Portfolio';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const isMobile = useIsMobile();
-
-  const enableScroll = useCallback(() => {
-    if (isMobile) document.body.style.overflow = '';
-  }, [isMobile]);
 
   useGSAP(
     () => {
@@ -34,11 +30,9 @@ export default function Home() {
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[0]);
-            enableScroll();
           },
           onEnterBack: () => {
             setCurrentPage(NAV_LIST[0]);
-            enableScroll();
           },
         },
       });
@@ -72,7 +66,7 @@ export default function Home() {
       });
       valueTL.to('.base-background2', { opacity: 1 });
     },
-    { dependencies: [isMobile, enableScroll] },
+    { dependencies: [isMobile] },
   );
 
   return (
@@ -81,7 +75,7 @@ export default function Home() {
       <div id="wrapper">
         <div id="content">
           <Vision />
-          <Portfolio />
+          {isMobile ? <MobilePortfolio /> : <Portfolio />}
           <Value />
           <Footer />
         </div>

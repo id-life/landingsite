@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { gsap } from 'gsap';
+import Portfolio from '@/app/portfolio/_components/Portfolio';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useGSAP } from '@gsap/react';
-import Portfolio from '@/app/portfolio/Portfolio';
+import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import MobilePortfolio from './_components/MobilePortfolio';
 
 export default function PortfolioPage() {
+  const isMobile = useIsMobile();
+
   useGSAP(() => {
     const smoother = ScrollSmoother.create({
       wrapper: '#wrapper',
@@ -29,9 +32,7 @@ export default function PortfolioPage() {
   return (
     <>
       <div id="wrapper">
-        <div id="content">
-          <Portfolio />
-        </div>
+        <div id="content">{isMobile ? <MobilePortfolio /> : <Portfolio />}</div>
       </div>
     </>
   );
