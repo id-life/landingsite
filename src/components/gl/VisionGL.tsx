@@ -13,6 +13,8 @@ export default function VisionGL() {
     setScale(newScale);
   }, [viewport?.width]);
 
+  console.log('scale:', scale);
+
   return (
     <group scale={scale}>
       <CenterLogo />

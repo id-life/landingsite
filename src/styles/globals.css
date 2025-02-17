@@ -71,13 +71,16 @@
     min-height: 150svh;
     overflow: hidden;
 
-    &.fund {
-      @apply mobile:min-h-[200svh];
-    }
-
     &.value {
       min-height: 800svh;
     }
+  }
+
+  .page-container-mobile {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
   }
 
   .list-mark-red-disc li {

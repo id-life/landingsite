@@ -1,4 +1,9 @@
-import { currentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
+import {
+  currentPageAtom,
+  mobileCurrentPageAtom,
+  mobilePortfolioPageIndexAtom,
+  mobilePortfolioPageNavigateToAtom,
+} from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -6,7 +11,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -30,7 +35,7 @@ function MobilePortfolio() {
   const swiperRef = useRef<SwiperType>();
   const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
   const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
-
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
   const enableScroll = useCallback(() => {
     document.body.style.overflow = '';
   }, []);
@@ -144,7 +149,13 @@ function MobilePortfolio() {
   }, [disableScroll, isEntered]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
+    <div
+      ref={wrapperRef}
+      id={NAV_LIST[1].id}
+      className={cn('page-container-mobile text-white', {
+        hidden: currentPage?.id !== NAV_LIST[1].id,
+      })}
+    >
       {active && (
         <>
           <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx1} id="particle-container-mobile-1" />
