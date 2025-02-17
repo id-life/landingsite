@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import CenterLogo from './model/vision/CenterLogo';
 import DragonModel from './model/vision/DragonModel';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import MobileDragonModel from './model/vision/MobileDragonModel';
 
 export default function VisionGL() {
   const { viewport } = useThree();
-
+  const isMobile = useIsMobile();
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function VisionGL() {
   return (
     <group scale={scale}>
       <CenterLogo />
-      <DragonModel />
+      {isMobile ? <MobileDragonModel /> : <DragonModel />}
     </group>
   );
 }

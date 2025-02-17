@@ -12,7 +12,6 @@ export default function MobileVision() {
   const wrapperRef = useRef(null);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-
   return (
     <div
       ref={wrapperRef}
@@ -21,22 +20,20 @@ export default function MobileVision() {
         hidden: currentPage?.id !== NAV_LIST[0].id,
       })}
     >
-      <div className="group pointer-events-none absolute inset-0 z-10 select-none">
-        {globalLoaded && (
-          <VerticalCarousel
-            isShuffle
-            slideDown
-            itemHeight={40}
-            duration={5}
-            transition={0.6}
-            className="fixed-logo pointer-events-none absolute inset-x-0 top-[calc(50svh_+_8.5rem)] w-auto -translate-y-1/2"
-          >
-            {CAROUSEL_ITEMS.map((item) => (
-              <CarouselItem key={item.cnText ?? item.text} {...item} />
-            ))}
-          </VerticalCarousel>
-        )}
-      </div>
+      {globalLoaded && (
+        <VerticalCarousel
+          isShuffle
+          slideDown
+          itemHeight={40}
+          duration={5}
+          transition={0.6}
+          className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(50vh_+_8.5rem)] w-auto -translate-y-1/2"
+        >
+          {CAROUSEL_ITEMS.map((item) => (
+            <CarouselItem key={item.cnText ?? item.text} {...item} />
+          ))}
+        </VerticalCarousel>
+      )}
     </div>
   );
 }

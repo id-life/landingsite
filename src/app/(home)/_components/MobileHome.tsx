@@ -10,13 +10,11 @@ export default function Home() {
   return (
     <>
       <MobileThreeWrapper />
-      <div id="wrapper">
-        <div id="content">
-          <MobileVision />
-          <MobilePortfolio />
-          <Value />
-          <MobileFooter />
-        </div>
+      <div id="wrapper" className="h-screen">
+        <MobileVision />
+        <MobilePortfolio />
+        <Value />
+        <MobileFooter />
       </div>
     </>
   );
