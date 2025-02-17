@@ -1,7 +1,8 @@
 import { globalLoadedAtom } from '@/atoms/geo';
-import { CAROUSEL_ITEMS, CarouselItem } from '@/components/common/FixedUI';
+import { CarouselItem } from '@/components/common/PCFixedUI';
 import VerticalCarousel from '@/components/common/VerticalCarousel';
 import { NAV_LIST } from '@/components/nav/nav';
+import { CAROUSEL_ITEMS } from '@/constants/config';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';

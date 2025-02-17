@@ -6,7 +6,6 @@ import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
-import { useNavigation } from '@/hooks/useNavigation';
 import { useAtom, useAtomValue } from 'jotai';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';

@@ -1,11 +1,10 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
@@ -16,33 +15,27 @@ gsap.registerPlugin(useGSAP);
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubOpen] = useState(false);
-  const [currentPage] = useAtom(currentPageAtom);
-  const setNavigateTo = useSetAtom(navigateToAtom);
-  const isMobile = useIsMobile();
+  const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
 
-  const startAnim = useCallback(
-    (isOpen: boolean) => {
-      if (!isMobile) return;
-      if (isOpen) {
-        gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-        gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
-      } else {
-        gsap.set('.mobile-nav-item', { y: 0 });
-        gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
-      }
-    },
-    [isMobile],
-  );
+  const startAnim = useCallback((isOpen: boolean) => {
+    if (isOpen) {
+      gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
+      gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
+    } else {
+      gsap.set('.mobile-nav-item', { y: 0 });
+      gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
+    }
+  }, []);
 
   const handleNavClick = useCallback(
     (item: NavItem) => {
       startAnim(false);
       setTimeout(() => {
         setOpen(false);
-        setNavigateTo(item);
+        setCurrentPage(item);
       }, 300);
     },
-    [setOpen, setNavigateTo, startAnim],
+    [startAnim, setOpen, setCurrentPage],
   );
 
   useEffect(() => {

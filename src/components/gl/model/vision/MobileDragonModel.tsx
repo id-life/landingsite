@@ -1,6 +1,6 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useVisionAnimation } from '@/hooks/useVisionAnimation';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -19,7 +19,6 @@ export default function MobileDragonModel(props: {}) {
   const isRecoveringRef = useRef(false);
   const rotationRef = useRef({ y: InitRotation, x: 0 });
   const backgroundRef = useRef(new THREE.Color(0xffffff));
-  const isMobile = useIsMobile();
   const meshRef = useRef<THREE.Mesh>(null);
   const transmissionConfigRef = useRef({
     transmission: 1,
@@ -36,6 +35,7 @@ export default function MobileDragonModel(props: {}) {
   });
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const { playEnterAnimation, playExitAnimation } = useVisionAnimation(modelRef, 0.08, 0.14, 0);
 
   useFrame(({ clock }) => {
     if (!modelRef.current) return;
@@ -84,24 +84,8 @@ export default function MobileDragonModel(props: {}) {
   useGSAP(
     () => {
       if (!modelRef.current) return;
-      gsap.from(modelRef.current.position, {
-        x: 0,
-        y: 0,
-        z: 10,
-        ease: 'power3.out',
-        duration: 1.5,
-      });
-      gsap.from(modelRef.current.rotation, {
-        x: Math.PI,
-        y: (Math.PI * 3) / 2,
-        z: Math.PI,
-        ease: 'power3.out',
-        duration: 1.5,
-        onComplete: () => {
-          clock.start();
-          autoSwingRef.current = true;
-        },
-      });
+      clock.start();
+      autoSwingRef.current = true;
     },
     { scope: modelRef },
   );
@@ -111,8 +95,14 @@ export default function MobileDragonModel(props: {}) {
     const tl = timelineRef.current;
     if (currentPage?.id === NAV_LIST[0].id) {
       tl?.play();
+      playEnterAnimation();
     } else {
       tl?.pause();
+      if (model) {
+        autoSwingRef.current = false;
+        clock.stop();
+        playExitAnimation();
+      }
     }
     return () => {
       if (tl) {
@@ -123,7 +113,7 @@ export default function MobileDragonModel(props: {}) {
         clock.stop();
       }
     };
-  }, [clock, currentPage]);
+  }, [clock, currentPage, playEnterAnimation, playExitAnimation]);
 
   useGSAP(() => {
     if (!meshRef.current) return;
@@ -230,14 +220,7 @@ export default function MobileDragonModel(props: {}) {
   });
 
   return (
-    <group
-      {...(bind() as any)}
-      ref={modelRef}
-      {...props}
-      scale={isMobile ? 0.14 : 0.13}
-      position={[0, 0, 0]}
-      rotation={[0, InitRotation, 0]}
-    >
+    <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh ref={meshRef} geometry={(nodes.logo as any).geometry}>
         <MeshTransmissionMaterial resolution={512} background={backgroundRef.current} {...transmissionConfigRef.current} />
       </mesh>

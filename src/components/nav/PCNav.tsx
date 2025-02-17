@@ -1,17 +1,17 @@
 'use client';
 
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
+import { currentPageAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
-import { NAV_LIST } from '@/components/nav/nav';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useThrottle } from '@/hooks/useThrottle';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
+import { NAV_LIST } from './nav';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);

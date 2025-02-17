@@ -4,9 +4,12 @@ import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html, useProgress } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useEffect } from 'react';
 import { Fluid } from './fluid/Fluid';
+import { mobileCurrentPageAtom } from '@/atoms';
+import { NAV_LIST } from '../nav/nav';
+import ValueGL from './ValueGL';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -58,7 +61,7 @@ export default function MobileThreeWrapper() {
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense fallback={<Loader />}>
         <VisionGL />
-        {/* <ValueGL /> */}
+        {/* {currentPage.id === NAV_LIST[1].id && <ValueGL />} */}
       </Suspense>
       <EffectComposer>
         <Fluid />
