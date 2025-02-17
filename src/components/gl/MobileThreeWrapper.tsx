@@ -1,15 +1,15 @@
+import { mobileCurrentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import VisionGL from '@/components/gl/VisionGL';
+import { cn } from '@/utils';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html, useProgress } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { Suspense, useEffect } from 'react';
-import { Fluid } from './fluid/Fluid';
-import { mobileCurrentPageAtom } from '@/atoms';
+import { Suspense, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
-import ValueGL from './ValueGL';
+import { Fluid } from './fluid/Fluid';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -46,10 +46,12 @@ function Loader() {
 }
 
 export default function MobileThreeWrapper() {
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const hideCanvas = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
   return (
     <Canvas
       id="vision-canvas"
-      style={{ position: 'fixed', zIndex: 1 }}
+      className={cn('fixed z-10', { 'pointer-events-none hidden': hideCanvas })}
       camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{
         alpha: true,

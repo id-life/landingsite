@@ -6,7 +6,7 @@ import MobileVision from '@/app/vision/_components/MobileVision';
 import MobileThreeWrapper from '@/components/gl/MobileThreeWrapper';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 
-export default function Home() {
+export default function MobileHome() {
   return (
     <>
       <MobileThreeWrapper />

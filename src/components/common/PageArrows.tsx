@@ -1,26 +1,22 @@
 import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
-import {
-  currentPageAtom,
-  currentPageIndexAtom,
-  mobilePortfolioPageIndexAtom,
-  mobilePortfolioPageNavigateToAtom,
-  navigateToAtom,
-  valuePageIndexAtom,
-  valuePageNavigateToAtom,
-} from '@/atoms';
+import { portfolio } from '@/app/portfolio/_components/portfolioData';
+import { mobilePortfolioPageIndexAtom, navigateToAtom, valuePageIndexAtom } from '@/atoms';
+import { useCurrentPage } from '@/hooks/useCurrentPage';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import gsap from 'gsap';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback } from 'react';
 import { NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
   className?: string;
 }
 const VALUE_PAGE_INDEX_LIST = new Array(5).fill(0);
+
 export default function PageArrows({ className }: PageArrowsProps) {
-  const currentPage = useAtomValue(currentPageAtom);
+  const { currentPage } = useCurrentPage();
   const valuePageIndex = useAtomValue(valuePageIndexAtom);
   return (
     <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
@@ -46,39 +42,50 @@ export default function PageArrows({ className }: PageArrowsProps) {
   );
 }
 
-function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) {
-  const currentPage = useAtomValue(currentPageAtom);
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
+function ArrowItem({ isUp }: { isUp?: boolean }) {
+  const { currentPage, currentPageIndex, setValuePageNavigateTo, setMobilePortfolioPageNavigateTo } = useCurrentPage();
   const setNavigateTo = useSetAtom(navigateToAtom);
-  const isMobile = useIsMobile();
   const valuePageIndex = useAtomValue(valuePageIndexAtom);
-  const setValuePageNavigateTo = useSetAtom(valuePageNavigateToAtom);
-  const [mobilePortfolioPageIndex, setMobilePortfolioPageIndex] = useAtom(mobilePortfolioPageIndexAtom);
-  const setMobilePortfolioPageNavigateTo = useSetAtom(mobilePortfolioPageNavigateToAtom);
+  const mobilePortfolioPageIndex = useAtomValue(mobilePortfolioPageIndexAtom);
+  const isMobile = useIsMobile();
+  const { mobileNavChange } = useMobileNavigation();
 
-  const handleClick = useThrottle(() => {
-    onClick?.();
-    if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
-      // 移动端 需要特殊处理
-      const height = window.innerHeight;
-      gsap.to(window, {
-        duration: 1.5,
-        scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
-      });
-      return;
-    }
-    if (isMobile && currentPageIndex === 1) {
-      if (isUp && mobilePortfolioPageIndex === 0) {
-        // 开头 往上翻
-        setNavigateTo(NAV_LIST[0]);
+  // console.log({ currentPageIndex, valuePageIndex, mobilePortfolioPageIndex });
+
+  const mobileArrowClick = useCallback(() => {
+    if (currentPageIndex === 2) {
+      // 第三页 ValueGL
+      if (valuePageIndex === 0 && isUp) {
+        // 小进度开头 往上翻
+        mobileNavChange(NAV_LIST[1]);
         return;
       }
-      if (!isUp && mobilePortfolioPageIndex === 7) {
-        // 结尾 往下翻
-        setNavigateTo(NAV_LIST[2]);
+      setValuePageNavigateTo(valuePageIndex + (isUp ? -1 : 1));
+    } else if (currentPageIndex === 1) {
+      // 第二页 Portfolio
+      if (mobilePortfolioPageIndex === 0 && isUp) {
+        mobileNavChange(NAV_LIST[0]);
+        return;
+      }
+      if (mobilePortfolioPageIndex + 1 === (portfolio?.length ?? 0) - 1 && !isUp) {
+        mobileNavChange(NAV_LIST[2]);
         return;
       }
       setMobilePortfolioPageNavigateTo(mobilePortfolioPageIndex + (isUp ? -1 : 1));
+    } else mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
+  }, [
+    currentPageIndex,
+    mobileNavChange,
+    isUp,
+    valuePageIndex,
+    setValuePageNavigateTo,
+    mobilePortfolioPageIndex,
+    setMobilePortfolioPageNavigateTo,
+  ]);
+
+  const handleClick = useThrottle(() => {
+    if (isMobile) {
+      mobileArrowClick();
       return;
     }
     if (currentPageIndex === 2) {
