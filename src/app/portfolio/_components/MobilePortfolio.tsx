@@ -4,6 +4,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { cn } from '@/utils';
+import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -11,6 +12,7 @@ import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+
 SwiperType.use([FreeMode]);
 
 function MobilePortfolio() {
@@ -97,11 +99,12 @@ function MobilePortfolio() {
       setParticleActive(true);
       setMobileImageIdx1(1);
       setMobileImageIdx2(2);
-      // createEnterAnimation();
+      createEnterAnimation();
     } else {
       setParticleActive(false);
-      // createExitAnimation();
+      createExitAnimation();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   return (

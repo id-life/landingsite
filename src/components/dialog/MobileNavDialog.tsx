@@ -5,10 +5,12 @@ import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import SubscribeDialog from './SubscribeDialog';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useThrottle } from '@/hooks/useThrottle';
 
 gsap.registerPlugin(useGSAP);
 
@@ -16,31 +18,34 @@ function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubOpen] = useState(false);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
-
-  const startAnim = useCallback((isOpen: boolean) => {
-    if (isOpen) {
-      gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-      gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
-    } else {
-      gsap.set('.mobile-nav-item', { y: 0 });
-      gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
-    }
-  }, []);
-
-  const handleNavClick = useCallback(
-    (item: NavItem) => {
-      startAnim(false);
-      setTimeout(() => {
-        setOpen(false);
-        setCurrentPage(item);
-      }, 300);
+  const isMobile = useIsMobile();
+  const startAnim = useCallback(
+    (isOpen: boolean) => {
+      if (!isMobile) return;
+      if (isOpen) {
+        gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
+        gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
+      } else {
+        gsap.set('.mobile-nav-item', { y: 0 });
+        gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
+      }
     },
-    [startAnim, setOpen, setCurrentPage],
+    [isMobile],
   );
 
+  const handleNavClick = useThrottle((item: NavItem) => {
+    startAnim(false);
+    setTimeout(() => {
+      setOpen(false);
+      setCurrentPage(item);
+    }, 600);
+  }, 1000);
+
   useEffect(() => {
-    setTimeout(() => startAnim(open), 300);
-  }, [open]);
+    if (!isMobile) return;
+    if (open) setTimeout(() => startAnim(open), 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isMobile]);
 
   return (
     <Dialog

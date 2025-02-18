@@ -2,7 +2,9 @@
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { mobileCurrentPageAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
+import { NAV_LIST } from '@/components/nav/nav';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { useGSAP } from '@gsap/react';
@@ -17,6 +19,7 @@ export default function MobileFooter() {
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
   const portalNode = useFloatingPortalNode();
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,12 +45,13 @@ export default function MobileFooter() {
   };
 
   useEffect(() => {
+    if (currentPage.id !== NAV_LIST[2].id) return;
     if (isSubscribeShow) {
       open();
     } else {
       close();
     }
-  }, [isSubscribeShow]);
+  }, [isSubscribeShow, currentPage]);
 
   useGSAP(
     () => {
