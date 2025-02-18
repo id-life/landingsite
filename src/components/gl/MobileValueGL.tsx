@@ -181,7 +181,7 @@ function MobileValueGL() {
     return () => {
       if (startAnimTLRef.current) startAnimTLRef.current.kill();
     };
-  }, [currentPage.id, startAnimTLRef]);
+  }, [camera, currentPage, getScalePosition, isMobile, page1Config, startAnimTLRef]);
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
@@ -269,9 +269,7 @@ function MobileValueGL() {
   }, [currentPage]);
 
   useEffect(() => {
-    console.log('valuePageNavigateTo', { currentPageIndex, valuePageNavigateTo });
     if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
-    console.log('valuePageNavigateTo 111', { currentPageIndex, valuePageNavigateTo });
 
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {

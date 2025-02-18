@@ -11,6 +11,7 @@ import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+import gsap from 'gsap';
 SwiperType.use([FreeMode]);
 
 function MobilePortfolio() {
@@ -20,6 +21,7 @@ function MobilePortfolio() {
   const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const swiperRef = useRef<SwiperType>();
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
   const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -29,6 +31,53 @@ function MobilePortfolio() {
     window.open(item.link, '_blank');
   }, []);
   const { mobileNavChange } = useMobileNavigation();
+
+  // 创建入场动画
+  const createEnterAnimation = useCallback(() => {
+    if (!wrapperRef.current) return;
+
+    // 如果存在之前的动画，先清理
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+    }
+
+    const tl = gsap.timeline();
+    timelineRef.current = tl;
+
+    tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
+
+    // 标题动画
+    tl.fromTo('.page2-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    // Portfolio items 动画
+    tl.fromTo('.page2-fund', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    // Contact 部分动画
+    tl.fromTo('.page2-contact', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    return tl;
+  }, []);
+
+  // 创建退场动画
+  const createExitAnimation = useCallback(() => {
+    if (!wrapperRef.current) return;
+
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+    }
+
+    const tl = gsap.timeline();
+    timelineRef.current = tl;
+
+    tl.to(wrapperRef.current, {
+      opacity: 0,
+      y: -50,
+      duration: 0.8,
+      ease: 'power2.inOut',
+    });
+
+    return tl;
+  }, []);
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -49,10 +98,24 @@ function MobilePortfolio() {
       setParticleActive(true);
       setMobileImageIdx1(1);
       setMobileImageIdx2(2);
+      createEnterAnimation();
     } else {
+      if (particleActive) {
+        createExitAnimation();
+      }
       setParticleActive(false);
     }
-  }, [currentPage]);
+  }, [currentPage, createEnterAnimation, createExitAnimation, particleActive]);
+
+  // 清理动画
+  useEffect(() => {
+    return () => {
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+        timelineRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div

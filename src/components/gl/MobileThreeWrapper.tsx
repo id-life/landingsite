@@ -12,6 +12,7 @@ import { Suspense, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
 import MobileValueGL from './MobileValueGL';
+import MobileVisionGL from './MobileVisionGL';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -67,7 +68,7 @@ export default function MobileThreeWrapper() {
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense fallback={<Loader />}>
-        <VisionGL />
+        <MobileVisionGL />
         <MobileValueGL />
       </Suspense>
       <EffectComposer>

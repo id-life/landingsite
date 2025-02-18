@@ -1,13 +1,9 @@
-import { mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useVisionAnimation } from '@/hooks/useVisionAnimation';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import * as THREE from 'three';
 
 const InitRotation = Math.PI / 2;
@@ -34,8 +30,6 @@ export default function MobileDragonModel(props: {}) {
     metalness: 0.1,
   });
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const { playEnterAnimation, playExitAnimation } = useVisionAnimation(modelRef, 0.08, 0.14, 0);
 
   useFrame(({ clock }) => {
     if (!modelRef.current) return;
@@ -89,31 +83,6 @@ export default function MobileDragonModel(props: {}) {
     },
     { scope: modelRef },
   );
-
-  useEffect(() => {
-    const model = modelRef.current;
-    const tl = timelineRef.current;
-    if (currentPage?.id === NAV_LIST[0].id) {
-      tl?.play();
-      playEnterAnimation();
-    } else {
-      tl?.pause();
-      if (model) {
-        autoSwingRef.current = false;
-        clock.stop();
-        playExitAnimation();
-      }
-    }
-    return () => {
-      if (tl) {
-        tl.kill();
-      }
-      if (model) {
-        autoSwingRef.current = false;
-        clock.stop();
-      }
-    };
-  }, [clock, currentPage, playEnterAnimation, playExitAnimation]);
 
   useGSAP(() => {
     if (!meshRef.current) return;

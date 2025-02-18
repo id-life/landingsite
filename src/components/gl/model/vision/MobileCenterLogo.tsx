@@ -1,12 +1,10 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { LogoType } from '@/components/nav/Logo';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useVisionAnimation } from '@/hooks/useVisionAnimation';
 import { useThrottle } from '@/hooks/useThrottle';
 import { Center, Svg } from '@react-three/drei';
 import { gsap } from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 export default function MobileCenterLogo() {
@@ -16,17 +14,9 @@ export default function MobileCenterLogo() {
   const currentLogoRef = useRef<LogoType>(LogoType.EN);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
 
-  const { playEnterAnimation, playExitAnimation } = useVisionAnimation(groupRef, 0.5, 0.7, -5);
-
   useEffect(() => {
     if (!groupRef.current) return;
-
-    if (currentPage?.id === NAV_LIST[0].id) {
-      playEnterAnimation();
-    } else {
-      playExitAnimation();
-    }
-  }, [currentPage, playEnterAnimation, playExitAnimation]);
+  }, [currentPage]);
 
   const handleClick = useThrottle(() => {
     if (currentLogoRef.current === LogoType.EN) {
