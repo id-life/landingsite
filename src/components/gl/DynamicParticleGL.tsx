@@ -26,8 +26,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   const mouseSize = 50;
   const scaleRatio = 1;
   let activeAnim = false;
-  let isAnimating = false;
-  let pendingImageIdx: number | null = null;
   const sourceImgInfos: {
     scaleNum?: number;
     resize?: number[];
@@ -94,7 +92,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   ];
 
   p5.updateWithProps = (props) => {
-    // console.log('props', props);
     if (props.activeAnim) {
       activeAnim = true;
     } else activeAnim = false;
@@ -282,15 +279,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   };
 
   function setImageIdx(idx: number) {
-    // console.log('开始重置图像 idx:', isAnimating, idx);
-    // 如果正在动画中，将新的图像索引存储起来
-    if (isAnimating) {
-      pendingImageIdx = idx;
-      return;
-    }
-    // console.log('开始重置图像 2 idx:', isAnimating, idx);
-    isAnimating = true;
-
     const {
       scaleNum = defaultConfig.scaleNum,
       loadPercentage = defaultConfig.loadPercentage,
@@ -348,7 +336,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         newParticle.endColor = pixelColor;
       }
     }
-    // console.log('particleIndexes', particleIndexes, ' allParticles', allParticles);
     // Kill off any left over particles that aren't assigned to anything.
     const preLen = preParticleIndexes.length;
     if (preLen > 0) {
@@ -358,14 +345,6 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
         allParticles[index].endColor = p5.color(0);
       }
     }
-    // 在粒子设置完成后，检查是否有待处理的图像切换
-    setTimeout(() => {
-      isAnimating = false;
-      if (pendingImageIdx !== null && (pendingImageIdx === 0 || pendingImageIdx !== idx)) {
-        setImageIdx(pendingImageIdx);
-        pendingImageIdx = null;
-      }
-    }, 1000);
   }
   p5.draw = () => {
     if (!activeAnim) return;

@@ -11,7 +11,6 @@ import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import gsap from 'gsap';
 SwiperType.use([FreeMode]);
 
 function MobilePortfolio() {
@@ -21,7 +20,6 @@ function MobilePortfolio() {
   const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const swiperRef = useRef<SwiperType>();
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
   const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -31,6 +29,7 @@ function MobilePortfolio() {
     window.open(item.link, '_blank');
   }, []);
   const { mobileNavChange } = useMobileNavigation();
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   // 创建入场动画
   const createEnterAnimation = useCallback(() => {
@@ -98,24 +97,12 @@ function MobilePortfolio() {
       setParticleActive(true);
       setMobileImageIdx1(1);
       setMobileImageIdx2(2);
-      createEnterAnimation();
+      // createEnterAnimation();
     } else {
-      if (particleActive) {
-        createExitAnimation();
-      }
       setParticleActive(false);
+      // createExitAnimation();
     }
-  }, [currentPage, createEnterAnimation, createExitAnimation, particleActive]);
-
-  // 清理动画
-  useEffect(() => {
-    return () => {
-      if (timelineRef.current) {
-        timelineRef.current.kill();
-        timelineRef.current = null;
-      }
-    };
-  }, []);
+  }, [currentPage]);
 
   return (
     <div
