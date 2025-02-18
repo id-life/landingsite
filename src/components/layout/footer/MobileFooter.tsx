@@ -5,8 +5,9 @@ import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 
 export default function MobileFooter() {
@@ -15,6 +16,8 @@ export default function MobileFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const portalNode = useFloatingPortalNode();
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
@@ -29,15 +32,46 @@ export default function MobileFooter() {
     });
   };
 
+  const open = () => {
+    gsap.to('.page-footer', { bottom: '5rem' });
+    gsap.to('.footer-box-clip', { width: '100%', height: 'auto' });
+  };
+  const close = () => {
+    gsap.to('.page-footer', { bottom: '-40rem' });
+    gsap.to('.footer-box-clip', { width: '0', height: '0' });
+  };
+
   useEffect(() => {
     if (isSubscribeShow) {
-      gsap.to(subscribeRef.current, { bottom: '5rem' });
-      gsap.to('.footer-box-clip', { width: '100%', height: 'auto' });
+      open();
     } else {
-      gsap.to(subscribeRef.current, { bottom: '-40rem' });
-      gsap.to('.footer-box-clip', { width: '0', height: '0' });
+      close();
     }
   }, [isSubscribeShow]);
+
+  useGSAP(
+    () => {
+      if (!portalNode) return;
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          id: 'footerTimeline',
+          trigger: wrapperRef.current,
+          start: 'top bottom',
+          end: 'bottom bottom',
+          scrub: true,
+          onEnter: () => {
+            open();
+          },
+          onLeaveBack: () => {
+            close();
+          },
+        },
+      });
+      timeline.to(subscribeRef.current, { bottom: '5rem' });
+      timeline.to('.footer-box-clip', { width: '100%', height: 'auto' }, '<');
+    },
+    { dependencies: [portalNode] },
+  );
 
   return (
     <>

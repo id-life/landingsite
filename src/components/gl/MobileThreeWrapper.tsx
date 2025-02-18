@@ -1,6 +1,7 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import VisionGL from '@/components/gl/VisionGL';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html, useProgress } from '@react-three/drei';
@@ -10,6 +11,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
+import MobileValueGL from './MobileValueGL';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -48,10 +50,13 @@ function Loader() {
 export default function MobileThreeWrapper() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const hideCanvas = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  const isMounted = useIsMounted();
+  if (!isMounted) return null;
   return (
     <Canvas
       id="vision-canvas"
-      className={cn('fixed z-10', { 'pointer-events-none hidden': hideCanvas })}
+      className={cn('pointer-events-none', { 'pointer-events-none hidden': hideCanvas })}
+      style={{ position: 'fixed', zIndex: 1 }}
       camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{
         alpha: true,
@@ -63,7 +68,7 @@ export default function MobileThreeWrapper() {
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <Suspense fallback={<Loader />}>
         <VisionGL />
-        {/* {currentPage.id === NAV_LIST[1].id && <ValueGL />} */}
+        <MobileValueGL />
       </Suspense>
       <EffectComposer>
         <Fluid />

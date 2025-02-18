@@ -1,20 +1,32 @@
 import VisionDecorationBottomScrollSVG from '@/../public/svgs/vision/vision-decoration-2.svg?component';
 import { navigateToAtom } from '@/atoms';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { cn } from '@/utils';
-import { useSetAtom } from 'jotai';
-import { NAV_LIST } from '../nav/nav';
-import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
+import { NAV_LIST } from '../nav/nav';
 
 interface ScrollButtonProps {
   className?: string;
 }
 
-export default function ScrollButton({ className }: ScrollButtonProps) {
+export default function MobileScrollButton({ className }: ScrollButtonProps) {
   const setNavigateTo = useSetAtom(navigateToAtom);
   const rippleRef1 = useRef<HTMLDivElement>(null);
   const rippleRef2 = useRef<HTMLDivElement>(null);
   const rippleRef3 = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const { mobileNavChange } = useMobileNavigation();
+
+  const onClick = useCallback(() => {
+    if (isMobile) {
+      mobileNavChange(NAV_LIST[1]);
+    } else {
+      setNavigateTo(NAV_LIST[1]);
+    }
+  }, [isMobile, mobileNavChange, setNavigateTo]);
 
   useEffect(() => {
     const ripple1 = rippleRef1.current;
@@ -50,7 +62,7 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
   }, []);
 
   return (
-    <div className={cn('pointer-events-auto z-10 cursor-pointer', className)} onClick={() => setNavigateTo(NAV_LIST[1])}>
+    <div className={cn('pointer-events-auto z-10 cursor-pointer', className)} onClick={onClick}>
       <div className="relative h-10 w-[7.625rem]">
         <div ref={rippleRef1} className="scroll-button-ripple-init" />
         <div ref={rippleRef2} className="scroll-button-ripple-init" />

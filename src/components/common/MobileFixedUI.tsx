@@ -7,17 +7,17 @@ import { mobileCurrentPageAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
-import PageArrows from './PageArrows';
-import ScrollButton from './ScrollButton';
+import MobilePageArrows from './MobilePageArrows';
+import MobileScrollButton from './MobileScrollButton';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   return (
     <>
       {currentPage.id === NAV_LIST[0].id ? (
-        <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
+        <MobileScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
-        <PageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
+        <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
       )}
       <div
         className={cn(
