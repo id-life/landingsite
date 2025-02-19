@@ -78,8 +78,24 @@ export default function MobileDragonModel(props: {}) {
   useGSAP(
     () => {
       if (!modelRef.current) return;
-      clock.start();
-      autoSwingRef.current = true;
+      gsap.from(modelRef.current.position, {
+        x: 0,
+        y: 0,
+        z: 10,
+        ease: 'power3.out',
+        duration: 1.5,
+      });
+      gsap.from(modelRef.current.rotation, {
+        x: Math.PI,
+        y: (Math.PI * 3) / 2,
+        z: Math.PI,
+        ease: 'power3.out',
+        duration: 1.5,
+        onComplete: () => {
+          clock.start();
+          autoSwingRef.current = true;
+        },
+      });
     },
     { scope: modelRef },
   );

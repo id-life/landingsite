@@ -5,6 +5,7 @@ import FixedCard from '@/app/value/FixedCard';
 import FixedValue from '@/app/value/FixedValue';
 import { currentPageAtom } from '@/atoms';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
+import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { ReactNode, useMemo } from 'react';
@@ -13,7 +14,6 @@ import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
-import { CAROUSEL_ITEMS } from '@/constants/config';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
