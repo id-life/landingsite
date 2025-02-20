@@ -30,7 +30,6 @@ function MobilePortfolio() {
     if (!item.link) return;
     window.open(item.link, '_blank');
   }, []);
-  const { mobileNavChange } = useMobileNavigation();
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   // 创建入场动画
@@ -118,7 +117,7 @@ function MobilePortfolio() {
       <ParticleGL imageIdx={mobileImageIdx1} activeAnim={particleActive} id="particle-container-mobile-1" />
       <ParticleGL imageIdx={mobileImageIdx2} activeAnim={particleActive} id="particle-container-mobile-2" />
 
-      <div className="relative flex h-[100vh] flex-col items-center pt-28">
+      <div className="relative flex h-[100vh] flex-col items-center pt-20">
         <div id="particle-gl">
           <div id="particle-container-mobile-1" className={cn({ active: particleActive })}>
             <div className="particle-mask"></div>
@@ -146,16 +145,6 @@ function MobilePortfolio() {
               momentumVelocityRatio: 0.5, // 降低速度比率
               minimumVelocity: 0.1, // 设置最小速度阈值
             }}
-            onTouchEnd={(swiper) => {
-              // 检查是否在顶部且有向上拖动的动作
-              if (swiper.isBeginning && swiper.touches.diff > 50) {
-                mobileNavChange(NAV_LIST[0]);
-              }
-              // 检查是否在底部且有向下拖动的动作
-              if (swiper.isEnd && swiper.touches.diff < -50) {
-                mobileNavChange(NAV_LIST[2]);
-              }
-            }}
           >
             {portfolio.map((item, index) => (
               <SwiperSlide key={item.title} className="h-[30vh]">
@@ -171,7 +160,7 @@ function MobilePortfolio() {
             ))}
           </Swiper>
         </div>
-        <div className="page2-contact relative">
+        <div className="page2-contact flex-center relative h-12 w-full">
           <Contact />
         </div>
       </div>

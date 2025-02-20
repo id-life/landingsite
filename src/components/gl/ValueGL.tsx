@@ -10,13 +10,13 @@ import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations
 import { useValueSVGAnimations } from '@/hooks/valueGL/useValueSVGAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useMemo, useRef, memo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);

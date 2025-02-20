@@ -271,7 +271,7 @@ function sketch(p5: P5CanvasInstance<MySketchProps>) {
   p5.setup = () => {
     // console.log('p5.setup 开始执行');
     const ratio = 1280 / 750;
-    const width = IS_MOBILE ? window.innerHeight - 10 : 1280;
+    const width = IS_MOBILE ? 800 : 1280;
     const height = width / ratio;
     canvas = p5.createCanvas(width, height);
     canvas.parent(id);
