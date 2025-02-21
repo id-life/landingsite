@@ -1,119 +1,83 @@
-import { currentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
+import { mobileCurrentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
-import { useIsMounted } from '@/hooks/useIsMounted';
+import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { cn } from '@/utils';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
-import { throttle } from 'lodash-es';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+
 SwiperType.use([FreeMode]);
 
 function MobilePortfolio() {
-  const isMounted = useIsMounted();
-  const [isEntered, setIsEntered] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
-  const setCurrentPage = useSetAtom(currentPageAtom);
   const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
-  const showParticle = useMemo(() => isEntered, [isEntered]);
   const swiperRef = useRef<SwiperType>();
   const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
   const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
-
-  const enableScroll = useCallback(() => {
-    document.body.style.overflow = '';
-  }, []);
-
-  const disableScroll = useCallback(() => {
-    document.body.style.overflow = 'hidden';
-  }, []);
-
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const [particleActive, setParticleActive] = useState(false);
   const handleFundClick = useCallback((item: PortfolioItemInfo) => {
     if (!item.link) return;
     window.open(item.link, '_blank');
   }, []);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-  const throttledSetIsEntered = useMemo(
-    () =>
-      throttle((value: boolean) => {
-        setIsEntered(value);
-      }, 50),
-    [],
-  );
+  // 创建入场动画
+  const createEnterAnimation = useCallback(() => {
+    if (!wrapperRef.current) return;
 
-  useGSAP(() => {
-    if (!isMounted) return;
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[1].id}`,
-        start: 'top top',
-        end: '+=200%',
-        pin: true,
-        scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[1]);
-          setActive(true);
-        },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[1]);
-          setActive(true);
-        },
-        onLeaveBack: () => {
-          setActive(false);
-        },
-        onUpdate: (self) => {
-          if (self.progress >= 0.42 && self.progress <= 0.7) {
-            throttledSetIsEntered(true);
-          } else {
-            throttledSetIsEntered(false);
-          }
-        },
-      },
+    // 如果存在之前的动画，先清理
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+    }
+
+    const tl = gsap.timeline();
+    timelineRef.current = tl;
+
+    tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
+
+    // 标题动画
+    tl.fromTo('.page2-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    // Portfolio items 动画
+    tl.fromTo('.page2-fund', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    // Contact 部分动画
+    tl.fromTo('.page2-contact', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+    return tl;
+  }, []);
+
+  // 创建退场动画
+  const createExitAnimation = useCallback(() => {
+    if (!wrapperRef.current) return;
+
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+    }
+
+    const tl = gsap.timeline();
+    timelineRef.current = tl;
+
+    tl.to(wrapperRef.current, {
+      opacity: 0,
+      y: -50,
+      duration: 0.8,
+      ease: 'power2.inOut',
     });
-    // 进
-    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 0.2 }, '<');
-    tl.from(
-      '.page2-title',
-      {
-        delay: 0.5,
-        y: (_, target) => target.offsetHeight,
-        rotateX: 45,
-        rotateY: 15,
-        opacity: 0,
-      },
-      '<',
-    );
-    tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
-    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 }, '<');
-    // 出
-    tl.to(
-      '.page2-title',
-      {
-        delay: 0.5,
-        y: (_, target) => -target.offsetHeight,
-        rotateX: -45,
-        rotateY: 15,
-        opacity: 0,
-      },
-      '>0.3',
-    );
-    tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
-    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 }, '<');
-    tl.to('#particle-gl', { opacity: 0 }, '<');
-    tl.to('.fixed-top', { top: 'calc(50% - 20rem)' }, '<');
-    tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
-  }, [isMounted]);
+
+    return tl;
+  }, []);
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -130,38 +94,40 @@ function MobilePortfolio() {
   }, [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo]);
 
   useEffect(() => {
-    if (showParticle) {
-      setMobileImageIdx1(activeIndex + 1);
-      setMobileImageIdx2(activeIndex + 2);
+    if (currentPage.id === NAV_LIST[1].id) {
+      setParticleActive(true);
+      setMobileImageIdx1(1);
+      setMobileImageIdx2(2);
+      createEnterAnimation();
+    } else {
+      setParticleActive(false);
+      createExitAnimation();
     }
-  }, [showParticle, activeIndex]);
-
-  // 添加 useEffect 来控制滚动
-  useEffect(() => {
-    if (isEntered) {
-      disableScroll();
-    }
-  }, [disableScroll, isEntered]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container fund text-white">
-      {active && (
-        <>
-          <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx1} id="particle-container-mobile-1" />
-          <ParticleGL activeAnim={showParticle} imageIdx={mobileImageIdx2} id="particle-container-mobile-2" />
-        </>
-      )}
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
+    <div
+      ref={wrapperRef}
+      id={NAV_LIST[1].id}
+      className={cn('page-container-mobile text-white', {
+        hidden: currentPage?.id !== NAV_LIST[1].id,
+      })}
+    >
+      <ParticleGL imageIdx={mobileImageIdx1} activeAnim={particleActive} id="particle-container-mobile-1" />
+      <ParticleGL imageIdx={mobileImageIdx2} activeAnim={particleActive} id="particle-container-mobile-2" />
+
+      <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
         <div id="particle-gl">
-          <div id="particle-container-mobile-1" className={cn({ active: isEntered })}>
+          <div id="particle-container-mobile-1" className={cn({ active: particleActive })}>
             <div className="particle-mask"></div>
           </div>
-          <div id="particle-container-mobile-2" className={cn({ active: isEntered })}>
+          <div id="particle-container-mobile-2" className={cn({ active: particleActive })}>
             <div className="particle-mask"></div>
           </div>
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund my-12 overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
+        <div className="page2-fund overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
           <Swiper
             direction="vertical"
             slidesPerView={2}
@@ -179,23 +145,6 @@ function MobilePortfolio() {
               momentumVelocityRatio: 0.5, // 降低速度比率
               minimumVelocity: 0.1, // 设置最小速度阈值
             }}
-            onTouchEnd={(swiper) => {
-              // 检查是否在顶部且有向上拖动的动作
-              if (swiper.isBeginning && swiper.touches.diff > 50) {
-                enableScroll();
-                gsap.to(window, {
-                  duration: 1.5,
-                  scrollTo: { y: `#${NAV_LIST[0].id}` },
-                });
-              }
-              // 检查是否在底部且有向下拖动的动作
-              if (swiper.isEnd && swiper.touches.diff < -50) {
-                gsap.to(window, {
-                  duration: 1.5,
-                  scrollTo: { y: `#${NAV_LIST[2].id}`, offsetY: 10 },
-                });
-              }
-            }}
           >
             {portfolio.map((item, index) => (
               <SwiperSlide key={item.title} className="h-[30svh]">
@@ -211,7 +160,7 @@ function MobilePortfolio() {
             ))}
           </Swiper>
         </div>
-        <div className="page2-contact">
+        <div className="page2-contact flex-center relative h-12 w-full">
           <Contact />
         </div>
       </div>

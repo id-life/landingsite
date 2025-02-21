@@ -1,8 +1,13 @@
+import { mobileCurrentPageAtom } from '@/atoms';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import gsap from 'gsap';
-import { ReactNode, useEffect, useMemo, useRef } from 'react';
+import { useAtomValue } from 'jotai';
 import { shuffle } from 'lodash-es';
-import { useIsMounted } from '@/hooks/useIsMounted';
+import { ReactNode, useEffect, useMemo, useRef } from 'react';
+import { NAV_LIST } from '../nav/nav';
+
 interface VerticalCarouselProps {
   children: ReactNode[];
   className?: string;
@@ -29,7 +34,8 @@ export default function VerticalCarousel({
   const itemClass = useMemo(() => {
     return cn('mobile:flex mobile:flex-col mobile:items-center mobile:justify-center', itemClassName);
   }, [itemClassName]);
-
+  const isMobile = useIsMobile();
+  const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
   const items = useMemo(() => {
     if (!isMounted) return children;
     let result = [...children];
@@ -39,11 +45,20 @@ export default function VerticalCarousel({
     return slideDown ? result.concat(result?.length ? result[0] : []) : result;
   }, [children, isMounted, isShuffle, slideDown]);
 
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const tl = gsap.timeline({ repeat: -1 });
+    tlRef.current = gsap.timeline({ repeat: -1 });
+    const tl = tlRef.current;
     const elements = containerRef.current.children;
+
+    // 如果是移动端且不在首页，暂停动画
+    if (isMobile && mobileCurrentPage.id !== NAV_LIST[0]?.id) {
+      tl.pause();
+    }
+
     if (slideDown) {
       // 向下滑动的动画逻辑
       items.forEach((_, index) => {
@@ -118,9 +133,21 @@ export default function VerticalCarousel({
     }
 
     return () => {
-      tl.kill();
+      tl?.kill();
+      tlRef.current = null;
     };
-  }, [items, itemHeight, duration, transition, slideDown]);
+  }, [items, itemHeight, duration, transition, slideDown, isMobile, mobileCurrentPage]);
+
+  // 监听页面变化，控制动画
+  useEffect(() => {
+    if (!isMobile || !tlRef.current || !mobileCurrentPage) return;
+
+    if (mobileCurrentPage.id === NAV_LIST[0].id) {
+      tlRef.current.play();
+    } else {
+      tlRef.current.pause();
+    }
+  }, [mobileCurrentPage, isMobile]);
 
   return (
     <div className={cn('overflow-hidden', className)} style={{ height: itemHeight }}>

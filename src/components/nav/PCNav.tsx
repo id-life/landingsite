@@ -1,24 +1,20 @@
 'use client';
 
-import gsap from 'gsap';
-import { clsx } from 'clsx';
-import Logo from '@/components/nav/Logo';
-import { useEffect, useRef } from 'react';
-import MenuOpenSVG from '../svg/MenuOpenSVG';
-import { useAtom, useAtomValue } from 'jotai';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useThrottle } from '@/hooks/useThrottle';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import { useNavigation } from '@/hooks/useNavigation';
-import MobileNavDialog from '../dialog/MobileNavDialog';
-import { currentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import { currentPageAtom } from '@/atoms';
+import { isSubscribeShowAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
+import Logo from '@/components/nav/Logo';
+import { useNavigation } from '@/hooks/useNavigation';
+import { useThrottle } from '@/hooks/useThrottle';
+import { clsx } from 'clsx';
+import gsap from 'gsap';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useRef } from 'react';
+import { NAV_LIST } from './nav';
 
-export default function Nav() {
+export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
-  const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const { handleNavClick } = useNavigation();
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const playingRef = useRef<boolean>(false);
@@ -93,11 +89,7 @@ export default function Nav() {
           <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
           Subscribe
         </div>
-        <div className="ml-5 hidden mobile:block" onClick={() => setMenuOpen((pre) => !pre)}>
-          {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
-        </div>
       </div>
-      <MobileNavDialog />
     </div>
   );
 }

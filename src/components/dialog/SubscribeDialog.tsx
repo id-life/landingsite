@@ -26,7 +26,7 @@ export default function SubscribeDialog({ handleSubmit }: SubscribeDialogProps) 
   return (
     <div className="w-[27.5rem] p-8 mobile:w-full">
       <img src="/svgs/email.svg" className="mx-auto h-10" alt="email" />
-      <h3 className="text-xl/5.5 mt-4 text-center font-semibold uppercase">subscribe</h3>
+      <h3 className="mt-4 text-center text-xl/5.5 font-semibold uppercase">subscribe</h3>
       <form id="subscribe-form" className="mt-8 px-2" onSubmit={onFormSubmit}>
         <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
         <input type="hidden" name="amp;id" value="af9154d6b5" />
@@ -41,7 +41,7 @@ export default function SubscribeDialog({ handleSubmit }: SubscribeDialogProps) 
             defaultValue=""
           />
         </div>
-        <div className="submit-btn max-w-55 mx-auto mt-7.5 !py-0">
+        <div className="submit-btn mx-auto mt-7.5 max-w-55 !py-0">
           {isSubmitting ? (
             <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-800">
               <img src="/svgs/loading.svg" className="w-6 animate-spin" alt="loading" />
