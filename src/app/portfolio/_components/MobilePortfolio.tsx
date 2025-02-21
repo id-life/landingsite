@@ -117,7 +117,7 @@ function MobilePortfolio() {
       <ParticleGL imageIdx={mobileImageIdx1} activeAnim={particleActive} id="particle-container-mobile-1" />
       <ParticleGL imageIdx={mobileImageIdx2} activeAnim={particleActive} id="particle-container-mobile-2" />
 
-      <div className="relative flex h-[100vh] flex-col items-center pt-20">
+      <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
         <div id="particle-gl">
           <div id="particle-container-mobile-1" className={cn({ active: particleActive })}>
             <div className="particle-mask"></div>
@@ -132,7 +132,7 @@ function MobilePortfolio() {
             direction="vertical"
             slidesPerView={2}
             spaceBetween={0}
-            className="h-[60vh]"
+            className="h-[60svh]"
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
             }}
@@ -147,7 +147,7 @@ function MobilePortfolio() {
             }}
           >
             {portfolio.map((item, index) => (
-              <SwiperSlide key={item.title} className="h-[30vh]">
+              <SwiperSlide key={item.title} className="h-[30svh]">
                 <PortfolioItem
                   item={item}
                   onClick={() => handleFundClick(item)}
