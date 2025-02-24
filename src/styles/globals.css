@@ -28,7 +28,7 @@
   body {
     color: #222222;
     background: var(--background);
-    @apply font-poppins;
+    @apply font-poppins mobile:h-full mobile:overflow-auto;
   }
 
   .base-background1 {
@@ -71,13 +71,13 @@
     min-height: 150svh;
     overflow: hidden;
 
-    &.fund {
-      @apply mobile:min-h-[200svh];
-    }
-
     &.value {
       min-height: 800svh;
     }
+  }
+
+  .page-container-mobile {
+    @apply relative h-full overflow-hidden;
   }
 
   .list-mark-red-disc li {

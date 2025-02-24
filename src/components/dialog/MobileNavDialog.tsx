@@ -1,25 +1,24 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { currentPageAtom, mobileNavOpenAtom, navigateToAtom } from '@/atoms';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import SubscribeDialog from './SubscribeDialog';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useThrottle } from '@/hooks/useThrottle';
 
 gsap.registerPlugin(useGSAP);
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubOpen] = useState(false);
-  const [currentPage] = useAtom(currentPageAtom);
-  const setNavigateTo = useSetAtom(navigateToAtom);
+  const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const isMobile = useIsMobile();
-
   const startAnim = useCallback(
     (isOpen: boolean) => {
       if (!isMobile) return;
@@ -34,20 +33,19 @@ function MobileNavDialog() {
     [isMobile],
   );
 
-  const handleNavClick = useCallback(
-    (item: NavItem) => {
-      startAnim(false);
-      setTimeout(() => {
-        setOpen(false);
-        setNavigateTo(item);
-      }, 300);
-    },
-    [setOpen, setNavigateTo, startAnim],
-  );
+  const handleNavClick = useThrottle((item: NavItem) => {
+    startAnim(false);
+    setTimeout(() => {
+      setOpen(false);
+      setCurrentPage(item);
+    }, 600);
+  }, 1000);
 
   useEffect(() => {
-    setTimeout(() => startAnim(open), 300);
-  }, [open]);
+    if (!isMobile) return;
+    if (open) setTimeout(() => startAnim(open), 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isMobile]);
 
   return (
     <Dialog

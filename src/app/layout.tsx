@@ -1,15 +1,15 @@
-import { clsx } from 'clsx';
-import Nav from '@/components/nav';
-import Providers from '@/providers/root';
-import FixedUI from '@/components/common/FixedUI';
 import Background from '@/components/common/Background';
+import FixedUI from '@/components/common/FixedUI';
+import Providers from '@/providers/root';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { clsx } from 'clsx';
 import type { Metadata } from 'next';
 
-import '../utils/analytics';
-import 'swiper/css';
+import ClientNav from '@/components/nav/CilentNav';
 import '@/styles/globals.css';
+import 'swiper/css';
+import '../utils/analytics';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -85,7 +85,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
-          <Nav />
+          <ClientNav />
           {children}
           <FixedUI />
           <Background />

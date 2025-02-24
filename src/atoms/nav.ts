@@ -19,3 +19,9 @@ export const valuePageIndexAtom = atom<number>(0);
 export const valuePageNavigateToAtom = atom<number | null>(null);
 
 export const isScrollingAtom = atom<boolean>(false);
+
+// 移动端的新逻辑
+export const mobileCurrentPageAtom = atom<NavItem>(NAV_LIST[0]);
+export const mobileCurrentPageIndexAtom = selectAtom(mobileCurrentPageAtom, (page) =>
+  NAV_LIST.findIndex((item) => item.id === page.id),
+);

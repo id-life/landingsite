@@ -1,13 +1,11 @@
-import { currentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import { mobileCurrentPageAtom, mobileCurrentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useScrollLock } from '@/hooks/useScrollLock';
+import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
+import { useMobileValueSVGAnimations } from '@/hooks/valueGL/useMobileValueSVGAnimations';
 import { useValueCalcPosition } from '@/hooks/valueGL/useValueCalcPosition';
-import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
-import { useValueSVGAnimations } from '@/hooks/valueGL/useValueSVGAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
@@ -16,7 +14,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
@@ -59,8 +57,9 @@ const TitleSVG = memo(({ titleRef, position, rotation, scale, titleName }: Title
 
 TitleSVG.displayName = 'TitleSVG';
 
-function ValueGL() {
+function MobileValueGL() {
   const { camera } = useThree();
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
   const title1Ref = useRef<THREE.Group>(null);
   const title2Ref = useRef<THREE.Group>(null);
@@ -71,27 +70,23 @@ function ValueGL() {
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
-  const isMobile = useIsMobile();
   const setValuePageIndex = useSetAtom(valuePageIndexAtom);
   const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
-  const progressMap = useMemo(() => (isMobile ? VALUE_PROGRESS_CONFIG.mobile : VALUE_PROGRESS_CONFIG.desktop), [isMobile]);
-
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
-  const { lockScroll, unlockScroll } = useScrollLock();
+  const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.mobile, []);
+  const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);
-  const enableScroll = useCallback(() => {
-    document.body.style.overflow = '';
-  }, []);
 
-  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim, createPage4SvgAnim } = useValueSVGAnimations();
-  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim, createPage4CrossAnim } = useValueCrossAnimations({
-    title1Ref,
-    title2Ref,
-    title3Ref,
-    title4Ref,
-    modelRef,
-    isScrollingRef,
-  });
+  const startAnimTLRef = useRef<gsap.core.Timeline | null>(null);
+  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim, createPage4SvgAnim } = useMobileValueSVGAnimations();
+  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim, createPage4CrossAnim } =
+    useMobileValueCrossAnimations({
+      title1Ref,
+      title2Ref,
+      title3Ref,
+      title4Ref,
+      modelRef,
+      isScrollingRef,
+    });
 
   const { scaleRatio, getScalePosition, getVectorPosition } = useValueCalcPosition();
 
@@ -129,64 +124,63 @@ function ValueGL() {
     [page1Config, page2Config, page3Config, page4Config, getVectorPosition, getScalePosition],
   );
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          immediateRender: isMobile,
-          trigger: `#${NAV_LIST[2].id}`,
-          start: isMobile ? 'top bottom+=400' : 'top bottom+=500',
-          end: 'top top',
-          scrub: true,
-        },
-      });
-      tl.to(camera.position, { ...page1Config.to.camera.position });
-      tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
-      if (!title1Ref.current || !modelRef.current) return;
-      tl.fromTo(
-        title1Ref.current.position,
-        { ...getScalePosition(page1Config.from.title.position) },
-        { ...getScalePosition(page1Config.to.title.position), ease: 'power1.out' },
-        '<10%',
-      );
-      tl.fromTo(
-        title1Ref.current.rotation,
-        { ...page1Config.from.title.rotation },
-        { ...page1Config.to.title.rotation, ease: 'power1.out' },
-        '<',
-      );
-      tl.fromTo(
-        modelRef.current.position,
-        { ...page1Config.from.model.position },
-        {
-          ...(isMobile ? page1Config.to.model.mobilePos : page1Config.to.model.position),
-          ease: 'power3.out',
-        },
-        '<',
-      );
-      tl.fromTo(
-        modelRef.current.rotation,
-        { ...page1Config.from.model.rotation },
-        {
-          ...page1Config.to.model.rotation,
-          ease: 'power3.out',
-          onComplete: () => {
-            if (isMobile) enableScroll();
-          },
-        },
-        '<',
-      );
-      tl.to(
-        '#page-value-1',
-        {
-          opacity: 1,
-        },
-        '<30%',
-      );
-      if (isMobile) tl.to('#value-1-svg-mobile', { opacity: 1 }, '<30%');
-    },
-    { dependencies: [isMobile] },
-  );
+  useEffect(() => {
+    if (startAnimTLRef.current) return;
+    const tl = gsap.timeline({
+      onStart: () => {
+        console.log('start anim start');
+      },
+      onReverseComplete: () => {
+        console.log('reverse complete');
+      },
+    });
+    tl.to(camera.position, { ...page1Config.to.camera.position });
+    tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
+    if (!title1Ref.current || !modelRef.current) return;
+    tl.fromTo(
+      title1Ref.current.position,
+      { ...getScalePosition(page1Config.from.title.position) },
+      { ...getScalePosition(page1Config.to.title.position), ease: 'power1.out' },
+      '<',
+    );
+    tl.fromTo(
+      title1Ref.current.rotation,
+      { ...page1Config.from.title.rotation },
+      { ...page1Config.to.title.rotation, ease: 'power1.out' },
+      '<',
+    );
+    tl.fromTo(
+      modelRef.current.position,
+      { ...page1Config.from.model.position },
+      {
+        ...page1Config.to.model.mobilePos,
+        ease: 'power3.out',
+      },
+      '<',
+    );
+    tl.fromTo(
+      modelRef.current.rotation,
+      { ...page1Config.from.model.rotation },
+      {
+        ...page1Config.to.model.rotation,
+        ease: 'power3.out',
+      },
+      '<',
+    );
+    tl.to(
+      '#page-value-1',
+      {
+        opacity: 1,
+      },
+      '<',
+    );
+    tl.to('#value-1-svg-mobile', { opacity: 1 }, '<');
+
+    startAnimTLRef.current = tl;
+    return () => {
+      if (startAnimTLRef.current) startAnimTLRef.current.kill();
+    };
+  }, [camera, currentPage, getScalePosition, page1Config, startAnimTLRef]);
 
   useGSAP(() => {
     if (!modelRef.current || !title1Ref.current || !title2Ref.current || !title3Ref.current || !title4Ref.current) return;
@@ -201,26 +195,9 @@ function ValueGL() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        immediateRender: isMobile,
-        // onUpdate: (self) => {
-        //   console.log('progress ', self?.progress);
-        // },
+        immediateRender: true,
       },
     });
-
-    tl.add(() => {
-      if (isMobile) {
-        // console.log('isMobile anim start lock');
-        lockScroll('up');
-      }
-    });
-    tl.add(() => {
-      if (isMobile) {
-        // console.log('isMobile anim end unlock');
-        unlockScroll();
-      }
-    }, '+=0.1');
-
     // page1~2之间的 svg切换动画，红字消失变换为中文
     createPage1SvgAnim(tl);
     // page1 to page2
@@ -243,7 +220,7 @@ function ValueGL() {
     // End
     // 移动整个模型到最终位置（第五页到第六页的过渡）
     tl.to(modelRef.current.position, {
-      ...(isMobile ? page6Config.to.model.mobilePos : page6Config.to.model.position),
+      ...page6Config.to.model.mobilePos,
       duration: 4,
       ease: 'none',
       onStart: () => {
@@ -256,7 +233,7 @@ function ValueGL() {
     tl.to(
       modelRef.current.rotation,
       {
-        ...(isMobile ? page6Config.to.model.mobileRot : page6Config.to.model.rotation),
+        ...page6Config.to.model.mobileRot,
         duration: 4,
         ease: 'none',
       },
@@ -281,12 +258,20 @@ function ValueGL() {
     tl.to('#value-end-2', { autoAlpha: 1, duration: 1, ease: 'power3.out' }, '<');
 
     // 移动端特殊处理，文字消失再出 SUBSCRIBE
-    if (isMobile) tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
-    if (isMobile) tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
-  }, [isMobile]);
+    tl.to('#value-end-1', { autoAlpha: 0, duration: 5, ease: 'none' });
+    tl.to('#value-end-2', { autoAlpha: 0, duration: 5, ease: 'none' }, '<');
+  }, []);
+
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[2].id) startAnimTLRef.current?.play();
+    else {
+      startAnimTLRef.current?.reverse();
+    }
+  }, [currentPage]);
 
   useEffect(() => {
     if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
+
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
       if (valuePageNavigateTo === 5) {
@@ -298,7 +283,6 @@ function ValueGL() {
             scrollTo: st.end,
             onComplete: () => {
               isScrollingRef.current = false;
-              enableScroll();
             },
           });
         }
@@ -311,7 +295,6 @@ function ValueGL() {
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;
-              enableScroll();
               if (valuePageNavigateTo === 0 && title1Ref.current)
                 gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
             },
@@ -324,18 +307,16 @@ function ValueGL() {
   }, [
     currentPageIndex,
     valuePageNavigateTo,
-    isMobile,
     progressMap,
     setValuePageIndex,
     setValuePageNavigateTo,
-    enableScroll,
     getScalePosition,
     page1Config.to.title.position,
   ]);
 
   return (
     <group>
-      <group scale={scaleRatio} visible={!isMobile}>
+      <group scale={scaleRatio} visible={false}>
         {titlesConfig.map((config, index) => (
           <TitleSVG key={config.titleName} {...config} />
         ))}
@@ -344,4 +325,4 @@ function ValueGL() {
     </group>
   );
 }
-export default memo(ValueGL);
+export default memo(MobileValueGL);
