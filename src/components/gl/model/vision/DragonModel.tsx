@@ -231,7 +231,7 @@ export default function DragonModel(props: {}) {
       rotation={[0, InitRotation, 0]}
     >
       <mesh ref={meshRef} geometry={(nodes.logo as any).geometry}>
-        <MeshTransmissionMaterial resolution={512} background={backgroundRef.current} {...transmissionConfigRef.current} />
+        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...transmissionConfigRef.current} />
       </mesh>
     </group>
   );

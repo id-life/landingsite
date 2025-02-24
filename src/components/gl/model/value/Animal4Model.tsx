@@ -19,8 +19,8 @@ const Animal4Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const meshRef = useRef<THREE.Mesh[]>([]);
   const [discardMaterial] = useState(() => new MeshDiscardMaterial());
   const [background] = useState(() => new THREE.Color('white'));
-  const fboMain = useFBO(256, 256);
-  const fboBack = useFBO(256, 256);
+  const fboMain = useFBO(gltfConfig.resolution, gltfConfig.resolution);
+  const fboBack = useFBO(gltfConfig.resolution, gltfConfig.resolution);
   const visible = useAtomValue(model4VisibleAtom);
   const isMobile = useIsMobile();
 

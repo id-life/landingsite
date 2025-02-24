@@ -3,7 +3,7 @@ import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
-import { useProgress } from '@react-three/drei';
+import { PerspectiveCamera, useProgress, View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -37,10 +37,6 @@ export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
 
-  // const { showPerf } = useControls({
-  //   showPerf: false,
-  // });
-
   const handleClick = useThrottle(() => {
     if (!isMobile) return;
     setIsCN((prev) => !prev);
@@ -50,7 +46,6 @@ export default function ThreeWrapper() {
     <Canvas
       id="vision-canvas"
       style={{ position: 'fixed', zIndex: 1 }}
-      camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{
         alpha: true,
         antialias: true,
@@ -58,7 +53,7 @@ export default function ThreeWrapper() {
       }}
       onClick={handleClick}
     >
-      {/* {showPerf && <Perf position="top-left" />} */}
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
       <OuterLoader />

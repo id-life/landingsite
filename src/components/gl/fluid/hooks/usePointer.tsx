@@ -19,9 +19,9 @@ export const usePointer = ({ force }: { force: number }) => {
   const hasMoved = useRef<boolean>(false);
 
   const createRadialSplats = useCallback(
-    (x: number, y: number, numSplats = 16, forceRatio = 16) => {
+    (x: number, y: number, numSplats = 8, forceRatio = 8) => {
       const baseRadius = force * forceRatio;
-      const numLayers = 8;
+      const numLayers = 2;
       splatStack.push({
         mouseX: x / size.width,
         mouseY: 1.0 - y / size.height,
@@ -41,8 +41,8 @@ export const usePointer = ({ force }: { force: number }) => {
           splatStack.push({
             mouseX: x / size.width,
             mouseY: 1.0 - y / size.height,
-            velocityX: velocityX * (1 + Math.random() * 16),
-            velocityY: velocityY * (1 + Math.random() * 16),
+            velocityX: velocityX * (1 + Math.random() * 8),
+            velocityY: velocityY * (1 + Math.random() * 8),
           });
         }
       }

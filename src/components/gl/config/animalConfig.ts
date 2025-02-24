@@ -12,6 +12,7 @@ type AnimalConfig = {
   path: string;
   scale: number;
   animation: number;
+  resolution: number;
   mesh: Mesh[];
 };
 export const ANIMAL_CONFIG: AnimalConfig[] = [
@@ -19,18 +20,21 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
     path: 'https://cdn.id.life/animal2.glb',
     scale: 1,
     animation: 1,
+    resolution: 64,
     mesh: [{ name: 'JF_skin_in', reflectivity: 0.04, anisotropy: 0.5 }],
   },
   {
     path: 'https://cdn.id.life/animal3.glb',
     scale: 1.1,
     animation: 2,
+    resolution: 64,
     mesh: [{ name: 'Object_12', reflectivity: 0.04, anisotropy: 0.5 }],
   },
   {
     path: 'https://cdn.id.life/animal4.glb',
     scale: 55,
     animation: 0,
+    resolution: 64,
     mesh: [{ name: 'Object_11', reflectivity: 0.04, anisotropy: 0.5 }],
   },
 ] as const;
