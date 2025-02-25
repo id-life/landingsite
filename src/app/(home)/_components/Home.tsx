@@ -11,6 +11,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai/index';
+import Engagement from '@/app/engagement/Engagement';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -41,15 +42,15 @@ export default function Home() {
     });
     const valueTL = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[3].id}`,
         start: 'top bottom+=400',
         end: 'top center',
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
       },
     });
@@ -69,6 +70,7 @@ export default function Home() {
         <div id="content">
           <Vision />
           <Portfolio />
+          <Engagement />
           <Value />
           <Footer />
         </div>

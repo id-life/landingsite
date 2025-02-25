@@ -134,7 +134,7 @@ function ValueGL() {
       const tl = gsap.timeline({
         scrollTrigger: {
           immediateRender: isMobile,
-          trigger: `#${NAV_LIST[2].id}`,
+          trigger: `#${NAV_LIST[3].id}`,
           start: isMobile ? 'top bottom+=400' : 'top bottom+=500',
           end: 'top top',
           scrub: true,
@@ -197,7 +197,7 @@ function ValueGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[3].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,

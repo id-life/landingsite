@@ -65,7 +65,7 @@ export function useMobileNavigation() {
       },
     });
 
-    if (currentPage.id === NAV_LIST[2].id) {
+    if (currentPage.id === NAV_LIST[3].id) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
         duration: 0.5,

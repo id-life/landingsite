@@ -25,7 +25,7 @@ export default function PCFixedUI() {
         <PageArrows
           className={cn(
             'fixed left-1/2 -translate-x-1/2',
-            currentPage.id === NAV_LIST[2].id ? 'bottom-5 mobile:bottom-6' : 'bottom-11 mobile:bottom-6',
+            currentPage.id === NAV_LIST[3].id ? 'bottom-5 mobile:bottom-6' : 'bottom-11 mobile:bottom-6',
           )}
         />
       )}

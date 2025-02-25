@@ -61,8 +61,19 @@ export function useNavigation() {
         if (isMobile) {
           gsap.to(window, {
             duration: 1.5,
+            scrollTo: { y: `#${NAV_LIST[2].id}`, offsetY: 0 },
+          });
+        } else {
+          smoother?.scrollTo(`#${item.id}`, true);
+        }
+      }
+      if (item.id === NAV_LIST[3].id) {
+        isNavScrollingRef.current = true;
+        if (isMobile) {
+          gsap.to(window, {
+            duration: 1.5,
             scrollTo: {
-              y: `#${NAV_LIST[2].id}`,
+              y: `#${NAV_LIST[3].id}`,
               offsetY: 0,
             },
           });

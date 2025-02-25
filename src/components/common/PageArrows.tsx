@@ -15,6 +15,8 @@ import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 
+const whiteList = [NAV_LIST[1].id, NAV_LIST[2].id ];
+
 interface PageArrowsProps {
   className?: string;
 }
@@ -26,10 +28,10 @@ export default function PageArrows({ className }: PageArrowsProps) {
     <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {(currentPage.id !== NAV_LIST[2].id || valuePageIndex !== 5) && <ArrowItem />}
+        {(currentPage.id !== NAV_LIST[3].id || valuePageIndex !== 5) && <ArrowItem />}
       </div>
       {/* 5个细长方块进度条 */}
-      {currentPage.id === NAV_LIST[2].id && (
+      {currentPage.id === NAV_LIST[3].id && (
         <div className="flex-center order-2 gap-3 mobile:order-1">
           {VALUE_PAGE_INDEX_LIST.map((_, index) => (
             <div
@@ -75,7 +77,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       }
       if (!isUp && mobilePortfolioPageIndex === 7) {
         // 结尾 往下翻
-        setNavigateTo(NAV_LIST[2]);
+        setNavigateTo(NAV_LIST[3]);
         return;
       }
       setMobilePortfolioPageNavigateTo(mobilePortfolioPageIndex + (isUp ? -1 : 1));
@@ -98,7 +100,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        currentPage.id === NAV_LIST[1].id ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        whiteList.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

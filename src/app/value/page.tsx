@@ -11,7 +11,7 @@ export default function ValuePage() {
   const setCurrentPage = useSetAtom(currentPageAtom);
 
   useEffect(() => {
-    setCurrentPage(NAV_LIST[2]);
+    setCurrentPage(NAV_LIST[3]);
   }, [setCurrentPage]);
 
   return (

@@ -12,6 +12,10 @@ export const NAV_LIST: NavItem[] = [
     title: 'portfolio 投资',
   },
   {
+    id: 'engagement_page',
+    title: 'engagement 印记',
+  },
+  {
     id: 'value_page',
     title: 'value 信念',
   },

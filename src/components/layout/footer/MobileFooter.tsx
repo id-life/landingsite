@@ -45,7 +45,7 @@ export default function MobileFooter() {
   };
 
   useEffect(() => {
-    if (currentPage.id !== NAV_LIST[2].id) return;
+    if (currentPage.id !== NAV_LIST[3].id) return;
     if (isSubscribeShow) {
       open();
     } else {
