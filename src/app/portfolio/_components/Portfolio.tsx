@@ -1,4 +1,5 @@
 import { currentPageAtom } from '@/atoms';
+import { globalLoadedAtom } from '@/atoms/geo';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -6,7 +7,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -24,6 +25,7 @@ function Portfolio() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => active, [active]);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
 
   const handleFundClick = useCallback((item: PortfolioItemInfo) => {
     if (!item.link) return;
@@ -31,7 +33,8 @@ function Portfolio() {
   }, []);
 
   useGSAP(() => {
-    if (!isMounted) return;
+    if (!globalLoaded) return;
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[1].id}`,
@@ -74,7 +77,7 @@ function Portfolio() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
     tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
-  }, [isMounted]);
+  }, [globalLoaded]);
 
   useGSAP(
     () => {
