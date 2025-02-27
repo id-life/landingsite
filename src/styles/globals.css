@@ -28,7 +28,7 @@
   body {
     color: #222222;
     background: var(--background);
-    @apply font-poppins mobile:h-full mobile:overflow-auto;
+    @apply font-poppins mobile:h-full mobile:overflow-hidden mobile:overscroll-y-none;
   }
 
   .base-background1 {
