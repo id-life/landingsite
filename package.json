@@ -28,6 +28,7 @@
     "jotai": "^2.9.3",
     "leva": "^0.9.35",
     "lodash-es": "^4.17.21",
+    "m3.js": "^1.1.0",
     "next": "14.2.10",
     "p5": "^1.10.0",
     "postprocessing": "^6.36.3",
@@ -42,7 +43,8 @@
     "react-use": "^17.5.1",
     "swiper": "^11.1.15",
     "tailwind-merge": "^2.5.2",
-    "three": "0.169.0"
+    "three": "0.169.0",
+    "twgl.js": "^5.5.4"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

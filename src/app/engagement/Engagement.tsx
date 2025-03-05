@@ -1,9 +1,15 @@
 import { memo } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useGSAP } from '@gsap/react';
 import { useSetAtom } from 'jotai';
 import { currentPageAtom } from '@/atoms';
+import Demo3 from './Demo3/Demo3';
+// import Demo4 from './Demo4/Demo4';
+import Demo8 from '@/app/engagement/Demo8/Demo8';
+import Demo9 from '@/app/engagement/Demo9/Demo9';
+
+// import Demo4 from './Demo4/Demo4';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -24,12 +30,26 @@ function Engagement() {
         },
       },
     });
+    tl.to('.test-panel', { xPercent: -100, ease: 'none' });
   }, []);
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <img className="mx-auto w-[56rem]" src="/imgs/engagement/talk-01.webp" alt="" />
-        <div className="mt-14 ml-40 grid grid-cols-3 gap-15 text-white">
+        {/*<Demo9 />*/}
+        {/*<Demo8 />*/}
+        {/*<Demo3 />*/}
+        {/*<div className="absolute left-0 top-0 flex w-[300vw] flex-nowrap">*/}
+        {/*<div className="test-panel h-screen w-screen">*/}
+        {/*  <Demo3 />*/}
+        {/*</div>*/}
+        {/*<div className="test-panel h-40 w-screen">*/}
+        {/*  <video src="https://cdn.id.life/video/translation-01.webm" autoPlay loop muted />*/}
+        {/*</div>*/}
+        {/*<div className="test-panel h-screen w-screen">*/}
+        {/*  <Demo4 />*/}
+        {/*</div>*/}
+        {/*</div>*/}
+        <div className="relative left-40 z-10 grid grid-cols-3 gap-15 text-white">
           <div>
             <div className="text-3xl font-semibold uppercase">talk</div>
             <div className="mt-1.5 text-base font-medium">
@@ -51,12 +71,12 @@ function Engagement() {
           <div>
             <div className="text-3xl font-semibold uppercase">sponsorship</div>
             <div className="">
-              <div className="flex gap-5 mt-2.5">
-                <img className="w-36 h-10" src="/imgs/engagement/sponsor-01.webp" alt="" />
+              <div className="mt-2.5 flex gap-5">
+                <img className="h-10 w-36" src="/imgs/engagement/sponsor-01.webp" alt="" />
                 <img className="w-33" src="/imgs/engagement/sponsor-02.webp" alt="" />
               </div>
-              <div className="flex gap-5 items-center mt-2.5">
-                <img className="w-45 h-9" src="/imgs/engagement/sponsor-03.webp" alt="" />
+              <div className="mt-2.5 flex items-center gap-5">
+                <img className="h-9 w-45" src="/imgs/engagement/sponsor-03.webp" alt="" />
                 <img className="w-16.5" src="/imgs/engagement/sponsor-04.webp" alt="" />
               </div>
             </div>
