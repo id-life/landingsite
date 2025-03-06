@@ -1,37 +1,16 @@
-import { glLoadedAtom, globalLoadedAtom, isCNAtom } from '@/atoms/geo';
+import { isCNAtom } from '@/atoms/geo';
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
-import { PerspectiveCamera, useProgress, View } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
-import ProgressLoader, { OuterLoader } from './ProgressLoader';
-
-function Loader() {
-  const { progress, active } = useProgress();
-  const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const setGLLoaded = useSetAtom(glLoadedAtom);
-  // 设置全局加载完成
-  useEffect(() => {
-    if (!active) {
-      setGlobalLoaded(true);
-      setGLLoaded(true);
-    }
-  }, [active, setGlobalLoaded, setGLLoaded]);
-
-  useEffect(() => {
-    const smoother = ScrollSmoother.get();
-    if (!smoother) return;
-    smoother.paused(active);
-  }, [active]);
-
-  return <ProgressLoader progress={progress.toFixed(2)} />;
-}
+import { OuterLoader } from './ProgressLoader';
+import Loader from '@/components/gl/Loader';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);

@@ -12,6 +12,7 @@ import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai/index';
 import Engagement from '@/app/engagement/Engagement';
+import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -66,6 +67,7 @@ export default function Home() {
   return (
     <>
       <ThreeWrapper />
+      {/*<TwinThreeWrapper />*/}
       <div id="wrapper">
         <div id="content">
           <Vision />

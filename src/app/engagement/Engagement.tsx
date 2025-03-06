@@ -36,7 +36,7 @@ function Engagement() {
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         {/*<Demo9 />*/}
-        {/*<Demo8 />*/}
+        <Demo8 />
         {/*<Demo3 />*/}
         {/*<div className="absolute left-0 top-0 flex w-[300vw] flex-nowrap">*/}
         {/*<div className="test-panel h-screen w-screen">*/}
