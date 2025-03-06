@@ -13,6 +13,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai/index';
 import Engagement from '@/app/engagement/Engagement';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
+import Twin from '@/app/twin/Twin';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -41,27 +42,27 @@ export default function Home() {
       '--background': '#000000',
       '--foreground': '#F0F0F0',
     });
-    const valueTL = gsap.timeline({
+    const twinTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[3].id}`,
         start: 'top bottom+=400',
         end: 'top center',
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[2]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[2]);
         },
       },
     });
-    valueTL.to(root, {
+    twinTL.to(root, {
       '--gradient-from': '#FFFFFF',
       '--gradient-to': '#CBD6EA',
       '--background': '#F0F0F0',
       '--foreground': '#000000',
     });
-    valueTL.to('.base-background2', { opacity: 1 });
+    twinTL.to('.base-background2', { opacity: 1 });
   });
 
   return (
@@ -73,6 +74,7 @@ export default function Home() {
           <Vision />
           <Portfolio />
           <Engagement />
+          <Twin />
           <Value />
           <Footer />
         </div>

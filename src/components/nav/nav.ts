@@ -16,6 +16,10 @@ export const NAV_LIST: NavItem[] = [
     title: 'engagement 印记',
   },
   {
+    id: 'twin_page',
+    title: 'digital twin 孪生',
+  },
+  {
     id: 'value_page',
     title: 'value 信念',
   },

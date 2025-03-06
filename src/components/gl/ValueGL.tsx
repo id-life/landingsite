@@ -1,4 +1,4 @@
-import { currentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import { currentPageAtom, currentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
@@ -61,6 +61,7 @@ TitleSVG.displayName = 'TitleSVG';
 
 function ValueGL() {
   const { camera } = useThree();
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
   const title1Ref = useRef<THREE.Group>(null);
   const title2Ref = useRef<THREE.Group>(null);
@@ -134,10 +135,16 @@ function ValueGL() {
       const tl = gsap.timeline({
         scrollTrigger: {
           immediateRender: isMobile,
-          trigger: `#${NAV_LIST[3].id}`,
+          trigger: `#${NAV_LIST[4].id}`,
           start: isMobile ? 'top bottom+=400' : 'top bottom+=500',
           end: 'top top',
           scrub: true,
+          onEnter: () => {
+            setCurrentPage(NAV_LIST[4]);
+          },
+          onEnterBack: () => {
+            setCurrentPage(NAV_LIST[4]);
+          },
         },
       });
       tl.to(camera.position, { ...page1Config.to.camera.position });
@@ -197,7 +204,7 @@ function ValueGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[3].id}`,
+        trigger: `#${NAV_LIST[4].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
@@ -344,4 +351,5 @@ function ValueGL() {
     </group>
   );
 }
+
 export default memo(ValueGL);
