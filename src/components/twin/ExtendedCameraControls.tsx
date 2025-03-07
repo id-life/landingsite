@@ -1,6 +1,4 @@
 import { forwardRef } from 'react';
-// import { eventBus } from '@/components/event-bus/eventBus';
-// import { MessageType } from '@/components/event-bus/messageType';
 import { CameraControls, CameraControlsProps } from '@react-three/drei';
 import CameraControlsImpl from 'camera-controls';
 

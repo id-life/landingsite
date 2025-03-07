@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <>
       <ThreeWrapper />
-      {/*<TwinThreeWrapper />*/}
+      <TwinThreeWrapper />
       <div id="wrapper">
         <div id="content">
           <Vision />

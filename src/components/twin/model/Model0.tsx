@@ -1,11 +1,20 @@
 'use client';
 
-import React, { forwardRef, useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Center } from '@react-three/drei';
+import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM0';
+import { SkeletonUtils } from "three-stdlib";
 
 const Model0 = forwardRef<{}>(function ({}, ref) {
+  const [cloth, integumentarySystem] = useGLTF([
+    'https://cdn.id.life/full_male/cloth-v1.glb',
+    'https://cdn.id.life/full_male/integumentary_system_tin.glb',
+  ]);
+
+  const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);
+  const integumentarySystemScene = useMemo(() => SkeletonUtils.clone(integumentarySystem.scene), [integumentarySystem.scene]);
+
   const modelInRef = useRef<THREE.Group>(null);
   const modelOutRef = useRef<THREE.Group>(null);
   const animationGroupRef = useRef<AnimationGroupHandle>(null);
@@ -27,6 +36,10 @@ const Model0 = forwardRef<{}>(function ({}, ref) {
     <Center>
       <group ref={modelOutRef} position={[0, 0.2, -0.15]}>
         <AnimationGroup ref={animationGroupRef} modelRef={modelInRef} />
+      </group>
+      <group ref={modelInRef} scale={5}>
+        <primitive visible={false} object={clothScene} />
+        <primitive visible={false} object={integumentarySystemScene} />
       </group>
     </Center>
   );

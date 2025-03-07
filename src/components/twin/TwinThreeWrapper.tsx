@@ -15,7 +15,7 @@ export default function TwinThreeWrapper() {
   const controlRefs = useMemo(() => [controlRef1, controlRef2], [controlRef1, controlRef2]);
 
   return (
-    <div className="fixed left-0 top-0 z-10 grid h-screen w-screen grid-cols-1">
+    <div id="twin-three-wrapper" className="fixed invisible left-0 top-0 z-0 opacity-0 grid h-screen w-screen grid-cols-1">
       <Canvas
         id="model-canvas"
         dpr={[1, 2]}
