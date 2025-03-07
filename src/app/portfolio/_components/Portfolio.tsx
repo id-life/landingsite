@@ -75,8 +75,8 @@ function Portfolio() {
     tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
     tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
     tl.to('#particle-gl', { opacity: 0 });
-    tl.to('.fixed-top', { top: 'calc(50% - 20rem)' });
-    tl.to('.fixed-bottom', { top: 'calc(50% + 20rem)' }, '<');
+    tl.to('.fixed-top', { opacity: 0 });
+    tl.to('.fixed-bottom', { opacity: 0 }, '<');
   }, [globalLoaded]);
 
   useGSAP(

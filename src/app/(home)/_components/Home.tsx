@@ -42,6 +42,26 @@ export default function Home() {
       '--background': '#000000',
       '--foreground': '#F0F0F0',
     });
+    const engagementTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[2].id}`,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: true,
+        onEnter: () => {
+          setCurrentPage(NAV_LIST[1]);
+        },
+        onEnterBack: () => {
+          setCurrentPage(NAV_LIST[1]);
+        },
+      },
+    });
+    engagementTL.to(root, {
+      '--gradient-from': '#000000',
+      '--gradient-to': '#000000',
+      '--background': '#000000',
+      '--foreground': '#FFFFFF',
+    });
     const twinTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[3].id}`,
