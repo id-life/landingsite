@@ -13,45 +13,37 @@ interface MapProps {
   lineColor?: string;
 }
 
-// 使用memo包装WorldMap组件避免不必要的重渲染
 export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor = '#0ea5e9' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   // 缓存地图实例和SVG结果，使用优化后的参数
   const svgMap = useMemo(() => {
-    // 根据优化级别调整网格和点的密度
-    const gridType = 'diagonal';
-    const pointRadius = 0.3;
-
     const map = new DottedMap({
-      height: 100, // 减少高度可以减少点的数量
-      grid: gridType,
+      height: 100,
+      grid: 'diagonal',
     });
 
     return map.getSVG({
-      radius: pointRadius,
+      radius: 0.3,
       color: '#FFFFFF40',
       shape: 'circle',
-      backgroundColor: 'black',
+      backgroundColor: 'var(--background)',
     });
   }, []);
 
-  // 将经纬度转换为屏幕坐标的函数放入useCallback中避免重复创建
   const projectPoint = useCallback((lat: number, lng: number) => {
     const x = (lng + 180) * (800 / 360);
     const y = (90 - lat) * (400 / 180);
     return { x, y };
   }, []);
 
-  // 同样将创建曲线路径的函数放入useCallback中
   const createCurvedPath = useCallback((start: { x: number; y: number }, end: { x: number; y: number }) => {
     const midX = (start.x + end.x) / 2;
     const midY = Math.min(start.y, end.y) - 50;
     return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
   }, []);
 
-  // 优化线条渲染，根据优化级别调整复杂度
-  const renderDotsLines = useMemo(() => {
+  const dotsLines = useMemo(() => {
     return dots.map((dot, i) => {
       const startPoint = projectPoint(dot.start.lat, dot.start.lng);
       const endPoint = projectPoint(dot.end.lat, dot.end.lng);
@@ -75,8 +67,12 @@ export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor =
     });
   }, [createCurvedPath, dots, projectPoint]);
 
+  const src = useMemo(() => {
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`;
+  }, [svgMap]);
+
   // 优化点的渲染，减少动画复杂度
-  const renderDotsPoints = useMemo(() => {
+  const dotsPoints = useMemo(() => {
     return dots.map((dot, i) => {
       const startPoint = projectPoint(dot.start.lat, dot.start.lng);
       const endPoint = projectPoint(dot.end.lat, dot.end.lng);
@@ -109,19 +105,16 @@ export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor =
   return (
     <div className="flex-center relative mt-18 h-[100svh] w-full overflow-hidden bg-black/20 font-sans [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]">
       <Image
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
-        className="pointer-events-none h-full w-full select-none bg-top"
+        src={src}
+        className="pointer-events-none size-full select-none bg-top"
         alt="world map"
-        height="495"
-        width="1056"
+        fill
         draggable={false}
-        priority={true}
         loading="eager"
-        unoptimized={true}
       />
       <svg ref={svgRef} viewBox="0 0 800 400" className="pointer-events-none absolute inset-0 h-full w-full select-none">
-        {renderDotsLines}
-        {renderDotsPoints}
+        {dotsLines}
+        {dotsPoints}
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="white" stopOpacity="0" />
