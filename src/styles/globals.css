@@ -24,6 +24,18 @@
   /*  width: 0;*/
   /*  background: transparent;*/
   /*}*/
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #ffffff66;
+    backdrop-filter: blur(40px);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #ffffff90;
+  }
 
   body {
     color: #222222;

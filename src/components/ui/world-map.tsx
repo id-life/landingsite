@@ -1,20 +1,19 @@
 'use client';
 
+import { selectEngagementDotDataAtom } from '@/atoms/page';
+import { MapDotData } from '@/constants/engagement';
+import { cn } from '@/utils';
 import DottedMap from 'dotted-map';
+import { useAtom } from 'jotai';
 import Image from 'next/image';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { ClockSVG } from '../svg';
+import FeatherImg from './feather-img';
 
 export type MapRegionDotData = {
   lat: number;
   lng: number;
   icon?: React.ReactNode;
-};
-export type MapDotData = {
-  lat: number;
-  lng: number;
-  label?: string;
-  period?: string;
 };
 
 interface MapProps {
@@ -25,6 +24,8 @@ interface MapProps {
 
 export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, lineColor = '#C11111' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const [selectEngagementDotData, setSelectEngagementDotData] = useAtom(selectEngagementDotDataAtom);
+  const { title, imgs, className } = selectEngagementDotData;
 
   // 缓存地图实例和SVG结果，使用优化后的参数
   const svgMap = useMemo(() => {
@@ -87,26 +88,72 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
             <animate attributeName="opacity" from="0.5" to="0" dur={animationDuration} begin="0s" repeatCount="indefinite" />
           </circle>
           <foreignObject x={point.x + 6} y={point.y - 7} width={120} height={16}>
-            <div className="flex items-center font-oxanium text-[.5625rem] text-white">
-              {dot?.label && <span className="mr-1">{dot.label}</span>}
+            <div
+              className="flex items-center font-oxanium text-xl/6 text-white"
+              style={{
+                transform: 'scale(var(--inverse-scale, 1))',
+                transformOrigin: 'top left',
+              }}
+            >
+              {dot?.label && <span className="mr-2">{dot.label}</span>}
               {dot?.period && (
-                <div className="flex-center gap-0.5">
-                  <ClockSVG className="size-2" />
+                <div className="flex-center gap-1">
+                  <ClockSVG className="size-5" />
                   {dot.period}
                 </div>
               )}
             </div>
           </foreignObject>
+          <foreignObject x={point.x} y={0} width={368} className="flex h-[80vh] flex-col overflow-visible">
+            <div
+              className={cn('absolute inset-0 flex h-full w-[23rem] flex-col items-center font-oxanium')}
+              style={{
+                transform: 'scale(var(--inverse-scale, 1)) translate(-100%, 0)',
+                transformOrigin: 'top left',
+              }}
+            >
+              {title && <h3 className="text-xl/6 font-semibold capitalize text-white">{title}</h3>}
+              {imgs?.length ? (
+                <div className="mr-10 flex grow flex-col overflow-auto pr-1 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]">
+                  {imgs.map((img) => (
+                    <FeatherImg key={img.src} className="w-[19.75rem]" src={img.src} alt={img.alt} />
+                  ))}
+                  <FeatherImg src="/imgs/vision.jpg" className="w-[19.75rem]" alt="test" />
+                </div>
+              ) : null}
+            </div>
+          </foreignObject>
         </g>
       );
     });
-  }, [dots, lineColor, projectPoint]);
+  }, [dots, imgs, lineColor, projectPoint, title]);
+
+  // 添加useEffect来计算和设置反向缩放
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const updateScale = () => {
+      // 计算SVG当前的缩放比例
+      const svgRect = svg.getBoundingClientRect();
+      const scale = svgRect.width / svg.viewBox.baseVal.width;
+
+      // 设置反向缩放CSS变量
+      document.documentElement.style.setProperty('--inverse-scale', `${1 / scale}`);
+    };
+
+    window.addEventListener('resize', updateScale);
+    // 初始计算
+    setTimeout(updateScale, 100); // 确保SVG完全渲染
+
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
 
   return (
-    <div className="flex-center relative mt-18 h-[100svh] w-full overflow-hidden bg-black/20 font-sans [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]">
+    <div className="relative mt-18 aspect-[2/1] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans">
       <Image
         src={src}
-        className="pointer-events-none size-full select-none bg-top"
+        className="pointer-events-none size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]"
         alt="world map"
         fill
         draggable={false}
@@ -127,5 +174,5 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
     </div>
   );
 });
-
-export { WorldMap as default };
+WorldMap.displayName = 'WorldMap';
+export default memo(WorldMap);

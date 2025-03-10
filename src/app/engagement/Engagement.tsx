@@ -5,61 +5,12 @@ import { gsap } from 'gsap';
 import { useSetAtom } from 'jotai';
 import { memo } from 'react';
 // import Demo4 from './Demo4/Demo4';
-import { AmericaSVG, ChineseSVG, EuropeanUnionSVG, SingaporeSVG, HongKongSVG, JapanSVG, KoreanSVG } from '@/components/svg';
-import { MapDotData, MapRegionDotData, WorldMap } from '@/components/ui/world-map';
+import { WorldMap } from '@/components/ui/world-map';
+import { WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 // import Demo4 from './Demo4/Demo4';
 
-const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
-  {
-    lat: 34,
-    lng: -92,
-    icon: <AmericaSVG className="size-2.5" />,
-  },
-  {
-    lat: 23,
-    lng: 128,
-    icon: <KoreanSVG className="size-2.5" />,
-  },
-  {
-    lat: 28,
-    lng: 141,
-    icon: <JapanSVG className="size-2.5" />,
-  },
-  {
-    lat: -14,
-    lng: 103.85,
-    icon: <SingaporeSVG className="size-2.5" />,
-  },
-  {
-    lat: 7,
-    lng: 116,
-    icon: <HongKongSVG className="size-2.5" />,
-  },
-
-  {
-    lat: 39,
-    lng: 116,
-    icon: <ChineseSVG className="size-2.5" />,
-  },
-
-  {
-    lat: 38.7223,
-    lng: 10,
-    icon: <EuropeanUnionSVG className="size-2.5" />,
-  },
-];
-
-const WORLD_MAP_DOTS: MapDotData[] = [
-  {
-    lat: 16,
-    lng: 120,
-    label: 'Shanghai',
-    period: '2024',
-  },
-];
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
-
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -83,6 +34,16 @@ function Engagement() {
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
+        {/* <div className={cn('absolute flex w-[22.625rem] flex-col items-center bg-red-400', className)}>
+          {title && <h3 className="text-2xl font-semibold uppercase">{title}</h3>}
+          {imgs?.length ? (
+            <div className="flex flex-col gap-2">
+              {imgs.map((img) => (
+                <img key={img.src} className="w-[19.75rem]" src={img.src} alt={img.alt} />
+              ))}
+            </div>
+          ) : null}
+        </div> */}
       </div>
       {/* <div className="relative flex h-[100svh] flex-col items-center justify-center"> */}
       {/*<Demo9 />*/}
