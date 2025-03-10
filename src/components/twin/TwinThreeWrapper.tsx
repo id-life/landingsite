@@ -5,6 +5,8 @@ import Model0 from '@/components/twin/model/Model0';
 import EnvironmentGroup from '@/components/twin/EnvironmentGroup';
 import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
 import Model1 from '@/components/twin/model/Model1';
+import Model2 from '@/components/twin/model/Model2';
+import Model3 from '@/components/twin/model/Model3';
 import Loader from '@/components/gl/Loader';
 import LightGroup from '@/components/twin/LightGroup';
 
@@ -15,7 +17,7 @@ export default function TwinThreeWrapper() {
   const controlRefs = useMemo(() => [controlRef1, controlRef2], [controlRef1, controlRef2]);
 
   return (
-    <div id="twin-three-wrapper" className="fixed invisible left-0 top-0 z-0 opacity-0 grid h-screen w-screen grid-cols-1">
+    <div id="twin-three-wrapper" className="invisible fixed left-0 top-0 z-0 grid h-screen w-screen grid-cols-1 opacity-0">
       <Canvas
         id="model-canvas"
         dpr={[1, 2]}
@@ -41,6 +43,20 @@ export default function TwinThreeWrapper() {
       {/*<View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>*/}
       {/*  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />*/}
       {/*  <Model1 ref={modelRefs[1]} />*/}
+      {/*  <EnvironmentGroup />*/}
+      {/*  <LightGroup ambientIntensity={1.6} />*/}
+      {/*  <ExtendedCameraControls ref={controlRefs[1]} />*/}
+      {/*</View>*/}
+      {/*<View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>*/}
+      {/*  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />*/}
+      {/*  <Model2 ref={modelRefs[1]} />*/}
+      {/*  <EnvironmentGroup />*/}
+      {/*  <LightGroup ambientIntensity={1.6} />*/}
+      {/*  <ExtendedCameraControls ref={controlRefs[1]} />*/}
+      {/*</View>*/}
+      {/*<View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>*/}
+      {/*  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />*/}
+      {/*  <Model3 ref={modelRefs[1]} />*/}
       {/*  <EnvironmentGroup />*/}
       {/*  <LightGroup ambientIntensity={1.6} />*/}
       {/*  <ExtendedCameraControls ref={controlRefs[1]} />*/}

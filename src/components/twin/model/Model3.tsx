@@ -2,14 +2,14 @@
 
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Center, useGLTF } from '@react-three/drei';
-import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM1';
 import { SkeletonUtils } from 'three-stdlib';
+import { Center, useGLTF } from '@react-three/drei';
+import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM3';
 
-const Model1 = forwardRef<{}>(function ({}, ref) {
+const Model3 = forwardRef<{}>(function ({}, ref) {
   const [cloth, integumentarySystem] = useGLTF([
-    'https://cdn.id.life/m1/cloth-v1.glb',
-    'https://cdn.id.life/m1/integumentary_system.glb',
+    'https://cdn.id.life/full_male/cloth-v1.glb',
+    'https://cdn.id.life/m3/integumentary_system_fat.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);
@@ -46,6 +46,6 @@ const Model1 = forwardRef<{}>(function ({}, ref) {
   );
 });
 
-Model1.displayName = 'Model1';
+Model3.displayName = 'Model3';
 
-export default Model1;
+export default Model3;
