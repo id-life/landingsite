@@ -1,19 +1,29 @@
 'use client';
 
 import DottedMap from 'dotted-map';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { memo, useCallback, useMemo, useRef } from 'react';
+import { ClockSVG } from '../svg';
+
+export type MapRegionDotData = {
+  lat: number;
+  lng: number;
+  icon?: React.ReactNode;
+};
+export type MapDotData = {
+  lat: number;
+  lng: number;
+  label?: string;
+  period?: string;
+};
 
 interface MapProps {
-  dots?: Array<{
-    start: { lat: number; lng: number; label?: string };
-    end: { lat: number; lng: number; label?: string };
-  }>;
+  dots?: Array<MapDotData>;
+  regionDots?: Array<MapRegionDotData>;
   lineColor?: string;
 }
 
-export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor = '#0ea5e9' }: MapProps) {
+export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, lineColor = '#C11111' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   // 缓存地图实例和SVG结果，使用优化后的参数
@@ -37,66 +47,56 @@ export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor =
     return { x, y };
   }, []);
 
-  const createCurvedPath = useCallback((start: { x: number; y: number }, end: { x: number; y: number }) => {
-    const midX = (start.x + end.x) / 2;
-    const midY = Math.min(start.y, end.y) - 50;
-    return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
-  }, []);
-
-  const dotsLines = useMemo(() => {
-    return dots.map((dot, i) => {
-      const startPoint = projectPoint(dot.start.lat, dot.start.lng);
-      const endPoint = projectPoint(dot.end.lat, dot.end.lng);
-      return (
-        <g key={`path-group-${i}`}>
-          <motion.path
-            d={createCurvedPath(startPoint, endPoint)}
-            fill="none"
-            stroke="url(#path-gradient)"
-            strokeWidth="1"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{
-              duration: 1,
-              delay: 0.5 * i,
-              ease: 'easeOut',
-            }}
-          ></motion.path>
-        </g>
-      );
-    });
-  }, [createCurvedPath, dots, projectPoint]);
-
   const src = useMemo(() => {
     return `data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`;
   }, [svgMap]);
 
-  // 优化点的渲染，减少动画复杂度
-  const dotsPoints = useMemo(() => {
-    return dots.map((dot, i) => {
-      const startPoint = projectPoint(dot.start.lat, dot.start.lng);
-      const endPoint = projectPoint(dot.end.lat, dot.end.lng);
-
-      // 高优化级别时禁用或简化动画
-      const animationDuration = '1.5s';
-      const maxRadius = '8';
-
+  const regionDotsPoints = useMemo(() => {
+    if (!regionDots?.length) return null;
+    return regionDots.map((dot, i) => {
+      const startPoint = projectPoint(dot.lat, dot.lng);
+      const size = 12;
       return (
         <g key={`points-group-${i}`}>
-          <g key={`start-${i}`}>
+          {dot.icon ? (
+            <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
+              <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
+            </foreignObject>
+          ) : (
             <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
-            <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} opacity="0.5">
-              <animate attributeName="r" from="2" to={maxRadius} dur={animationDuration} begin="0s" repeatCount="indefinite" />
-              <animate attributeName="opacity" from="0.5" to="0" dur={animationDuration} begin="0s" repeatCount="indefinite" />
-            </circle>
-          </g>
-          <g key={`end-${i}`}>
-            <circle cx={endPoint.x} cy={endPoint.y} r="2" fill={lineColor} />
-            <circle cx={endPoint.x} cy={endPoint.y} r="2" fill={lineColor} opacity="0.5">
-              <animate attributeName="r" from="2" to={maxRadius} dur={animationDuration} begin="0s" repeatCount="indefinite" />
-              <animate attributeName="opacity" from="0.5" to="0" dur={animationDuration} begin="0s" repeatCount="indefinite" />
-            </circle>
-          </g>
+          )}
+        </g>
+      );
+    });
+  }, [lineColor, projectPoint, regionDots]);
+
+  const dotsPoints = useMemo(() => {
+    if (!dots?.length) return null;
+    return dots.map((dot, i) => {
+      const point = projectPoint(dot.lat, dot.lng);
+      const animationDuration = '1s';
+      return (
+        <g key={`points-group-${i}`} className="pointer-events-auto cursor-pointer">
+          <circle cx={point.x} cy={point.y} r="2" fill={lineColor} />
+          <circle cx={point.x} cy={point.y} r="2" fill={lineColor} opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur={animationDuration} begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur={animationDuration} begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke={lineColor} strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur={animationDuration} begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur={animationDuration} begin="0s" repeatCount="indefinite" />
+          </circle>
+          <foreignObject x={point.x + 6} y={point.y - 7} width={120} height={16}>
+            <div className="flex items-center font-oxanium text-[.5625rem] text-white">
+              {dot?.label && <span className="mr-1">{dot.label}</span>}
+              {dot?.period && (
+                <div className="flex-center gap-0.5">
+                  <ClockSVG className="size-2" />
+                  {dot.period}
+                </div>
+              )}
+            </div>
+          </foreignObject>
         </g>
       );
     });
@@ -113,7 +113,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots = [], lineColor =
         loading="eager"
       />
       <svg ref={svgRef} viewBox="0 0 800 400" className="pointer-events-none absolute inset-0 h-full w-full select-none">
-        {dotsLines}
+        {regionDotsPoints}
         {dotsPoints}
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">

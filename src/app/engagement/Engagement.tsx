@@ -5,43 +5,58 @@ import { gsap } from 'gsap';
 import { useSetAtom } from 'jotai';
 import { memo } from 'react';
 // import Demo4 from './Demo4/Demo4';
-import { WorldMap } from '@/components/ui/world-map';
-
+import { AmericaSVG, ChineseSVG, EuropeanUnionSVG, SingaporeSVG, HongKongSVG, JapanSVG, KoreanSVG } from '@/components/svg';
+import { MapDotData, MapRegionDotData, WorldMap } from '@/components/ui/world-map';
 // import Demo4 from './Demo4/Demo4';
 
-const WORLD_MAP_DOTS = [
+const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
-    start: {
-      lat: 64.2008,
-      lng: -149.4937,
-    }, // Alaska (Fairbanks)
-    end: {
-      lat: 34.0522,
-      lng: -118.2437,
-    }, // Los Angeles
+    lat: 34,
+    lng: -92,
+    icon: <AmericaSVG className="size-2.5" />,
   },
   {
-    start: { lat: 64.2008, lng: -149.4937 }, // Alaska (Fairbanks)
-    end: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
+    lat: 23,
+    lng: 128,
+    icon: <KoreanSVG className="size-2.5" />,
   },
   {
-    start: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
-    end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
+    lat: 28,
+    lng: 141,
+    icon: <JapanSVG className="size-2.5" />,
   },
   {
-    start: { lat: 51.5074, lng: -0.1278 }, // London
-    end: { lat: 28.6139, lng: 77.209 }, // New Delhi
+    lat: -14,
+    lng: 103.85,
+    icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    start: { lat: 28.6139, lng: 77.209 }, // New Delhi
-    end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
+    lat: 7,
+    lng: 116,
+    icon: <HongKongSVG className="size-2.5" />,
   },
+
   {
-    start: { lat: 28.6139, lng: 77.209 }, // New Delhi
-    end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
+    lat: 39,
+    lng: 116,
+    icon: <ChineseSVG className="size-2.5" />,
+  },
+
+  {
+    lat: 38.7223,
+    lng: 10,
+    icon: <EuropeanUnionSVG className="size-2.5" />,
   },
 ];
 
+const WORLD_MAP_DOTS: MapDotData[] = [
+  {
+    lat: 16,
+    lng: 120,
+    label: 'Shanghai',
+    period: '2024',
+  },
+];
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
 
@@ -67,7 +82,7 @@ function Engagement() {
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <WorldMap dots={WORLD_MAP_DOTS} lineColor="#0ea5e9" />
+        <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
       </div>
       {/* <div className="relative flex h-[100svh] flex-col items-center justify-center"> */}
       {/*<Demo9 />*/}
