@@ -50,7 +50,7 @@ export const EngagementPopup: React.FC<EngagementPopupProps> = ({ isOpen, title,
                   <div className="flex flex-col justify-between">
                     <div>
                       <h4 className="text-base/5 font-semibold">{item.name}</h4>
-                      <p className="line-clamp-2 text-xs/5">{item.desc}</p>
+                      {/* <p className="line-clamp-2 text-xs/5">{item.desc}</p> */}
                     </div>
                     {item.link && item.linkDesc && (
                       <a
