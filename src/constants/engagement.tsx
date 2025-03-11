@@ -82,3 +82,15 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
   },
 ];
+
+export const engagementBottomButtons = {
+  publications: {
+    //  info...
+  },
+  sponsorship: {
+    //  info...
+  },
+  discovery: {
+    //  info...
+  },
+};

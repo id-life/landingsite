@@ -1,13 +1,13 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
+import { DiscoverySVG, PublicationsSVG, SponsorshipSVG, SubscribeBorderSVG } from '@/components/svg';
+import { WorldMap } from '@/components/ui/world-map';
+import { WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
+import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { useSetAtom } from 'jotai';
-import { memo } from 'react';
-// import Demo4 from './Demo4/Demo4';
-import { WorldMap } from '@/components/ui/world-map';
-import { WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
-// import Demo4 from './Demo4/Demo4';
+import { createElement, FC, memo, SVGProps, useCallback } from 'react';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -30,72 +30,58 @@ function Engagement() {
     // tl.to('.test-panel', { xPercent: -100, ease: 'none' });
   }, []);
 
+  const onPublicationsClick = useCallback(() => {
+    console.log('publications');
+  }, []);
+  const onSponsorshipClick = useCallback(() => {
+    console.log('sponsorship');
+  }, []);
+  const onDiscoveryClick = useCallback(() => {
+    console.log('discovery');
+  }, []);
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
-        {/* <div className={cn('absolute flex w-[22.625rem] flex-col items-center bg-red-400', className)}>
-          {title && <h3 className="text-2xl font-semibold uppercase">{title}</h3>}
-          {imgs?.length ? (
-            <div className="flex flex-col gap-2">
-              {imgs.map((img) => (
-                <img key={img.src} className="w-[19.75rem]" src={img.src} alt={img.alt} />
-              ))}
-            </div>
-          ) : null}
-        </div> */}
+        <div className="absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-10">
+          <EngagementBottomButton
+            label="Publications"
+            icon={PublicationsSVG}
+            onClick={onPublicationsClick}
+            iconClassName="w-5.5"
+          />
+          <EngagementBottomButton label="Sponsorship" icon={SponsorshipSVG} onClick={onSponsorshipClick} />
+          <EngagementBottomButton label="Discovery" icon={DiscoverySVG} onClick={onDiscoveryClick} />
+        </div>
       </div>
-      {/* <div className="relative flex h-[100svh] flex-col items-center justify-center"> */}
-      {/*<Demo9 />*/}
-      {/* <Demo8 /> */}
-      {/*<Demo3 />*/}
-      {/*<div className="absolute left-0 top-0 flex w-[300vw] flex-nowrap">*/}
-      {/*<div className="test-panel h-screen w-screen">*/}
-      {/*  <Demo3 />*/}
-      {/*</div>*/}
-      {/*<div className="test-panel h-40 w-screen">*/}
-      {/*  <video src="https://cdn.id.life/video/translation-01.webm" autoPlay loop muted />*/}
-      {/*</div>*/}
-      {/*<div className="test-panel h-screen w-screen">*/}
-      {/*  <Demo4 />*/}
-      {/*</div>*/}
-      {/*</div>*/}
-      {/* <div className="relative left-40 z-10 grid grid-cols-3 gap-15 text-white">
-          <div>
-            <div className="text-3xl font-semibold uppercase">talk</div>
-            <div className="mt-1.5 text-base font-medium">
-              <p>2024 Oxford Future Innovation Forum - Healthy Aging sub-forum</p>
-              <p>Timepie</p>
-              <p>Edge City Lanna</p>
-              <p>Founder&apos;s Longevity Forum</p>
-            </div>
-          </div>
-          <div>
-            <div className="text-3xl font-semibold uppercase">translation & publishing</div>
-            <div className="mt-1.5 text-base font-medium">
-              <p>bio/acc manifesto &gt;</p>
-              <p>the Network State &gt;</p>
-              <p>The Case against death</p>
-              <p>王钊 better aging</p>
-            </div>
-          </div>
-          <div>
-            <div className="text-3xl font-semibold uppercase">sponsorship</div>
-            <div className="">
-              <div className="mt-2.5 flex gap-5">
-                <img className="h-10 w-36" src="/imgs/engagement/sponsor-01.webp" alt="" />
-                <img className="w-33" src="/imgs/engagement/sponsor-02.webp" alt="" />
-              </div>
-              <div className="mt-2.5 flex items-center gap-5">
-                <img className="h-9 w-45" src="/imgs/engagement/sponsor-03.webp" alt="" />
-                <img className="w-16.5" src="/imgs/engagement/sponsor-04.webp" alt="" />
-              </div>
-            </div>
-          </div>
-        </div> */}
-      {/* </div> */}
     </div>
   );
 }
 
 export default memo(Engagement);
+
+const EngagementBottomButton = memo(function EngagementBottomButton({
+  label,
+  icon,
+  onClick,
+  iconClassName,
+}: {
+  label: string;
+  icon: FC<SVGProps<SVGElement>>;
+  onClick: () => void;
+  iconClassName?: string;
+}) {
+  return (
+    <div
+      onClick={onClick}
+      className="group relative flex h-[3.125rem] w-[13rem] cursor-pointer items-center justify-center gap-1.5 bg-white/10 text-base/5 font-semibold text-foreground backdrop-blur-2xl transition-colors duration-150 hover:text-red-600"
+    >
+      <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground transition-colors duration-150 group-hover:stroke-red-600" />
+      {createElement(icon, {
+        className: cn('h-7.5 w-6 fill-foreground transition-colors duration-150 group-hover:fill-red-600', iconClassName),
+      })}
+      {label}
+    </div>
+  );
+});
+EngagementBottomButton.displayName = 'EngagementBottomButton';

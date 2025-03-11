@@ -104,7 +104,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
               )}
             </div>
           </foreignObject>
-          <foreignObject x={point.x} y={0} width={368} className="flex h-[80vh] flex-col overflow-visible">
+          <foreignObject x={point.x} y={0} width={368} className="flex h-[75vh] flex-col overflow-visible">
             <div
               className={cn('absolute inset-0 flex h-full w-[23rem] flex-col items-center font-oxanium')}
               style={{
