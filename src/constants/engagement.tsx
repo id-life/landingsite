@@ -1,5 +1,7 @@
 import { AmericaSVG, ChineseSVG, EuropeanUnionSVG, HongKongSVG, JapanSVG, KoreanSVG, SingaporeSVG } from '@/components/svg';
-import { MapRegionDotData } from '@/components/ui/world-map';
+import { MapRegionDotData } from '@/components/engagement/WorldMap';
+import { PopupItem } from '@/components/engagement/EngagementPopup';
+
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 34,
@@ -83,14 +85,49 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
 ];
 
-export const engagementBottomButtons = {
+export const engagementBottomButtons: Record<'publications' | 'sponsorship', { title: string; items: PopupItem[] }> = {
   publications: {
-    //  info...
+    title: 'Translation',
+    items: [
+      {
+        name: 'The Network State', // 书名
+        logo: '/imgs/engagement/book-01.webp', // 书封面
+        desc: 'Guidelines for biotech ethics', // 描述
+        linkDesc: 'Read Chinese Ver. by Boyang', // 描述
+        link: 'https://.......', // 跳转链接
+      },
+      {
+        name: 'bio/acc manifesto', // 书名
+        logo: '/imgs/engagement/book-02.webp', // 书封面
+        desc: 'Guidelines for biotech ethics', // 描述
+        linkDesc: 'Read Chinese Ver. by Boyang', // 描述
+        link: 'https://.......', // 跳转链接
+      },
+    ],
   },
   sponsorship: {
-    //  info...
-  },
-  discovery: {
-    //  info...
+    title: 'Sponsorship',
+    items: [
+      {
+        name: 'VITALIST BAY',
+        logo: '/imgs/engagement/sponsor-01.webp',
+        className: 'h-7.5',
+      },
+      {
+        name: 'ETHPanda',
+        logo: '/imgs/engagement/sponsor-02.webp',
+        className: 'h-7',
+      },
+      {
+        name: 'OXFORD LONGEVITY',
+        logo: '/imgs/engagement/sponsor-03.webp',
+        className: 'h-7.5',
+      },
+      {
+        name: 'ARRD',
+        logo: '/imgs/engagement/sponsor-04.webp',
+        className: 'h-9',
+      },
+    ],
   },
 };

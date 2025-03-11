@@ -1,5 +1,6 @@
 @import './webgl.css';
 @import './geo.css';
+@import './components/button.css';
 
 @tailwind base;
 @tailwind components;
@@ -167,7 +168,6 @@
       opacity: 0;
     }
   }
-
   .clip-box {
     position: relative;
     background: #22222299;

@@ -12,6 +12,7 @@ import SingaporeSVG from '@/../public/svgs/engagement/singapore.svg?component';
 import SponsorshipSVG from '@/../public/svgs/engagement/sponsorship.svg?component';
 import PublicationsSVG from '@/../public/svgs/engagement/publications.svg?component';
 import DiscoverySVG from '@/../public/svgs/engagement/discovery.svg?component';
+import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 
 export {
   KoreanSVG,
@@ -26,4 +27,5 @@ export {
   SponsorshipSVG,
   PublicationsSVG,
   DiscoverySVG,
+  BookSVG,
 };

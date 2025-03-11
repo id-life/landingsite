@@ -8,7 +8,7 @@ import { useAtom } from 'jotai';
 import Image from 'next/image';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { ClockSVG } from '../svg';
-import FeatherImg from './feather-img';
+import FeatherImg from './FeatherImg';
 
 export type MapRegionDotData = {
   lat: number;

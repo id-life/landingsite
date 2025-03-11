@@ -68,6 +68,9 @@ const config: Config = {
         yellow: {
           800: '#FFD12C',
         },
+        blue: {
+          DEFAULT: '#43BBFF',
+        },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },
