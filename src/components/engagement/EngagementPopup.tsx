@@ -1,5 +1,5 @@
 import { cn } from '@/utils';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import React, { useCallback } from 'react';
 import { BookSVG } from '../svg';
 
