@@ -106,7 +106,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
           </foreignObject>
           <foreignObject x={point.x - 16} y={0} width={368} className="flex h-[70vh] max-h-[42.5rem] flex-col overflow-visible">
             <div
-              className={cn('absolute inset-0 flex h-full w-[18.75rem] flex-col items-center font-oxanium')}
+              className={cn('absolute inset-0 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
               style={{
                 transform: 'scale(var(--inverse-scale, 1)) translate(-100%, 0)',
                 transformOrigin: 'top left',
@@ -114,7 +114,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
             >
               {title && <h3 className="text-xl/6 font-semibold capitalize text-white">{title}</h3>}
               {imgs?.length ? (
-                <div className="-ml-2 -mt-2 flex grow flex-col gap-3 overflow-auto pb-16 pr-3 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
+                <div className="-ml-8 -mt-2 flex grow flex-col gap-3 overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
                   {imgs.map((img) => (
                     <FeatherImg key={img.src} src={img.src} alt={img.alt} />
                   ))}
