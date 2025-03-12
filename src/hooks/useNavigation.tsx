@@ -65,7 +65,17 @@ export function useNavigation() {
           });
         } else {
           smoother?.scrollTo(`#${item.id}`, true);
+          requestAnimationFrame(() => {
+            // 滚到 0.6 进度
+            const st = ScrollTrigger.getById('engagement-scroll-trigger');
+            if (!st) return;
+            st.scroll(st.start + (st.end - st.start) * 0.6);
+            const animation = st.animation;
+            if (!animation) return;
+            animation.progress(0.6);
+          });
         }
+        setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
       if (item.id === NAV_LIST[3].id) {
         isNavScrollingRef.current = true;

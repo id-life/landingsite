@@ -1,22 +1,25 @@
 import { currentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
-import { DiscoverySVG, PublicationsSVG, SponsorshipSVG, SubscribeBorderSVG } from '@/components/svg';
+import { globalLoadedAtom } from '@/atoms/geo';
 import { EngagementPopup } from '@/components/engagement/EngagementPopup';
 import { WorldMap } from '@/components/engagement/WorldMap';
+import { NAV_LIST } from '@/components/nav/nav';
+import { DiscoverySVG, PublicationsSVG, SponsorshipSVG, SubscribeBorderSVG } from '@/components/svg';
 import { engagementBottomButtons, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { useSetAtom } from 'jotai';
+import gsap from 'gsap';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { createElement, FC, memo, SVGProps, useCallback, useState } from 'react';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [activePopup, setActivePopup] = useState<'publications' | 'sponsorship' | null>(null);
-
+  const globalLoaded = useAtomValue(globalLoadedAtom);
   useGSAP(() => {
+    if (!globalLoaded) return;
     const tl = gsap.timeline({
       scrollTrigger: {
+        id: 'engagement-scroll-trigger',
         trigger: `#${NAV_LIST[2].id}`,
         start: 'top top',
         end: '+=300%',
@@ -28,10 +31,60 @@ function Engagement() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[2]);
         },
+        // onUpdate: (p) => {
+        //   console.log('progress:', p);
+        // },
       },
     });
-    // tl.to('.test-panel', { xPercent: -100, ease: 'none' });
-  }, []);
+    tl.set('#world-map-img', { y: 50, opacity: 0 });
+    tl.set(['.world-map-region', '.world-map-dot'], {
+      opacity: 0,
+    });
+    // start 出场动画
+    tl.to('#world-map-img', { y: 0, opacity: 1, ease: 'none', duration: 1 });
+    tl.to('.world-map-region', {
+      scale: 1,
+      opacity: 1,
+      ease: 'power2.out',
+      stagger: 0.15,
+      duration: 1,
+    });
+    tl.to(
+      '.world-map-dot',
+      {
+        opacity: 1,
+        scale: 1,
+        ease: 'power2.out',
+        duration: 1,
+      },
+      '<',
+    );
+    tl.to('.world-map-dot-content', {
+      opacity: 1,
+      scale: 1,
+      ease: 'power2.out',
+      duration: 1,
+    });
+    const buttons = document.querySelectorAll('.engagement-bottom-button');
+    tl.set(buttons, { y: 30, opacity: 0 });
+    tl.to(buttons, {
+      y: 0,
+      opacity: 1,
+      stagger: 0.15,
+      ease: 'back.out(1.7)',
+      duration: 1,
+    });
+    tl.to(() => {}, { duration: 1 });
+    // end 退场动画
+    tl.to(buttons, {
+      y: 30,
+      opacity: 0,
+      stagger: 0.15,
+      ease: 'back.out(1.7)',
+      duration: 1,
+    });
+    tl.to(['#world-map-img', '#world-map-svg'], { y: -50, opacity: 0, ease: 'power2.out', duration: 1 });
+  }, [globalLoaded]);
 
   const onPublicationsClick = useCallback(() => {
     setActivePopup((prev) => (prev === 'publications' ? null : 'publications'));
@@ -49,7 +102,7 @@ function Engagement() {
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
-        <div className="absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-x-9 gap-y-0">
+        <div className="engagement-bottom-buttons-container absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-x-9 gap-y-0">
           <div className="relative">
             <EngagementBottomButton
               label="Publications"
@@ -111,6 +164,7 @@ const EngagementBottomButton = memo(function EngagementBottomButton({
       className={cn(
         'group relative flex h-[3.125rem] w-[13rem] cursor-pointer items-center justify-center gap-1.5 bg-white/10 text-base/5 font-semibold backdrop-blur-2xl transition-colors duration-150',
         active ? 'text-red-600' : 'text-foreground hover:text-red-600',
+        'engagement-bottom-button opacity-0', // anim init
       )}
     >
       <SubscribeBorderSVG

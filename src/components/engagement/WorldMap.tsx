@@ -58,7 +58,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
       const startPoint = projectPoint(dot.lat, dot.lng);
       const size = 12;
       return (
-        <g key={`points-group-${i}`}>
+        <g key={`points-group-${i}`} className="world-map-region opacity-0">
           {dot.icon ? (
             <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
               <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
@@ -77,7 +77,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
       const point = projectPoint(dot.lat, dot.lng);
       const animationDuration = '1s';
       return (
-        <g key={`points-group-${i}`} className="pointer-events-auto cursor-pointer">
+        <g key={`points-group-${i}`} className="world-map-dot pointer-events-auto cursor-pointer opacity-0">
           <circle cx={point.x} cy={point.y} r="2" fill={lineColor} />
           <circle cx={point.x} cy={point.y} r="2" fill={lineColor} opacity="0.5">
             <animate attributeName="r" from={2} to={6} dur={animationDuration} begin="0s" repeatCount="indefinite" />
@@ -104,7 +104,12 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
               )}
             </div>
           </foreignObject>
-          <foreignObject x={point.x - 16} y={0} width={368} className="flex h-[70vh] max-h-[42.5rem] flex-col overflow-visible">
+          <foreignObject
+            x={point.x - 16}
+            y={0}
+            width={368}
+            className="world-map-dot-content flex h-[70vh] max-h-[42.5rem] flex-col overflow-visible opacity-0"
+          >
             <div
               className={cn('absolute inset-0 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
               style={{
@@ -151,14 +156,23 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
   return (
     <div className="relative mt-18 aspect-[2/1] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans">
       <Image
+        id="world-map-img"
         src={src}
-        className="pointer-events-none size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]"
+        className={cn(
+          'pointer-events-none size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'opacity-0', // anim init state
+        )}
         alt="world map"
         fill
         draggable={false}
         loading="eager"
       />
-      <svg ref={svgRef} viewBox="0 0 800 400" className="pointer-events-none absolute inset-0 h-full w-full select-none">
+      <svg
+        id="world-map-svg"
+        ref={svgRef}
+        viewBox="0 0 800 400"
+        className="pointer-events-none absolute inset-0 h-full w-full select-none"
+      >
         {regionDotsPoints}
         {dotsPoints}
         <defs>
