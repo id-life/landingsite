@@ -1,5 +1,6 @@
 import Background from '@/components/common/Background';
 import FixedUI from '@/components/common/FixedUI';
+import ScrollBehavior from '@/components/common/ScrollBehavior';
 import Providers from '@/providers/root';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import { GoogleTagManager } from '@next/third-parties/google';
@@ -85,6 +86,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
+          <ScrollBehavior />
           <ClientNav />
           {children}
           <FixedUI />
