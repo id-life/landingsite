@@ -111,7 +111,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
             className="world-map-dot-content flex h-[70vh] max-h-[42.5rem] flex-col overflow-visible opacity-0"
           >
             <div
-              className={cn('absolute inset-0 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
+              className={cn('absolute inset-0 top-4 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
               style={{
                 transform: 'scale(var(--inverse-scale, 1)) translate(-100%, 0)',
                 transformOrigin: 'top left',
