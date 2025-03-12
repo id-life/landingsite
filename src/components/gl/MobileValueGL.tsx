@@ -1,4 +1,4 @@
-import { mobileCurrentPageAtom, mobileCurrentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import { mobileCurrentPageAtom, mobileCurrentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
@@ -70,8 +70,8 @@ function MobileValueGL() {
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
-  const setValuePageIndex = useSetAtom(valuePageIndexAtom);
-  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
+  const setValuePageIndex = useSetAtom(innerPageIndexAtom);
+  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.mobile, []);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);

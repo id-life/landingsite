@@ -2,48 +2,63 @@ import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
 import {
   currentPageAtom,
   currentPageIndexAtom,
-  mobilePortfolioPageIndexAtom,
-  mobilePortfolioPageNavigateToAtom,
+  innerPageIndexAtom,
+  innerPageNavigateToAtom,
+  innerPageTotalAtom,
   navigateToAtom,
-  valuePageIndexAtom,
-  valuePageNavigateToAtom,
 } from '@/atoms';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 
-const whiteList = [NAV_LIST[1].id, NAV_LIST[2].id ];
+const whiteList = [NAV_LIST[1].id, NAV_LIST[2].id];
 
 interface PageArrowsProps {
   className?: string;
 }
-const VALUE_PAGE_INDEX_LIST = new Array(5).fill(0);
 export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
-  const valuePageIndex = useAtomValue(valuePageIndexAtom);
+  const innerPageIndex = useAtomValue(innerPageIndexAtom);
+  const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
+
+  const pageIndexList = useMemo(() => {
+    const getTotal = () => {
+      if (![NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) return 0;
+      return currentPage.id === NAV_LIST[2].id ? 4 : 5;
+    };
+    const total = getTotal();
+    if (!total) return [];
+    setInnerPageTotal(total);
+    return new Array(total).fill(0);
+  }, [currentPage.id, setInnerPageTotal]);
+
+  const isLastPageAndInnerPage = useMemo(() => {
+    // 最后一页 & 最后一小进度,不展示向下箭头
+    return currentPage.id === NAV_LIST[4].id && innerPageIndex === innerPageTotal - 1;
+  }, [currentPage.id, innerPageIndex, innerPageTotal]);
+
   return (
     <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {(currentPage.id !== NAV_LIST[3].id || valuePageIndex !== 5) && <ArrowItem />}
+        {!isLastPageAndInnerPage && <ArrowItem />}
       </div>
-      {/* 5个细长方块进度条 */}
-      {currentPage.id === NAV_LIST[3].id && (
+      {/* 细长方块进度条 */}
+      {pageIndexList?.length ? (
         <div className="flex-center order-2 gap-3 mobile:order-1">
-          {VALUE_PAGE_INDEX_LIST.map((_, index) => (
+          {pageIndexList.map((_, index) => (
             <div
-              key={`value-page-index-${index}`}
+              key={`inner-page-index-${index}`}
               className={cn(
                 'h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                valuePageIndex === index ? 'bg-gray-800' : 'bg-[#B8B8B8]',
+                innerPageIndex === index ? 'bg-gray-800' : 'bg-[#B8B8B8]',
               )}
             ></div>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -52,45 +67,25 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const currentPage = useAtomValue(currentPageAtom);
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const setNavigateTo = useSetAtom(navigateToAtom);
-  const isMobile = useIsMobile();
-  const valuePageIndex = useAtomValue(valuePageIndexAtom);
-  const setValuePageNavigateTo = useSetAtom(valuePageNavigateToAtom);
-  const [mobilePortfolioPageIndex, setMobilePortfolioPageIndex] = useAtom(mobilePortfolioPageIndexAtom);
-  const setMobilePortfolioPageNavigateTo = useSetAtom(mobilePortfolioPageNavigateToAtom);
-
+  const innerPageIndex = useAtomValue(innerPageIndexAtom);
+  const innerPageTotal = useAtomValue(innerPageTotalAtom);
+  const setInnerPageNavigateToAtom = useSetAtom(innerPageNavigateToAtom);
+  console.log({ innerPageIndex, innerPageTotal });
   const handleClick = useThrottle(() => {
+    console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
-    if (isMobile && currentPageIndex === 2 && valuePageIndex === 0 && isUp) {
-      // 移动端 需要特殊处理
-      const height = window.innerHeight;
-      gsap.to(window, {
-        duration: 1.5,
-        scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: height * 0.85 },
-      });
-      return;
-    }
-    if (isMobile && currentPageIndex === 1) {
-      if (isUp && mobilePortfolioPageIndex === 0) {
-        // 开头 往上翻
-        setNavigateTo(NAV_LIST[0]);
-        return;
-      }
-      if (!isUp && mobilePortfolioPageIndex === 7) {
-        // 结尾 往下翻
-        setNavigateTo(NAV_LIST[3]);
-        return;
-      }
-      setMobilePortfolioPageNavigateTo(mobilePortfolioPageIndex + (isUp ? -1 : 1));
-      return;
-    }
-    if (currentPageIndex === 2) {
-      if (valuePageIndex === 0 && isUp) {
+    if (innerPageIndex !== -1) {
+      // 有小进度条
+      if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻
-        setNavigateTo(NAV_LIST[1]);
+        setNavigateTo(NAV_LIST[currentPageIndex - 1]);
+        return;
+      } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
+        // 最后一个小进度 往下翻
+        setNavigateTo(NAV_LIST[currentPageIndex + 1]);
         return;
       }
-      // 小进度结尾
-      setValuePageNavigateTo(valuePageIndex + (isUp ? -1 : 1));
+      setInnerPageNavigateToAtom(innerPageIndex + (isUp ? -1 : 1));
       return;
     }
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);

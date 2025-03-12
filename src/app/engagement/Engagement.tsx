@@ -1,4 +1,4 @@
-import { currentPageAtom } from '@/atoms';
+import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { EngagementPopup } from '@/components/engagement/EngagementPopup';
 import { WorldMap } from '@/components/engagement/WorldMap';
@@ -8,13 +8,17 @@ import { engagementBottomButtons, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { createElement, FC, memo, SVGProps, useCallback, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { createElement, FC, memo, SVGProps, useCallback, useEffect, useState } from 'react';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [activePopup, setActivePopup] = useState<'publications' | 'sponsorship' | null>(null);
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const currentPageIndex = useAtomValue(currentPageIndexAtom);
+
   useGSAP(() => {
     if (!globalLoaded) return;
     const tl = gsap.timeline({
@@ -148,6 +152,47 @@ function Engagement() {
     // });
   }, [globalLoaded]);
 
+  useEffect(() => {
+    if (currentPageIndex !== 2 || innerPageNavigateTo === null) return;
+    setInnerPageIndex(innerPageNavigateTo);
+    setInnerPageNavigateTo(null);
+    // TODO: Engagement 页 小进度条
+    // const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
+    // if (progress !== undefined) {
+    //   if (valuePageNavigateTo === 5) {
+    //     const st = ScrollTrigger.getById('footerTimeline');
+    //     if (st) {
+    //       isScrollingRef.current = true;
+    //       gsap.to(window, {
+    //         duration: 0.5,
+    //         scrollTo: st.end,
+    //         onComplete: () => {
+    //           isScrollingRef.current = false;
+    //           enableScroll();
+    //         },
+    //       });
+    //     }
+    //   } else {
+    //     const st = ScrollTrigger.getById('valueTimeline');
+    //     if (st) {
+    //       isScrollingRef.current = true;
+    //       gsap.to(window, {
+    //         duration: 1,
+    //         scrollTo: st.start + (st.end - st.start) * progress,
+    //         onComplete: () => {
+    //           isScrollingRef.current = false;
+    //           enableScroll();
+    //           if (valuePageNavigateTo === 0 && title1Ref.current)
+    //             gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
+    //         },
+    //       });
+    //     }
+    //   }
+    //   setValuePageIndex(valuePageNavigateTo);
+    //   setValuePageNavigateTo(null);
+    // }
+  }, [currentPageIndex, innerPageNavigateTo, setInnerPageIndex, setInnerPageNavigateTo]);
+
   const onPublicationsClick = useCallback(() => {
     setActivePopup((prev) => (prev === 'publications' ? null : 'publications'));
   }, []);
@@ -180,7 +225,6 @@ function Engagement() {
               className="h-[17.5rem]"
             />
           </div>
-
           <div className="relative">
             <EngagementBottomButton
               label="Sponsorship"

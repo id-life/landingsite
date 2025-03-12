@@ -1,4 +1,4 @@
-import { valuePageIndexAtom } from '@/atoms';
+import { innerPageIndexAtom } from '@/atoms';
 import { model2VisibleAtom, model3VisibleAtom, model4VisibleAtom } from '@/atoms/geo';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
@@ -38,7 +38,7 @@ export const useMobileValueCrossAnimations = ({
   const [model2Visible, setModel2Visible] = useAtom(model2VisibleAtom);
   const [model3Visible, setModel3Visible] = useAtom(model3VisibleAtom);
   const setModel4Visible = useSetAtom(model4VisibleAtom);
-  const setValuePageIndex = useSetAtom(valuePageIndexAtom);
+  const setValuePageIndex = useSetAtom(innerPageIndexAtom);
 
   // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
