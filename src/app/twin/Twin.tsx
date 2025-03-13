@@ -35,6 +35,9 @@ function Twin() {
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 6 });
+    tl.to('#switch-model', { opacity: 1, duration: 6 }, '<');
+    tl.to('#switch-skin', { opacity: 1, duration: 6 }, '<');
+    tl.to('#switch-anatomy-camera', { opacity: 1, duration: 6 }, '<');
     tl.to('.title-01', { left: '4rem', ease: 'power2.inOut' });
     tl.to('.title-01', { left: '-30rem', ease: 'power2.inOut', duration: 2, delay: 2 });
     tl.to('#twin-three-wrapper', { opacity: 0, duration: 2 });

@@ -1,6 +1,6 @@
 @import './webgl.css';
-@import './geo.css';
 @import './components/button.css';
+@import './loading.css';
 
 @tailwind base;
 @tailwind components;

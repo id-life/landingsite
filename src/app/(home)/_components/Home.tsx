@@ -65,7 +65,7 @@ export default function Home() {
     const twinTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[3].id}`,
-        start: 'top bottom+=400',
+        start: 'top bottom',
         end: 'top center',
         scrub: true,
         onEnter: () => {

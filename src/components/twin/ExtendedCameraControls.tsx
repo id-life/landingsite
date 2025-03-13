@@ -1,6 +1,8 @@
 import { forwardRef } from 'react';
 import { CameraControls, CameraControlsProps } from '@react-three/drei';
 import CameraControlsImpl from 'camera-controls';
+import { eventBus } from '../event-bus/eventBus';
+import { MessageType } from '../event-bus/messageType';
 
 type ExtendedCameraControlsProps = CameraControlsProps & {
   enabled?: boolean;
@@ -22,12 +24,8 @@ const ExtendedCameraControls = forwardRef<CameraControls, ExtendedCameraControls
       azimuthAngle={Math.PI / 12}
       onChange={(event: any) => {
         if (event.type !== 'control') return;
-        // eventBus.next({ type: MessageType.SYNC_CAMERA, payload: event.target });
+        eventBus.next({ type: MessageType.SYNC_CAMERA, payload: event.target });
       }}
-      // onEnd={(event: any) => {
-      //   if (!event.target) return;
-      //   event.target.setOrbitPoint(0, 0, 0);
-      // }}
       enabled={enabled}
       {...props}
     />

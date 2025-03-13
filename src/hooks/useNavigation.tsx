@@ -39,13 +39,15 @@ export function useNavigation() {
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      } else if (id === NAV_LIST[1].id) {
+      }
+       if (id === NAV_LIST[1].id) {
         // portfolio 页 偏移 & contact 需要处理
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, false, 'top 10px');
         requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      } else if (id === NAV_LIST[2].id) {
+      }
+       if (id === NAV_LIST[2].id) {
         // engagement 页，需要滚动到 0.47 进度
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
@@ -59,12 +61,18 @@ export function useNavigation() {
           animation.progress(0.5);
         });
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      } else {
+      }
+      if (item.id === NAV_LIST[3].id) {
+        isNavScrollingRef.current = true;
+        smoother?.scrollTo(`#${item.id}`,false, 'top 10px');
+        requestAnimationFrame(() => smoother?.scrollTo('#switch-model', true, `${window.innerHeight * 1.5}px`));
+      }
+      if (item.id === NAV_LIST[4].id) {
         // 其他 正常滚
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      }
+        }
 
       setCurrentPage(item);
       if (id === NAV_LIST[2].id || id === NAV_LIST[4].id) {

@@ -1,4 +1,6 @@
 export enum MessageType {
+  SWITCH_MODEL = 'SWITCH_MODEL', // 切换模型
   SYNC_CAMERA = 'SYNC_CAMERA', // 同步摄像机
   ALLOW_OPERATION = 'ALLOW_OPERATION',   // 允许操作
+  SWITCH_ANATOMY_CAMERA = 'SWITCH_ANATOMY_CAMERA', // 切换解剖视角
 }
