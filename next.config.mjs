@@ -1,4 +1,5 @@
 import MillionLint from '@million/lint';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -33,6 +34,7 @@ const nextConfig = {
     ];
     return config;
   },
+  cacheHandler: new URL('./cache-handler.mjs', import.meta.url).pathname,
 };
 
 export default MillionLint.next({
