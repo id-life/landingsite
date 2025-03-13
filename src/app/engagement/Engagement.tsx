@@ -9,7 +9,9 @@ import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { createElement, FC, memo, SVGProps, useCallback, useEffect, useState } from 'react';
+import { debounce } from 'lodash-es';
+import { createElement, FC, memo, SVGProps, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -18,6 +20,19 @@ function Engagement() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
+  const lastIndexRef = useRef<number>(0);
+  const { jumpTo } = useEngagementJumpTo();
+
+  const debouncedSetInnerPageIndex = useMemo(
+    () =>
+      debounce((index: number) => {
+        if (lastIndexRef.current !== index) {
+          lastIndexRef.current = index;
+          setInnerPageIndex(index);
+        }
+      }, 200),
+    [setInnerPageIndex],
+  );
 
   useGSAP(() => {
     if (!globalLoaded) return;
@@ -35,9 +50,9 @@ function Engagement() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[2]);
         },
-        onUpdate: (p) => {
-          console.log('progress:', p);
-        },
+        // onUpdate: (p) => {
+        //   console.log('progress:', p);
+        // },
       },
     });
     tl.set('#world-map-img', { y: 50, opacity: 0 });
@@ -109,13 +124,70 @@ function Engagement() {
     const stayDuration = 0.4 * factor;
     // 计算停留每个动画的单位时长
     const stayUnit = stayDuration / 4; // 分为 4 个步骤
-    tl.to(`.world-map-dot-content-0`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor);
-    tl.to(`.world-map-dot-content-0`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit);
-    tl.to(`.world-map-dot-content-1`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
-    tl.to(`.world-map-dot-content-1`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit * 2);
-    tl.to(`.world-map-dot-content-2`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
-    tl.to(`.world-map-dot-content-2`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit * 3);
-    tl.to(`.world-map-dot-content-3`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
+    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor);
+    tl.to(
+      `.world-map-dot-content-0`,
+      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
+      0.4 * factor + stayUnit,
+    );
+    tl.to(
+      `.world-map-dot-content-1`,
+      {
+        opacity: 1,
+        height: '70vh',
+        ease: 'power2.out',
+        duration: stayUnit / 2,
+        onComplete: () => {
+          debouncedSetInnerPageIndex(1);
+        },
+        onReverseComplete: () => {
+          debouncedSetInnerPageIndex(0);
+        },
+      },
+      '<',
+    );
+    tl.to(
+      `.world-map-dot-content-1`,
+      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
+      0.4 * factor + stayUnit * 2,
+    );
+    tl.to(
+      `.world-map-dot-content-2`,
+      {
+        opacity: 1,
+        height: '70vh',
+        ease: 'power2.out',
+        duration: stayUnit / 2,
+        onComplete: () => {
+          debouncedSetInnerPageIndex(2);
+        },
+        onReverseComplete: () => {
+          debouncedSetInnerPageIndex(1);
+        },
+      },
+      '<',
+    );
+    tl.to(
+      `.world-map-dot-content-2`,
+      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
+      0.4 * factor + stayUnit * 3,
+    );
+    tl.to(
+      `.world-map-dot-content-3`,
+      {
+        opacity: 1,
+        height: '70vh',
+        ease: 'power2.out',
+        duration: stayUnit / 2,
+        onComplete: () => {
+          debouncedSetInnerPageIndex(3);
+        },
+        onReverseComplete: () => {
+          debouncedSetInnerPageIndex(2);
+        },
+      },
+      '<',
+    );
     // 出场动画（在进度0.8后开始）
     // 计算出场动画总时长（占总进度的0.2）
     const exitDuration = 0.2 * factor;
@@ -123,7 +195,7 @@ function Engagement() {
     const exitUnit = exitDuration / 3; // 分为2个步骤
 
     // 出场动画序列
-    tl.to(`.world-map-dot-content-3`, { opacity: 0, ease: 'power2.out', duration: exitUnit }, 0.8 * factor);
+    tl.to(`.world-map-dot-content-3`, { opacity: 0, height: 0, ease: 'power2.out', duration: exitUnit }, 0.8 * factor);
     tl.to(
       buttons,
       {
@@ -145,48 +217,15 @@ function Engagement() {
       },
       0.8 * factor + exitUnit * 2,
     );
-  }, [globalLoaded]);
+  }, [globalLoaded, debouncedSetInnerPageIndex]);
 
   useEffect(() => {
     if (currentPageIndex !== 2 || innerPageNavigateTo === null) return;
-    setInnerPageIndex(innerPageNavigateTo);
-    setInnerPageNavigateTo(null);
-    // TODO: Engagement 页 小进度条
-    // const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
-    // if (progress !== undefined) {
-    //   if (valuePageNavigateTo === 5) {
-    //     const st = ScrollTrigger.getById('footerTimeline');
-    //     if (st) {
-    //       isScrollingRef.current = true;
-    //       gsap.to(window, {
-    //         duration: 0.5,
-    //         scrollTo: st.end,
-    //         onComplete: () => {
-    //           isScrollingRef.current = false;
-    //           enableScroll();
-    //         },
-    //       });
-    //     }
-    //   } else {
-    //     const st = ScrollTrigger.getById('valueTimeline');
-    //     if (st) {
-    //       isScrollingRef.current = true;
-    //       gsap.to(window, {
-    //         duration: 1,
-    //         scrollTo: st.start + (st.end - st.start) * progress,
-    //         onComplete: () => {
-    //           isScrollingRef.current = false;
-    //           enableScroll();
-    //           if (valuePageNavigateTo === 0 && title1Ref.current)
-    //             gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
-    //         },
-    //       });
-    //     }
-    //   }
-    //   setValuePageIndex(valuePageNavigateTo);
-    //   setValuePageNavigateTo(null);
-    // }
-  }, [currentPageIndex, innerPageNavigateTo, setInnerPageIndex, setInnerPageNavigateTo]);
+    jumpTo(innerPageNavigateTo, () => {
+      setInnerPageIndex(innerPageNavigateTo);
+      setInnerPageNavigateTo(null);
+    });
+  }, [currentPageIndex, innerPageNavigateTo, jumpTo, setInnerPageIndex, setInnerPageNavigateTo]);
 
   const onPublicationsClick = useCallback(() => {
     setActivePopup((prev) => (prev === 'publications' ? null : 'publications'));

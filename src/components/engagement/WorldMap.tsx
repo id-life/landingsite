@@ -1,14 +1,10 @@
 'use client';
 
-import { selectEngagementDotDataAtom } from '@/atoms/page';
 import { MapDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 import DottedMap from 'dotted-map';
-import { useAtom } from 'jotai';
 import Image from 'next/image';
-import { Fragment, memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { ClockSVG } from '../svg';
-import FeatherImg from './FeatherImg';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import WorldMapDotPoint from './WorldMapDotPoint';
 
 export type MapRegionDotData = {
@@ -25,7 +21,6 @@ interface MapProps {
 
 export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, lineColor = '#C11111' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [selectEngagementDotData, setSelectEngagementDotData] = useAtom(selectEngagementDotDataAtom);
 
   // 缓存地图实例和SVG结果，使用优化后的参数
   const svgMap = useMemo(() => {

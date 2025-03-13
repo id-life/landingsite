@@ -1,32 +1,26 @@
-import { selectEngagementDotDataAtom } from '@/atoms/page';
 import { MapDotData } from '@/constants/engagement';
+import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 import { cn } from '@/utils';
-import { useAtom } from 'jotai';
-import React, { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback } from 'react';
 import FeatherImg from './FeatherImg';
 
 export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; index: number }) {
   const { title, imgs, contentTransformStyle, period, country, label, lat, lng, key } = dot;
-
-  const [selectEngagementDotData, setSelectEngagementDotData] = useAtom(selectEngagementDotDataAtom);
-  const isSelected = useMemo(() => {
-    return selectEngagementDotData?.key === key;
-  }, [selectEngagementDotData, key]);
+  const { jumpTo } = useEngagementJumpTo();
 
   const projectPoint = useCallback((lat: number, lng: number) => {
     const x = (lng + 180) * (800 / 360);
     const y = (90 - lat) * (400 / 180);
     return { x, y };
   }, []);
+
   const point = projectPoint(lat, lng);
 
   return (
     <Fragment key={`points-group-${index}`}>
       <g
         className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer opacity-0`}
-        onClick={(e: React.MouseEvent) => {
-          setSelectEngagementDotData(isSelected ? null : dot);
-        }}
+        onClick={() => jumpTo(index)}
       >
         <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
         <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
@@ -55,7 +49,7 @@ export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; inde
         y={0}
         width={160}
         className={cn(
-          `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-[70vh] max-h-[42.5rem] flex-col overflow-visible opacity-0`,
+          `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-0 max-h-[42.5rem] flex-col overflow-visible opacity-0`,
           // 通过 gsap 控制动画
           //    isSelected ? 'opacity-100' : 'opacity-0',
         )}
