@@ -25,13 +25,13 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
   // 缓存地图实例和SVG结果，使用优化后的参数
   const svgMap = useMemo(() => {
     const map = new DottedMap({
-      height: 100,
+      height: 60,
       grid: 'diagonal',
     });
 
     return map.getSVG({
-      radius: 0.3,
-      color: '#FFFFFF40',
+      radius: 0.26,
+      color: '#ffffff33',
       shape: 'circle',
       backgroundColor: 'var(--background)',
     });
