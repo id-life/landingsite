@@ -46,14 +46,15 @@ function Engagement() {
     });
 
     // 使用进度位置控制动画时机
-    // 入场动画：0 - 0.55
-    // 停留时间：0.55 - 0.65
+    // 入场动画：0 - 0.4
+    // 停留时间：0.4 - 0.65
     // 出场动画：0.65 - 1.0
+    const factor = 100; // 动画因子
 
-    // 计算入场动画总时长（占总进度的0.55）
-    const entranceDuration = 0.55;
+    // 计算入场动画总时长（占总进度的0.4
+    const entranceDuration = 0.4 * factor;
     // 计算入场每个动画的单位时长
-    const entranceUnit = entranceDuration / 5; // 分为5个步骤
+    const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
 
     // 入场动画序列
     tl.to(
@@ -90,17 +91,6 @@ function Engagement() {
       entranceUnit * 2,
     );
 
-    tl.to(
-      '.world-map-dot-content',
-      {
-        opacity: 1,
-        scale: 1,
-        ease: 'power2.out',
-        duration: entranceUnit,
-      },
-      entranceUnit * 3,
-    );
-
     const buttons = document.querySelectorAll('.engagement-bottom-button');
     tl.set(buttons, { y: 30, opacity: 0 });
     tl.to(
@@ -112,16 +102,28 @@ function Engagement() {
         ease: 'back.out(1.7)',
         duration: entranceUnit,
       },
-      entranceUnit * 4,
+      entranceUnit * 3,
     );
 
-    // 出场动画（在进度0.65后开始）
-    // 计算出场动画总时长（占总进度的0.35）
-    const exitDuration = 0.35;
+    // 停留 0.4 - 0.8
+    const stayDuration = 0.4 * factor;
+    // 计算停留每个动画的单位时长
+    const stayUnit = stayDuration / 4; // 分为 4 个步骤
+    tl.to(`.world-map-dot-content-0`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor);
+    tl.to(`.world-map-dot-content-0`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit);
+    tl.to(`.world-map-dot-content-1`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
+    tl.to(`.world-map-dot-content-1`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit * 2);
+    tl.to(`.world-map-dot-content-2`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
+    tl.to(`.world-map-dot-content-2`, { opacity: 0, ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor + stayUnit * 3);
+    tl.to(`.world-map-dot-content-3`, { opacity: 1, ease: 'power2.out', duration: stayUnit / 2 }, '<');
+    // 出场动画（在进度0.8后开始）
+    // 计算出场动画总时长（占总进度的0.2）
+    const exitDuration = 0.2 * factor;
     // 计算出场每个动画的单位时长
-    const exitUnit = exitDuration / 2; // 分为2个步骤
+    const exitUnit = exitDuration / 3; // 分为2个步骤
 
     // 出场动画序列
+    tl.to(`.world-map-dot-content-3`, { opacity: 0, ease: 'power2.out', duration: exitUnit }, 0.8 * factor);
     tl.to(
       buttons,
       {
@@ -131,9 +133,8 @@ function Engagement() {
         ease: 'back.out(1.7)',
         duration: exitUnit,
       },
-      0.65,
+      0.8 * factor + exitUnit,
     );
-
     tl.to(
       ['#world-map-img', '#world-map-svg'],
       {
@@ -142,14 +143,8 @@ function Engagement() {
         ease: 'power2.out',
         duration: exitUnit,
       },
-      0.65 + exitUnit,
+      0.8 * factor + exitUnit * 2,
     );
-    // 可选的调试代码
-    // gsap.ticker.add(() => {
-    //   if (tl.scrollTrigger) {
-    //     console.log('progress:', tl.scrollTrigger.progress.toFixed(2));
-    //   }
-    // });
   }, [globalLoaded]);
 
   useEffect(() => {
