@@ -74,7 +74,7 @@ export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; inde
             </h3>
           )}
           {imgs?.length ? (
-            <div className="-ml-8 -mt-2 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
+            <div className="pointer-events-auto -ml-8 -mt-2 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
               {imgs.map((img) => (
                 <FeatherImg key={img.src} src={img.src} alt={img.alt} />
               ))}

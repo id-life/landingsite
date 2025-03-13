@@ -44,6 +44,8 @@ function Engagement() {
     tl.set(['.world-map-region', '.world-map-dot'], {
       opacity: 0,
     });
+    const buttons = document.querySelectorAll('.engagement-bottom-button');
+    tl.set(buttons, { y: 30, opacity: 0 });
 
     // 使用进度位置控制动画时机
     // 入场动画：0 - 0.4
@@ -91,8 +93,6 @@ function Engagement() {
       entranceUnit * 2,
     );
 
-    const buttons = document.querySelectorAll('.engagement-bottom-button');
-    tl.set(buttons, { y: 30, opacity: 0 });
     tl.to(
       buttons,
       {

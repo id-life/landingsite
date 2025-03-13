@@ -53,10 +53,10 @@ export function useNavigation() {
           // 滚到 0.47 进度
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          st.scroll(st.start + (st.end - st.start) * 0.47);
+          st.scroll(st.start + (st.end - st.start) * 0.5);
           const animation = st.animation;
           if (!animation) return;
-          animation.progress(0.47);
+          animation.progress(0.5);
         });
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       } else {
