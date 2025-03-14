@@ -1,11 +1,51 @@
 import { MapDotData } from '@/constants/engagement';
 import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 import { cn } from '@/utils';
-import { Fragment, useCallback } from 'react';
+import { motion, Variants } from 'motion/react';
+import { useCallback } from 'react';
 import FeatherImg from './FeatherImg';
 
+const pointVariants: Variants = {
+  initial: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.5,
+    transition: {
+      duration: 0.3,
+      scale: { type: 'easeInOut' },
+    },
+  },
+};
+
+const labelVariants: Variants = {
+  initial: {
+    fontSize: '20px',
+  },
+  hover: {
+    fontSize: '24px',
+    transition: {
+      duration: 0.3,
+      type: 'easeInOut',
+    },
+  },
+};
+
+// 添加父元素动画变体
+const containerVariants: Variants = {
+  initial: {
+    opacity: 1,
+  },
+  hover: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
 export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; index: number }) {
-  const { title, imgs, contentTransformStyle, period, country, label, lat, lng, key } = dot;
+  const { title, imgs, contentTransformStyle, period, country, label, lat, lng } = dot;
   const { jumpTo } = useEngagementJumpTo();
 
   const projectPoint = useCallback((lat: number, lng: number) => {
@@ -17,23 +57,30 @@ export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; inde
   const point = projectPoint(lat, lng);
 
   return (
-    <Fragment key={`points-group-${index}`}>
-      <g
+    <g>
+      <motion.g
         className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer opacity-0`}
+        initial="initial"
+        whileHover="hover"
         onClick={() => jumpTo(index)}
+        variants={containerVariants}
       >
-        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-          <animate attributeName="r" from={2} to={6} dur="1s" begin="0s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="0.5" to="0" dur="1s" begin="0s" repeatCount="indefinite" />
-        </circle>
-        <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-          <animate attributeName="r" from={6} to={10} dur="1s" begin="0s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="0.5" to="0" dur="1s" begin="0s" repeatCount="indefinite" />
-        </circle>
-        <foreignObject x={point.x + 6} y={point.y - 6} width={120} height={20}>
+        {/* 点 */}
+        <motion.g variants={pointVariants}>
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+        </motion.g>
+        {/* 标签 */}
+        <motion.foreignObject variants={labelVariants} x={point.x + 6} y={point.y - 5} width={140} height={28}>
           <div
-            className="flex flex-col items-start font-oxanium text-xl/6 text-white"
+            className="flex flex-col items-start font-oxanium leading-[1.1] text-white"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -42,20 +89,18 @@ export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; inde
             {country && <span className="mr-2 font-semibold">{country}</span>}
             {label}
           </div>
-        </foreignObject>
-      </g>
+        </motion.foreignObject>
+      </motion.g>
       <foreignObject
         x={point.x - 16}
         y={0}
         width={160}
         className={cn(
           `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-0 max-h-[42.5rem] flex-col overflow-visible opacity-0`,
-          // 通过 gsap 控制动画
-          //    isSelected ? 'opacity-100' : 'opacity-0',
         )}
       >
         <div
-          className={cn('absolute inset-0 top-4 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
+          className={cn('absolute inset-0 top-4 z-10 flex h-full w-[20.25rem] flex-col items-center font-oxanium')}
           style={{
             transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
             transformOrigin: 'top left',
@@ -76,6 +121,6 @@ export default function WorldMapDotPoint({ dot, index }: { dot: MapDotData; inde
           ) : null}
         </div>
       </foreignObject>
-    </Fragment>
+    </g>
   );
 }

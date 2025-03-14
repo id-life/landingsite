@@ -30,7 +30,7 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
     });
 
     return map.getSVG({
-      radius: 0.26,
+      radius: 0.245,
       color: '#ffffff33',
       shape: 'circle',
       backgroundColor: 'var(--background)',

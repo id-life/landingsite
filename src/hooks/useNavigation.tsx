@@ -39,15 +39,13 @@ export function useNavigation() {
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      }
-       if (id === NAV_LIST[1].id) {
+      } else if (id === NAV_LIST[1].id) {
         // portfolio 页 偏移 & contact 需要处理
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, false, 'top 10px');
         requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      }
-       if (id === NAV_LIST[2].id) {
+      } else if (id === NAV_LIST[2].id) {
         // engagement 页，需要滚动到 0.47 进度
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
@@ -55,24 +53,22 @@ export function useNavigation() {
           // 滚到 0.47 进度
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          st.scroll(st.start + (st.end - st.start) * 0.5);
+          st.scroll(st.start + (st.end - st.start) * 0.47);
           const animation = st.animation;
           if (!animation) return;
-          animation.progress(0.5);
+          animation.progress(0.47);
         });
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-      }
-      if (item.id === NAV_LIST[3].id) {
+      } else if (item.id === NAV_LIST[3].id) {
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${item.id}`,false, 'top 10px');
+        smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
         requestAnimationFrame(() => smoother?.scrollTo('#switch-model', true, `${window.innerHeight * 1.5}px`));
-      }
-      if (item.id === NAV_LIST[4].id) {
+      } else {
         // 其他 正常滚
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
-        }
+      }
 
       setCurrentPage(item);
       if (id === NAV_LIST[2].id || id === NAV_LIST[4].id) {
