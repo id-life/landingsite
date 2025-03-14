@@ -17,9 +17,9 @@ export function OuterLoader() {
     }
     if (glLoaded) {
       timer.current = setTimeout(() => {
-        setShow(false); // 加载完后再延迟1s
+        setShow(false); // TODO: 加载完后再延迟 1s 再设置全局加载完成，权宜之计，现在的加载管理还很不完善。
         setGlobalLoaded(true);
-      }, 100);
+      }, 1000);
     }
     return () => {
       if (timer.current) {
