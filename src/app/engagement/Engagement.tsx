@@ -3,7 +3,7 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { EngagementPopup } from '@/components/engagement/EngagementPopup';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
-import { DiscoverySVG, PublicationsSVG, SponsorshipSVG, SubscribeBorderSVG } from '@/components/svg';
+import { SubscribeBorderSVG } from '@/components/svg';
 import { engagementBottomButtons, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
@@ -243,7 +243,7 @@ function Engagement() {
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
-        <div className="engagement-bottom-buttons-container absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-x-9 gap-y-0">
+        {/* <div className="engagement-bottom-buttons-container absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-x-9 gap-y-0">
           <div className="relative">
             <EngagementBottomButton
               label="Publications"
@@ -277,7 +277,7 @@ function Engagement() {
           <div className="relative">
             <EngagementBottomButton label="Discovery" icon={DiscoverySVG} onClick={onDiscoveryClick} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

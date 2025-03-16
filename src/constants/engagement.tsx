@@ -1,15 +1,6 @@
 import { PopupItem } from '@/components/engagement/EngagementPopup';
 import { MapRegionDotData } from '@/components/engagement/WorldMap';
-import {
-  AmericaSVG,
-  ChineseSVG,
-  EuropeanUnionSVG,
-  HondurasSVG,
-  JapanSVG,
-  KoreanSVG,
-  SingaporeSVG,
-  ThailandSVG,
-} from '@/components/svg';
+import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG } from '@/components/svg';
 
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
@@ -17,39 +8,29 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     lng: -92,
     icon: <AmericaSVG className="size-2.5" />,
   },
-  {
-    lat: 23,
-    lng: 128,
-    icon: <KoreanSVG className="size-2.5" />,
-  },
-  {
-    lat: 28,
-    lng: 141,
-    icon: <JapanSVG className="size-2.5" />,
-  },
+  // {
+  //   lat: 23,
+  //   lng: 128,
+  //   icon: <KoreanSVG className="size-2.5" />,
+  // },
   {
     lat: -16,
-    lng: 103.85,
+    lng: 102,
     icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    lat: 39,
-    lng: 116,
+    lat: 30,
+    lng: 105,
     icon: <ChineseSVG className="size-2.5" />,
   },
   {
-    lat: 38.7223,
-    lng: 10,
-    icon: <EuropeanUnionSVG className="size-2.5" />,
-  },
-  {
-    lat: -0.5,
-    lng: -87,
+    lat: -4,
+    lng: -89,
     icon: <HondurasSVG className="size-2.5" />,
   },
   {
-    lat: 4,
-    lng: 98.9853,
+    lat: 5 - 6,
+    lng: 98.9853 + 4,
     icon: <ThailandSVG className="size-2.5" />,
   },
 ];
@@ -72,8 +53,8 @@ export type MapDotData = {
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
-    lat: 16,
-    lng: 120,
+    lat: 31.23 - 12,
+    lng: 121,
     country: 'China', // 新加的一个
     label: 'Shanghai',
     period: '2024/11',
@@ -101,8 +82,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: -2,
-    lng: -85.478282,
+    lat: -10,
+    lng: -85,
     label: 'Roatan',
     country: 'Hondurus',
     period: '2024/01',
@@ -130,8 +111,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: 7,
-    lng: 99,
+    lat: 18.796143 - 15,
+    lng: 98.979263 + 6,
     country: 'Thailand',
     label: 'Chiang Mai',
     period: '2024/11',
@@ -155,8 +136,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 3,
-    lat: -14,
-    lng: 104,
+    lat: -13,
+    lng: 106,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025',
