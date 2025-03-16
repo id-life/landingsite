@@ -13,19 +13,20 @@ import Loader from './Loader';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import SwitchSkin from '@/app/twin/_components/SwitchSkin';
 import { ModelRef, ModelType } from './model/type';
 import { MessageType } from '../event-bus/messageType';
 import { useEventBus } from '../event-bus/useEventBus';
 import * as THREE from 'three';
 import SwitchAnatomyCamera from '@/app/twin/_components/SwitchAnatomyCamera';
-
+import { eventBus } from '../event-bus/eventBus';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const currentModel = useAtomValue(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
+  const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
   const controlRef1 = useRef<CameraControls>(null);
   const controlRef2 = useRef<CameraControls>(null);
   const isSyncingRef = useRef(false);
@@ -44,37 +45,57 @@ export default function TwinThreeWrapper() {
   ]);
 
   // 切换模型
-  useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType }) => {
+  useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType; model: PredictionModel }) => {
+    const controls1 = controlRefs[0]?.current;
+    const controls2 = controlRefs[1]?.current;
+    // 重制镜头
+    if (payload.type === ModelType.Skin) {
+      controls1?.reset(true);
+      controls2?.reset(true);
+      setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
+    }
+    let index = AnatomyCamera.CAMERA0;
+    if (payload.type === ModelType.Anatomy) {
+      if (payload.model === PredictionModel.M0 || payload.model === PredictionModel.M1) {
+        index = AnatomyCamera.CAMERA0;
+      }
+      if (payload.model === PredictionModel.M2) {
+        index = AnatomyCamera.CAMERA7;
+      }
+      if (payload.model === PredictionModel.M3) {
+        index = AnatomyCamera.CAMERA10;
+      }
+      setCurrentAnatomyCamera(index);
+      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+    }
     modelRefs.forEach((modelRef) => {
       if (!modelRef.current) return;
-      modelRef.current.switchModelShow(payload.type);
+      modelRef.current.switchModelShow(payload.type, index);
     });
-    console.log('switch model', payload.type);
     setCurrentModelType(payload.type);
   });
 
-    //对比视角同步
-    const syncCameras = (source: CameraControls, target: CameraControls) => {
-      if (isSyncingRef.current) return;
-      isSyncingRef.current = true;  
-      const targetPosition = new THREE.Vector3();
-      const cameraPosition = new THREE.Vector3();
-      source.getTarget(targetPosition);
-      cameraPosition.copy(source.camera.position);
-  
-      target.setLookAt(
-        cameraPosition.x,
-        cameraPosition.y,
-        cameraPosition.z,
-        targetPosition.x,
-        targetPosition.y,
-        targetPosition.z,
-        false,
-      );
-  
-      isSyncingRef.current = false;
-    };
-  
+  //对比视角同步
+  const syncCameras = (source: CameraControls, target: CameraControls) => {
+    if (isSyncingRef.current) return;
+    isSyncingRef.current = true;
+    const targetPosition = new THREE.Vector3();
+    const cameraPosition = new THREE.Vector3();
+    source.getTarget(targetPosition);
+    cameraPosition.copy(source.camera.position);
+
+    target.setLookAt(
+      cameraPosition.x,
+      cameraPosition.y,
+      cameraPosition.z,
+      targetPosition.x,
+      targetPosition.y,
+      targetPosition.z,
+      false,
+    );
+
+    isSyncingRef.current = false;
+  };
 
   useEventBus(MessageType.SYNC_CAMERA, (source) => {
     const controls1 = controlRefs[0]?.current;
@@ -84,6 +105,91 @@ export default function TwinThreeWrapper() {
       syncCameras(controls1, controls2);
     } else {
       syncCameras(controls2, controls1);
+    }
+  });
+
+  // 镜头控制
+  useEventBus(MessageType.SWITCH_CAMERA, (payload: { index: AnatomyCamera }) => {
+    const controls1 = controlRefs[0]?.current;
+    const controls2 = controlRefs[1]?.current;
+    if (payload.index === AnatomyCamera.CAMERA0) {
+      controls1?.reset(true);
+      controls2?.reset(true);
+    }
+    if (payload.index === AnatomyCamera.CAMERA1) {
+      controls1?.reset(true);
+      controls2?.reset(true);
+    }
+    if (payload.index === AnatomyCamera.CAMERA2) {
+      controls1?.reset(true);
+      controls2?.reset(true);
+    }
+    if (payload.index === AnatomyCamera.CAMERA3) {
+      modelRefs[0].current?.scenes?.vascular_system.traverse((object: any) => {
+        controls1?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA4) {
+      modelRefs[0].current?.scenes?.nervous_system.traverse((object: any) => {
+        if (object.name === 'brain') {
+          controls1?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+          controls1?.rotateAzimuthTo(-Math.PI / 4, true);
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA5) {
+      modelRefs[0].current?.scenes?.skeletal_system.traverse((object: any) => {
+        if (object.name === 'Scene') {
+          controls1?.fitToBox(object, true);
+          controls1?.rotateAzimuthTo(-Math.PI / 2, true);
+          controls2?.fitToBox(object, true);
+          controls2?.rotateAzimuthTo(-Math.PI / 2, true);
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA6) {
+      modelRefs[0].current?.scenes?.skeletal_system.traverse((object: any) => {
+        if (object.name === 'Scene') {
+          controls1?.fitToBox(object, true, { cover: true, paddingLeft: 0, paddingRight: 0 });
+          controls1?.rotateAzimuthTo(Math.PI / 4, true);
+          controls2?.fitToBox(object, true, { cover: true, paddingLeft: 0, paddingRight: 0 });
+          controls2?.rotateAzimuthTo(Math.PI / 4, true);
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA7) {
+      modelRefs[0].current?.scenes?.muscular_system.traverse((object: any) => {
+        if (object.name === 'R_pectoralis_minor') {
+          controls1?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+          controls1?.rotateAzimuthTo(-Math.PI / 4, true);
+          controls2?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+          controls2?.rotateAzimuthTo(-Math.PI / 4, true);
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA8) {
+      modelRefs[0].current?.scenes?.organs.traverse((object: any) => {
+        if (object.name === 'liver_left') {
+          controls1?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+          controls2?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA9) {
+      modelRefs[0].current?.scenes?.muscular_system.traverse((object: any) => {
+        if (object.name === 'R_bicep_brachii_long_head') {
+          controls1?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+          controls2?.fitToBox(object, true, { cover: false, paddingLeft: 1, paddingRight: 1 });
+        }
+      });
+    }
+    if (payload.index === AnatomyCamera.CAMERA10) {
+      controls1?.dollyTo(8, true);
+      controls2?.dollyTo(8, true);
+      controls1?.rotateAzimuthTo(Math.PI / 5, true);
+      controls2?.rotateAzimuthTo(Math.PI / 5, true);
+      controls1?.rotatePolarTo((Math.PI / 4) * 2.5, true);
+      controls2?.rotatePolarTo((Math.PI / 4) * 2.5, true);
     }
   });
 
@@ -98,7 +204,7 @@ export default function TwinThreeWrapper() {
           height: '100%',
           display: 'grid',
           gridTemplateColumns: currentModel ? '1fr 1fr' : '1fr',
-          paddingLeft: currentModel ? '40%' : '0%',
+          paddingLeft: currentModel ? '35%' : '0%',
           paddingRight: currentModel ? '10%' : '0%',
         }}
       >

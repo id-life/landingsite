@@ -7,11 +7,13 @@ import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM2';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
+import { AnatomyCamera } from '@/atoms/twin';
+import { MessageType } from '@/components/event-bus/messageType';
+import { useEventBus } from '@/components/event-bus/useEventBus';
+import { BICEP_NAME, LIVER_NAME } from './Model0';
 
 const liverNames = ['hepatic_duct', 'liver_ligament', 'liver_right', 'left_hepatic_duct', 'right_hepatic_duct', 'liver_left'];
-
 const stomachNames = ['stomach', 'small_intestine', 'colon'];
-
 
 const Model2 = forwardRef<ModelRef>(function ({}, ref) {
   const [
@@ -77,7 +79,6 @@ const Model2 = forwardRef<ModelRef>(function ({}, ref) {
     skeletalSystemScene,
   ]);
 
-
   useEffect(() => {
     if (!models.length) return;
     models.forEach((scene: any) => {
@@ -100,8 +101,7 @@ const Model2 = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [models]);
 
-
-  const switchModelShow = (type: ModelType, onlySkinShow?: boolean) => {
+  const switchModelShow = (type: ModelType, index: AnatomyCamera) => {
     if (!modelInRef.current || !modelOutRef.current || !animationGroupRef.current) return;
     if (type === ModelType.Skin) {
       // 显示外层模型
@@ -119,16 +119,11 @@ const Model2 = forwardRef<ModelRef>(function ({}, ref) {
         //去除外层模型动画
         animationGroupRef.current.stopAnimationLoop();
         //显示解刨模型
-        if (onlySkinShow) {
-          // 只显示皮肤层
-          changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
-        } else {
-          changeArrayData(modelInRef.current.children, 'visible', true);
-        }
+        changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
+        switchAnatomyModule(index);
       });
     }
   };
-
 
   useEffect(() => {
     // 修改 血管 颜色
@@ -143,8 +138,6 @@ const Model2 = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [vascularSystemScene]);
 
-
-
   useEffect(() => {
     const animationGroup = animationGroupRef.current;
 
@@ -158,6 +151,41 @@ const Model2 = forwardRef<ModelRef>(function ({}, ref) {
       }
     };
   }, []);
+
+  const switchAnatomyModule = (index: AnatomyCamera) => {
+    // 展示完全体
+    if (index === AnatomyCamera.CAMERA7) {
+      changeArrayData(models, 'visible', true);
+    }
+    // 只展示肝脏
+    if (index === AnatomyCamera.CAMERA8) {
+      const organs = [models[2]];
+      const otherSystem = models.filter((child) => !organs.includes(child));
+      changeArrayData(otherSystem, 'visible', false);
+      organs[0].visible = true;
+      organs[0].traverse((object: any) => {
+        if (object.isMesh) {
+          object.visible = LIVER_NAME.includes(object.name);
+        }
+      });
+    }
+    // 只展示右肱二头肌
+    if (index === AnatomyCamera.CAMERA9) {
+      const muscleSystem = [models[0]];
+      const otherSystem = models.filter((child) => !muscleSystem.includes(child));
+      changeArrayData(otherSystem, 'visible', false);
+      muscleSystem[0].visible = true;
+      muscleSystem[0].traverse((object: any) => {
+        if (object.isMesh) {
+          object.visible = BICEP_NAME.includes(object.name);
+        }
+      });
+    }
+  };
+
+  useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
+    switchAnatomyModule(payload.index);
+  });
 
   return (
     <Center>

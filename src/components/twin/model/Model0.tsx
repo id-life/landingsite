@@ -11,6 +11,9 @@ import { AnatomyCamera } from '@/atoms/twin';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 
+export const LIVER_NAME = ['liver_left', 'liver_right'];
+export const BICEP_NAME = ['R_bicep_brachii_long_head', 'R_bicep_brachii_short_head', 'R_bicipital_aponeurosis'];
+
 const Model0 = forwardRef<ModelRef>(function ({}, ref) {
   const [
     cloth,
@@ -51,7 +54,19 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
   const modelOutRef = useRef<THREE.Group>(null);
   const animationGroupRef = useRef<AnimationGroupHandle>(null);
 
-  useImperativeHandle(ref, () => ({ switchModelShow: switchModelShow }));
+  useImperativeHandle(ref, () => ({
+    scenes: {
+      muscular_system: muscularSystemScene as THREE.Group,
+      connective_tissue: connectiveTissueScene as THREE.Group,
+      organs: organsScene as THREE.Group,
+      lymphatic_system: lymphaticSystemScene as THREE.Group,
+      vascular_system: vascularSystemScene as THREE.Group,
+      nervous_system: nervousSystemScene as THREE.Group,
+      cartilage_tissue: cartilageTissueScene as THREE.Group,
+      skeletal_system: skeletalSystemScene as THREE.Group,
+    },
+    switchModelShow: switchModelShow,
+  }));
 
   const models = useMemo(() => {
     return [
@@ -75,7 +90,7 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
     skeletalSystemScene,
   ]);
 
-  const switchModelShow = (type: ModelType, onlySkinShow?: boolean) => {
+  const switchModelShow = (type: ModelType, index: AnatomyCamera) => {
     if (!modelInRef.current || !modelOutRef.current || !animationGroupRef.current) return;
     if (type === ModelType.Skin) {
       // 显示外层模型
@@ -93,12 +108,8 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
         //去除外层模型动画
         animationGroupRef.current.stopAnimationLoop();
         //显示解刨模型
-        if (onlySkinShow) {
-          // 只显示皮肤层
-          changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
-        } else {
-          changeArrayData(modelInRef.current.children, 'visible', true);
-        }
+        changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
+        switchAnatomyModule(index);
       });
     }
   };
@@ -116,28 +127,27 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
     };
   }, []);
 
-  useEventBus(MessageType.SWITCH_ANATOMY_CAMERA, (payload: { index: AnatomyCamera }) => {
-    if (!modelInRef.current) return;
+  const switchAnatomyModule = (index: AnatomyCamera) => {
     // 展示完全体
-    if (payload.index === AnatomyCamera.CAMERA0) {
+    if (index === AnatomyCamera.CAMERA0) {
       changeArrayData(models, 'visible', true);
     }
     // 去除肌肉
-    if (payload.index === AnatomyCamera.CAMERA1) {
+    if (index === AnatomyCamera.CAMERA1) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
       changeArrayData(muscleSystem, 'visible', false);
       changeArrayData(otherSystem, 'visible', true);
     }
     // 只保留血管
-    if (payload.index === AnatomyCamera.CAMERA2) {
+    if (index === AnatomyCamera.CAMERA2) {
       const vascularSystem = [models[4]];
       const otherSystem = models.filter((child) => !vascularSystem.includes(child));
       changeArrayData(vascularSystem, 'visible', true);
       changeArrayData(otherSystem, 'visible', false);
     }
     // 只展示心脏
-    if (payload.index === AnatomyCamera.CAMERA3) {
+    if (index === AnatomyCamera.CAMERA3) {
       const vascularSystem = [models[4]];
       const otherSystem = models.filter((child) => !vascularSystem.includes(child));
       changeArrayData(otherSystem, 'visible', false);
@@ -149,7 +159,7 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
       });
     }
     // 只展示大脑
-    if (payload.index === AnatomyCamera.CAMERA4) {
+    if (index === AnatomyCamera.CAMERA4) {
       const nervousSystem = [models[5]];
       const otherSystem = models.filter((child) => !nervousSystem.includes(child));
       changeArrayData(otherSystem, 'visible', false);
@@ -160,6 +170,59 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
         }
       });
     }
+    // 去除肌肉
+    if (index === AnatomyCamera.CAMERA5) {
+      const muscleSystem = [models[0]];
+      const otherSystem = models.filter((child) => !muscleSystem.includes(child));
+      changeArrayData(muscleSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', true);
+    }
+    // 只保留骨骼
+    if (index === AnatomyCamera.CAMERA6) {
+      const skeletalSystem = [models[7]];
+      const otherSystem = models.filter((child) => !skeletalSystem.includes(child));
+      changeArrayData(skeletalSystem, 'visible', true);
+      changeArrayData(otherSystem, 'visible', false);
+    }
+    // 展示完全体
+    if (index === AnatomyCamera.CAMERA7) {
+      changeArrayData(models, 'visible', true);
+    }
+    // 只展示肝脏
+    if (index === AnatomyCamera.CAMERA8) {
+      const organs = [models[2]];
+      const otherSystem = models.filter((child) => !organs.includes(child));
+      changeArrayData(otherSystem, 'visible', false);
+      organs[0].visible = true;
+      organs[0].traverse((object: any) => {
+        if (object.isMesh) {
+          object.visible = LIVER_NAME.includes(object.name);
+        }
+      });
+    }
+    // 只展示右肱二头肌
+    if (index === AnatomyCamera.CAMERA9) {
+      const muscleSystem = [models[0]];
+      const otherSystem = models.filter((child) => !muscleSystem.includes(child));
+      changeArrayData(otherSystem, 'visible', false);
+      muscleSystem[0].visible = true;
+      muscleSystem[0].traverse((object: any) => {
+        if (object.isMesh) {
+          object.visible = BICEP_NAME.includes(object.name);
+        }
+      });
+    }
+    // 只保留血管
+    if (index === AnatomyCamera.CAMERA10) {
+      const vascularSystem = [models[4]];
+      const otherSystem = models.filter((child) => !vascularSystem.includes(child));
+      changeArrayData(vascularSystem, 'visible', true);
+      changeArrayData(otherSystem, 'visible', false);
+    }
+  }
+
+  useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
+    switchAnatomyModule(payload.index);
   });
 
   return (

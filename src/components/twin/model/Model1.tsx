@@ -7,6 +7,9 @@ import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM1';
 import { SkeletonUtils } from 'three-stdlib';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
+import { AnatomyCamera } from '@/atoms/twin';
+import { useEventBus } from '@/components/event-bus/useEventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 // 皮肤层稍微变暗
 const DEFAULT_INTEGUMENTARY_OPACITY = 0.4;
@@ -51,7 +54,7 @@ const Model1 = forwardRef<ModelRef>(function ({}, ref) {
   const modelOutRef = useRef<THREE.Group>(null);
   const animationGroupRef = useRef<AnimationGroupHandle>(null);
 
-  useImperativeHandle(ref, () => ({switchModelShow: switchModelShow }));
+  useImperativeHandle(ref, () => ({ switchModelShow: switchModelShow }));
 
   const models = useMemo(() => {
     return [
@@ -122,8 +125,7 @@ const Model1 = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [integumentarySystemScene]);
 
-
-  const switchModelShow = (type: ModelType, onlySkinShow?: boolean) => {
+  const switchModelShow = (type: ModelType, index: AnatomyCamera) => {
     if (!modelInRef.current || !modelOutRef.current || !animationGroupRef.current) return;
     if (type === ModelType.Skin) {
       // 显示外层模型
@@ -141,12 +143,8 @@ const Model1 = forwardRef<ModelRef>(function ({}, ref) {
         //去除外层模型动画
         animationGroupRef.current.stopAnimationLoop();
         //显示解刨模型
-        if (onlySkinShow) {
-          // 只显示皮肤层
-          changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
-        } else {
-          changeArrayData(modelInRef.current.children, 'visible', true);
-        }
+        changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
+        switchAnatomyModule(index);
       });
     }
   };
@@ -164,6 +162,32 @@ const Model1 = forwardRef<ModelRef>(function ({}, ref) {
       }
     };
   }, []);
+
+  const switchAnatomyModule = (index: AnatomyCamera) => {
+    // 展示完全体
+    if (index === AnatomyCamera.CAMERA0) {
+      changeArrayData(models, 'visible', true);
+    }
+    // 去除肌肉
+    if (index === AnatomyCamera.CAMERA5) {
+      const muscleSystem = [models[0]];
+      const otherSystem = models.filter((child) => !muscleSystem.includes(child));
+      changeArrayData(muscleSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', true);
+    }
+
+    // 只保留骨骼
+    if (index === AnatomyCamera.CAMERA6) {
+      const skeletalSystem = [models[7]];
+      const otherSystem = models.filter((child) => !skeletalSystem.includes(child));
+      changeArrayData(skeletalSystem, 'visible', true);
+      changeArrayData(otherSystem, 'visible', false);
+    }
+  }
+
+  useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
+    switchAnatomyModule(payload.index);
+  });
 
   return (
     <Center>

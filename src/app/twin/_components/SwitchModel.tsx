@@ -1,13 +1,20 @@
-import { currentModelAtom, PredictionModel } from '@/atoms/twin';
-import { useAtom, useSetAtom } from 'jotai';
+import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import SelectSVG from '@/../public/svgs/twin/select.svg?component';
 import clsx from 'clsx';
+import { MessageType } from '@/components/event-bus/messageType';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { ModelType } from '@/components/twin/model/type';
 
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
+  const currentModelType = useAtomValue(currentModelTypeAtom);
 
   const handleSwitchModel = (model: PredictionModel | null) => {
+    if (currentModelType !== ModelType.Skin) {
+      eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
+    }
     setCurrentModel(model);
   };
 

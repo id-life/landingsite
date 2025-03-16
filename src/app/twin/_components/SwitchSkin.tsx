@@ -4,13 +4,15 @@ import { ModelType } from '@/components/twin/model/type';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
 import { useAtomValue } from 'jotai';
-import { currentModelTypeAtom } from '@/atoms/twin';
+import { currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
 import clsx from 'clsx';
 
 export default function SwitchSkin() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
+  const currentModel = useAtomValue(currentModelAtom);
+
   const handleModelTypeChange = (type: ModelType) => {
-    eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type } });
+    eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
   };
 
   return (

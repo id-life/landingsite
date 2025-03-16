@@ -7,42 +7,18 @@ import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM3';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
+import { AnatomyCamera } from '@/atoms/twin';
 
 const Model3 = forwardRef<ModelRef>(function ({}, ref) {
-  const [
-    cloth,
-    integumentarySystem,
-    muscularSystem,
-    connectiveTissue,
-    organs,
-    lymphaticSystem,
-    vascularSystem,
-    nervousSystem,
-    cartilageTissue,
-    skeletalSystem,
-  ] = useGLTF([
+  const [cloth, integumentarySystem, vascularSystem] = useGLTF([
     'https://cdn.id.life/full_male/cloth-v1.glb',
     'https://cdn.id.life/m3/integumentary_system_fat.glb',
-    'https://cdn.id.life/twin/m0/muscular_system.glb',
-    'https://cdn.id.life/twin/m0/connective_tissue.glb',
-    'https://cdn.id.life/twin/m0/organs.glb',
-    'https://cdn.id.life/twin/m0/lymphatic_system.glb',
     'https://cdn.id.life/twin/m0/vascular_system.glb',
-    'https://cdn.id.life/twin/m0/nervous_system.glb',
-    'https://cdn.id.life/twin/m0/cartilage_tissue.glb',
-    'https://cdn.id.life/twin/m0/skeletal_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);
   const integumentarySystemScene = useMemo(() => SkeletonUtils.clone(integumentarySystem.scene), [integumentarySystem.scene]);
-  const muscularSystemScene = useMemo(() => SkeletonUtils.clone(muscularSystem.scene), [muscularSystem.scene]);
-  const connectiveTissueScene = useMemo(() => SkeletonUtils.clone(connectiveTissue.scene), [connectiveTissue.scene]);
-  const organsScene = useMemo(() => SkeletonUtils.clone(organs.scene), [organs.scene]);
-  const lymphaticSystemScene = useMemo(() => SkeletonUtils.clone(lymphaticSystem.scene), [lymphaticSystem.scene]);
   const vascularSystemScene = useMemo(() => SkeletonUtils.clone(vascularSystem.scene), [vascularSystem.scene]);
-  const nervousSystemScene = useMemo(() => SkeletonUtils.clone(nervousSystem.scene), [nervousSystem.scene]);
-  const cartilageTissueScene = useMemo(() => SkeletonUtils.clone(cartilageTissue.scene), [cartilageTissue.scene]);
-  const skeletalSystemScene = useMemo(() => SkeletonUtils.clone(skeletalSystem.scene), [skeletalSystem.scene]);
 
   const modelInRef = useRef<THREE.Group>(null);
   const modelOutRef = useRef<THREE.Group>(null);
@@ -59,7 +35,7 @@ const Model3 = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [integumentarySystemScene]);
 
-  const switchModelShow = (type: ModelType, onlySkinShow?: boolean) => {
+  const switchModelShow = (type: ModelType, index: AnatomyCamera) => {
     if (!modelInRef.current || !modelOutRef.current || !animationGroupRef.current) return;
     if (type === ModelType.Skin) {
       // 显示外层模型
@@ -77,12 +53,7 @@ const Model3 = forwardRef<ModelRef>(function ({}, ref) {
         //去除外层模型动画
         animationGroupRef.current.stopAnimationLoop();
         //显示解刨模型
-        if (onlySkinShow) {
-          // 只显示皮肤层
-          changeArrayData([modelInRef.current.children[0], modelInRef.current.children[1]], 'visible', true);
-        } else {
-          changeArrayData(modelInRef.current.children, 'visible', true);
-        }
+        changeArrayData(modelInRef.current.children, 'visible', true);
       });
     }
   };
@@ -107,8 +78,6 @@ const Model3 = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [vascularSystemScene, integumentarySystemScene]);
 
-
-
   useEffect(() => {
     const animationGroup = animationGroupRef.current;
 
@@ -131,14 +100,7 @@ const Model3 = forwardRef<ModelRef>(function ({}, ref) {
       <group ref={modelInRef} scale={5}>
         <primitive visible={false} object={clothScene} />
         <primitive visible={false} object={integumentarySystemScene} />
-        <primitive visible={false} object={muscularSystemScene} />
-        <primitive visible={false} object={connectiveTissueScene} />
-        <primitive visible={false} object={organsScene} />
-        <primitive visible={false} object={lymphaticSystemScene} />
         <primitive visible={false} object={vascularSystemScene} />
-        <primitive visible={false} object={nervousSystemScene} />
-        <primitive visible={false} object={cartilageTissueScene} />
-        <primitive visible={false} object={skeletalSystemScene} />
       </group>
     </Center>
   );
