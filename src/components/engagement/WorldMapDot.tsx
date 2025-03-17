@@ -1,5 +1,5 @@
 import { MapDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
+import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { cn } from '@/utils';
 import { motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
@@ -66,7 +66,10 @@ export function WorldMapDotPoint({
       className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer opacity-0`}
       initial="initial"
       whileHover="hover"
-      onClick={() => jumpTo(index)}
+      onClick={(e) => {
+        e.stopPropagation();
+        jumpTo(index);
+      }}
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>

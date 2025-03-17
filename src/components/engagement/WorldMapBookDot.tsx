@@ -1,10 +1,10 @@
 import { MapBookDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
+import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
-import { activeBookDotAtom, toggleBookDot } from '@/atoms/engagement';
+import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
 import { useAtom } from 'jotai';
 
 const pointVariants: Variants = {
@@ -65,13 +65,13 @@ export function WorldMapBookDotPoint({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    const newState = toggleBookDot(index, activeBookDot);
+    const newState = toggleDotIndex(index, activeBookDot);
     setActiveBookDot(newState);
 
-    // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
-    if (newState !== null && activeBookDot !== newState) {
-      jumpTo(-1);
-    }
+    // // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
+    // if (newState !== null && activeBookDot !== newState) {
+    //   jumpTo(-1);
+    // }
   };
 
   return (
@@ -94,7 +94,7 @@ export function WorldMapBookDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x + 6} y={point.y - 5} width={100} height={12}>
+      <foreignObject x={point.x + 6} y={point.y - 4} width={100} height={12}>
         <motion.p
           variants={labelVariants}
           className="w-full whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"

@@ -1,26 +1,37 @@
 'use client';
 
-import { MapBookDotData, MapDotData, MapRegionDotData } from '@/constants/engagement';
+import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 // import DottedMap from 'dotted-map';
 
+import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { WorldMapSVG } from '../svg';
-import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
-import { activeBookDotAtom } from '@/atoms/engagement';
-import { useAtom } from 'jotai';
+import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
+import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 
 interface MapProps {
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
   bookDots?: Array<MapBookDotData>;
+  sponsorDots?: Array<MapSponsorDotData>;
   lineColor?: string;
 }
 
-export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, bookDots, lineColor = '#C11111' }: MapProps) {
+export const WorldMap = memo(function WorldMapComponent({
+  dots,
+  regionDots,
+  bookDots,
+  sponsorDots,
+  lineColor = '#C11111',
+}: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [_, setActiveBookDot] = useAtom(activeBookDotAtom);
+  const setActiveBookDot = useSetAtom(activeBookDotAtom);
+  const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const { jumpTo } = useEngagementJumpTo();
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -106,6 +117,20 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, book
     });
   }, [calcPoint, bookDots]);
 
+  const sponsorDotsPoints = useMemo(() => {
+    if (!sponsorDots?.length) return null;
+    return sponsorDots.map((dot, i) => {
+      return <WorldMapSponsorDotPoint key={`world-map-dot-sponsor-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+    });
+  }, [calcPoint, sponsorDots]);
+
+  const sponsorDotsContents = useMemo(() => {
+    if (!sponsorDots?.length) return null;
+    return sponsorDots.map((dot, i) => {
+      return <WorldMapSponsorDotContent key={`world-map-dot-sponsor-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+    });
+  }, [calcPoint, sponsorDots]);
+
   // 添加useEffect来计算和设置反向缩放
   useEffect(() => {
     const svg = svgRef.current;
@@ -130,7 +155,9 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, book
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
-  }, [setActiveBookDot]);
+    setActiveSponsorDot(null);
+    jumpTo(-1);
+  }, [jumpTo, setActiveBookDot, setActiveSponsorDot]);
 
   // 确保在组件卸载时重置状态
   useEffect(() => {
@@ -178,7 +205,9 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, book
         {regionDotsPoints}
         {dotsPoints}
         {bookDotsPoints}
+        {sponsorDotsPoints}
         {bookDotsContents}
+        {sponsorDotsContents}
         {dotsContents}
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
