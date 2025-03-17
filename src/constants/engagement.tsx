@@ -1,5 +1,5 @@
 import { PopupItem } from '@/components/engagement/EngagementPopup';
-import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG } from '@/components/svg';
+import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
 
 export type MapRegionDotData = {
@@ -33,6 +33,11 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     lat: 5 - 6,
     lng: 98.9853 + 4,
     icon: <ThailandSVG className="size-2.5" />,
+  },
+  {
+    lat: 53,
+    lng: -1,
+    icon: <UKSVG className="size-2.5" />,
   },
 ];
 
@@ -218,53 +223,19 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     key: 'sponsor-01',
     alt: 'VITALIST BAY',
     icon: '/imgs/engagement/sponsor-01.webp',
-    link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
+  },
+  {
+    lat: 24,
+    lng: 96,
+    key: 'sponsor-02',
+    alt: 'ETHPanda',
+    icon: '/imgs/engagement/sponsor-02.webp',
+  },
+  {
+    lat: 49,
+    lng: -1,
+    key: 'sponsor-03',
+    alt: 'OXFORD LONGEVITY',
+    icon: '/imgs/engagement/sponsor-03.webp',
   },
 ];
-
-export const engagementBottomButtons: Record<'publications' | 'sponsorship', { title: string; items: PopupItem[] }> = {
-  publications: {
-    title: 'Translation',
-    items: [
-      {
-        name: 'The Network State', // 书名
-        logo: '/imgs/engagement/book-01.webp', // 书封面
-        desc: 'Guidelines for biotech ethics', // 描述
-        linkDesc: 'Read Chinese Ver. by Boyang', // 描述
-        link: 'https://.......', // 跳转链接
-      },
-      {
-        name: 'bio/acc manifesto', // 书名
-        logo: '/imgs/engagement/book-02.webp', // 书封面
-        desc: 'Guidelines for biotech ethics', // 描述
-        linkDesc: 'Read Chinese Ver. by Boyang', // 描述
-        link: 'https://.......', // 跳转链接
-      },
-    ],
-  },
-  sponsorship: {
-    title: 'Sponsorship',
-    items: [
-      {
-        name: 'VITALIST BAY',
-        logo: '/imgs/engagement/sponsor-01.webp',
-        className: 'h-7.5',
-      },
-      {
-        name: 'ETHPanda',
-        logo: '/imgs/engagement/sponsor-02.webp',
-        className: 'h-7',
-      },
-      {
-        name: 'OXFORD LONGEVITY',
-        logo: '/imgs/engagement/sponsor-03.webp',
-        className: 'h-7.5',
-      },
-      {
-        name: 'ARRD',
-        logo: '/imgs/engagement/sponsor-04.webp',
-        className: 'h-9',
-      },
-    ],
-  },
-};

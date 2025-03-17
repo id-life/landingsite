@@ -27,7 +27,7 @@ const labelVariants: Variants = {
     fontSize: '20px',
   },
   hover: {
-    fontSize: '24px',
+    fontSize: '22px',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -149,9 +149,7 @@ export function WorldMapSponsorDotContent({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className={cn(
-              'absolute left-0 top-0 flex h-12 w-[7.5rem] flex-col items-center overflow-hidden pt-1.5 font-oxanium',
-            )}
+            className={cn('absolute left-0 top-0 flex h-12 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
             style={{
               transform: `scale(var(--inverse-scale, 1))`,
               transformOrigin: 'top left',
