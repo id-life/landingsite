@@ -76,7 +76,7 @@ export function WorldMapBookDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer`}
+      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer opacity-0`}
       initial="initial"
       whileHover="hover"
       onClick={handleClick}

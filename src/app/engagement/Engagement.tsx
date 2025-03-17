@@ -97,11 +97,12 @@ function Engagement() {
     );
 
     tl.to(
-      '.world-map-dot',
+      ['.world-map-dot', '.world-map-dot-book'],
       {
         opacity: 1,
         scale: 1,
         ease: 'power2.out',
+        stagger: entranceUnit * 0.2,
         duration: entranceUnit,
       },
       entranceUnit * 2,
