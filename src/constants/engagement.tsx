@@ -177,6 +177,7 @@ export type MapBookDotData = {
   desc?: string; // 灰字描述
   key?: string;
   coverUrl?: string;
+  videoUrl?: string;
   contentTransformStyle?: string;
   link?: string; // 跳转链接
 };
@@ -188,7 +189,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     // contentTransformStyle: 'translate(-85%, 0)',
     title: 'The Network State',
     desc: 'Read Chinese Ver. by Boyang', // 描述
-    coverUrl: '/imgs/engagement/book-01.webp',
+    coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
+    videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
   },
   {
@@ -198,7 +200,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     // contentTransformStyle: 'translate(-85%, 0)',
     title: 'bio/acc manifesto',
     desc: 'Read Chinese Ver. by Boyang', // 描述
-    coverUrl: '/imgs/engagement/book-02.webp',
+    coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
+    videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
   },
 ];

@@ -1,3 +1,4 @@
+import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import ClockSVG from '@/../public/svgs/clock.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 
@@ -13,6 +14,7 @@ import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 
 export {
+  ArrowSVG,
   AmericaSVG,
   BookSVG,
   ChineseSVG,

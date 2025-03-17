@@ -1,9 +1,11 @@
 import { MapBookDotData } from '@/constants/engagement';
 import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 import { cn } from '@/utils';
-import { motion, Variants } from 'motion/react';
-import { useMemo } from 'react';
-import { BookSVG } from '../svg';
+import { AnimatePresence, motion, Variants } from 'motion/react';
+import { useCallback, useMemo, useState } from 'react';
+import { ArrowSVG, BookSVG } from '../svg';
+import { activeBookDotAtom, toggleBookDot } from '@/atoms/engagement';
+import { useAtom } from 'jotai';
 
 const pointVariants: Variants = {
   initial: {
@@ -22,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '20px',
+    fontSize: '24px',
   },
   hover: {
-    fontSize: '24px',
+    fontSize: '26px',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -57,20 +59,33 @@ export function WorldMapBookDotPoint({
 }) {
   const { title, lat, lng } = dot;
   const { jumpTo } = useEngagementJumpTo();
+  const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 防止冒泡
+    const newState = toggleBookDot(index, activeBookDot);
+    setActiveBookDot(newState);
+
+    // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
+    if (newState !== null && activeBookDot !== newState) {
+      jumpTo(-1);
+    }
+  };
 
   return (
     <motion.g
       className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer`}
       initial="initial"
       whileHover="hover"
-      onClick={() => jumpTo(index)}
+      onClick={handleClick}
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={10}>
+        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={12}>
           <BookSVG
+            className="size-7"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -79,17 +94,18 @@ export function WorldMapBookDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <motion.foreignObject variants={labelVariants} x={point.x + 6} y={point.y - 5} width={240} height={28}>
-        <div
-          className="flex flex-col items-start font-oxanium font-semibold capitalize leading-[1.1] text-white"
+      <foreignObject x={point.x + 6} y={point.y - 5} width={100} height={12}>
+        <motion.p
+          variants={labelVariants}
+          className="w-full whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',
           }}
         >
           {title}
-        </div>
-      </motion.foreignObject>
+        </motion.p>
+      </foreignObject>
     </motion.g>
   );
 }
@@ -103,29 +119,99 @@ export function WorldMapBookDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, desc, coverUrl, lat, lng } = dot;
+  const { title, desc, coverUrl, videoUrl, lat, lng, link } = dot;
+  const [activeBookDot] = useAtom(activeBookDotAtom);
+  const isActive = activeBookDot === index;
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
+  const onClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      window.open(link, '_blank');
+    },
+    [link],
+  );
+
   return (
-    <foreignObject
-      x={point.x}
-      y={point.y + 6}
-      width={120}
-      className={cn(
-        `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+    <AnimatePresence mode="wait">
+      {isActive && (
+        <foreignObject
+          x={point.x - 4}
+          y={point.y + 6}
+          className={cn(
+            `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+          )}
+          onClick={onClick}
+        >
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className={cn('absolute left-0 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              style={{
+                transform: `scale(var(--inverse-scale, 1))`,
+                transformOrigin: 'top left',
+              }}
+            >
+              <motion.div
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: -30,
+                    scaleY: 0,
+                    transformOrigin: 'top',
+                  },
+                  visible: {
+                    opacity: 1,
+                    scaleY: 1,
+                    y: 0,
+                    transformOrigin: 'top',
+                  },
+                }}
+                transition={{
+                  duration: 0.3,
+                  type: 'easeInOut',
+                }}
+                className="flex-center relative -mt-5"
+              >
+                {coverUrl && !videoLoaded && <img src={coverUrl} alt={title} className="size-[15.5rem] object-contain" />}
+                {videoUrl && (
+                  <video
+                    src={videoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden')}
+                    onLoadedData={() => setVideoLoaded(true)}
+                  />
+                )}
+              </motion.div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: -30 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                }}
+                transition={{
+                  duration: 0.3,
+                  type: 'easeInOut',
+                  delay: 0.2,
+                }}
+                className="flex cursor-pointer flex-col items-center gap-1"
+              >
+                <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
+                <p className="text-xs/3 text-gray-350">{desc}</p>
+              </motion.div>
+            </motion.div>
+          </a>
+        </foreignObject>
       )}
-    >
-      <div
-        className={cn('absolute left-0 top-0 flex w-50 flex-col items-center gap-4 pt-4 font-oxanium')}
-        style={{
-          transform: `scale(var(--inverse-scale, 1))`,
-          transformOrigin: 'top left',
-        }}
-      >
-        <div className="flex-center">{coverUrl && <img src={coverUrl} alt={title} className="h-32 object-contain" />}</div>
-        {desc && <p className="text-xs/3 text-gray-350">{desc}</p>}
-      </div>
-    </foreignObject>
+    </AnimatePresence>
   );
 }

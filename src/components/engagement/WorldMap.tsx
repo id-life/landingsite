@@ -8,6 +8,8 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { WorldMapSVG } from '../svg';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
+import { activeBookDotAtom } from '@/atoms/engagement';
+import { useAtom } from 'jotai';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -18,6 +20,7 @@ interface MapProps {
 
 export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, bookDots, lineColor = '#C11111' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const [_, setActiveBookDot] = useAtom(activeBookDotAtom);
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -124,8 +127,23 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, book
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
+  // 点击地图背景时关闭所有激活的书籍详情
+  const handleBackgroundClick = useCallback(() => {
+    setActiveBookDot(null);
+  }, [setActiveBookDot]);
+
+  // 确保在组件卸载时重置状态
+  useEffect(() => {
+    return () => {
+      setActiveBookDot(null);
+    };
+  }, [setActiveBookDot]);
+
   return (
-    <div className="relative mt-18 aspect-[2/1] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans">
+    <div
+      className="relative mt-18 aspect-[2/1] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans"
+      onClick={handleBackgroundClick}
+    >
       {/* <button
         onClick={downloadSVG}
         className="absolute right-4 top-4 z-10 rounded bg-white/10 px-3 py-1 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
