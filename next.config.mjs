@@ -1,4 +1,9 @@
 import MillionLint from '@million/lint';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+// 获取当前文件的目录
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -34,7 +39,7 @@ const nextConfig = {
     ];
     return config;
   },
-  cacheHandler: new URL('./cache-handler.mjs', import.meta.url).pathname,
+  cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
 };
 
 export default MillionLint.next({
