@@ -1,6 +1,12 @@
 import { PopupItem } from '@/components/engagement/EngagementPopup';
-import { MapRegionDotData } from '@/components/engagement/WorldMap';
 import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG } from '@/components/svg';
+import { ReactNode } from 'react';
+
+export type MapRegionDotData = {
+  lat: number;
+  lng: number;
+  icon?: ReactNode;
+};
 
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
@@ -8,11 +14,6 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     lng: -92,
     icon: <AmericaSVG className="size-2.5" />,
   },
-  // {
-  //   lat: 23,
-  //   lng: 128,
-  //   icon: <KoreanSVG className="size-2.5" />,
-  // },
   {
     lat: -16,
     lng: 102,
@@ -166,6 +167,39 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'Singapore-5.webp',
       },
     ],
+  },
+];
+
+export type MapBookDotData = {
+  lat: number;
+  lng: number;
+  title?: string;
+  desc?: string; // 灰字描述
+  key?: string;
+  coverUrl?: string;
+  contentTransformStyle?: string;
+  link?: string; // 跳转链接
+};
+export const MAP_BOOK_DOTS: MapBookDotData[] = [
+  {
+    lat: 20,
+    lng: -114,
+    key: 'publications-01',
+    // contentTransformStyle: 'translate(-85%, 0)',
+    title: 'The Network State',
+    desc: 'Read Chinese Ver. by Boyang', // 描述
+    coverUrl: '/imgs/engagement/book-01.webp',
+    link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
+  },
+  {
+    lat: -24,
+    lng: 140,
+    key: 'publications-02',
+    // contentTransformStyle: 'translate(-85%, 0)',
+    title: 'bio/acc manifesto',
+    desc: 'Read Chinese Ver. by Boyang', // 描述
+    coverUrl: '/imgs/engagement/book-02.webp',
+    link: 'https://bioacc.life/zh/', // 跳转链接
   },
 ];
 

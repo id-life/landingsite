@@ -1,17 +1,16 @@
 import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
-import { EngagementPopup } from '@/components/engagement/EngagementPopup';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { SubscribeBorderSVG } from '@/components/svg';
-import { engagementBottomButtons, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
+import { MAP_BOOK_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
+import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { debounce } from 'lodash-es';
 import { createElement, FC, memo, SVGProps, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -242,7 +241,7 @@ function Engagement() {
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} />
+        <WorldMap dots={WORLD_MAP_DOTS} regionDots={WORLD_MAP_REGION_DOTS} bookDots={MAP_BOOK_DOTS} />
         {/* <div className="engagement-bottom-buttons-container absolute bottom-[9.375rem] left-1/2 z-10 flex -translate-x-1/2 items-center gap-x-9 gap-y-0">
           <div className="relative">
             <EngagementBottomButton

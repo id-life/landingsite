@@ -3,8 +3,8 @@ import { useEngagementJumpTo } from '@/hooks/engegement/useEngagementJumpTo';
 import { cn } from '@/utils';
 import { motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
-import FeatherImg from './FeatherImg';
 import { MeetingSVG } from '../svg';
+import FeatherImg from './FeatherImg';
 
 const pointVariants: Variants = {
   initial: {

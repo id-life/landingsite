@@ -1,26 +1,22 @@
 'use client';
 
-import { MapDotData } from '@/constants/engagement';
+import { MapBookDotData, MapDotData, MapRegionDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 // import DottedMap from 'dotted-map';
 
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { WorldMapSVG } from '../svg';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
-
-export type MapRegionDotData = {
-  lat: number;
-  lng: number;
-  icon?: React.ReactNode;
-};
+import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 
 interface MapProps {
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
+  bookDots?: Array<MapBookDotData>;
   lineColor?: string;
 }
 
-export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, lineColor = '#C11111' }: MapProps) {
+export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, bookDots, lineColor = '#C11111' }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
@@ -93,6 +89,20 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
     });
   }, [calcPoint, dots]);
 
+  const bookDotsPoints = useMemo(() => {
+    if (!bookDots?.length) return null;
+    return bookDots.map((dot, i) => {
+      return <WorldMapBookDotPoint key={`world-map-dot-book-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+    });
+  }, [calcPoint, bookDots]);
+
+  const bookDotsContents = useMemo(() => {
+    if (!bookDots?.length) return null;
+    return bookDots.map((dot, i) => {
+      return <WorldMapBookDotContent key={`world-map-dot-book-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+    });
+  }, [calcPoint, bookDots]);
+
   // 添加useEffect来计算和设置反向缩放
   useEffect(() => {
     const svg = svgRef.current;
@@ -149,6 +159,8 @@ export const WorldMap = memo(function WorldMapComponent({ dots, regionDots, line
       >
         {regionDotsPoints}
         {dotsPoints}
+        {bookDotsPoints}
+        {bookDotsContents}
         {dotsContents}
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
