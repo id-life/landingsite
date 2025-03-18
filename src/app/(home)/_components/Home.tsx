@@ -1,22 +1,36 @@
 'use client';
 
-import Footer from '@/components/layout/footer/Footer';
+import Engagement from '@/app/engagement/Engagement';
 import Portfolio from '@/app/portfolio/_components/Portfolio';
+import Twin from '@/app/twin/Twin';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
+import Footer from '@/components/layout/footer/Footer';
 import { NAV_LIST } from '@/components/nav/nav';
+import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai/index';
-import Engagement from '@/app/engagement/Engagement';
-import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
-import Twin from '@/app/twin/Twin';
+import { throttle } from 'lodash-es';
+import { useCallback, useEffect } from 'react';
+import { useEvent } from 'react-use';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
+  const isMobile = useIsMobile();
+  const initFontSize = useCallback(() => {
+    if (isMobile) return;
+    const width = window.innerWidth;
+    const fontSize = 16 * (width / 1920);
+    document.documentElement.style.fontSize = fontSize + 'px';
+  }, [isMobile]);
+
+  useEffect(() => initFontSize(), [initFontSize]);
+  useEvent('resize', throttle(initFontSize, 1000));
 
   useGSAP(() => {
     ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: true, smoothTouch: 0.1 });
