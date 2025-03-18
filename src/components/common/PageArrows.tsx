@@ -53,7 +53,13 @@ export default function PageArrows({ className }: PageArrowsProps) {
               key={`inner-page-index-${index}`}
               className={cn(
                 'h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                innerPageIndex === index ? 'bg-gray-800' : 'bg-[#B8B8B8]',
+                currentPage.id === NAV_LIST[2].id
+                  ? innerPageIndex !== index
+                    ? 'bg-white/20'
+                    : 'bg-white/40'
+                  : innerPageIndex === index
+                    ? 'bg-gray-800'
+                    : 'bg-[#B8B8B8]',
               )}
             ></div>
           ))}

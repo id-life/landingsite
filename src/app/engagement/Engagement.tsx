@@ -59,13 +59,13 @@ function Engagement() {
     tl.set(buttons, { y: 30, opacity: 0 });
 
     // 使用进度位置控制动画时机
-    // 入场动画：0 - 0.4
-    // 停留时间：0.4 - 0.65
-    // 出场动画：0.65 - 1.0
-    const factor = 100; // 动画因子
+    // 入场动画：0 - 0.2
+    // 停留时间：0.2 - 0.8
+    // 出场动画：0.8 - 1.0
+    const factor = 1; // 动画因子
 
-    // 计算入场动画总时长（占总进度的0.4
-    const entranceDuration = 0.4 * factor;
+    // 计算入场动画总时长（占总进度的0.2
+    const entranceDuration = 0.2 * factor;
     // 计算入场每个动画的单位时长
     const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
 
@@ -117,15 +117,15 @@ function Engagement() {
       entranceUnit * 3,
     );
 
-    // 停留 0.4 - 0.8
-    const stayDuration = 0.4 * factor;
+    // 停留 0.2 - 0.8
+    const stayDuration = 0.6 * factor;
     // 计算停留每个动画的单位时长
     const stayUnit = stayDuration / 4; // 分为 4 个步骤
-    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 }, 0.4 * factor);
+    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 }, 0.2 * factor);
     tl.to(
       `.world-map-dot-content-0`,
       { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.4 * factor + stayUnit,
+      0.2 * factor + stayUnit,
     );
     tl.to(
       `.world-map-dot-content-1`,
@@ -146,7 +146,7 @@ function Engagement() {
     tl.to(
       `.world-map-dot-content-1`,
       { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.4 * factor + stayUnit * 2,
+      0.2 * factor + stayUnit * 2,
     );
     tl.to(
       `.world-map-dot-content-2`,
@@ -167,7 +167,7 @@ function Engagement() {
     tl.to(
       `.world-map-dot-content-2`,
       { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.4 * factor + stayUnit * 3,
+      0.2 * factor + stayUnit * 3,
     );
     tl.to(
       `.world-map-dot-content-3`,

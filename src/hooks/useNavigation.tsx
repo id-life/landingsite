@@ -46,17 +46,17 @@ export function useNavigation() {
         requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', true, `${window.innerHeight}px`));
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       } else if (id === NAV_LIST[2].id) {
-        // engagement 页，需要滚动到 0.47 进度
+        // engagement 页，需要滚动到 0.27 进度
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${id}`, true);
         requestAnimationFrame(() => {
           // 滚到 0.47 进度
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          st.scroll(st.start + (st.end - st.start) * 0.47);
+          st.scroll(st.start + (st.end - st.start) * 0.27);
           const animation = st.animation;
           if (!animation) return;
-          animation.progress(0.47);
+          animation.progress(0.27);
         });
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       } else if (item.id === NAV_LIST[3].id) {
