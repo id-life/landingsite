@@ -2,7 +2,7 @@
 
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
+import { mobileNavOpenAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
@@ -11,7 +11,6 @@ import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
 
 export default function MobileNav() {
-  const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);

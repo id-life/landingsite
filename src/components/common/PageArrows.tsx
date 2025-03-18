@@ -69,8 +69,9 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const setNavigateTo = useSetAtom(navigateToAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
-  const setInnerPageNavigateToAtom = useSetAtom(innerPageNavigateToAtom);
-  console.log({ innerPageIndex, innerPageTotal });
+  const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
+  // console.log({ innerPageIndex, innerPageTotal });
+
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
@@ -85,7 +86,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
         setNavigateTo(NAV_LIST[currentPageIndex + 1]);
         return;
       }
-      setInnerPageNavigateToAtom(innerPageIndex + (isUp ? -1 : 1));
+      setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
       return;
     }
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);

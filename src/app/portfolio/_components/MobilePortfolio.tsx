@@ -2,7 +2,6 @@ import { mobileCurrentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPag
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
-import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';

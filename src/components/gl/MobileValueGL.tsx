@@ -1,8 +1,9 @@
-import { mobileCurrentPageAtom, mobileCurrentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom, mobileCurrentPageIndexAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
+import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
 import { useMobileValueSVGAnimations } from '@/hooks/valueGL/useMobileValueSVGAnimations';
 import { useValueCalcPosition } from '@/hooks/valueGL/useValueCalcPosition';
@@ -191,7 +192,7 @@ function MobileValueGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[VALUE_PAGE_INDEX].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
@@ -263,14 +264,14 @@ function MobileValueGL() {
   }, []);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[2].id) startAnimTLRef.current?.play();
+    if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) startAnimTLRef.current?.play();
     else {
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);
 
   useEffect(() => {
-    if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
+    if (currentPageIndex !== VALUE_PAGE_INDEX || valuePageNavigateTo === null) return;
 
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {

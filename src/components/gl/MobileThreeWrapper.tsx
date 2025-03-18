@@ -54,13 +54,13 @@ function OuterLoader() {
 }
 export default function MobileThreeWrapper() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const hideCanvas = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  const showCanvas = useMemo(() => [NAV_LIST[0].id, NAV_LIST[NAV_LIST.length - 1].id].includes(currentPage.id), [currentPage]);
   const isMounted = useIsMounted();
   if (!isMounted) return null;
   return (
     <Canvas
       id="vision-canvas"
-      className={cn('pointer-events-none', { 'pointer-events-none hidden': hideCanvas })}
+      className={cn('pointer-events-none', { 'pointer-events-none hidden': !showCanvas })}
       style={{ position: 'fixed', zIndex: 1 }}
       camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{

@@ -1,6 +1,8 @@
 'use client';
 
+import MobileEngagement from '@/app/engagement/MobileEngagement';
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
+import MobileTwin from '@/app/twin/MobileTwin';
 import MobileValue from '@/app/value/MobileValue';
 import MobileVision from '@/app/vision/_components/MobileVision';
 import { mobileCurrentPageAtom } from '@/atoms';
@@ -17,8 +19,10 @@ export default function MobileHome() {
       <div id="wrapper" className="">
         <MobileVision />
         <MobilePortfolio />
+        <MobileEngagement />
+        <MobileTwin />
         <MobileValue />
-        {currentPage.id === NAV_LIST[2].id && <MobileFooter />}
+        {currentPage.id === NAV_LIST[NAV_LIST.length - 1].id && <MobileFooter />}
       </div>
     </>
   );
