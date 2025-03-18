@@ -144,13 +144,13 @@ export const WorldMap = memo(function WorldMapComponent({
     const updateScale = () => {
       // 计算SVG当前的缩放比例
       const svgRect = svg.getBoundingClientRect();
-      const winWidth = window.innerWidth;
+      // const winWidth = window.innerWidth;
       const svgWidth = svgRect.width;
       const svgScale = svgWidth / svg.viewBox.baseVal.width;
-      const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
+      // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
       // console.log({ svgScale, mapScale, winWidth, svgWidth });
       // 设置地图缩放适配
-      document.documentElement.style.setProperty('--map-scale', `${mapScale}`);
+      document.documentElement.style.setProperty('--map-scale', `${0.95}`);
       // 设置反向缩放CSS变量
       document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
     };
@@ -201,13 +201,13 @@ export const WorldMap = memo(function WorldMapComponent({
       /> */}
       <WorldMapSVG
         className={cn(
-          'world-map-img pointer-events-none absolute -left-36 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'world-map-img pointer-events-none absolute -left-40 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
       />
       <WorldMapSVG
         className={cn(
-          'world-map-img pointer-events-none absolute left-[calc(100%_-_9rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'world-map-img pointer-events-none absolute left-[calc(100%_-_10rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
       />
@@ -215,7 +215,7 @@ export const WorldMap = memo(function WorldMapComponent({
         id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute -left-36 top-0 h-full w-full select-none overflow-visible"
+        className="pointer-events-none absolute -left-40 top-0 h-full w-full select-none overflow-visible"
       >
         {regionDotsPoints}
         {dotsPoints}
