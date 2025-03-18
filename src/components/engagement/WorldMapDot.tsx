@@ -23,10 +23,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '20px',
+    fontSize: '1.25rem',
   },
   hover: {
-    fontSize: '24px',
+    fontSize: '1.5rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -73,8 +73,9 @@ export function WorldMapDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={28}>
+        <foreignObject x={point.x} y={point.y - 5} width=".625rem" height=".625rem">
           <MeetingSVG
+            className="size-6"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -95,9 +96,9 @@ export function WorldMapDotPoint({
           </circle>
         </motion.g> */}
       {/* 标签 */}
-      <motion.foreignObject variants={labelVariants} x={point.x + 6} y={point.y - 5} width={140} height={28}>
+      <motion.foreignObject variants={labelVariants} x={point.x} y={point.y - 5} width={140} height={28}>
         <div
-          className="flex flex-col items-start font-oxanium leading-[1.1] text-white"
+          className="flex flex-col items-start pl-6 font-oxanium leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',

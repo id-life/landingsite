@@ -88,8 +88,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: -10,
-    lng: -85,
+    lat: -8,
+    lng: -88,
     label: 'Roatan',
     country: 'Hondurus',
     period: '2024/01',
@@ -117,8 +117,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: 18.796143 - 15,
-    lng: 98.979263 + 6,
+    lat: 2,
+    lng: 103,
     country: 'Thailand',
     label: 'Chiang Mai',
     period: '2024/11',
@@ -142,8 +142,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 3,
-    lat: -13,
-    lng: 106,
+    lat: -14,
+    lng: 102,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025',

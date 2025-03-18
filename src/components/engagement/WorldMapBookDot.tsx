@@ -24,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '24px',
+    fontSize: '1.5rem',
   },
   hover: {
-    fontSize: '26px',
+    fontSize: '1.625rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -83,7 +83,7 @@ export function WorldMapBookDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={12}>
+        <foreignObject x={point.x} y={point.y - 5} width=".75rem" height=".75rem">
           <BookSVG
             className="size-7"
             style={{
@@ -94,10 +94,10 @@ export function WorldMapBookDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x + 6} y={point.y - 4} width={160} height={12}>
+      <foreignObject x={point.x} y={point.y - 4} width={160} height={12}>
         <motion.p
           variants={labelVariants}
-          className="whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',
@@ -138,7 +138,7 @@ export function WorldMapBookDotContent({
     <AnimatePresence mode="wait">
       {isActive && (
         <foreignObject
-          x={point.x - 4}
+          x={point.x}
           y={point.y + 6}
           className={cn(
             `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,

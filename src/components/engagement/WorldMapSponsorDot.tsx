@@ -24,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '20px',
+    fontSize: '1.25rem',
   },
   hover: {
-    fontSize: '22px',
+    fontSize: '1.375rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -83,7 +83,7 @@ export function WorldMapSponsorDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={10}>
+        <foreignObject x={point.x} y={point.y - 5} width=".625rem" height=".625rem">
           <SponsorSVG
             className="size-5"
             style={{
@@ -94,10 +94,10 @@ export function WorldMapSponsorDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x + 3} y={point.y - 5} width={100} height={10}>
+      <foreignObject x={point.x} y={point.y - 5} width={100} height={10}>
         <motion.p
           variants={labelVariants}
-          className="w-full whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="w-full whitespace-nowrap pl-6 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',
@@ -137,7 +137,7 @@ export function WorldMapSponsorDotContent({
     <AnimatePresence mode="wait">
       {isActive && (
         <foreignObject
-          x={point.x - 6}
+          x={point.x}
           y={point.y + 6}
           className={cn(
             `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
