@@ -117,8 +117,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: 2,
-    lng: 103,
+    lat: 3,
+    lng: 104,
     country: 'Thailand',
     label: 'Chiang Mai',
     period: '2024/11',
@@ -142,8 +142,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 3,
-    lat: -14,
-    lng: 102,
+    lat: -13,
+    lng: 103,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025',
@@ -198,7 +198,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
   },
   {
     lat: -24,
-    lng: 140,
+    lng: 136,
     key: 'publications-02',
     title: 'bio/acc manifesto',
     desc: 'Read Chinese Ver. by Boyang', // 描述
