@@ -6,12 +6,14 @@ import { cn } from '@/utils';
 
 import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
+import { globalLoadedAtom } from '@/atoms/geo';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -31,6 +33,7 @@ export const WorldMap = memo(function WorldMapComponent({
   const svgRef = useRef<SVGSVGElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
   const { jumpTo } = useEngagementJumpTo();
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
@@ -133,24 +136,31 @@ export const WorldMap = memo(function WorldMapComponent({
 
   // 添加useEffect来计算和设置反向缩放
   useEffect(() => {
+    if (!globalLoaded) return;
     const svg = svgRef.current;
     if (!svg) return;
 
+    // 创建可重用的更新比例函数
     const updateScale = () => {
       // 计算SVG当前的缩放比例
       const svgRect = svg.getBoundingClientRect();
-      const scale = svgRect.width / svg.viewBox.baseVal.width;
-
+      const winWidth = window.innerWidth;
+      const svgWidth = svgRect.width;
+      const svgScale = svgWidth / svg.viewBox.baseVal.width;
+      const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
+      console.log({ svgScale, mapScale, winWidth, svgWidth });
+      // 设置地图缩放适配
+      document.documentElement.style.setProperty('--map-scale', `${mapScale}`);
       // 设置反向缩放CSS变量
-      document.documentElement.style.setProperty('--inverse-scale', `${1 / scale}`);
+      document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
     };
 
-    window.addEventListener('resize', updateScale);
+    window.addEventListener('resize', throttle(updateScale, 100));
     // 初始计算
     setTimeout(updateScale, 100); // 确保SVG完全渲染
 
     return () => window.removeEventListener('resize', updateScale);
-  }, []);
+  }, [globalLoaded]);
 
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
@@ -168,7 +178,7 @@ export const WorldMap = memo(function WorldMapComponent({
 
   return (
     <div
-      className="relative mt-18 aspect-[2/1] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans"
+      className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans"
       onClick={handleBackgroundClick}
     >
       {/* <button
@@ -190,17 +200,22 @@ export const WorldMap = memo(function WorldMapComponent({
         loading="eager"
       /> */}
       <WorldMapSVG
-        id="world-map-img"
         className={cn(
-          'pointer-events-none size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-          'opacity-0', // anim init state
+          'world-map-img pointer-events-none absolute -left-36 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          // 'opacity-0', // anim init state
+        )}
+      />
+      <WorldMapSVG
+        className={cn(
+          'world-map-img pointer-events-none absolute left-[calc(100%_-_9rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          // 'opacity-0', // anim init state
         )}
       />
       <svg
         id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute inset-0 h-full w-full select-none"
+        className="pointer-events-none absolute -left-36 top-0 h-full w-full select-none overflow-visible"
       >
         {regionDotsPoints}
         {dotsPoints}

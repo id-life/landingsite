@@ -51,7 +51,7 @@ function Engagement() {
         // },
       },
     });
-    tl.set('#world-map-img', { y: 50, opacity: 0 });
+    tl.set('.world-map-img', { y: 50, opacity: 0 });
     tl.set(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 0,
     });
@@ -71,7 +71,7 @@ function Engagement() {
 
     // 入场动画序列
     tl.to(
-      '#world-map-img',
+      '.world-map-img',
       {
         y: 0,
         opacity: 1,
@@ -205,7 +205,7 @@ function Engagement() {
       0.8 * factor + exitUnit,
     );
     tl.to(
-      ['#world-map-img', '#world-map-svg'],
+      ['.world-map-img', '#world-map-svg'],
       {
         y: -50,
         opacity: 0,
@@ -226,7 +226,13 @@ function Engagement() {
 
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
+      <div
+        className="relative flex h-[100svh] flex-col items-center justify-center"
+        style={{
+          transform: `scale(var(--map-scale))`,
+          // transformOrigin: 'center',
+        }}
+      >
         <WorldMap
           dots={WORLD_MAP_DOTS}
           regionDots={WORLD_MAP_REGION_DOTS}

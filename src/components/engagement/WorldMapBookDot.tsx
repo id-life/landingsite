@@ -76,7 +76,7 @@ export function WorldMapBookDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer opacity-0`}
+      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer overflow-visible opacity-0`}
       initial="initial"
       whileHover="hover"
       onClick={handleClick}
@@ -94,10 +94,10 @@ export function WorldMapBookDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x + 6} y={point.y - 4} width={100} height={12}>
+      <foreignObject x={point.x + 6} y={point.y - 4} width={160} height={12}>
         <motion.p
           variants={labelVariants}
-          className="w-full whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="whitespace-nowrap align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',

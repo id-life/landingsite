@@ -63,7 +63,7 @@ export function WorldMapDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer opacity-0`}
+      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible opacity-0`}
       initial="initial"
       whileHover="hover"
       onClick={(e) => {
@@ -73,7 +73,7 @@ export function WorldMapDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={10}>
+        <foreignObject x={point.x - 6} y={point.y - 5} width={10} height={28}>
           <MeetingSVG
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
