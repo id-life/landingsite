@@ -148,7 +148,7 @@ export const WorldMap = memo(function WorldMapComponent({
       const svgWidth = svgRect.width;
       const svgScale = svgWidth / svg.viewBox.baseVal.width;
       const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-      console.log({ svgScale, mapScale, winWidth, svgWidth });
+      // console.log({ svgScale, mapScale, winWidth, svgWidth });
       // 设置地图缩放适配
       document.documentElement.style.setProperty('--map-scale', `${mapScale}`);
       // 设置反向缩放CSS变量

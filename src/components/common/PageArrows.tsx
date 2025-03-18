@@ -22,6 +22,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
+  const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
 
   const pageIndexList = useMemo(() => {
     const getTotal = () => {
@@ -40,7 +41,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
   }, [currentPage.id, innerPageIndex, innerPageTotal]);
 
   return (
-    <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
+    <div className={cn('pointer-events-auto z-20 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
         {!isLastPageAndInnerPage && <ArrowItem />}
@@ -52,7 +53,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
             <div
               key={`inner-page-index-${index}`}
               className={cn(
-                'h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
+                'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
                 currentPage.id === NAV_LIST[2].id
                   ? innerPageIndex !== index
                     ? 'bg-white/20'
@@ -61,7 +62,12 @@ export default function PageArrows({ className }: PageArrowsProps) {
                     ? 'bg-gray-800'
                     : 'bg-[#B8B8B8]',
               )}
-            ></div>
+            >
+              <div
+                className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"
+                onClick={() => setInnerPageNavigateTo(index)}
+              />
+            </div>
           ))}
         </div>
       ) : null}
