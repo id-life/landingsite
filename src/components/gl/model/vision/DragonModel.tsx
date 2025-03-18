@@ -7,6 +7,8 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { currentModelAtom, PredictionModel } from '@/atoms/twin';
+import { useSetAtom } from 'jotai';
 
 const InitRotation = Math.PI / 2;
 export default function DragonModel(props: {}) {
@@ -20,6 +22,8 @@ export default function DragonModel(props: {}) {
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const isMobile = useIsMobile();
   const meshRef = useRef<THREE.Mesh>(null);
+  const setCurrentModel = useSetAtom(currentModelAtom);
+
   const transmissionConfigRef = useRef({
     transmission: 1,
     roughness: 0,
@@ -94,6 +98,10 @@ export default function DragonModel(props: {}) {
         z: 10,
         ease: 'power3.out',
         duration: 1.5,
+        delay: 1,
+        onStart: () => {
+          setCurrentModel(PredictionModel.M0);
+        },
       });
       gsap.from(modelRef.current.rotation, {
         x: Math.PI,
@@ -101,6 +109,7 @@ export default function DragonModel(props: {}) {
         z: Math.PI,
         ease: 'power3.out',
         duration: 1.5,
+        delay: 1,
         onComplete: () => {
           clock.start();
           autoSwingRef.current = true;

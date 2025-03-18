@@ -16,7 +16,7 @@ export default function SwitchSkin() {
   };
 
   return (
-    <div id="switch-model" className="absolute bottom-32 right-32 z-20 grid gap-5 opacity-0">
+    <div id="switch-skin" className="absolute bottom-60 right-32 z-20 grid gap-5 opacity-0">
       <div className="grid grid-cols-2 gap-10">
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG className={clsx(currentModelType === ModelType.Skin ? 'stroke-red-600 fill-red-600' : 'stroke-black fill-black')} />
