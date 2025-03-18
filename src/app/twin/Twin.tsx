@@ -85,7 +85,7 @@ function Twin() {
         <div className="twin-title-item twin-title-M1 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">30 YEARS 30年后</p>
           <p className="mt-5 text-base font-medium">
-            Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day's activities.
+            Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s activities.
             Long-term irregular living patterns, often staying up until ...
             <span className="cursor-auto text-red-600"> More &gt;</span>
           </p>
