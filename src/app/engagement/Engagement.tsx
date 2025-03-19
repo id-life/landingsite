@@ -46,6 +46,12 @@ function Engagement() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[2]);
         },
+        onLeave: () => {
+          gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[3].id}` } });
+        },
+        onLeaveBack: () => {
+          gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[1].id}` } });
+        },
         // onUpdate: (p) => {
         //   console.log('progress:', p);
         // },
@@ -62,7 +68,7 @@ function Engagement() {
     // 入场动画：0 - 0.2
     // 停留时间：0.2 - 0.8
     // 出场动画：0.8 - 1.0
-    const factor = 1; // 动画因子
+    const factor = 10; // 动画因子
 
     // 计算入场动画总时长（占总进度的0.2
     const entranceDuration = 0.2 * factor;
@@ -70,105 +76,69 @@ function Engagement() {
     const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
 
     // 入场动画序列
-    tl.to(
-      '.world-map-img',
-      {
-        y: 0,
-        opacity: 1,
-        ease: 'none',
-        duration: entranceUnit,
-      },
-      0,
-    );
+    tl.to('.world-map-img', {
+      y: 0,
+      opacity: 1,
+      ease: 'none',
+      duration: entranceUnit,
+    });
 
-    tl.to(
-      '.world-map-region',
-      {
-        scale: 1,
-        opacity: 1,
-        ease: 'power2.out',
-        stagger: entranceUnit * 0.05,
-        duration: entranceUnit,
-      },
-      entranceUnit,
-    );
+    tl.to('.world-map-region', {
+      scale: 1,
+      opacity: 1,
+      ease: 'power2.out',
+      stagger: entranceUnit * 0.05,
+      duration: entranceUnit,
+    });
 
-    tl.to(
-      ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'],
-      {
-        opacity: 1,
-        scale: 1,
-        ease: 'power2.out',
-        stagger: entranceUnit * 0.05,
-        duration: entranceUnit,
-      },
-      entranceUnit * 2,
-    );
+    tl.to(['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
+      opacity: 1,
+      scale: 1,
+      ease: 'power2.out',
+      stagger: entranceUnit * 0.05,
+      duration: entranceUnit,
+    });
 
-    tl.to(
-      buttons,
-      {
-        y: 0,
-        opacity: 1,
-        stagger: entranceUnit * 0.2,
-        ease: 'back.out(1.7)',
-        duration: entranceUnit,
-      },
-      entranceUnit * 3,
-    );
+    tl.to(buttons, {
+      y: 0,
+      opacity: 1,
+      stagger: entranceUnit * 0.2,
+      ease: 'back.out(1.7)',
+      duration: entranceUnit,
+    });
 
     // 停留 0.2 - 0.8
     const stayDuration = 0.6 * factor;
     // 计算停留每个动画的单位时长
     const stayUnit = stayDuration / 4; // 分为 4 个步骤
-    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 }, 0.2 * factor);
-    tl.to(
-      `.world-map-dot-content-0`,
-      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.2 * factor + stayUnit,
-    );
-    tl.to(
-      `.world-map-dot-content-1`,
-      {
-        opacity: 1,
-        height: '70vh',
-        ease: 'power2.out',
-        duration: stayUnit / 2,
-        onComplete: () => {
-          debouncedSetInnerPageIndex(1);
-        },
-        onReverseComplete: () => {
-          debouncedSetInnerPageIndex(0);
-        },
+    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 });
+    tl.to(`.world-map-dot-content-0`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 });
+    tl.to(`.world-map-dot-content-1`, {
+      opacity: 1,
+      height: '70vh',
+      ease: 'power2.out',
+      duration: stayUnit / 2,
+      onComplete: () => {
+        debouncedSetInnerPageIndex(1);
       },
-      '<',
-    );
-    tl.to(
-      `.world-map-dot-content-1`,
-      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.2 * factor + stayUnit * 2,
-    );
-    tl.to(
-      `.world-map-dot-content-2`,
-      {
-        opacity: 1,
-        height: '70vh',
-        ease: 'power2.out',
-        duration: stayUnit / 2,
-        onComplete: () => {
-          debouncedSetInnerPageIndex(2);
-        },
-        onReverseComplete: () => {
-          debouncedSetInnerPageIndex(1);
-        },
+      onReverseComplete: () => {
+        debouncedSetInnerPageIndex(0);
       },
-      '<',
-    );
-    tl.to(
-      `.world-map-dot-content-2`,
-      { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 },
-      0.2 * factor + stayUnit * 3,
-    );
+    });
+    tl.to(`.world-map-dot-content-1`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 }, '>');
+    tl.to(`.world-map-dot-content-2`, {
+      opacity: 1,
+      height: '70vh',
+      ease: 'power2.out',
+      duration: stayUnit / 2,
+      onComplete: () => {
+        debouncedSetInnerPageIndex(2);
+      },
+      onReverseComplete: () => {
+        debouncedSetInnerPageIndex(1);
+      },
+    });
+    tl.to(`.world-map-dot-content-2`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 });
     tl.to(
       `.world-map-dot-content-3`,
       {
@@ -192,28 +162,20 @@ function Engagement() {
     const exitUnit = exitDuration / 3; // 分为2个步骤
 
     // 出场动画序列
-    tl.to(`.world-map-dot-content-3`, { opacity: 0, height: 0, ease: 'power2.out', duration: exitUnit }, 0.8 * factor);
-    tl.to(
-      buttons,
-      {
-        y: 30,
-        opacity: 0,
-        stagger: exitUnit * 0.2,
-        ease: 'back.out(1.7)',
-        duration: exitUnit,
-      },
-      0.8 * factor + exitUnit,
-    );
-    tl.to(
-      ['.world-map-img', '#world-map-svg'],
-      {
-        y: -50,
-        opacity: 0,
-        ease: 'power2.out',
-        duration: exitUnit,
-      },
-      0.8 * factor + exitUnit * 2,
-    );
+    tl.to(`.world-map-dot-content-3`, { opacity: 0, height: 0, ease: 'power2.out', duration: exitUnit });
+    tl.to(buttons, {
+      y: 30,
+      opacity: 0,
+      stagger: exitUnit * 0.2,
+      ease: 'back.out(1.7)',
+      duration: exitUnit,
+    });
+    tl.to(['.world-map-img', '#world-map-svg'], {
+      y: -50,
+      opacity: 0,
+      ease: 'power2.out',
+      duration: exitUnit,
+    });
   }, [globalLoaded, debouncedSetInnerPageIndex]);
 
   useEffect(() => {
@@ -227,6 +189,7 @@ function Engagement() {
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
       <div
+        id="map-container"
         className="relative flex h-[100svh] flex-col items-center justify-center"
         style={{
           transform: `scale(var(--map-scale))`,

@@ -14,6 +14,7 @@ import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 SwiperType.use([FreeMode]);
 
@@ -49,6 +50,10 @@ function Portfolio() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[1]);
           setActive(true);
+        },
+        onLeave: () => {
+          const smoother = ScrollSmoother.get();
+          smoother?.scrollTo(`#${NAV_LIST[2].id}`, true);
         },
         onLeaveBack: () => {
           setActive(false);

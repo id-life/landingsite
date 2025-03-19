@@ -1,9 +1,10 @@
-import { memo, useRef } from 'react';
-import { gsap } from 'gsap';
+import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
-import { currentPageAtom } from '@/atoms';
+import { memo, useRef } from 'react';
 
 function Twin() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -26,6 +27,8 @@ function Twin() {
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
+          const smoother = ScrollSmoother.get();
+          smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
         onLeave: () => {
@@ -68,7 +71,7 @@ function Twin() {
             <p>TWIN</p>
           </div>
         </div>
-        <div className="twin-title-item twin-title-M0 bottom-32 absolute left-[-80rem] max-w-[31.25rem]">
+        <div className="twin-title-item twin-title-M0 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">Appearance & Biomarkers 外形采集&健康数据</p>
           <p className="mt-5 text-base font-medium">
             Create from Personal Biomarkers & Generate Clones Based on Time, Environment, and Habits.
@@ -85,8 +88,8 @@ function Twin() {
         <div className="twin-title-item twin-title-M1 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">30 YEARS 30年后</p>
           <p className="mt-5 text-base font-medium">
-            Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s activities.
-            Long-term irregular living patterns, often staying up until ...
+            Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s
+            activities. Long-term irregular living patterns, often staying up until ...
             <span className="cursor-auto text-red-600"> More &gt;</span>
           </p>
           <p className="mt-2 text-base font-medium">
