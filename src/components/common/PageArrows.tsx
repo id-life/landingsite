@@ -23,7 +23,6 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
-
   const pageIndexList = useMemo(() => {
     const getTotal = () => {
       if (![NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) return 0;
@@ -83,11 +82,10 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
   // console.log({ innerPageIndex, innerPageTotal });
-
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
-    if (innerPageIndex !== -1) {
+    if ([NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) {
       // 有小进度条
       if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻

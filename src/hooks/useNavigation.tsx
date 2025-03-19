@@ -73,7 +73,6 @@ export function useNavigation() {
       if (id === NAV_LIST[2].id || id === NAV_LIST[4].id) {
         setInnerPageIndex(0);
       } else {
-        setInnerPageIndex(-1);
         setInnerPageTotal(0);
       }
     },
