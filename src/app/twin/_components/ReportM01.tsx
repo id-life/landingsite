@@ -76,7 +76,7 @@ export default function ReportM01() {
               ) : (
                 <div className="mt-5 text-base font-medium">
                   <h3 className="font-bold">Living State: </h3>
-                  Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day's activities.
+                  Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s activities.
                   Long-term irregular living patterns, often staying up until 3-4 AM,
                   <span className="text-red-600">rarely able to maintain a regular sleep schedule throughout the week.</span>
                   Uses electronic devices intensively for over 14 hours daily, rarely goes out, usually stays at home all day,
@@ -95,8 +95,9 @@ export default function ReportM01() {
                   <span className="text-red-600">
                     Works all day in an air-conditioned office, job requires long hours of staring at computer screens.
                   </span>
-                  Due to late wake-up time, doesn't take lunch breaks. Habitually slouches with hunched back and forward-leaning
-                  neck while working, pays no attention to posture, likes to cross legs. Snacks every 20 minutes.
+                  Due to late wake-up time, doesn&apos;t take lunch breaks. Habitually slouches with hunched back and
+                  forward-leaning neck while working, pays no attention to posture, likes to cross legs. Snacks every 20
+                  minutes.
                   <span className="text-red-600">
                     Low work efficiency, frequently experiences fatigue, uses energy drinks for relief.
                   </span>
@@ -112,8 +113,8 @@ export default function ReportM01() {
                   Frequently takes caffeine pills for energy.
                   <h3 className="mt-2 font-bold">Exercise Habits: </h3>
                   Apart from walking to the office building,
-                  <span className="text-red-600">performs virtually no form of exercise.</span> Average daily step count doesn't
-                  exceed 2000 steps. Take the elevator even for just one floor.
+                  <span className="text-red-600">performs virtually no form of exercise.</span> Average daily step count
+                  doesn&apos;t exceed 2000 steps. Take the elevator even for just one floor.
                   <span className="text-red-600">Sit for an average of over 15 hours daily.</span>
                   <h3 className="mt-2 font-bold">Environmental Exposure: </h3>
                   Lives long-term in <span className="text-red-600">sealed, air-conditioned environments</span>, rarely opens
@@ -133,10 +134,10 @@ export default function ReportM01() {
                   <h3 className="mt-2 font-bold">Personal Hygiene: </h3>
                   Almost never exercises or sweats. <span className="text-red-600">Do not shower every day unless sweats.</span>
                   Puts off buying new toothpaste for a long time when it runs out. Only brushes teeth about once every three
-                  days. Doesn't do any skincare like washing face or using creams.
+                  days. Doesn&apos;t do any skincare like washing face or using creams.
                   <h3 className="mt-2 font-bold">Medical Checkups: </h3>
                   Gets <span className="text-red-600">physical examination once every 2-3 years</span>, rarely initiates health
-                  checkups, doesn't take physical examinations seriously. Usually searches online for solutions when
+                  checkups, doesn&apos;t take physical examinations seriously. Usually searches online for solutions when
                   experiencing physical discomfort. Completely disinterested in medical and health care knowledge.
                 </div>
               )}
