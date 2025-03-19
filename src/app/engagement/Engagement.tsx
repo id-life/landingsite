@@ -3,6 +3,7 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -18,7 +19,25 @@ function Engagement() {
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const lastIndexRef = useRef<number>(0);
   const { jumpTo } = useEngagementJumpTo();
+  const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
+    triggerId: 'engagement-scroll-trigger',
+    scrollFn: () => {
+      // console.log('Engagement scrollFn Up');
+      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
+    },
+    isUp: true,
+  });
 
+  const { setEnableJudge: setEnableDownJudge } = useScrollTriggerAction({
+    triggerId: 'engagement-scroll-trigger',
+    scrollFn: () => {
+      // console.log('Engagement scrollFn down');
+      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[3].id}` } });
+    },
+    isUp: false,
+  });
+
+  // console.log('engagement enableJudge', { enableUpJudge, enableDownJudge });
   const debouncedSetInnerPageIndex = useMemo(
     () =>
       debounce((index: number) => {
@@ -46,15 +65,6 @@ function Engagement() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[2]);
         },
-        onLeave: () => {
-          gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[3].id}` } });
-        },
-        onLeaveBack: () => {
-          gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[1].id}` } });
-        },
-        // onUpdate: (p) => {
-        //   console.log('progress:', p);
-        // },
       },
     });
     tl.set('.world-map-img', { y: 50, opacity: 0 });
@@ -74,7 +84,9 @@ function Engagement() {
     const entranceDuration = 0.2 * factor;
     // 计算入场每个动画的单位时长
     const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
-
+    tl.add(() => {
+      setEnableUpJudge(true);
+    });
     // 入场动画序列
     tl.to('.world-map-img', {
       y: 0,
@@ -175,6 +187,10 @@ function Engagement() {
       opacity: 0,
       ease: 'power2.out',
       duration: exitUnit,
+    });
+
+    tl.add(() => {
+      setEnableDownJudge(true);
     });
   }, [globalLoaded, debouncedSetInnerPageIndex]);
 

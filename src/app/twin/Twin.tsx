@@ -1,5 +1,6 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -9,10 +10,20 @@ import { memo, useRef } from 'react';
 function Twin() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
+  const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
+    triggerId: 'twin-scroll-trigger',
+    scrollFn: () => {
+      // console.log('Twin scrollFn Up');
+      const smoother = ScrollSmoother.get();
+      smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
+    },
+    isUp: true,
+  });
 
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
+        id: 'twin-scroll-trigger',
         trigger: `#${NAV_LIST[3].id}`,
         start: 'top top',
         end: '+=300%',
@@ -27,14 +38,15 @@ function Twin() {
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
-          const smoother = ScrollSmoother.get();
-          smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
         onLeave: () => {
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
       },
+    });
+    tl.add(() => {
+      setEnableUpJudge(true);
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 6 });

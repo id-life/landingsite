@@ -9,17 +9,21 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+
+// 注册GSAP插件
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
 
 function Portfolio() {
-  const isMounted = useIsMounted();
   const [active, setActive] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
@@ -27,6 +31,15 @@ function Portfolio() {
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => active, [active]);
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const { setEnableJudge: setEnableDownJudge } = useScrollTriggerAction({
+    triggerId: 'portfolio-trigger',
+    scrollFn: () => {
+      // console.log('Portfolio scrollFn down');
+      const smoother = ScrollSmoother.get();
+      smoother?.scrollTo(`#${NAV_LIST[2].id}`, false);
+    },
+    isUp: false,
+  });
 
   const handleFundClick = useCallback((item: PortfolioItemInfo) => {
     if (!item.link) return;
@@ -43,6 +56,7 @@ function Portfolio() {
         end: '+=300%',
         pin: true,
         scrub: true,
+        id: 'portfolio-trigger', // 添加ID以便后续引用
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
           setActive(true);
@@ -50,10 +64,6 @@ function Portfolio() {
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[1]);
           setActive(true);
-        },
-        onLeave: () => {
-          const smoother = ScrollSmoother.get();
-          smoother?.scrollTo(`#${NAV_LIST[2].id}`, true);
         },
         onLeaveBack: () => {
           setActive(false);
@@ -82,6 +92,11 @@ function Portfolio() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
+
+    // 在整个动画完成后设置标志
+    tl.eventCallback('onComplete', () => {
+      setEnableDownJudge(true);
+    });
   }, [globalLoaded]);
 
   useGSAP(
