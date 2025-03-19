@@ -11,7 +11,9 @@ export default function FeatherImg({ src, alt, className }: { src: string; alt: 
       loading="lazy"
       style={{
         WebkitMaskImage: `url(${maskImage.src})`,
+        WebkitMaskSize: '100% 100%',
         maskImage: `url(${maskImage.src})`,
+        maskSize: '100% 100%',
       }}
     />
   );
