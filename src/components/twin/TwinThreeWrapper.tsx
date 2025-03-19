@@ -21,6 +21,7 @@ import { useEventBus } from '../event-bus/useEventBus';
 import * as THREE from 'three';
 import SwitchAnatomyCamera from '@/app/twin/_components/SwitchAnatomyCamera';
 import { eventBus } from '../event-bus/eventBus';
+import ModelReport from '@/app/twin/_components/ModelReport';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -198,17 +199,7 @@ export default function TwinThreeWrapper() {
       <SwitchModel />
       <SwitchSkin />
       <SwitchAnatomyCamera />
-      <div className="relative h-12 w-42">
-        <div className="loading-text absolute left-0 top-0 text-[2rem]/[2.5rem] font-semibold text-white">Loading...</div>
-        <div
-         
-          className="absolute left-0 top-0 z-30 text-[2rem]/[2.5rem] font-semibold"
-          style={{ clipPath: 'inset(0 100% 0 0)' }}
-        >
-          Loading...
-        </div>
-        <div className="absolute z-20 h-full w-0 bg-white"></div>
-      </div>
+      <ModelReport />
       <div
         style={{
           position: 'relative',

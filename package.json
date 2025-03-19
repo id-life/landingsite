@@ -47,7 +47,8 @@
     "swiper": "^11.1.15",
     "tailwind-merge": "^2.5.2",
     "three": "0.169.0",
-    "twgl.js": "^5.5.4"
+    "twgl.js": "^5.5.4",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
