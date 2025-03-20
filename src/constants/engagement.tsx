@@ -183,6 +183,9 @@ export type MapBookDotData = {
   coverUrl?: string;
   videoUrl?: string;
   link?: string; // 跳转链接
+  mobilePointTransformStyle?: string;
+  mobileContentTransformStyle?: string;
+  mobileIsUp?: boolean; // 移动端在点上方
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
@@ -204,6 +207,9 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
+    mobileIsUp: true, // 移动端在点上方
+    mobileContentTransformStyle: 'translate(-30px, -115%)',
+    mobilePointTransformStyle: 'translateX(-30px)',
   },
 ];
 

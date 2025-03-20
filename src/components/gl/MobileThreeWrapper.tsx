@@ -40,7 +40,7 @@ function OuterLoader() {
       timer.current = setTimeout(() => {
         setShow(false); // 加载完后再延迟1s
         setGlobalLoaded(true);
-      }, 300);
+      }, 1000);
     }
     return () => {
       if (timer.current) {

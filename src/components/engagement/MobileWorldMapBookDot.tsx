@@ -24,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '1rem',
+    fontSize: '.625rem',
   },
   hover: {
-    fontSize: '1.125rem',
+    fontSize: '.75rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -57,7 +57,7 @@ export function MobileWorldMapBookDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, lat, lng } = dot;
+  const { title, lat, lng, mobilePointTransformStyle } = dot;
   const { jumpTo } = useEngagementJumpTo();
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
 
@@ -81,19 +81,20 @@ export function MobileWorldMapBookDotPoint({
       whileHover="hover"
       onClick={handleClick}
       variants={containerVariants}
+      style={{ transform: mobilePointTransformStyle }}
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
           <div>
-            <BookSVG className="size-5" />
+            <BookSVG className="size-2.5" />
           </div>
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={160} height={12}>
+      <foreignObject x={point.x} y={point.y - 4} width={150} height={12}>
         <motion.p
           variants={labelVariants}
-          className="whitespace-nowrap pl-5.5 align-middle font-oxanium font-semibold capitalize leading-5 text-white"
+          className="whitespace-nowrap pl-2.5 align-middle font-oxanium font-semibold capitalize leading-3 text-white"
         >
           {title}
         </motion.p>
@@ -111,7 +112,7 @@ export function MobileWorldMapBookDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, desc, coverUrl, videoUrl, lat, lng, link } = dot;
+  const { title, desc, coverUrl, videoUrl, lat, lng, link, mobileContentTransformStyle, mobileIsUp } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const isActive = activeBookDot === index;
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -142,28 +143,31 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[50vw] flex-col items-center overflow-hidden font-oxanium')}
+              className={cn('absolute left-0 top-0 flex w-[25vw] flex-col items-center overflow-hidden font-oxanium')}
+              style={{ transform: mobileContentTransformStyle }}
             >
               <motion.div
                 variants={{
                   hidden: {
                     opacity: 0,
-                    y: -30,
+                    y: mobileIsUp ? 30 : -30,
                     scaleY: 0,
-                    transformOrigin: 'top',
+                    transformOrigin: mobileIsUp ? 'bottom' : 'top',
                   },
                   visible: {
                     opacity: 1,
                     scaleY: 1,
                     y: 0,
-                    transformOrigin: 'top',
+                    transformOrigin: mobileIsUp ? 'bottom' : 'top',
                   },
                 }}
                 transition={{
-                  duration: 0.3,
+                  duration: 0.5,
                   type: 'easeInOut',
                 }}
-                className="flex-center relative"
+                className={cn('flex-center relative', {
+                  'order-2': mobileIsUp,
+                })}
               >
                 {coverUrl && !videoLoaded && <img src={coverUrl} alt={title} className="size-full object-contain" />}
                 {videoUrl && (
@@ -180,7 +184,7 @@ export function MobileWorldMapBookDotContent({
               </motion.div>
               <motion.div
                 variants={{
-                  hidden: { opacity: 0, y: -30 },
+                  hidden: { opacity: 0, y: mobileIsUp ? 30 : -30 },
                   visible: {
                     opacity: 1,
                     y: 0,
@@ -191,10 +195,22 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center gap-1 whitespace-nowrap"
+                className={cn('flex cursor-pointer flex-col items-center whitespace-nowrap', {
+                  'order-1': mobileIsUp,
+                })}
               >
-                <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
-                <p className="text-xs/3 text-gray-350">{desc}</p>
+                <ArrowSVG
+                  className={cn('size-2 rotate-180 fill-gray-350', {
+                    'order-2 rotate-0': mobileIsUp,
+                  })}
+                />
+                <p
+                  className={cn('scale-50 text-xs/3 text-gray-350', {
+                    'order-1': mobileIsUp,
+                  })}
+                >
+                  {desc}
+                </p>
               </motion.div>
             </motion.div>
           </a>

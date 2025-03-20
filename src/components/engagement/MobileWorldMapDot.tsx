@@ -23,10 +23,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '1rem',
+    fontSize: '.625rem',
   },
   hover: {
-    fontSize: '1.125rem',
+    fontSize: '.75rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -74,12 +74,12 @@ export function MobileWorldMapDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={16} height={16}>
-          <MeetingSVG className="size-5" />
+          <MeetingSVG className="size-2.5" />
         </foreignObject>
       </motion.g>
       {/* 标签 */}
       <motion.foreignObject variants={labelVariants} x={point.x} y={point.y - 5} width={140} height={28}>
-        <div className="flex flex-col items-start pl-5.5 font-oxanium leading-5 text-white">
+        <div className="flex flex-col items-start pl-3 font-oxanium leading-3 text-white">
           {country && <span className="font-semibold">{country}</span>}
           {label}
         </div>
@@ -103,12 +103,7 @@ export function MobileWorldMapDotContent({
 
   return (
     <g className={`world-map-dot-content world-map-dot-content-${index}`}>
-      <foreignObject
-        x={point.x}
-        y={0}
-        width="15rem"
-        className={cn(`pointer-events-none flex h-[32vh] flex-col overflow-visible`)}
-      >
+      <foreignObject x={point.x} y={0} height={500} width={400} className={cn(`flex h-[32vh] flex-col overflow-visible`)}>
         <div className={cn('absolute inset-0 -left-[30vw] top-7 flex h-full w-[30vw] flex-col items-center font-oxanium')}>
           {title && (
             <h3 className="scale-50 text-center text-base/5 font-semibold capitalize text-white">
