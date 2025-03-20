@@ -11,6 +11,7 @@ import Footer from '@/components/layout/footer/Footer';
 import { NAV_LIST } from '@/components/nav/nav';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -22,12 +23,16 @@ import { useEvent } from 'react-use';
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const isMobile = useIsMobile();
+  const isMounted = useIsMounted();
   const initFontSize = useCallback(() => {
-    if (isMobile) return;
+    if (!isMounted || isMobile) {
+      document.documentElement.style.fontSize = '16px';
+      return;
+    }
     const width = window.innerWidth;
     const fontSize = 16 * (width / 1920);
     document.documentElement.style.fontSize = fontSize + 'px';
-  }, [isMobile]);
+  }, [isMobile, isMounted]);
 
   useEffect(() => initFontSize(), [initFontSize]);
   useEvent('resize', throttle(initFontSize, 1000));
