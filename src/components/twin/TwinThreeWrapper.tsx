@@ -1,14 +1,10 @@
 'use client';
 
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useMemo, useRef } from 'react';
+import { Suspense, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
-import Model0 from '@/components/twin/model/Model0';
 import EnvironmentGroup from '@/components/twin/EnvironmentGroup';
 import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
-import Model1 from '@/components/twin/model/Model1';
-import Model2 from '@/components/twin/model/Model2';
-import Model3 from '@/components/twin/model/Model3';
 import Loader from './Loader';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
@@ -22,6 +18,14 @@ import * as THREE from 'three';
 import SwitchAnatomyCamera from '@/app/twin/_components/SwitchAnatomyCamera';
 import { eventBus } from '../event-bus/eventBus';
 import ModelReport from '@/app/twin/_components/ModelReport';
+import Model0In from './model/Model0In';
+import Model0Out from './model/Model0Out';
+import Model1In from './model/Model1In';
+import Model1Out from './model/Model1Out';
+import Model3In from './model/Model3In';
+import Model3Out from './model/Model3Out';
+import Model2Out from './model/Model2Out';
+import Model2In from './model/Model2In';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -32,18 +36,8 @@ export default function TwinThreeWrapper() {
   const controlRef2 = useRef<CameraControls>(null);
   const isSyncingRef = useRef(false);
   const controlRefs = useMemo(() => [controlRef1, controlRef2], [controlRef1, controlRef2]);
-  useGLTF.preload([
-    'https://cdn.id.life/full_male/cloth-v1.glb',
-    'https://cdn.id.life/full_male/integumentary_system_tin.glb',
-    'https://cdn.id.life/twin/m0/muscular_system.glb',
-    'https://cdn.id.life/twin/m0/connective_tissue.glb',
-    'https://cdn.id.life/twin/m0/organs.glb',
-    'https://cdn.id.life/twin/m0/lymphatic_system.glb',
-    'https://cdn.id.life/twin/m0/vascular_system.glb',
-    'https://cdn.id.life/twin/m0/nervous_system.glb',
-    'https://cdn.id.life/twin/m0/cartilage_tissue.glb',
-    'https://cdn.id.life/twin/m0/skeletal_system.glb',
-  ]);
+  const [modelType, setModelType] = useState<ModelType>(ModelType.Skin);
+  useGLTF.preload(['https://cdn.id.life/full_male/test-v1.glb']);
 
   // 切换模型
   useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType; model: PredictionModel }) => {
@@ -51,8 +45,8 @@ export default function TwinThreeWrapper() {
     const controls2 = controlRefs[1]?.current;
     // 重制镜头
     if (payload.type === ModelType.Skin) {
-      controls1?.reset(true);
-      controls2?.reset(true);
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
+      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
       setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
     }
     let index = AnatomyCamera.CAMERA0;
@@ -74,6 +68,7 @@ export default function TwinThreeWrapper() {
       modelRef.current.switchModelShow(payload.type, index);
     });
     setCurrentModelType(payload.type);
+    setModelType(payload.type);
   });
 
   //对比视角同步
@@ -114,16 +109,16 @@ export default function TwinThreeWrapper() {
     const controls1 = controlRefs[0]?.current;
     const controls2 = controlRefs[1]?.current;
     if (payload.index === AnatomyCamera.CAMERA0) {
-      controls1?.reset(true);
-      controls2?.reset(true);
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
+      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
     }
     if (payload.index === AnatomyCamera.CAMERA1) {
-      controls1?.reset(true);
-      controls2?.reset(true);
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
+      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
     }
     if (payload.index === AnatomyCamera.CAMERA2) {
-      controls1?.reset(true);
-      controls2?.reset(true);
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
+      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
     }
     if (payload.index === AnatomyCamera.CAMERA3) {
       modelRefs[0].current?.scenes?.vascular_system.traverse((object: any) => {
@@ -228,7 +223,8 @@ export default function TwinThreeWrapper() {
         {currentModel && (
           <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
             <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            <Model0 ref={modelRefs[0]} />
+            {modelType === ModelType.Skin && <Model0Out />}
+            {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
             <EnvironmentGroup />
             <LightGroup ambientIntensity={1.6} />
             <ExtendedCameraControls ref={controlRefs[0]} />
@@ -237,7 +233,8 @@ export default function TwinThreeWrapper() {
         {currentModel === PredictionModel.M1 && (
           <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
             <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            <Model1 ref={modelRefs[1]} />
+            {modelType === ModelType.Skin && <Model1Out />}
+            {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
             <EnvironmentGroup />
             <LightGroup ambientIntensity={1.6} />
             <ExtendedCameraControls ref={controlRefs[1]} />
@@ -246,7 +243,8 @@ export default function TwinThreeWrapper() {
         {currentModel === PredictionModel.M2 && (
           <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
             <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            <Model2 ref={modelRefs[1]} />
+            {modelType === ModelType.Skin && <Model2Out />}
+            {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
             <EnvironmentGroup />
             <LightGroup ambientIntensity={1.6} />
             <ExtendedCameraControls ref={controlRefs[1]} />
@@ -255,7 +253,8 @@ export default function TwinThreeWrapper() {
         {currentModel === PredictionModel.M3 && (
           <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
             <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            <Model3 ref={modelRefs[1]} />
+            {modelType === ModelType.Skin && <Model3Out />}
+            {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
             <EnvironmentGroup />
             <LightGroup ambientIntensity={1.6} />
             <ExtendedCameraControls ref={controlRefs[1]} />
