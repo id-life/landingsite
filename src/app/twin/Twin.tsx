@@ -13,7 +13,6 @@ function Twin() {
   const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
     triggerId: 'twin-scroll-trigger',
     scrollFn: () => {
-      // console.log('Twin scrollFn Up');
       const smoother = ScrollSmoother.get();
       smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
     },
@@ -60,9 +59,7 @@ function Twin() {
       </div>
       <div className="twin-title-wrapper relative h-screen">
         <div className="twin-title absolute left-10 top-40 w-screen">
-          <p className="font-oxanium text-[11.875rem]/[11.25rem] font-bold uppercase text-red-600">DIGITAL TWIN</p>
-          <p className="font-oxanium text-[10.5rem]/[10.25rem] font-bold uppercase">BIOMARKER</p>
-          <p className="font-oxanium text-[10.5rem]/[10.25rem] font-bold uppercase">VISUALIZATION</p>
+          <img src="/svgs/twin/title-page.svg" alt="" />
         </div>
         <div className="twin-title absolute bottom-20 right-32 text-right text-base font-medium">
           <p>- High-Precision Custom Digital Twin Creation</p>
@@ -72,11 +69,7 @@ function Twin() {
           <p>高精度数字孪生/AI预测克隆体/健康跟踪与个性化指导/持续升级和优化</p>
         </div>
         <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-64">
-          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">ONTOLOGY</p>
-          <div className="font-oxanium text-[7.5rem]/[7.5rem] font-bold uppercase">
-            <p>DIGITAL</p>
-            <p>TWIN</p>
-          </div>
+          <img src="/svgs/twin/title-ontology.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M0 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">Appearance & Biomarkers 外形采集&健康数据</p>
@@ -86,25 +79,13 @@ function Twin() {
           <p className="mt-2 text-base font-medium">根据个人生物指标创建 & 根据时间、环境和习惯生成克隆</p>
         </div>
         <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-64">
-          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">CLONE_01</p>
-          <div className="font-oxanium text-[7.5rem]/[7.5rem] font-bold uppercase">
-            <p>Unhealthy</p>
-            <p>habits me</p>
-          </div>
+          <img src="/svgs/twin/title-clone-01.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-64">
-          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">CLONE_02</p>
-          <div className="font-oxanium text-[7.5rem]/[7.5rem] font-bold uppercase">
-            <p className="text-[6.25rem]/[6.25rem]">A Healthier</p>
-            <p>Life</p>
-          </div>
+          <img src="/svgs/twin/title-clone-02.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-64">
-          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">CLONE_03</p>
-          <div className="font-oxanium text-[7.5rem]/[7.5rem] font-bold uppercase">
-            <p>FITNESS</p>
-            <p>FITNESS FITNESS</p>
-          </div>
+          <img src="/svgs/twin/title-clone-03.svg" alt="" />
         </div>
       </div>
     </div>
