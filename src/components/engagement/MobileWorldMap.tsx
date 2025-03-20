@@ -9,11 +9,11 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useMeasure } from 'react-use';
+import { useEvent, useMeasure } from 'react-use';
 import { WorldMapSVG } from '../svg';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
-import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
-import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
+import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
+import { MobileWorldMapSponsorDotContent, MobileWorldMapSponsorDotPoint } from './MobileWorldMapSponsorDot';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -63,14 +63,14 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const dotsPoints = useMemo(() => {
     if (!dots?.length) return null;
     return dots.map((dot, i) => {
-      return <WorldMapDotPoint key={`world-map-dot-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+      return <MobileWorldMapDotPoint key={`world-map-dot-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
     });
   }, [calcPoint, dots]);
 
   const dotsContents = useMemo(() => {
     if (!dots?.length) return null;
     return dots.map((dot, i) => {
-      return <WorldMapDotContent key={`world-map-dot-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+      return <MobileWorldMapDotContent key={`world-map-dot-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
     });
   }, [calcPoint, dots]);
 
@@ -91,44 +91,53 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const sponsorDotsPoints = useMemo(() => {
     if (!sponsorDots?.length) return null;
     return sponsorDots.map((dot, i) => {
-      return <WorldMapSponsorDotPoint key={`world-map-dot-sponsor-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+      return (
+        <MobileWorldMapSponsorDotPoint key={`world-map-dot-sponsor-point-${i}`} dot={dot} calcPoint={calcPoint} index={i} />
+      );
     });
   }, [calcPoint, sponsorDots]);
 
   const sponsorDotsContents = useMemo(() => {
     if (!sponsorDots?.length) return null;
     return sponsorDots.map((dot, i) => {
-      return <WorldMapSponsorDotContent key={`world-map-dot-sponsor-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />;
+      return (
+        <MobileWorldMapSponsorDotContent key={`world-map-dot-sponsor-content-${i}`} dot={dot} calcPoint={calcPoint} index={i} />
+      );
     });
   }, [calcPoint, sponsorDots]);
-
-  // 添加useEffect来计算和设置反向缩放
-  useEffect(() => {
-    if (!globalLoaded) return;
+  const updateSVGScale = useCallback(() => {
+    console.log('updateSVGScale');
     const svg = svgRef.current;
     if (!svg) return;
+    // 计算SVG当前的缩放比例
+    const svgRect = svg.getBoundingClientRect();
+    // const winWidth = window.innerWidth;
+    const svgWidth = svgRect.width;
+    const svgScale = svgWidth / svg.viewBox.baseVal.width;
+    console.log({ svgScale, svgWidth, svgRect });
+    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
+    // console.log({ svgScale, mapScale, winWidth, svgWidth });
+    // 设置地图缩放适配
+    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
+    // 设置反向缩放CSS变量
+    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
+  }, []);
 
-    // 创建可重用的更新比例函数
-    const updateScale = () => {
-      // 计算SVG当前的缩放比例
-      const svgRect = svg.getBoundingClientRect();
-      // const winWidth = window.innerWidth;
-      const svgWidth = svgRect.width;
-      const svgScale = svgWidth / svg.viewBox.baseVal.width;
-      // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-      // console.log({ svgScale, mapScale, winWidth, svgWidth });
-      // 设置地图缩放适配
-      document.documentElement.style.setProperty('--map-scale', `${0.95}`);
-      // 设置反向缩放CSS变量
-      document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
-    };
+  useEvent('resize', throttle(updateSVGScale, 100));
 
-    window.addEventListener('resize', throttle(updateScale, 100));
-    // 初始计算
-    setTimeout(updateScale, 100); // 确保SVG完全渲染
+  useEffect(() => {
+    if (!globalLoaded) return;
+    updateSVGScale();
+  }, [globalLoaded, updateSVGScale]);
 
-    return () => window.removeEventListener('resize', updateScale);
-  }, [globalLoaded]);
+  useEffect(() => {
+    if (svgRef.current && mapWidth > 0) {
+      console.log('SVG refs available, updating scale');
+      requestAnimationFrame(() => {
+        updateSVGScale();
+      });
+    }
+  }, [mapWidth, updateSVGScale]);
 
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {

@@ -24,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '.75rem',
+    fontSize: '1rem',
   },
   hover: {
-    fontSize: '.875rem',
+    fontSize: '1.125rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -84,20 +84,21 @@ export function MobileWorldMapBookDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
-          <BookSVG
-            className="size-3.5"
+          <div
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
             }}
-          />
+          >
+            <BookSVG className="size-5" />
+          </div>
         </foreignObject>
       </motion.g>
       {/* 标签 */}
       <foreignObject x={point.x} y={point.y - 4} width={160} height={12}>
         <motion.p
           variants={labelVariants}
-          className="whitespace-nowrap pl-4 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="whitespace-nowrap pl-5.5 align-middle font-oxanium font-semibold capitalize leading-5 text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',
@@ -139,18 +140,18 @@ export function MobileWorldMapBookDotContent({
       {isActive && (
         <foreignObject
           x={point.x}
-          y={point.y + 6}
+          y={point.y + 8}
           className={cn(
             `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
           )}
           onClick={onClick}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto">
             <motion.div
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              className={cn('absolute left-0 top-0 flex w-[50vw] flex-col items-center overflow-hidden font-oxanium')}
               style={{
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
@@ -175,9 +176,9 @@ export function MobileWorldMapBookDotContent({
                   duration: 0.3,
                   type: 'easeInOut',
                 }}
-                className="flex-center relative -mt-5"
+                className="flex-center relative"
               >
-                {coverUrl && !videoLoaded && <img src={coverUrl} alt={title} className="size-[15.5rem] object-contain" />}
+                {coverUrl && !videoLoaded && <img src={coverUrl} alt={title} className="size-full object-contain" />}
                 {videoUrl && (
                   <video
                     src={videoUrl}
@@ -185,7 +186,7 @@ export function MobileWorldMapBookDotContent({
                     loop
                     muted
                     playsInline
-                    className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden')}
+                    className={cn('size-full object-contain', videoLoaded ? 'block' : 'hidden')}
                     onLoadedData={() => setVideoLoaded(true)}
                   />
                 )}
@@ -203,7 +204,7 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center gap-1"
+                className="flex cursor-pointer flex-col items-center gap-1 whitespace-nowrap"
               >
                 <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
                 <p className="text-xs/3 text-gray-350">{desc}</p>

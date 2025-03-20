@@ -26,9 +26,13 @@
   /*  background: transparent;*/
   /*}*/
   *::-webkit-scrollbar {
-    width: 6px;
+    width: 0.375rem;
   }
-
+  @media (max-width: 768px) {
+    *::-webkit-scrollbar {
+      width: 2px;
+    }
+  }
   *::-webkit-scrollbar-thumb {
     background-color: #ffffff66;
     backdrop-filter: blur(40px);

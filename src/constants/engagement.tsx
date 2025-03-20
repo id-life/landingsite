@@ -1,4 +1,3 @@
-import { PopupItem } from '@/components/engagement/EngagementPopup';
 import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
 
@@ -20,8 +19,8 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    lat: 30,
-    lng: 105,
+    lat: 32,
+    lng: 108,
     icon: <ChineseSVG className="size-2.5" />,
   },
   {
@@ -225,8 +224,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     icon: '/imgs/engagement/sponsor-01.webp',
   },
   {
-    lat: 24,
-    lng: 96,
+    lat: 26,
+    lng: 98,
     key: 'sponsor-02',
     alt: 'ETHPanda',
     icon: '/imgs/engagement/sponsor-02.webp',
