@@ -33,17 +33,17 @@ export default function Loader() {
   return (
     <Html center>
       <div className="relative h-12 w-44">
-        <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-white">
+        <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-red-600">
           Loading...
         </div>
         <div
           ref={inverseTextRef}
-          className="absolute z-30 flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-black"
+          className="absolute z-30 flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-white"
           style={{ clipPath: 'inset(0 100% 0 0)' }}
         >
           Loading...
         </div>
-        <div ref={fillRef} className="absolute z-20 h-full w-0 bg-white"></div>
+        <div ref={fillRef} className="absolute z-20 h-full w-0 bg-red-600"></div>
       </div>
     </Html>
   );

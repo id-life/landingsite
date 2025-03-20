@@ -49,13 +49,8 @@ function Twin() {
       setEnableUpJudge(true);
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
-    tl.to('#twin-three-wrapper', { opacity: 1, duration: 6 });
-    tl.to('#switch-model', { opacity: 1, duration: 6 }, '<');
-    tl.to('#switch-skin', { opacity: 1, duration: 6 }, '<');
-    tl.to('#switch-anatomy-camera', { opacity: 1, duration: 6 }, '<');
-    // tl.to('.twin-title-wrapper', { left: '4rem', ease: 'power2.inOut' });
-    // tl.to('.twin-title-wrapper', { left: '-30rem', ease: 'power2.inOut', duration: 2, delay: 2 });
-    tl.to('#twin-three-wrapper', { opacity: 0, duration: 2 });
+    tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
+    tl.to('#twin-three-wrapper', { opacity: 0, duration: 2, delay: 1 });
   }, []);
 
   return (
@@ -77,7 +72,7 @@ function Twin() {
           <p>高精度数字孪生/AI预测克隆体/健康跟踪与个性化指导/持续升级和优化</p>
         </div>
         <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-64">
-          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">organization</p>
+          <p className="font-oxanium text-[1.75rem]/[1.75rem] font-bold uppercase text-red-600">ONTOLOGY</p>
           <div className="font-oxanium text-[7.5rem]/[7.5rem] font-bold uppercase">
             <p>DIGITAL</p>
             <p>TWIN</p>

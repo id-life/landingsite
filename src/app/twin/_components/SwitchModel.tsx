@@ -17,15 +17,15 @@ export default function SwitchModel() {
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }
     const list = gsap.utils.toArray('.twin-title-item');
-    gsap.to('.twin-title', { opacity: 0});
-    gsap.to(list, { left: '-80rem'});
-    gsap.to(`.twin-title-${model}`, { left: '5rem',  delay: 0.5 });
+    gsap.to('.twin-title', { opacity: 0 });
+    gsap.to(list, { left: '-80rem' });
+    gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.5 });
     gsap.to('#switch-skin', { bottom: '8rem' });
     setCurrentModel(model);
   };
 
   return (
-    <div id="switch-model" className="absolute right-32 top-50 z-20 grid gap-5 opacity-0">
+    <div id="switch-model" className="absolute right-32 top-50 z-20 grid gap-5">
       <div className="relative cursor-pointer p-1" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(

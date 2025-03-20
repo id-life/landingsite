@@ -4,7 +4,6 @@ import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } fr
 import * as THREE from 'three';
 import { SkeletonUtils } from 'three-stdlib';
 import { Center, useGLTF } from '@react-three/drei';
-import { AnimationGroupHandle } from './AnimationGroupM3';
 import { ModelRef, ModelType } from './type';
 import { AnatomyCamera } from '@/atoms/twin';
 

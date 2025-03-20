@@ -37,7 +37,7 @@ export default function TwinThreeWrapper() {
   const isSyncingRef = useRef(false);
   const controlRefs = useMemo(() => [controlRef1, controlRef2], [controlRef1, controlRef2]);
   const [modelType, setModelType] = useState<ModelType>(ModelType.Skin);
-  useGLTF.preload(['https://cdn.id.life/full_male/test-v1.glb']);
+  useGLTF.preload(['https://cdn.id.life/full_male/test-v2.glb']);
 
   // 切换模型
   useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType; model: PredictionModel }) => {

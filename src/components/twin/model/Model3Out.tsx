@@ -18,7 +18,7 @@ export default function Model3Out() {
     }
     const action = actions['Apose'];
     if (currentActionRef.current && action) {
-      action.reset().fadeIn(0.5).play();
+      action.reset().play();
       currentActionRef.current = action;
       action.clampWhenFinished = true;
       action.loop = THREE.LoopRepeat;
@@ -28,7 +28,7 @@ export default function Model3Out() {
         currentActionRef.current.fadeOut(0.5);
       }
       if (actions['Idle']) {
-        actions['Idle'].reset().fadeIn(0.5).play();
+        actions['Idle'].reset().play();
         currentActionRef.current = actions['Idle'];
 
         animationLoopRef.current = setTimeout(() => {
@@ -43,7 +43,7 @@ export default function Model3Out() {
         currentActionRef.current.fadeOut(0.5);
       }
       if (actions[name]) {
-        actions[name].reset().fadeIn(0.5).play();
+        actions[name].reset().play();
         currentActionRef.current = actions[name];
 
         animationLoopRef.current = setTimeout(() => {

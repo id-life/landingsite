@@ -22,7 +22,6 @@ export default function DragonModel(props: {}) {
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const isMobile = useIsMobile();
   const meshRef = useRef<THREE.Mesh>(null);
-  const setCurrentModel = useSetAtom(currentModelAtom);
 
   const transmissionConfigRef = useRef({
     transmission: 1,
@@ -110,7 +109,6 @@ export default function DragonModel(props: {}) {
         onComplete: () => {
           clock.start();
           autoSwingRef.current = true;
-          setCurrentModel(PredictionModel.M0);
         },
       });
     },

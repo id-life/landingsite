@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 export default function Model0Out() {
-  const { scene, animations } = useGLTF('https://cdn.id.life/full_male/test-v1.glb');
+  const { scene, animations } = useGLTF('https://cdn.id.life/full_male/test-v2.glb');
   const currentActionRef = useRef<THREE.AnimationAction | null>(null); // 存储当前动画
   const animationLoopRef = useRef<NodeJS.Timeout | null>(null);
   const { actions } = useAnimations(animations, scene);
@@ -18,7 +18,7 @@ export default function Model0Out() {
     }
     const action = actions['Apose'];
     if (currentActionRef.current && action) {
-      action.reset().fadeIn(0.5).play();
+      action.reset().play();
       currentActionRef.current = action;
       action.clampWhenFinished = true;
       action.loop = THREE.LoopRepeat;
@@ -28,7 +28,7 @@ export default function Model0Out() {
         currentActionRef.current.fadeOut(0.5);
       }
       if (actions['Idle']) {
-        actions['Idle'].reset().fadeIn(0.5).play();
+        actions['Idle'].reset().play();
         currentActionRef.current = actions['Idle'];
 
         animationLoopRef.current = setTimeout(() => {
@@ -43,7 +43,7 @@ export default function Model0Out() {
         currentActionRef.current.fadeOut(0.5);
       }
       if (actions[name]) {
-        actions[name].reset().fadeIn(0.5).play();
+        actions[name].reset().play();
         currentActionRef.current = actions[name];
 
         animationLoopRef.current = setTimeout(() => {

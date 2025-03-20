@@ -61,7 +61,7 @@ export function useNavigation() {
       } else if (item.id === NAV_LIST[3].id) {
         isNavScrollingRef.current = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
-        requestAnimationFrame(() => smoother?.scrollTo('#switch-model', true, `${window.innerHeight * 2}px`));
+        requestAnimationFrame(() => smoother?.scrollTo('#switch-model', true, `${window.innerHeight}px`));
       } else {
         // 其他 正常滚
         isNavScrollingRef.current = true;

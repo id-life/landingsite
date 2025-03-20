@@ -29,30 +29,45 @@ export default function SwitchAnatomyCamera() {
   };
 
   return (
-    <div id="switch-anatomy-camera" className="absolute bottom-32 left-1/2 z-20 -translate-x-1/2 opacity-0">
+    <div id="switch-anatomy-camera" className="absolute bottom-32 left-1/2 z-20 -translate-x-1/2">
       {currentModelType === ModelType.Anatomy && (
         <div className="flex gap-7 bg-white/10 p-3 backdrop-blur">
           {currentModel === PredictionModel.M0 && (
             <>
               <AnatomyM01
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA0)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM02
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA1)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA1 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA1 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM03
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA2)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA2 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA2 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM04
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA3)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA3 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA3 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM05
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA4)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA4 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA4 ? 'fill-red-600' : 'fill-black',
+                )}
               />
             </>
           )}
@@ -60,15 +75,24 @@ export default function SwitchAnatomyCamera() {
             <>
               <AnatomyM11
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA0)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM12
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA5)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA5 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA5 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM13
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA6)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA6 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA6 ? 'fill-red-600' : 'fill-black',
+                )}
               />
             </>
           )}
@@ -76,15 +100,24 @@ export default function SwitchAnatomyCamera() {
             <>
               <AnatomyM21
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA7)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA7 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA7 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM22
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA8)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA8 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA8 ? 'fill-red-600' : 'fill-black',
+                )}
               />
               <AnatomyM23
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA9)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA9 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA9 ? 'fill-red-600' : 'fill-black',
+                )}
               />
             </>
           )}
@@ -92,7 +125,10 @@ export default function SwitchAnatomyCamera() {
             <>
               <AnatomyM31
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA10)}
-                className={clsx('cursor-pointer', currentAnatomyCamera === AnatomyCamera.CAMERA10 ? 'fill-red-600' : 'fill-black')}
+                className={clsx(
+                  'cursor-pointer',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA10 ? 'fill-red-600' : 'fill-black',
+                )}
               />
             </>
           )}
