@@ -76,7 +76,7 @@ export function WorldMapSponsorDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer opacity-0`}
+      className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
       initial="initial"
       whileHover="hover"
       onClick={handleClick}

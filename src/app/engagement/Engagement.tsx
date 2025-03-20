@@ -71,6 +71,10 @@ function Engagement() {
     tl.set(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 0,
     });
+    tl.set('.world-map-dot-content', {
+      opacity: 0,
+      height: 0,
+    });
     const buttons = document.querySelectorAll('.engagement-bottom-button');
     tl.set(buttons, { y: 30, opacity: 0 });
 

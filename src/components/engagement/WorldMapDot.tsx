@@ -63,7 +63,7 @@ export function WorldMapDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible opacity-0`}
+      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
       initial="initial"
       whileHover="hover"
       onClick={(e) => {
@@ -131,7 +131,7 @@ export function WorldMapDotContent({
       y={0}
       width={160}
       className={cn(
-        `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-0 max-h-[42.5rem] flex-col overflow-visible opacity-0`,
+        `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex max-h-[42.5rem] flex-col overflow-visible`,
       )}
     >
       <div

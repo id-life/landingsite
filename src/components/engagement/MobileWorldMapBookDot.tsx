@@ -24,10 +24,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '1.5rem',
+    fontSize: '.75rem',
   },
   hover: {
-    fontSize: '1.625rem',
+    fontSize: '.875rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -48,7 +48,7 @@ const containerVariants: Variants = {
   },
 };
 
-export function WorldMapBookDotPoint({
+export function MobileWorldMapBookDotPoint({
   dot,
   index,
   calcPoint,
@@ -83,9 +83,9 @@ export function WorldMapBookDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width=".75rem" height=".75rem">
+        <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
           <BookSVG
-            className="size-7"
+            className="size-3.5"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -97,7 +97,7 @@ export function WorldMapBookDotPoint({
       <foreignObject x={point.x} y={point.y - 4} width={160} height={12}>
         <motion.p
           variants={labelVariants}
-          className="whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="whitespace-nowrap pl-4 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
           style={{
             transform: 'scale(var(--inverse-scale, 1))',
             transformOrigin: 'top left',
@@ -110,7 +110,7 @@ export function WorldMapBookDotPoint({
   );
 }
 
-export function WorldMapBookDotContent({
+export function MobileWorldMapBookDotContent({
   dot,
   index,
   calcPoint,

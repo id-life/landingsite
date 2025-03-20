@@ -63,3 +63,34 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
 ];
 
 export const VALUE_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'value_page');
+
+export const BACKGROUND_THEME = {
+  LIGHT: 'light',
+  BLACK: 'black',
+  BLACK_RED: 'black-red',
+} as const;
+
+export type ValueOf<T> = T[keyof T];
+
+export type BackgroundTheme = ValueOf<typeof BACKGROUND_THEME>;
+
+export const BACKGROUND_COLORS = {
+  [BACKGROUND_THEME.LIGHT]: {
+    '--gradient-from': '#FFFFFF',
+    '--gradient-to': '#CBD6EA',
+    '--background': '#F0F0F0',
+    '--foreground': '#000000',
+  },
+  [BACKGROUND_THEME.BLACK]: {
+    '--gradient-from': '#000000',
+    '--gradient-to': '#000000',
+    '--background': '#000000',
+    '--foreground': '#FFFFFF',
+  },
+  [BACKGROUND_THEME.BLACK_RED]: {
+    '--gradient-from': '#000000',
+    '--gradient-to': '#C111114C',
+    '--background': '#000000',
+    '--foreground': '#F0F0F0',
+  },
+} as const;
