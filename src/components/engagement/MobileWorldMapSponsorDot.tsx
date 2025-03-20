@@ -23,10 +23,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '.875rem',
+    fontSize: '.625rem',
   },
   hover: {
-    fontSize: '1rem',
+    fontSize: '.75rem',
     transition: {
       duration: 0.3,
       type: 'easeInOut',
@@ -77,14 +77,14 @@ export function MobileWorldMapSponsorDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
-          <SponsorSVG className="size-4" />
+          <SponsorSVG className="size-2.5" />
         </foreignObject>
       </motion.g>
       {/* 标签 */}
       <foreignObject x={point.x} y={point.y - 4} width={100} height={12}>
         <motion.p
           variants={labelVariants}
-          className="w-full whitespace-nowrap pl-4 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
+          className="w-full whitespace-nowrap pl-3 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
         >
           Sponsorship
         </motion.p>
@@ -132,7 +132,7 @@ export function MobileWorldMapSponsorDotContent({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className={cn('absolute left-0 top-0 flex h-9 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
+            className={cn('absolute left-0 top-0 flex h-6 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
           >
             <motion.div
               variants={{
@@ -153,7 +153,7 @@ export function MobileWorldMapSponsorDotContent({
               }}
               className="flex-center relative"
             >
-              {icon && <img src={icon} alt={alt} className="h-7 w-auto" />}
+              {icon && <img src={icon} alt={alt} className="h-4.5 w-auto" />}
             </motion.div>
           </motion.div>
           {/* </a> */}

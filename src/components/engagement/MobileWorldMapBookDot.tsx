@@ -133,9 +133,7 @@ export function MobileWorldMapBookDotContent({
         <foreignObject
           x={point.x}
           y={point.y + 8}
-          className={cn(
-            `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
-          )}
+          className={cn(`world-map-dot-book-content world-map-dot-book-content-${index} flex h-20 flex-col overflow-visible`)}
           onClick={onClick}
         >
           <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto">
