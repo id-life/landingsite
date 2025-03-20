@@ -142,13 +142,13 @@ export function WorldMapDotContent({
         }}
       >
         {title && (
-          <h3 className="text-xl/6 font-semibold capitalize text-white">
+          <h3 className="text-center text-xl/6 font-semibold capitalize text-white">
             <span className="mr-2">{title}</span>
             {period}
           </h3>
         )}
         {imgs?.length ? (
-          <div className="pointer-events-auto -ml-8 -mt-2 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
+          <div className="hide-scrollbar pointer-events-auto -mt-2.5 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
             {imgs.map((img) => (
               <FeatherImg key={img.src} src={img.src} alt={img.alt} />
             ))}

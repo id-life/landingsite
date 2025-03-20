@@ -134,13 +134,15 @@ export const MobileWorldMap = memo(function WorldMapComponent({
         viewBox={`0 0 756 360`}
         className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
       >
-        {regionDotsPoints}
-        {dotsPoints}
-        {bookDotsPoints}
-        {sponsorDotsPoints}
-        {bookDotsContents}
-        {sponsorDotsContents}
-        {dotsContents}
+        <g>
+          {regionDotsPoints}
+          {dotsPoints}
+          {bookDotsPoints}
+          {sponsorDotsPoints}
+          {bookDotsContents}
+          {sponsorDotsContents}
+          {dotsContents}
+        </g>
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="white" stopOpacity="0" />

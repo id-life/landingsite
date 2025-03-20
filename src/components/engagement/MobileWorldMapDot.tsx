@@ -102,29 +102,29 @@ export function MobileWorldMapDotContent({
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   return (
-    <foreignObject
-      x={point.x - 16}
-      y={0}
-      width={160}
-      className={cn(
-        `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-[78vh] max-h-[78vh] flex-col overflow-visible`,
-      )}
-    >
-      <div className={cn('absolute inset-0 top-7 flex h-full w-[50vw] flex-col items-center font-oxanium')}>
-        {title && (
-          <h3 className="w-[55vw] text-base/5 font-semibold capitalize text-white">
-            <span className="mr-2">{title}</span>
-            {period}
-          </h3>
-        )}
-        {imgs?.length ? (
-          <div className="pointer-events-auto -ml-4 -mt-2 flex h-[80vh] grow flex-col overflow-auto pb-3 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
-            {imgs.map((img) => (
-              <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-            ))}
-          </div>
-        ) : null}
-      </div>
-    </foreignObject>
+    <g className={`world-map-dot-content world-map-dot-content-${index}`}>
+      <foreignObject
+        x={point.x}
+        y={0}
+        width="15rem"
+        className={cn(`pointer-events-none flex h-[32vh] flex-col overflow-visible`)}
+      >
+        <div className={cn('absolute inset-0 -left-[30vw] top-7 flex h-full w-[30vw] flex-col items-center font-oxanium')}>
+          {title && (
+            <h3 className="scale-50 text-center text-base/5 font-semibold capitalize text-white">
+              <span className="mr-2">{title}</span>
+              {period}
+            </h3>
+          )}
+          {imgs?.length ? (
+            <div className="hide-scrollbar pointer-events-auto -mt-2.5 flex grow flex-col overflow-auto pb-3 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
+              {imgs.map((img) => (
+                <FeatherImg key={img.src} src={img.src} alt={img.alt} className="w-full" />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </foreignObject>
+    </g>
   );
 }
