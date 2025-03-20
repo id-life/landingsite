@@ -1,15 +1,12 @@
 'use client';
 
-import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
-import { cn } from '@/utils';
-// import DottedMap from 'dotted-map';
-
 import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
+import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
+import { cn } from '@/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useEvent, useMeasure } from 'react-use';
+import { useMeasure } from 'react-use';
 import { WorldMapSVG } from '../svg';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
@@ -105,39 +102,6 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       );
     });
   }, [calcPoint, sponsorDots]);
-  const updateSVGScale = useCallback(() => {
-    console.log('updateSVGScale');
-    const svg = svgRef.current;
-    if (!svg) return;
-    // 计算SVG当前的缩放比例
-    const svgRect = svg.getBoundingClientRect();
-    // const winWidth = window.innerWidth;
-    const svgWidth = svgRect.width;
-    const svgScale = svgWidth / svg.viewBox.baseVal.width;
-    console.log({ svgScale, svgWidth, svgRect });
-    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-    // console.log({ svgScale, mapScale, winWidth, svgWidth });
-    // 设置地图缩放适配
-    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
-    // 设置反向缩放CSS变量
-    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
-  }, []);
-
-  useEvent('resize', throttle(updateSVGScale, 100));
-
-  useEffect(() => {
-    if (!globalLoaded) return;
-    updateSVGScale();
-  }, [globalLoaded, updateSVGScale]);
-
-  useEffect(() => {
-    if (svgRef.current && mapWidth > 0) {
-      console.log('SVG refs available, updating scale');
-      requestAnimationFrame(() => {
-        updateSVGScale();
-      });
-    }
-  }, [mapWidth, updateSVGScale]);
 
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
@@ -155,28 +119,20 @@ export const MobileWorldMap = memo(function WorldMapComponent({
 
   return (
     <div
-      className="relative mt-5 aspect-[63/30] h-[calc(100svh_-_1.25rem)] w-full justify-center overflow-auto bg-black/20 font-sans"
+      className="world-map-container relative mt-5 aspect-[63/30] h-[calc(100svh_-_1.25rem)] w-full justify-center overflow-auto bg-black/20 font-sans opacity-0"
       onClick={handleBackgroundClick}
     >
       <WorldMapSVG
         ref={ref}
         className={cn(
-          'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
         )}
-      />
-      <WorldMapSVG
-        className={cn(
-          'world-map-img pointer-events-none absolute top-0 h-full w-20 select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-        )}
-        style={{
-          left: `${mapWidth}px`,
-        }}
       />
       <svg
         id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute top-0 h-full select-none overflow-visible"
+        className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
       >
         {regionDotsPoints}
         {dotsPoints}

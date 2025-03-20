@@ -87,35 +87,6 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: -8,
-    lng: -88,
-    label: 'Roatan',
-    country: 'Hondurus',
-    period: '2024/01',
-    key: 'roatan_vitalia_2024', // Unique identifier for the dot
-    title: 'Vitalia @ Roatan, Honduras',
-    contentTransformStyle: 'translate(-85%, 0)',
-    imgs: [
-      {
-        src: 'https://cdn.id.life/engagement/Honduras-1.webp',
-        alt: 'Honduras-1.webp',
-      },
-      {
-        src: 'https://cdn.id.life/engagement/Honduras-2.webp',
-        alt: 'Honduras-2.webp',
-      },
-      {
-        src: 'https://cdn.id.life/engagement/Honduras-3.webp',
-        alt: 'Honduras-3.webp',
-      },
-      {
-        src: 'https://cdn.id.life/engagement/Honduras-4.webp',
-        alt: 'Honduras-4.webp',
-      },
-    ],
-  },
-  {
-    index: 2,
     lat: 3,
     lng: 104,
     country: 'Thailand',
@@ -140,7 +111,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
   },
   {
-    index: 3,
+    index: 2,
     lat: -13,
     lng: 103,
     // label: 'Singapore',
@@ -169,6 +140,35 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       {
         src: 'https://cdn.id.life/engagement/Singapore-5.webp',
         alt: 'Singapore-5.webp',
+      },
+    ],
+  },
+  {
+    index: 3,
+    lat: -8,
+    lng: -88,
+    label: 'Roatan',
+    country: 'Hondurus',
+    period: '2024/01',
+    key: 'roatan_vitalia_2024', // Unique identifier for the dot
+    title: 'Vitalia @ Roatan, Honduras',
+    contentTransformStyle: 'translate(-85%, 0)',
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/Honduras-1.webp',
+        alt: 'Honduras-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Honduras-2.webp',
+        alt: 'Honduras-2.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Honduras-3.webp',
+        alt: 'Honduras-3.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Honduras-4.webp',
+        alt: 'Honduras-4.webp',
       },
     ],
   },

@@ -63,7 +63,7 @@ export function MobileWorldMapDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
+      className={`world-map-dot opacity-0 world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
       initial="initial"
       whileHover="hover"
       onClick={(e) => {
@@ -74,24 +74,12 @@ export function MobileWorldMapDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={16} height={16}>
-          <MeetingSVG
-            className="size-5"
-            style={{
-              transform: 'scale(var(--inverse-scale, 1))',
-              transformOrigin: 'top left',
-            }}
-          />
+          <MeetingSVG className="size-5" />
         </foreignObject>
       </motion.g>
       {/* 标签 */}
       <motion.foreignObject variants={labelVariants} x={point.x} y={point.y - 5} width={140} height={28}>
-        <div
-          className="flex flex-col items-start pl-5.5 font-oxanium leading-5 text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
-        >
+        <div className="flex flex-col items-start pl-5.5 font-oxanium leading-5 text-white">
           {country && <span className="font-semibold">{country}</span>}
           {label}
         </div>
@@ -122,13 +110,7 @@ export function MobileWorldMapDotContent({
         `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex h-[78vh] max-h-[78vh] flex-col overflow-visible`,
       )}
     >
-      <div
-        className={cn('absolute inset-0 top-7 flex h-full w-[50vw] flex-col items-center font-oxanium')}
-        style={{
-          transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
-          transformOrigin: 'top left',
-        }}
-      >
+      <div className={cn('absolute inset-0 top-7 flex h-full w-[50vw] flex-col items-center font-oxanium')}>
         {title && (
           <h3 className="w-[55vw] text-base/5 font-semibold capitalize text-white">
             <span className="mr-2">{title}</span>

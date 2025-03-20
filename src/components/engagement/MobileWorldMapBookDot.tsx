@@ -76,7 +76,7 @@ export function MobileWorldMapBookDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer overflow-visible`}
+      className={`world-map-dot-book opacity-0 world-map-dot-book-${index} pointer-events-auto cursor-pointer overflow-visible`}
       initial="initial"
       whileHover="hover"
       onClick={handleClick}
@@ -84,12 +84,7 @@ export function MobileWorldMapBookDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
-          <div
-            style={{
-              transform: 'scale(var(--inverse-scale, 1))',
-              transformOrigin: 'top left',
-            }}
-          >
+          <div>
             <BookSVG className="size-5" />
           </div>
         </foreignObject>
@@ -99,10 +94,6 @@ export function MobileWorldMapBookDotPoint({
         <motion.p
           variants={labelVariants}
           className="whitespace-nowrap pl-5.5 align-middle font-oxanium font-semibold capitalize leading-5 text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
         >
           {title}
         </motion.p>
@@ -152,10 +143,6 @@ export function MobileWorldMapBookDotContent({
               animate="visible"
               exit="hidden"
               className={cn('absolute left-0 top-0 flex w-[50vw] flex-col items-center overflow-hidden font-oxanium')}
-              style={{
-                transform: `scale(var(--inverse-scale, 1))`,
-                transformOrigin: 'top left',
-              }}
             >
               <motion.div
                 variants={{

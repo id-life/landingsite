@@ -69,7 +69,7 @@ export function MobileWorldMapSponsorDotPoint({
 
   return (
     <motion.g
-      className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
+      className={`world-map-dot-sponsor opacity-0 world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
       initial="initial"
       whileHover="hover"
       onClick={handleClick}
@@ -77,13 +77,7 @@ export function MobileWorldMapSponsorDotPoint({
     >
       <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
-          <SponsorSVG
-            className="size-4"
-            style={{
-              transform: 'scale(var(--inverse-scale, 1))',
-              transformOrigin: 'top left',
-            }}
-          />
+          <SponsorSVG className="size-4" />
         </foreignObject>
       </motion.g>
       {/* 标签 */}
@@ -91,10 +85,6 @@ export function MobileWorldMapSponsorDotPoint({
         <motion.p
           variants={labelVariants}
           className="w-full whitespace-nowrap pl-4 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
         >
           Sponsorship
         </motion.p>
@@ -143,10 +133,6 @@ export function MobileWorldMapSponsorDotContent({
             animate="visible"
             exit="hidden"
             className={cn('absolute left-0 top-0 flex h-9 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
-            style={{
-              transform: `scale(var(--inverse-scale, 1))`,
-              transformOrigin: 'top left',
-            }}
           >
             <motion.div
               variants={{

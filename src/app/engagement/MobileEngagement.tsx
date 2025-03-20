@@ -1,37 +1,20 @@
-import {
-  currentPageAtom,
-  currentPageIndexAtom,
-  innerPageIndexAtom,
-  innerPageNavigateToAtom,
-  mobileCurrentPageAtom,
-  mobileCurrentPageIndexAtom,
-} from '@/atoms';
-import { globalLoadedAtom } from '@/atoms/geo';
+import { mobileCurrentPageAtom } from '@/atoms';
 import MobileWorldMap from '@/components/engagement/MobileWorldMap';
-import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { useMobileEngagementAnim } from '@/hooks/anim/useMobileEngagementAnim';
 import { cn } from '@/utils';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { debounce } from 'lodash-es';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { useAtomValue } from 'jotai';
+import { memo, useEffect } from 'react';
 
 function MobileEngagement() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  // const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  // const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
-  // const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
-  // const lastIndexRef = useRef<number>(0);
-  // useEffect(() => {
-  //   if (currentPageIndex !== 2 || innerPageNavigateTo === null) return;
-  //   jumpTo(innerPageNavigateTo, () => {
-  //     setInnerPageIndex(innerPageNavigateTo);
-  //     setInnerPageNavigateTo(null);
-  //   });
-  // }, [currentPageIndex, innerPageNavigateTo, jumpTo, setInnerPageIndex, setInnerPageNavigateTo]);
+  const { enterAnimate } = useMobileEngagementAnim();
+
+  useEffect(() => {
+    if (currentPage?.id !== NAV_LIST[2].id) return;
+    enterAnimate();
+  }, [currentPage]);
 
   return (
     <div
