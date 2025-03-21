@@ -103,17 +103,17 @@ export function WorldMapDotPoint({
         </circle>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={10}>
+      <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
         <motion.p
           variants={labelVariants}
           transition={{ duration: 0.3 }}
-          className="flex origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
+          className="relative origin-top-left overflow-visible whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
         >
           {label ? `${label}, ` : ''}
           {country}
-          <span className="text-purple bg-purple/20 flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl">
+          <span className="text-purple bg-purple/20 absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl">
             <MeetingSVG className="fill-purple size-5" />
-            Sponsorship
+            Conference
           </span>
         </motion.p>
       </foreignObject>
