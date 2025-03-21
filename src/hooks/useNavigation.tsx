@@ -14,6 +14,7 @@ export function useNavigation() {
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
+
   useGSAP(() => {
     ScrollTrigger.create({
       trigger: `#${NAV_LIST[1].id}`,
@@ -52,10 +53,10 @@ export function useNavigation() {
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          st.scroll(st.start + (st.end - st.start) * engagementProgressMap[0]);
-          const animation = st.animation;
-          if (!animation) return;
-          animation.progress(engagementProgressMap[0]);
+          gsap.to(window, { scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
+          // const animation = st.animation;
+          // if (!animation) return;
+          // animation.progress(engagementProgressMap[0]);
         });
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       } else if (item.id === NAV_LIST[3].id) {
@@ -70,7 +71,7 @@ export function useNavigation() {
       }
 
       setCurrentPage(item);
-      if (id === NAV_LIST[2].id || id === NAV_LIST[4].id) {
+      if (id === NAV_LIST[4].id) {
         setInnerPageIndex(0);
       } else {
         setInnerPageTotal(0);

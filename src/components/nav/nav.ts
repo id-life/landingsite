@@ -24,3 +24,6 @@ export const NAV_LIST: NavItem[] = [
     title: 'value 信念',
   },
 ];
+
+export const HAS_INNER_PAGE_LIST = [NAV_LIST[4].id] as const; // 有小进度条的
+export const BLACK_ARROW_LIST = [NAV_LIST[1].id, NAV_LIST[2].id] as const; // 深色背景箭头样式不一样

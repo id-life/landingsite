@@ -152,7 +152,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/01',
     key: 'roatan_vitalia_2024', // Unique identifier for the dot
     title: 'Vitalia @ Roatan, Honduras',
-    contentTransformStyle: 'translate(-85%, 5%)',
+    contentTransformStyle: 'translate(85%, 5%)',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',

@@ -1,11 +1,10 @@
+import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
 import { MapBookDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { cn } from '@/utils';
+import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
-import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
-import { useAtom } from 'jotai';
 
 const pointVariants: Variants = {
   initial: {
@@ -57,7 +56,6 @@ export function WorldMapBookDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, lat, lng } = dot;
-  const { jumpTo } = useEngagementJumpTo();
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -66,11 +64,6 @@ export function WorldMapBookDotPoint({
     e.stopPropagation(); // 防止冒泡
     const newState = toggleDotIndex(index, activeBookDot);
     setActiveBookDot(newState);
-
-    // // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
-    // if (newState !== null && activeBookDot !== newState) {
-    //   jumpTo(-1);
-    // }
   };
 
   return (

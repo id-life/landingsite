@@ -1,11 +1,10 @@
-import { activeBookDotAtom, activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
-import { MapBookDotData, MapSponsorDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
+import { MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useMemo, useState } from 'react';
-import { ArrowSVG, SponsorSVG } from '../svg';
+import { useMemo } from 'react';
+import { SponsorSVG } from '../svg';
 
 const pointVariants: Variants = {
   initial: {
@@ -57,7 +56,6 @@ export function WorldMapSponsorDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { lat, lng } = dot;
-  const { jumpTo } = useEngagementJumpTo();
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -66,11 +64,6 @@ export function WorldMapSponsorDotPoint({
     e.stopPropagation(); // 防止冒泡
     const newIndex = toggleDotIndex(index, activeSponsorDot);
     setActiveSponsorDot(newIndex);
-
-    // // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
-    // if (newIndex !== null && activeSponsorDot !== newIndex) {
-    //   jumpTo(-1);
-    // }
   };
 
   return (

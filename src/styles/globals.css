@@ -89,7 +89,7 @@
     overflow: hidden;
 
     &.engagement {
-      min-height: 400svh;
+      min-height: 380svh;
     }
     &.value {
       min-height: 800svh;

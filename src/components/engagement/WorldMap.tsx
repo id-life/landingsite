@@ -3,18 +3,18 @@
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 // import DottedMap from 'dotted-map';
-
-import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { globalLoadedAtom } from '@/atoms/geo';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEvent, useMeasure } from 'react-use';
 import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
-import { globalLoadedAtom } from '@/atoms/geo';
-import { useEvent, useMeasure } from 'react-use';
+import { currentPageAtom } from '@/atoms';
+import { NAV_LIST } from '../nav/nav';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -34,10 +34,10 @@ export const WorldMap = memo(function WorldMapComponent({
   const svgRef = useRef<SVGSVGElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
+  const currentPage = useAtomValue(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const { jumpTo } = useEngagementJumpTo();
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
-
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -174,15 +174,18 @@ export const WorldMap = memo(function WorldMapComponent({
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
     setActiveSponsorDot(null);
-    jumpTo(-1);
-  }, [jumpTo, setActiveBookDot, setActiveSponsorDot]);
+    setActiveMeetingDot(null);
+  }, [setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
   // 确保在组件卸载时重置状态
   useEffect(() => {
-    return () => {
+    if (!globalLoaded) return;
+    if (currentPage?.id !== NAV_LIST[2].id) {
       setActiveBookDot(null);
-    };
-  }, [setActiveBookDot]);
+      setActiveSponsorDot(null);
+      setActiveMeetingDot(null);
+    }
+  }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
   return (
     <div
