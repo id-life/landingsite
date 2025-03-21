@@ -1,14 +1,15 @@
 import { currentPageAtom } from '@/atoms';
+import { currentModelAtom, PredictionModel } from '@/atoms/twin';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useSetAtom } from 'jotai';
-import { memo, useRef } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useEffect, useRef } from 'react';
 
 function Twin() {
-  const setCurrentPage = useSetAtom(currentPageAtom);
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
     triggerId: 'twin-scroll-trigger',
@@ -18,6 +19,7 @@ function Twin() {
     },
     isUp: true,
   });
+  const setCurrentModel = useSetAtom(currentModelAtom);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -51,6 +53,20 @@ function Twin() {
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
     tl.to('#twin-three-wrapper', { opacity: 0, duration: 2, delay: 1 });
   }, []);
+
+  useEffect(() => {
+    if (currentPage !== NAV_LIST[3]) {
+      resetModel();
+    }
+  }, [currentPage]);
+
+  const resetModel = () => {
+    const list = gsap.utils.toArray('.twin-title-item');
+    gsap.to(list, { left: '-80rem' });
+    gsap.to('.twin-title', { opacity: 1 });
+    gsap.to('#switch-skin', { bottom: '15rem' });
+    setCurrentModel(PredictionModel.M0);
+  };
 
   return (
     <div id={NAV_LIST[3].id} className="page-container twin">
