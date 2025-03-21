@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
@@ -56,14 +57,12 @@ export function WorldMapSponsorDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { lat, lng, title } = dot;
-  const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
-
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { handleClickPoint } = useEngagementClickPoint();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    const newIndex = toggleDotIndex(index, activeSponsorDot);
-    setActiveSponsorDot(newIndex);
+    handleClickPoint('sponsor', index);
   };
 
   return (
@@ -98,7 +97,7 @@ export function WorldMapSponsorDotPoint({
         </circle>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={170} height={10}>
+      <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
         <motion.p
           variants={labelVariants}
           className="flex w-full origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"

@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
@@ -56,14 +57,12 @@ export function WorldMapBookDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, lat, lng } = dot;
-  const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
-
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
+  const { handleClickPoint } = useEngagementClickPoint();
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    const newState = toggleDotIndex(index, activeBookDot);
-    setActiveBookDot(newState);
+    handleClickPoint('book', index);
   };
 
   return (
@@ -98,7 +97,7 @@ export function WorldMapBookDotPoint({
         </circle>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={170} height={10}>
+      <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
         <motion.p
           transition={{ duration: 0.3 }}
           variants={labelVariants}

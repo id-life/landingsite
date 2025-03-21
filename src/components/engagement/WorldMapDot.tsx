@@ -6,6 +6,7 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
@@ -58,19 +59,16 @@ export function WorldMapDotPoint({
 }) {
   const { country, label, lat, lng } = dot;
 
-  const [activeMeetingDot, setActiveMeetingDot] = useAtom(activeMeetingDotAtom);
+  const { activeMeetingDot, handleClickPoint } = useEngagementClickPoint();
+
   const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation(); // 防止冒泡
-      const newState = toggleDotIndex(index, activeMeetingDot);
-      setActiveMeetingDot(newState);
-    },
-    [index, activeMeetingDot, setActiveMeetingDot],
-  );
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 防止冒泡
+    handleClickPoint('meeting', index);
+  };
 
   return (
     <motion.g
@@ -105,7 +103,7 @@ export function WorldMapDotPoint({
         </circle>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width="7.5rem" height={10}>
+      <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={10}>
         <motion.p
           variants={labelVariants}
           transition={{ duration: 0.3 }}
