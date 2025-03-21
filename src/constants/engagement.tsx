@@ -178,6 +178,7 @@ export type MapBookDotData = {
   lat: number;
   lng: number;
   title?: string;
+  bookTitle?: string;
   desc?: string; // 灰字描述
   key?: string;
   coverUrl?: string;
@@ -192,8 +193,9 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     lat: 20,
     lng: -114,
     key: 'publications-01',
-    title: 'The Network State',
-    desc: 'Read Chinese Ver. by Boyang', // 描述
+    title: 'California, USA',
+    bookTitle: 'The Network State',
+    desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
@@ -202,8 +204,9 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     lat: -24,
     lng: 136,
     key: 'publications-02',
-    title: 'bio/acc manifesto',
-    desc: 'Read Chinese Ver. by Boyang', // 描述
+    title: 'Network State',
+    bookTitle: 'bio/acc manifesto',
+    desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接

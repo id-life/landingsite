@@ -14,6 +14,7 @@ import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot'
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 import { globalLoadedAtom } from '@/atoms/geo';
+import { useEvent, useMeasure } from 'react-use';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -35,6 +36,8 @@ export const WorldMap = memo(function WorldMapComponent({
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const { jumpTo } = useEngagementJumpTo();
+  const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
+
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -134,33 +137,38 @@ export const WorldMap = memo(function WorldMapComponent({
     });
   }, [calcPoint, sponsorDots]);
 
-  // 添加useEffect来计算和设置反向缩放
-  useEffect(() => {
-    if (!globalLoaded) return;
+  // 创建可重用的更新比例函数
+  const updateSVGScale = useCallback(() => {
     const svg = svgRef.current;
     if (!svg) return;
+    // 计算SVG当前的缩放比例
+    const svgRect = svg.getBoundingClientRect();
+    // const winWidth = window.innerWidth;
+    const svgWidth = svgRect.width;
+    const svgScale = svgWidth / svg.viewBox.baseVal.width;
+    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
+    // console.log({ svgScale, mapScale, winWidth, svgWidth });
+    // 设置地图缩放适配
+    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
+    // 设置反向缩放CSS变量
+    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
+  }, [svgRef]);
 
-    // 创建可重用的更新比例函数
-    const updateScale = () => {
-      // 计算SVG当前的缩放比例
-      const svgRect = svg.getBoundingClientRect();
-      // const winWidth = window.innerWidth;
-      const svgWidth = svgRect.width;
-      const svgScale = svgWidth / svg.viewBox.baseVal.width;
-      // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-      // console.log({ svgScale, mapScale, winWidth, svgWidth });
-      // 设置地图缩放适配
-      document.documentElement.style.setProperty('--map-scale', `${0.95}`);
-      // 设置反向缩放CSS变量
-      document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
-    };
+  useEvent('resize', throttle(updateSVGScale, 100));
 
-    window.addEventListener('resize', throttle(updateScale, 100));
-    // 初始计算
-    setTimeout(updateScale, 100); // 确保SVG完全渲染
+  useEffect(() => {
+    if (!globalLoaded) return;
+    updateSVGScale();
+  }, [globalLoaded, updateSVGScale]);
 
-    return () => window.removeEventListener('resize', updateScale);
-  }, [globalLoaded]);
+  useEffect(() => {
+    if (svgRef.current && mapWidth > 0) {
+      console.log('SVG refs available, updating scale');
+      requestAnimationFrame(() => {
+        updateSVGScale();
+      });
+    }
+  }, [mapWidth, updateSVGScale]);
 
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
@@ -200,17 +208,18 @@ export const WorldMap = memo(function WorldMapComponent({
         loading="eager"
       /> */}
       <WorldMapSVG
+        ref={ref}
         className={cn(
           'world-map-img pointer-events-none absolute -left-40 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
       />
-      <WorldMapSVG
+      {/* <WorldMapSVG
         className={cn(
           'world-map-img pointer-events-none absolute left-[calc(100%_-_10rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
-      />
+      /> */}
       <svg
         id="world-map-svg"
         ref={svgRef}

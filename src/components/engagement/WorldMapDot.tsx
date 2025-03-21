@@ -24,13 +24,12 @@ const pointVariants: Variants = {
 const labelVariants: Variants = {
   initial: {
     fontSize: '1.25rem',
+    transform: 'scale(var(--inverse-scale, 1))',
   },
   hover: {
     fontSize: '1.5rem',
-    transition: {
-      duration: 0.3,
-      type: 'easeInOut',
-    },
+    y: '-0.5rem',
+    transform: 'scale(var(--inverse-scale, 1)) translateY(-0.1875rem)',
   },
 };
 
@@ -73,7 +72,7 @@ export function WorldMapDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width=".625rem" height=".625rem">
+        <foreignObject x={point.x} y={point.y} width={8} height={8}>
           <MeetingSVG
             className="size-6"
             style={{
@@ -96,18 +95,16 @@ export function WorldMapDotPoint({
           </circle>
         </motion.g> */}
       {/* 标签 */}
-      <motion.foreignObject variants={labelVariants} x={point.x} y={point.y - 5} width={140} height={28}>
-        <div
-          className="flex flex-col items-start pl-6 font-oxanium leading-[1.1] text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
+      <foreignObject x={point.x} y={point.y} width="7.5rem" height={10}>
+        <motion.p
+          variants={labelVariants}
+          transition={{ duration: 0.3 }}
+          className="origin-[top_left] overflow-visible whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
-          {country && <span className="mr-2 font-semibold">{country}</span>}
-          {label}
-        </div>
-      </motion.foreignObject>
+          {label ? `${label}, ` : ''}
+          {country}
+        </motion.p>
+      </foreignObject>
     </motion.g>
   );
 }

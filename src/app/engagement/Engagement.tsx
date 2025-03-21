@@ -208,14 +208,7 @@ function Engagement() {
 
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
-      <div
-        id="map-container"
-        className="relative flex h-[100svh] flex-col items-center justify-center"
-        style={{
-          transform: `scale(var(--map-scale))`,
-          // transformOrigin: 'center',
-        }}
-      >
+      <div id="map-container" className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap
           dots={WORLD_MAP_DOTS}
           regionDots={WORLD_MAP_REGION_DOTS}

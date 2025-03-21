@@ -24,14 +24,13 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '1.5rem',
+    fontSize: '1.25rem',
+    transform: 'scale(var(--inverse-scale, 1))',
   },
   hover: {
-    fontSize: '1.625rem',
-    transition: {
-      duration: 0.3,
-      type: 'easeInOut',
-    },
+    fontSize: '1.5rem',
+    y: '-0.5rem',
+    transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
   },
 };
 
@@ -83,9 +82,9 @@ export function WorldMapBookDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width=".75rem" height=".75rem">
+        <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
           <BookSVG
-            className="size-7"
+            className="size-6"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -94,14 +93,11 @@ export function WorldMapBookDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={160} height={12}>
+      <foreignObject x={point.x} y={point.y - 4.5} width={80} height={10}>
         <motion.p
+          transition={{ duration: 0.3 }}
           variants={labelVariants}
-          className="whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
+          className="origin-[top_left] whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
           {title}
         </motion.p>
@@ -119,7 +115,7 @@ export function WorldMapBookDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, desc, coverUrl, videoUrl, lat, lng, link } = dot;
+  const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const isActive = activeBookDot === index;
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -150,7 +146,7 @@ export function WorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              className={cn('absolute -left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
               style={{
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
@@ -205,6 +201,7 @@ export function WorldMapBookDotContent({
                 }}
                 className="flex cursor-pointer flex-col items-center gap-1"
               >
+                <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
                 <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
                 <p className="text-xs/3 text-gray-350">{desc}</p>
               </motion.div>

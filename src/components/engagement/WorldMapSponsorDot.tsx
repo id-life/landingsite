@@ -25,13 +25,12 @@ const pointVariants: Variants = {
 const labelVariants: Variants = {
   initial: {
     fontSize: '1.25rem',
+    transform: 'scale(var(--inverse-scale, 1))',
   },
   hover: {
-    fontSize: '1.375rem',
-    transition: {
-      duration: 0.3,
-      type: 'easeInOut',
-    },
+    fontSize: '1.5rem',
+    y: '-0.5rem',
+    transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
   },
 };
 
@@ -83,9 +82,9 @@ export function WorldMapSponsorDotPoint({
       variants={containerVariants}
     >
       <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width=".625rem" height=".625rem">
+        <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
           <SponsorSVG
-            className="size-5"
+            className="size-6"
             style={{
               transform: 'scale(var(--inverse-scale, 1))',
               transformOrigin: 'top left',
@@ -94,14 +93,10 @@ export function WorldMapSponsorDotPoint({
         </foreignObject>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 5} width={100} height={10}>
+      <foreignObject x={point.x} y={point.y - 4} width={80} height={10}>
         <motion.p
           variants={labelVariants}
-          className="w-full whitespace-nowrap pl-6 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
-          style={{
-            transform: 'scale(var(--inverse-scale, 1))',
-            transformOrigin: 'top left',
-          }}
+          className="w-full origin-[top_left] whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
           Sponsorship
         </motion.p>
