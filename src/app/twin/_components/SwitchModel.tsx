@@ -26,10 +26,10 @@ export default function SwitchModel() {
 
   return (
     <div id="switch-model" className="absolute right-32 top-50 z-20 grid gap-5">
-      <div className="relative cursor-pointer p-1" onClick={() => handleSwitchModel(PredictionModel.M0)}>
+      <div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(
-            'absolute left-0 top-0 w-full',
+            'absolute left-0 top-0 h-auto w-full',
             currentModel === PredictionModel.M0 ? 'stroke-red-600' : 'stroke-black',
           )}
         />
