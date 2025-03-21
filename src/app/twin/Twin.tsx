@@ -78,10 +78,10 @@ function Twin() {
           <img src="/svgs/twin/title-page.svg" alt="" />
         </div>
         <div className="twin-title absolute bottom-20 right-32 text-right text-base font-medium">
-          <p>- High-Precision Custom Digital Twin Creation</p>
-          <p>- AI Health Prediction Clones</p>
+          <p>- High-Precision Digital Twin Model Creation</p>
+          <p>- Predictive Models</p>
           <p>- Long-Term Health Tracking & Personalized Guidance</p>
-          <p>- Continuous Digital Twin Upgrades & Optimization</p>
+          <p>- Progressive Digital Twin Refinement & Optimization</p>
           <p>高精度数字孪生/AI预测克隆体/健康跟踪与个性化指导/持续升级和优化</p>
         </div>
         <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-64">
@@ -90,9 +90,9 @@ function Twin() {
         <div className="twin-title-item twin-title-M0 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">Appearance & Biomarkers 外形采集&健康数据</p>
           <p className="mt-5 text-base font-medium">
-            Create from Personal Biomarkers & Generate Clones Based on Time, Environment, and Habits.
+            Precision Digital Clones: Generated from Biomarkers & Environmental Contexts.
           </p>
-          <p className="mt-2 text-base font-medium">根据个人生物指标创建 & 根据时间、环境和习惯生成克隆</p>
+          <p className="mt-2 text-base font-medium">根据个人生物指标创建本体 & 根据时间、环境和习惯生成克隆</p>
         </div>
         <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-64">
           <img src="/svgs/twin/title-clone-01.svg" alt="" />
