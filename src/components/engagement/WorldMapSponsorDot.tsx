@@ -13,9 +13,9 @@ const pointVariants: Variants = {
   },
   hover: {
     scale: 1.2,
-    rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
+    // rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
     transition: {
-      rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
+      // rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
       scale: { duration: 0.3 },
     },
   },
@@ -55,7 +55,7 @@ export function WorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { lat, lng } = dot;
+  const { lat, lng, title } = dot;
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -74,7 +74,7 @@ export function WorldMapSponsorDotPoint({
       onClick={handleClick}
       variants={containerVariants}
     >
-      <motion.g variants={pointVariants}>
+      {/* <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
           <SponsorSVG
             className="size-6"
@@ -84,14 +84,30 @@ export function WorldMapSponsorDotPoint({
             }}
           />
         </foreignObject>
+      </motion.g> */}
+      {/* 点 */}
+      <motion.g variants={pointVariants}>
+        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+          <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+          <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+          <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+          <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+        </circle>
       </motion.g>
       {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={80} height={10}>
+      <foreignObject x={point.x} y={point.y - 4} width={170} height={10}>
         <motion.p
           variants={labelVariants}
-          className="w-full origin-top-left whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.2] text-white"
+          className="flex w-full origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
         >
-          Sponsorship
+          {title}
+          <span className="text-orange bg-orange/20 flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl">
+            <SponsorSVG className="fill-orange size-5" />
+            Sponsorship
+          </span>
         </motion.p>
       </foreignObject>
     </motion.g>

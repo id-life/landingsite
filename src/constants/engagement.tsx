@@ -64,7 +64,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     label: 'Shanghai',
     period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    title: 'The 5th TIMEPIE LONGEVITY FORUM', //上海timepie
+    title: 'The 5th Timepie Longevity Forum', //上海timepie
     contentTransformStyle: 'translate(-85%, 0)',
     imgs: [
       {
@@ -116,7 +116,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     lng: 103,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
-    period: '2025',
+    period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum',
     contentTransformStyle: 'translate(-85%, 8%)',
@@ -193,7 +193,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     lat: 20,
     lng: -114,
     key: 'publications-01',
-    title: 'California, USA',
+    title: 'Stanford, CA, USA',
     bookTitle: 'The Network State',
     desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
@@ -201,8 +201,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
   },
   {
-    lat: -24,
-    lng: 136,
+    lat: -14,
+    lng: -18,
     key: 'publications-02',
     title: 'Network State',
     bookTitle: 'bio/acc manifesto',
@@ -225,31 +225,37 @@ export type MapSponsorDotData = {
   icon?: string;
   iconClass?: string;
   link?: string; // 跳转链接
+  title: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
     lat: 45,
     lng: -124,
+    title: 'Berkeley, CA, USA',
     key: 'sponsor-01',
     alt: 'VITALIST BAY',
     icon: '/imgs/engagement/sponsor-01.webp',
     containerClass: 'w-[13.5rem]',
+    link: '',
   },
   {
     lat: 26,
     lng: 98,
+    title: 'Cloud, China',
     key: 'sponsor-02',
     alt: 'ETHPanda',
     icon: '/imgs/engagement/sponsor-02.webp',
     containerClass: 'w-[14.5rem]',
+    link: '',
   },
   {
     lat: 49,
     lng: -1,
+    title: 'Oxford, UK',
     key: 'sponsor-03',
     alt: 'OXFORD LONGEVITY',
     icon: '/imgs/engagement/sponsor-03.webp',
     containerClass: 'w-[18.75rem]',
-    // iconClass: 'w-[14.375rem]',
+    link: '',
   },
 ];
