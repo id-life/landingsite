@@ -221,7 +221,9 @@ export type MapSponsorDotData = {
   lng: number;
   alt?: string; // 灰字描述
   key?: string;
+  containerClass?: string;
   icon?: string;
+  iconClass?: string;
   link?: string; // 跳转链接
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
@@ -231,6 +233,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     key: 'sponsor-01',
     alt: 'VITALIST BAY',
     icon: '/imgs/engagement/sponsor-01.webp',
+    containerClass: 'w-[13.5rem]',
   },
   {
     lat: 26,
@@ -238,6 +241,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     key: 'sponsor-02',
     alt: 'ETHPanda',
     icon: '/imgs/engagement/sponsor-02.webp',
+    containerClass: 'w-[14.5rem]',
   },
   {
     lat: 49,
@@ -245,5 +249,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     key: 'sponsor-03',
     alt: 'OXFORD LONGEVITY',
     icon: '/imgs/engagement/sponsor-03.webp',
+    containerClass: 'w-[18.75rem]',
+    // iconClass: 'w-[14.375rem]',
   },
 ];

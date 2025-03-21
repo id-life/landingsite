@@ -97,7 +97,7 @@ export function WorldMapBookDotPoint({
         <motion.p
           transition={{ duration: 0.3 }}
           variants={labelVariants}
-          className="origin-[top_left] whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
+          className="origin-top-left whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
           {title}
         </motion.p>

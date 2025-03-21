@@ -99,7 +99,7 @@ export function WorldMapDotPoint({
         <motion.p
           variants={labelVariants}
           transition={{ duration: 0.3 }}
-          className="origin-[top_left] overflow-visible whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
+          className="origin-top-left overflow-visible whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
           {label ? `${label}, ` : ''}
           {country}

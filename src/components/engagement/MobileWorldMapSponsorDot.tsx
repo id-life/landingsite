@@ -132,8 +132,11 @@ export function MobileWorldMapSponsorDotContent({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className={cn('absolute left-0 top-0 flex h-6 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
+            className={cn(
+              'absolute left-0 top-0 flex h-6 flex-col items-start gap-5 overflow-hidden bg-gray-700/50 px-8 py-5 pt-1.5 font-oxanium backdrop-blur-3xl',
+            )}
           >
+            <h4 className="text-xl/6 font-semibold capitalize text-white">Sponsorship</h4>
             <motion.div
               variants={{
                 hidden: {

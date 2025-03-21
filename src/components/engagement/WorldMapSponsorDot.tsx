@@ -96,7 +96,7 @@ export function WorldMapSponsorDotPoint({
       <foreignObject x={point.x} y={point.y - 4} width={80} height={10}>
         <motion.p
           variants={labelVariants}
-          className="w-full origin-[top_left] whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.2] text-white"
+          className="w-full origin-top-left whitespace-nowrap pl-7 align-middle font-oxanium font-semibold capitalize leading-[1.2] text-white"
         >
           Sponsorship
         </motion.p>
@@ -114,7 +114,7 @@ export function WorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { alt, icon, link, lat, lng } = dot;
+  const { alt, icon, iconClass, link, lat, lng, containerClass } = dot;
   const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
   const isActive = activeSponsorDot === index;
 
@@ -144,33 +144,30 @@ export function WorldMapSponsorDotContent({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className={cn('absolute left-0 top-0 flex h-12 w-[10rem] flex-col items-start overflow-hidden pt-1.5 font-oxanium')}
-            style={{
-              transform: `scale(var(--inverse-scale, 1))`,
-              transformOrigin: 'top left',
+            className={cn(
+              'clip-sponsor-content absolute left-0 top-0 flex h-[7.875rem] w-[10rem] max-w-[18.75rem] origin-top-left flex-col items-start gap-5 overflow-hidden bg-gray-700/50 px-8 py-5 font-oxanium backdrop-blur-3xl',
+              containerClass,
+            )}
+            variants={{
+              hidden: {
+                opacity: 0,
+                transform: `scale(var(--inverse-scale, 1)) translateY(-10px)`,
+                transformOrigin: 'top left',
+              },
+              visible: {
+                opacity: 1,
+                transform: `scale(var(--inverse-scale, 1))`,
+                transformOrigin: 'top left',
+              },
+            }}
+            transition={{
+              staggerChildren: 0.05,
+              duration: 0.3,
+              type: 'easeInOut',
             }}
           >
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -30,
-                  transformOrigin: 'top',
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transformOrigin: 'top',
-                },
-              }}
-              transition={{
-                duration: 0.3,
-                type: 'easeInOut',
-              }}
-              className="flex-center relative"
-            >
-              {icon && <img src={icon} alt={alt} className="h-7.5 w-auto" />}
-            </motion.div>
+            <h4 className="text-xl/6 font-semibold capitalize text-white">Sponsorship</h4>
+            <motion.div>{icon && <img src={icon} alt={alt} className={cn('h-10.5 object-contain', iconClass)} />}</motion.div>
           </motion.div>
           {/* </a> */}
         </foreignObject>
