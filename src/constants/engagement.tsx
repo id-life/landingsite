@@ -19,8 +19,8 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    lat: 32,
-    lng: 108,
+    lat: 13,
+    lng: 111,
     icon: <ChineseSVG className="size-2.5" />,
   },
   {
@@ -29,13 +29,13 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <HondurasSVG className="size-2.5" />,
   },
   {
-    lat: 5 - 6,
-    lng: 98.9853 + 4,
+    lat: 2,
+    lng: 101,
     icon: <ThailandSVG className="size-2.5" />,
   },
   {
     lat: 53,
-    lng: -1,
+    lng: -3,
     icon: <UKSVG className="size-2.5" />,
   },
 ];
@@ -58,8 +58,8 @@ export type MapDotData = {
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
-    lat: 31.23 - 12,
-    lng: 121,
+    lat: 17,
+    lng: 120,
     country: 'China', // 新加的一个
     label: 'Shanghai',
     period: '2024/11',
@@ -87,7 +87,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: 3,
+    lat: -2,
     lng: 104,
     country: 'Thailand',
     label: 'Chiang Mai',
@@ -112,8 +112,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: -13,
-    lng: 103,
+    lat: -22,
+    lng: 105,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025/02',
@@ -229,8 +229,8 @@ export type MapSponsorDotData = {
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
-    lat: 45,
-    lng: -124,
+    lat: 42,
+    lng: -120,
     title: 'Berkeley, CA, USA',
     key: 'sponsor-01',
     alt: 'VITALIST BAY',
@@ -239,8 +239,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: '',
   },
   {
-    lat: 26,
-    lng: 98,
+    lat: 30,
+    lng: 88,
     title: 'Cloud, China',
     key: 'sponsor-02',
     alt: 'ETHPanda',

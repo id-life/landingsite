@@ -9,27 +9,24 @@ export function useEngagementClickPoint() {
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
-  const handleClickPoint = useCallback(
-    (type: EngagementClickPointType, index: number) => {
-      if (type === 'meeting') {
-        const newState = toggleDotIndex(index, activeMeetingDot);
-        setActiveMeetingDot(newState);
-        setActiveBookDot(null);
-        setActiveSponsorDot(null);
-      } else if (type === 'book') {
-        const newState = toggleDotIndex(index, activeBookDot);
-        setActiveBookDot(newState);
-        setActiveMeetingDot(null);
-        setActiveSponsorDot(null);
-      } else if (type === 'sponsor') {
-        const newState = toggleDotIndex(index, activeSponsorDot);
-        setActiveSponsorDot(newState);
-        setActiveMeetingDot(null);
-        setActiveBookDot(null);
-      }
-    },
-    [activeMeetingDot, setActiveMeetingDot],
-  );
+  const handleClickPoint = (type: EngagementClickPointType, index: number) => {
+    if (type === 'meeting') {
+      const newState = toggleDotIndex(index, activeMeetingDot);
+      setActiveMeetingDot(newState);
+      setActiveBookDot(null);
+      setActiveSponsorDot(null);
+    } else if (type === 'book') {
+      const newState = toggleDotIndex(index, activeBookDot);
+      setActiveBookDot(newState);
+      setActiveMeetingDot(null);
+      setActiveSponsorDot(null);
+    } else if (type === 'sponsor') {
+      const newState = toggleDotIndex(index, activeSponsorDot);
+      setActiveSponsorDot(newState);
+      setActiveMeetingDot(null);
+      setActiveBookDot(null);
+    }
+  };
 
   return { handleClickPoint, activeMeetingDot, activeBookDot, activeSponsorDot };
 }

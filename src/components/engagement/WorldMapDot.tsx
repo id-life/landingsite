@@ -59,10 +59,14 @@ export function WorldMapDotPoint({
 }) {
   const { country, label, lat, lng } = dot;
 
-  const { activeMeetingDot, handleClickPoint } = useEngagementClickPoint();
+  const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot } = useEngagementClickPoint();
 
   const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
 
+  const isOtherActive = useMemo(
+    () => (activeMeetingDot !== null && !isActive) || activeBookDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
+  );
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -79,7 +83,8 @@ export function WorldMapDotPoint({
       animate={isActive ? 'hover' : 'initial'}
       onClick={handleClick}
     >
-      {/* <motion.g variants={pointVariants}>
+      <g className={cn(isOtherActive && 'opacity-50')}>
+        {/* <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y} width={8} height={8}>
           <MeetingSVG
             className="size-6"
@@ -90,33 +95,44 @@ export function WorldMapDotPoint({
           />
         </foreignObject>
       </motion.g> */}
-      {/* 点 */}
-      <motion.g variants={pointVariants}>
-        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-        <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-          <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-        </circle>
-        <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-          <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-        </circle>
-      </motion.g>
-      {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
-        <motion.p
-          variants={labelVariants}
-          transition={{ duration: 0.3 }}
-          className="relative origin-top-left overflow-visible whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
-        >
-          {label ? `${label}, ` : ''}
-          {country}
-          <span className="text-purple bg-purple/20 absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl">
-            <MeetingSVG className="fill-purple size-5" />
-            Conference
-          </span>
-        </motion.p>
-      </foreignObject>
+        {/* 点 */}
+        <motion.g variants={pointVariants}>
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+        </motion.g>
+        {/* 标签 */}
+        <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
+          <motion.p
+            variants={labelVariants}
+            transition={{ duration: 0.3 }}
+            className="relative origin-top-left overflow-visible whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
+          >
+            {label ? `${label}, ` : ''}
+            {country}
+
+            <AnimatePresence>
+              {isActive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="text-purple bg-purple/20 absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl"
+                >
+                  <MeetingSVG className="fill-purple size-5" />
+                  Conference
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.p>
+        </foreignObject>
+      </g>
     </motion.g>
   );
 }
@@ -173,7 +189,7 @@ export function WorldMapDotContent({
             }}
           >
             {title && (
-              <h3 className="flex text-center text-xl/6 font-semibold capitalize text-white">
+              <h3 className="whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
                 <span className="mr-2">{title}</span>
                 {period}
               </h3>

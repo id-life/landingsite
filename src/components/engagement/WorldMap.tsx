@@ -3,18 +3,19 @@
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 // import DottedMap from 'dotted-map';
+import { currentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useEvent, useMeasure } from 'react-use';
+import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
-import { currentPageAtom } from '@/atoms';
-import { NAV_LIST } from '../nav/nav';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -58,7 +59,11 @@ export const WorldMap = memo(function WorldMapComponent({
     const y = (90 - lat) * (360 / 180);
     return { x, y };
   }, []);
-
+  const { activeBookDot, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
+  const isAnyActive = useMemo(
+    () => activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot],
+  );
   // const src = useMemo(() => {
   //   return `data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`;
   // }, [svgMap]);
@@ -83,13 +88,15 @@ export const WorldMap = memo(function WorldMapComponent({
       const size = 12;
       return (
         <g key={`points-group-${i}`} className="world-map-region opacity-0">
-          {dot.icon ? (
-            <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
-              <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
-            </foreignObject>
-          ) : (
-            <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
-          )}
+          <g className={cn(isAnyActive && 'opacity-50')}>
+            {dot.icon ? (
+              <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
+                <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
+              </foreignObject>
+            ) : (
+              <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
+            )}
+          </g>
         </g>
       );
     });
