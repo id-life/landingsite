@@ -13,7 +13,7 @@ import { useSetAtom } from 'jotai';
 const InitRotation = Math.PI / 2;
 export default function DragonModel(props: {}) {
   const { events, size, clock } = useThree();
-  const { nodes } = useGLTF('/models/logo.glb');
+  const { nodes } = useGLTF('/models/logo_v1.glb');
   const modelRef = useRef<THREE.Group>(null);
   const autoSwingRef = useRef(false);
   const isRecoveringRef = useRef(false);

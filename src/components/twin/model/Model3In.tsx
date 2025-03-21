@@ -11,7 +11,7 @@ const Model3In = forwardRef<ModelRef>(function ({}, ref) {
   const [cloth, integumentarySystem, vascularSystem] = useGLTF([
     'https://cdn.id.life/full_male/cloth-v1.glb',
     'https://cdn.id.life/m3/integumentary_system_fat.glb',
-    'https://cdn.id.life/twin/m0/vascular_system.glb',
+    'https://cdn.id.life/landingsite/twin/vascular_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);

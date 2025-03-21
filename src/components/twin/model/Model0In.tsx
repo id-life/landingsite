@@ -29,14 +29,14 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
   ] = useGLTF([
     'https://cdn.id.life/full_male/cloth-v1.glb',
     'https://cdn.id.life/full_male/integumentary_system_tin.glb',
-    'https://cdn.id.life/twin/m0/muscular_system.glb',
+    'https://cdn.id.life/landingsite/twin/muscular_system.glb',
     'https://cdn.id.life/twin/m0/connective_tissue.glb',
-    'https://cdn.id.life/twin/m0/organs.glb',
+    'https://cdn.id.life/landingsite/twin/organs.glb',
     'https://cdn.id.life/twin/m0/lymphatic_system.glb',
-    'https://cdn.id.life/twin/m0/vascular_system.glb',
+    'https://cdn.id.life/landingsite/twin/vascular_system.glb',
     'https://cdn.id.life/twin/m0/nervous_system.glb',
     'https://cdn.id.life/twin/m0/cartilage_tissue.glb',
-    'https://cdn.id.life/twin/m0/skeletal_system.glb',
+    'https://cdn.id.life/landingsite/twin/skeletal_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);

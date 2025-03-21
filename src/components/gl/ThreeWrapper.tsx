@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { OuterLoader } from './ProgressLoader';
 import Loader from '@/components/gl/Loader';
+// import { Perf } from 'r3f-perf';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
@@ -35,6 +36,7 @@ export default function ThreeWrapper() {
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+      {/* <Perf deepAnalyze={true} /> */}
       <OuterLoader />
       <Suspense fallback={<Loader />}>
         <VisionGL />
