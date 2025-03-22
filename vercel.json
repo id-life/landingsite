@@ -1,5 +1,6 @@
 {
   "redirects": [
-    { "source": "/career", "destination": "https://brainvat.sg.larksuite.com/docx/Wg1Kd73GDoaOqUxzGJnlphPTgWD" }
+    { "source": "/career", "destination": "https://brainvat.sg.larksuite.com/docx/Wg1Kd73GDoaOqUxzGJnlphPTgWD" },
+    { "source": "/career-en", "destination": "https://brainvat.sg.larksuite.com/docx/G8j3d5P97o2uFQx02aelNWihgYc" }
   ]
 }
