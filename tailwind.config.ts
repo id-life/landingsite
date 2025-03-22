@@ -1,3 +1,4 @@
+import { DEFAULT } from '@react-three/fiber/dist/declarations/src/core/utils';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -59,6 +60,9 @@ const config: Config = {
           700: '#444444',
           800: '#222222',
         },
+        orange: {
+          DEFAULT: '#FFE500',
+        },
         red: {
           500: '#BB1212',
           600: '#C11111',
@@ -69,8 +73,14 @@ const config: Config = {
         yellow: {
           800: '#FFD12C',
         },
+        cyan: {
+          DEFAULT: '#00DDFF',
+        },
         blue: {
           DEFAULT: '#43BBFF',
+        },
+        purple: {
+          DEFAULT: '#CE3AFF',
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',

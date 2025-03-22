@@ -11,9 +11,7 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo } from 'react';
-import { NAV_LIST } from '../nav/nav';
-
-const whiteList = [NAV_LIST[1].id, NAV_LIST[2].id];
+import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
   className?: string;
@@ -21,18 +19,18 @@ interface PageArrowsProps {
 export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
-  const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
+  const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
+
   const pageIndexList = useMemo(() => {
     const getTotal = () => {
-      if (![NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) return 0;
-      return currentPage.id === NAV_LIST[2].id ? 4 : 5;
+      if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
+      return 5; // 目前就一个 Value 页有
     };
     const total = getTotal();
     if (!total) return [];
-    setInnerPageTotal(total);
     return new Array(total).fill(0);
-  }, [currentPage.id, setInnerPageTotal]);
+  }, [currentPage.id]);
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
@@ -53,7 +51,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
               key={`inner-page-index-${index}`}
               className={cn(
                 'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                currentPage.id === NAV_LIST[2].id
+                BLACK_ARROW_LIST.includes(currentPage.id)
                   ? innerPageIndex !== index
                     ? 'bg-white/20'
                     : 'bg-white/40'
@@ -81,11 +79,11 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
-  // console.log({ innerPageIndex, innerPageTotal });
+
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
-    if ([NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) {
+    if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
       // 有小进度条
       if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻
@@ -106,7 +104,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        whiteList.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        BLACK_ARROW_LIST.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

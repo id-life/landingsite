@@ -6,7 +6,9 @@ export const activeBookDotAtom = atom<number | null>(null);
 // 存储当前展开的书籍点的索引，如果为null则表示没有展开的项
 export const activeSponsorDotAtom = atom<number | null>(null);
 
-// 切换书籍点的展开状态的函数
+export const activeMeetingDotAtom = atom<number | null>(null);
+
+// 切换点的展开状态的函数
 export const toggleDotIndex = (index: number, currentActive: number | null) => {
   if (currentActive === index) {
     // 如果点击的是当前已经激活的点，则关闭它

@@ -1,22 +1,22 @@
+import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
 import { MapBookDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { cn } from '@/utils';
+import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
-import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
-import { useAtom } from 'jotai';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
-    rotate: 0,
+    // rotate: 0,
     scale: 1,
   },
   hover: {
     scale: 1.2,
-    rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
+    // rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
     transition: {
-      rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
+      // rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
       scale: { duration: 0.3 },
     },
   },
@@ -57,20 +57,18 @@ export function WorldMapBookDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, lat, lng } = dot;
-  const { jumpTo } = useEngagementJumpTo();
-  const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
-
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  const { activeBookDot, handleClickPoint, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
+  const isActive = useMemo(() => activeBookDot === index, [activeBookDot, index]);
+  const isOtherActive = useMemo(
+    () => (activeBookDot !== null && !isActive) || activeMeetingDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
+  );
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    const newState = toggleDotIndex(index, activeBookDot);
-    setActiveBookDot(newState);
-
-    // // 只有当点击导致内容从隐藏变为显示时（newState不为null且不等于之前的状态），才执行跳转
-    // if (newState !== null && activeBookDot !== newState) {
-    //   jumpTo(-1);
-    // }
+    handleClickPoint('book', index);
   };
 
   return (
@@ -81,7 +79,8 @@ export function WorldMapBookDotPoint({
       onClick={handleClick}
       variants={containerVariants}
     >
-      <motion.g variants={pointVariants}>
+      <g className={cn(isOtherActive && 'opacity-50')}>
+        {/* <motion.g variants={pointVariants}>
         <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
           <BookSVG
             className="size-6"
@@ -91,17 +90,43 @@ export function WorldMapBookDotPoint({
             }}
           />
         </foreignObject>
-      </motion.g>
-      {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4.5} width={80} height={10}>
-        <motion.p
-          transition={{ duration: 0.3 }}
-          variants={labelVariants}
-          className="origin-top-left whitespace-nowrap pl-7 align-top font-oxanium font-semibold capitalize leading-[1.2] text-white"
-        >
-          {title}
-        </motion.p>
-      </foreignObject>
+      </motion.g> */}
+        {/* 点 */}
+        <motion.g variants={pointVariants} className="origin-center">
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+        </motion.g>
+        {/* 标签 */}
+        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
+          <motion.p
+            transition={{ duration: 0.3 }}
+            variants={labelVariants}
+            className="flex origin-top-left items-center gap-2 whitespace-nowrap pl-5 align-top font-oxanium font-semibold capitalize text-white"
+          >
+            {title}
+            <AnimatePresence>
+              {isActive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="text-cyan flex items-center gap-1 rounded-lg bg-cyan-500/20 p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl"
+                >
+                  <BookSVG className="fill-cyan size-5" />
+                  Translation
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.p>
+        </foreignObject>
+      </g>
     </motion.g>
   );
 }

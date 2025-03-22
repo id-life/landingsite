@@ -19,8 +19,8 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    lat: 32,
-    lng: 108,
+    lat: 13,
+    lng: 111,
     icon: <ChineseSVG className="size-2.5" />,
   },
   {
@@ -29,13 +29,13 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <HondurasSVG className="size-2.5" />,
   },
   {
-    lat: 5 - 6,
-    lng: 98.9853 + 4,
+    lat: 2,
+    lng: 101,
     icon: <ThailandSVG className="size-2.5" />,
   },
   {
     lat: 53,
-    lng: -1,
+    lng: -3,
     icon: <UKSVG className="size-2.5" />,
   },
 ];
@@ -58,13 +58,13 @@ export type MapDotData = {
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
-    lat: 31.23 - 12,
-    lng: 121,
+    lat: 17,
+    lng: 120,
     country: 'China', // 新加的一个
     label: 'Shanghai',
     period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    title: 'The 5th TIMEPIE LONGEVITY FORUM', //上海timepie
+    title: 'The 5th Timepie Longevity Forum', //上海timepie
     contentTransformStyle: 'translate(-85%, 0)',
     imgs: [
       {
@@ -87,7 +87,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: 3,
+    lat: -2,
     lng: 104,
     country: 'Thailand',
     label: 'Chiang Mai',
@@ -112,11 +112,11 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: -13,
-    lng: 103,
+    lat: -22,
+    lng: 105,
     // label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
-    period: '2025',
+    period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum',
     contentTransformStyle: 'translate(-85%, 8%)',
@@ -152,7 +152,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/01',
     key: 'roatan_vitalia_2024', // Unique identifier for the dot
     title: 'Vitalia @ Roatan, Honduras',
-    contentTransformStyle: 'translate(-85%, 5%)',
+    contentTransformStyle: 'translate(85%, 5%)',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',
@@ -193,7 +193,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     lat: 20,
     lng: -114,
     key: 'publications-01',
-    title: 'California, USA',
+    title: 'Stanford, CA, USA',
     bookTitle: 'The Network State',
     desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
@@ -201,8 +201,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
   },
   {
-    lat: -24,
-    lng: 136,
+    lat: -14,
+    lng: -18,
     key: 'publications-02',
     title: 'Network State',
     bookTitle: 'bio/acc manifesto',
@@ -225,31 +225,37 @@ export type MapSponsorDotData = {
   icon?: string;
   iconClass?: string;
   link?: string; // 跳转链接
+  title: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
-    lat: 45,
-    lng: -124,
+    lat: 42,
+    lng: -120,
+    title: 'Berkeley, CA, USA',
     key: 'sponsor-01',
     alt: 'VITALIST BAY',
     icon: '/imgs/engagement/sponsor-01.webp',
     containerClass: 'w-[13.5rem]',
+    link: '',
   },
   {
-    lat: 26,
-    lng: 98,
+    lat: 30,
+    lng: 88,
+    title: 'Cloud, China',
     key: 'sponsor-02',
     alt: 'ETHPanda',
     icon: '/imgs/engagement/sponsor-02.webp',
     containerClass: 'w-[14.5rem]',
+    link: '',
   },
   {
     lat: 49,
     lng: -1,
+    title: 'Oxford, UK',
     key: 'sponsor-03',
     alt: 'OXFORD LONGEVITY',
     icon: '/imgs/engagement/sponsor-03.webp',
     containerClass: 'w-[18.75rem]',
-    // iconClass: 'w-[14.375rem]',
+    link: '',
   },
 ];

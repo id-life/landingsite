@@ -1,24 +1,18 @@
-import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
+import { currentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { debounce } from 'lodash-es';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { memo } from 'react';
 
 function Engagement() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
-  const lastIndexRef = useRef<number>(0);
-  const { jumpTo } = useEngagementJumpTo();
+
   const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
@@ -36,18 +30,6 @@ function Engagement() {
     },
     isUp: false,
   });
-
-  // console.log('engagement enableJudge', { enableUpJudge, enableDownJudge });
-  const debouncedSetInnerPageIndex = useMemo(
-    () =>
-      debounce((index: number) => {
-        if (lastIndexRef.current !== index) {
-          lastIndexRef.current = index;
-          setInnerPageIndex(index);
-        }
-      }, 200),
-    [setInnerPageIndex],
-  );
 
   useGSAP(() => {
     if (!globalLoaded) return;
@@ -122,55 +104,8 @@ function Engagement() {
       ease: 'back.out(1.7)',
       duration: entranceUnit,
     });
-
-    // 停留 0.2 - 0.8
-    const stayDuration = 0.6 * factor;
-    // 计算停留每个动画的单位时长
-    const stayUnit = stayDuration / 4; // 分为 4 个步骤
-    tl.to(`.world-map-dot-content-0`, { opacity: 1, height: '70vh', ease: 'power2.out', duration: stayUnit / 2 });
-    tl.to(`.world-map-dot-content-0`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 });
-    tl.to(`.world-map-dot-content-1`, {
-      opacity: 1,
-      height: '70vh',
-      ease: 'power2.out',
-      duration: stayUnit / 2,
-      onComplete: () => {
-        debouncedSetInnerPageIndex(1);
-      },
-      onReverseComplete: () => {
-        debouncedSetInnerPageIndex(0);
-      },
-    });
-    tl.to(`.world-map-dot-content-1`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 }, '>');
-    tl.to(`.world-map-dot-content-2`, {
-      opacity: 1,
-      height: '70vh',
-      ease: 'power2.out',
-      duration: stayUnit / 2,
-      onComplete: () => {
-        debouncedSetInnerPageIndex(2);
-      },
-      onReverseComplete: () => {
-        debouncedSetInnerPageIndex(1);
-      },
-    });
-    tl.to(`.world-map-dot-content-2`, { opacity: 0, height: 0, ease: 'power2.out', duration: stayUnit / 2 });
-    tl.to(
-      `.world-map-dot-content-3`,
-      {
-        opacity: 1,
-        height: '70vh',
-        ease: 'power2.out',
-        duration: stayUnit / 2,
-        onComplete: () => {
-          debouncedSetInnerPageIndex(3);
-        },
-        onReverseComplete: () => {
-          debouncedSetInnerPageIndex(2);
-        },
-      },
-      '<',
-    );
+    // 停留一阵子
+    tl.to(() => {}, { duration: 5 });
     // 出场动画（在进度0.8后开始）
     // 计算出场动画总时长（占总进度的0.2）
     const exitDuration = 0.2 * factor;
@@ -196,15 +131,7 @@ function Engagement() {
     tl.add(() => {
       setEnableDownJudge(true);
     });
-  }, [globalLoaded, debouncedSetInnerPageIndex]);
-
-  useEffect(() => {
-    if (currentPageIndex !== 2 || innerPageNavigateTo === null) return;
-    jumpTo(innerPageNavigateTo, () => {
-      setInnerPageIndex(innerPageNavigateTo);
-      setInnerPageNavigateTo(null);
-    });
-  }, [currentPageIndex, innerPageNavigateTo, jumpTo, setInnerPageIndex, setInnerPageNavigateTo]);
+  }, [globalLoaded]);
 
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">

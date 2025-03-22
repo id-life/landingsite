@@ -3,18 +3,19 @@
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 // import DottedMap from 'dotted-map';
-
-import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { currentPageAtom } from '@/atoms';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { globalLoadedAtom } from '@/atoms/geo';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEvent, useMeasure } from 'react-use';
+import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
-import { globalLoadedAtom } from '@/atoms/geo';
-import { useEvent, useMeasure } from 'react-use';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -34,10 +35,10 @@ export const WorldMap = memo(function WorldMapComponent({
   const svgRef = useRef<SVGSVGElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
+  const currentPage = useAtomValue(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const { jumpTo } = useEngagementJumpTo();
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
-
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -58,7 +59,11 @@ export const WorldMap = memo(function WorldMapComponent({
     const y = (90 - lat) * (360 / 180);
     return { x, y };
   }, []);
-
+  const { activeBookDot, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
+  const isAnyActive = useMemo(
+    () => activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot],
+  );
   // const src = useMemo(() => {
   //   return `data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`;
   // }, [svgMap]);
@@ -83,13 +88,15 @@ export const WorldMap = memo(function WorldMapComponent({
       const size = 12;
       return (
         <g key={`points-group-${i}`} className="world-map-region opacity-0">
-          {dot.icon ? (
-            <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
-              <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
-            </foreignObject>
-          ) : (
-            <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
-          )}
+          <g className={cn(isAnyActive && 'opacity-50')}>
+            {dot.icon ? (
+              <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
+                <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
+              </foreignObject>
+            ) : (
+              <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
+            )}
+          </g>
         </g>
       );
     });
@@ -174,15 +181,18 @@ export const WorldMap = memo(function WorldMapComponent({
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
     setActiveSponsorDot(null);
-    jumpTo(-1);
-  }, [jumpTo, setActiveBookDot, setActiveSponsorDot]);
+    setActiveMeetingDot(null);
+  }, [setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
   // 确保在组件卸载时重置状态
   useEffect(() => {
-    return () => {
+    if (!globalLoaded) return;
+    if (currentPage?.id !== NAV_LIST[2].id) {
       setActiveBookDot(null);
-    };
-  }, [setActiveBookDot]);
+      setActiveSponsorDot(null);
+      setActiveMeetingDot(null);
+    }
+  }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
   return (
     <div
