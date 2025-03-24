@@ -95,14 +95,18 @@ export function WorldMapDotPoint({
         {/* 点 */}
         <motion.g variants={pointVariants}>
           <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
+          {isActive && (
+            <>
+              <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+                <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+                <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+            </>
+          )}
         </motion.g>
         {/* 标签 */}
         <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
@@ -179,19 +183,21 @@ export function WorldMapDotContent({
               duration: 0.3,
               type: 'easeInOut',
             }}
-            className={cn('absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center font-oxanium')}
+            className={cn(
+              'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+            )}
             style={{
               transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
             }}
           >
             {title && (
-              <h3 className="whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
+              <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
                 <span className="mr-2">{title}</span>
                 {period}
               </h3>
             )}
             {imgs?.length ? (
-              <div className="hide-scrollbar pointer-events-auto -mt-2.5 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
+              <div className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
                 {imgs.map((img) => (
                   <FeatherImg key={img.src} src={img.src} alt={img.alt} />
                 ))}

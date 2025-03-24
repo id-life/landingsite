@@ -107,14 +107,18 @@ export function WorldMapBookDotPoint({
         {/* 点 */}
         <motion.g variants={pointVariants} className="origin-center">
           <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
+          {isActive && (
+            <>
+              <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+                <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+                <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+            </>
+          )}
         </motion.g>
         {/* 标签 */}
         <foreignObject x={point.x} y={point.y - 4.5} width={170} height={20}>
