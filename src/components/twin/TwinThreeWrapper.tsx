@@ -26,6 +26,7 @@ import Model3In from './model/Model3In';
 import Model3Out from './model/Model3Out';
 import Model2Out from './model/Model2Out';
 import Model2In from './model/Model2In';
+import { pollComponentMethod } from '@/components/twin/model/utils';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -63,12 +64,13 @@ export default function TwinThreeWrapper() {
       setCurrentAnatomyCamera(index);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
     }
-    modelRefs.forEach((modelRef) => {
-      if (!modelRef.current) return;
-      modelRef.current.switchModelShow(payload.type, index);
-    });
     setCurrentModelType(payload.type);
     setModelType(payload.type);
+    setTimeout(() => {
+      modelRefs.forEach((modelRef) => {
+        pollComponentMethod(modelRef, 'switchModelShow', [payload.type, index]).then();
+      });
+    });
   });
 
   //对比视角同步

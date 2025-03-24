@@ -17,14 +17,14 @@ type AnimalConfig = {
 };
 export const ANIMAL_CONFIG: AnimalConfig[] = [
   {
-    path: '/models/animal2_v2.glb',
+    path: 'https://cdn.id.life/animal2_v2.glb',
     scale: 1,
     animation: 0,
     resolution: 32,
     mesh: [{ name: 'JF_skin_in', reflectivity: 0.04, anisotropy: 0.5 }],
   },
   {
-    path: '/models/animal3_v1.glb',
+    path: 'https://cdn.id.life/animal3_v1.glb',
     scale: 1.1,
     animation: 0,
     resolution: 32,

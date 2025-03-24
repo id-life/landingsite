@@ -13,7 +13,6 @@ export default function Loader() {
   const setCurrentModel = useSetAtom(currentModelAtom);
   // 设置全局加载完成
   useEffect(() => {
-    console.log(active);
     if (!active) {
       // setGlobalLoaded(true); // 看 OuterLoader
       setGLLoaded(true);
