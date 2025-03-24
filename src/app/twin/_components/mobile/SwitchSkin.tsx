@@ -1,5 +1,4 @@
-import { eventBus } from '@/components/event-bus/eventBus';
-import { MessageType } from '@/components/event-bus/messageType';
+
 import { ModelType } from '@/components/twin/model/type';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';

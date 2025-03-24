@@ -1,11 +1,7 @@
 import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
-import SelectSVG from '@/../public/svgs/twin/select.svg?component';
 import clsx from 'clsx';
-import { MessageType } from '@/components/event-bus/messageType';
-import { eventBus } from '@/components/event-bus/eventBus';
-import { ModelType } from '@/components/twin/model/type';
 import { gsap } from 'gsap';
 
 export default function SwitchModel() {
@@ -13,15 +9,17 @@ export default function SwitchModel() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
 
   const handleSwitchModel = (model: PredictionModel | null) => {
-    // if (currentModelType !== ModelType.Skin) {
-    //   eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
-    // }
-    // const list = gsap.utils.toArray('.twin-title-item');
-    // gsap.to('.twin-title', { opacity: 0 });
-    // gsap.to(list, { left: '-80rem' });
-    // gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.5 });
-    // gsap.to('#switch-skin', { bottom: '8rem' });
+    const list = gsap.utils.toArray('.twin-title-item');
+    gsap.to('.twin-title', { opacity: 0 });
+    gsap.to(list, { left: '-80rem' });
+    gsap.to(`.twin-title-${model}`, { left: '1.25rem', delay: 0.5 });
     setCurrentModel(model);
+    if (model !== PredictionModel.M0) {
+      gsap.to('.twin-tag', { left: '-80rem' });
+      gsap.to('.twin-tag', { left: '0rem', delay: 0.5 });
+    } else {
+      gsap.to('.twin-tag', { left: '-80rem', delay: 0.5 });
+    }
   };
 
   return (

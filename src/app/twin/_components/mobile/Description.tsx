@@ -2,15 +2,14 @@
 
 import Tag from './Tag';
 import { useState, useEffect } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
-import { currentModelAtom, descriptionDrawerAtom, PredictionModel } from '@/atoms/twin';
+import { useAtom } from 'jotai';
+import { currentModelAtom, PredictionModel } from '@/atoms/twin';
 import ReportM01 from './ReportM01';
 import ReportM02 from './ReportM02';
 import ReportM03 from './ReportM03';
 
 export default function Description() {
   const [currentModel] = useAtom(currentModelAtom);
-  const [descriptionDrawer, setDescriptionDrawer] = useAtom(descriptionDrawerAtom);
 
   const [tags, setTags] = useState<string[]>([]);
 
@@ -30,14 +29,8 @@ export default function Description() {
     }
   }, [currentModel]);
 
-  const openDrawer = () => {
-    setDescriptionDrawer(true);
-  };
-
-  if (!tags.length) return null;
-
   return (
-    <div className="absolute bottom-20 left-0 w-full px-5">
+    <div className="twin-tag absolute bottom-20 left-0 w-full px-5">
       <div className="flex items-center">
         <div className="flex-1 overflow-hidden">
           <div className="flex gap-2 whitespace-nowrap">

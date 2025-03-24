@@ -25,16 +25,16 @@ export default function MobileTwin() {
         <div className="twin-title absolute left-5 top-20 w-screen">
           <img src="/svgs/twin/mobile/title-page.svg" alt="" />
         </div>
-        <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-64">
+        <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-ontology.svg" alt="" />
         </div>
-        <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-64">
+        <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-01.svg" alt="" />
         </div>
-        <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-64">
+        <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-02.svg" alt="" />
         </div>
-        <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-64">
+        <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-03.svg" alt="" />
         </div>
       </div>

@@ -26,5 +26,3 @@ export const currentModelAtom = atom<PredictionModel|null>(null);
 export const currentModelTypeAtom = atom<ModelType>(ModelType.Skin);
 
 export const currentAnatomyCameraAtom = atom<AnatomyCamera>(AnatomyCamera.CAMERA0);
-
-export const descriptionDrawerAtom = atom<boolean>(false);
