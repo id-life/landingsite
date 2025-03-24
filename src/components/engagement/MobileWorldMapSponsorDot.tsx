@@ -227,10 +227,10 @@ export function MobileWorldMapSponsorDotContent({
               videoUrl={videoUrl}
               title={alt}
               containerClass="-mt-2"
-              videoClass="mobile:size-[35vw]"
-              coverClass="mobile:size-[35vw]"
+              videoClass="mobile:size-[30vw]"
+              coverClass="mobile:size-[30vw]"
             />
-            <h4 className="-mt-2 whitespace-pre-wrap text-center text-sm/3.5 font-semibold capitalize text-white">{alt}</h4>
+            <h4 className="-mt-2 whitespace-pre-wrap text-center text-xs/3 font-semibold capitalize text-white">{alt}</h4>
           </motion.div>
           {/* </a> */}
         </foreignObject>

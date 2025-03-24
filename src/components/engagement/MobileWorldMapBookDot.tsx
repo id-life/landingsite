@@ -25,11 +25,11 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '.625rem',
+    fontSize: '.75rem',
     transform: 'scale(var(--inverse-scale, 1))',
   },
   hover: {
-    fontSize: '.75rem',
+    fontSize: '.875rem',
     y: '-0.5rem',
     transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
   },
@@ -121,7 +121,7 @@ export function MobileWorldMapBookDotPoint({
           <motion.p
             transition={{ duration: 0.3 }}
             variants={labelVariants}
-            className="flex origin-top-left items-center gap-2 whitespace-nowrap pl-5 align-top font-oxanium font-semibold capitalize text-white"
+            className="flex origin-top-left items-center gap-2 whitespace-nowrap pl-2 align-top font-oxanium font-semibold capitalize text-white"
           >
             {title}
             <AnimatePresence>
@@ -130,9 +130,9 @@ export function MobileWorldMapBookDotPoint({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-cyan-500/20 p-1 px-2 py-1 text-base/5 font-semibold text-cyan backdrop-blur-2xl"
+                  className="flex items-center gap-0.5 rounded-lg bg-cyan-500/20 px-1 py-0.5 text-xs/3 font-semibold text-cyan backdrop-blur-2xl"
                 >
-                  <BookSVG className="size-5 fill-cyan" />
+                  <BookSVG className="size-3 fill-cyan" />
                   Translation
                 </motion.span>
               )}
@@ -193,14 +193,21 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[20vw] flex-col items-center overflow-hidden pt-2 font-oxanium')}
+              className={cn('absolute left-0 top-0 flex w-[35vw] flex-col items-center overflow-hidden pt-2 font-oxanium')}
               style={{
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
               }}
               onMouseLeave={handleContentMouseLeave}
             >
-              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
+              <VideoWithPoster
+                coverUrl={coverUrl}
+                videoUrl={videoUrl}
+                title={title}
+                containerClass="-mt-2"
+                videoClass="mobile:size-[35vw]"
+                coverClass="mobile:size-[35vw]"
+              />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },

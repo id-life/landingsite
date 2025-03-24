@@ -23,10 +23,10 @@ const pointVariants: Variants = {
 
 const labelVariants: Variants = {
   initial: {
-    fontSize: '.625rem',
+    fontSize: '.75rem',
   },
   hover: {
-    fontSize: '.75rem',
+    fontSize: '.875rem',
     y: '-0.5rem',
     transform: 'scale(var(--inverse-scale, 1)) translateY(-0.1875rem)',
   },
@@ -112,7 +112,6 @@ export function MobileWorldMapDotPoint({
           >
             {label ? `${label}, ` : ''}
             {country}
-
             <AnimatePresence>
               {isActive && (
                 <motion.span
@@ -142,7 +141,7 @@ export function MobileWorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, imgs, contentTransformStyle, period, lat, lng } = dot;
+  const { title, imgs, mobileContentTransformStyle, period, lat, lng } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
 
@@ -180,7 +179,7 @@ export function MobileWorldMapDotContent({
             }}
             className={cn('absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center font-oxanium')}
             style={{
-              transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
+              transform: `scale(var(--inverse-scale, 1)) ${mobileContentTransformStyle}`,
             }}
           >
             {title && (
