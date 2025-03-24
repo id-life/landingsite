@@ -1,6 +1,7 @@
 import { Drawer } from 'vaul';
-import SwitchLanguage from './SwitchLanguage';
+import SwitchLanguage from '../SwitchLanguage';
 import { useState } from 'react';
+import Tag from './Tag';
 
 export default function ReportM01() {
   const [isChinese, setIsChinese] = useState(false);
@@ -14,18 +15,22 @@ export default function ReportM01() {
       <Drawer.Trigger className="text-red-600"> More &gt;</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />
-        <Drawer.Content className="fixed bottom-0 left-0 top-0 z-[100] flex w-full bg-white outline-none">
-          <div className="flex h-full w-full grow flex-col p-10">
-            <Drawer.Title className="text-[2.5rem]/[3rem] font-semibold">Unhealthy habits me</Drawer.Title>
-            <Drawer.Close className="absolute right-10 top-10 w-5">
+        <Drawer.Content className="fixed bottom-0 left-0 top-[200px] z-[100] flex w-full bg-white outline-none">
+          <div className="flex h-full w-full grow flex-col p-4">
+            <Drawer.Title className="flex items-center gap-3 text-xl/6 font-semibold">
+              Unhealthy habits me <SwitchLanguage isChineseActive={isChinese} onChange={handleLanguageChange} />
+            </Drawer.Title>
+            <Drawer.Close className="absolute right-4 top-4 w-5">
               <img src="/svgs/close.svg" alt="" />
             </Drawer.Close>
             <div className="mb-2 mt-4 flex items-center justify-between">
-              <div className="flex items-center justify-center gap-0.5 bg-red-600/20 p-1 text-xl/5 font-semibold uppercase text-red-600">
-                <img src="/svgs/twin/time.svg" alt="" />
-                30 YEARS
+              <div className="flex-1 overflow-hidden">
+                <div className="flex gap-2 whitespace-nowrap">
+                  {['30 YEARS', 'Sedentary', 'High-Sugar'].map((tag, index) => (
+                    <Tag key={tag} text={tag} isActive={index === 0} />
+                  ))}
+                </div>
               </div>
-              <SwitchLanguage isChineseActive={isChinese} onChange={handleLanguageChange} />
             </div>
             <Drawer.Description className="overflow-scroll">
               {isChinese ? (
