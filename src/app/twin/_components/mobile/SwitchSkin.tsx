@@ -1,21 +1,20 @@
-
 import { ModelType } from '@/components/twin/model/type';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
 import clsx from 'clsx';
 
 export default function SwitchSkin() {
-  const currentModelType = useAtomValue(currentModelTypeAtom);
+  const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
 
   const handleModelTypeChange = (type: ModelType) => {
-    // eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
+    setCurrentModelType(type);
   };
 
   return (
-    <div id="switch-skin" className="absolute bottom-60 right-5 z-20 grid gap-5">
+    <div id="switch-skin" className="absolute right-5 top-1/2 z-20 grid -translate-y-1/2 gap-5">
       <div className="grid grid-rows-2 gap-6">
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG

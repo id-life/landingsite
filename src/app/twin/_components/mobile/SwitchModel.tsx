@@ -20,10 +20,11 @@ export default function SwitchModel() {
     } else {
       gsap.to('.twin-tag', { left: '-80rem', delay: 0.5 });
     }
+    gsap.to('#switch-model', { top: '50%', y: '-50%' });
   };
 
   return (
-    <div id="switch-model" className="absolute left-5 top-100 z-20 grid w-20 gap-3">
+    <div id="switch-model" className="absolute left-5 top-[34rem] z-20 grid w-20 gap-3">
       <div className="relative cursor-pointer p-3" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(

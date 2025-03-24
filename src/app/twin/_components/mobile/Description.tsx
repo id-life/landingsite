@@ -31,7 +31,7 @@ export default function Description() {
 
   return (
     <div className="twin-tag absolute bottom-20 left-0 w-full px-5">
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <div className="flex-1 overflow-hidden">
           <div className="flex gap-2 whitespace-nowrap">
             {tags.map((tag, index) => (
