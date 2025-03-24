@@ -100,7 +100,7 @@ export const WorldMap = memo(function WorldMapComponent({
         </g>
       );
     });
-  }, [lineColor, calcPoint, regionDots]);
+  }, [regionDots, calcPoint, isAnyActive, lineColor]);
 
   const dotsPoints = useMemo(() => {
     if (!dots?.length) return null;
@@ -192,7 +192,7 @@ export const WorldMap = memo(function WorldMapComponent({
       setActiveSponsorDot(null);
       setActiveMeetingDot(null);
     }
-  }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
+  }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot, globalLoaded]);
 
   return (
     <div

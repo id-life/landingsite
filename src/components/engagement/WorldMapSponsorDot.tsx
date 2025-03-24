@@ -1,11 +1,12 @@
-import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom, toggleDotIndex } from '@/atoms/engagement';
+import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
 import { MapSponsorDotData } from '@/constants/engagement';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
-import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { VideoWithPoster } from './VideoWithPoster';
 
 const pointVariants: Variants = {
   initial: {
@@ -115,7 +116,7 @@ export function WorldMapSponsorDotPoint({
           </circle>
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
+        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={20}>
           <motion.p
             variants={labelVariants}
             className="flex w-full origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
@@ -150,7 +151,7 @@ export function WorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { alt, icon, iconClass, link, lat, lng, containerClass } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng, containerClass } = dot;
   const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
@@ -169,7 +170,7 @@ export function WorldMapSponsorDotContent({
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
     // 检查鼠标是否移出到非点区域
-    if (!relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
       handleMouseLeave(e, index, 'sponsor');
     }
   };
@@ -191,7 +192,7 @@ export function WorldMapSponsorDotContent({
             animate="visible"
             exit="hidden"
             className={cn(
-              'clip-sponsor-content absolute left-0 top-0 flex h-[7.875rem] w-[10rem] max-w-[18.75rem] origin-top-left flex-col items-start gap-5 overflow-hidden bg-gray-700/50 px-8 py-5 font-oxanium backdrop-blur-3xl',
+              'clip-sponsor-content absolute -left-3 top-0 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
               containerClass,
             )}
             onMouseLeave={handleContentMouseLeave}
@@ -213,8 +214,15 @@ export function WorldMapSponsorDotContent({
               type: 'easeInOut',
             }}
           >
-            <h4 className="text-xl/6 font-semibold capitalize text-white">Sponsorship</h4>
-            <motion.div>{icon && <img src={icon} alt={alt} className={cn('h-10.5 object-contain', iconClass)} />}</motion.div>
+            <VideoWithPoster
+              coverUrl={coverUrl}
+              videoUrl={videoUrl}
+              title={alt}
+              containerClass="-mt-8"
+              videoClass="size-[15.5rem]"
+              coverClass="size-[15.5rem]"
+            />
+            <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
           </motion.div>
           {/* </a> */}
         </foreignObject>

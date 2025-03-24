@@ -222,9 +222,9 @@ export type MapSponsorDotData = {
   alt?: string; // 灰字描述
   key?: string;
   containerClass?: string;
-  icon?: string;
-  iconClass?: string;
   link?: string; // 跳转链接
+  coverUrl?: string;
+  videoUrl?: string;
   title: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
@@ -233,9 +233,10 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -120,
     title: 'Berkeley, CA, USA',
     key: 'sponsor-01',
-    alt: 'VITALIST BAY',
-    icon: '/imgs/engagement/sponsor-01.webp',
-    containerClass: 'w-[13.5rem]',
+    alt: 'VITALIST\nBAY',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
+    // containerClass: 'w-[13.5rem]',
     link: '',
   },
   {
@@ -243,9 +244,10 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: 88,
     title: 'Cloud, China',
     key: 'sponsor-02',
-    alt: 'ETHPanda',
-    icon: '/imgs/engagement/sponsor-02.webp',
-    containerClass: 'w-[14.5rem]',
+    alt: 'ethPanda',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
+    // containerClass: 'w-[14.5rem]',
     link: '',
   },
   {
@@ -253,9 +255,10 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -1,
     title: 'Oxford, UK',
     key: 'sponsor-03',
-    alt: 'OXFORD LONGEVITY',
-    icon: '/imgs/engagement/sponsor-03.webp',
-    containerClass: 'w-[18.75rem]',
+    alt: 'OXFORD\nLONGEVITY',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
+    // containerClass: 'w-[18.75rem]',
     link: '',
   },
 ];

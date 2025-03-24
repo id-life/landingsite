@@ -48,7 +48,7 @@ export const useScrollTriggerAction = ({
     return () => {
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [enableJudge]);
+  }, [enableJudge, isUp, throttleScrollFn, triggerId]);
 
   return { enableJudge, setEnableJudge };
 };

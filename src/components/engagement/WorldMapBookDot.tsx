@@ -4,8 +4,9 @@ import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPo
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
+import { VideoWithPoster } from './VideoWithPoster';
 
 const pointVariants: Variants = {
   initial: {
@@ -70,8 +71,8 @@ export function WorldMapBookDotPoint({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
     handleClickPoint('book', index);
+    if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
   };
 
   return (
@@ -116,7 +117,7 @@ export function WorldMapBookDotPoint({
           </circle>
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
+        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={20}>
           <motion.p
             transition={{ duration: 0.3 }}
             variants={labelVariants}
@@ -156,7 +157,6 @@ export function WorldMapBookDotContent({
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -172,7 +172,7 @@ export function WorldMapBookDotContent({
     if (activeBookDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
     // 检查鼠标是否移出到非点区域
-    if (!relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
       handleMouseLeave(e, index, 'book');
     }
   };
@@ -200,40 +200,7 @@ export function WorldMapBookDotContent({
               }}
               onMouseLeave={handleContentMouseLeave}
             >
-              <motion.div
-                variants={{
-                  hidden: {
-                    opacity: 0,
-                    y: -30,
-                    scaleY: 0,
-                    transformOrigin: 'top',
-                  },
-                  visible: {
-                    opacity: 1,
-                    scaleY: 1,
-                    y: 0,
-                    transformOrigin: 'top',
-                  },
-                }}
-                transition={{
-                  duration: 0.3,
-                  type: 'easeInOut',
-                }}
-                className="flex-center relative -mt-5"
-              >
-                {coverUrl && !videoLoaded && <img src={coverUrl} alt={title} className="size-[15.5rem] object-contain" />}
-                {videoUrl && (
-                  <video
-                    src={videoUrl}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden')}
-                    onLoadedData={() => setVideoLoaded(true)}
-                  />
-                )}
-              </motion.div>
+              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },
