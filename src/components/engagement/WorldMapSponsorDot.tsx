@@ -1,9 +1,9 @@
-import { activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
+import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom, toggleDotIndex } from '@/atoms/engagement';
 import { MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { SponsorSVG } from '../svg';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
@@ -58,7 +58,9 @@ export function WorldMapSponsorDotPoint({
 }) {
   const { lat, lng, title } = dot;
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-  const { handleClickPoint, activeSponsorDot, activeBookDot, activeMeetingDot } = useEngagementClickPoint();
+  const { handleClickPoint, activeSponsorDot, activeBookDot, activeMeetingDot, handleMouseEnter, handleMouseLeave } =
+    useEngagementClickPoint();
+  const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const isActive = activeSponsorDot === index;
   const isOtherActive = useMemo(
     () => (activeSponsorDot !== null && !isActive) || activeBookDot !== null || activeMeetingDot !== null,
@@ -67,6 +69,7 @@ export function WorldMapSponsorDotPoint({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
+    if (!activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(true);
     handleClickPoint('sponsor', index);
   };
 
@@ -75,8 +78,17 @@ export function WorldMapSponsorDotPoint({
       className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
       initial="initial"
       whileHover="hover"
+      animate={isActive ? 'hover' : 'initial'}
       onClick={handleClick}
       variants={containerVariants}
+      onMouseEnter={(e) => {
+        if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
+        handleMouseEnter(e, index, 'sponsor');
+      }}
+      onMouseLeave={(e) => {
+        if (activeSponsorDotClickOpen) return;
+        handleMouseLeave(e, index, 'sponsor');
+      }}
     >
       <g className={cn(isOtherActive && 'opacity-50')}>
         {/* <motion.g variants={pointVariants}>
@@ -115,9 +127,9 @@ export function WorldMapSponsorDotPoint({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  className="text-orange bg-orange/20 flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl"
+                  className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
                 >
-                  <SponsorSVG className="fill-orange size-5" />
+                  <SponsorSVG className="size-5 fill-orange" />
                   Sponsorship
                 </motion.span>
               )}
@@ -140,8 +152,9 @@ export function WorldMapSponsorDotContent({
 }) {
   const { alt, icon, iconClass, link, lat, lng, containerClass } = dot;
   const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
+  const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
-
+  const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // const onClick = useCallback(
@@ -152,6 +165,15 @@ export function WorldMapSponsorDotContent({
   //   [link],
   // );
 
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeSponsorDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (!relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
+      handleMouseLeave(e, index, 'sponsor');
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isActive && (
@@ -159,7 +181,7 @@ export function WorldMapSponsorDotContent({
           x={point.x}
           y={point.y + 6}
           className={cn(
-            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-auto flex h-20 flex-col overflow-visible`,
           )}
           // onClick={onClick}
         >
@@ -172,6 +194,7 @@ export function WorldMapSponsorDotContent({
               'clip-sponsor-content absolute left-0 top-0 flex h-[7.875rem] w-[10rem] max-w-[18.75rem] origin-top-left flex-col items-start gap-5 overflow-hidden bg-gray-700/50 px-8 py-5 font-oxanium backdrop-blur-3xl',
               containerClass,
             )}
+            onMouseLeave={handleContentMouseLeave}
             variants={{
               hidden: {
                 opacity: 0,

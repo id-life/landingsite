@@ -2,9 +2,11 @@ import { atom } from 'jotai';
 
 // 存储当前展开的书籍点的索引，如果为null则表示没有展开的项
 export const activeBookDotAtom = atom<number | null>(null);
+export const activeBookDotClickOpenAtom = atom<boolean>(false);
 
 // 存储当前展开的书籍点的索引，如果为null则表示没有展开的项
 export const activeSponsorDotAtom = atom<number | null>(null);
+export const activeSponsorDotClickOpenAtom = atom<boolean>(false);
 
 export const activeMeetingDotAtom = atom<number | null>(null);
 

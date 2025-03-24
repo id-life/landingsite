@@ -1,12 +1,10 @@
-import { activeMeetingDotAtom, toggleDotIndex } from '@/atoms/engagement';
 import { MapDotData } from '@/constants/engagement';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
-import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
@@ -58,9 +56,8 @@ export function WorldMapDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { country, label, lat, lng } = dot;
-
+  // const isClickOpenRef = useRef(false);
   const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot } = useEngagementClickPoint();
-
   const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
 
   const isOtherActive = useMemo(
@@ -79,8 +76,8 @@ export function WorldMapDotPoint({
       className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
       initial="initial"
       whileHover="hover"
-      variants={containerVariants}
       animate={isActive ? 'hover' : 'initial'}
+      variants={containerVariants}
       onClick={handleClick}
     >
       <g className={cn(isOtherActive && 'opacity-50')}>
@@ -123,9 +120,9 @@ export function WorldMapDotPoint({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  className="text-purple bg-purple/20 absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl"
+                  className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
                 >
-                  <MeetingSVG className="fill-purple size-5" />
+                  <MeetingSVG className="size-5 fill-purple" />
                   Conference
                 </motion.span>
               )}
@@ -147,9 +144,8 @@ export function WorldMapDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, imgs, contentTransformStyle, period, lat, lng } = dot;
-
-  const activeMeetingDot = useAtomValue(activeMeetingDotAtom);
-  const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
+  const { activeMeetingDot } = useEngagementClickPoint();
+  const isActive = activeMeetingDot === index;
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 

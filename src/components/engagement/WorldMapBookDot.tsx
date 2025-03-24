@@ -1,11 +1,11 @@
-import { activeBookDotAtom, toggleDotIndex } from '@/atoms/engagement';
+import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { MapBookDotData } from '@/constants/engagement';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo, useState } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
-import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 
 const pointVariants: Variants = {
   initial: {
@@ -58,8 +58,10 @@ export function WorldMapBookDotPoint({
 }) {
   const { title, lat, lng } = dot;
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const [activeBookDotClickOpen, setActiveBookDotClickOpen] = useAtom(activeBookDotClickOpenAtom);
 
-  const { activeBookDot, handleClickPoint, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
+  const { activeBookDot, handleClickPoint, activeMeetingDot, activeSponsorDot, handleMouseEnter, handleMouseLeave } =
+    useEngagementClickPoint();
   const isActive = useMemo(() => activeBookDot === index, [activeBookDot, index]);
   const isOtherActive = useMemo(
     () => (activeBookDot !== null && !isActive) || activeMeetingDot !== null || activeSponsorDot !== null,
@@ -68,6 +70,7 @@ export function WorldMapBookDotPoint({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
+    if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
     handleClickPoint('book', index);
   };
 
@@ -78,6 +81,15 @@ export function WorldMapBookDotPoint({
       whileHover="hover"
       onClick={handleClick}
       variants={containerVariants}
+      animate={isActive ? 'hover' : 'initial'}
+      onMouseEnter={(e) => {
+        if (activeBookDotClickOpen) setActiveBookDotClickOpen(false);
+        handleMouseEnter(e, index, 'book');
+      }}
+      onMouseLeave={(e) => {
+        if (activeBookDotClickOpen) return;
+        handleMouseLeave(e, index, 'book');
+      }}
     >
       <g className={cn(isOtherActive && 'opacity-50')}>
         {/* <motion.g variants={pointVariants}>
@@ -117,9 +129,9 @@ export function WorldMapBookDotPoint({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  className="text-cyan flex items-center gap-1 rounded-lg bg-cyan-500/20 p-1 px-2 py-1 text-base/5 font-semibold backdrop-blur-2xl"
+                  className="flex items-center gap-1 rounded-lg bg-cyan-500/20 p-1 px-2 py-1 text-base/5 font-semibold text-cyan backdrop-blur-2xl"
                 >
-                  <BookSVG className="fill-cyan size-5" />
+                  <BookSVG className="size-5 fill-cyan" />
                   Translation
                 </motion.span>
               )}
@@ -142,9 +154,10 @@ export function WorldMapBookDotContent({
 }) {
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
+  const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
   const [videoLoaded, setVideoLoaded] = useState(false);
-
+  const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   const onClick = useCallback(
@@ -154,6 +167,15 @@ export function WorldMapBookDotContent({
     },
     [link],
   );
+
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeBookDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (!relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
+      handleMouseLeave(e, index, 'book');
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -176,6 +198,7 @@ export function WorldMapBookDotContent({
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
               }}
+              onMouseLeave={handleContentMouseLeave}
             >
               <motion.div
                 variants={{
