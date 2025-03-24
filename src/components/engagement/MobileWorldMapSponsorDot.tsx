@@ -1,43 +1,49 @@
-import { activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
+import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
 import { MapSponsorDotData } from '@/constants/engagement';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
+import { VideoWithPoster } from './VideoWithPoster';
 
+// 添加点动画变体
 const pointVariants: Variants = {
   initial: {
-    rotate: 0,
     scale: 1,
+    x: 0,
+    y: 0,
+    origin: 0,
   },
   hover: {
     scale: 1.2,
-    rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
+    x: 0,
+    y: 0,
+    origin: 0,
     transition: {
-      rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
-      scale: { duration: 0.3 },
+      type: 'spring',
+      stiffness: 300,
+      damping: 15,
     },
   },
 };
-
 const labelVariants: Variants = {
   initial: {
-    fontSize: '.625rem',
+    fontSize: '.75rem',
+    transform: 'scale(var(--inverse-scale, 1))',
   },
   hover: {
-    fontSize: '.75rem',
-    transition: {
-      duration: 0.3,
-      type: 'easeInOut',
-    },
+    fontSize: '.875rem',
+    y: '-0.5rem',
+    transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
   },
 };
 
 // 添加父元素动画变体
 const containerVariants: Variants = {
   initial: {
-    opacity: 1,
+    opacity: 0,
   },
   hover: {
     opacity: 1,
@@ -56,39 +62,88 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { lat, lng } = dot;
-  const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
-
+  const { lat, lng, title } = dot;
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { handleClickPoint, activeSponsorDot, activeBookDot, activeMeetingDot, handleMouseEnter, handleMouseLeave } =
+    useEngagementClickPoint();
+  const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
+  const isActive = activeSponsorDot === index;
+  const isOtherActive = useMemo(
+    () => (activeSponsorDot !== null && !isActive) || activeBookDot !== null || activeMeetingDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
+  );
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    const newIndex = toggleDotIndex(index, activeSponsorDot);
-    setActiveSponsorDot(newIndex);
+    if (!activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(true);
+    handleClickPoint('sponsor', index);
   };
 
   return (
     <motion.g
-      className={`world-map-dot-sponsor opacity-0 world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
+      className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
       initial="initial"
       whileHover="hover"
+      animate={isActive ? 'hover' : 'initial'}
       onClick={handleClick}
       variants={containerVariants}
+      onMouseEnter={(e) => {
+        if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
+        handleMouseEnter(e, index, 'sponsor');
+      }}
+      onMouseLeave={(e) => {
+        if (activeSponsorDotClickOpen) return;
+        handleMouseLeave(e, index, 'sponsor');
+      }}
     >
-      <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width={12} height={12}>
-          <SponsorSVG className="size-2.5" />
+      <g className={cn(isOtherActive && 'opacity-50')}>
+        {/* <motion.g variants={pointVariants}>
+        <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
+          <SponsorSVG
+            className="size-6"
+            style={{
+              transform: 'scale(var(--inverse-scale, 1))',
+              transformOrigin: 'top left',
+            }}
+          />
         </foreignObject>
-      </motion.g>
-      {/* 标签 */}
-      <foreignObject x={point.x} y={point.y - 4} width={100} height={12}>
-        <motion.p
-          variants={labelVariants}
-          className="w-full whitespace-nowrap pl-3 align-middle font-oxanium font-semibold capitalize leading-[1.1] text-white"
-        >
-          Sponsorship
-        </motion.p>
-      </foreignObject>
+      </motion.g> */}
+
+        {/* 点 */}
+        <motion.g variants={pointVariants}>
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+        </motion.g>
+        {/* 标签 */}
+        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
+          <motion.p
+            variants={labelVariants}
+            className="flex h-5 w-full origin-top-left items-center gap-2 whitespace-nowrap pl-3 font-oxanium text-base/4 font-semibold capitalize text-white"
+          >
+            {title}
+            <AnimatePresence>
+              {isActive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-0.5 rounded-lg bg-orange/20 p-0.5 px-1 py-1 text-xs/3 font-semibold text-orange backdrop-blur-2xl"
+                >
+                  <SponsorSVG className="size-3 fill-orange" />
+                  Sponsorship
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.p>
+        </foreignObject>
+      </g>
     </motion.g>
   );
 }
@@ -102,10 +157,11 @@ export function MobileWorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { alt, icon, link, lat, lng } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng, containerClass } = dot;
   const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
+  const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
-
+  const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // const onClick = useCallback(
@@ -116,14 +172,23 @@ export function MobileWorldMapSponsorDotContent({
   //   [link],
   // );
 
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeSponsorDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
+      handleMouseLeave(e, index, 'sponsor');
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isActive && (
         <foreignObject
           x={point.x}
-          y={point.y + 6}
+          y={point.y}
           className={cn(
-            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-auto flex h-20 flex-col overflow-visible`,
           )}
           // onClick={onClick}
         >
@@ -133,31 +198,39 @@ export function MobileWorldMapSponsorDotContent({
             animate="visible"
             exit="hidden"
             className={cn(
-              'absolute left-0 top-0 flex h-6 flex-col items-start gap-5 overflow-hidden bg-gray-700/50 px-8 py-5 pt-1.5 font-oxanium backdrop-blur-3xl',
+              'clip-sponsor-content absolute -left-3 top-0 flex w-[35vw] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+              containerClass,
             )}
+            onMouseLeave={handleContentMouseLeave}
+            variants={{
+              hidden: {
+                opacity: 0,
+                scale: 0.95,
+                y: -10,
+                transformOrigin: 'top left',
+              },
+              visible: {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transformOrigin: 'top left',
+              },
+            }}
+            transition={{
+              staggerChildren: 0.05,
+              duration: 0.3,
+              type: 'easeInOut',
+            }}
           >
-            <h4 className="text-xl/6 font-semibold capitalize text-white">Sponsorship</h4>
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -30,
-                  transformOrigin: 'top',
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transformOrigin: 'top',
-                },
-              }}
-              transition={{
-                duration: 0.3,
-                type: 'easeInOut',
-              }}
-              className="flex-center relative"
-            >
-              {icon && <img src={icon} alt={alt} className="h-4.5 w-auto" />}
-            </motion.div>
+            <VideoWithPoster
+              coverUrl={coverUrl}
+              videoUrl={videoUrl}
+              title={alt}
+              containerClass="-mt-2"
+              videoClass="mobile:size-[35vw]"
+              coverClass="mobile:size-[35vw]"
+            />
+            <h4 className="-mt-2 whitespace-pre-wrap text-center text-sm/3.5 font-semibold capitalize text-white">{alt}</h4>
           </motion.div>
           {/* </a> */}
         </foreignObject>

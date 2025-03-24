@@ -14,6 +14,7 @@ function MobileEngagement() {
   useEffect(() => {
     if (currentPage?.id !== NAV_LIST[2].id) return;
     enterAnimate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   return (

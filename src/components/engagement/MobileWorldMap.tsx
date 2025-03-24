@@ -1,16 +1,19 @@
 'use client';
 
-import { activeBookDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useMeasure } from 'react-use';
+import { useEvent, useMeasure } from 'react-use';
 import { WorldMapSVG } from '../svg';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
 import { MobileWorldMapSponsorDotContent, MobileWorldMapSponsorDotPoint } from './MobileWorldMapSponsorDot';
+import { throttle } from 'lodash-es';
+import { NAV_LIST } from '../nav/nav';
+import { mobileCurrentPageAtom } from '@/atoms';
 
 interface MapProps {
   dots?: Array<MapDotData>;
@@ -30,6 +33,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const svgRef = useRef<SVGSVGElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
   const calcPoint = useCallback((lat: number, lng: number) => {
@@ -37,6 +41,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
     const y = (90 - lat) * (360 / 180);
     return { x, y };
   }, []);
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
 
   const regionDotsPoints = useMemo(() => {
     if (!regionDots?.length) return null;
@@ -103,19 +108,55 @@ export const MobileWorldMap = memo(function WorldMapComponent({
     });
   }, [calcPoint, sponsorDots]);
 
+  // 创建可重用的更新比例函数
+  const updateSVGScale = useCallback(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    // 计算SVG当前的缩放比例
+    const svgRect = svg.getBoundingClientRect();
+    // const winWidth = window.innerWidth;
+    const svgWidth = svgRect.width;
+    const svgScale = svgWidth / svg.viewBox.baseVal.width;
+    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
+    // console.log({ svgScale, mapScale, winWidth, svgWidth });
+    // 设置地图缩放适配
+    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
+    // 设置反向缩放CSS变量
+    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
+  }, [svgRef]);
+
+  useEvent('resize', throttle(updateSVGScale, 100));
+
+  useEffect(() => {
+    if (!globalLoaded) return;
+    updateSVGScale();
+  }, [globalLoaded, updateSVGScale]);
+
+  useEffect(() => {
+    if (svgRef.current && mapWidth > 0) {
+      console.log('SVG refs available, updating scale');
+      requestAnimationFrame(() => {
+        updateSVGScale();
+      });
+    }
+  }, [mapWidth, updateSVGScale]);
+
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
     setActiveSponsorDot(null);
-    // jumpTo(-1);
-  }, [setActiveBookDot, setActiveSponsorDot]);
+    setActiveMeetingDot(null);
+  }, [setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
   // 确保在组件卸载时重置状态
   useEffect(() => {
-    return () => {
+    if (!globalLoaded) return;
+    if (currentPage?.id !== NAV_LIST[2].id) {
       setActiveBookDot(null);
-    };
-  }, [setActiveBookDot]);
+      setActiveSponsorDot(null);
+      setActiveMeetingDot(null);
+    }
+  }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot, globalLoaded]);
 
   return (
     <div

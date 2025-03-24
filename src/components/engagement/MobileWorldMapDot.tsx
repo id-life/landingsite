@@ -1,7 +1,7 @@
 import { MapDotData } from '@/constants/engagement';
-import { useEngagementJumpTo } from '@/hooks/engagement/useEngagementJumpTo';
+import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
-import { motion, Variants } from 'motion/react';
+import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
@@ -13,9 +13,9 @@ const pointVariants: Variants = {
   },
   hover: {
     scale: 1.2,
-    rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
+    // rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
     transition: {
-      rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
+      // rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
       scale: { duration: 0.3 },
     },
   },
@@ -27,10 +27,8 @@ const labelVariants: Variants = {
   },
   hover: {
     fontSize: '.75rem',
-    transition: {
-      duration: 0.3,
-      type: 'easeInOut',
-    },
+    y: '-0.5rem',
+    transform: 'scale(var(--inverse-scale, 1)) translateY(-0.1875rem)',
   },
 };
 
@@ -57,33 +55,80 @@ export function MobileWorldMapDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { country, label, lat, lng } = dot;
-  const { jumpTo } = useEngagementJumpTo();
+  // const isClickOpenRef = useRef(false);
+  const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot } = useEngagementClickPoint();
+  const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
 
+  const isOtherActive = useMemo(
+    () => (activeMeetingDot !== null && !isActive) || activeBookDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
+  );
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 防止冒泡
+    handleClickPoint('meeting', index);
+  };
 
   return (
     <motion.g
-      className={`world-map-dot opacity-0 world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
+      className={`world-map-dot world-map-dot-${index} pointer-events-auto cursor-pointer overflow-visible`}
       initial="initial"
       whileHover="hover"
-      onClick={(e) => {
-        e.stopPropagation();
-        jumpTo(index);
-      }}
+      animate={isActive ? 'hover' : 'initial'}
       variants={containerVariants}
+      onClick={handleClick}
     >
-      <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width={16} height={16}>
-          <MeetingSVG className="size-2.5" />
+      <g className={cn(isOtherActive && 'opacity-50')}>
+        {/* <motion.g variants={pointVariants}>
+        <foreignObject x={point.x} y={point.y} width={8} height={8}>
+          <MeetingSVG
+            className="size-6"
+            style={{
+              transform: 'scale(var(--inverse-scale, 1))',
+              transformOrigin: 'top left',
+            }}
+          />
         </foreignObject>
-      </motion.g>
-      {/* 标签 */}
-      <motion.foreignObject variants={labelVariants} x={point.x} y={point.y - 5} width={140} height={28}>
-        <div className="flex flex-col items-start pl-3 font-oxanium leading-3 text-white">
-          {country && <span className="font-semibold">{country}</span>}
-          {label}
-        </div>
-      </motion.foreignObject>
+      </motion.g> */}
+        {/* 点 */}
+        <motion.g variants={pointVariants}>
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+        </motion.g>
+        {/* 标签 */}
+        <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
+          <motion.p
+            variants={labelVariants}
+            transition={{ duration: 0.3 }}
+            className="relative origin-top-left overflow-visible whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
+          >
+            {label ? `${label}, ` : ''}
+            {country}
+
+            <AnimatePresence>
+              {isActive && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
+                >
+                  <MeetingSVG className="size-5 fill-purple" />
+                  Conference
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.p>
+        </foreignObject>
+      </g>
     </motion.g>
   );
 }
@@ -98,28 +143,62 @@ export function MobileWorldMapDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, imgs, contentTransformStyle, period, lat, lng } = dot;
+  const { activeMeetingDot } = useEngagementClickPoint();
+  const isActive = activeMeetingDot === index;
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   return (
-    <g className={`world-map-dot-content world-map-dot-content-${index}`}>
-      <foreignObject x={point.x} y={0} height={500} width={400} className={cn(`flex h-[32vh] flex-col overflow-visible`)}>
-        <div className={cn('absolute inset-0 -left-[30vw] top-7 flex h-full w-[30vw] flex-col items-center font-oxanium')}>
-          {title && (
-            <h3 className="scale-50 text-center text-base/5 font-semibold capitalize text-white">
-              <span className="mr-2">{title}</span>
-              {period}
-            </h3>
+    <AnimatePresence mode="wait">
+      {isActive && (
+        <foreignObject
+          x={point.x - 16}
+          y={0}
+          width={160}
+          className={cn(
+            `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex max-h-[42.5rem] flex-col overflow-visible`,
           )}
-          {imgs?.length ? (
-            <div className="hide-scrollbar pointer-events-auto -mt-2.5 flex grow flex-col overflow-auto pb-3 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
-              {imgs.map((img) => (
-                <FeatherImg key={img.src} src={img.src} alt={img.alt} className="w-full" />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </foreignObject>
-    </g>
+        >
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+              hidden: {
+                opacity: 0,
+                height: 0,
+              },
+              visible: {
+                opacity: 1,
+                height: '70vh',
+              },
+            }}
+            transition={{
+              staggerChildren: 0.1,
+              duration: 0.3,
+              type: 'easeInOut',
+            }}
+            className={cn('absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center font-oxanium')}
+            style={{
+              transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
+            }}
+          >
+            {title && (
+              <h3 className="whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
+                <span className="mr-2">{title}</span>
+                {period}
+              </h3>
+            )}
+            {imgs?.length ? (
+              <div className="hide-scrollbar pointer-events-auto -mt-2.5 flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_75%,transparent)]">
+                {imgs.map((img) => (
+                  <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                ))}
+              </div>
+            ) : null}
+          </motion.div>
+        </foreignObject>
+      )}
+    </AnimatePresence>
   );
 }
