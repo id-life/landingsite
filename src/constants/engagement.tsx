@@ -221,6 +221,7 @@ export type MapSponsorDotData = {
   lng: number;
   alt?: string; // 灰字描述
   key?: string;
+  icon?: string;
   containerClass?: string;
   link?: string; // 跳转链接
   coverUrl?: string;
