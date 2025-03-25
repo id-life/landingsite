@@ -117,7 +117,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     index: 2,
     lat: -22,
     lng: 105,
-    // label: 'Singapore',
+    label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
@@ -198,7 +198,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     lat: 20,
     lng: -114,
     key: 'publications-01',
-    title: 'Stanford, CA, USA',
+    title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
     desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
@@ -237,7 +237,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
     lat: 42,
     lng: -120,
-    title: 'Berkeley, CA, USA',
+    title: 'California, USA',
     key: 'sponsor-01',
     alt: 'VITALIST\nBAY',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webp',
@@ -248,7 +248,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
     lat: 30,
     lng: 88,
-    title: 'Cloud, China',
+    title: 'Chengdu, China',
     key: 'sponsor-02',
     alt: 'ethPanda',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webp',
