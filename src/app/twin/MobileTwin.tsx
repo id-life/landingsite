@@ -8,6 +8,8 @@ import SwitchSkin from './_components/mobile/SwitchSkin';
 import Description from './_components/mobile/Description';
 import { currentModelAtom, PredictionModel } from '@/atoms/twin';
 import { gsap } from 'gsap';
+import { Model } from './_components/mobile/Model';
+import SwitchAnatomyCamera from './_components/SwitchAnatomyCamera';
 
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
@@ -59,6 +61,8 @@ export default function MobileTwin() {
         <SwitchModel />
         <SwitchSkin />
         <Description />
+        <SwitchAnatomyCamera />
+        <Model />
       </div>
     </div>
   );
