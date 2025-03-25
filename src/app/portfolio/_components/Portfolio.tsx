@@ -31,10 +31,12 @@ function Portfolio() {
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => active, [active]);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const { setEnableJudge: setEnableDownJudge } = useScrollTriggerAction({
+  const currentPage = useAtomValue(currentPageAtom);
+  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     triggerId: 'portfolio-trigger',
     scrollFn: () => {
-      // console.log('Portfolio scrollFn down');
+      if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
+      console.log('Portfolio scrollFn down');
       const smoother = ScrollSmoother.get();
       smoother?.scrollTo(`#${NAV_LIST[2].id}`, false);
     },
@@ -94,7 +96,7 @@ function Portfolio() {
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
 
     // 在整个动画完成后设置标志
-    tl.eventCallback('onComplete', () => {
+    tl.add(() => {
       setEnableDownJudge(true);
     });
   }, [globalLoaded]);

@@ -11,9 +11,10 @@ import { memo, useEffect, useRef } from 'react';
 function Twin() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
+  const { setEnableJudge: setEnableUpJudge, enableJudge } = useScrollTriggerAction({
     triggerId: 'twin-scroll-trigger',
     scrollFn: () => {
+      if (!enableJudge || currentPage.id !== NAV_LIST[3].id) return;
       const smoother = ScrollSmoother.get();
       smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
     },

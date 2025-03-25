@@ -6,26 +6,28 @@ import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS 
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { memo } from 'react';
 
 function Engagement() {
-  const setCurrentPage = useSetAtom(currentPageAtom);
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
 
-  const { setEnableJudge: setEnableUpJudge } = useScrollTriggerAction({
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
-      // console.log('Engagement scrollFn Up');
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      console.log('Engagement scrollFn Up');
       gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
     },
     isUp: true,
   });
 
-  const { setEnableJudge: setEnableDownJudge } = useScrollTriggerAction({
+  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollTriggerAction({
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
-      // console.log('Engagement scrollFn down');
+      if (!enableDownJudge || currentPage.id !== NAV_LIST[2].id) return;
+      console.log('Engagement scrollFn down');
       gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[3].id}` } });
     },
     isUp: false,
