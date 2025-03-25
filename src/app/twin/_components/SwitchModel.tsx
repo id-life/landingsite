@@ -13,15 +13,18 @@ export default function SwitchModel() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
 
   const handleSwitchModel = (model: PredictionModel | null) => {
-    if (currentModelType !== ModelType.Skin) {
-      eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
-    }
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0 });
     gsap.to(list, { left: '-80rem' });
     gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.5 });
     gsap.to('#switch-skin', { bottom: '8rem' });
-    setCurrentModel(model);
+
+    if (currentModelType === ModelType.Skin) {
+      setCurrentModel(model);
+    }
+    if (currentModelType === ModelType.Anatomy) {
+      eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
+    }
   };
 
   return (

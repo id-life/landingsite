@@ -51,7 +51,7 @@ function Twin() {
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
-    tl.to('#twin-three-wrapper', { opacity: 0, duration: 2, delay: 1 });
+    tl.to('#twin-three-wrapper', { opacity: 0, duration: 1, delay: 0.6 });
   }, []);
 
   useEffect(() => {

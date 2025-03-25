@@ -8,7 +8,7 @@ import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
 import Loader from './Loader';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import SwitchSkin from '@/app/twin/_components/SwitchSkin';
 import { ModelRef, ModelType } from './model/type';
@@ -30,7 +30,7 @@ import { pollComponentMethod } from '@/components/twin/model/utils';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
-  const currentModel = useAtomValue(currentModelAtom);
+  const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
   const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
   const controlRef1 = useRef<CameraControls>(null);
@@ -46,7 +46,9 @@ export default function TwinThreeWrapper() {
     const controls2 = controlRefs[1]?.current;
     // 重制镜头
     if (payload.type === ModelType.Skin) {
-      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true).then(() => {
+        setCurrentModel(payload.model);
+      });
       controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
       setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
     }
@@ -62,15 +64,14 @@ export default function TwinThreeWrapper() {
         index = AnatomyCamera.CAMERA10;
       }
       setCurrentAnatomyCamera(index);
-      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+      setCurrentModel(payload.model);
     }
     setCurrentModelType(payload.type);
     setModelType(payload.type);
-    setTimeout(() => {
-      modelRefs.forEach((modelRef) => {
-        pollComponentMethod(modelRef, 'switchModelShow', [payload.type, index]).then();
-      });
+    pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
+      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } })
     });
+    pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
   });
 
   //对比视角同步
