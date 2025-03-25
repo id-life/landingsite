@@ -5,6 +5,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { activeMeetingDotClickOpenAtom } from '@/atoms/engagement';
+import { useAtom, useAtomValue } from 'jotai';
 
 const pointVariants: Variants = {
   initial: {
@@ -57,7 +59,9 @@ export function WorldMapDotPoint({
 }) {
   const { country, label, lat, lng } = dot;
   // const isClickOpenRef = useRef(false);
-  const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot } = useEngagementClickPoint();
+  const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
+  const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot, handleMouseEnter, handleMouseLeave } =
+    useEngagementClickPoint();
   const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
 
   const isOtherActive = useMemo(
@@ -79,6 +83,14 @@ export function WorldMapDotPoint({
       animate={isActive ? 'hover' : 'initial'}
       variants={containerVariants}
       onClick={handleClick}
+      onMouseEnter={(e) => {
+        if (activeMeetingDotClickOpen) setActiveMeetingDotClickOpen(false);
+        handleMouseEnter(e, index, 'meeting');
+      }}
+      onMouseLeave={(e) => {
+        if (activeMeetingDotClickOpen) return;
+        handleMouseLeave(e, index, 'meeting');
+      }}
     >
       <g className={cn(isOtherActive && 'opacity-50')}>
         {/* <motion.g variants={pointVariants}>
@@ -148,10 +160,20 @@ export function WorldMapDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { title, imgs, contentTransformStyle, period, lat, lng } = dot;
-  const { activeMeetingDot } = useEngagementClickPoint();
+  const { activeMeetingDot, handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
+  const activeMeetingDotClickOpen = useAtomValue(activeMeetingDotClickOpenAtom);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeMeetingDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-content-${index}`)) {
+      handleMouseLeave(e, index, 'meeting');
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -189,6 +211,7 @@ export function WorldMapDotContent({
             style={{
               transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
             }}
+            onMouseLeave={handleContentMouseLeave}
           >
             {title && (
               <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">

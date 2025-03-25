@@ -197,7 +197,7 @@ export function WorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute -left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              className={cn('absolute left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
               style={{
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
