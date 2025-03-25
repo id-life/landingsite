@@ -26,7 +26,7 @@ export default function MobileTwin() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#switch-model', { top: '34rem' });
+    gsap.to('#switch-model', { top: '34rem', y: '-50%' });
     setCurrentModel(PredictionModel.M0);
   };
   return (

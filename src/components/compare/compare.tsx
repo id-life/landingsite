@@ -16,6 +16,7 @@ interface CompareProps {
   showHandlebar?: boolean;
   autoplay?: boolean;
   autoplayDuration?: number;
+  isVideo?: boolean;
 }
 export const Compare = ({
   firstImage = '',
@@ -28,15 +29,31 @@ export const Compare = ({
   showHandlebar = true,
   autoplay = false,
   autoplayDuration = 5000,
+  isVideo = false,
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
   const [isDragging, setIsDragging] = useState(false);
+  const firstVideoRef = useRef<HTMLVideoElement>(null);
+  const secondVideoRef = useRef<HTMLVideoElement>(null);
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const [isMouseOver, setIsMouseOver] = useState(false);
 
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isVideo) {
+      if (firstVideoRef.current) {
+        firstVideoRef.current.currentTime = 0;
+        firstVideoRef.current.play();
+      }
+      if (secondVideoRef.current) {
+        secondVideoRef.current.currentTime = 0;
+        secondVideoRef.current.play();
+      }
+    }
+  }, [firstImage, secondImage, isVideo]);
 
   const startAutoplay = useCallback(() => {
     if (!autoplay) return;
@@ -159,7 +176,7 @@ export const Compare = ({
     >
       <AnimatePresence initial={false}>
         <motion.div
-          className="absolute top-0 z-30 m-auto h-full w-px bg-gradient-to-b from-transparent from-[5%] via-indigo-500 to-transparent to-[95%]"
+          className="absolute top-0 z-30 m-auto h-full w-[2px] bg-gradient-to-b from-transparent from-[15%] via-[#c11111] to-transparent to-[95%]"
           style={{
             left: `${sliderXPercent}%`,
             top: '0',
@@ -167,8 +184,8 @@ export const Compare = ({
           }}
           transition={{ duration: 0 }}
         >
-          <div className="absolute left-0 top-1/2 z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-indigo-400 via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
-          <div className="absolute left-0 top-1/2 z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-cyan-400 via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
+          <div className="absolute left-0 top-1/2 z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
+          <div className="absolute left-0 top-1/2 z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
           <div className="absolute -right-10 top-1/2 h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]">
             <MemoizedSparklesCore
               background="transparent"
@@ -199,12 +216,25 @@ export const Compare = ({
               }}
               transition={{ duration: 0 }}
             >
-              <img
-                alt="first image"
-                src={firstImage}
-                className={cn('absolute inset-0 z-20 h-full w-full shrink-0 select-none rounded-2xl', firstImageClassName)}
-                draggable={false}
-              />
+              {isVideo ? (
+                <video
+                  ref={firstVideoRef}
+                  src={firstImage}
+                  className={cn('absolute inset-0 z-20 h-full w-full shrink-0 select-none rounded-2xl', firstImageClassName)}
+                  draggable={false}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              ) : (
+                <img
+                  alt="first image"
+                  src={firstImage}
+                  className={cn('absolute inset-0 z-20 h-full w-full shrink-0 select-none rounded-2xl', firstImageClassName)}
+                  draggable={false}
+                />
+              )}
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -212,12 +242,33 @@ export const Compare = ({
 
       <AnimatePresence initial={false}>
         {secondImage ? (
-          <motion.img
+          <motion.div
             className={cn('absolute left-0 top-0 z-[19] h-full w-full select-none rounded-2xl', secondImageClassname)}
-            alt="second image"
-            src={secondImage}
-            draggable={false}
-          />
+            style={{
+              clipPath: `inset(0 0 0 ${sliderXPercent}%)`,
+            }}
+            transition={{ duration: 0 }}
+          >
+            {isVideo ? (
+              <video
+                ref={secondVideoRef}
+                src={secondImage}
+                className={cn('absolute inset-0 h-full w-full shrink-0 select-none rounded-2xl', secondImageClassname)}
+                draggable={false}
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ) : (
+              <img
+                alt="second image"
+                src={secondImage}
+                className={cn('absolute inset-0 h-full w-full shrink-0 select-none rounded-2xl', secondImageClassname)}
+                draggable={false}
+              />
+            )}
+          </motion.div>
         ) : null}
       </AnimatePresence>
     </div>

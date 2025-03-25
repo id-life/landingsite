@@ -25,9 +25,9 @@ export default function ReportM01() {
             </Drawer.Close>
             <div className="mb-2 mt-4 flex items-center justify-between">
               <div className="flex-1 overflow-hidden">
-                <div className="flex gap-2 whitespace-nowrap">
+                <div className="flex flex-wrap gap-2">
                   {['30 YEARS', 'Sedentary', 'High-Sugar'].map((tag, index) => (
-                    <Tag key={tag} text={tag} isActive={index === 0} />
+                    <Tag key={tag} text={tag} />
                   ))}
                 </div>
               </div>
