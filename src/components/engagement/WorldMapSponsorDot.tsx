@@ -106,40 +106,36 @@ export function WorldMapSponsorDotPoint({
         {/* 点 */}
         <motion.g variants={pointVariants}>
           <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          {isActive && (
-            <>
-              <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-                <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-              </circle>
-              <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-                <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-              </circle>
-            </>
-          )}
+          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+          </circle>
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={20}>
-          <motion.p
+        <foreignObject x={point.x - 1} y={point.y - 5} width={isActive ? 140 : 70} height={14}>
+          <motion.div
             variants={labelVariants}
-            className="flex w-full origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
+            className="flex w-auto origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"
           >
             {title}
             <AnimatePresence>
               {isActive && (
-                <motion.span
+                <motion.div
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
+                  className="relative flex items-center gap-1 rounded-lg bg-[#3e3a15] p-1 px-2 py-1 text-base/5 font-semibold text-orange"
                 >
                   <SponsorSVG className="size-5 fill-orange" />
                   Sponsorship
-                </motion.span>
+                </motion.div>
               )}
             </AnimatePresence>
-          </motion.p>
+          </motion.div>
         </foreignObject>
       </g>
     </motion.g>

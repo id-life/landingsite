@@ -9,8 +9,8 @@ export type MapRegionDotData = {
 
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
-    lat: 34,
-    lng: -92,
+    lat: 36,
+    lng: -100,
     icon: <AmericaSVG className="size-2.5" />,
   },
   {
@@ -19,8 +19,8 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <SingaporeSVG className="size-2.5" />,
   },
   {
-    lat: 13,
-    lng: 111,
+    lat: 30,
+    lng: 100,
     icon: <ChineseSVG className="size-2.5" />,
   },
   {
@@ -195,8 +195,8 @@ export type MapBookDotData = {
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
-    lat: 20,
-    lng: -114,
+    lat: 32,
+    lng: 25,
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
@@ -206,10 +206,10 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
   },
   {
-    lat: -14,
-    lng: -18,
+    lat: -10,
+    lng: 34,
     key: 'publications-02',
-    title: 'Network State',
+    title: 'Earth',
     bookTitle: 'bio/acc manifesto',
     desc: 'Read Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
@@ -235,7 +235,7 @@ export type MapSponsorDotData = {
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
-    lat: 42,
+    lat: 26,
     lng: -120,
     title: 'California, USA',
     key: 'sponsor-01',
@@ -246,7 +246,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: '',
   },
   {
-    lat: 30,
+    lat: 17,
     lng: 88,
     title: 'Chengdu, China',
     key: 'sponsor-02',

@@ -88,7 +88,7 @@ export const WorldMap = memo(function WorldMapComponent({
       const size = 12;
       return (
         <g key={`points-group-${i}`} className="world-map-region opacity-0">
-          <g className={cn(isAnyActive && 'opacity-50')}>
+          <g className={cn(isAnyActive && 'opacity-80')} filter="url(#black-overlay)">
             {dot.icon ? (
               <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
                 <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
@@ -220,7 +220,7 @@ export const WorldMap = memo(function WorldMapComponent({
       <WorldMapSVG
         ref={ref}
         className={cn(
-          'world-map-img pointer-events-none absolute -left-40 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'world-map-img pointer-events-none absolute -left-10 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
       />
@@ -234,7 +234,7 @@ export const WorldMap = memo(function WorldMapComponent({
         id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute -left-40 top-0 h-full w-full select-none overflow-visible"
+        className="pointer-events-none absolute -left-10 top-0 size-full select-none overflow-visible"
       >
         {regionDotsPoints}
         {dotsPoints}
@@ -250,6 +250,10 @@ export const WorldMap = memo(function WorldMapComponent({
             <stop offset="95%" stopColor={lineColor} stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </linearGradient>
+          <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
+            <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
+            <feComposite in="overlay" in2="SourceGraphic" operator="over" />
+          </filter>
         </defs>
       </svg>
     </div>
