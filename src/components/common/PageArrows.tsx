@@ -9,7 +9,7 @@ import {
 } from '@/atoms';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 

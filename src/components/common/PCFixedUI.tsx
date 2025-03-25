@@ -9,7 +9,7 @@ import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { ReactNode, useMemo } from 'react';
-import { NAV_LIST } from '../nav/nav';
+import { HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
@@ -25,9 +25,7 @@ export default function PCFixedUI() {
         <PageArrows
           className={cn(
             'fixed left-1/2 -translate-x-1/2',
-            [NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)
-              ? 'bottom-5 mobile:bottom-6'
-              : 'bottom-11 mobile:bottom-6',
+            HAS_INNER_PAGE_LIST.includes(currentPage.id) ? 'bottom-5 mobile:bottom-6' : 'bottom-11 mobile:bottom-6',
           )}
         />
       )}

@@ -49,11 +49,11 @@ export function useNavigation() {
       } else if (id === NAV_LIST[2].id) {
         // engagement 页
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${id}`, true);
+        smoother?.scrollTo(`#${id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          gsap.to(window, { scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
+          gsap.set(window, { scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
           // const animation = st.animation;
           // if (!animation) return;
           // animation.progress(engagementProgressMap[0]);
@@ -66,7 +66,7 @@ export function useNavigation() {
       } else {
         // 其他 正常滚
         isNavScrollingRef.current = true;
-        smoother?.scrollTo(`#${id}`, true);
+        smoother?.scrollTo(`#${id}`, false);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       }
 
