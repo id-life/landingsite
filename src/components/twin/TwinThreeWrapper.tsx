@@ -27,6 +27,7 @@ import Model3Out from './model/Model3Out';
 import Model2Out from './model/Model2Out';
 import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
+import YTBDemo from '@/app/twin/_components/YTBDemo';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -42,17 +43,13 @@ export default function TwinThreeWrapper() {
 
   // 切换模型
   useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType; model: PredictionModel }) => {
-    const controls1 = controlRefs[0]?.current;
-    const controls2 = controlRefs[1]?.current;
     // 重制镜头
-    if (payload.type === ModelType.Skin) {
-      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true).then(() => {
-        setCurrentModel(payload.model);
-      });
-      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
-      setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
-    }
     let index = AnatomyCamera.CAMERA0;
+    if (payload.type === ModelType.Skin) {
+      setCurrentModel(payload.model);
+      setCurrentAnatomyCamera(index);
+      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+    }
     if (payload.type === ModelType.Anatomy) {
       if (payload.model === PredictionModel.M0 || payload.model === PredictionModel.M1) {
         index = AnatomyCamera.CAMERA0;
@@ -65,13 +62,13 @@ export default function TwinThreeWrapper() {
       }
       setCurrentAnatomyCamera(index);
       setCurrentModel(payload.model);
+      pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
+        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+      });
+      pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
     }
     setCurrentModelType(payload.type);
     setModelType(payload.type);
-    pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
-      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } })
-    });
-    pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
   });
 
   //对比视角同步
@@ -198,6 +195,7 @@ export default function TwinThreeWrapper() {
       <SwitchSkin />
       <SwitchAnatomyCamera />
       <ModelReport />
+      <YTBDemo />
       <div
         style={{
           position: 'relative',

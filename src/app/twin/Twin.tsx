@@ -1,5 +1,5 @@
 import { currentPageAtom } from '@/atoms';
-import { currentModelAtom, PredictionModel } from '@/atoms/twin';
+import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
@@ -7,8 +7,12 @@ import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom, useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
+import { ModelType } from '@/components/twin/model/type';
 
 function Twin() {
+  const isResetDemo = useRef(false);
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { setEnableJudge: setEnableUpJudge, enableJudge } = useScrollTriggerAction({
@@ -21,6 +25,7 @@ function Twin() {
     isUp: true,
   });
   const setCurrentModel = useSetAtom(currentModelAtom);
+  const setCurrentModelType = useSetAtom(currentModelTypeAtom);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -56,18 +61,22 @@ function Twin() {
   }, []);
 
   useEffect(() => {
-    if (currentPage !== NAV_LIST[3]) {
-      resetModel();
+    if (currentPage === NAV_LIST[3]) {
+      isResetDemo.current = true;
+      return;
+    }
+    if (currentPage !== NAV_LIST[3] && isResetDemo.current) {
+      const list = gsap.utils.toArray('.twin-title-item');
+      gsap.to(list, { left: '-80rem' });
+      gsap.to('.twin-title', { opacity: 1 });
+      gsap.to('#ytb-demo', { opacity: 1 });
+      gsap.to('#switch-skin', { bottom: '15rem' });
+      setCurrentModel(PredictionModel.M0);
+      setCurrentModelType(ModelType.Skin);
+      eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });
+      isResetDemo.current = false;
     }
   }, [currentPage]);
-
-  const resetModel = () => {
-    const list = gsap.utils.toArray('.twin-title-item');
-    gsap.to(list, { left: '-80rem' });
-    gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#switch-skin', { bottom: '15rem' });
-    setCurrentModel(PredictionModel.M0);
-  };
 
   return (
     <div id={NAV_LIST[3].id} className="page-container twin">

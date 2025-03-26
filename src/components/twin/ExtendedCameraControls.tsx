@@ -15,6 +15,7 @@ const ExtendedCameraControls = forwardRef<CameraControls, ExtendedCameraControls
       minDistance={1}
       maxDistance={15}
       polarAngle={Math.PI / 2.3}
+      draggingSmoothTime={0}
       mouseButtons={{
         left: CameraControlsImpl.ACTION.ROTATE,
         right: CameraControlsImpl.ACTION.NONE,

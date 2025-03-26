@@ -1,4 +1,4 @@
-import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import SelectSVG from '@/../public/svgs/twin/select.svg?component';
@@ -13,16 +13,23 @@ export default function SwitchModel() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
 
   const handleSwitchModel = (model: PredictionModel | null) => {
-    const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0 });
-    gsap.to(list, { left: '-80rem' });
-    gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.5 });
+    gsap.to('#ytb-demo', { opacity: 0 });
     gsap.to('#switch-skin', { bottom: '8rem' });
-
+    const list = gsap.utils.toArray('.twin-title-item');
+    gsap.killTweensOf(list);
     if (currentModelType === ModelType.Skin) {
+      gsap.to(list, { left: '-80rem', duration: 0.5 }).then(() => {
+        gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
+      });
       setCurrentModel(model);
+      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
+      // eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }
     if (currentModelType === ModelType.Anatomy) {
+      gsap.to(list, { left: '-80rem', delay: 0.5, duration: 0.5 }).then(() => {
+        gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
+      });
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }
   };
