@@ -21,11 +21,12 @@ export default function SwitchModel() {
       gsap.to('.twin-tag', { left: '-80rem', delay: 0.5 });
     }
     gsap.to('#switch-model', { top: '50%', y: '-50%' });
+    gsap.to('#switch-skin', { top: '50%', y: '-50%' });
   };
 
   return (
-    <div id="switch-model" className="absolute left-5 top-[34rem] z-20 grid w-20 gap-3">
-      <div className="relative cursor-pointer p-3" onClick={() => handleSwitchModel(PredictionModel.M0)}>
+    <div id="switch-model" className="absolute left-5 top-100 z-20 grid w-20 gap-3">
+      <div className="relative cursor-pointer p-1 w-10" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(
             'absolute left-0 top-0 h-auto w-full',
@@ -34,8 +35,8 @@ export default function SwitchModel() {
         />
         <img src="/imgs/twin/avatar-model0.png" alt="" />
       </div>
-      <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
-      <div className="grid gap-2 border-2 border-black p-2">
+      <img src="/svgs/twin/avatar-divider.svg" alt="" />
+      <div className="grid gap-2 border-2 border-black p-1 w-10">
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
           onClick={() => handleSwitchModel(PredictionModel.M1)}

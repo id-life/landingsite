@@ -35,6 +35,8 @@ export const Compare = ({
   const [isDragging, setIsDragging] = useState(false);
   const firstVideoRef = useRef<HTMLVideoElement>(null);
   const secondVideoRef = useRef<HTMLVideoElement>(null);
+  const [isFirstVideoReady, setIsFirstVideoReady] = useState(false);
+  const [isSecondVideoReady, setIsSecondVideoReady] = useState(false);
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -43,15 +45,45 @@ export const Compare = ({
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    if (isVideo && isFirstVideoReady && isSecondVideoReady) {
+      const playVideos = async () => {
+        if (firstVideoRef.current && secondVideoRef.current) {
+          firstVideoRef.current.currentTime = 0;
+          secondVideoRef.current.currentTime = 0;
+          
+          try {
+            await Promise.all([
+              firstVideoRef.current.play(),
+              secondVideoRef.current.play()
+            ]);
+          } catch (error) {
+            console.error('视频播放失败:', error);
+          }
+        }
+      };
+      
+      playVideos();
+    }
+  }, [isFirstVideoReady, isSecondVideoReady, isVideo]);
+
+  useEffect(() => {
     if (isVideo) {
       if (firstVideoRef.current) {
+        firstVideoRef.current.pause();
         firstVideoRef.current.currentTime = 0;
-        firstVideoRef.current.play();
+        firstVideoRef.current.src = firstImage;
+        firstVideoRef.current.load();
       }
+      
       if (secondVideoRef.current) {
+        secondVideoRef.current.pause();
         secondVideoRef.current.currentTime = 0;
-        secondVideoRef.current.play();
+        secondVideoRef.current.src = secondImage;
+        secondVideoRef.current.load();
       }
+      
+      setIsFirstVideoReady(false);
+      setIsSecondVideoReady(false);
     }
   }, [firstImage, secondImage, isVideo]);
 
@@ -197,7 +229,7 @@ export const Compare = ({
             />
           </div>
           {showHandlebar && (
-            <div className="absolute -right-2.5 top-1/2 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
+            <div className="absolute -right-2.5 top-[43%] z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
               <IconDotsVertical className="h-4 w-4 text-black" />
             </div>
           )}
@@ -222,10 +254,11 @@ export const Compare = ({
                   src={firstImage}
                   className={cn('absolute inset-0 z-20 h-full w-full shrink-0 select-none rounded-2xl', firstImageClassName)}
                   draggable={false}
-                  autoPlay
+                  autoPlay={false}
                   muted
                   loop
                   playsInline
+                  onCanPlayThrough={() => setIsFirstVideoReady(true)}
                 />
               ) : (
                 <img
@@ -255,10 +288,11 @@ export const Compare = ({
                 src={secondImage}
                 className={cn('absolute inset-0 h-full w-full shrink-0 select-none rounded-2xl', secondImageClassname)}
                 draggable={false}
-                autoPlay
+                autoPlay={false}
                 muted
                 loop
                 playsInline
+                onCanPlayThrough={() => setIsSecondVideoReady(true)}
               />
             ) : (
               <img

@@ -15,15 +15,21 @@ export default function SwitchSkin() {
 
   return (
     <div id="switch-skin" className="absolute right-5 top-1/2 z-20 grid -translate-y-1/2 gap-5">
-      <div className="grid grid-rows-2 gap-6">
+      <div className="grid grid-rows-2 gap-3">
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG
-            className={clsx(currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
+            className={clsx(
+              'w-7',
+              currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+            )}
           />
         </div>
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
           <AnatomySVG
-            className={clsx(currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
+            className={clsx(
+              'w-7',
+              currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+            )}
           />
         </div>
       </div>

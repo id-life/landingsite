@@ -26,7 +26,8 @@ export default function MobileTwin() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#switch-model', { top: '34rem', y: '-50%' });
+    gsap.to('#switch-model', { top: '30rem', y: '-50%' });
+    gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
     setCurrentModel(PredictionModel.M0);
   };
   return (
@@ -43,16 +44,16 @@ export default function MobileTwin() {
         <div className="twin-title absolute left-5 top-20 w-screen">
           <img src="/svgs/twin/mobile/title-page.svg" alt="" />
         </div>
-        <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-24">
+        <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-ontology.svg" alt="" className="h-[116px] w-auto" />
         </div>
-        <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-24">
+        <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-01.svg" alt="" className="h-[116px] w-auto" />
         </div>
-        <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-24">
+        <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-02.svg" alt="" className="h-[116px] w-auto" />
         </div>
-        <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-24">
+        <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-20">
           <img src="/svgs/twin/title-clone-03.svg" alt="" className="h-[116px] w-auto" />
         </div>
       </div>

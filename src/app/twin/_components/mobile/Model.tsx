@@ -58,20 +58,19 @@ export function Model() {
       }
     } else {
       if (!currentModel || currentModel === PredictionModel.M0) {
-        return ['/imgs/twin/model/video/M0.webm'];
+        return ['https://cdn.id.life/twin/M0.webm'];
       } else if (currentModel === PredictionModel.M1) {
-        return ['/imgs/twin/model/video/M0.webm', '/imgs/twin/model/video/M1.webm'];
+        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M1.webm'];
       } else if (currentModel === PredictionModel.M2) {
-        return ['/imgs/twin/model/video/M0.webm', '/imgs/twin/model/video/M2.webm'];
+        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M2.webm'];
       } else if (currentModel === PredictionModel.M3) {
-        return ['/imgs/twin/model/video/M0.webm', '/imgs/twin/model/video/M3.webm'];
+        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M3.webm'];
       }
     }
   }, [currentAnatomyCamera, currentModel, currentModelType]);
-  console.log(imgUrl);
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+    <div className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform">
       {currentModelType === ModelType.Anatomy ? (
         currentModel === PredictionModel.M0 ? (
           <img src={imgUrl?.[0]} alt="" className="object-cover object-center" />
