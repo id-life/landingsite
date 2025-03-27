@@ -27,12 +27,12 @@ export default function SwitchSkin() {
       <div className="grid grid-cols-2 gap-10">
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG
-            className={clsx(currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
+            className={clsx('w-[42px] h-[42px]',currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
           />
         </div>
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
           <AnatomySVG
-            className={clsx(currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
+            className={clsx('w-[42px] h-[42px]',currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black')}
           />
         </div>
       </div>
