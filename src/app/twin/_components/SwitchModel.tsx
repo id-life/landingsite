@@ -24,7 +24,6 @@ export default function SwitchModel() {
       });
       setCurrentModel(model);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
-      // eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }
     if (currentModelType === ModelType.Anatomy) {
       gsap.to(list, { left: '-80rem', delay: 0.5, duration: 0.5 }).then(() => {
@@ -45,6 +44,9 @@ export default function SwitchModel() {
         />
         {currentModel === PredictionModel.M0 && <SelectSVG className="absolute -right-7 top-6" />}
         <img src="/imgs/twin/avatar-model0.png" alt="" />
+        <div className="flex-center absolute inset-2 left-2 top-2 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+          ORG
+        </div>
       </div>
       <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
       <div className="grid gap-2 border-2 border-black p-2">
@@ -54,6 +56,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model1.png" alt="" />
           {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+            C01
+          </div>
         </div>
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M2 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
@@ -61,6 +66,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model2.png" alt="" />
           {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+            C02
+          </div>
         </div>
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M3 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
@@ -68,6 +76,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model3.png" alt="" />
           {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+            C03
+          </div>
         </div>
       </div>
     </div>

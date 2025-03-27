@@ -46,9 +46,14 @@ export default function TwinThreeWrapper() {
     // 重制镜头
     let index = AnatomyCamera.CAMERA0;
     if (payload.type === ModelType.Skin) {
-      setCurrentModel(payload.model);
-      setCurrentAnatomyCamera(index);
-      eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+      const controls1 = controlRefs[0]?.current;
+      const controls2 = controlRefs[1]?.current;
+      controls1?.setLookAt(0, 0, 15, 0, 0, 0, true).then(() => {
+        setCurrentModel(payload.model);
+        setCurrentAnatomyCamera(index);
+        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+      });
+      controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);
     }
     if (payload.type === ModelType.Anatomy) {
       if (payload.model === PredictionModel.M0 || payload.model === PredictionModel.M1) {
@@ -65,7 +70,9 @@ export default function TwinThreeWrapper() {
       pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
         eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
       });
-      pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
+      if (payload.model !== PredictionModel.M0) {
+        pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
+      }
     }
     setCurrentModelType(payload.type);
     setModelType(payload.type);

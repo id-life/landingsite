@@ -25,7 +25,7 @@ export const pollComponentMethod = <T extends ComponentWithMethods>(
   componentRef: any,
   methodName: keyof T,
   args: any[] = [],
-  maxAttempts: number = 20,
+  maxAttempts: number = 10,
   interval: number = 100,
 ): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
@@ -41,7 +41,7 @@ export const pollComponentMethod = <T extends ComponentWithMethods>(
       attempts++;
 
       if (attempts >= maxAttempts) {
-        reject(new Error(`Failed to execute ${String(methodName)} after ${maxAttempts} attempts`));
+        console.log(`Failed to execute ${String(methodName)} after ${maxAttempts} attempts`);
         return true;
       }
 

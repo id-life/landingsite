@@ -10,11 +10,11 @@ export default function ReportM01() {
   };
 
   return (
-    <Drawer.Root direction="bottom">
+    <Drawer.Root direction="left">
       <Drawer.Trigger className="text-red-600"> More &gt;</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />
-        <Drawer.Content className="fixed bottom-0 left-0 top-0 z-[100] flex w-full bg-white outline-none">
+        <Drawer.Content className="fixed bottom-0 left-0 top-0 z-[100] flex w-[42rem] bg-white outline-none">
           <div className="flex h-full w-full grow flex-col p-10">
             <Drawer.Title className="text-[2.5rem]/[3rem] font-semibold">Unhealthy habits me</Drawer.Title>
             <Drawer.Close className="absolute right-10 top-10 w-5">
