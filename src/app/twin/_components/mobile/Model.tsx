@@ -68,10 +68,9 @@ export function Model() {
       }
     }
   }, [currentAnatomyCamera, currentModel, currentModelType]);
-  console.log(imgUrl);
 
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+    <div className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform">
       {currentModelType === ModelType.Anatomy ? (
         currentModel === PredictionModel.M0 ? (
           <img src={imgUrl?.[0]} alt="" className="object-cover object-center" />
