@@ -12,6 +12,7 @@ import gsap from 'gsap';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { NAV_LIST } from './nav';
+import { useEvent } from 'react-use';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -60,6 +61,21 @@ export default function PCNav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  const handleClickOutside = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (isSubscribeShow && !playingRef.current) {
+      const target = e.target as Element;
+      const isClickFooter = target.closest('.footer-box-clip');
+      const isClickSubscribeBtn = target.closest('#subscribe-btn');
+      if (!isClickFooter && !isClickSubscribeBtn) {
+        timelineRef.current.reverse();
+        setIsSubscribeShow(false);
+      }
+    }
+  };
+
+  useEvent('mousedown', handleClickOutside);
+
   if (!globalLoaded) return null;
   return (
     <div
@@ -81,7 +97,7 @@ export default function PCNav() {
           </div>
         ))}
       </div>
-      <div className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
+      <div id="subscribe-btn" className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
         <div
           onClick={onSubscribeClick}
           className="group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
