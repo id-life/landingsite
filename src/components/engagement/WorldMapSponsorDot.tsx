@@ -120,7 +120,7 @@ export function WorldMapSponsorDotPoint({
           )}
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x - 1} y={point.y - 5} width={isActive ? 140 : 70} height={14}>
+        <foreignObject x={point.x - 1} y={point.y - 5} width={isActive ? '8.75rem' : '5rem'} height=".875rem">
           <motion.div
             variants={labelVariants}
             className="flex w-auto origin-top-left items-center gap-2 whitespace-nowrap pl-5 font-oxanium font-semibold capitalize text-white"

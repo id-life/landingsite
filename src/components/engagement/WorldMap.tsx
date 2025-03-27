@@ -196,7 +196,7 @@ export const WorldMap = memo(function WorldMapComponent({
 
   return (
     <div
-      className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden bg-black/20 font-sans"
+      className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
       onClick={handleBackgroundClick}
     >
       {/* <button

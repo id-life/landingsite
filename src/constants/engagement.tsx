@@ -60,8 +60,8 @@ export type MapDotData = {
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
-    lat: 17,
-    lng: 120,
+    lat: 17.5,
+    lng: 120.5,
     country: 'China', // 新加的一个
     label: 'Shanghai',
     period: '2024/11',
@@ -252,7 +252,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   },
   {
     lat: 17,
-    lng: 88,
+    lng: 88.5,
     title: 'Chengdu, China',
     key: 'sponsor-02',
     alt: 'ethPanda',

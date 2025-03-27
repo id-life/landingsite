@@ -121,7 +121,7 @@ export function WorldMapBookDotPoint({
           )}
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={14}>
+        <foreignObject x={point.x} y={point.y - 4.5} width={isActive ? '12.5rem' : '6.25rem'} height=".875rem">
           <motion.p
             transition={{ duration: 0.3 }}
             variants={labelVariants}
