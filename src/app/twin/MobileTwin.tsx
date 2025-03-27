@@ -8,6 +8,8 @@ import SwitchSkin from './_components/mobile/SwitchSkin';
 import Description from './_components/mobile/Description';
 import { currentModelAtom, PredictionModel } from '@/atoms/twin';
 import { gsap } from 'gsap';
+import { Model } from './_components/mobile/Model';
+import SwitchAnatomyCamera from './_components/SwitchAnatomyCamera';
 
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
@@ -24,7 +26,7 @@ export default function MobileTwin() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#switch-model', { top: '34rem' });
+    gsap.to('#switch-model', { top: '34rem', y: '-50%' });
     setCurrentModel(PredictionModel.M0);
   };
   return (
@@ -59,6 +61,8 @@ export default function MobileTwin() {
         <SwitchModel />
         <SwitchSkin />
         <Description />
+        <SwitchAnatomyCamera />
+        <Model />
       </div>
     </div>
   );
