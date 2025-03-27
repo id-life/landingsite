@@ -106,14 +106,18 @@ export function WorldMapSponsorDotPoint({
         {/* 点 */}
         <motion.g variants={pointVariants}>
           <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
+          {isActive && (
+            <>
+              <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
+                <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
+                <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
+              </circle>
+            </>
+          )}
         </motion.g>
         {/* 标签 */}
         <foreignObject x={point.x - 1} y={point.y - 5} width={isActive ? 140 : 70} height={14}>
@@ -152,8 +156,7 @@ export function WorldMapSponsorDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { alt, link, coverUrl, videoUrl, lat, lng, containerClass } = dot;
-  const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
-  const { handleMouseLeave } = useEngagementClickPoint();
+  const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);

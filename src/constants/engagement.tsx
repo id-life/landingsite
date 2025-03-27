@@ -54,6 +54,7 @@ export type MapDotData = {
   }[];
   contentTransformStyle?: string;
   mobileContentTransformStyle?: string;
+  pcDotHotAreaClass?: string;
   index?: number; // 动画标识符
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
@@ -68,6 +69,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'The 5th Timepie Longevity Forum', //上海timepie
     contentTransformStyle: 'translate(-85%, 0)',
     mobileContentTransformStyle: 'translate(-85%, 0)',
+    pcDotHotAreaClass: 'top-[29vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Shanghai-01.webp',
@@ -98,6 +100,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     contentTransformStyle: 'translate(-85%, 20%)',
     mobileContentTransformStyle: 'translate(-85%, 20%)',
+    pcDotHotAreaClass: 'top-[24vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Chiangmai-1.webp',
@@ -124,6 +127,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum',
     contentTransformStyle: 'translate(-85%, 8%)',
     mobileContentTransformStyle: 'translate(-85%, 8%)',
+    pcDotHotAreaClass: 'top-[42vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Singapore-1.webp',
@@ -152,12 +156,13 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     lat: -8,
     lng: -88,
     label: 'Roatan',
-    country: 'Hondurus',
+    country: 'Honduras',
     period: '2024/01',
     key: 'roatan_vitalia_2024', // Unique identifier for the dot
     title: 'Vitalia @ Roatan, Honduras',
     contentTransformStyle: 'translate(85%, 5%)',
     mobileContentTransformStyle: 'translate(55%, 5%)',
+    pcDotHotAreaClass: 'right-full -left-[85%] top-[37vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',

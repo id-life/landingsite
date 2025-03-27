@@ -87,10 +87,6 @@ export function WorldMapDotPoint({
         if (activeMeetingDotClickOpen) setActiveMeetingDotClickOpen(false);
         handleMouseEnter(e, index, 'meeting');
       }}
-      onMouseLeave={(e) => {
-        if (activeMeetingDotClickOpen) return;
-        handleMouseLeave(e, index, 'meeting');
-      }}
     >
       <g className={cn(isOtherActive && 'opacity-50')}>
         {/* <motion.g variants={pointVariants}>
@@ -121,7 +117,12 @@ export function WorldMapDotPoint({
           )}
         </motion.g>
         {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width="7.5rem" height={40}>
+        <foreignObject
+          x={point.x}
+          y={point.y - 4.5}
+          width={isActive ? '8rem' : '7rem'}
+          height={isActive ? '1.75rem' : '.75rem'}
+        >
           <motion.p
             variants={labelVariants}
             transition={{ duration: 0.3 }}
@@ -159,7 +160,7 @@ export function WorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
-  const { title, imgs, contentTransformStyle, period, lat, lng } = dot;
+  const { title, imgs, contentTransformStyle, period, lat, lng, pcDotHotAreaClass } = dot;
   const { activeMeetingDot, handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const activeMeetingDotClickOpen = useAtomValue(activeMeetingDotClickOpenAtom);
@@ -181,11 +182,24 @@ export function WorldMapDotContent({
         <foreignObject
           x={point.x - 16}
           y={0}
-          width={160}
+          width="18.75rem"
           className={cn(
             `world-map-dot-content world-map-dot-content-${index} pointer-events-none flex max-h-[42.5rem] flex-col overflow-visible`,
           )}
         >
+          {/* 移出判断热区 */}
+          <div
+            className={cn(
+              'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+            )}
+            style={{
+              transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
+            }}
+            onMouseLeave={handleContentMouseLeave}
+          >
+            <div className="pointer-events-auto absolute -inset-10"></div>
+            <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28', pcDotHotAreaClass)}></div>
+          </div>
           <motion.div
             initial="hidden"
             animate="visible"
@@ -211,7 +225,6 @@ export function WorldMapDotContent({
             style={{
               transform: `scale(var(--inverse-scale, 1)) ${contentTransformStyle}`,
             }}
-            onMouseLeave={handleContentMouseLeave}
           >
             {title && (
               <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
