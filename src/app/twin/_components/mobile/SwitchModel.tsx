@@ -1,5 +1,5 @@
-import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
-import { useAtom, useAtomValue } from 'jotai';
+import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
@@ -7,7 +7,7 @@ import { gsap } from 'gsap';
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
-
+  const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
   const handleSwitchModel = (model: PredictionModel | null) => {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0 });
@@ -22,6 +22,21 @@ export default function SwitchModel() {
     }
     gsap.to('#switch-model', { top: '50%', y: '-50%' });
     gsap.to('#switch-skin', { top: '50%', y: '-50%' });
+
+    switch (model) {
+      case PredictionModel.M0:
+        setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
+        break;
+      case PredictionModel.M1:
+        setCurrentAnatomyCamera(AnatomyCamera.CAMERA0);
+        break;
+      case PredictionModel.M2:
+        setCurrentAnatomyCamera(AnatomyCamera.CAMERA7);
+        break;
+      case PredictionModel.M3:
+        setCurrentAnatomyCamera(AnatomyCamera.CAMERA10);
+        break;
+    }
   };
 
   return (

@@ -216,21 +216,21 @@ export const Compare = ({
           }}
           transition={{ duration: 0 }}
         >
-          <div className="absolute left-0 top-1/2 z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
-          <div className="absolute left-0 top-1/2 z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
-          <div className="absolute -right-10 top-1/2 h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]">
+          <div className="absolute left-0 top-[43%] z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
+          <div className="absolute left-0 top-[43%] z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
+          <div className="absolute -right-10 top-[43%] h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]">
             <MemoizedSparklesCore
               background="transparent"
               minSize={0.4}
               maxSize={1}
               particleDensity={1200}
               className="h-full w-full"
-              particleColor="#FFFFFF"
+              particleColor="#c11111"
             />
           </div>
           {showHandlebar && (
-            <div className="absolute -right-2.5 top-[43%] z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
-              <IconDotsVertical className="h-4 w-4 text-black" />
+            <div className="absolute -right-2.5 top-[43%] z-30 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
+              <IconDotsVertical className="h-5 w-5 text-black" />
             </div>
           )}
         </motion.div>

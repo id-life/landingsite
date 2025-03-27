@@ -73,7 +73,17 @@ export function Model() {
     <div className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform">
       {currentModelType === ModelType.Anatomy ? (
         currentModel === PredictionModel.M0 ? (
-          <img src={imgUrl?.[0]} alt="" className="object-cover object-center" />
+          <img
+            src={imgUrl?.[0]}
+            alt=""
+            className={`object-cover object-center ${
+              currentAnatomyCamera === AnatomyCamera.CAMERA3
+                ? 'transform-center scale-[3.5]'
+                : currentAnatomyCamera === AnatomyCamera.CAMERA4
+                  ? 'scale-[2] origin-top'
+                  : ''
+            }`}
+          />
         ) : (
           <Compare
             firstImage={imgUrl?.[0] || ''}
@@ -85,7 +95,7 @@ export function Model() {
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
-        <video src={imgUrl?.[0]} autoPlay muted loop className="h-[500px] w-[200px] object-cover object-center" />
+        <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[200px] object-cover object-center" />
       ) : (
         <Compare
           firstImage={imgUrl?.[0] || ''}
