@@ -4,7 +4,7 @@ import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@
 import { globalLoadedAtom } from '@/atoms/geo';
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useEvent, useMeasure } from 'react-use';
 import { WorldMapSVG } from '../svg';
@@ -35,12 +35,15 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   lineColor = '#C11111',
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const setActiveBookDot = useSetAtom(activeBookDotAtom);
-  const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
-  const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
+  const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
+  const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
+  const [activeMeetingDot, setActiveMeetingDot] = useAtom(activeMeetingDotAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
-
+  const isAnyActive = useMemo(
+    () => activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null,
+    [activeBookDot, activeMeetingDot, activeSponsorDot],
+  );
   const calcPoint = useCallback(
     (lat: number, lng: number) => {
       const svg = svgRef.current;
@@ -64,15 +67,19 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       const startPoint = calcPoint(dot.lat, dot.lng);
       const size = 12;
       return (
-        <g key={`points-group-${i}`} className="world-map-region">
-          {dot.icon ? (
-            <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
-              <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
-            </foreignObject>
-          ) : (
-            <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
+        <div
+          key={`points-group-${i}`}
+          className={cn(
+            'world-map-region flex-center pointer-events-auto absolute size-7 cursor-pointer text-3xl opacity-0',
+            isAnyActive && 'opacity-80',
           )}
-        </g>
+          style={{
+            left: startPoint.left,
+            top: startPoint.top,
+          }}
+        >
+          {dot.icon}
+        </div>
       );
     });
   }, [lineColor, calcPoint, regionDots]);
@@ -184,7 +191,10 @@ export const MobileWorldMap = memo(function WorldMapComponent({
           'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
         )}
       />
+      {regionDotsPoints}
       {dotsPoints}
+      {bookDotsPoints}
+      {sponsorDotsPoints}
       <svg
         id="world-map-svg"
         ref={svgRef}
@@ -192,9 +202,6 @@ export const MobileWorldMap = memo(function WorldMapComponent({
         className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
       >
         <g>
-          {regionDotsPoints}
-          {bookDotsPoints}
-          {sponsorDotsPoints}
           {bookDotsContents}
           {sponsorDotsContents}
           {dotsContents}

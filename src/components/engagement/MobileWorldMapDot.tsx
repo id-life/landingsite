@@ -5,6 +5,7 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -21,14 +22,9 @@ export function MobileWorldMapDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { country, label, lat, lng, pulseConfig } = dot;
-  const { activeMeetingDot, handleClickPoint, activeSponsorDot, activeBookDot, handleMouseEnter, handleMouseLeave } =
-    useEngagementClickPoint();
-  const isActive = useMemo(() => activeMeetingDot === index, [activeMeetingDot, index]);
+  const { handleClickPoint } = useEngagementClickPoint();
+  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
 
-  const isOtherActive = useMemo(
-    () => (activeMeetingDot !== null && !isActive) || activeBookDot !== null || activeSponsorDot !== null,
-    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
-  );
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // 使用自定义配置或默认配置
@@ -49,8 +45,7 @@ export function MobileWorldMapDotPoint({
     <motion.div
       className={cn(
         `world-map-dot world-map-dot-${index}`,
-        'pointer-events-auto absolute z-20 flex origin-[center_left] cursor-pointer items-center gap-1 overflow-visible',
-        { 'opacity-50': isOtherActive },
+        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
       )}
       onClick={handleClick}
       variants={pointVariants}
@@ -61,84 +56,86 @@ export function MobileWorldMapDotPoint({
         top: `${top}px`,
       }}
     >
-      {/* 中心红点和波纹 */}
-      <div className="relative size-6 overflow-visible">
-        <svg
-          width={svgSize}
-          height={svgSize}
-          viewBox={`0 0 ${svgSize} ${svgSize}`}
-          className="absolute -left-full -top-full size-18"
-        >
-          <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-          {isActive && (
-            <>
-              {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-              <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                <animate
-                  attributeName="r"
-                  from={pulse1.fromRadius}
-                  to={pulse1.toRadius}
-                  dur={`${pulse1.duration}s`}
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur={`${pulse1.duration}s`}
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle
-                cx={centerPoint}
-                cy={centerPoint}
-                r={pulse2.fromRadius}
-                stroke={color}
-                strokeWidth="2"
-                fill="none"
-                opacity="0.5"
+      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+        {/* 中心红点和波纹 */}
+        <div className="relative size-6 overflow-visible">
+          <svg
+            width={svgSize}
+            height={svgSize}
+            viewBox={`0 0 ${svgSize} ${svgSize}`}
+            className="absolute -left-full -top-full size-18"
+          >
+            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
+            {isActive && (
+              <>
+                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
+                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
+                  <animate
+                    attributeName="r"
+                    from={pulse1.fromRadius}
+                    to={pulse1.toRadius}
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+                <circle
+                  cx={centerPoint}
+                  cy={centerPoint}
+                  r={pulse2.fromRadius}
+                  stroke={color}
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.5"
+                >
+                  <animate
+                    attributeName="r"
+                    from={pulse2.fromRadius}
+                    to={pulse2.toRadius}
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </>
+            )}
+          </svg>
+        </div>
+        {/* 标签 */}
+        <motion.p className="flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+          {label ? `${label}, ` : ''}
+          {country}
+          <AnimatePresence>
+            {isActive && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 0.83 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
               >
-                <animate
-                  attributeName="r"
-                  from={pulse2.fromRadius}
-                  to={pulse2.toRadius}
-                  dur={`${pulse2.duration}s`}
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur={`${pulse2.duration}s`}
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </>
-          )}
-        </svg>
+                <MeetingSVG className="size-5 fill-purple" />
+                Conference
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.p>
       </div>
-      {/* 标签 */}
-      <motion.p className="flex flex-col items-start whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
-        {label ? `${label}, ` : ''}
-        {country}
-        <AnimatePresence>
-          {isActive && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 0.83 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
-            >
-              <MeetingSVG className="size-5 fill-purple" />
-              Conference
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.p>
     </motion.div>
   );
 }

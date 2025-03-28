@@ -1,58 +1,18 @@
-import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
-import { MapSponsorDotData } from '@/constants/engagement';
+import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
+import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 
-// 添加点动画变体
 const pointVariants: Variants = {
-  initial: {
-    scale: 1,
-    x: 0,
-    y: 0,
-    origin: 0,
-  },
-  hover: {
-    scale: 1.2,
-    x: 0,
-    y: 0,
-    origin: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 300,
-      damping: 15,
-    },
-  },
+  initial: { scale: 1 },
+  active: { scale: 1.2 },
 };
-const labelVariants: Variants = {
-  initial: {
-    fontSize: '.75rem',
-    transform: 'scale(var(--inverse-scale, 1))',
-  },
-  hover: {
-    fontSize: '.875rem',
-    y: '-0.5rem',
-    transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
-  },
-};
-
-// 添加父元素动画变体
-const containerVariants: Variants = {
-  initial: {
-    opacity: 0,
-  },
-  hover: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
 export function MobileWorldMapSponsorDotPoint({
   dot,
   index,
@@ -60,91 +20,128 @@ export function MobileWorldMapSponsorDotPoint({
 }: {
   dot: MapSponsorDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number };
+  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title } = dot;
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-  const { handleClickPoint, activeSponsorDot, activeBookDot, activeMeetingDot, handleMouseEnter, handleMouseLeave } =
-    useEngagementClickPoint();
-  const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
-  const isActive = activeSponsorDot === index;
-  const isOtherActive = useMemo(
-    () => (activeSponsorDot !== null && !isActive) || activeBookDot !== null || activeMeetingDot !== null,
-    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
-  );
+  const { lat, lng, title, pulseConfig } = dot;
+  const { handleClickPoint } = useEngagementClickPoint();
+  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
+    id: `world-map-dot-sponsor-${index}`,
+    index,
+    type: 'sponsor',
+  });
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    if (!activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(true);
     handleClickPoint('sponsor', index);
   };
 
+  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  // 使用自定义配置或默认配置
+  const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
+    () => pulseConfig || DEFAULT_PULSE_CONFIG,
+    [pulseConfig],
+  );
+
+  // 计算SVG中心点
+  const centerPoint = useMemo(() => svgSize / 2, [svgSize]);
+
   return (
-    <motion.g
-      className={`world-map-dot-sponsor world-map-dot-sponsor-${index} pointer-events-auto cursor-pointer`}
+    <motion.div
+      className={cn(
+        `world-map-dot-sponsor world-map-dot-sponsor-${index}`,
+        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+      )}
       initial="initial"
-      whileHover="hover"
-      animate={isActive ? 'hover' : 'initial'}
+      whileHover="active"
+      animate={isActive ? 'active' : 'initial'}
       onClick={handleClick}
-      variants={containerVariants}
-      onMouseEnter={(e) => {
-        if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
-        handleMouseEnter(e, index, 'sponsor');
-      }}
-      onMouseLeave={(e) => {
-        if (activeSponsorDotClickOpen) return;
-        handleMouseLeave(e, index, 'sponsor');
+      variants={pointVariants}
+      style={{
+        left: `${left}px`,
+        top: `${top}px`,
       }}
     >
-      <g className={cn(isOtherActive && 'opacity-50')}>
-        {/* <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
-          <SponsorSVG
-            className="size-6"
-            style={{
-              transform: 'scale(var(--inverse-scale, 1))',
-              transformOrigin: 'top left',
-            }}
-          />
-        </foreignObject>
-      </motion.g> */}
-
-        {/* 点 */}
-        <motion.g variants={pointVariants}>
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-        </motion.g>
-        {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={10}>
-          <motion.p
-            variants={labelVariants}
-            className="flex h-5 w-full origin-top-left items-center gap-2 whitespace-nowrap pl-3 font-oxanium text-base/4 font-semibold capitalize text-white"
+      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+        {/* 中心红点和波纹 */}
+        <div className="relative size-6 overflow-visible">
+          <svg
+            width={svgSize}
+            height={svgSize}
+            viewBox={`0 0 ${svgSize} ${svgSize}`}
+            className="absolute -left-full -top-full size-18"
           >
-            {title}
-            <AnimatePresence>
-              {isActive && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-0.5 rounded-lg bg-orange/20 p-0.5 px-1 py-1 text-xs/3 font-semibold text-orange backdrop-blur-2xl"
+            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
+            {isActive && (
+              <>
+                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
+                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
+                  <animate
+                    attributeName="r"
+                    from={pulse1.fromRadius}
+                    to={pulse1.toRadius}
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+                <circle
+                  cx={centerPoint}
+                  cy={centerPoint}
+                  r={pulse2.fromRadius}
+                  stroke={color}
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.5"
                 >
-                  <SponsorSVG className="size-3 fill-orange" />
-                  Sponsorship
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.p>
-        </foreignObject>
-      </g>
-    </motion.g>
+                  <animate
+                    attributeName="r"
+                    from={pulse2.fromRadius}
+                    to={pulse2.toRadius}
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </>
+            )}
+          </svg>
+        </div>
+        {/* 标签 */}
+        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+          {title}
+          <AnimatePresence>
+            {isActive && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 0.83 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+              >
+                <SponsorSVG className="size-5 fill-orange" />
+                Sponsorship
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -158,8 +155,7 @@ export function MobileWorldMapSponsorDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number };
 }) {
   const { alt, link, coverUrl, videoUrl, lat, lng, containerClass } = dot;
-  const [activeSponsorDot] = useAtom(activeSponsorDotAtom);
-  const { handleMouseLeave } = useEngagementClickPoint();
+  const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -186,7 +182,7 @@ export function MobileWorldMapSponsorDotContent({
       {isActive && (
         <foreignObject
           x={point.x}
-          y={point.y}
+          y={point.y + 6}
           className={cn(
             `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-auto flex h-20 flex-col overflow-visible`,
           )}
@@ -198,21 +194,19 @@ export function MobileWorldMapSponsorDotContent({
             animate="visible"
             exit="hidden"
             className={cn(
-              'clip-sponsor-content absolute -left-3 top-0 flex w-[35vw] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+              'clip-sponsor-content absolute left-0 top-2 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
               containerClass,
             )}
             onMouseLeave={handleContentMouseLeave}
             variants={{
               hidden: {
                 opacity: 0,
-                scale: 0.95,
-                y: -10,
+                transform: `scale(var(--inverse-scale, 1)) translateY(-10px)`,
                 transformOrigin: 'top left',
               },
               visible: {
                 opacity: 1,
-                scale: 1,
-                y: 0,
+                transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
               },
             }}
@@ -226,11 +220,11 @@ export function MobileWorldMapSponsorDotContent({
               coverUrl={coverUrl}
               videoUrl={videoUrl}
               title={alt}
-              containerClass="-mt-2"
-              videoClass="mobile:size-[30vw]"
-              coverClass="mobile:size-[30vw]"
+              containerClass="-mt-8"
+              videoClass="size-[15.5rem]"
+              coverClass="size-[15.5rem]"
             />
-            <h4 className="-mt-2 whitespace-pre-wrap text-center text-xs/3 font-semibold capitalize text-white">{alt}</h4>
+            <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
           </motion.div>
           {/* </a> */}
         </foreignObject>

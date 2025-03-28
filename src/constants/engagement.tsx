@@ -45,37 +45,37 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 40,
     lng: -106,
-    icon: <AmericaSVG className="size-7" />,
+    icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: 42.5,
     lng: 7,
-    icon: <EUnionSVG className="size-7" />,
+    icon: <EUnionSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: -14,
     lng: 97,
-    icon: <SingaporeSVG className="size-7" />,
+    icon: <SingaporeSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: 30,
     lng: 99,
-    icon: <ChineseSVG className="size-7" />,
+    icon: <ChineseSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: -1,
     lng: -98,
-    icon: <HondurasSVG className="size-7" />,
+    icon: <HondurasSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: 5,
     lng: 100,
-    icon: <ThailandSVG className="size-7" />,
+    icon: <ThailandSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: 55,
     lng: -4,
-    icon: <UKSVG className="size-7" />,
+    icon: <UKSVG className="size-7 mobile:size-5.5" />,
   },
 ];
 

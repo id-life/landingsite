@@ -1,13 +1,13 @@
-import { activeSponsorDotAtom, activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
+import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -23,7 +23,6 @@ export function WorldMapSponsorDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { lat, lng, title, pulseConfig } = dot;
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   const { handleClickPoint, handleMouseEnter, handleMouseLeave } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({

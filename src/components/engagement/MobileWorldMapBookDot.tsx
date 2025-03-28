@@ -1,5 +1,5 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
-import { MapBookDotData } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapBookDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
@@ -7,45 +7,11 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useMemo } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
-  initial: {
-    // rotate: 0,
-    scale: 1,
-  },
-  hover: {
-    scale: 1.2,
-    // rotate: [0, 4, -8, 8, -8, 8, -8, -4, 4, 0],
-    transition: {
-      // rotate: { duration: 1.5, repeat: Infinity, type: 'linear', repeatDelay: 0.5 },
-      scale: { duration: 0.3 },
-    },
-  },
-};
-
-const labelVariants: Variants = {
-  initial: {
-    fontSize: '.75rem',
-    transform: 'scale(var(--inverse-scale, 1))',
-  },
-  hover: {
-    fontSize: '.875rem',
-    y: '-0.5rem',
-    transform: 'scale(var(--inverse-scale, 1)) translateY(-.1875rem)',
-  },
-};
-
-// 添加父元素动画变体
-const containerVariants: Variants = {
-  initial: {
-    opacity: 1,
-  },
-  hover: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
+  initial: { scale: 1 },
+  active: { scale: 1.2 },
 };
 
 export function MobileWorldMapBookDotPoint({
@@ -55,19 +21,16 @@ export function MobileWorldMapBookDotPoint({
 }: {
   dot: MapBookDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number };
+  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, lat, lng, mobilePointTransformStyle } = dot;
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { title, lat, lng, pulseConfig } = dot;
   const [activeBookDotClickOpen, setActiveBookDotClickOpen] = useAtom(activeBookDotClickOpenAtom);
-
-  const { activeBookDot, handleClickPoint, activeMeetingDot, activeSponsorDot, handleMouseEnter, handleMouseLeave } =
-    useEngagementClickPoint();
-  const isActive = useMemo(() => activeBookDot === index, [activeBookDot, index]);
-  const isOtherActive = useMemo(
-    () => (activeBookDot !== null && !isActive) || activeMeetingDot !== null || activeSponsorDot !== null,
-    [activeBookDot, activeMeetingDot, activeSponsorDot, isActive],
-  );
+  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
+    id: `world-map-dot-book-${index}`,
+    index,
+    type: 'book',
+  });
+  const { handleClickPoint } = useEngagementClickPoint();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
@@ -75,72 +38,113 @@ export function MobileWorldMapBookDotPoint({
     if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
   };
 
+  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  // 使用自定义配置或默认配置
+  const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
+    () => pulseConfig || DEFAULT_PULSE_CONFIG,
+    [pulseConfig],
+  );
+
+  // 计算SVG中心点
+  const centerPoint = useMemo(() => svgSize / 2, [svgSize]);
+
   return (
-    <motion.g
-      className={`world-map-dot-book world-map-dot-book-${index} pointer-events-auto cursor-pointer overflow-visible`}
+    <motion.div
+      className={cn(
+        `world-map-dot-book world-map-dot-book-${index} `,
+        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+      )}
       initial="initial"
-      whileHover="hover"
+      whileHover="active"
       onClick={handleClick}
-      variants={containerVariants}
-      animate={isActive ? 'hover' : 'initial'}
-      onMouseEnter={(e) => {
-        if (activeBookDotClickOpen) setActiveBookDotClickOpen(false);
-        handleMouseEnter(e, index, 'book');
-      }}
-      onMouseLeave={(e) => {
-        if (activeBookDotClickOpen) return;
-        handleMouseLeave(e, index, 'book');
+      variants={pointVariants}
+      animate={isActive ? 'active' : 'initial'}
+      style={{
+        left: `${left}px`,
+        top: `${top}px`,
       }}
     >
-      <g className={cn(isOtherActive && 'opacity-50')}>
-        {/* <motion.g variants={pointVariants}>
-        <foreignObject x={point.x} y={point.y - 5} width={10} height={10}>
-          <BookSVG
-            className="size-6"
-            style={{
-              transform: 'scale(var(--inverse-scale, 1))',
-              transformOrigin: 'top left',
-            }}
-          />
-        </foreignObject>
-      </motion.g> */}
-        {/* 点 */}
-        <motion.g variants={pointVariants} className="origin-center">
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" />
-          <circle cx={point.x} cy={point.y} r="2" fill="#C11111" opacity="0.5">
-            <animate attributeName="r" from={2} to={6} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-          <circle cx={point.x} cy={point.y} r="6" stroke="#C11111" strokeWidth="1" opacity="0.5" fill="none">
-            <animate attributeName="r" from={6} to={10} dur="1.2s" begin="0s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" begin="0s" repeatCount="indefinite" />
-          </circle>
-        </motion.g>
-        {/* 标签 */}
-        <foreignObject x={point.x} y={point.y - 4.5} width={170} height={20}>
-          <motion.p
-            transition={{ duration: 0.3 }}
-            variants={labelVariants}
-            className="flex origin-top-left items-center gap-2 whitespace-nowrap pl-2 align-top font-oxanium font-semibold capitalize text-white"
+      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+        {/* 中心红点和波纹 */}
+        <div className="relative size-6 overflow-visible">
+          <svg
+            width={svgSize}
+            height={svgSize}
+            viewBox={`0 0 ${svgSize} ${svgSize}`}
+            className="absolute -left-full -top-full size-18"
           >
-            {title}
-            <AnimatePresence>
-              {isActive && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-0.5 rounded-lg bg-cyan-500/20 px-1 py-0.5 text-xs/3 font-semibold text-cyan backdrop-blur-2xl"
+            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
+            {isActive && (
+              <>
+                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
+                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
+                  <animate
+                    attributeName="r"
+                    from={pulse1.fromRadius}
+                    to={pulse1.toRadius}
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse1.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+                <circle
+                  cx={centerPoint}
+                  cy={centerPoint}
+                  r={pulse2.fromRadius}
+                  stroke={color}
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.5"
                 >
-                  <BookSVG className="size-3 fill-cyan" />
-                  Translation
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.p>
-        </foreignObject>
-      </g>
-    </motion.g>
+                  <animate
+                    attributeName="r"
+                    from={pulse2.fromRadius}
+                    to={pulse2.toRadius}
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur={`${pulse2.duration}s`}
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </>
+            )}
+          </svg>
+        </div>
+        {/* 标签 */}
+        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+          {title}
+          <AnimatePresence>
+            {isActive && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 0.83 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="flex items-center gap-1 rounded-lg bg-cyan/20 p-1 px-2 py-1 text-sm/4 font-semibold text-cyan backdrop-blur-2xl"
+              >
+                <BookSVG className="size-5 fill-cyan" />
+                Translation
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -155,9 +159,7 @@ export function MobileWorldMapBookDotContent({
 }) {
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
-  const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
-  const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   const onClick = useCallback(
@@ -167,15 +169,6 @@ export function MobileWorldMapBookDotContent({
     },
     [link],
   );
-
-  const handleContentMouseLeave = (e: React.MouseEvent) => {
-    if (activeBookDotClickOpen) return;
-    const relatedTarget = e.relatedTarget as Element;
-    // 检查鼠标是否移出到非点区域
-    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
-      handleMouseLeave(e, index, 'book');
-    }
-  };
 
   return (
     <AnimatePresence mode="wait">
@@ -193,21 +186,13 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[35vw] flex-col items-center overflow-hidden pt-2 font-oxanium')}
+              className={cn('absolute left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
               style={{
                 transform: `scale(var(--inverse-scale, 1))`,
                 transformOrigin: 'top left',
               }}
-              onMouseLeave={handleContentMouseLeave}
             >
-              <VideoWithPoster
-                coverUrl={coverUrl}
-                videoUrl={videoUrl}
-                title={title}
-                containerClass="-mt-2"
-                videoClass="mobile:size-[35vw]"
-                coverClass="mobile:size-[35vw]"
-              />
+              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },
@@ -221,9 +206,9 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center"
+                className="flex cursor-pointer flex-col items-center gap-1"
               >
-                <h4 className="text-sm/7 font-semibold capitalize text-white">{bookTitle}</h4>
+                <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
                 <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
                 <p className="text-xs/3 text-gray-350">{desc}</p>
               </motion.div>
