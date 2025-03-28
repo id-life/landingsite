@@ -96,6 +96,7 @@ export type MapDotData = {
   pcDotHotAreaClass?: string;
   index?: number; // 动画标识符
   pulseConfig?: PulseConfig; // 自定义波纹配置
+  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -110,6 +111,13 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformStyle: 'translate(-85%, 0)',
     mobileContentTransformStyle: 'translate(-85%, 0)',
     pcDotHotAreaClass: 'top-[29vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-1',
+      'world-map-dot-2',
+      'world-map-dot-book-0',
+      'world-map-dot-book-1',
+    ],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Shanghai-01.webp',
@@ -141,6 +149,13 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformStyle: 'translate(-85%, 20%)',
     mobileContentTransformStyle: 'translate(-85%, 20%)',
     pcDotHotAreaClass: 'top-[24vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-0',
+      'world-map-dot-2',
+      'world-map-dot-book-0',
+      'world-map-dot-book-1',
+    ],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Chiangmai-1.webp',
@@ -168,6 +183,13 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformStyle: 'translate(-85%, 8%)',
     mobileContentTransformStyle: 'translate(-85%, 8%)',
     pcDotHotAreaClass: 'top-[42vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-0',
+      'world-map-dot-1',
+      'world-map-dot-book-0',
+      'world-map-dot-book-1',
+    ],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Singapore-1.webp',
@@ -238,6 +260,7 @@ export type MapBookDotData = {
   mobilePointTransformStyle?: string;
   mobileContentTransformStyle?: string;
   mobileIsUp?: boolean; // 移动端在点上方
+  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
@@ -250,6 +273,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
+    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-1'],
   },
   {
     lat: -6,
@@ -279,6 +303,7 @@ export type MapSponsorDotData = {
   videoUrl?: string;
   title: string;
   pulseConfig?: PulseConfig; // 自定义波纹配置
+  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -302,6 +327,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
     // containerClass: 'w-[14.5rem]',
     link: '',
+    activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
   {
     lat: 51.5,
@@ -312,6 +338,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webp',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
     // containerClass: 'w-[18.75rem]',
+    activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1'],
     link: '',
   },
 ];

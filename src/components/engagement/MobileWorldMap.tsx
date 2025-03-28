@@ -15,6 +15,10 @@ import { throttle } from 'lodash-es';
 import { NAV_LIST } from '../nav/nav';
 import { mobileCurrentPageAtom } from '@/atoms';
 
+const svgViewBox = {
+  w: 756,
+  h: 360,
+};
 interface MapProps {
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
@@ -36,11 +40,22 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
-  const calcPoint = useCallback((lat: number, lng: number) => {
-    const x = (lng + 180) * (756 / 360);
-    const y = (90 - lat) * (360 / 180);
-    return { x, y };
-  }, []);
+
+  const calcPoint = useCallback(
+    (lat: number, lng: number) => {
+      const svg = svgRef.current;
+      if (!svg) return { x: 0, y: 0, left: 0, top: 0 };
+      const { w, h } = svgViewBox;
+      const { width, height } = svg.getBoundingClientRect();
+      const x = (lng + 180) * (w / 360);
+      const y = (90 - lat) * (h / 180);
+      const left = (x / w) * width;
+      const top = (y / h) * height;
+      console.log({ x, y, left, top, w, h, width, height });
+      return { x, y, left, top };
+    },
+    [mapWidth],
+  );
   const currentPage = useAtomValue(mobileCurrentPageAtom);
 
   const regionDotsPoints = useMemo(() => {
@@ -169,6 +184,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
           'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
         )}
       />
+      {dotsPoints}
       <svg
         id="world-map-svg"
         ref={svgRef}
@@ -177,7 +193,6 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       >
         <g>
           {regionDotsPoints}
-          {dotsPoints}
           {bookDotsPoints}
           {sponsorDotsPoints}
           {bookDotsContents}
