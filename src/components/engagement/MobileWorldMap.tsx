@@ -76,6 +76,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
           style={{
             left: startPoint.left,
             top: startPoint.top,
+            filter: 'url(#black-overlay)',
           }}
         >
           {dot.icon}
@@ -213,6 +214,10 @@ export const MobileWorldMap = memo(function WorldMapComponent({
             <stop offset="95%" stopColor={lineColor} stopOpacity="1" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </linearGradient>
+          <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
+            <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
+            <feComposite in="overlay" in2="SourceGraphic" operator="over" />
+          </filter>
         </defs>
       </svg>
     </div>

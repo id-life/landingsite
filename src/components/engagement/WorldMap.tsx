@@ -102,16 +102,14 @@ export const WorldMap = memo(function WorldMapComponent({
       return (
         <div
           key={`points-group-${i}`}
-          className={cn(
-            'world-map-region flex-center pointer-events-auto absolute size-7 cursor-pointer text-3xl opacity-0',
-            isAnyActive && 'opacity-80',
-          )}
+          className="world-map-region flex-center pointer-events-auto absolute size-7 cursor-pointer text-3xl opacity-0"
           style={{
             left: startPoint.left,
             top: startPoint.top,
+            filter: 'url(#black-overlay)',
           }}
         >
-          {dot.icon}
+          <div className={cn({ 'opacity-80': isAnyActive })}>{dot.icon}</div>
         </div>
       );
     });
