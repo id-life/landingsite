@@ -1,6 +1,7 @@
 import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { Compare } from '@/components/compare/compare';
 import { ModelType } from '@/components/twin/model/type';
+import { isSafari } from '@/utils';
 import { useAtomValue } from 'jotai';
 import React, { useMemo } from 'react';
 
@@ -57,14 +58,26 @@ export function Model() {
         }
       }
     } else {
-      if (!currentModel || currentModel === PredictionModel.M0) {
-        return ['https://cdn.id.life/twin/M0.webm'];
-      } else if (currentModel === PredictionModel.M1) {
-        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M1.webm'];
-      } else if (currentModel === PredictionModel.M2) {
-        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M2.webm'];
-      } else if (currentModel === PredictionModel.M3) {
-        return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M3.webm'];
+      if (isSafari()) {
+        if (!currentModel || currentModel === PredictionModel.M0) {
+          return ['/imgs/twin/model/safari/M0.png'];
+        } else if (currentModel === PredictionModel.M1) {
+          return ['/imgs/twin/model/safari/M0.png', '/imgs/twin/model/safari/M1.png'];
+        } else if (currentModel === PredictionModel.M2) {
+          return ['/imgs/twin/model/safari/M0.png', '/imgs/twin/model/safari/M2.png'];
+        } else if (currentModel === PredictionModel.M3) {
+          return ['/imgs/twin/model/safari/M0.png', '/imgs/twin/model/safari/M3.png'];
+        }
+      } else {
+        if (!currentModel || currentModel === PredictionModel.M0) {
+          return ['https://cdn.id.life/twin/M0.webm'];
+        } else if (currentModel === PredictionModel.M1) {
+          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M1.webm'];
+        } else if (currentModel === PredictionModel.M2) {
+          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M2.webm'];
+        } else if (currentModel === PredictionModel.M3) {
+          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M3.webm'];
+        }
       }
     }
   }, [currentAnatomyCamera, currentModel, currentModelType]);
@@ -80,7 +93,7 @@ export function Model() {
               currentAnatomyCamera === AnatomyCamera.CAMERA3
                 ? 'transform-center scale-[3.5]'
                 : currentAnatomyCamera === AnatomyCamera.CAMERA4
-                  ? 'scale-[2] origin-top'
+                  ? 'origin-top scale-[2]'
                   : ''
             }`}
           />
@@ -95,16 +108,20 @@ export function Model() {
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
-        <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[200px] object-cover object-center" />
+        isSafari() ? (
+          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[200px] object-contain object-center" />
+        ) : (
+          <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[200px] object-cover object-center" />
+        )
       ) : (
         <Compare
           firstImage={imgUrl?.[0] || ''}
           secondImage={imgUrl?.[1] || ''}
-          firstImageClassName="object-cover object-center"
-          secondImageClassname="object-cover object-center"
+          firstImageClassName={!isSafari() ? "object-cover object-center" : "object-center object-contain"}
+          secondImageClassname={!isSafari() ? "object-cover object-center" : "object-center object-contain"}
           className="h-[500px] w-[200px]"
           slideMode="hover"
-          isVideo={true}
+          isVideo={!isSafari()}
         />
       )}
     </div>
