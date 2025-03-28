@@ -4,7 +4,7 @@ import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPo
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 
@@ -164,8 +164,34 @@ export function WorldMapDotContent({
   const { activeMeetingDot, handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const activeMeetingDotClickOpen = useAtomValue(activeMeetingDotClickOpenAtom);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+
+  // 打开时禁用弹窗内的滚动, overscroll-none 不顶用
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer || !isActive) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+      const isAtTop = scrollTop <= 0;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+      // 滚动到边界时阻止默认行为
+      if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+        e.preventDefault();
+      }
+
+      // 无论如何都阻止冒泡
+      e.stopPropagation();
+    };
+
+    scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      scrollContainer.removeEventListener('wheel', handleWheel);
+    };
+  }, [isActive]);
 
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeMeetingDotClickOpen) return;
@@ -233,7 +259,10 @@ export function WorldMapDotContent({
               </h3>
             )}
             {imgs?.length ? (
-              <div className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
+              <div
+                ref={scrollContainerRef}
+                className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+              >
                 {imgs.map((img) => (
                   <FeatherImg key={img.src} src={img.src} alt={img.alt} />
                 ))}
