@@ -140,7 +140,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 1,
     lat: 1,
-    lng: 102.5,
+    lng: 104,
     country: 'Thailand',
     label: 'Chiang Mai',
     period: '2024/11',
@@ -173,8 +173,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: -17,
-    lng: 100,
+    lat: -19,
+    lng: 101,
     label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025/02',
@@ -215,8 +215,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 3,
-    lat: -4,
-    lng: -95,
+    lat: -5,
+    lng: -94,
     label: 'Roatan',
     country: 'Honduras',
     period: '2024/01',
@@ -330,8 +330,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
   {
-    lat: 51.5,
-    lng: -2,
+    lat: 51,
+    lng: -1,
     title: 'Oxford, UK',
     key: 'sponsor-03',
     alt: 'OXFORD\nLONGEVITY',
