@@ -59,8 +59,6 @@ function Engagement() {
       opacity: 0,
       height: 0,
     });
-    const buttons = document.querySelectorAll('.engagement-bottom-button');
-    tl.set(buttons, { y: 30, opacity: 0 });
 
     // 使用进度位置控制动画时机
     // 入场动画：0 - 0.2
@@ -82,7 +80,6 @@ function Engagement() {
       ease: 'none',
       duration: entranceUnit,
     });
-
     tl.to('.world-map-region', {
       scale: 1,
       opacity: 1,
@@ -99,30 +96,23 @@ function Engagement() {
       duration: entranceUnit,
     });
 
-    tl.to(buttons, {
-      y: 0,
-      opacity: 1,
-      stagger: entranceUnit * 0.2,
-      ease: 'back.out(1.7)',
-      duration: entranceUnit,
-    });
     // 停留一阵子
     tl.to(() => {}, { duration: 5 });
     // 出场动画（在进度0.8后开始）
     // 计算出场动画总时长（占总进度的0.2）
     const exitDuration = 0.2 * factor;
     // 计算出场每个动画的单位时长
-    const exitUnit = exitDuration / 3; // 分为2个步骤
+    const exitUnit = exitDuration / 3; // 分为3个步骤
 
     // 出场动画序列
-    tl.to(`.world-map-dot-content-3`, { opacity: 0, height: 0, ease: 'power2.out', duration: exitUnit });
-    tl.to(buttons, {
-      y: 30,
+
+    tl.to(['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'], {
       opacity: 0,
+      ease: 'power2.out',
       stagger: exitUnit * 0.2,
-      ease: 'back.out(1.7)',
       duration: exitUnit,
     });
+
     tl.to(['.world-map-img', '#world-map-svg'], {
       y: -50,
       opacity: 0,
