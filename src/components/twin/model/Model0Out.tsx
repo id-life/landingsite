@@ -1,5 +1,7 @@
-import { Center, useAnimations, useGLTF } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { MessageType } from '@/components/event-bus/messageType';
+import { useEventBus } from '@/components/event-bus/useEventBus';
+import { Center, useAnimations, useGLTF, useProgress } from '@react-three/drei';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export default function Model0Out() {
@@ -7,6 +9,7 @@ export default function Model0Out() {
   const currentActionRef = useRef<THREE.AnimationAction | null>(null); // 存储当前动画
   const animationLoopRef = useRef<NodeJS.Timeout | null>(null);
   const { actions } = useAnimations(animations, scene);
+  const [resetAnimation, setResetAnimation] = useState<number>(0);
 
   const startAnimationLoop = () => {
     if (animationLoopRef.current) {
@@ -66,7 +69,11 @@ export default function Model0Out() {
     return () => {
       stopAnimationLoop();
     };
-  }, []);
+  }, [resetAnimation]);
+
+  useEventBus(MessageType.RESET_ANIMATION, () => {
+    setResetAnimation((state) => state + 1);
+  });
 
   return (
     <Center scale={5.5}>

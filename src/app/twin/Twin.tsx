@@ -85,7 +85,7 @@ function Twin() {
       </div>
       <div className="twin-title-wrapper relative h-screen">
         <div className="twin-title absolute left-10 top-40 w-screen">
-          <img src="/svgs/twin/title-page.svg" alt="" />
+          <img className="w-[964px] xl:w-[1205px]" src="/svgs/twin/title-page.svg" alt="" />
         </div>
         <div className="twin-title absolute bottom-20 right-[7.5rem] text-right text-base font-medium">
           <p>- High-Precision Digital Twin Model Creation</p>
@@ -95,7 +95,7 @@ function Twin() {
           <p>高精度数字孪生/AI预测克隆体/健康跟踪与个性化指导/持续升级和优化</p>
         </div>
         <div className="twin-title-item twin-title-M0 absolute left-[-80rem] top-64">
-          <img src="/svgs/twin/title-ontology.svg" alt="" />
+          <img className="w-[325px] xl:w-[403px]" src="/svgs/twin/title-ontology.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M0 absolute bottom-32 left-[-80rem] max-w-[31.25rem]">
           <p className="text-xl/6 font-semibold">Appearance & Biomarkers 外形采集&健康数据</p>
@@ -105,13 +105,13 @@ function Twin() {
           <p className="mt-2 text-base font-medium">根据个人生物指标创建本体 & 根据时间、环境和习惯生成克隆</p>
         </div>
         <div className="twin-title-item twin-title-M1 absolute left-[-80rem] top-64">
-          <img src="/svgs/twin/title-clone-01.svg" alt="" />
+          <img className="w-[512px] xl:w-[640px]" src="/svgs/twin/title-clone-01.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M2 absolute left-[-80rem] top-64">
-          <img src="/svgs/twin/title-clone-02.svg" alt="" />
+          <img className="w-[455px] xl:w-[569px]" src="/svgs/twin/title-clone-02.svg" alt="" />
         </div>
         <div className="twin-title-item twin-title-M3 absolute left-[-80rem] top-64">
-          <img src="/svgs/twin/title-clone-03.svg" alt="" />
+          <img className="w-[720px] xl:w-[900px]" src="/svgs/twin/title-clone-03.svg" alt="" />
         </div>
       </div>
     </div>

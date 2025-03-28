@@ -4,4 +4,5 @@ export enum MessageType {
   ALLOW_OPERATION = 'ALLOW_OPERATION',   // 允许操作
   SWITCH_ANATOMY_MODULE = 'SWITCH_ANATOMY_MODULE', // 切换解刨模块
   SWITCH_CAMERA = 'SWITCH_CAMERA', // 切换相机视角
+  RESET_ANIMATION = 'RESET_ANIMATION',  // 重置动画
 }

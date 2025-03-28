@@ -111,6 +111,10 @@ export default function TwinThreeWrapper() {
     }
   });
 
+  useEventBus(MessageType.RESET_ANIMATION, () => {
+    
+  });
+
   // 镜头控制
   useEventBus(MessageType.SWITCH_CAMERA, (payload: { index: AnatomyCamera }) => {
     const controls1 = controlRefs[0]?.current;

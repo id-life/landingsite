@@ -24,6 +24,7 @@ export default function SwitchModel() {
       });
       setCurrentModel(model);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
+      eventBus.next({ type: MessageType.RESET_ANIMATION });
     }
     if (currentModelType === ModelType.Anatomy) {
       gsap.to(list, { left: '-80rem', delay: 0.5, duration: 0.5 }).then(() => {
