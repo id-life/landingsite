@@ -4,6 +4,7 @@ import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component'
 
 import UKSVG from '@/../public/svgs/engagement/uk.svg?component';
 import AmericaSVG from '@/../public/svgs/engagement/america.svg?component';
+import EUnionSVG from '@/../public/svgs/engagement/european-union.svg?component';
 import ChineseSVG from '@/../public/svgs/engagement/chinese.svg?component';
 import HondurasSVG from '@/../public/svgs/engagement/honduras.svg?component';
 import SingaporeSVG from '@/../public/svgs/engagement/singapore.svg?component';
@@ -18,6 +19,7 @@ export {
   ArrowSVG,
   UKSVG,
   AmericaSVG,
+  EUnionSVG,
   BookSVG,
   ChineseSVG,
   ClockSVG,

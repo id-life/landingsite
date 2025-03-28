@@ -1,5 +1,39 @@
-import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
+import { AmericaSVG, ChineseSVG, EUnionSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
+
+// 波纹动画配置
+export type PulseConfig = {
+  svgSize: number; // SVG视图大小
+  centerRadius: number; // 中心点半径
+  pulse1: {
+    fromRadius: number; // 第一个波纹初始半径
+    toRadius: number; // 第一个波纹最终半径
+    duration: number; // 动画持续时间(秒)
+  };
+  pulse2: {
+    fromRadius: number; // 第二个波纹初始半径
+    toRadius: number; // 第二个波纹最终半径
+    duration: number; // 动画持续时间(秒)
+  };
+  color: string; // 颜色 (十六进制)
+};
+
+// 默认波纹配置
+export const DEFAULT_PULSE_CONFIG: PulseConfig = {
+  svgSize: 60,
+  centerRadius: 4,
+  pulse1: {
+    fromRadius: 4,
+    toRadius: 12,
+    duration: 1.5,
+  },
+  pulse2: {
+    fromRadius: 12,
+    toRadius: 24,
+    duration: 1.5,
+  },
+  color: '#C11111',
+};
 
 export type MapRegionDotData = {
   lat: number;
@@ -9,34 +43,39 @@ export type MapRegionDotData = {
 
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
-    lat: 36,
-    lng: -100,
-    icon: <AmericaSVG className="size-2.5" />,
+    lat: 40,
+    lng: -106,
+    icon: <AmericaSVG className="size-7" />,
   },
   {
-    lat: -16,
-    lng: 102,
-    icon: <SingaporeSVG className="size-2.5" />,
+    lat: 42.5,
+    lng: 7,
+    icon: <EUnionSVG className="size-7" />,
+  },
+  {
+    lat: -14,
+    lng: 97,
+    icon: <SingaporeSVG className="size-7" />,
   },
   {
     lat: 30,
+    lng: 99,
+    icon: <ChineseSVG className="size-7" />,
+  },
+  {
+    lat: -1,
+    lng: -98,
+    icon: <HondurasSVG className="size-7" />,
+  },
+  {
+    lat: 5,
     lng: 100,
-    icon: <ChineseSVG className="size-2.5" />,
+    icon: <ThailandSVG className="size-7" />,
   },
   {
-    lat: -4,
-    lng: -89,
-    icon: <HondurasSVG className="size-2.5" />,
-  },
-  {
-    lat: 2,
-    lng: 101,
-    icon: <ThailandSVG className="size-2.5" />,
-  },
-  {
-    lat: 53,
-    lng: -3,
-    icon: <UKSVG className="size-2.5" />,
+    lat: 55,
+    lng: -4,
+    icon: <UKSVG className="size-7" />,
   },
 ];
 
@@ -56,12 +95,13 @@ export type MapDotData = {
   mobileContentTransformStyle?: string;
   pcDotHotAreaClass?: string;
   index?: number; // 动画标识符
+  pulseConfig?: PulseConfig; // 自定义波纹配置
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
-    lat: 17.5,
-    lng: 120.5,
+    lat: 22,
+    lng: 120,
     country: 'China', // 新加的一个
     label: 'Shanghai',
     period: '2024/11',
@@ -91,8 +131,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 1,
-    lat: -2,
-    lng: 104,
+    lat: 1,
+    lng: 102.5,
     country: 'Thailand',
     label: 'Chiang Mai',
     period: '2024/11',
@@ -118,8 +158,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 2,
-    lat: -22,
-    lng: 105,
+    lat: -17,
+    lng: 100,
     label: 'Singapore',
     country: 'Singapore', //如果为空就不显示
     period: '2025/02',
@@ -153,8 +193,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 3,
-    lat: -8,
-    lng: -88,
+    lat: -4,
+    lng: -95,
     label: 'Roatan',
     country: 'Honduras',
     period: '2024/01',
@@ -162,7 +202,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalia @ Roatan, Honduras',
     contentTransformStyle: 'translate(85%, 5%)',
     mobileContentTransformStyle: 'translate(55%, 5%)',
-    pcDotHotAreaClass: 'right-full -left-[85%] top-[37vh]',
+    pcDotHotAreaClass: 'right-full -left-[70%] top-[37vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',
@@ -194,14 +234,15 @@ export type MapBookDotData = {
   coverUrl?: string;
   videoUrl?: string;
   link?: string; // 跳转链接
+  pulseConfig?: PulseConfig; // 自定义波纹配置
   mobilePointTransformStyle?: string;
   mobileContentTransformStyle?: string;
   mobileIsUp?: boolean; // 移动端在点上方
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
-    lat: 32,
-    lng: 25,
+    lat: 36,
+    lng: 22,
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
@@ -211,8 +252,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
   },
   {
-    lat: -10,
-    lng: 34,
+    lat: -6,
+    lng: 27,
     key: 'publications-02',
     title: 'Earth',
     bookTitle: 'bio/acc manifesto',
@@ -237,11 +278,12 @@ export type MapSponsorDotData = {
   coverUrl?: string;
   videoUrl?: string;
   title: string;
+  pulseConfig?: PulseConfig; // 自定义波纹配置
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
-    lat: 26,
-    lng: -120,
+    lat: 30,
+    lng: -123.5,
     title: 'California, USA',
     key: 'sponsor-01',
     alt: 'VITALIST\nBAY',
@@ -251,8 +293,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: '',
   },
   {
-    lat: 17,
-    lng: 88.5,
+    lat: 20,
+    lng: 86,
     title: 'Chengdu, China',
     key: 'sponsor-02',
     alt: 'ethPanda',
@@ -262,8 +304,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: '',
   },
   {
-    lat: 49,
-    lng: -1,
+    lat: 51.5,
+    lng: -2,
     title: 'Oxford, UK',
     key: 'sponsor-03',
     alt: 'OXFORD\nLONGEVITY',

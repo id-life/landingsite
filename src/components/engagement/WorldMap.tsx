@@ -17,6 +17,10 @@ import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot'
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 
+const svgViewBox = {
+  w: 756,
+  h: 360,
+};
 interface MapProps {
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
@@ -54,11 +58,21 @@ export const WorldMap = memo(function WorldMapComponent({
   //   });
   // }, []);
 
-  const calcPoint = useCallback((lat: number, lng: number) => {
-    const x = (lng + 180) * (756 / 360);
-    const y = (90 - lat) * (360 / 180);
-    return { x, y };
-  }, []);
+  const calcPoint = useCallback(
+    (lat: number, lng: number) => {
+      const svg = svgRef.current;
+      if (!svg) return { x: 0, y: 0, left: 0, top: 0 };
+      const { w, h } = svgViewBox;
+      const { width, height } = svg.getBoundingClientRect();
+      const x = (lng + 180) * (w / 360);
+      const y = (90 - lat) * (h / 180);
+      const left = (x / w) * width;
+      const top = (y / h) * height;
+      console.log({ x, y, left, top, w, h, width, height });
+      return { x, y, left, top };
+    },
+    [mapWidth],
+  );
   const { activeBookDot, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
   const isAnyActive = useMemo(
     () => activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null,
@@ -85,19 +99,20 @@ export const WorldMap = memo(function WorldMapComponent({
     if (!regionDots?.length) return null;
     return regionDots.map((dot, i) => {
       const startPoint = calcPoint(dot.lat, dot.lng);
-      const size = 12;
       return (
-        <g key={`points-group-${i}`} className="world-map-region opacity-0">
-          <g className={cn(isAnyActive && 'opacity-80')} filter="url(#black-overlay)">
-            {dot.icon ? (
-              <foreignObject x={startPoint.x - size / 2} y={startPoint.y - size / 2} width={size} height={size}>
-                <div className="flex-center pointer-events-auto size-full cursor-pointer">{dot.icon}</div>
-              </foreignObject>
-            ) : (
-              <circle cx={startPoint.x} cy={startPoint.y} r="2" fill={lineColor} />
-            )}
-          </g>
-        </g>
+        <div
+          key={`points-group-${i}`}
+          className={cn(
+            'world-map-region flex-center pointer-events-auto absolute size-7 cursor-pointer text-3xl opacity-0',
+            isAnyActive && 'opacity-80',
+          )}
+          style={{
+            left: startPoint.left,
+            top: startPoint.top,
+          }}
+        >
+          {dot.icon}
+        </div>
       );
     });
   }, [regionDots, calcPoint, isAnyActive, lineColor]);
@@ -196,7 +211,7 @@ export const WorldMap = memo(function WorldMapComponent({
 
   return (
     <div
-      className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
+      className="0 relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
       onClick={handleBackgroundClick}
     >
       {/* <button
@@ -220,7 +235,7 @@ export const WorldMap = memo(function WorldMapComponent({
       <WorldMapSVG
         ref={ref}
         className={cn(
-          'world-map-img pointer-events-none absolute -left-10 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          'world-map-img pointer-events-none absolute left-0 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
           // 'opacity-0', // anim init state
         )}
       />
@@ -230,16 +245,16 @@ export const WorldMap = memo(function WorldMapComponent({
           // 'opacity-0', // anim init state
         )}
       /> */}
+      {regionDotsPoints}
+      {dotsPoints}
+      {bookDotsPoints}
+      {sponsorDotsPoints}
       <svg
         id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute -left-10 top-0 size-full select-none overflow-visible"
+        className="pointer-events-none absolute -left-10 top-0 z-30 size-full select-none overflow-visible"
       >
-        {regionDotsPoints}
-        {dotsPoints}
-        {bookDotsPoints}
-        {sponsorDotsPoints}
         {bookDotsContents}
         {sponsorDotsContents}
         {dotsContents}
