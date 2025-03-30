@@ -91,8 +91,8 @@ export type MapDotData = {
     src: string;
     alt: string;
   }[];
-  contentTransformStyle?: string;
-  mobileContentTransformStyle?: string;
+  contentTransformClass?: string;
+  mobileContentTransformClass?: string;
   pcDotHotAreaClass?: string;
   index?: number; // 动画标识符
   pulseConfig?: PulseConfig; // 自定义波纹配置
@@ -108,9 +108,9 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
     title: 'The 5th Timepie Longevity Forum', //上海timepie
-    contentTransformStyle: 'translate(-85%, 0)',
-    mobileContentTransformStyle: 'translate(-85%, 0)',
-    pcDotHotAreaClass: 'top-[29vh]',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
+    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
+    pcDotHotAreaClass: 'top-[25vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-1',
@@ -146,8 +146,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/11',
     key: 'cm_lanna_2024', // Unique identifier for the dot
     title: 'Edge City Lanna',
-    contentTransformStyle: 'translate(-85%, 20%)',
-    mobileContentTransformStyle: 'translate(-85%, 20%)',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
+    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
     pcDotHotAreaClass: 'top-[24vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
@@ -180,8 +180,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum',
-    contentTransformStyle: 'translate(-85%, 8%)',
-    mobileContentTransformStyle: 'translate(-85%, 8%)',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
+    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
     pcDotHotAreaClass: 'top-[42vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
@@ -222,8 +222,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/01',
     key: 'roatan_vitalia_2024', // Unique identifier for the dot
     title: 'Vitalia @ Roatan, Honduras',
-    contentTransformStyle: 'translate(85%, 5%)',
-    mobileContentTransformStyle: 'translate(55%, 5%)',
+    contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
+    mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-[70%] top-[37vh]',
     imgs: [
       {

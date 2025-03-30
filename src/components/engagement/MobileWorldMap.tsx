@@ -196,6 +196,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       {dotsPoints}
       {bookDotsPoints}
       {sponsorDotsPoints}
+      {dotsContents}
       <svg
         id="world-map-svg"
         ref={svgRef}
@@ -205,7 +206,6 @@ export const MobileWorldMap = memo(function WorldMapComponent({
         <g>
           {bookDotsContents}
           {sponsorDotsContents}
-          {dotsContents}
         </g>
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
