@@ -110,7 +110,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'The 5th Timepie Longevity Forum', //上海timepie
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    pcDotHotAreaClass: 'top-[25vh]',
+    pcDotHotAreaClass: 'top-[22vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-1',
@@ -148,7 +148,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
-    pcDotHotAreaClass: 'top-[24vh]',
+    pcDotHotAreaClass: 'top-[23vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-0',
@@ -182,7 +182,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
-    pcDotHotAreaClass: 'top-[42vh]',
+    pcDotHotAreaClass: 'top-[37vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-0',
@@ -224,7 +224,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalia @ Roatan, Honduras',
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
-    pcDotHotAreaClass: 'right-full -left-[70%] top-[37vh]',
+    pcDotHotAreaClass: 'right-full -left-full top-[34vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',
@@ -257,9 +257,6 @@ export type MapBookDotData = {
   videoUrl?: string;
   link?: string; // 跳转链接
   pulseConfig?: PulseConfig; // 自定义波纹配置
-  mobilePointTransformStyle?: string;
-  mobileContentTransformStyle?: string;
-  mobileIsUp?: boolean; // 移动端在点上方
   activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
@@ -285,9 +282,6 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
-    mobileIsUp: true, // 移动端在点上方
-    mobileContentTransformStyle: 'translate(-30px, -115%)',
-    mobilePointTransformStyle: 'translateX(-30px)',
   },
 ];
 
@@ -297,7 +291,6 @@ export type MapSponsorDotData = {
   alt?: string; // 灰字描述
   key?: string;
   icon?: string;
-  containerClass?: string;
   link?: string; // 跳转链接
   coverUrl?: string;
   videoUrl?: string;
@@ -314,7 +307,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'VITALIST\nBAY',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
-    // containerClass: 'w-[13.5rem]',
     link: '',
   },
   {
@@ -325,7 +317,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'ethPanda',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
-    // containerClass: 'w-[14.5rem]',
     link: '',
     activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
@@ -337,7 +328,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'OXFORD\nLONGEVITY',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webp',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
-    // containerClass: 'w-[18.75rem]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1'],
     link: '',
   },

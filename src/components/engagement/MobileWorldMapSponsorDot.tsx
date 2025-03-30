@@ -152,13 +152,13 @@ export function MobileWorldMapSponsorDotContent({
 }: {
   dot: MapSponsorDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number };
+  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { alt, link, coverUrl, videoUrl, lat, lng, containerClass } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // const onClick = useCallback(
   //   (e: React.MouseEvent) => {
@@ -180,12 +180,15 @@ export function MobileWorldMapSponsorDotContent({
   return (
     <AnimatePresence mode="wait">
       {isActive && (
-        <foreignObject
-          x={point.x}
-          y={point.y + 6}
+        <div
           className={cn(
-            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index} pointer-events-auto flex h-20 flex-col overflow-visible`,
+            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index}`,
+            'pointer-events-auto absolute z-30 flex h-20 translate-y-4 flex-col overflow-visible',
           )}
+          style={{
+            left: `${left}px`,
+            top: `${top}px`,
+          }}
           // onClick={onClick}
         >
           {/* <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4"> */}
@@ -195,18 +198,17 @@ export function MobileWorldMapSponsorDotContent({
             exit="hidden"
             className={cn(
               'clip-sponsor-content absolute left-0 top-2 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
-              containerClass,
             )}
             onMouseLeave={handleContentMouseLeave}
             variants={{
               hidden: {
                 opacity: 0,
-                transform: `scale(var(--inverse-scale, 1)) translateY(-10px)`,
+                y: -10,
                 transformOrigin: 'top left',
               },
               visible: {
                 opacity: 1,
-                transform: `scale(var(--inverse-scale, 1))`,
+                y: 0,
                 transformOrigin: 'top left',
               },
             }}
@@ -227,7 +229,7 @@ export function MobileWorldMapSponsorDotContent({
             <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
           </motion.div>
           {/* </a> */}
-        </foreignObject>
+        </div>
       )}
     </AnimatePresence>
   );

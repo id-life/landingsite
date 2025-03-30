@@ -163,14 +163,14 @@ export function WorldMapBookDotContent({
 }: {
   dot: MapBookDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number };
+  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   const onClick = useCallback(
     (e: React.MouseEvent) => {
@@ -192,24 +192,23 @@ export function WorldMapBookDotContent({
   return (
     <AnimatePresence mode="wait">
       {isActive && (
-        <foreignObject
-          x={point.x}
-          y={point.y + 6}
+        <div
           className={cn(
-            `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+            `world-map-dot-book-content world-map-dot-book-content-${index}`,
+            'pointer-events-none absolute -mt-2 flex h-20 flex-col overflow-visible',
           )}
           onClick={onClick}
+          style={{
+            left: `${left}px`,
+            top: `${top}px`,
+          }}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto">
             <motion.div
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
-              style={{
-                transform: `scale(var(--inverse-scale, 1))`,
-                transformOrigin: 'top left',
-              }}
+              className={cn('absolute left-2 top-5 flex w-[15.5rem] flex-col items-center overflow-hidden pt-6 font-oxanium')}
               onMouseLeave={handleContentMouseLeave}
             >
               <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
@@ -234,7 +233,7 @@ export function WorldMapBookDotContent({
               </motion.div>
             </motion.div>
           </a>
-        </foreignObject>
+        </div>
       )}
     </AnimatePresence>
   );

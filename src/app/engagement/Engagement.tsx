@@ -113,7 +113,7 @@ function Engagement() {
       duration: exitUnit,
     });
 
-    tl.to(['.world-map-img', '#world-map-svg'], {
+    tl.to(['.world-map-img'], {
       y: -50,
       opacity: 0,
       ease: 'power2.out',

@@ -8,9 +8,8 @@ import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@
 import { globalLoadedAtom } from '@/atoms/geo';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useEvent, useMeasure } from 'react-use';
+import { useMeasure } from 'react-use';
 import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
@@ -157,39 +156,6 @@ export const WorldMap = memo(function WorldMapComponent({
     });
   }, [calcPoint, sponsorDots]);
 
-  // 创建可重用的更新比例函数
-  const updateSVGScale = useCallback(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
-    // 计算SVG当前的缩放比例
-    const svgRect = svg.getBoundingClientRect();
-    // const winWidth = window.innerWidth;
-    const svgWidth = svgRect.width;
-    const svgScale = svgWidth / svg.viewBox.baseVal.width;
-    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-    // console.log({ svgScale, mapScale, winWidth, svgWidth });
-    // 设置地图缩放适配
-    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
-    // 设置反向缩放CSS变量
-    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
-  }, [svgRef]);
-
-  useEvent('resize', throttle(updateSVGScale, 100));
-
-  useEffect(() => {
-    if (!globalLoaded) return;
-    updateSVGScale();
-  }, [globalLoaded, updateSVGScale]);
-
-  useEffect(() => {
-    if (svgRef.current && mapWidth > 0) {
-      console.log('SVG refs available, updating scale');
-      requestAnimationFrame(() => {
-        updateSVGScale();
-      });
-    }
-  }, [mapWidth, updateSVGScale]);
-
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
@@ -248,14 +214,14 @@ export const WorldMap = memo(function WorldMapComponent({
       {bookDotsPoints}
       {sponsorDotsPoints}
       {dotsContents}
+      {bookDotsContents}
+      {sponsorDotsContents}
+
       <svg
-        id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute -left-10 top-0 z-30 size-full select-none overflow-visible"
+        className="pointer-events-none absolute left-0 top-0 size-full select-none overflow-visible"
       >
-        {bookDotsContents}
-        {sponsorDotsContents}
         <defs>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="white" stopOpacity="0" />

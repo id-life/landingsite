@@ -1,13 +1,13 @@
 import { activeMeetingDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
-import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -205,7 +205,7 @@ export function WorldMapDotContent({
         <div
           className={cn(
             `world-map-dot-content world-map-dot-content-${index}`,
-            'pointer-events-none absolute flex max-h-[42.5rem] flex-col overflow-visible',
+            'pointer-events-none absolute z-30 flex max-h-[42.5rem] flex-col overflow-visible',
           )}
           style={{
             left: `${left}px`,
@@ -221,7 +221,7 @@ export function WorldMapDotContent({
             onMouseLeave={handleContentMouseLeave}
           >
             <div className="pointer-events-auto absolute -inset-10"></div>
-            <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28', pcDotHotAreaClass)}></div>
+            <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-40', pcDotHotAreaClass)}></div>
           </div>
           <motion.div
             initial="hidden"

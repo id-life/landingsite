@@ -1,19 +1,18 @@
 'use client';
 
+import { mobileCurrentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useEvent, useMeasure } from 'react-use';
+import { useMeasure } from 'react-use';
+import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
 import { MobileWorldMapSponsorDotContent, MobileWorldMapSponsorDotPoint } from './MobileWorldMapSponsorDot';
-import { throttle } from 'lodash-es';
-import { NAV_LIST } from '../nav/nav';
-import { mobileCurrentPageAtom } from '@/atoms';
 
 const svgViewBox = {
   w: 756,
@@ -64,8 +63,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const regionDotsPoints = useMemo(() => {
     if (!regionDots?.length) return null;
     return regionDots.map((dot, i) => {
-      const startPoint = calcPoint(dot.lat, dot.lng);
-      const size = 12;
+      const { left, top } = calcPoint(dot.lat, dot.lng);
       return (
         <div
           key={`points-group-${i}`}
@@ -74,8 +72,8 @@ export const MobileWorldMap = memo(function WorldMapComponent({
             isAnyActive && 'opacity-80',
           )}
           style={{
-            left: startPoint.left,
-            top: startPoint.top,
+            left: left,
+            top: top,
             filter: 'url(#black-overlay)',
           }}
         >
@@ -131,39 +129,6 @@ export const MobileWorldMap = memo(function WorldMapComponent({
     });
   }, [calcPoint, sponsorDots]);
 
-  // 创建可重用的更新比例函数
-  const updateSVGScale = useCallback(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
-    // 计算SVG当前的缩放比例
-    const svgRect = svg.getBoundingClientRect();
-    // const winWidth = window.innerWidth;
-    const svgWidth = svgRect.width;
-    const svgScale = svgWidth / svg.viewBox.baseVal.width;
-    // const mapScale = Math.min(1, 1 - (1920 - winWidth) / 1920);
-    // console.log({ svgScale, mapScale, winWidth, svgWidth });
-    // 设置地图缩放适配
-    document.documentElement.style.setProperty('--map-scale', `${0.95}`);
-    // 设置反向缩放CSS变量
-    document.documentElement.style.setProperty('--inverse-scale', `${1 / svgScale}`);
-  }, [svgRef]);
-
-  useEvent('resize', throttle(updateSVGScale, 100));
-
-  useEffect(() => {
-    if (!globalLoaded) return;
-    updateSVGScale();
-  }, [globalLoaded, updateSVGScale]);
-
-  useEffect(() => {
-    if (svgRef.current && mapWidth > 0) {
-      console.log('SVG refs available, updating scale');
-      requestAnimationFrame(() => {
-        updateSVGScale();
-      });
-    }
-  }, [mapWidth, updateSVGScale]);
-
   // 点击地图背景时关闭所有激活的书籍详情
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
@@ -197,23 +162,14 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       {bookDotsPoints}
       {sponsorDotsPoints}
       {dotsContents}
+      {bookDotsContents}
+      {sponsorDotsContents}
       <svg
-        id="world-map-svg"
         ref={svgRef}
         viewBox={`0 0 756 360`}
         className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
       >
-        <g>
-          {bookDotsContents}
-          {sponsorDotsContents}
-        </g>
         <defs>
-          <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="5%" stopColor={lineColor} stopOpacity="1" />
-            <stop offset="95%" stopColor={lineColor} stopOpacity="1" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </linearGradient>
           <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
             <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
             <feComposite in="overlay" in2="SourceGraphic" operator="over" />

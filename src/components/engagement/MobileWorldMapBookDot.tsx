@@ -155,12 +155,12 @@ export function MobileWorldMapBookDotContent({
 }: {
   dot: MapBookDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number };
+  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const isActive = activeBookDot === index;
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   const onClick = useCallback(
     (e: React.MouseEvent) => {
@@ -173,12 +173,15 @@ export function MobileWorldMapBookDotContent({
   return (
     <AnimatePresence mode="wait">
       {isActive && (
-        <foreignObject
-          x={point.x}
-          y={point.y + 6}
+        <div
           className={cn(
-            `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none flex h-20 flex-col overflow-visible`,
+            `world-map-dot-book-content world-map-dot-book-content-${index} pointer-events-none`,
+            'absolute z-30 flex h-20 translate-y-4 flex-col overflow-visible',
           )}
+          style={{
+            left: `${left}px`,
+            top: `${top}px`,
+          }}
           onClick={onClick}
         >
           <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
@@ -186,13 +189,16 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-2 top-0 flex w-[15.5rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
-              style={{
-                transform: `scale(var(--inverse-scale, 1))`,
-                transformOrigin: 'top left',
-              }}
+              className={cn('absolute left-0 top-0 flex w-[13.75rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
             >
-              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
+              <VideoWithPoster
+                coverUrl={coverUrl}
+                videoUrl={videoUrl}
+                title={title}
+                containerClass="-mt-6"
+                coverClass="size-[13.75rem]"
+                videoClass="size-[13.75rem]"
+              />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },
@@ -206,15 +212,15 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center gap-1"
+                className="-mt-3 flex cursor-pointer flex-col items-center gap-1"
               >
-                <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
-                <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
+                <h4 className="text-base/5 font-semibold capitalize text-white">{bookTitle}</h4>
+                <ArrowSVG className="mt-1 size-4 rotate-180 fill-gray-350" />
                 <p className="text-xs/3 text-gray-350">{desc}</p>
               </motion.div>
             </motion.div>
           </a>
-        </foreignObject>
+        </div>
       )}
     </AnimatePresence>
   );
