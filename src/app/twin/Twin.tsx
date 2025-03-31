@@ -10,9 +10,12 @@ import { memo, useEffect, useRef } from 'react';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { ModelType } from '@/components/twin/model/type';
+import { useInView } from 'react-intersection-observer';
 
 function Twin() {
   const isResetDemo = useRef(false);
+  const { ref, inView } = useInView({ threshold: 0 });
+
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { setEnableJudge: setEnableUpJudge, enableJudge } = useScrollTriggerAction({
@@ -61,11 +64,12 @@ function Twin() {
   }, []);
 
   useEffect(() => {
-    if (currentPage === NAV_LIST[3]) {
+    console.log('inView', inView, isResetDemo.current);
+    if (inView) {
       isResetDemo.current = true;
       return;
     }
-    if (currentPage !== NAV_LIST[3] && isResetDemo.current) {
+    if (!inView && isResetDemo.current) {
       const list = gsap.utils.toArray('.twin-title-item');
       gsap.to(list, { left: '-80rem' });
       gsap.to('.twin-title', { opacity: 1 });
@@ -76,10 +80,10 @@ function Twin() {
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });
       isResetDemo.current = false;
     }
-  }, [currentPage]);
+  }, [inView]);
 
   return (
-    <div id={NAV_LIST[3].id} className="page-container twin">
+    <div id={NAV_LIST[3].id} ref={ref} className="page-container twin">
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>
