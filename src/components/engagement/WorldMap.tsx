@@ -67,7 +67,7 @@ export const WorldMap = memo(function WorldMapComponent({
       const y = (90 - lat) * (h / 180);
       const left = (x / w) * width;
       const top = (y / h) * height;
-      console.log({ x, y, left, top, w, h, width, height });
+      // console.log({ x, y, left, top, w, h, width, height });
       return { x, y, left, top };
     },
     [mapWidth],

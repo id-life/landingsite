@@ -22,7 +22,7 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig } = dot;
+  const { lat, lng, title, pulseConfig, mobileLat, mobileLng } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -35,7 +35,7 @@ export function MobileWorldMapSponsorDotPoint({
     handleClickPoint('sponsor', index);
   };
 
-  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(() => calcPoint(mobileLat ?? lat, mobileLng ?? lng), [calcPoint, lat, lng]);
 
   // 使用自定义配置或默认配置
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
@@ -154,11 +154,11 @@ export function MobileWorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { alt, link, coverUrl, videoUrl, lat, lng } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
-  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(() => calcPoint(mobileLat ?? lat, mobileLng ?? lng), [calcPoint, lat, lng]);
 
   // const onClick = useCallback(
   //   (e: React.MouseEvent) => {

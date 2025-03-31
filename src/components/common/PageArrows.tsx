@@ -9,7 +9,7 @@ import {
 } from '@/atoms';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 
@@ -19,7 +19,7 @@ interface PageArrowsProps {
 export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
-  const innerPageTotal = useAtomValue(innerPageTotalAtom);
+  const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
 
   const pageIndexList = useMemo(() => {
@@ -29,6 +29,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
     };
     const total = getTotal();
     if (!total) return [];
+    setInnerPageTotal(total);
     return new Array(total).fill(0);
   }, [currentPage.id]);
 

@@ -288,6 +288,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
 export type MapSponsorDotData = {
   lat: number;
   lng: number;
+  mobileLat?: number;
+  mobileLng?: number;
   alt?: string; // 灰字描述
   key?: string;
   icon?: string;
@@ -312,6 +314,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
     lat: 20,
     lng: 86,
+    mobileLat: 20,
+    mobileLng: 80,
     title: 'Chengdu, China',
     key: 'sponsor-02',
     alt: 'ethPanda',

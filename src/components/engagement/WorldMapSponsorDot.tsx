@@ -193,7 +193,7 @@ export function WorldMapSponsorDotContent({
         <div
           className={cn(
             `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index}`,
-            'pointer-events-auto absolute flex h-20 translate-y-5 flex-col overflow-visible',
+            'pointer-events-auto absolute z-30 flex h-20 translate-y-5 flex-col overflow-visible',
           )}
           style={{
             left: `${left}px`,

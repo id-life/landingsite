@@ -1,14 +1,16 @@
-import { mobileCurrentPageAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { BACKGROUND_COLORS, BACKGROUND_THEME, BackgroundTheme } from '@/constants/config';
 import gsap from 'gsap';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileNavigation() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isAnimatingRef = useRef(false);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
 
   const changeBackground = useCallback((theme: BackgroundTheme) => {
     const root = document.documentElement;
@@ -98,6 +100,12 @@ export function useMobileNavigation() {
       // 如果动画正在进行中，不响应新的切换请求
       if (isAnimatingRef.current) return;
       setCurrentPage(item);
+      if (item.id === NAV_LIST[4].id) {
+        setInnerPageIndex(0);
+      } else {
+        setInnerPageIndex(-1);
+        setInnerPageTotal(0);
+      }
     },
     [setCurrentPage],
   );

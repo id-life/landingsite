@@ -12,7 +12,7 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo } from 'react';
-import { NAV_LIST } from '../nav/nav';
+import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
   className?: string;
@@ -20,19 +20,19 @@ interface PageArrowsProps {
 export default function MobilePageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
-
+  const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
   const pageIndexList = useMemo(() => {
     const getTotal = () => {
-      if (![NAV_LIST[2].id, NAV_LIST[4].id].includes(currentPage.id)) return 0;
-      return currentPage.id === NAV_LIST[2].id ? 4 : 5;
+      if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
+      return 5; // 目前就一个 Value 页有
     };
     const total = getTotal();
     if (!total) return [];
     setInnerPageTotal(total);
     return new Array(total).fill(0);
-  }, [currentPage.id, setInnerPageTotal]);
+  }, [currentPage.id]);
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
@@ -52,12 +52,23 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
         <div className="flex-center order-2 gap-3 mobile:order-1">
           {pageIndexList.map((_, index) => (
             <div
-              key={`value-page-index-${index}`}
+              key={`inner-page-index-${index}`}
               className={cn(
-                'h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                innerPageIndex === index ? 'bg-gray-800' : 'bg-[#B8B8B8]',
+                'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
+                BLACK_ARROW_LIST.includes(currentPage.id)
+                  ? innerPageIndex !== index
+                    ? 'bg-white/20'
+                    : 'bg-white/40'
+                  : innerPageIndex === index
+                    ? 'bg-gray-800'
+                    : 'bg-[#B8B8B8]',
               )}
-            ></div>
+            >
+              <div
+                className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"
+                onClick={() => setInnerPageNavigateTo(index)}
+              />
+            </div>
           ))}
         </div>
       ) : null}
@@ -75,22 +86,41 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const { mobileNavChange } = useMobileNavigation();
 
   const handleClick = useThrottle(() => {
-    if (innerPageIndex !== -1) {
+    console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
+    if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
       // 有小进度条
-      // 第三页 ValueGL
       if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻
         mobileNavChange(NAV_LIST[currentPageIndex - 1]);
         return;
       } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
-        // 小进度结尾 往下翻
+        // 最后一个小进度 往下翻
         mobileNavChange(NAV_LIST[currentPageIndex + 1]);
         return;
       }
       setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
-    } else mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-    setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
+      return;
+    }
+    mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
   }, 1000);
+
+  // const handleClick = useThrottle(() => {
+  //   if (innerPageIndex !== -1) {
+  //     // 有小进度条
+  //     // 第三页 ValueGL
+  //     if (innerPageIndex === 0 && isUp) {
+  //       // 小进度开头 往上翻
+  //       mobileNavChange(NAV_LIST[currentPageIndex - 1]);
+  //       return;
+  //     } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
+  //       // 小进度结尾 往下翻
+  //       mobileNavChange(NAV_LIST[currentPageIndex + 1]);
+  //       return;
+  //     }
+  //     setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
+  //   } else mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
+  //   setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
+  // }, 1000);
 
   return (
     <div
