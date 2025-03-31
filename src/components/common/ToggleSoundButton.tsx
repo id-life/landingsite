@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
+import { isMobile, isSafari } from 'react-device-detect';
 
 function SoundLineItem() {
   return (
@@ -28,17 +29,21 @@ export default function ToggleSoundButton({ className }: { className?: string })
   const handleUserInteraction = useCallback(() => {
     if (!audioRef.current || canAutoPlay) return;
     audioRef.current.volume = 0.3;
-    audioRef.current.play().then();
+    audioRef.current?.play().then();
     window.removeEventListener('click', handleUserInteraction);
   }, [canAutoPlay]);
 
   useEffect(() => {
     if (!isMounted || soundOff) return;
 
-    audioRef.current?.play().catch(() => {
-      setCanAutoPlay(false);
-      console.log('autoplay error');
-    });
+    try {
+      audioRef.current?.play().catch(() => {
+        setCanAutoPlay(false);
+        console.log('autoplay error');
+      });
+    } catch (error) {
+      console.log('播放操作异常', error);
+    }
 
     window.addEventListener('click', handleUserInteraction);
 
@@ -49,7 +54,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
 
   useEffect(() => {
     if (audioRef.current) {
-      soundOff ? audioRef.current.pause() : audioRef.current.play();
+      soundOff ? audioRef.current.pause() : isSafari ? null : audioRef.current?.play();
     }
     // button animation
     if (soundOff) {
@@ -77,7 +82,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
         speed: 0.2,
       });
     }
-  }, [soundOff]);
+  }, [soundOff, isSafari, isMobile]);
 
   return (
     <>
@@ -114,7 +119,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
         ref={audioRef}
         className="bottom-0-0 invisible fixed left-0 size-0.5"
         src="https://cdn.id.life/id-bgm-01.mp3"
-        autoPlay
+        // autoPlay
         loop
       />
     </>

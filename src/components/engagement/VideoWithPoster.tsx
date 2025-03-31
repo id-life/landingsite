@@ -1,6 +1,7 @@
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { CustomView, isSafari } from 'react-device-detect';
 
 interface VideoWithPosterProps {
   coverUrl?: string;
@@ -39,17 +40,19 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       {coverUrl && !videoLoaded && (
         <img src={coverUrl} alt={title} className={cn('size-[15.5rem] object-contain', coverClass)} />
       )}
-      {videoUrl && (
-        <video
-          src={videoUrl}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
-          onLoadedData={() => setVideoLoaded(true)}
-        />
-      )}
+      <CustomView condition={!isSafari}>
+        {videoUrl && (
+          <video
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
+            onLoadedData={() => setVideoLoaded(true)}
+          />
+        )}
+      </CustomView>
     </motion.div>
   );
 }
