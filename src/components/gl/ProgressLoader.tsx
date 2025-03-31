@@ -3,7 +3,7 @@ import Background from '@/components/common/Background';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html } from '@react-three/drei';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function OuterLoader() {
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
@@ -11,7 +11,7 @@ export function OuterLoader() {
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }

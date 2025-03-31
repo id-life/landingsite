@@ -6,7 +6,7 @@ import { useProgress } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
 import MobileValueGL from './MobileValueGL';
@@ -32,7 +32,7 @@ function OuterLoader() {
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
