@@ -1,8 +1,8 @@
-import { useIsMounted } from '@/hooks/useIsMounted';
-import { cn, judgeIsWebView } from '@/utils';
+import { useSupportsWebm } from '@/hooks/useSupportsWebm';
+import { cn } from '@/utils';
 import { motion } from 'motion/react';
-import { useMemo, useState } from 'react';
-import { CustomView, isSafari } from 'react-device-detect';
+import { useState } from 'react';
+import { CustomView } from 'react-device-detect';
 
 interface VideoWithPosterProps {
   coverUrl?: string;
@@ -15,12 +15,7 @@ interface VideoWithPosterProps {
 
 export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, coverClass, videoClass }: VideoWithPosterProps) {
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const isMounted = useIsMounted();
-
-  const isWebView = useMemo(() => {
-    if (isMounted) return judgeIsWebView();
-    return false;
-  }, [isMounted]);
+  const supportsWebm = useSupportsWebm();
 
   return (
     <motion.div
@@ -47,7 +42,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       {coverUrl && !videoLoaded && (
         <img src={coverUrl} alt={title} className={cn('size-[15.5rem] object-contain', coverClass)} />
       )}
-      <CustomView condition={!isSafari && !isWebView}>
+      <CustomView condition={supportsWebm}>
         {videoUrl && (
           <video
             src={videoUrl}
