@@ -336,3 +336,15 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: '',
   },
 ];
+
+export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number; duration?: number }[] = [
+  { type: 'sponsor', index: 0 },
+  { type: 'meeting', index: 3 },
+  { type: 'sponsor', index: 2 },
+  { type: 'book', index: 0 },
+  { type: 'book', index: 1 },
+  { type: 'sponsor', index: 1 },
+  { type: 'meeting', index: 2 },
+  { type: 'meeting', index: 1 },
+  { type: 'meeting', index: 0 },
+];
