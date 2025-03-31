@@ -1,15 +1,15 @@
 import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { Compare } from '@/components/compare/compare';
 import { ModelType } from '@/components/twin/model/type';
+import { useSupportsWebm } from '@/hooks/useSupportsWebm';
 import { useAtomValue } from 'jotai';
 import React, { useMemo } from 'react';
-import { isSafari } from 'react-device-detect';
 
 export function Model() {
   const currentModel = useAtomValue(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const currentAnatomyCamera = useAtomValue(currentAnatomyCameraAtom);
-
+  const supportsWebm = useSupportsWebm();
   const imgUrl = useMemo(() => {
     if (currentModelType === ModelType.Anatomy) {
       if (currentModel === PredictionModel.M0) {
@@ -58,7 +58,7 @@ export function Model() {
         }
       }
     } else {
-      if (isSafari) {
+      if (!supportsWebm) {
         if (!currentModel || currentModel === PredictionModel.M0) {
           return ['/imgs/twin/model/safari/M0.png'];
         } else if (currentModel === PredictionModel.M1) {
@@ -108,7 +108,7 @@ export function Model() {
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
-        isSafari ? (
+        !supportsWebm ? (
           <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[200px] object-contain object-center" />
         ) : (
           <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[200px] object-cover object-center" />
@@ -117,11 +117,11 @@ export function Model() {
         <Compare
           firstImage={imgUrl?.[0] || ''}
           secondImage={imgUrl?.[1] || ''}
-          firstImageClassName={!isSafari ? "object-cover object-center" : "object-center object-contain"}
-          secondImageClassname={!isSafari ? "object-cover object-center" : "object-center object-contain"}
+          firstImageClassName={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
+          secondImageClassname={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
           className="h-[500px] w-[200px]"
           slideMode="hover"
-          isVideo={!isSafari}
+          isVideo={supportsWebm}
         />
       )}
     </div>
