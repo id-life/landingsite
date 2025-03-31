@@ -6,15 +6,17 @@ import { useEffect, useRef } from 'react';
 import SwitchModel from './_components/mobile/SwitchModel';
 import SwitchSkin from './_components/mobile/SwitchSkin';
 import Description from './_components/mobile/Description';
-import { currentModelAtom, PredictionModel } from '@/atoms/twin';
+import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { gsap } from 'gsap';
 import { Model } from './_components/mobile/Model';
 import SwitchAnatomyCamera from './_components/mobile/SwitchAnatomyCamera';
+import { ModelType } from '@/components/twin/model/type';
 
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const setCurrentModel = useSetAtom(currentModelAtom);
+  const setCurrentModelType = useSetAtom(currentModelTypeAtom);
 
   useEffect(() => {
     if (currentPage !== NAV_LIST[3]) {
@@ -29,6 +31,7 @@ export default function MobileTwin() {
     gsap.to('#switch-model', { top: '30rem', y: '-50%' });
     gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
     setCurrentModel(PredictionModel.M0);
+    setCurrentModelType(ModelType.Skin);
   };
   return (
     <div
