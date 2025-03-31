@@ -10,7 +10,7 @@ import {
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
@@ -22,16 +22,24 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
 
+  const getTotal = useCallback(() => {
+    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
+    return 5; // 目前就一个 Value 页有
+  }, [currentPage]);
+
   const pageIndexList = useMemo(() => {
-    const getTotal = () => {
-      if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-      return 5; // 目前就一个 Value 页有
-    };
     const total = getTotal();
     if (!total) return [];
-    setInnerPageTotal(total);
     return new Array(total).fill(0);
-  }, [currentPage.id]);
+  }, [getTotal, setInnerPageTotal]);
+
+  // 更新 innerPageTotal
+  useEffect(() => {
+    const total = getTotal();
+    if (innerPageTotal !== total) {
+      setInnerPageTotal(total);
+    }
+  }, [getTotal, setInnerPageTotal, innerPageTotal]);
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
