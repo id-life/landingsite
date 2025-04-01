@@ -37,24 +37,26 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
         duration: 0.3,
         type: 'easeInOut',
       }}
-      className={cn('flex-center relative -mt-5 overflow-hidden', containerClass)}
+      // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >
-      {coverUrl && !videoLoaded && (
-        <img src={coverUrl} alt={title} className={cn('size-[15.5rem] object-contain', coverClass)} />
-      )}
-      <CustomView condition={supportsWebm}>
-        {videoUrl && (
-          <video
-            src={videoUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
-            onLoadedData={() => setVideoLoaded(true)}
-          />
+      <div className={cn('flex-center relative -mt-5 overflow-hidden', containerClass)}>
+        {coverUrl && !videoLoaded && (
+          <img src={coverUrl} alt={title} className={cn('size-[15.5rem] object-contain', coverClass)} />
         )}
-      </CustomView>
+        <CustomView condition={supportsWebm}>
+          {videoUrl && (
+            <video
+              src={videoUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
+              onLoadedData={() => setVideoLoaded(true)}
+            />
+          )}
+        </CustomView>
+      </div>
     </motion.div>
   );
 }

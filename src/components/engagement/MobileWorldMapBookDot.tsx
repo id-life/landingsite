@@ -157,7 +157,7 @@ export function MobileWorldMapBookDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
+  const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle, containerClass } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const isActive = activeBookDot === index;
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -195,7 +195,7 @@ export function MobileWorldMapBookDotContent({
                 coverUrl={coverUrl}
                 videoUrl={videoUrl}
                 title={title}
-                containerClass="-mt-6"
+                containerClass={cn('-mt-6', containerClass)}
                 coverClass="size-[13.75rem]"
                 videoClass="size-[13.75rem]"
               />

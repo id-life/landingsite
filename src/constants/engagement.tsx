@@ -258,6 +258,7 @@ export type MapBookDotData = {
   link?: string; // 跳转链接
   pulseConfig?: PulseConfig; // 自定义波纹配置
   activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
+  containerClass?: string;
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
@@ -282,6 +283,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
+    containerClass: 'scale-[1.2]',
   },
 ];
 

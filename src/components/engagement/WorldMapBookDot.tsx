@@ -169,7 +169,7 @@ export function WorldMapBookDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle } = dot;
+  const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle, containerClass } = dot;
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
@@ -215,7 +215,7 @@ export function WorldMapBookDotContent({
               className={cn('absolute left-2 top-5 flex w-[15.5rem] flex-col items-center overflow-hidden pt-6 font-oxanium')}
               onMouseLeave={handleContentMouseLeave}
             >
-              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} />
+              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} containerClass={containerClass} />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },
