@@ -121,7 +121,7 @@ export default function SwitchAnatomyCamera() {
               />
             </>
           )}
-          {currentModel === PredictionModel.M3 && (
+          {/* {currentModel === PredictionModel.M3 && (
             <>
               <AnatomyM31
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA10)}
@@ -131,7 +131,7 @@ export default function SwitchAnatomyCamera() {
                 )}
               />
             </>
-          )}
+          )} */}
         </div>
       )}
     </div>
