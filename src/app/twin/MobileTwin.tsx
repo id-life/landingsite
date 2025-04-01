@@ -28,7 +28,7 @@ export default function MobileTwin() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#switch-model', { top: '30rem', y: '-50%' });
+    gsap.to('#switch-model', { top: '32rem', y: '-50%' });
     gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
     gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     setCurrentModel(PredictionModel.M0);
@@ -53,7 +53,9 @@ export default function MobileTwin() {
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>
+
       <div className="twin-title-wrapper relative h-[500px]">
+        <YTBDemo />
         <div className="twin-title absolute left-5 top-20 w-screen">
           <img src="/svgs/twin/mobile/title-page.svg" alt="" />
         </div>
@@ -77,7 +79,6 @@ export default function MobileTwin() {
         <Description />
         <SwitchAnatomyCamera />
         <Model />
-        {currentModel === PredictionModel.M0 && currentModelType === ModelType.Skin && <YTBDemo />}
       </div>
     </div>
   );
