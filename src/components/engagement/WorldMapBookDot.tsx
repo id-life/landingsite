@@ -1,13 +1,13 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapBookDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { ArrowSVG, BookSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -30,13 +30,21 @@ export function WorldMapBookDotPoint({
     index,
     type: 'book',
   });
-  const { handleClickPoint, handleMouseEnter, handleMouseLeave } = useEngagementClickPoint();
+  const { handleClickPoint, handleMouseEnter, activeBookDot } = useEngagementClickPoint();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    handleClickPoint('book', index);
-    if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
+    if (!activeBookDotClickOpen) {
+      setActiveBookDotClickOpen(true);
+      handleClickPoint('book', index, true);
+    } else {
+      handleClickPoint('book', index);
+    }
   };
+
+  useEffect(() => {
+    if (!activeBookDot) setActiveBookDotClickOpen(false);
+  }, [activeBookDot]);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -61,12 +69,8 @@ export function WorldMapBookDotPoint({
       variants={pointVariants}
       animate={isActive ? 'active' : 'initial'}
       onMouseEnter={(e) => {
-        if (activeBookDotClickOpen) setActiveBookDotClickOpen(false);
-        handleMouseEnter(e, index, 'book');
-      }}
-      onMouseLeave={(e) => {
         if (activeBookDotClickOpen) return;
-        handleMouseLeave(e, index, 'book');
+        handleMouseEnter(e, index, 'book');
       }}
       style={{
         left: `${left}px`,

@@ -23,10 +23,10 @@ export function WorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, activeOtherDarkerDotIDs } = dot;
+  const { country, label, lat, lng, pulseConfig } = dot;
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
-  const { handleClickPoint, handleMouseEnter } = useEngagementClickPoint();
+  const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -40,9 +40,19 @@ export function WorldMapDotPoint({
   // 计算SVG中心点
   const centerPoint = useMemo(() => svgSize / 2, [svgSize]);
 
+  useEffect(() => {
+    if (!activeMeetingDot) setActiveMeetingDotClickOpen(false);
+  }, [activeMeetingDot]);
+
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    handleClickPoint('meeting', index);
+    if (!activeMeetingDotClickOpen) {
+      setActiveMeetingDotClickOpen(true);
+      handleClickPoint('meeting', index, true);
+    } else {
+      setActiveMeetingDotClickOpen(false);
+      handleClickPoint('meeting', index, false);
+    }
   };
 
   return (
@@ -53,7 +63,7 @@ export function WorldMapDotPoint({
       )}
       onClick={handleClick}
       onMouseEnter={(e) => {
-        if (activeMeetingDotClickOpen) setActiveMeetingDotClickOpen(false);
+        if (activeMeetingDotClickOpen) return;
         handleMouseEnter(e, index, 'meeting');
       }}
       variants={pointVariants}
@@ -163,7 +173,6 @@ export function WorldMapDotContent({
   const activeMeetingDotClickOpen = useAtomValue(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const point = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   // 打开时禁用弹窗内的滚动, overscroll-none 不顶用
   useEffect(() => {
@@ -221,7 +230,12 @@ export function WorldMapDotContent({
             onMouseLeave={handleContentMouseLeave}
           >
             <div className="pointer-events-auto absolute -inset-10"></div>
-            <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-40', pcDotHotAreaClass)}></div>
+            <div
+              className={cn(
+                'clip-meeting-pc-hot-area pointer-events-auto absolute -right-72 left-[90%] h-40',
+                pcDotHotAreaClass,
+              )}
+            ></div>
           </div>
           <motion.div
             initial="hidden"

@@ -5,7 +5,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 
@@ -23,7 +23,7 @@ export function WorldMapSponsorDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { lat, lng, title, pulseConfig } = dot;
-  const { handleClickPoint, handleMouseEnter, handleMouseLeave } = useEngagementClickPoint();
+  const { handleClickPoint, handleMouseEnter, activeSponsorDot } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -33,10 +33,17 @@ export function WorldMapSponsorDotPoint({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
-    if (!activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(true);
-    handleClickPoint('sponsor', index);
+    if (!activeSponsorDotClickOpen) {
+      setActiveSponsorDotClickOpen(true);
+      handleClickPoint('sponsor', index, true);
+    } else {
+      handleClickPoint('sponsor', index);
+    }
   };
 
+  useEffect(() => {
+    if (!activeSponsorDot) setActiveSponsorDotClickOpen(false);
+  }, [activeSponsorDot]);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // 使用自定义配置或默认配置
@@ -62,10 +69,6 @@ export function WorldMapSponsorDotPoint({
       onMouseEnter={(e) => {
         if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
         handleMouseEnter(e, index, 'sponsor');
-      }}
-      onMouseLeave={(e) => {
-        if (activeSponsorDotClickOpen) return;
-        handleMouseLeave(e, index, 'sponsor');
       }}
       style={{
         left: `${left}px`,

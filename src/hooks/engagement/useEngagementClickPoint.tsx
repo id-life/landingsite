@@ -9,19 +9,19 @@ export function useEngagementClickPoint() {
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
-  const handleClickPoint = (type: EngagementClickPointType, index: number) => {
+  const handleClickPoint = (type: EngagementClickPointType, index: number, openState?: boolean) => {
     if (type === 'meeting') {
-      const newState = toggleDotIndex(index, activeMeetingDot);
+      const newState = openState === undefined ? toggleDotIndex(index, activeMeetingDot) : openState ? index : null;
       setActiveMeetingDot(newState);
       setActiveBookDot(null);
       setActiveSponsorDot(null);
     } else if (type === 'book') {
-      const newState = toggleDotIndex(index, activeBookDot);
+      const newState = openState === undefined ? toggleDotIndex(index, activeBookDot) : openState ? index : null;
       setActiveBookDot(newState);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
     } else if (type === 'sponsor') {
-      const newState = toggleDotIndex(index, activeSponsorDot);
+      const newState = openState === undefined ? toggleDotIndex(index, activeSponsorDot) : openState ? index : null;
       setActiveSponsorDot(newState);
       setActiveMeetingDot(null);
       setActiveBookDot(null);
@@ -73,5 +73,12 @@ export function useEngagementClickPoint() {
     }
   }, 400);
 
-  return { handleClickPoint, handleMouseEnter, handleMouseLeave, activeMeetingDot, activeBookDot, activeSponsorDot };
+  return {
+    handleClickPoint,
+    handleMouseEnter,
+    handleMouseLeave,
+    activeMeetingDot,
+    activeBookDot,
+    activeSponsorDot,
+  };
 }
