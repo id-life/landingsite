@@ -9,15 +9,17 @@ import Logo from '@/components/nav/Logo';
 import { useAtom, useAtomValue } from 'jotai';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
+import { cn } from '@/utils';
+import { useCallback } from 'react';
 
 export default function MobileNav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
 
-  const onSubscribeClick = () => {
+  const onSubscribeClick = useCallback(() => {
     setIsSubscribeShow((pre) => !pre);
-  };
+  }, []);
 
   if (!globalLoaded) return null;
   return (
@@ -29,9 +31,16 @@ export default function MobileNav() {
       <div className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
         <div
           onClick={onSubscribeClick}
-          className="group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
+          className={cn(
+            'group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+            { 'stroke-red-600 text-red-600': isSubscribeShow },
+          )}
         >
-          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
+          <SubscribeBorderSVG
+            className={cn('absolute left-0 top-0 size-full stroke-foreground duration-300', {
+              'stroke-red-600': isSubscribeShow,
+            })}
+          />
           Subscribe
         </div>
         <div className="ml-5 hidden mobile:block" onClick={() => setMenuOpen((pre) => !pre)}>

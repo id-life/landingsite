@@ -127,7 +127,7 @@ export function MobileWorldMapBookDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
+        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive && (

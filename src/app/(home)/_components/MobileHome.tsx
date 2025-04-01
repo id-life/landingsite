@@ -22,7 +22,7 @@ export default function MobileHome() {
         <MobileEngagement />
         <MobileTwin />
         <MobileValue />
-        {currentPage.id === NAV_LIST[NAV_LIST.length - 1].id && <MobileFooter />}
+        <MobileFooter />
       </div>
     </>
   );
