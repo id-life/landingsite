@@ -70,20 +70,28 @@ export function Model() {
         }
       } else {
         if (!currentModel || currentModel === PredictionModel.M0) {
-          return ['https://cdn.id.life/twin/M0.webm'];
+          return ['https://cdn.id.life/twin/M0-1.webm'];
         } else if (currentModel === PredictionModel.M1) {
-          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M1.webm'];
+          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M1-1.webm'];
         } else if (currentModel === PredictionModel.M2) {
-          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M2.webm'];
+          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M2-1.webm'];
         } else if (currentModel === PredictionModel.M3) {
-          return ['https://cdn.id.life/twin/M0.webm', 'https://cdn.id.life/twin/M3.webm'];
+          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M3-1.webm'];
         }
       }
     }
   }, [currentAnatomyCamera, currentModel, currentModelType]);
 
   return (
-    <div className="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform">
+    <div
+      className={`absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform ${
+        currentAnatomyCamera === AnatomyCamera.CAMERA3
+          ? ''
+          : currentAnatomyCamera === AnatomyCamera.CAMERA4
+            ? 'top-[50%]'
+            : ''
+      }`}
+    >
       {currentModelType === ModelType.Anatomy ? (
         currentModel === PredictionModel.M0 ? (
           <img
@@ -91,9 +99,9 @@ export function Model() {
             alt=""
             className={`object-cover object-center ${
               currentAnatomyCamera === AnatomyCamera.CAMERA3
-                ? 'transform-center scale-[3.5]'
+                ? 'transform-center'
                 : currentAnatomyCamera === AnatomyCamera.CAMERA4
-                  ? 'origin-top scale-[2]'
+                  ? 'top-10'
                   : ''
             }`}
           />

@@ -33,6 +33,15 @@ export default function MobileTwin() {
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   };
+
+  useEffect(() => {
+    const preventDefault = (e: Event) => e.preventDefault();
+    document.addEventListener('touchmove', preventDefault, { passive: false });
+    return () => {
+      document.removeEventListener('touchmove', preventDefault);
+    };
+  }, []);
+
   return (
     <div
       id={NAV_LIST[3].id}

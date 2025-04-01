@@ -11,7 +11,7 @@ export default function ReportM02() {
   };
 
   return (
-    <Drawer.Root direction="bottom" disablePreventScroll={true}>
+    <Drawer.Root direction="bottom">
       <Drawer.Trigger className="text-red-600"> More &gt;</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />

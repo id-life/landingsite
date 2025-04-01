@@ -11,24 +11,26 @@ export default function ReportM01() {
   };
 
   return (
-    <Drawer.Root direction="bottom" disablePreventScroll={true}>
+    <Drawer.Root direction="bottom">
       <Drawer.Trigger className="text-red-600"> More &gt;</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />
         <Drawer.Content className="fixed bottom-0 left-0 top-[200px] z-[100] flex w-full bg-white outline-none">
-          <div className="flex h-full w-full grow flex-col p-4">
-            <Drawer.Title className="flex items-center gap-3 text-xl/6 font-semibold">
-              Unhealthy habits me <SwitchLanguage isChineseActive={isChinese} onChange={handleLanguageChange} />
-            </Drawer.Title>
-            <Drawer.Close className="absolute right-4 top-4 w-5">
-              <img src="/svgs/close.svg" alt="" />
-            </Drawer.Close>
-            <div className="mb-2 mt-4 flex items-center justify-between">
-              <div className="flex-1 overflow-hidden">
-                <div className="flex flex-wrap gap-2">
-                  {['30 YEARS', 'Sedentary', 'High-Sugar'].map((tag, index) => (
-                    <Tag key={tag} text={tag} />
-                  ))}
+          <div className="flex h-full w-full flex-1 grow flex-col overflow-y-auto p-4">
+            <div className="flex-none">
+              <Drawer.Title className="flex items-center gap-3 text-xl/6 font-semibold">
+                Unhealthy habits me <SwitchLanguage isChineseActive={isChinese} onChange={handleLanguageChange} />
+              </Drawer.Title>
+              <Drawer.Close className="absolute right-4 top-4 w-5">
+                <img src="/svgs/close.svg" alt="" />
+              </Drawer.Close>
+              <div className="mb-2 mt-4 flex items-center justify-between">
+                <div className="flex-1 overflow-hidden">
+                  <div className="flex flex-wrap gap-2">
+                    {['30 YEARS', 'Sedentary', 'High-Sugar'].map((tag, index) => (
+                      <Tag key={tag} text={tag} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
