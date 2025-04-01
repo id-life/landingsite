@@ -1,6 +1,5 @@
-import DemoBorderSVG from '@/../public/svgs/twin/demo-border.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import RightSVG from '@/../public/svgs/twin/right.svg?component';
+import RightSVG from '@/../public/svgs/twin/right-2.svg?component';
 
 export default function YTBDemo() {
   return (
@@ -11,7 +10,6 @@ export default function YTBDemo() {
         rel="noopener noreferrer"
         className="group relative flex h-[28px] items-center justify-between"
       >
-        {/* <DemoBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600" /> */}
         <div className="flex-center gap-2 text-sm font-medium group-hover:text-red-600">
           <YoutubeSVG className="fill-black group-hover:fill-red-600 w-4" />
           DEMO

@@ -17,10 +17,8 @@ export default function SwitchModel() {
     if (model !== PredictionModel.M0) {
       gsap.to('.twin-tag', { left: '-80rem' });
       gsap.to('.twin-tag', { left: '0rem', delay: 0.5 });
-      gsap.to('#switch-anatomy-camera', { bottom: '14rem' });
     } else {
       gsap.to('.twin-tag', { left: '-80rem', delay: 0.5 });
-      gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     }
     gsap.to('#switch-model', { top: '50%', y: '-50%' });
     gsap.to('#switch-skin', { top: '50%', y: '-50%' });
@@ -55,7 +53,7 @@ export default function SwitchModel() {
         <img src="/imgs/twin/avatar-model0.png" alt="" />
       </div>
       <img src="/svgs/twin/avatar-divider.svg" alt="" />
-      <div className="grid gap-2 border-2 border-black p-1 w-10">
+      <div className="grid gap-2 border-[1.5px] border-black p-1 w-10">
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
           onClick={() => handleSwitchModel(PredictionModel.M1)}

@@ -1,7 +1,7 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import SwitchModel from './_components/mobile/SwitchModel';
 import SwitchSkin from './_components/mobile/SwitchSkin';
@@ -16,8 +16,8 @@ import YTBDemo from './_components/mobile/YTBDemo';
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
-  const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
+  const [, setCurrentModel] = useAtom(currentModelAtom);
+  const [, setCurrentModelType] = useAtom(currentModelTypeAtom);
   useEffect(() => {
     if (currentPage !== NAV_LIST[3]) {
       resetModel();
@@ -34,14 +34,6 @@ export default function MobileTwin() {
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   };
-
-  // useEffect(() => {
-  //   const preventDefault = (e: Event) => e.preventDefault();
-  //   document.addEventListener('touchmove', preventDefault, { passive: false });
-  //   return () => {
-  //     document.removeEventListener('touchmove', preventDefault);
-  //   };
-  // }, []);
 
   return (
     <div

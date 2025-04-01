@@ -30,12 +30,14 @@ export default function Description() {
   }, [currentModel]);
 
   return (
-    <div className="twin-tag absolute bottom-44 left-0 w-full px-5 z-10">
-      <div className="flex items-center gap-2">
+    <div className="twin-tag absolute bottom-44 right-5 z-10 w-full px-5">
+      <div className="flex flex-col items-end gap-2">
         <div className="flex-1 overflow-hidden">
-          <div className="flex gap-2 whitespace-nowrap">
+          <div className="flex flex-col gap-1.5 whitespace-nowrap">
             {tags.map((tag, index) => (
-              <Tag key={tag} text={tag} />
+              <div key={tag} className="text-right text-xs/3 font-semibold">
+                {tag}
+              </div>
             ))}
           </div>
         </div>
