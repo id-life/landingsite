@@ -17,11 +17,15 @@ export default function SwitchModel() {
     if (model !== PredictionModel.M0) {
       gsap.to('.twin-tag', { left: '-80rem' });
       gsap.to('.twin-tag', { left: '0rem', delay: 0.5 });
+      gsap.to('#switch-anatomy-camera', { bottom: '14rem' });
     } else {
       gsap.to('.twin-tag', { left: '-80rem', delay: 0.5 });
+      gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     }
     gsap.to('#switch-model', { top: '50%', y: '-50%' });
     gsap.to('#switch-skin', { top: '50%', y: '-50%' });
+   
+   
 
     switch (model) {
       case PredictionModel.M0:

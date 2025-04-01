@@ -30,6 +30,7 @@ export default function MobileTwin() {
     gsap.to('.twin-title', { opacity: 1 });
     gsap.to('#switch-model', { top: '30rem', y: '-50%' });
     gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
+    gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   };
