@@ -45,6 +45,7 @@
   body {
     color: #222222;
     background: var(--background);
+    overscroll-behavior: none;
     @apply font-poppins mobile:h-full mobile:overflow-auto;
   }
 

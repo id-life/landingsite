@@ -84,7 +84,7 @@ export function Model() {
 
   return (
     <div
-      className={`absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 transform ${
+      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ${
         currentAnatomyCamera === AnatomyCamera.CAMERA3
           ? ''
           : currentAnatomyCamera === AnatomyCamera.CAMERA4

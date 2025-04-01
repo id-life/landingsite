@@ -22,7 +22,8 @@ export default function ReportM02() {
             </Drawer.Close>
             <div className="mb-2 mt-4 flex items-center justify-between">
               <div className="flex items-center justify-center gap-0.5 bg-red-600/20 p-1 text-xl/5 font-semibold uppercase text-red-600">
-                <img src="/svgs/twin/time.svg" alt="" />5 YEARS
+                <img src="/svgs/twin/time.svg" alt="" />
+                {isChinese ? '5年后' : '5 YEARS'}
               </div>
               <SwitchLanguage isChineseActive={isChinese} onChange={handleLanguageChange} />
             </div>
