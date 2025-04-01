@@ -27,6 +27,13 @@ const ExtendedCameraControls = forwardRef<CameraControls, ExtendedCameraControls
         if (event.type !== 'control') return;
         eventBus.next({ type: MessageType.SYNC_CAMERA, payload: event.target });
       }}
+      onEnd={(event: any) => {
+        if (event.type !== 'controlend') return;
+        requestAnimationFrame(() => {
+          console.log('onEnd', event.target);
+          eventBus.next({ type: MessageType.SYNC_CAMERA, payload: event.target });
+        });
+      }}
       enabled={enabled}
       {...props}
     />
