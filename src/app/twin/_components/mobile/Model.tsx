@@ -85,11 +85,7 @@ export function Model() {
   return (
     <div
       className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ${
-        currentAnatomyCamera === AnatomyCamera.CAMERA3
-          ? ''
-          : currentAnatomyCamera === AnatomyCamera.CAMERA4
-            ? 'top-[50%]'
-            : ''
+        currentAnatomyCamera === AnatomyCamera.CAMERA4 ? 'top-[50%]' : ''
       }`}
     >
       {currentModelType === ModelType.Anatomy ? (
@@ -111,15 +107,15 @@ export function Model() {
             secondImage={imgUrl?.[1] || ''}
             firstImageClassName="object-cover object-center"
             secondImageClassname="object-cover object-center"
-            className="h-[500px] w-[200px]"
+            className="h-[500px] w-[220px]"
             slideMode="hover"
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
         !supportsWebm ? (
-          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[200px] object-contain object-center" />
+          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[220px] object-contain object-center" />
         ) : (
-          <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[200px] object-cover object-center" />
+          <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[220px] object-cover object-center" />
         )
       ) : (
         <Compare
@@ -127,7 +123,7 @@ export function Model() {
           secondImage={imgUrl?.[1] || ''}
           firstImageClassName={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
           secondImageClassname={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
-          className="h-[500px] w-[200px]"
+          className="h-[500px] w-[220px]"
           slideMode="hover"
           isVideo={supportsWebm}
         />
