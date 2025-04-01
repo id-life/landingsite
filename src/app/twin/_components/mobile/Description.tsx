@@ -16,13 +16,13 @@ export default function Description() {
   useEffect(() => {
     switch (currentModel) {
       case PredictionModel.M1:
-        setTags(['30 YEARS', 'Sedentary', 'High-Sugar']);
+        setTags(['30 Years', 'Sedentary', 'High-Sugar']);
         break;
       case PredictionModel.M2:
-        setTags(['5 YEARS', 'Disciplined Wellness', 'Balanced Nutrition']);
+        setTags(['5 Years', 'Disciplined Wellness', 'Balanced Nutrition']);
         break;
       case PredictionModel.M3:
-        setTags(['3 MONTHS', 'Structured fitness', 'Precision-Controlled']);
+        setTags(['3 Months', 'Structured fitness', 'Precision-Controlled']);
         break;
       default:
         setTags([]);

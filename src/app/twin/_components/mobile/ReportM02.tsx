@@ -26,7 +26,7 @@ export default function ReportM02() {
             <div className="mb-2 mt-4 flex items-center justify-between">
               <div className="flex-1 overflow-hidden">
                 <div className="flex flex-wrap gap-2">
-                  {['5 YEARS', 'Disciplined Wellness', 'Balanced Nutrition'].map((tag, index) => (
+                  {['5 Years', 'Disciplined Wellness', 'Balanced Nutrition'].map((tag, index) => (
                     <Tag key={tag} text={tag} />
                   ))}
                 </div>

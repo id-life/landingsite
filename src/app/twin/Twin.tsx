@@ -64,7 +64,6 @@ function Twin() {
   }, []);
 
   useEffect(() => {
-    console.log('inView', inView, isResetDemo.current);
     if (inView) {
       isResetDemo.current = true;
       return;
