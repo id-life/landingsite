@@ -2,6 +2,7 @@ import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModel
 import { Compare } from '@/components/compare/compare';
 import { ModelType } from '@/components/twin/model/type';
 import { useSupportsWebm } from '@/hooks/useSupportsWebm';
+import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import React, { useMemo } from 'react';
 
@@ -107,13 +108,13 @@ export function Model() {
             secondImage={imgUrl?.[1] || ''}
             firstImageClassName="object-cover object-center"
             secondImageClassname="object-cover object-center"
-            className="h-[500px] w-[220px]"
+            className="h-[500px] w-[200px]"
             slideMode="hover"
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
         !supportsWebm ? (
-          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[220px] object-contain object-center" />
+          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[200px] object-contain object-center" />
         ) : (
           <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[220px] object-cover object-center" />
         )
@@ -123,7 +124,10 @@ export function Model() {
           secondImage={imgUrl?.[1] || ''}
           firstImageClassName={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
           secondImageClassname={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
-          className="h-[500px] w-[220px]"
+          className={cn('h-[500px]', {
+            'w-[220px]': supportsWebm,
+            'w-[200px]': !supportsWebm,
+          })}
           slideMode="hover"
           isVideo={supportsWebm}
         />
