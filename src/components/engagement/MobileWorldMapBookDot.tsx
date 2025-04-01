@@ -127,7 +127,7 @@ export function MobileWorldMapBookDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive && (
@@ -135,9 +135,9 @@ export function MobileWorldMapBookDotPoint({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="flex items-center gap-1 rounded-lg bg-cyan/20 p-1 px-2 py-1 text-sm/4 font-semibold text-cyan backdrop-blur-2xl"
+                className="flex items-center gap-1 rounded-lg bg-cyan/20 p-1 text-sm/4 font-semibold text-cyan backdrop-blur-2xl"
               >
-                <BookSVG className="size-5 fill-cyan" />
+                <BookSVG className="size-4 fill-cyan" />
                 Translation
               </motion.span>
             )}

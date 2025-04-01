@@ -118,7 +118,7 @@ export function MobileWorldMapDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p className="flex flex-col items-start whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
           {label ? `${label}, ` : ''}
           {country}
           <AnimatePresence>
@@ -129,7 +129,7 @@ export function MobileWorldMapDotPoint({
                 exit={{ opacity: 0, scale: 0.5 }}
                 className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
               >
-                <MeetingSVG className="size-5 fill-purple" />
+                <MeetingSVG className="size-4 fill-purple" />
                 Conference
               </motion.span>
             )}

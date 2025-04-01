@@ -34,7 +34,6 @@ export function useMobileEngagementAnim() {
     console.log('enterAnimate');
     if (enterTLRef.current) enterTLRef.current.kill();
     userInteractedRef.current = false;
-
     const enterTL = gsap.timeline({
       duration: 0.3,
     });
@@ -46,6 +45,13 @@ export function useMobileEngagementAnim() {
         opacity: 0,
       },
     );
+
+    // 在入场动画开始前设置初始滚动位置
+    const mapContainerForScroll = document.querySelector('.world-map-container') as HTMLElement | null;
+    if (mapContainerForScroll) {
+      const initialScroll = mapContainerForScroll.scrollWidth * 0.12; // 初始向右滚动 12%
+      mapContainerForScroll.scrollLeft = initialScroll;
+    }
 
     // 入场动画序列
     enterTL.to('.world-map-container', {
@@ -65,7 +71,7 @@ export function useMobileEngagementAnim() {
       opacity: 1,
       scale: 1,
       ease: 'power2.out',
-      stagger: 0.05,
+      stagger: 0.02,
     });
     enterTLRef.current?.play();
 
@@ -88,7 +94,6 @@ export function useMobileEngagementAnim() {
       enterTLRef.current?.kill();
       if (autoScrollRef.current) autoScrollRef.current.kill();
       if (dotShowIntervalRef.current) clearInterval(dotShowIntervalRef.current);
-
       // 移除事件监听器
       if (mapContainer) {
         mapContainer.removeEventListener('click', handleUserInteraction);
@@ -107,7 +112,7 @@ export function useMobileEngagementAnim() {
     // 计算可滚动范围
     const scrollWidth = mapContainer.scrollWidth;
     const clientWidth = mapContainer.clientWidth;
-    const maxScrollLeft = scrollWidth - clientWidth - 50;
+    const maxScrollLeft = scrollWidth - clientWidth - 30;
 
     if (maxScrollLeft <= 0) return; // 没有可滚动区域
 
@@ -124,6 +129,37 @@ export function useMobileEngagementAnim() {
         }
       },
     });
+    return () => {
+      if (autoScrollRef.current) {
+        autoScrollRef.current.kill();
+      }
+    };
+  }, []);
+
+  const showPoint = useCallback((currentIndex: number) => {
+    if (userInteractedRef.current) {
+      if (dotShowIntervalRef.current) {
+        clearInterval(dotShowIntervalRef.current);
+        dotShowIntervalRef.current = null;
+      }
+      return;
+    }
+
+    const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
+    const { type, index } = point;
+    // 重置之前激活的点
+    setActiveBookDot(null);
+    setActiveMeetingDot(null);
+    setActiveSponsorDot(null);
+
+    // 激活新点
+    if (type === 'book') {
+      setActiveBookDot(index);
+    } else if (type === 'meeting') {
+      setActiveMeetingDot(index);
+    } else if (type === 'sponsor') {
+      setActiveSponsorDot(index);
+    }
   }, []);
 
   // 自动展示点
@@ -132,40 +168,13 @@ export function useMobileEngagementAnim() {
 
     let currentIndex = 0;
 
+    showPoint(currentIndex);
+    currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
     dotShowIntervalRef.current = setInterval(() => {
-      if (userInteractedRef.current) {
-        if (dotShowIntervalRef.current) {
-          clearInterval(dotShowIntervalRef.current);
-          dotShowIntervalRef.current = null;
-        }
-        return;
-      }
-
-      const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
-      const { type, index } = point;
-      // 重置之前激活的点
-      setActiveBookDot(null);
-      setActiveMeetingDot(null);
-      setActiveSponsorDot(null);
-
-      // 激活新点
-      if (type === 'book') {
-        setActiveBookDot(index);
-      } else if (type === 'meeting') {
-        setActiveMeetingDot(index);
-      } else if (type === 'sponsor') {
-        setActiveSponsorDot(index);
-      }
+      showPoint(currentIndex);
       currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    }, 7000); // 每7秒展示一个新点
-
-    return () => {
-      if (dotShowIntervalRef.current) {
-        clearInterval(dotShowIntervalRef.current);
-        dotShowIntervalRef.current = null;
-      }
-    };
-  }, [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot]);
+    }, 9000); // 每 9 秒展示一个新点
+  }, [showPoint]);
 
   return {
     enterAnimate,

@@ -13,14 +13,15 @@ function MobileEngagement() {
 
   useEffect(() => {
     if (currentPage?.id !== NAV_LIST[2].id) return;
-    enterAnimate();
+    const cleanup = enterAnimate();
+    return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   return (
     <div
       id={NAV_LIST[2].id}
-      className={cn('relative h-[100svh] w-full overflow-auto text-white', {
+      className={cn('relative h-[100svh] w-full overflow-auto text-white transition-all duration-300', {
         hidden: currentPage?.id !== NAV_LIST[2].id,
       })}
     >

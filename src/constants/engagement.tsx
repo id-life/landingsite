@@ -306,7 +306,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -123.5,
     title: 'California, USA',
     key: 'sponsor-01',
-    alt: 'VITALIST\nBAY',
+    alt: 'VITALISTBAY',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
     link: '',

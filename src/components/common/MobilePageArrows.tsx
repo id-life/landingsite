@@ -47,7 +47,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
   console.log({ currentPage, innerPageIndex, innerPageTotal });
 
   return (
-    <div className={cn('pointer-events-auto z-10 flex cursor-pointer flex-col items-center gap-5', className)}>
+    <div className={cn('pointer-events-auto z-40 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
         {!isLastPageAndInnerPage && <ArrowItem />}
