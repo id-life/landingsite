@@ -34,13 +34,13 @@ export default function MobileTwin() {
     setCurrentModelType(ModelType.Skin);
   };
 
-  useEffect(() => {
-    const preventDefault = (e: Event) => e.preventDefault();
-    document.addEventListener('touchmove', preventDefault, { passive: false });
-    return () => {
-      document.removeEventListener('touchmove', preventDefault);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const preventDefault = (e: Event) => e.preventDefault();
+  //   document.addEventListener('touchmove', preventDefault, { passive: false });
+  //   return () => {
+  //     document.removeEventListener('touchmove', preventDefault);
+  //   };
+  // }, []);
 
   return (
     <div
