@@ -11,13 +11,13 @@ import { gsap } from 'gsap';
 import { Model } from './_components/mobile/Model';
 import SwitchAnatomyCamera from './_components/mobile/SwitchAnatomyCamera';
 import { ModelType } from '@/components/twin/model/type';
+import YTBDemo from './_components/mobile/YTBDemo';
 
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const setCurrentModel = useSetAtom(currentModelAtom);
-  const setCurrentModelType = useSetAtom(currentModelTypeAtom);
-
+  const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
+  const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   useEffect(() => {
     if (currentPage !== NAV_LIST[3]) {
       resetModel();
@@ -30,6 +30,7 @@ export default function MobileTwin() {
     gsap.to('.twin-title', { opacity: 1 });
     gsap.to('#switch-model', { top: '30rem', y: '-50%' });
     gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
+    gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   };
@@ -76,6 +77,7 @@ export default function MobileTwin() {
         <Description />
         <SwitchAnatomyCamera />
         <Model />
+        {currentModel === PredictionModel.M0 && currentModelType === ModelType.Skin && <YTBDemo />}
       </div>
     </div>
   );
