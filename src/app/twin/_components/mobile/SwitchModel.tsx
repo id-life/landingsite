@@ -44,7 +44,7 @@ export default function SwitchModel() {
   };
 
   return (
-    <div id="switch-model" className="absolute left-5 top-100 z-20 grid w-20 gap-3">
+    <div id="switch-model" className="absolute left-5 top-[25rem] z-20 grid w-20 gap-3">
       <div className="relative cursor-pointer p-1 w-10" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(
