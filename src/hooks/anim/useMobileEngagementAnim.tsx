@@ -1,8 +1,8 @@
-import gsap from 'gsap';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
-import { useCallback, useEffect, useRef } from 'react';
+import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
+import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
-import { WORLD_MAP_DOTS, MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
+import { useCallback, useRef } from 'react';
 
 export function useMobileEngagementAnim() {
   const enterTLRef = useRef<gsap.core.Timeline | null>(null);

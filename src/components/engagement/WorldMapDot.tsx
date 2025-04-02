@@ -168,9 +168,9 @@ export function WorldMapDotContent({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass } = dot;
-  const { activeMeetingDot, handleMouseLeave } = useEngagementClickPoint();
+  const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
-  const activeMeetingDotClickOpen = useAtomValue(activeMeetingDotClickOpenAtom);
+  const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -198,6 +198,17 @@ export function WorldMapDotContent({
       scrollContainer.removeEventListener('wheel', handleWheel);
     };
   }, [isActive]);
+
+  const handleClick = (e: MouseEvent) => {
+    e.stopPropagation(); // 防止冒泡
+    if (!activeMeetingDotClickOpen) {
+      setActiveMeetingDotClickOpen(true);
+      handleClickPoint('meeting', index, true);
+    } else {
+      setActiveMeetingDotClickOpen(false);
+      handleClickPoint('meeting', index, false);
+    }
+  };
 
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeMeetingDotClickOpen) return;
@@ -231,10 +242,8 @@ export function WorldMapDotContent({
           >
             <div className="pointer-events-auto absolute -inset-10"></div>
             <div
-              className={cn(
-                'clip-meeting-pc-hot-area pointer-events-auto absolute -right-72 left-[90%] h-40',
-                pcDotHotAreaClass,
-              )}
+              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-40 cursor-pointer', pcDotHotAreaClass)}
+              onClick={handleClick}
             ></div>
           </div>
           <motion.div
