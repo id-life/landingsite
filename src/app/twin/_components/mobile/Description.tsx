@@ -33,9 +33,9 @@ export default function Description() {
     <div className="twin-tag absolute bottom-44 right-5 z-10 w-full px-5">
       <div className="flex flex-col items-end gap-2">
         <div className="flex-1 overflow-hidden">
-          <div className="flex flex-col gap-1.5 whitespace-nowrap">
+          <div className="flex flex-col gap-1 whitespace-nowrap">
             {tags.map((tag, index) => (
-              <div key={tag} className="text-right text-xs/3 font-semibold">
+              <div key={tag} className="text-right text-xs/3.5 font-semibold">
                 {tag}
               </div>
             ))}

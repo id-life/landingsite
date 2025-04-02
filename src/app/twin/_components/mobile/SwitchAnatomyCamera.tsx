@@ -30,7 +30,7 @@ export default function SwitchAnatomyCamera() {
 
   return (
     <div id="switch-anatomy-camera" className="absolute bottom-44 left-1/2 z-20 -translate-x-1/2">
-      {currentModelType === ModelType.Anatomy && (
+      {currentModelType === ModelType.Anatomy && currentModel !== PredictionModel.M3 && (
         <div className="flex gap-4 bg-white/10 p-2 backdrop-blur">
           {currentModel === PredictionModel.M0 && (
             <>

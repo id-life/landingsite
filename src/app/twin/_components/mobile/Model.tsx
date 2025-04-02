@@ -114,9 +114,13 @@ export function Model() {
         )
       ) : currentModel === PredictionModel.M0 ? (
         !supportsWebm ? (
-          <img src={imgUrl?.[0]} alt="" className="h-[500px] w-[200px] object-contain object-center" />
+          <div className="relative h-[500px] w-[200px]">
+            <img src={imgUrl?.[0]} alt="" className="h-full w-full object-contain object-center" />
+          </div>
         ) : (
-          <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-[500px] w-[220px] object-cover object-center" />
+          <div className="relative h-[500px] w-[220px]">
+            <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-full w-full object-cover object-center" />
+          </div>
         )
       ) : (
         <Compare
