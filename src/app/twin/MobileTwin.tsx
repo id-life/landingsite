@@ -28,6 +28,7 @@ export default function MobileTwin() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
+    gsap.to('#ytb-demo', { opacity: 1, left: '1.25rem' });
     gsap.to('#switch-model', { top: '32rem', y: '-50%' });
     gsap.to('#switch-skin', { top: '30rem', y: '-50%' });
     gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
