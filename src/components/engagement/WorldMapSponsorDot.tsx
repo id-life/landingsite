@@ -22,7 +22,7 @@ export function WorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig } = dot;
+  const { lat, lng, title, pulseConfig, sponsorText } = dot;
   const { handleClickPoint, handleMouseEnter, activeSponsorDot } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
@@ -148,7 +148,7 @@ export function WorldMapSponsorDotPoint({
                 className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
               >
                 <SponsorSVG className="size-5 fill-orange" />
-                Cohost
+                {sponsorText ?? 'Sponsorship'}
               </motion.span>
             )}
           </AnimatePresence>

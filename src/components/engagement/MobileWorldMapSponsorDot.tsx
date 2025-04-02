@@ -22,7 +22,7 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig, mobileLat, mobileLng } = dot;
+  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -35,7 +35,10 @@ export function MobileWorldMapSponsorDotPoint({
     handleClickPoint('sponsor', index);
   };
 
-  const { left, top } = useMemo(() => calcPoint(mobileLat ?? lat, mobileLng ?? lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(
+    () => calcPoint(mobileLat ?? lat, mobileLng ?? lng),
+    [calcPoint, lat, lng, mobileLat, mobileLng],
+  );
 
   // 使用自定义配置或默认配置
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
@@ -135,7 +138,7 @@ export function MobileWorldMapSponsorDotPoint({
                 className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
               >
                 <SponsorSVG className="size-4 fill-orange" />
-                Cohost
+                {sponsorText ?? 'Sponsorship'}
               </motion.span>
             )}
           </AnimatePresence>
@@ -158,7 +161,10 @@ export function MobileWorldMapSponsorDotContent({
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
-  const { left, top } = useMemo(() => calcPoint(mobileLat ?? lat, mobileLng ?? lng), [calcPoint, lat, lng]);
+  const { left, top } = useMemo(
+    () => calcPoint(mobileLat ?? lat, mobileLng ?? lng),
+    [calcPoint, lat, lng, mobileLat, mobileLng],
+  );
 
   // const onClick = useCallback(
   //   (e: React.MouseEvent) => {

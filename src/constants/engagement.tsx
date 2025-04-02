@@ -306,6 +306,7 @@ export type MapSponsorDotData = {
   title: string;
   pulseConfig?: PulseConfig; // 自定义波纹配置
   activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
+  sponsorText?: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -317,6 +318,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
     link: '',
+    sponsorText: 'Cohost',
   },
   {
     lat: 19,
