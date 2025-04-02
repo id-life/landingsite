@@ -88,7 +88,7 @@ export default function ReportM02() {
                       Adopts a scientific nutritional approach by distributing three meals in a 4:3:3 ratio
                     </span>
                     , emphasizing <span className="text-red-600">low-carb</span> and
-                    <span className="text-red-600">high-protein balanced nutrition</span>. Breakfast consists of a homemade
+                    <span className="text-red-600">&nbsp;high-protein balanced nutrition</span>. Breakfast consists of a homemade
                     oatmeal cup (50g oats + 15g chia seeds + 50g blueberries) with steamed eggs. Plans lunch a week ahead,
                     bringing packed meals to work that include whole grains like sweet potato and corn (50%) along with 2-3
                     seasonal vegetables. Focuses on <span className="text-red-600">protein for dinner</span>, mainly fish and
@@ -100,29 +100,29 @@ export default function ReportM02() {
                       Works in a relatively flexible environment with moderate intensity, 6-8 hours daily
                     </span>
                     . To ensure proper ergonomics, maintains optimal workspace conditions by
-                    <span className="text-red-600">keeping desk at elbow height and taking 5-minute eye breaks every hour</span>
+                    <span className="text-red-600">&nbsp;keeping desk at elbow height and taking 5-minute eye breaks every hour</span>
                     . During lunch breaks, listens to meditation audio for 20 minutes and keeps succulent plants at workstation
                     to improve mood. Sets water drinking reminders to avoid prolonged sitting.
                   </div>
 
                   <div className="mt-2">
                     <span className="font-bold">Maintains a positive mindset with low stress levels</span>.
-                    <span className="text-red-600">Expresses emotions through sharing</span> life experiences, movie reviews,
+                    <span className="text-red-600">&nbsp;Expresses emotions through sharing</span> life experiences, movie reviews,
                     and music reviews on social media. For nutritional support, takes B-complex vitamins (Thorne, after
                     breakfast), turmeric (Now, 300mg after lunch), spirulina (6 tablets before dinner), probiotics (50 billion
                     CFU before bed),
-                    <span className="text-red-600">adjusting supplement plan every 3 months based on blood tests.</span>
+                    <span className="text-red-600">&nbsp;adjusting supplement plan every 3 months based on blood tests.</span>
                   </div>
                   <div className="mt-2">
                     <span className="font-bold">Follows a diverse and consistent exercise routine</span>, including
-                    <span className="text-red-600">daily 1-hour gym sessions</span> focusing on core strength training, swimming
+                    <span className="text-red-600">&nbsp;daily 1-hour gym sessions</span> focusing on core strength training, swimming
                     lessons twice weekly, and maintaining 8000 daily steps. Goes hiking or cycling with friends on weekends and
                     practices low-intensity Tai Chi,
-                    <span className="text-red-600">demonstrating appreciation for traditional exercise forms.</span>
+                    <span className="text-red-600">&nbsp;demonstrating appreciation for traditional exercise forms.</span>
                   </div>
                   <div className="mt-2">
                     <span className="font-bold">Chooses a naturally well-ventilated office near a park</span>, ensuring
-                    <span className="text-red-600">1 hour of daily sunlight exposure.</span> Actively engages in social
+                    <span className="text-red-600">&nbsp;1 hour of daily sunlight exposure.</span> Actively engages in social
                     interactions, frequently returning home for family meals and participating in local environmental volunteer
                     activities. Has formed a rooftop garden interest group with neighbors.
                   </div>

@@ -81,13 +81,13 @@ export default function ReportM01() {
                   <span className="text-red-600">rarely able to maintain a regular sleep schedule throughout the week.</span>
                   Uses electronic devices intensively for over 14 hours daily, rarely goes out, usually stays at home all day,
                   remaining sedentary.
-                  <h3 className="mt-2 font-bold">Eating Habits: </h3>
+                  <h3 className="mt-2 font-bold">&nbsp;Eating Habits: </h3>
                   <span className="text-red-600">
                     Skips breakfast, never cooks, relies mainly on takeout for lunch and dinner.
                   </span>
-                  Prefers high-fat and high-sugar foods, enjoys fried foods. Often eats dinner after 1 AM with large portions.
+                  &nbsp;Prefers high-fat and high-sugar foods, enjoys fried foods. Often eats dinner after 1 AM with large portions.
                   Has hotpot or barbecue at least 4 times per week.
-                  <span className="text-red-600">High consumption of sugary drinks</span>, at least 1.5L of cola daily and an
+                  <span className="text-red-600">&nbsp;High consumption of sugary drinks</span>, at least 1.5L of cola daily and an
                   average of 2 bubble teas per day. Snacks mainly consist of spicy strips and chips, consuming over 300g daily
                   on average. <span className="text-red-600">Rarely eats fruits and vegetables,</span> mainly consumes refined
                   grains as staples.
@@ -95,31 +95,31 @@ export default function ReportM01() {
                   <span className="text-red-600">
                     Works all day in an air-conditioned office, job requires long hours of staring at computer screens.
                   </span>
-                  Due to late wake-up time, doesn&apos;t take lunch breaks. Habitually slouches with hunched back and
+                  &nbsp;Due to late wake-up time, doesn&apos;t take lunch breaks. Habitually slouches with hunched back and
                   forward-leaning neck while working, pays no attention to posture, likes to cross legs. Snacks every 20
                   minutes.
                   <span className="text-red-600">
-                    Low work efficiency, frequently experiences fatigue, uses energy drinks for relief.
+                    &nbsp;Low work efficiency, frequently experiences fatigue, uses energy drinks for relief.
                   </span>
                   <h3 className="mt-2 font-bold">Psychological State: </h3>
                   <span className="text-red-600">Completely unconcerned</span> about weight and health conditions, has moderate
                   anxiety but never addresses it, relieves stress through shopping and late-night snacking. Experiences
-                  <span className="text-red-600">significant mood swings</span>, alternating between excitement and depression.
+                  <span className="text-red-600">&nbsp;significant mood swings</span>, alternating between excitement and depression.
                   <h3 className="mt-2 font-bold">Nutritional Intake: </h3>
                   Takes <span className="text-red-600">no</span> vitamins or nutritional supplements whatsoever. Has
-                  <span className="text-red-600">no</span> understanding of nutritional knowledge, believes regular eating is
+                  <span className="text-red-600">&nbsp;no</span> understanding of nutritional knowledge, believes regular eating is
                   sufficient. Occasionally takes stimulants due to lack of energy.
                   <h3 className="mt-2 font-bold">Medication Intake: </h3>
                   Frequently takes caffeine pills for energy.
                   <h3 className="mt-2 font-bold">Exercise Habits: </h3>
                   Apart from walking to the office building,
-                  <span className="text-red-600">performs virtually no form of exercise.</span> Average daily step count
+                  <span className="text-red-600">&nbsp;performs virtually no form of exercise.</span> Average daily step count
                   doesn&apos;t exceed 2000 steps. Take the elevator even for just one floor.
-                  <span className="text-red-600">Sit for an average of over 15 hours daily.</span>
+                  <span className="text-red-600">&nbsp;Sit for an average of over 15 hours daily.</span>
                   <h3 className="mt-2 font-bold">Environmental Exposure: </h3>
                   Lives long-term in <span className="text-red-600">sealed, air-conditioned environments</span>, rarely opens
                   windows for ventilation. Often uses phone in dark environments after work. Living environment is
-                  <span className="text-red-600">damp but never addressed</span>. Bedroom never receives sunlight, poor air
+                  <span className="text-red-600">&nbsp;damp but never addressed</span>. Bedroom never receives sunlight, poor air
                   quality. Never gets sun exposure, stays in air-conditioned rooms right after waking up, long-term lack of
                   outdoor activities.
                   <h3 className="mt-2 font-bold">Social Interaction: </h3>

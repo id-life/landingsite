@@ -167,7 +167,7 @@ export default function ReportM03() {
                   <h3 className="mt-2 font-bold">Work Situation:</h3>
                   <p>Uses lunch break for 30-minute fast walk in office gym</p>
                   <p>
-                    Performs <span className="text-red-600">one hour of stationary exercise during work breaks,</span> including
+                    Performs <span className="text-red-600">one hour of stationary exercise during work breaks</span>, including
                     15 squats and 10 push-ups
                   </p>
                   <p>Keeps adequate water and low-calorie meal replacements ready for hunger management</p>
