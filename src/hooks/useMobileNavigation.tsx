@@ -100,14 +100,13 @@ export function useMobileNavigation() {
       // 如果动画正在进行中，不响应新的切换请求
       if (isAnimatingRef.current) return;
       setCurrentPage(item);
-      if (item.id === NAV_LIST[4].id) {
+      if (item?.id === NAV_LIST[4].id) {
         setInnerPageIndex(0);
       } else {
-        setInnerPageIndex(-1);
         setInnerPageTotal(0);
       }
     },
-    [setCurrentPage],
+    [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
 
   return { mobileNavChange };

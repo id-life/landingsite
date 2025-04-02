@@ -31,7 +31,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
     const total = getTotal();
     if (!total) return [];
     return new Array(total).fill(0);
-  }, [getTotal, setInnerPageTotal]);
+  }, [getTotal]);
 
   // 更新 innerPageTotal
   useEffect(() => {

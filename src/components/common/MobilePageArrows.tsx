@@ -36,8 +36,11 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   // 更新 innerPageTotal
   useEffect(() => {
-    setInnerPageTotal(getTotal());
-  }, [getTotal, setInnerPageTotal]);
+    const total = getTotal();
+    if (innerPageTotal !== total) {
+      setInnerPageTotal(total);
+    }
+  }, [getTotal, setInnerPageTotal, innerPageTotal]);
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
