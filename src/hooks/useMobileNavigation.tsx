@@ -99,10 +99,12 @@ export function useMobileNavigation() {
     (item: NavItem) => {
       // 如果动画正在进行中，不响应新的切换请求
       if (isAnimatingRef.current) return;
+
       setCurrentPage(item);
       if (item?.id === NAV_LIST[4].id) {
         setInnerPageIndex(0);
       } else {
+        gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
         setInnerPageTotal(0);
       }
     },

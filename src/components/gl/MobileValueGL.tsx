@@ -266,7 +266,6 @@ function MobileValueGL() {
   useEffect(() => {
     if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) startAnimTLRef.current?.play();
     else {
-      gsap.to(window, { scrollTo: 0 });
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);
