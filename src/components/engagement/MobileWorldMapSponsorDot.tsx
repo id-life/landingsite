@@ -124,7 +124,7 @@ export function MobileWorldMapSponsorDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive && (
@@ -135,7 +135,7 @@ export function MobileWorldMapSponsorDotPoint({
                 className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
               >
                 <SponsorSVG className="size-4 fill-orange" />
-                Sponsorship
+                Cohost
               </motion.span>
             )}
           </AnimatePresence>

@@ -136,7 +136,7 @@ export function WorldMapDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="flex flex-col items-start whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
           {label ? `${label}, ` : ''}
           {country}
           <AnimatePresence>
