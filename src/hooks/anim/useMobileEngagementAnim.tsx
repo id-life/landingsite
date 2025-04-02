@@ -30,6 +30,80 @@ export function useMobileEngagementAnim() {
     }
   }, []);
 
+  const showPoint = useCallback(
+    (currentIndex: number) => {
+      if (userInteractedRef.current) {
+        if (dotShowIntervalRef.current) {
+          clearInterval(dotShowIntervalRef.current);
+          dotShowIntervalRef.current = null;
+        }
+        return;
+      }
+
+      const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
+      const { type, index } = point;
+      // 重置之前激活的点
+      setActiveBookDot(null);
+      setActiveMeetingDot(null);
+      setActiveSponsorDot(null);
+
+      // 激活新点
+      if (type === 'book') {
+        setActiveBookDot(index);
+      } else if (type === 'meeting') {
+        setActiveMeetingDot(index);
+      } else if (type === 'sponsor') {
+        setActiveSponsorDot(index);
+      }
+    },
+    [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
+  );
+  // 自动展示点
+  const startAutoDotShow = useCallback(() => {
+    if (userInteractedRef.current) return;
+
+    let currentIndex = 0;
+
+    showPoint(currentIndex);
+    currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
+    dotShowIntervalRef.current = setInterval(() => {
+      showPoint(currentIndex);
+      currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
+    }, 7000); // 每 7 秒展示一个新点
+  }, [showPoint]);
+
+  // 自动横向滚动
+  const startAutoScroll = useCallback(() => {
+    const mapContainer = document.querySelector('.world-map-container');
+    if (!mapContainer || userInteractedRef.current) return;
+
+    // 计算可滚动范围
+    const scrollWidth = mapContainer.scrollWidth;
+    const clientWidth = mapContainer.clientWidth;
+    const maxScrollLeft = scrollWidth - clientWidth - scrollWidth * 0.05;
+
+    if (maxScrollLeft <= 0) return; // 没有可滚动区域
+
+    // 创建自动滚动动画
+    autoScrollRef.current = gsap.to(mapContainer, {
+      scrollLeft: maxScrollLeft,
+      duration: 40, // 缓慢滚动，40 秒
+      ease: 'none',
+      onUpdate: () => {
+        // 如果用户交互了，停止滚动
+        if (userInteractedRef.current && autoScrollRef.current) {
+          autoScrollRef.current.kill();
+          autoScrollRef.current = null;
+        }
+      },
+    });
+    return () => {
+      if (autoScrollRef.current) {
+        autoScrollRef.current.kill();
+      }
+    };
+  }, []);
+
   const enterAnimate = useCallback(() => {
     console.log('enterAnimate');
     if (enterTLRef.current) enterTLRef.current.kill();
@@ -102,79 +176,7 @@ export function useMobileEngagementAnim() {
         mapContainer.removeEventListener('mousedown', handleUserInteraction);
       }
     };
-  }, [handleUserInteraction]);
-
-  // 自动横向滚动
-  const startAutoScroll = useCallback(() => {
-    const mapContainer = document.querySelector('.world-map-container');
-    if (!mapContainer || userInteractedRef.current) return;
-
-    // 计算可滚动范围
-    const scrollWidth = mapContainer.scrollWidth;
-    const clientWidth = mapContainer.clientWidth;
-    const maxScrollLeft = scrollWidth - clientWidth - 30;
-
-    if (maxScrollLeft <= 0) return; // 没有可滚动区域
-
-    // 创建自动滚动动画
-    autoScrollRef.current = gsap.to(mapContainer, {
-      scrollLeft: maxScrollLeft,
-      duration: 50, // 缓慢滚动，40 秒
-      ease: 'none',
-      onUpdate: () => {
-        // 如果用户交互了，停止滚动
-        if (userInteractedRef.current && autoScrollRef.current) {
-          autoScrollRef.current.kill();
-          autoScrollRef.current = null;
-        }
-      },
-    });
-    return () => {
-      if (autoScrollRef.current) {
-        autoScrollRef.current.kill();
-      }
-    };
-  }, []);
-
-  const showPoint = useCallback((currentIndex: number) => {
-    if (userInteractedRef.current) {
-      if (dotShowIntervalRef.current) {
-        clearInterval(dotShowIntervalRef.current);
-        dotShowIntervalRef.current = null;
-      }
-      return;
-    }
-
-    const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
-    const { type, index } = point;
-    // 重置之前激活的点
-    setActiveBookDot(null);
-    setActiveMeetingDot(null);
-    setActiveSponsorDot(null);
-
-    // 激活新点
-    if (type === 'book') {
-      setActiveBookDot(index);
-    } else if (type === 'meeting') {
-      setActiveMeetingDot(index);
-    } else if (type === 'sponsor') {
-      setActiveSponsorDot(index);
-    }
-  }, []);
-
-  // 自动展示点
-  const startAutoDotShow = useCallback(() => {
-    if (userInteractedRef.current) return;
-
-    let currentIndex = 0;
-
-    showPoint(currentIndex);
-    currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    dotShowIntervalRef.current = setInterval(() => {
-      showPoint(currentIndex);
-      currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    }, 9000); // 每 9 秒展示一个新点
-  }, [showPoint]);
+  }, [handleUserInteraction, startAutoDotShow, startAutoScroll]);
 
   return {
     enterAnimate,

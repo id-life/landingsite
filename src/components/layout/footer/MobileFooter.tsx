@@ -6,8 +6,8 @@ import { isSubscribeShowAtom } from '@/atoms/footer';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 export default function MobileFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -15,6 +15,25 @@ export default function MobileFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (subscribeRef.current && !subscribeRef.current.contains(event.target as Node)) {
+        setIsSubscribeShow(false);
+      }
+    },
+    [setIsSubscribeShow],
+  );
+
+  useEffect(() => {
+    if (isSubscribeShow) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClickOutside, isSubscribeShow]);
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

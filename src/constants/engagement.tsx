@@ -227,6 +227,10 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     pcDotHotAreaClass: 'right-full -left-full top-[34vh]',
     imgs: [
       {
+        src: 'https://cdn.id.life/engagement/Honduras-5.webp',
+        alt: 'Honduras-5.webp',
+      },
+      {
         src: 'https://cdn.id.life/engagement/Honduras-1.webp',
         alt: 'Honduras-1.webp',
       },
@@ -272,6 +276,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
     activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-1'],
+    containerClass: 'scale-[0.9]',
   },
   {
     lat: -6,

@@ -56,6 +56,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       // console.log({ x, y, left, top, w, h, width, height });
       return { x, y, left, top };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [mapWidth],
   );
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -81,7 +82,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
         </div>
       );
     });
-  }, [lineColor, calcPoint, regionDots]);
+  }, [regionDots, calcPoint, isAnyActive]);
 
   const dotsPoints = useMemo(() => {
     if (!dots?.length) return null;
