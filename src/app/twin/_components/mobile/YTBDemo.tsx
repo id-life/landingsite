@@ -15,7 +15,7 @@ export default function YTBDemo() {
           DEMO
         </div>
         {/* <RightSVG className="fill-black stroke-black group-hover:fill-red-600 group-hover:stroke-red-600 ml-2" /> */}
-        <img src="/imgs/twin/arrow.webp" alt="" className="ml-1 h-2 w-3 relative -top-px" />
+        <img src="/imgs/twin/arrow.webp" alt="" className="ml-1 h-2 w-3" />
       </a>
     </div>
   );
