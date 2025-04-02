@@ -3,7 +3,7 @@ import RightSVG from '@/../public/svgs/twin/right-2.svg?component';
 
 export default function YTBDemo() {
   return (
-    <div id="ytb-demo" className="twin-title absolute top-[22rem] left-5 z-20 grid cursor-pointer gap-5">
+    <div id="ytb-demo" className="absolute top-[22rem] left-5 z-20 grid cursor-pointer gap-5">
       <a
         href="https://www.youtube.com/watch?v=DkC4e9wZJbw"
         target="_blank"

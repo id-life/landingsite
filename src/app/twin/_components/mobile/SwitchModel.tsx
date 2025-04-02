@@ -11,6 +11,8 @@ export default function SwitchModel() {
   const handleSwitchModel = (model: PredictionModel | null) => {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0 });
+    gsap.to('#ytb-demo', { opacity: 0, left: '-80rem' });
+
     gsap.to(list, { left: '-80rem' });
     gsap.to(`.twin-title-${model}`, { left: '1.25rem', delay: 0.5 });
     setCurrentModel(model);
@@ -22,8 +24,6 @@ export default function SwitchModel() {
     }
     gsap.to('#switch-model', { top: '50%', y: '-50%' });
     gsap.to('#switch-skin', { top: '50%', y: '-50%' });
-   
-   
 
     switch (model) {
       case PredictionModel.M0:
@@ -43,7 +43,7 @@ export default function SwitchModel() {
 
   return (
     <div id="switch-model" className="absolute left-5 top-[25rem] z-20 grid w-20 gap-3">
-      <div className="relative cursor-pointer p-1 w-10" onClick={() => handleSwitchModel(PredictionModel.M0)}>
+      <div className="relative w-10 cursor-pointer p-1" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <SelectBorderSVG
           className={clsx(
             'absolute left-0 top-0 h-auto w-full',
@@ -53,7 +53,7 @@ export default function SwitchModel() {
         <img src="/imgs/twin/avatar-model0.png" alt="" />
       </div>
       <img src="/svgs/twin/avatar-divider.svg" alt="" />
-      <div className="grid gap-2 border-[1.5px] border-black p-1 w-10">
+      <div className="grid w-10 gap-2 border-[1.5px] border-black p-1">
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
           onClick={() => handleSwitchModel(PredictionModel.M1)}
