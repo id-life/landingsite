@@ -35,7 +35,8 @@ export default function Description() {
         <div className="flex-1 overflow-hidden">
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             {tags.map((tag, index) => (
-              <div key={tag} className="text-right text-xs/4 font-semibold">
+              <div key={tag} className="flex justify-center text-right text-xs/4 font-semibold items-center gap-1">
+                <div className="h-1 w-1 bg-black"></div>
                 {tag}
               </div>
             ))}
