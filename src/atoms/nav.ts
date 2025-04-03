@@ -14,9 +14,10 @@ export const navigateToAtom = atom<NavItem | null>(null);
 export const mobilePortfolioPageIndexAtom = atom<number>(0);
 export const mobilePortfolioPageNavigateToAtom = atom<number | null>(null);
 
-// value 页面进度条
-export const valuePageIndexAtom = atom<number>(0);
-export const valuePageNavigateToAtom = atom<number | null>(null);
+// inner 页面细长进度条
+export const innerPageTotalAtom = atom<number>(0); // 小进度条数量
+export const innerPageIndexAtom = atom<number>(0); // -1 表示该页面没有额外的小进度条
+export const innerPageNavigateToAtom = atom<number | null>(null);
 
 export const isScrollingAtom = atom<boolean>(false);
 

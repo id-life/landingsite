@@ -2,15 +2,12 @@
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { mobileCurrentPageAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
-import { NAV_LIST } from '@/components/nav/nav';
 import jsonp from '@/utils/jsonp';
-import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
-import { useGSAP } from '@gsap/react';
+import { FloatingPortal } from '@floating-ui/react';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 export default function MobileFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -18,8 +15,25 @@ export default function MobileFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const portalNode = useFloatingPortalNode();
-  const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (subscribeRef.current && !subscribeRef.current.contains(event.target as Node)) {
+        setIsSubscribeShow(false);
+      }
+    },
+    [setIsSubscribeShow],
+  );
+
+  useEffect(() => {
+    if (isSubscribeShow) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClickOutside, isSubscribeShow]);
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,37 +59,12 @@ export default function MobileFooter() {
   };
 
   useEffect(() => {
-    if (currentPage.id !== NAV_LIST[2].id) return;
     if (isSubscribeShow) {
       open();
     } else {
       close();
     }
-  }, [isSubscribeShow, currentPage]);
-
-  useGSAP(
-    () => {
-      if (!portalNode) return;
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: 'footerTimeline',
-          trigger: wrapperRef.current,
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          onEnter: () => {
-            open();
-          },
-          onLeaveBack: () => {
-            close();
-          },
-        },
-      });
-      timeline.to(subscribeRef.current, { bottom: '5rem' });
-      timeline.to('.footer-box-clip', { width: '100%', height: 'auto' }, '<');
-    },
-    { dependencies: [portalNode] },
-  );
+  }, [isSubscribeShow]);
 
   return (
     <>

@@ -3,7 +3,7 @@ import Background from '@/components/common/Background';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { Html } from '@react-three/drei';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function OuterLoader() {
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
@@ -11,15 +11,15 @@ export function OuterLoader() {
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
     if (glLoaded) {
       timer.current = setTimeout(() => {
-        setShow(false); // 加载完后再延迟1s
+        setShow(false); // TODO: 加载完后再延迟 1s 再设置全局加载完成，权宜之计，现在的加载管理还很不完善。
         setGlobalLoaded(true);
-      }, 100);
+      }, 1000);
     }
     return () => {
       if (timer.current) {

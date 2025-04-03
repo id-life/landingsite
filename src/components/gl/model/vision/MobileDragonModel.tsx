@@ -207,7 +207,7 @@ export default function MobileDragonModel(props: {}) {
   return (
     <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh ref={meshRef} geometry={(nodes.logo as any).geometry}>
-        <MeshTransmissionMaterial resolution={512} background={backgroundRef.current} {...transmissionConfigRef.current} />
+        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...transmissionConfigRef.current} />
       </mesh>
     </group>
   );

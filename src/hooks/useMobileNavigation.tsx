@@ -1,15 +1,18 @@
-import { mobileCurrentPageAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
+import { BACKGROUND_COLORS, BACKGROUND_THEME, BackgroundTheme } from '@/constants/config';
 import gsap from 'gsap';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileNavigation() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isAnimatingRef = useRef(false);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
 
-  const changeToDarkBackground = useCallback((isDark: boolean) => {
+  const changeBackground = useCallback((theme: BackgroundTheme) => {
     const root = document.documentElement;
     if (!root) return;
 
@@ -29,32 +32,40 @@ export function useMobileNavigation() {
       },
     });
     timelineRef.current = tl;
-
-    if (isDark) {
-      tl.set('.base-background2', { opacity: 0 }).to(root, {
-        '--gradient-from': '#000000',
-        '--gradient-to': '#C111114C',
-        '--background': '#000000',
-        '--foreground': '#F0F0F0',
-        duration: 0.5,
-      });
-    } else {
-      tl.to('.base-background2', { opacity: 1, duration: 0.5 }).to(
-        root,
-        {
-          '--gradient-from': '#FFFFFF',
-          '--gradient-to': '#CBD6EA',
-          '--background': '#F0F0F0',
-          '--foreground': '#000000',
+    switch (theme) {
+      case BACKGROUND_THEME.BLACK_RED:
+        tl.set('.base-background2', { opacity: 0 }).to(root, {
+          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK_RED],
           duration: 0.5,
-        },
-        '<',
-      );
+        });
+        break;
+      case BACKGROUND_THEME.BLACK:
+        tl.set('.base-background2', { opacity: 0 }).to(root, {
+          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK],
+          duration: 0.5,
+        });
+        break;
+      default:
+        tl.to(
+          root,
+          {
+            ...BACKGROUND_COLORS[BACKGROUND_THEME.LIGHT],
+            duration: 0.5,
+          },
+          '<',
+        );
+        break;
     }
   }, []);
 
   useEffect(() => {
-    changeToDarkBackground(currentPage.id === NAV_LIST[1].id);
+    if (NAV_LIST[1].id === currentPage.id) {
+      changeBackground(BACKGROUND_THEME.BLACK_RED);
+    } else if (NAV_LIST[2].id === currentPage.id) {
+      changeBackground(BACKGROUND_THEME.BLACK);
+    } else {
+      changeBackground(BACKGROUND_THEME.LIGHT);
+    }
 
     const tl = gsap.timeline({
       onStart: () => {
@@ -65,7 +76,7 @@ export function useMobileNavigation() {
       },
     });
 
-    if (currentPage.id === NAV_LIST[2].id) {
+    if ([NAV_LIST[2].id, NAV_LIST[3].id].includes(currentPage.id)) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
         duration: 0.5,
@@ -82,15 +93,22 @@ export function useMobileNavigation() {
         y: 0,
       });
     }
-  }, [changeToDarkBackground, currentPage]);
+  }, [changeBackground, currentPage]);
 
   const mobileNavChange = useCallback(
     (item: NavItem) => {
       // 如果动画正在进行中，不响应新的切换请求
       if (isAnimatingRef.current) return;
+
       setCurrentPage(item);
+      if (item?.id === NAV_LIST[4].id) {
+        setInnerPageIndex(0);
+      } else {
+        gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
+        setInnerPageTotal(0);
+      }
     },
-    [setCurrentPage],
+    [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
 
   return { mobileNavChange };

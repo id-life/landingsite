@@ -6,7 +6,7 @@ import { useProgress } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
 import MobileValueGL from './MobileValueGL';
@@ -32,7 +32,7 @@ function OuterLoader() {
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
@@ -40,7 +40,7 @@ function OuterLoader() {
       timer.current = setTimeout(() => {
         setShow(false); // 加载完后再延迟1s
         setGlobalLoaded(true);
-      }, 300);
+      }, 1000);
     }
     return () => {
       if (timer.current) {
@@ -54,13 +54,13 @@ function OuterLoader() {
 }
 export default function MobileThreeWrapper() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const hideCanvas = useMemo(() => currentPage.id === NAV_LIST[1].id, [currentPage]);
+  const showCanvas = useMemo(() => [NAV_LIST[0].id, NAV_LIST[NAV_LIST.length - 1].id].includes(currentPage.id), [currentPage]);
   const isMounted = useIsMounted();
   if (!isMounted) return null;
   return (
     <Canvas
       id="vision-canvas"
-      className={cn('pointer-events-none', { 'pointer-events-none hidden': hideCanvas })}
+      className={cn('pointer-events-none', { 'pointer-events-none hidden': !showCanvas })}
       style={{ position: 'fixed', zIndex: 1 }}
       camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{

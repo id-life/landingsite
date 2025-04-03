@@ -9,7 +9,6 @@ import { useAtomValue } from 'jotai';
 
 const backsideThickness = 1.5;
 const thickness = 5;
-const FBO_RESOLUTION = 64;
 
 const gltfConfig = ANIMAL_CONFIG[1];
 
@@ -20,8 +19,8 @@ const Animal3Model = forwardRef((props, ref: Ref<THREE.Group>) => {
 
   const [discardMaterial, background] = useMemo(() => [new MeshDiscardMaterial(), new THREE.Color('white')], []);
 
-  const fboMain = useFBO(FBO_RESOLUTION, FBO_RESOLUTION);
-  const fboBack = useFBO(FBO_RESOLUTION, FBO_RESOLUTION);
+  const fboMain = useFBO(gltfConfig.resolution, gltfConfig.resolution);
+  const fboBack = useFBO(gltfConfig.resolution, gltfConfig.resolution);
   const visible = useAtomValue(model3VisibleAtom);
 
   useEffect(() => {

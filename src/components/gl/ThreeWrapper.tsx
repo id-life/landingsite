@@ -1,45 +1,21 @@
-import { glLoadedAtom, globalLoadedAtom, isCNAtom } from '@/atoms/geo';
+import { isCNAtom } from '@/atoms/geo';
 import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
-import { useProgress } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
-import ProgressLoader, { OuterLoader } from './ProgressLoader';
-
-function Loader() {
-  const { progress, active } = useProgress();
-  const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const setGLLoaded = useSetAtom(glLoadedAtom);
-  // 设置全局加载完成
-  useEffect(() => {
-    if (!active) {
-      setGlobalLoaded(true);
-      setGLLoaded(true);
-    }
-  }, [active, setGlobalLoaded, setGLLoaded]);
-
-  useEffect(() => {
-    const smoother = ScrollSmoother.get();
-    if (!smoother) return;
-    smoother.paused(active);
-  }, [active]);
-
-  return <ProgressLoader progress={progress.toFixed(2)} />;
-}
+import { OuterLoader } from './ProgressLoader';
+import Loader from '@/components/gl/Loader';
+// import { Perf } from 'r3f-perf';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
-
-  // const { showPerf } = useControls({
-  //   showPerf: false,
-  // });
 
   const handleClick = useThrottle(() => {
     if (!isMobile) return;
@@ -50,7 +26,6 @@ export default function ThreeWrapper() {
     <Canvas
       id="vision-canvas"
       style={{ position: 'fixed', zIndex: 1 }}
-      camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{
         alpha: true,
         antialias: true,
@@ -58,9 +33,10 @@ export default function ThreeWrapper() {
       }}
       onClick={handleClick}
     >
-      {/* {showPerf && <Perf position="top-left" />} */}
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+      {/* <Perf deepAnalyze={true} /> */}
       <OuterLoader />
       <Suspense fallback={<Loader />}>
         <VisionGL />

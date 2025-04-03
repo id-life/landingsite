@@ -69,7 +69,7 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
         <div ref={rippleRef3} className="scroll-button-ripple-init" />
         <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-black">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
-          <p className="font-migrena text-base/4 font-bold uppercase text-white">SCROLL</p>
+          <p className="font-migrena text-base/4 font-bold uppercase text-white">START</p>
         </div>
       </div>
     </div>

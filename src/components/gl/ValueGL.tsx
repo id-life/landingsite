@@ -1,4 +1,4 @@
-import { currentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
@@ -61,6 +61,7 @@ TitleSVG.displayName = 'TitleSVG';
 
 function ValueGL() {
   const { camera } = useThree();
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
   const title1Ref = useRef<THREE.Group>(null);
   const title2Ref = useRef<THREE.Group>(null);
@@ -72,8 +73,8 @@ function ValueGL() {
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
   const isMobile = useIsMobile();
-  const setValuePageIndex = useSetAtom(valuePageIndexAtom);
-  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const progressMap = useMemo(() => (isMobile ? VALUE_PROGRESS_CONFIG.mobile : VALUE_PROGRESS_CONFIG.desktop), [isMobile]);
 
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
@@ -134,10 +135,16 @@ function ValueGL() {
       const tl = gsap.timeline({
         scrollTrigger: {
           immediateRender: isMobile,
-          trigger: `#${NAV_LIST[2].id}`,
+          trigger: `#${NAV_LIST[4].id}`,
           start: isMobile ? 'top bottom+=400' : 'top bottom+=500',
           end: 'top top',
           scrub: true,
+          onEnter: () => {
+            setCurrentPage(NAV_LIST[4]);
+          },
+          onEnterBack: () => {
+            setCurrentPage(NAV_LIST[4]);
+          },
         },
       });
       tl.to(camera.position, { ...page1Config.to.camera.position });
@@ -197,7 +204,7 @@ function ValueGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[4].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
@@ -247,10 +254,10 @@ function ValueGL() {
       duration: 4,
       ease: 'none',
       onStart: () => {
-        if (!isScrollingRef.current) setValuePageIndex(3);
+        if (!isScrollingRef.current) setInnerPageIndex(3);
       },
       onComplete: () => {
-        if (!isScrollingRef.current) setValuePageIndex(4);
+        if (!isScrollingRef.current) setInnerPageIndex(4);
       },
     });
     tl.to(
@@ -286,10 +293,11 @@ function ValueGL() {
   }, [isMobile]);
 
   useEffect(() => {
-    if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
-    const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
+    // console.log({ currentPageIndex, innerPageNavigateTo });
+    if (currentPageIndex !== 4 || innerPageNavigateTo === null) return;
+    const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
-      if (valuePageNavigateTo === 5) {
+      if (innerPageNavigateTo === 5) {
         const st = ScrollTrigger.getById('footerTimeline');
         if (st) {
           isScrollingRef.current = true;
@@ -312,22 +320,22 @@ function ValueGL() {
             onComplete: () => {
               isScrollingRef.current = false;
               enableScroll();
-              if (valuePageNavigateTo === 0 && title1Ref.current)
+              if (innerPageNavigateTo === 0 && title1Ref.current)
                 gsap.set(title1Ref.current.position, { ...getScalePosition(page1Config.to.title.position) });
             },
           });
         }
       }
-      setValuePageIndex(valuePageNavigateTo);
-      setValuePageNavigateTo(null);
+      setInnerPageIndex(innerPageNavigateTo);
+      setInnerPageNavigateTo(null);
     }
   }, [
     currentPageIndex,
-    valuePageNavigateTo,
+    innerPageNavigateTo,
     isMobile,
     progressMap,
-    setValuePageIndex,
-    setValuePageNavigateTo,
+    setInnerPageIndex,
+    setInnerPageNavigateTo,
     enableScroll,
     getScalePosition,
     page1Config.to.title.position,
@@ -344,4 +352,5 @@ function ValueGL() {
     </group>
   );
 }
+
 export default memo(ValueGL);

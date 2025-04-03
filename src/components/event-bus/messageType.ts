@@ -1,0 +1,8 @@
+export enum MessageType {
+  SWITCH_MODEL = 'SWITCH_MODEL', // 切换模型
+  SYNC_CAMERA = 'SYNC_CAMERA', // 同步摄像机
+  ALLOW_OPERATION = 'ALLOW_OPERATION',   // 允许操作
+  SWITCH_ANATOMY_MODULE = 'SWITCH_ANATOMY_MODULE', // 切换解刨模块
+  SWITCH_CAMERA = 'SWITCH_CAMERA', // 切换相机视角
+  RESET_ANIMATION = 'RESET_ANIMATION',  // 重置动画
+}

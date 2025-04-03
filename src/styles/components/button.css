@@ -1,0 +1,32 @@
+.corner-button {
+  &::before,
+  &::after,
+  span::after,
+  span::before {
+    content: '';
+    display: block;
+    border-color: #979797;
+    @apply absolute size-3 border-2;
+  }
+  &::before {
+    @apply left-0 top-0 border-b-0 border-r-0;
+  }
+  &::after {
+    @apply right-0 top-0 border-b-0 border-l-0;
+  }
+  & > span::before {
+    @apply bottom-0 left-0 border-r-0 border-t-0;
+  }
+  & > span::after {
+    @apply bottom-0 right-0 border-l-0 border-t-0;
+  }
+  &:hover {
+    &::before,
+    &::after,
+    span::after,
+    span::before {
+      /* @apply h-4 w-1/2 */
+      @apply border-white;
+    }
+  }
+}

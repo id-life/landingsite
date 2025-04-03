@@ -74,7 +74,7 @@ export default function Intervention() {
               }}
             />
           </Suspense>
-          <Effects />
+          {/*<Effects />*/}
           <OrbitControls ref={controls} autoRotate autoRotateSpeed={1} enableDamping enableZoom={false} target={[0, 0, 0]} />
         </Canvas>
       </div>

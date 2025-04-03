@@ -1,3 +1,4 @@
+import { DEFAULT } from '@react-three/fiber/dist/declarations/src/core/utils';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -24,20 +25,24 @@ const config: Config = {
       spacing: {
         3.5: '0.875rem',
         4.5: '1.125rem',
+        5.5: '1.375rem',
         6.5: '1.625rem',
         7.5: '1.875rem',
         10.5: '2.625rem',
         14: '3.5rem',
         15: '3.75rem',
         15.5: '3.875rem',
+        16.5: '4.125rem',
         17: '4.25rem',
         18: '4.5rem',
         19.5: '4.875rem',
         22.5: '5.625rem',
         32.5: '8.125rem',
+        33: '8.25rem',
         34: '8.5rem',
         37: '9.25rem',
         42: '10.5rem',
+        45: '11.25rem',
         50: '12.5rem',
         51.5: '12.875rem',
         55: '13.75rem',
@@ -52,7 +57,11 @@ const config: Config = {
           200: '#D4D4D4',
           350: '#999999',
           400: '#9C979D',
+          700: '#444444',
           800: '#222222',
+        },
+        orange: {
+          DEFAULT: '#FFE500',
         },
         red: {
           500: '#BB1212',
@@ -63,6 +72,15 @@ const config: Config = {
         },
         yellow: {
           800: '#FFD12C',
+        },
+        cyan: {
+          DEFAULT: '#00DDFF',
+        },
+        blue: {
+          DEFAULT: '#43BBFF',
+        },
+        purple: {
+          DEFAULT: '#CE3AFF',
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',

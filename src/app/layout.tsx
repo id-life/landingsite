@@ -5,8 +5,9 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import { GoogleTagManager } from '@next/third-parties/google';
 import { clsx } from 'clsx';
 import type { Metadata } from 'next';
-
+import ScrollBehavior from '@/components/common/ScrollBehavior';
 import ClientNav from '@/components/nav/CilentNav';
+
 import '@/styles/globals.css';
 import 'swiper/css';
 import '../utils/analytics';
@@ -85,6 +86,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
+          <ScrollBehavior />
           <ClientNav />
           {children}
           <FixedUI />

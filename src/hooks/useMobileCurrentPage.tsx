@@ -3,14 +3,14 @@ import {
   mobileCurrentPageIndexAtom,
   mobilePortfolioPageIndexAtom,
   mobilePortfolioPageNavigateToAtom,
-  valuePageNavigateToAtom,
+  innerPageNavigateToAtom,
 } from '@/atoms';
 import { useAtom } from 'jotai';
 
 export function useMobileCurrentPage() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const [currentPageIndex, setCurrentPageIndex] = useAtom(mobileCurrentPageIndexAtom);
-  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
+  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(innerPageNavigateToAtom);
   return {
     currentPage,
     setCurrentPage,

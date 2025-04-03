@@ -1,5 +1,6 @@
 @import './webgl.css';
-@import './geo.css';
+@import './components/button.css';
+@import './loading.css';
 
 @tailwind base;
 @tailwind components;
@@ -24,11 +25,28 @@
   /*  width: 0;*/
   /*  background: transparent;*/
   /*}*/
+  *::-webkit-scrollbar {
+    width: 0.375rem;
+  }
+  @media (max-width: 768px) {
+    *::-webkit-scrollbar {
+      width: 2px;
+    }
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #ffffff66;
+    backdrop-filter: blur(40px);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #ffffff90;
+  }
 
   body {
     color: #222222;
     background: var(--background);
-    @apply font-poppins mobile:h-full mobile:overflow-hidden mobile:overscroll-y-none;
+    overscroll-behavior: none;
+    @apply font-poppins mobile:h-full mobile:overflow-hidden;
   }
 
   .base-background1 {
@@ -71,6 +89,9 @@
     min-height: 150svh;
     overflow: hidden;
 
+    &.engagement {
+      min-height: 420svh;
+    }
     &.value {
       min-height: 800svh;
     }
@@ -155,7 +176,6 @@
       opacity: 0;
     }
   }
-
   .clip-box {
     position: relative;
     background: #22222299;
@@ -190,4 +210,14 @@
     width: 122px;
     height: 40px;
   }
+
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .clip-sponsor-content {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
+    clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
+  } 
 }

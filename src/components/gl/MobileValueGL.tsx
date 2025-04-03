@@ -1,8 +1,9 @@
-import { mobileCurrentPageAtom, mobileCurrentPageIndexAtom, valuePageIndexAtom, valuePageNavigateToAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom, mobileCurrentPageIndexAtom } from '@/atoms';
 import { MODEL_CONFIG } from '@/components/gl/config/animalConfig';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
+import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
 import { useMobileValueSVGAnimations } from '@/hooks/valueGL/useMobileValueSVGAnimations';
 import { useValueCalcPosition } from '@/hooks/valueGL/useValueCalcPosition';
@@ -70,8 +71,8 @@ function MobileValueGL() {
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
   const page4Config = useMemo(() => VALUE_GL_CONFIG[3], []);
   const page6Config = useMemo(() => VALUE_GL_CONFIG[5], []);
-  const setValuePageIndex = useSetAtom(valuePageIndexAtom);
-  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(valuePageNavigateToAtom);
+  const setValuePageIndex = useSetAtom(innerPageIndexAtom);
+  const [valuePageNavigateTo, setValuePageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.mobile, []);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);
@@ -191,7 +192,7 @@ function MobileValueGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[VALUE_PAGE_INDEX].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
@@ -263,14 +264,15 @@ function MobileValueGL() {
   }, []);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[2].id) startAnimTLRef.current?.play();
+    if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) startAnimTLRef.current?.play();
     else {
+      gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);
 
   useEffect(() => {
-    if (currentPageIndex !== 2 || valuePageNavigateTo === null) return;
+    if (currentPageIndex !== VALUE_PAGE_INDEX || valuePageNavigateTo === null) return;
 
     const progress = progressMap[valuePageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {

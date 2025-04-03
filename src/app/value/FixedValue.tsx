@@ -111,9 +111,9 @@ const VALUE_CONTENT: ValueContentItem[] = [
     mobileSVGElement: (
       <h2
         id="value-4-svg-mobile"
-        className="pointer-events-none fixed inset-x-5 top-1/2 z-10 flex -translate-y-28 flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
+        className="pointer-events-none fixed inset-x-5 bottom-[14.75rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">
+        <span className="value-text-en whitespace-nowrap text-[3.625rem]/[3.625rem] text-red-500">
           A Virtuous
           <br />
           Cycle

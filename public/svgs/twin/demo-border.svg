@@ -1,0 +1,9 @@
+<svg viewBox="0 0 193 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="Subtract">
+        <mask id="path-1-inside-1_11615_1809" fill="white">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 13.1395V50H193V0H13.1395L0 13.1395Z"/>
+        </mask>
+        <path d="M0 50H-2V52H0V50ZM0 13.1395L-1.41421 11.7253L-2 12.3111V13.1395H0ZM193 50V52H195V50H193ZM193 0H195V-2H193V0ZM13.1395 0V-2H12.3111L11.7253 -1.41421L13.1395 0ZM2 50V13.1395H-2V50H2ZM193 48H0V52H193V48ZM191 0V50H195V0H191ZM13.1395 2H193V-2H13.1395V2ZM11.7253 -1.41421L-1.41421 11.7253L1.41421 14.5537L14.5537 1.41421L11.7253 -1.41421Z"
+              fill="current" mask="url(#path-1-inside-1_11615_1809)"/>
+    </g>
+</svg>
