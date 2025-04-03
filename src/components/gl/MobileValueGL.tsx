@@ -266,6 +266,7 @@ function MobileValueGL() {
   useEffect(() => {
     if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) startAnimTLRef.current?.play();
     else {
+      gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);
