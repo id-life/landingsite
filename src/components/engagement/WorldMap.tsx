@@ -201,10 +201,16 @@ export const WorldMap = memo(function WorldMapComponent({
     const moveX = -normalizedX * parallaxFactor;
     const moveY = -normalizedY * parallaxFactor;
 
-    // 使用GSAP实现平滑的移动效果
+    // 计算旋转角度 - 添加轻微的3D旋转效果
+    const rotateY = normalizedX * 2; // 水平方向旋转角度（度数）
+    const rotateX = -normalizedY * 1; // 垂直方向旋转角度（度数）
+
+    // 使用GSAP实现平滑的移动和旋转效果
     gsap.to(mapContentRef.current, {
       x: moveX,
       y: moveY,
+      rotateX: rotateX,
+      rotateY: rotateY,
       duration: 1.5,
       ease: 'power2.out',
       overwrite: 'auto',
@@ -217,6 +223,9 @@ export const WorldMap = memo(function WorldMapComponent({
       className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
       onClick={handleBackgroundClick}
       onMouseMove={handleMouseMove}
+      style={{
+        perspective: '1000px',
+      }}
     >
       {/* <button
         onClick={downloadSVG}
@@ -236,7 +245,7 @@ export const WorldMap = memo(function WorldMapComponent({
         draggable={false}
         loading="eager"
       /> */}
-      <div ref={mapContentRef} className="relative size-full">
+      <div ref={mapContentRef} className="relative -left-14 size-full [transform-style:preserve-3d]">
         <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
         {/* <WorldMapSVG
           className={cn(
