@@ -15,6 +15,7 @@ import { WorldMapSVG } from '../svg';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
+import { WorldMapAnimBackground } from './WorldMapAnimBackground';
 
 const svgViewBox = {
   w: 756,
@@ -196,13 +197,7 @@ export const WorldMap = memo(function WorldMapComponent({
         draggable={false}
         loading="eager"
       /> */}
-      <WorldMapSVG
-        ref={ref}
-        className={cn(
-          'world-map-img pointer-events-none absolute left-0 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-          // 'opacity-0', // anim init state
-        )}
-      />
+      <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
       {/* <WorldMapSVG
         className={cn(
           'world-map-img pointer-events-none absolute left-[calc(100%_-_10rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
