@@ -63,6 +63,7 @@ export function WorldMapDotPoint({
       )}
       onClick={handleClick}
       onMouseEnter={(e) => {
+        e.stopPropagation();
         if (activeMeetingDotClickOpen) return;
         handleMouseEnter(e, index, 'meeting');
       }}
@@ -74,6 +75,7 @@ export function WorldMapDotPoint({
         top: `${top}px`,
       }}
     >
+      <div className="absolute -inset-5" />
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
         <div className="relative size-6 overflow-visible">
@@ -238,7 +240,7 @@ export function WorldMapDotContent({
               'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
               contentTransformClass,
             )}
-            onMouseLeave={handleContentMouseLeave}
+            // onMouseLeave={handleContentMouseLeave}
           >
             <div className="pointer-events-auto absolute -inset-10"></div>
             <div
