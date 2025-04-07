@@ -14,15 +14,14 @@ interface WorldMapAnimBackgroundProps {
 // SVG viewBox dimensions matching WorldMapSVG's inherent size for coordinate mapping
 // Assuming WorldMapSVG's default viewBox is "0 0 126 60" based on usage below.
 // If WorldMapSVG's viewBox changes, this needs to be updated.
-const svgViewBox = { w: 126, h: 60 };
 
 export const WorldMapAnimBackground = forwardRef<SVGSVGElement, WorldMapAnimBackgroundProps>(function WorldMapAnimBackground(
   {
     className,
-    radius = 500,
-    animationDuration = 0.5,
-    animationScale = 1.6,
-    fadeOutThreshold = 0.8, // 默认在80%半径处开始淡出
+    radius = 70,
+    animationDuration = 0.6,
+    animationScale = 1.5,
+    fadeOutThreshold = 0.1, // 默认在10%半径处开始淡出
   },
   ref, // This ref is for the WorldMapSVG itself
 ) {
@@ -30,7 +29,7 @@ export const WorldMapAnimBackground = forwardRef<SVGSVGElement, WorldMapAnimBack
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const particlesRef = useRef<SVGCircleElement[]>([]);
-  const animationRef = useRef<{ [key: string]: gsap.core.Tween | null }>({});
+  const animationRef = useRef<{ [key: string]: gsap.core.Tween | gsap.core.Timeline | null }>({});
 
   // Initialize particle and background light animation
   useEffect(() => {
@@ -111,27 +110,64 @@ export const WorldMapAnimBackground = forwardRef<SVGSVGElement, WorldMapAnimBack
 
         const targetScale = 1 + (animationScale - 1) * intensity;
 
-        // 创建动画
-        animationRef.current[particleId] = gsap.to(circle, {
+        // --- 使用 GSAP Timeline 创建脉冲动画 ---
+        const tl = gsap.timeline({
+          onInterrupt: () => {
+            // Ensure cleanup if interrupted (e.g., by mouse moving away quickly)
+            if (animationRef.current[particleId]) {
+              gsap.to(circle, {
+                // Force back to original state on interrupt if needed
+                attr: { r: originalR },
+                fill: originalFill,
+                duration: animationDuration * 0.5, // Quick revert
+                ease: 'power1.out',
+                overwrite: true, // Overwrite any ongoing animation on this element
+              });
+            }
+          },
+        });
+
+        // 1. 动画到基础高亮状态
+        tl.to(circle, {
           attr: { r: originalR * targetScale },
           fill: `rgba(255, 255, 255, ${targetOpacity})`,
-          duration: animationDuration,
+          duration: animationDuration * 0.7, // 分配部分时间给基础动画
           ease: 'power2.out',
         });
+
+        // 2. 添加脉冲效果: 更加舒缓
+        tl.to(
+          circle,
+          {
+            attr: { r: originalR * targetScale * 1.2 }, // 保持较小的峰值
+            duration: animationDuration * 1.8, // 大幅增加脉冲时间
+            ease: 'power2.inOut', // 尝试更平滑的缓动
+            yoyo: true, // 自动反向播放（缩小回targetScale）
+            repeat: -1, // 无限重复
+          },
+          // '-=' + animationDuration * 0.2,
+        ); // 调整重叠时间
+
+        // 存储 Timeline 实例
+        animationRef.current[particleId] = tl;
       } else {
         // 如果粒子不在影响范围内，恢复原始状态
         const particleId = circle.getAttribute('data-id');
         if (particleId && animationRef.current[particleId]) {
+          // 停止当前动画 (Timeline 或 Tween)
           animationRef.current[particleId]?.kill();
+          animationRef.current[particleId] = null; // 清理引用
 
           const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
           const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
 
-          animationRef.current[particleId] = gsap.to(circle, {
+          // 使用 gsap.to 平滑恢复到原始状态
+          gsap.to(circle, {
             attr: { r: originalR },
             fill: originalFill,
-            duration: animationDuration,
+            duration: animationDuration, // 使用标准动画时间恢复
             ease: 'power2.out',
+            overwrite: true, // 确保覆盖掉可能存在的残留动画状态
           });
         }
       }
@@ -145,19 +181,23 @@ export const WorldMapAnimBackground = forwardRef<SVGSVGElement, WorldMapAnimBack
     // 恢复所有粒子的原始状态
     particlesRef.current.forEach((circle) => {
       const particleId = circle.getAttribute('data-id');
+      // 检查是否有活动的动画需要停止
       if (particleId && animationRef.current[particleId]) {
         animationRef.current[particleId]?.kill();
-
-        const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
-        const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
-
-        animationRef.current[particleId] = gsap.to(circle, {
-          attr: { r: originalR },
-          fill: originalFill,
-          duration: animationDuration,
-          ease: 'power2.out',
-        });
+        animationRef.current[particleId] = null; // 清理引用
       }
+      // 无论是否有动画在进行，都强制恢复其视觉状态
+      const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
+      const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
+
+      // 使用gsap.to确保平滑恢复，即使没有进行中的动画也设置状态
+      gsap.to(circle, {
+        attr: { r: originalR },
+        fill: originalFill,
+        duration: animationDuration, // 使用标准动画时间恢复
+        ease: 'power2.out',
+        overwrite: true, // 覆盖任何可能存在的动画状态
+      });
     });
   };
 
