@@ -23,7 +23,7 @@ export function WorldMapSponsorDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { lat, lng, title, pulseConfig, sponsorText } = dot;
-  const { handleClickPoint, handleMouseEnter, activeSponsorDot } = useEngagementClickPoint();
+  const { handleClickPoint, handleMouseEnter, handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -38,6 +38,15 @@ export function WorldMapSponsorDotPoint({
       handleClickPoint('sponsor', index, true);
     } else {
       handleClickPoint('sponsor', index);
+    }
+  };
+
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeSponsorDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
+      handleMouseLeave(e, index, 'sponsor');
     }
   };
 
@@ -70,6 +79,7 @@ export function WorldMapSponsorDotPoint({
         if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
         handleMouseEnter(e, index, 'sponsor');
       }}
+      onMouseLeave={handleContentMouseLeave}
       style={{
         left: `${left}px`,
         top: `${top}px`,

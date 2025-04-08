@@ -239,7 +239,7 @@ export function WorldMapDotContent({
               'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
               contentTransformClass,
             )}
-            // onMouseLeave={handleContentMouseLeave}
+            onMouseLeave={handleContentMouseLeave}
           >
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
