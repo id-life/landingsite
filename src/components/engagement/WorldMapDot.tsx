@@ -243,7 +243,7 @@ export function WorldMapDotContent({
           >
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
-              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-40 cursor-pointer', pcDotHotAreaClass)}
+              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20 cursor-pointer', pcDotHotAreaClass)}
               onClick={handleClick}
             ></div>
           </div>
