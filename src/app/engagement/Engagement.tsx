@@ -3,7 +3,6 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue } from 'jotai';
@@ -12,26 +11,6 @@ import { memo } from 'react';
 function Engagement() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-    triggerId: 'engagement-scroll-trigger',
-    scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
-      console.log('Engagement scrollFn Up');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
-    },
-    isUp: true,
-  });
-
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollTriggerAction({
-    triggerId: 'engagement-scroll-trigger',
-    scrollFn: () => {
-      if (!enableDownJudge || currentPage.id !== NAV_LIST[2].id) return;
-      console.log('Engagement scrollFn down');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[3].id}` } });
-    },
-    isUp: false,
-  });
 
   useGSAP(() => {
     if (!globalLoaded) return;
@@ -70,9 +49,7 @@ function Engagement() {
     const entranceDuration = 0.2 * factor;
     // 计算入场每个动画的单位时长
     const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
-    tl.add(() => {
-      setEnableUpJudge(true);
-    });
+
     // 入场动画序列
     tl.to('.world-map-img', {
       y: 0,
@@ -118,10 +95,6 @@ function Engagement() {
       opacity: 0,
       ease: 'power2.out',
       duration: exitUnit,
-    });
-
-    tl.add(() => {
-      setEnableDownJudge(true);
     });
   }, [globalLoaded]);
 

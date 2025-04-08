@@ -6,6 +6,8 @@ import Contact from '@/components/portfolio/Contact';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
@@ -13,10 +15,6 @@ import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
 
 // 注册GSAP插件
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -32,19 +30,6 @@ function Portfolio() {
   const showParticle = useMemo(() => active, [active]);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const currentPage = useAtomValue(currentPageAtom);
-  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
-    triggerId: 'portfolio-trigger',
-    scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
-      console.log('Portfolio scrollFn down');
-      // const smoother = ScrollSmoother.get();
-      // smoother?.scrollTo(`#${NAV_LIST[2].id}`);
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
-    },
-    isUp: false,
-  });
 
   const handleFundClick = useCallback((item: PortfolioItemInfo) => {
     if (!item.link) return;
@@ -97,11 +82,6 @@ function Portfolio() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
-
-    // 在整个动画完成后设置标志
-    tl.add(() => {
-      setEnableDownJudge(true);
-    });
   }, [globalLoaded]);
 
   useGSAP(
