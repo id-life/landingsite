@@ -16,6 +16,7 @@ import PortfolioItem from './PortfolioItem';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
 
 // 注册GSAP插件
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -36,8 +37,11 @@ function Portfolio() {
     scrollFn: () => {
       if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
       console.log('Portfolio scrollFn down');
-      const smoother = ScrollSmoother.get();
-      smoother?.scrollTo(`#${NAV_LIST[2].id}`, false);
+      // const smoother = ScrollSmoother.get();
+      // smoother?.scrollTo(`#${NAV_LIST[2].id}`);
+      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      if (!st) return;
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
     },
     isUp: false,
   });

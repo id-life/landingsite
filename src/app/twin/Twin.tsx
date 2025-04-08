@@ -11,6 +11,8 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { ModelType } from '@/components/twin/model/type';
 import { useInView } from 'react-intersection-observer';
+import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 function Twin() {
   const isResetDemo = useRef(false);
@@ -22,8 +24,11 @@ function Twin() {
     triggerId: 'twin-scroll-trigger',
     scrollFn: () => {
       if (!enableJudge || currentPage.id !== NAV_LIST[3].id) return;
-      const smoother = ScrollSmoother.get();
-      smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
+      // const smoother = ScrollSmoother.get();
+      // smoother?.scrollTo(`#${NAV_LIST[2].id}`);
+      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      if (!st) return;
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
     },
     isUp: true,
   });
