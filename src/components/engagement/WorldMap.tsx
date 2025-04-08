@@ -182,40 +182,43 @@ export const WorldMap = memo(function WorldMapComponent({
   }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot, globalLoaded]);
 
   // 处理鼠标移动，更新视差效果
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!mapContainerRef.current || !mapContentRef.current) return;
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!mapContainerRef.current || !mapContentRef.current || isAnyActive) return;
 
-    const containerRect = mapContainerRef.current.getBoundingClientRect();
+      const containerRect = mapContainerRef.current.getBoundingClientRect();
 
-    // 计算鼠标在容器中的相对位置 (0 到 1)
-    const relativeX = (e.clientX - containerRect.left) / containerRect.width;
-    const relativeY = (e.clientY - containerRect.top) / containerRect.height;
+      // 计算鼠标在容器中的相对位置 (0 到 1)
+      const relativeX = (e.clientX - containerRect.left) / containerRect.width;
+      const relativeY = (e.clientY - containerRect.top) / containerRect.height;
 
-    // 将相对位置转换为 -0.5 到 0.5 的范围，中心点为(0,0)
-    const normalizedX = relativeX - 0.5;
-    const normalizedY = relativeY - 0.5;
+      // 将相对位置转换为 -0.5 到 0.5 的范围，中心点为(0,0)
+      const normalizedX = relativeX - 0.5;
+      const normalizedY = relativeY - 0.5;
 
-    setMousePosition({ x: normalizedX, y: normalizedY });
+      setMousePosition({ x: normalizedX, y: normalizedY });
 
-    // 计算位移量 - 鼠标在左上角时，地图向右下角移动
-    const moveX = -normalizedX * parallaxFactor;
-    const moveY = -normalizedY * parallaxFactor;
+      // 计算位移量 - 鼠标在左上角时，地图向右下角移动
+      const moveX = -normalizedX * parallaxFactor;
+      const moveY = -normalizedY * parallaxFactor;
 
-    // 计算旋转角度 - 添加轻微的3D旋转效果
-    const rotateY = normalizedX * 2; // 水平方向旋转角度（度数）
-    const rotateX = -normalizedY * 1; // 垂直方向旋转角度（度数）
+      // 计算旋转角度 - 添加轻微的3D旋转效果
+      const rotateY = normalizedX * 2; // 水平方向旋转角度（度数）
+      const rotateX = -normalizedY * 1; // 垂直方向旋转角度（度数）
 
-    // 使用GSAP实现平滑的移动和旋转效果
-    gsap.to(mapContentRef.current, {
-      x: moveX,
-      y: moveY,
-      rotateX: rotateX,
-      rotateY: rotateY,
-      duration: 1.5,
-      ease: 'power2.out',
-      overwrite: 'auto',
-    });
-  }, []);
+      // 使用GSAP实现平滑的移动和旋转效果
+      gsap.to(mapContentRef.current, {
+        x: moveX,
+        y: moveY,
+        rotateX: rotateX,
+        rotateY: rotateY,
+        duration: 1.5,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    },
+    [isAnyActive],
+  );
 
   return (
     <div
@@ -245,7 +248,7 @@ export const WorldMap = memo(function WorldMapComponent({
         draggable={false}
         loading="eager"
       /> */}
-      <div ref={mapContentRef} className="relative -left-14 size-full [transform-style:preserve-3d]">
+      <div ref={mapContentRef} className="relative -left-14 size-full">
         <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
         {/* <WorldMapSVG
           className={cn(

@@ -3,7 +3,7 @@ import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engag
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG } from '../svg';
@@ -54,7 +54,6 @@ export function WorldMapDotPoint({
       handleClickPoint('meeting', index, false);
     }
   };
-
   return (
     <motion.div
       className={cn(
@@ -75,7 +74,7 @@ export function WorldMapDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className="absolute -inset-5" />
+      <div className="absolute -inset-5 cursor-pointer" />
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
         <div className="relative size-6 overflow-visible">
@@ -242,7 +241,7 @@ export function WorldMapDotContent({
             )}
             // onMouseLeave={handleContentMouseLeave}
           >
-            <div className="pointer-events-auto absolute -inset-10"></div>
+            <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
               className={cn('pointer-events-auto absolute -right-72 left-[90%] h-40 cursor-pointer', pcDotHotAreaClass)}
               onClick={handleClick}
