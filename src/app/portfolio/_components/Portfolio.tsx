@@ -37,8 +37,6 @@ function Portfolio() {
   }, []);
 
   useGSAP(() => {
-    if (!globalLoaded) return;
-
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[1].id}`,
@@ -82,7 +80,7 @@ function Portfolio() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
-  }, [globalLoaded]);
+  }, []);
 
   useGSAP(
     () => {
