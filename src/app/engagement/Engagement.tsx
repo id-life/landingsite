@@ -3,6 +3,7 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue } from 'jotai';
@@ -10,6 +11,17 @@ import { memo } from 'react';
 
 function Engagement() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // engagement auto scroll to profile
+    triggerId: 'engagement-scroll-trigger',
+    scrollFn: () => {
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      console.log('Engagement scrollFn Up');
+      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
+    },
+    isUp: true,
+  });
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -40,6 +52,9 @@ function Engagement() {
     // 使用进度位置控制动画时机
     const factor = 10; // 动画因子
 
+    tl.add(() => {
+      setEnableUpJudge(true);
+    });
     // 入场动画序列
     const entranceDuration = 2 * factor;
     tl.to('.world-map-img', {
@@ -57,7 +72,7 @@ function Engagement() {
     });
 
     // 停留一阵子
-    tl.to(() => {}, { duration: 4 * factor });
+    tl.to(() => {}, { duration: 2 * factor });
 
     // 出场动画序列
     const exitDuration = 2 * factor;
@@ -65,7 +80,7 @@ function Engagement() {
       ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'],
       {
         opacity: 0,
-        y: -10,
+        // y: -10,
         ease: 'power2.out',
         stagger: exitDuration * 0.1,
         duration: exitDuration,
@@ -73,16 +88,16 @@ function Engagement() {
       '+=105',
     );
 
-    tl.to(
-      ['.world-map-img'],
-      {
-        y: -50,
-        opacity: 0,
-        ease: 'power2.out',
-        duration: exitDuration * 5,
-      },
-      '<',
-    );
+    // tl.to(
+    //   ['.world-map-img'],
+    //   {
+    //     y: -50,
+    //     opacity: 0,
+    //     ease: 'power2.out',
+    //     duration: exitDuration * 5,
+    //   },
+    //   '<',
+    // );
   }, []);
 
   return (
