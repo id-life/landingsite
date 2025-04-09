@@ -110,7 +110,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'The 5th Timepie Longevity Forum', //上海timepie
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    pcDotHotAreaClass: 'top-[22vh]',
+    pcDotHotAreaClass: 'top-[25vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-1',
@@ -148,7 +148,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
-    pcDotHotAreaClass: 'top-[23vh]',
+    pcDotHotAreaClass: 'top-[25.5vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-0',
@@ -182,7 +182,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
-    pcDotHotAreaClass: 'top-[37vh]',
+    pcDotHotAreaClass: 'top-[39.5vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
       'world-map-dot-0',
@@ -224,7 +224,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalia @ Roatan, Honduras',
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
-    pcDotHotAreaClass: 'right-full -left-full top-[34vh]',
+    pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-5.webp',

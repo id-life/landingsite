@@ -1,15 +1,13 @@
 import { currentPageAtom } from '@/atoms';
 import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useAtom, useSetAtom } from 'jotai';
-import { memo, useEffect, useRef } from 'react';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
+import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 function Twin() {
@@ -18,15 +16,6 @@ function Twin() {
 
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { setEnableJudge: setEnableUpJudge, enableJudge } = useScrollTriggerAction({
-    triggerId: 'twin-scroll-trigger',
-    scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[3].id) return;
-      const smoother = ScrollSmoother.get();
-      smoother?.scrollTo(`#map-container`, true, `bottom bottom`);
-    },
-    isUp: true,
-  });
   const setCurrentModel = useSetAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
 
@@ -54,9 +43,6 @@ function Twin() {
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
       },
-    });
-    tl.add(() => {
-      setEnableUpJudge(true);
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });

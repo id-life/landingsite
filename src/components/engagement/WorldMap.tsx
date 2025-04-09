@@ -7,11 +7,12 @@ import { currentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import { NAV_LIST } from '../nav/nav';
-import { WorldMapSVG } from '../svg';
+import { WorldMapAnimBackground } from './WorldMapAnimBackground';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
@@ -20,6 +21,7 @@ const svgViewBox = {
   w: 756,
   h: 360,
 };
+const parallaxFactor = 20; // 视差移动的最大像素值
 interface MapProps {
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
@@ -36,12 +38,17 @@ export const WorldMap = memo(function WorldMapComponent({
   lineColor = '#C11111',
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapContentRef = useRef<HTMLDivElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const currentPage = useAtomValue(currentPageAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
+  // 视差效果参数
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   // 缓存地图实例和SVG结果，使用优化后的参数
   // const svgMap = useMemo(() => {
   //   const map = new DottedMap({
@@ -70,6 +77,7 @@ export const WorldMap = memo(function WorldMapComponent({
       // console.log({ x, y, left, top, w, h, width, height });
       return { x, y, left, top };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [mapWidth],
   );
   const { activeBookDot, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
@@ -112,7 +120,7 @@ export const WorldMap = memo(function WorldMapComponent({
         </div>
       );
     });
-  }, [regionDots, calcPoint, isAnyActive, lineColor]);
+  }, [regionDots, calcPoint, isAnyActive]);
 
   const dotsPoints = useMemo(() => {
     if (!dots?.length) return null;
@@ -173,10 +181,54 @@ export const WorldMap = memo(function WorldMapComponent({
     }
   }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot, globalLoaded]);
 
+  // 处理鼠标移动，更新视差效果
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!mapContainerRef.current || !mapContentRef.current || isAnyActive) return;
+
+      const containerRect = mapContainerRef.current.getBoundingClientRect();
+
+      // 计算鼠标在容器中的相对位置 (0 到 1)
+      const relativeX = (e.clientX - containerRect.left) / containerRect.width;
+      const relativeY = (e.clientY - containerRect.top) / containerRect.height;
+
+      // 将相对位置转换为 -0.5 到 0.5 的范围，中心点为(0,0)
+      const normalizedX = relativeX - 0.5;
+      const normalizedY = relativeY - 0.5;
+
+      setMousePosition({ x: normalizedX, y: normalizedY });
+
+      // 计算位移量 - 鼠标在左上角时，地图向右下角移动
+      const moveX = -normalizedX * parallaxFactor;
+      const moveY = -normalizedY * parallaxFactor;
+
+      // 计算旋转角度 - 添加轻微的3D旋转效果
+      const rotateY = normalizedX * 2; // 水平方向旋转角度（度数）
+      const rotateX = -normalizedY * 1; // 垂直方向旋转角度（度数）
+
+      // 使用GSAP实现平滑的移动和旋转效果
+      gsap.to(mapContentRef.current, {
+        x: moveX,
+        y: moveY,
+        rotateX: rotateX,
+        rotateY: rotateY,
+        duration: 1.5,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    },
+    [isAnyActive],
+  );
+
   return (
     <div
-      className="0 relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
+      ref={mapContainerRef}
+      className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
       onClick={handleBackgroundClick}
+      onMouseMove={handleMouseMove}
+      style={{
+        perspective: '1000px',
+      }}
     >
       {/* <button
         onClick={downloadSVG}
@@ -196,45 +248,41 @@ export const WorldMap = memo(function WorldMapComponent({
         draggable={false}
         loading="eager"
       /> */}
-      <WorldMapSVG
-        ref={ref}
-        className={cn(
-          'world-map-img pointer-events-none absolute left-0 top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-          // 'opacity-0', // anim init state
-        )}
-      />
-      {/* <WorldMapSVG
-        className={cn(
-          'world-map-img pointer-events-none absolute left-[calc(100%_-_10rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-          // 'opacity-0', // anim init state
-        )}
-      /> */}
-      {regionDotsPoints}
-      {dotsPoints}
-      {bookDotsPoints}
-      {sponsorDotsPoints}
-      {dotsContents}
-      {bookDotsContents}
-      {sponsorDotsContents}
+      <div ref={mapContentRef} className="relative -left-14 size-full">
+        <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
+        {/* <WorldMapSVG
+          className={cn(
+            'world-map-img pointer-events-none absolute left-[calc(100%_-_10rem)] top-0 size-full select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+            // 'opacity-0', // anim init state
+          )}
+        /> */}
+        {regionDotsPoints}
+        {dotsPoints}
+        {bookDotsPoints}
+        {sponsorDotsPoints}
+        {dotsContents}
+        {bookDotsContents}
+        {sponsorDotsContents}
 
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute left-0 top-0 size-full select-none overflow-visible"
-      >
-        <defs>
-          <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="5%" stopColor={lineColor} stopOpacity="1" />
-            <stop offset="95%" stopColor={lineColor} stopOpacity="1" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </linearGradient>
-          <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
-            <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
-            <feComposite in="overlay" in2="SourceGraphic" operator="over" />
-          </filter>
-        </defs>
-      </svg>
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 756 360`}
+          className="pointer-events-none absolute left-0 top-0 size-full select-none overflow-visible"
+        >
+          <defs>
+            <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="white" stopOpacity="0" />
+              <stop offset="5%" stopColor={lineColor} stopOpacity="1" />
+              <stop offset="95%" stopColor={lineColor} stopOpacity="1" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+            <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
+              <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
+              <feComposite in="overlay" in2="SourceGraphic" operator="over" />
+            </filter>
+          </defs>
+        </svg>
+      </div>
     </div>
   );
 });

@@ -30,7 +30,7 @@ export function WorldMapBookDotPoint({
     index,
     type: 'book',
   });
-  const { handleClickPoint, handleMouseEnter, activeBookDot } = useEngagementClickPoint();
+  const { handleClickPoint, handleMouseEnter, handleMouseLeave, activeBookDot } = useEngagementClickPoint();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
@@ -42,6 +42,14 @@ export function WorldMapBookDotPoint({
     }
   };
 
+  const handleContentMouseLeave = (e: React.MouseEvent) => {
+    if (activeBookDotClickOpen) return;
+    const relatedTarget = e.relatedTarget as Element;
+    // 检查鼠标是否移出到非点区域
+    if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
+      handleMouseLeave(e, index, 'book');
+    }
+  };
   useEffect(() => {
     if (!activeBookDot) setActiveBookDotClickOpen(false);
   }, [activeBookDot]);
@@ -72,6 +80,7 @@ export function WorldMapBookDotPoint({
         if (activeBookDotClickOpen) return;
         handleMouseEnter(e, index, 'book');
       }}
+      onMouseLeave={handleContentMouseLeave}
       style={{
         left: `${left}px`,
         top: `${top}px`,

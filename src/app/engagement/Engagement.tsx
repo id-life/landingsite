@@ -11,9 +11,9 @@ import { memo } from 'react';
 
 function Engagement() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-  const globalLoaded = useAtomValue(globalLoadedAtom);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // engagement auto scroll to profile
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
       if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
@@ -23,18 +23,7 @@ function Engagement() {
     isUp: true,
   });
 
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollTriggerAction({
-    triggerId: 'engagement-scroll-trigger',
-    scrollFn: () => {
-      if (!enableDownJudge || currentPage.id !== NAV_LIST[2].id) return;
-      console.log('Engagement scrollFn down');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[3].id}` } });
-    },
-    isUp: false,
-  });
-
   useGSAP(() => {
-    if (!globalLoaded) return;
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'engagement-scroll-trigger',
@@ -61,69 +50,55 @@ function Engagement() {
     });
 
     // 使用进度位置控制动画时机
-    // 入场动画：0 - 0.2
-    // 停留时间：0.2 - 0.8
-    // 出场动画：0.8 - 1.0
     const factor = 10; // 动画因子
 
-    // 计算入场动画总时长（占总进度的0.2
-    const entranceDuration = 0.2 * factor;
-    // 计算入场每个动画的单位时长
-    const entranceUnit = entranceDuration / 4; // 分为 4 个步骤
     tl.add(() => {
       setEnableUpJudge(true);
     });
     // 入场动画序列
+    const entranceDuration = 2 * factor;
     tl.to('.world-map-img', {
       y: 0,
       opacity: 1,
       ease: 'none',
-      duration: entranceUnit,
+      duration: entranceDuration,
     });
-    tl.to('.world-map-region', {
-      scale: 1,
-      opacity: 1,
-      ease: 'power2.out',
-      stagger: entranceUnit * 0.05,
-      duration: entranceUnit,
-    });
-
-    tl.to(['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
+    tl.to(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 1,
       scale: 1,
       ease: 'power2.out',
-      stagger: entranceUnit * 0.05,
-      duration: entranceUnit,
+      stagger: entranceDuration * 0.05,
+      duration: entranceDuration,
     });
 
     // 停留一阵子
-    tl.to(() => {}, { duration: 5 });
-    // 出场动画（在进度0.8后开始）
-    // 计算出场动画总时长（占总进度的0.2）
-    const exitDuration = 0.2 * factor;
-    // 计算出场每个动画的单位时长
-    const exitUnit = exitDuration / 3; // 分为3个步骤
+    tl.to(() => {}, { duration: 2 * factor });
 
     // 出场动画序列
+    const exitDuration = 2 * factor;
+    tl.to(
+      ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'],
+      {
+        opacity: 0,
+        // y: -10,
+        ease: 'power2.out',
+        stagger: exitDuration * 0.1,
+        duration: exitDuration,
+      },
+      '+=105',
+    );
 
-    tl.to(['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'], {
-      opacity: 0,
-      ease: 'power2.out',
-      stagger: exitUnit * 0.2,
-      duration: exitUnit,
-    });
-
-    tl.to(['.world-map-img'], {
-      y: -50,
-      opacity: 0,
-      ease: 'power2.out',
-      duration: exitUnit,
-    });
-
-    tl.add(() => {
-      setEnableDownJudge(true);
-    });
-  }, [globalLoaded]);
+    // tl.to(
+    //   ['.world-map-img'],
+    //   {
+    //     y: -50,
+    //     opacity: 0,
+    //     ease: 'power2.out',
+    //     duration: exitDuration * 5,
+    //   },
+    //   '<',
+    // );
+  }, []);
 
   return (
     <div id={NAV_LIST[2].id} className="page-container engagement">
