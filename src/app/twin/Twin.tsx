@@ -1,18 +1,14 @@
 import { currentPageAtom } from '@/atoms';
 import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
-import { NAV_LIST } from '@/components/nav/nav';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useAtom, useSetAtom } from 'jotai';
-import { memo, useEffect, useRef } from 'react';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
+import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 function Twin() {
   const isResetDemo = useRef(false);
@@ -20,18 +16,6 @@ function Twin() {
 
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { setEnableJudge: setEnableUpJudge, enableJudge } = useScrollTriggerAction({
-    triggerId: 'twin-scroll-trigger',
-    scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[3].id) return;
-      // const smoother = ScrollSmoother.get();
-      // smoother?.scrollTo(`#${NAV_LIST[2].id}`);
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
-    },
-    isUp: true,
-  });
   const setCurrentModel = useSetAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
 
@@ -59,9 +43,6 @@ function Twin() {
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
       },
-    });
-    tl.add(() => {
-      setEnableUpJudge(true);
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
