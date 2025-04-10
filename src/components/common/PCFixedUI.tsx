@@ -14,6 +14,7 @@ import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
+import NewFixedValue from '@/app/value/NewFixedValue';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -49,8 +50,9 @@ export default function PCFixedUI() {
       <ClientOnly>
         <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
       </ClientOnly>
-      <FixedValue />
+      {/*<FixedValue />*/}
       <FixedCard />
+      <NewFixedValue />
     </>
   );
 }

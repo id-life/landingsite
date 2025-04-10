@@ -194,7 +194,7 @@
   }
 
   .footer-box-clip {
-    clip-path: polygon(2.125rem 0, 100% 0, 100% calc(100% - 2.125rem), calc(100% - 2.125rem) 100%, 0 100%, 0 2.125rem);
+    clip-path: polygon(2.125rem 0, 100% 0, 100% calc(100% - 2.125rem), 100% 100%, 0 100%, 0 2.125rem);
   }
 
   .footer-submit-clip {

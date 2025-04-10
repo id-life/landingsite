@@ -74,7 +74,7 @@ export default function MobileThreeWrapper() {
       <OuterLoader />
       <Suspense fallback={<Loader />}>
         <MobileVisionGL />
-        <MobileValueGL />
+        {/*<MobileValueGL />*/}
       </Suspense>
       <EffectComposer>
         <Fluid />

@@ -45,7 +45,6 @@ export default function PCNav() {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
     setTimeout(() => {
       timelineRef.current.to('.page-footer', { bottom: '2.25rem' });
-      timelineRef.current.to('.footer-box-clip', { width: '40rem', height: '11.5rem' }, '<');
     }, 300);
   }, []);
 
