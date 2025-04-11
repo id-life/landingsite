@@ -25,11 +25,6 @@ export const VALUE_PROGRESS_CONFIG = {
     1: 0.69,
     2: 1, // 出邮箱
   },
-  mobile: {
-    0: 0,
-    1: 0.69,
-    2: 1, // 出邮箱
-  },
 } as const;
 
 type TitleProps = {
@@ -198,6 +193,7 @@ function ValueGL() {
     { dependencies: [] },
   );
 
+  // Value 页动画
   useGSAP(() => {
     if (!modelRef.current) return;
     const tl = gsap.timeline({
@@ -208,9 +204,6 @@ function ValueGL() {
         end: 'bottom bottom',
         scrub: true,
         immediateRender: false,
-        onUpdate: (self) => {
-          console.log(self.progress);
-        },
       },
     });
     createPage1CrossAnim(tl);
