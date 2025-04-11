@@ -9,11 +9,11 @@ export const VALUE_GL_CONFIG = [
     },
     to: {
       camera: {
-        position: { x: -3.211, y: -10.187, z: -4.946 },
+        position: { x: -9.2, y: -11.5, z: -1.9 },
         rotation: {
-          x: THREE.MathUtils.degToRad(147.49),
-          y: THREE.MathUtils.degToRad(-30.75),
-          z: THREE.MathUtils.degToRad(167.34),
+          x: 5.9,
+          y: -2.6,
+          z: 5.9,
         },
       },
       model: {

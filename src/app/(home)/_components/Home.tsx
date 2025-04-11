@@ -19,6 +19,7 @@ import { useSetAtom } from 'jotai/index';
 import { throttle } from 'lodash-es';
 import { useCallback, useEffect } from 'react';
 import { useEvent } from 'react-use';
+import FooterContact from "@/components/layout/footer/FooterContact";
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -116,6 +117,7 @@ export default function Home() {
           <Twin />
           <Value />
           <Footer />
+          <FooterContact />
         </div>
       </div>
     </>
