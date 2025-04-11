@@ -9,6 +9,7 @@ import * as THREE from 'three';
 
 const backsideThickness = 1.5;
 const thickness = 5;
+const animation = 0;
 
 const gltfConfig = ANIMAL_CONFIG[0];
 
@@ -41,7 +42,7 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   }, [scene]);
 
   useEffect(() => {
-    actions[names[gltfConfig.animation]]?.reset().play();
+    actions[names[animation]]?.reset().play();
   }, [actions, names]);
 
   useFrame(({ clock, gl, scene, camera }) => {

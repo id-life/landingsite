@@ -121,7 +121,7 @@ function ValueGL() {
         {
           rotationX: -45,
           rotationY: 30,
-          z: 100,
+          z: 500,
           opacity: 0,
         },
         {

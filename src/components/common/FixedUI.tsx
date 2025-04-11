@@ -8,7 +8,7 @@ import PCFixedUI from './PCFixedUI';
 
 export default function FixedUI() {
   const isMobile = useIsMobile();
-  const glLoaded = useAtomValue(glLoadedAtom); // 重要
-  if (!glLoaded) return null;
+  // const glLoaded = useAtomValue(glLoadedAtom); // 重要
+  // if (!glLoaded) return null;
   return isMobile ? <MobileFixedUI /> : <PCFixedUI />;
 }
