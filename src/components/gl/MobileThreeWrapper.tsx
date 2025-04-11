@@ -12,6 +12,7 @@ import { Fluid } from './fluid/Fluid';
 // import MobileValueGL from './MobileValueGL';
 import MobileVisionGL from './MobileVisionGL';
 import ProgressLoader from './ProgressLoader';
+import MobileValueGL from './MobileValueGL';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -74,7 +75,7 @@ export default function MobileThreeWrapper() {
       <OuterLoader />
       <Suspense fallback={<Loader />}>
         <MobileVisionGL />
-        {/*<MobileValueGL />*/}
+        <MobileValueGL />
       </Suspense>
       <EffectComposer>
         <Fluid />

@@ -251,10 +251,10 @@ export const useValueCrossAnimations = ({
           camera.lookAt(centerPoint);
         },
         onComplete: () => {
-          if (!isScrollingRef.current) setValuePageIndex(1);
+          if (!isScrollingRef.current) setValuePageIndex(2);
         },
         onReverseComplete: () => {
-          if (!isScrollingRef.current) setValuePageIndex(0);
+          if (!isScrollingRef.current) setValuePageIndex(1);
         },
       },
       '<',

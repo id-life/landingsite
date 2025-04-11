@@ -22,11 +22,13 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin);
 export const VALUE_PROGRESS_CONFIG = {
   desktop: {
     0: 0,
-    1: 0.25,
-    2: 0.486,
-    3: 0.742,
-    4: 1,
-    5: 1, // 出邮箱
+    1: 0.69,
+    2: 1, // 出邮箱
+  },
+  mobile: {
+    0: 0,
+    1: 0.69,
+    2: 1, // 出邮箱
   },
 } as const;
 
@@ -206,6 +208,9 @@ function ValueGL() {
         end: 'bottom bottom',
         scrub: true,
         immediateRender: false,
+        onUpdate: (self) => {
+          console.log(self.progress);
+        },
       },
     });
     createPage1CrossAnim(tl);
@@ -216,7 +221,7 @@ function ValueGL() {
     if (currentPageIndex !== 4 || innerPageNavigateTo === null) return;
     const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
-      if (innerPageNavigateTo === 5) {
+      if (innerPageNavigateTo === 2) {
         const st = ScrollTrigger.getById('footerTimeline');
         if (st) {
           isScrollingRef.current = true;
