@@ -80,6 +80,8 @@ function ValueGL() {
           },
         },
       });
+      tl.to('.fixed-top', { opacity: 1, top: '9.25rem' });
+      tl.to('.fixed-bottom', { opacity: 1, bottom: '9.25rem', top: 'auto' }, '<');
       tl.to(camera.position, { ...page1Config.to.camera.position });
       tl.to('#fixed-value', { opacity: 1 }, '<');
       tl.to(
