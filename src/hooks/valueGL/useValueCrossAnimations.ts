@@ -32,13 +32,13 @@ export const useValueCrossAnimations = ({
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
     });
-    title2.forEach((item) => {
-      if (!item) return;
-      tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    });
     title1cn.forEach((item) => {
       if (!item) return;
       tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
+    });
+    title2.forEach((item) => {
+      if (!item) return;
+      tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
     });
     title2cn.forEach((item) => {
       if (!item) return;
@@ -51,14 +51,14 @@ export const useValueCrossAnimations = ({
       opacity: 0,
       ease: 'power3.inOut',
       transformOrigin: '100% 0%',
-      duration: 6,
+      duration: 3,
     });
     tl.to(
       camera.position,
       {
         ...page2Config.to.camera.position,
-        duration: 8,
-        ease: 'power3.inOut',
+        duration: 10,
+        ease: 'power2.inOut',
       },
       '<',
     );
@@ -66,8 +66,8 @@ export const useValueCrossAnimations = ({
       camera.rotation,
       {
         ...page2Config.to.camera.rotation,
-        duration: 8,
-        ease: 'power3.inOut',
+        duration: 10,
+        ease: 'power2.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
@@ -96,7 +96,7 @@ export const useValueCrossAnimations = ({
         rotationZ: 0,
         z: 0,
         opacity: 1,
-        ease: 'power3.inOut',
+        ease: 'power2.inOut',
         transformOrigin: '100% 50%',
         duration: 6,
         delay: 2,
@@ -105,6 +105,8 @@ export const useValueCrossAnimations = ({
     );
     const title8 = gsap.utils.toArray('.value-title8 path');
     const title9 = gsap.utils.toArray('.value-title9 path');
+    const title3 = gsap.utils.toArray('.value-title3 path');
+    const title3cn = gsap.utils.toArray('.value-title3cn path');
     title8.forEach((item) => {
       if (!item) return;
       tl.fromTo(
@@ -116,9 +118,9 @@ export const useValueCrossAnimations = ({
         },
         {
           drawSVG: true,
-          duration: 0.5,
-          delay: 0.5,
-          ease: 'power3.inOut',
+          duration: 0.1,
+          delay: 0.3,
+          ease: 'power2.inOut',
         },
         '<',
       );
@@ -126,7 +128,7 @@ export const useValueCrossAnimations = ({
         item,
         {
           fill: 'black',
-          duration: 0.3,
+          duration: 0.1,
           delay: 0.3,
         },
         '<',
@@ -144,8 +146,8 @@ export const useValueCrossAnimations = ({
         {
           drawSVG: true,
           duration: 1,
-          delay: 0.5,
-          ease: 'power3.inOut',
+          delay: 0.3,
+          ease: 'power2.inOut',
         },
         '<',
       );
@@ -153,26 +155,31 @@ export const useValueCrossAnimations = ({
         item,
         {
           fill: 'black',
-          duration: 0.3,
-          delay: 1,
+          duration: 0.1,
+          delay: 0.3,
         },
         '<',
       );
+    });
+    title3.forEach((item, index) => {
+      if (!item) return;
+      if (index === 0) {
+        tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '-=3');
+      }
+      tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '<');
+    });
+    title3cn.forEach((item) => {
+      if (!item) return;
+      tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 }, '<');
     });
   };
 
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
-    const title3 = gsap.utils.toArray('.value-title3 path');
-    const title3cn = gsap.utils.toArray('.value-title3cn path');
     const title4 = gsap.utils.toArray('.value-title4 path');
     const title4cn = gsap.utils.toArray('.value-title4cn path');
     const title5 = gsap.utils.toArray('.value-title5 path');
     const title5cn = gsap.utils.toArray('.value-title5cn path');
-    title3.forEach((item) => {
-      if (!item) return;
-      tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    });
     title4.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
@@ -180,10 +187,6 @@ export const useValueCrossAnimations = ({
     title5.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    });
-    title3cn.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
     });
     title4cn.forEach((item) => {
       if (!item) return;
@@ -201,14 +204,14 @@ export const useValueCrossAnimations = ({
       opacity: 0,
       ease: 'power3.inOut',
       transformOrigin: '50% 100%',
-      duration: 6,
+      duration: 3,
     });
     tl.to(
       camera.position,
       {
         ...page3Config.to.camera.position,
-        duration: 8,
-        ease: 'power3.inOut',
+        duration: 10,
+        ease: 'power2.inOut',
       },
       '<',
     );
@@ -216,8 +219,8 @@ export const useValueCrossAnimations = ({
       camera.rotation,
       {
         ...page3Config.to.camera.rotation,
-        duration: 8,
-        ease: 'power3.inOut',
+        duration: 10,
+        ease: 'power2.inOut',
         onUpdate: () => {
           if (!modelRef.current) return;
           camera.lookAt(centerPoint);
@@ -246,7 +249,7 @@ export const useValueCrossAnimations = ({
         rotationZ: 0,
         z: 0,
         opacity: 1,
-        ease: 'power3.inOut',
+        ease: 'power2.inOut',
         transformOrigin: 'top center',
         duration: 6,
         delay: 2,

@@ -1,12 +1,10 @@
 export default function FixedValuePage1() {
   return (
     <div id="fixed-value-page-1" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 w-screen">
-      <div className="absolute left-20 top-36">
+      <div className="absolute left-20 top-48">
         <div className="relative h-[5.25rem]">
           <svg
-            className="value-title1 absolute bottom-0"
-            width="677"
-            height="83"
+            className="value-title1 absolute bottom-0 w-[42.3125rem]"
             viewBox="0 0 677 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,9 +42,7 @@ export default function FixedValuePage1() {
             />
           </svg>
           <svg
-            className="value-title1cn absolute bottom-0"
-            width="411"
-            height="133"
+            className="value-title1cn absolute bottom-0 w-[25.6875rem]"
             viewBox="0 0 411 133"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -74,9 +70,7 @@ export default function FixedValuePage1() {
           </svg>
         </div>
         <svg
-          className="value-title6 -ml-2 mt-8"
-          width="998"
-          height="180"
+          className="value-title6 -ml-2 mt-8 w-[62.375rem]"
           viewBox="0 0 998 180"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -169,8 +163,8 @@ export default function FixedValuePage1() {
           />
         </svg>
       </div>
-      <div className="absolute right-20 top-36 flex flex-col items-end">
-        <svg className="value-title7" width="669" height="97" viewBox="0 0 669 97" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div className="absolute right-20 top-48 flex flex-col items-end">
+        <svg className="value-title7 w-[41.8125rem]" viewBox="0 0 669 97" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M0.29375 90V7.19999H55.9738V20.52H14.9338V40.44H52.3738V53.76H14.9338V76.68H55.9738V90H0.29375Z"
             fill="black"
@@ -201,9 +195,7 @@ export default function FixedValuePage1() {
         </svg>
         <div className="relative mt-2">
           <svg
-            className="value-title2 absolute right-0 top-6"
-            width="407"
-            height="83"
+            className="value-title2 absolute right-0 top-6 w-[25.4375rem]"
             viewBox="0 0 407 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -234,9 +226,7 @@ export default function FixedValuePage1() {
             />
           </svg>
           <svg
-            className="value-title2cn absolute right-0 top-0"
-            width="273"
-            height="132"
+            className="value-title2cn absolute right-0 top-0 w-[17.0625rem]"
             viewBox="0 0 273 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

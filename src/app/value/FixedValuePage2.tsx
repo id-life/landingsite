@@ -4,9 +4,7 @@ export default function FixedValuePage2() {
       <div className="absolute left-20 top-1/2">
         <div className="relative">
           <svg
-            className="value-title3 absolute bottom-0"
-            width="629"
-            height="83"
+            className="value-title3 absolute bottom-0 w-[39.3125rem]"
             viewBox="0 0 629 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +40,7 @@ export default function FixedValuePage2() {
             <path d="M561.741 13.52V0.199993H628.581V13.52H602.541V83H587.781V13.52H561.741Z" fill="#BB1212" />
           </svg>
           <svg
-            className="value-title3cn absolute bottom-0"
-            width="547"
-            height="132"
+            className="value-title3cn absolute bottom-0 w-[34.1875rem]"
             viewBox="0 0 547 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -97,14 +93,7 @@ export default function FixedValuePage2() {
         </p>
       </div>
       <div className="absolute right-20 top-1/4 flex flex-col items-end">
-        <svg
-          className="value-title8"
-          width="587"
-          height="78"
-          viewBox="0 0 587 78"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="value-title8 w-[36.6875rem]" viewBox="0 0 587 78" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M0.322402 3.408L2.2264 0.719994H13.4264L27.2024 65.568H28.4344L43.1064 8.56H56.6584L71.2184 65.568H72.5624L86.3384 0.719994H97.5384L99.4424 3.408L83.4264 78H61.3624L49.8264 32.528L38.4024 78H16.4504L0.322402 3.408Z"
             fill="black"
@@ -138,11 +127,9 @@ export default function FixedValuePage2() {
             fill="black"
           />
         </svg>
-        <div className="relative h-[10rem]">
+        <div className="relative h-[9rem]">
           <svg
-            className="value-title4 absolute right-0 top-1/2 -translate-y-1/2"
-            width="429"
-            height="83"
+            className="value-title4 absolute right-0 top-1/2 w-[26.8125rem] -translate-y-1/2"
             viewBox="0 0 429 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -167,9 +154,7 @@ export default function FixedValuePage2() {
             />
           </svg>
           <svg
-            className="value-title4cn absolute right-0 top-1/2 -translate-y-1/2"
-            width="412"
-            height="132"
+            className="value-title4cn absolute right-0 top-1/2 w-[25.75rem] -translate-y-1/2"
             viewBox="0 0 412 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -192,11 +177,9 @@ export default function FixedValuePage2() {
             />
           </svg>
         </div>
-        <div className="relative h-[10rem]">
+        <div className="relative h-[9rem]">
           <svg
-            className="value-title5 absolute right-0 top-1/2 -translate-y-1/2"
-            width="578"
-            height="83"
+            className="value-title5 absolute right-0 top-1/2 w-[36.125rem] -translate-y-1/2"
             viewBox="0 0 578 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -227,9 +210,7 @@ export default function FixedValuePage2() {
             />
           </svg>
           <svg
-            className="value-title5cn absolute right-0 top-1/2 -translate-y-1/2"
-            width="411"
-            height="133"
+            className="value-title5cn absolute right-0 top-1/2 w-[25.6875rem] -translate-y-1/2"
             viewBox="0 0 411 133"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -252,24 +233,21 @@ export default function FixedValuePage2() {
             />
           </svg>
         </div>
-        <svg
-          className="value-title9"
-          width="265"
-          height="78"
-          viewBox="0 0 265 78"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M0.393139 78V0.719994H14.0571V65.568H49.0011V78H0.393139Z" fill="black"/>
-          <path d="M56.7256 78V0.719994H70.3896V78H56.7256Z" fill="black"/>
+        <svg className="value-title9 w-[16.5625rem]" viewBox="0 0 265 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.393139 78V0.719994H14.0571V65.568H49.0011V78H0.393139Z" fill="black" />
+          <path d="M56.7256 78V0.719994H70.3896V78H56.7256Z" fill="black" />
           <path
             d="M77.5568 3.408L79.3488 0.719994H91.2208L110.373 65.568H112.501L131.653 0.719994H143.637L145.317 3.408L122.469 78H100.293L77.5568 3.408Z"
-            fill="black"/>
-          <path d="M152.438 78V0.719994H204.406V13.152H166.102V31.744H201.046V44.176H166.102V65.568H204.406V78H152.438Z"
-                fill="black"/>
+            fill="black"
+          />
+          <path
+            d="M152.438 78V0.719994H204.406V13.152H166.102V31.744H201.046V44.176H166.102V65.568H204.406V78H152.438Z"
+            fill="black"
+          />
           <path
             d="M211.644 72.848V65.568H246.252C249.538 65.568 251.18 63.9627 251.18 60.752V52.24C251.18 49.4027 249.911 47.7227 247.372 47.2L224.636 42.608C215.975 40.8907 211.644 35.0667 211.644 25.136V18.976C211.644 6.80533 217.73 0.719994 229.9 0.719994H255.996L262.604 5.87199V13.152H230.236C226.951 13.152 225.308 14.7573 225.308 17.968V25.472C225.308 28.3093 226.578 29.9893 229.116 30.512L251.852 34.992C260.514 36.784 264.844 42.608 264.844 52.464V59.744C264.844 71.9147 258.759 78 246.588 78H218.252L211.644 72.848Z"
-            fill="black"/>
+            fill="black"
+          />
         </svg>
         <p className="mt-12 w-[42rem] text-right text-xl/6 font-semibold capitalize">
           and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality

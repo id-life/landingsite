@@ -70,7 +70,7 @@ function ValueGL() {
           immediateRender: false,
           trigger: `#${NAV_LIST[4].id}`,
           start: 'top bottom',
-          end: 'center center',
+          end: 'center bottom',
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[4]);
@@ -84,16 +84,6 @@ function ValueGL() {
       tl.to('.fixed-bottom', { opacity: 1, bottom: '9.25rem', top: 'auto' }, '<');
       tl.to(camera.position, { ...page1Config.to.camera.position });
       tl.to('#fixed-value', { opacity: 1 }, '<');
-      tl.to(
-        camera.rotation,
-        {
-          ...page1Config.to.camera.rotation,
-          onComplete: () => {
-            camera.lookAt(centerPoint);
-          },
-        },
-        '<',
-      );
       tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
       if (!modelRef.current) return;
       tl.fromTo(
@@ -112,6 +102,20 @@ function ValueGL() {
           ...page1Config.to.model.rotation,
           ease: 'power3.inOut',
           duration: 8,
+        },
+        '<',
+      );
+      tl.to(
+        camera.rotation,
+        {
+          ...page1Config.to.camera.rotation,
+          duration: 8,
+          onUpdate: () => {
+            camera.lookAt(centerPoint);
+          },
+          onComplete: () => {
+            camera.lookAt(centerPoint);
+          },
         },
         '<',
       );
@@ -148,8 +152,8 @@ function ValueGL() {
           },
           {
             drawSVG: true,
-            duration: 0.5,
-            delay: 0.5,
+            duration: 0.1,
+            delay: 0.3,
             ease: 'power3.inOut',
           },
           '<',
@@ -158,7 +162,7 @@ function ValueGL() {
           item,
           {
             fill: 'black',
-            duration: 0.3,
+            duration: 0.1,
             delay: 0.3,
           },
           '<',
@@ -175,8 +179,8 @@ function ValueGL() {
           },
           {
             drawSVG: true,
-            duration: 1,
-            delay: 0.5,
+            duration: 0.1,
+            delay: 0.3,
             ease: 'power3.inOut',
           },
           '<',
@@ -185,8 +189,8 @@ function ValueGL() {
           item,
           {
             fill: 'black',
-            duration: 0.3,
-            delay: 1,
+            duration: 0.1,
+            delay: 0.3,
           },
           '<',
         );
@@ -202,7 +206,7 @@ function ValueGL() {
       scrollTrigger: {
         id: 'valueTimeline',
         trigger: `#${NAV_LIST[4].id}`,
-        start: 'center center',
+        start: 'center bottom',
         end: 'bottom bottom',
         scrub: true,
         immediateRender: false,

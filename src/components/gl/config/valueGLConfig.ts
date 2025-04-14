@@ -5,11 +5,11 @@ export const VALUE_GL_CONFIG = [
   {
     from: {
       camera: { position: { x: 0, y: -10, z: 11 }, rotation: { x: 0, y: 0, z: 0 } },
-      model: { position: { x: 5, y: -15, z: -10 }, rotation: { x: 0.785, y: 0.785, z: 0.785 } },
+      model: { position: { x: 15, y: -20, z: -10 }, rotation: { x: 0.785, y: 0.785, z: 0.785 } },
     },
     to: {
       camera: {
-        position: { x: -9.2, y: -11.5, z: -1.9 },
+        position: { x: -9.2, y: -13, z: -3 },
         rotation: {
           x: 5.9,
           y: -2.6,

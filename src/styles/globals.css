@@ -28,6 +28,7 @@
   *::-webkit-scrollbar {
     width: 0.375rem;
   }
+
   @media (max-width: 768px) {
     *::-webkit-scrollbar {
       width: 2px;
@@ -92,8 +93,9 @@
     &.engagement {
       min-height: 110svh;
     }
+
     &.value {
-      min-height: 400svh;
+      min-height: 600svh;
     }
   }
 
@@ -126,6 +128,7 @@
     /* 设置字体优先级：先尝试 Oxanium (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
     font-family: var(--font-oxanium), var(--font-source-han-sans-cn), sans-serif;
   }
+
   .bilingual-font-poppins {
     /* 设置字体优先级：先尝试 poppins (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
     font-family: var(--font-poppins), var(--font-source-han-sans-cn), sans-serif;
@@ -176,6 +179,7 @@
       opacity: 0;
     }
   }
+
   .clip-box {
     position: relative;
     background: #22222299;
@@ -204,6 +208,7 @@
   .footer-submit-clip {
     clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0 100%, 0 0.75rem);
   }
+
   .scroll-button-ripple-init {
     position: absolute;
     top: 50%;
@@ -223,5 +228,5 @@
   .clip-sponsor-content {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
     clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
-  } 
+  }
 }

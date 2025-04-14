@@ -64,7 +64,7 @@ export function useNavigation() {
       } else if (item.id === NAV_LIST[4].id) {
         isNavScrollingRef.current = true;
         // smoother?.scrollTo(`#${id}`, false, `${window.innerHeight}px`);
-        smoother?.scrollTo(`#${id}`, false, `center center`);
+        smoother?.scrollTo(`#${id}`, false, `center bottom`);
         setTimeout(() => (isNavScrollingRef.current = false), 500);
       } else {
         // 其他 正常滚
