@@ -32,7 +32,7 @@ export const useMobileValueSVGAnimations = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          duration: 0.8,
           stagger: 0.02,
         },
       );
@@ -40,7 +40,7 @@ export const useMobileValueSVGAnimations = () => {
     tl.to(value1TextRedEn.chars, {
       opacity: 0,
       y: -50,
-      duration: 1,
+      duration: 0.8,
       stagger: 0.02,
     })
       // 中文淡入
@@ -53,7 +53,7 @@ export const useMobileValueSVGAnimations = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          duration: 0.8,
           stagger: 0.02,
         },
       );

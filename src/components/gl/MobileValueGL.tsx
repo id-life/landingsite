@@ -233,13 +233,13 @@ function MobileValueGL() {
       if (innerPageNavigateTo === 2) {
         const st = ScrollTrigger.getById('valueTimeline');
         if (st) {
+          setIsSubscribeShow(true);
           isScrollingRef.current = true;
           gsap.to(window, {
             duration: 1,
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;
-              setIsSubscribeShow(true);
             },
           });
         }
@@ -249,7 +249,7 @@ function MobileValueGL() {
           isScrollingRef.current = true;
           setIsSubscribeShow(false);
           gsap.to(window, {
-            duration: 1,
+            duration: 2,
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;
