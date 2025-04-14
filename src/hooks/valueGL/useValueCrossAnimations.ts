@@ -103,15 +103,14 @@ export const useValueCrossAnimations = ({
       },
       '<',
     );
-    const title3 = gsap.utils.toArray('.value-title3 path');
-    const title4 = gsap.utils.toArray('.value-title4 path');
-    const title5 = gsap.utils.toArray('.value-title5 path');
-    title3.forEach((item) => {
+    const title8 = gsap.utils.toArray('.value-title8 path');
+    const title9 = gsap.utils.toArray('.value-title9 path');
+    title8.forEach((item) => {
       if (!item) return;
       tl.fromTo(
         item,
         {
-          stroke: '#BB1212',
+          stroke: 'black',
           fill: 'none',
           drawSVG: 0,
         },
@@ -126,19 +125,19 @@ export const useValueCrossAnimations = ({
       tl.to(
         item,
         {
-          fill: '#BB1212',
+          fill: 'black',
           duration: 0.3,
           delay: 0.3,
         },
         '<',
       );
     });
-    title4.forEach((item) => {
+    title9.forEach((item) => {
       if (!item) return;
       tl.fromTo(
         item,
         {
-          stroke: '#BB1212',
+          stroke: 'black',
           fill: 'none',
           drawSVG: 0,
         },
@@ -153,34 +152,7 @@ export const useValueCrossAnimations = ({
       tl.to(
         item,
         {
-          fill: '#BB1212',
-          duration: 0.3,
-          delay: 1,
-        },
-        '<',
-      );
-    });
-    title5.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(
-        item,
-        {
-          stroke: '#BB1212',
-          fill: 'none',
-          drawSVG: 0,
-        },
-        {
-          drawSVG: true,
-          duration: 1,
-          delay: 0.5,
-          ease: 'power3.inOut',
-        },
-        '<',
-      );
-      tl.to(
-        item,
-        {
-          fill: '#BB1212',
+          fill: 'black',
           duration: 0.3,
           delay: 1,
         },

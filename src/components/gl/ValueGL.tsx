@@ -70,7 +70,7 @@ function ValueGL() {
           immediateRender: false,
           trigger: `#${NAV_LIST[4].id}`,
           start: 'top bottom',
-          end: 'top top',
+          end: 'center center',
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[4]);
@@ -133,14 +133,14 @@ function ValueGL() {
         },
         '<',
       );
-      const title1 = gsap.utils.toArray('.value-title1 path');
-      const title2 = gsap.utils.toArray('.value-title2 path');
-      title1.forEach((item) => {
+      const title6 = gsap.utils.toArray('.value-title6 path');
+      const title7 = gsap.utils.toArray('.value-title7 path');
+      title6.forEach((item) => {
         if (!item) return;
         tl.fromTo(
           item,
           {
-            stroke: '#BB1212',
+            stroke: 'black',
             fill: 'none',
             drawSVG: 0,
           },
@@ -155,19 +155,19 @@ function ValueGL() {
         tl.to(
           item,
           {
-            fill: '#BB1212',
+            fill: 'black',
             duration: 0.3,
             delay: 0.3,
           },
           '<',
         );
       });
-      title2.forEach((item) => {
+      title7.forEach((item) => {
         if (!item) return;
         tl.fromTo(
           item,
           {
-            stroke: '#BB1212',
+            stroke: 'black',
             fill: 'none',
             drawSVG: 0,
           },
@@ -182,7 +182,7 @@ function ValueGL() {
         tl.to(
           item,
           {
-            fill: '#BB1212',
+            fill: 'black',
             duration: 0.3,
             delay: 1,
           },
@@ -200,7 +200,7 @@ function ValueGL() {
       scrollTrigger: {
         id: 'valueTimeline',
         trigger: `#${NAV_LIST[4].id}`,
-        start: 'top top',
+        start: 'center center',
         end: 'bottom bottom',
         scrub: true,
         immediateRender: false,
