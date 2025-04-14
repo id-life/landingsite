@@ -16,7 +16,8 @@ export const useMobileValueSVGAnimations = () => {
       type: 'lines,words,chars',
     });
 
-    if (index === 1) {
+    if (index === 1 || index === 3) {
+      // 没有红字变换动画，只是单纯的渐入。
       tl.from([value1TextRedEn.chars, value1TextNormalEn.chars], {
         opacity: 1,
         y: 0,
@@ -31,7 +32,7 @@ export const useMobileValueSVGAnimations = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 1,
           stagger: 0.02,
         },
       );
@@ -39,7 +40,7 @@ export const useMobileValueSVGAnimations = () => {
     tl.to(value1TextRedEn.chars, {
       opacity: 0,
       y: -50,
-      duration: 0.8,
+      duration: 1,
       stagger: 0.02,
     })
       // 中文淡入
@@ -52,7 +53,7 @@ export const useMobileValueSVGAnimations = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 1,
           stagger: 0.02,
         },
       );

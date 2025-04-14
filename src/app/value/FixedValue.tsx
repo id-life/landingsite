@@ -24,20 +24,37 @@ const VALUE_CONTENT: ValueContentItem[] = [
     content:
       'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.\n我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     mobileSVGElement: (
-      <h2
-        id="value-1-svg-mobile"
-        className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap font-oxanium font-semibold uppercase opacity-0"
-      >
-        <span className="value-text-en whitespace-pre-wrap text-[3.625rem]/[3.625rem] text-red-500">
-          A purpose-
-          <br />
-          driven
-        </span>
-        <span className="value-text-cn bilingual-font absolute left-0 top-8 text-[5rem]/[5rem] font-bold text-red-500">
-          使命驱动
-        </span>
-        <span className="value-text-en text-[3.125rem]/[3.125rem]">longevity fund</span>
-      </h2>
+      <div className="opacity-0" id="value-1-svg-mobile">
+        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+            Evangelism
+          </span>
+          <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+            布道者
+          </span>
+          <span className="value-text-en text-[3rem]/[3rem]">
+            OF global
+            <br />
+            Longevity
+            <br />
+            awareness
+          </span>
+        </h2>
+        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem]">East / West</span>
+          <span className="value-text-en whitespace-pre-wrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+            Access
+          </span>
+          <span className="value-text-cn bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+            桥梁
+          </span>
+          <span className="value-text-en text-xs/4 capitalize tracking-normal">
+            Deep roots in both East and West, a conduit that
+            <br />
+            bridges market, capital, institutions and more
+          </span>
+        </h2>
+      </div>
     ),
   },
   {
@@ -52,21 +69,40 @@ const VALUE_CONTENT: ValueContentItem[] = [
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
-      <h2
-        id="value-2-svg-mobile"
-        className="pointer-events-none fixed inset-x-4 top-[calc(50%_-_13rem)] z-10 flex flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
-      >
-        <span className="value-text-en">Discovering</span>
-        <span className="value-text-en mt-5 text-[3.625rem]/[3.625rem] tracking-tight text-red-500">Champions</span>
-        <span className="value-text-cn bilingual-font absolute left-0 top-18 text-[5rem]/[5rem] font-bold text-red-500">
-          领军
-        </span>
-        <span className="value-text-en mt-5 whitespace-pre-wrap">
-          in
-          <br />
-          Longevity Biotech
-        </span>
-      </h2>
+      <div className="opacity-0" id="value-2-svg-mobile">
+        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+            MOONSHOT
+          </span>
+          <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+            逐月计划
+          </span>
+          <span className="value-text-en relative left-1 text-xs/4 capitalize tracking-normal">
+            we stand with bold unorthodox ideas
+            <br />
+            and brave contrarian founders
+          </span>
+        </h2>
+        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-10 flex flex-col gap-1 whitespace-nowrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
+          <span className="value-text-en text-[3rem]/[3rem]">We pursue</span>
+          <span className="value-text-en text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+            longer
+            <br />
+            healthier
+          </span>
+          <span className="value-text-cn bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+            更长久
+            <br />
+            更健康
+          </span>
+          <span className="value-text-en text-[3rem]/[3rem]">lives</span>
+          <span className="value-text-en text-xs/4 capitalize tracking-normal">
+            and less suffering from age-related ailments,
+            <br />
+            endeavoring all our might to bring this vision to reality
+          </span>
+        </h2>
+      </div>
     ),
   },
   {
@@ -79,22 +115,46 @@ const VALUE_CONTENT: ValueContentItem[] = [
     //   content: '',
     // },
     mobileSVGElement: (
-      <h2
+      <div
         id="value-3-svg-mobile"
-        className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
+        className="bilingual-font pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
       >
-        <span className="value-text-en">
-          Longevity
+        <p>
+          <span className="text-red-500">Evangelism</span>
           <br />
-          Biotech
+          OF global Longevity
           <br />
-          Is A
-        </span>
-        <span className="value-text-en text-[3.625rem]/[3.625rem] text-red-500">{'Moral\nImperative'}</span>
-        <span className="value-text-cn bilingual-font absolute left-0 top-40 text-[5rem]/[5rem] font-bold text-red-500">
-          必然
-        </span>
-      </h2>
+          awareness
+        </p>
+        <p className="mt-7.5">
+          East / West <span className="text-red-500">Access</span>
+        </p>
+        <p className="mt-2.5 text-xs/4 capitalize">
+          Deep roots in both East and West, a conduit that
+          <br />
+          bridges market, capital, institutions and more
+        </p>
+        <p className="mt-7.5 text-red-500">MOONSHOT</p>
+        <p className="mt-2.5 text-xs/4 capitalize">
+          we stand with bold unorthodox ideas
+          <br />
+          and brave contrarian founders
+        </p>
+        <p className="mt-7.5">
+          We pursue&nbsp;
+          <span className="text-red-500">
+            longer
+            <br />
+            healthier
+          </span>
+          &nbsp;lIVES
+        </p>
+        <p className="mt-2.5 text-xs/4 capitalize">
+          and less suffering from age-related ailments,
+          <br />
+          endeavoring all our might to bring this vision to reality
+        </p>
+      </div>
     ),
   },
   {
