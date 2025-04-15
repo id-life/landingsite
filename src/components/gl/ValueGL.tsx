@@ -85,35 +85,7 @@ function ValueGL() {
       tl.to('#fixed-value', { opacity: 1 }, '<');
       tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
       if (!modelRef.current) return;
-      // tl.fromTo(
-      //   modelRef.current.position,
-      //   { ...page1Config.from.model.position },
-      //   {
-      //     ...page1Config.to.model.position,
-      //     ease: 'power3.inOut',
-      //     duration: 10,
-      //   },
-      // );
-      // tl.fromTo(
-      //   modelRef.current.rotation,
-      //   { ...page1Config.from.model.rotation },
-      //   {
-      //     ...page1Config.to.model.rotation,
-      //     ease: 'power3.inOut',
-      //     duration: 8,
-      //   },
-      //   '<',
-      // );
-      tl.to(
-        camera.position,
-        {
-          ...page1Config.to.camera.position,
-          duration: 10,
-          onUpdate: () => {},
-          onComplete: () => {},
-        },
-        // '<',
-      );
+      tl.to(camera.position, { ...page1Config.to.camera.position, duration: 10 });
       tl.to(
         camera.rotation,
         {
@@ -140,7 +112,6 @@ function ValueGL() {
           ease: 'power3.inOut',
           transformOrigin: '50% 50%',
           duration: 8,
-          delay: 5,
         },
         '<',
       );

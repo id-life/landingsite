@@ -88,7 +88,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
     <>
       <div
         className={cn(
-          'group flex cursor-pointer items-center gap-0.5 rounded-full bg-foreground px-2 py-1 transition duration-300 hover:scale-110',
+          'sound-button group flex cursor-pointer items-center gap-0.5 rounded-full bg-foreground px-2 py-1 transition duration-300 hover:scale-110',
           className,
         )}
         onClick={() => {

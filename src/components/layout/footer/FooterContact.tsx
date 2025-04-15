@@ -62,9 +62,10 @@ export default function FooterContact() {
         scrollTrigger: {
           id: 'footerTimeline',
           trigger: wrapperRef.current,
-          start: 'top bottom',
-          end: 'bottom bottom',
+          start: 'top bottom+=100%',
+          end: 'bottom bottom+=80%',
           scrub: true,
+          markers: true,
           onEnter: () => {
             setIsSubscribeShow(true);
           },
@@ -74,6 +75,8 @@ export default function FooterContact() {
         },
       });
       timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '2.25rem' });
+      timeline.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
+      timeline.to('.scroll-title', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
     },
     { dependencies: [portalNode, isMobile] },
   );

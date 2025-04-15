@@ -127,7 +127,7 @@ export default function FixedValuePage2() {
             fill="black"
           />
         </svg>
-        <div className="relative h-[9rem]">
+        <div className="relative mt-4 h-[9rem]">
           <svg
             className="value-title4 absolute right-0 top-1/2 w-[26.8125rem] -translate-y-1/2"
             viewBox="0 0 429 83"
@@ -177,7 +177,7 @@ export default function FixedValuePage2() {
             />
           </svg>
         </div>
-        <div className="relative h-[9rem]">
+        <div className="relative mb-4 h-[9rem]">
           <svg
             className="value-title5 absolute right-0 top-1/2 w-[36.125rem] -translate-y-1/2"
             viewBox="0 0 578 83"

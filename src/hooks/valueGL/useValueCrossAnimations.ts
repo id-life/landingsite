@@ -46,8 +46,7 @@ export const useValueCrossAnimations = ({
       camera.position,
       {
         ...page2Config.to.camera.position,
-        duration: 10,
-        ease: 'power2.inOut',
+        duration: 20,
       },
       '-=5',
     );
@@ -55,9 +54,9 @@ export const useValueCrossAnimations = ({
       camera.rotation,
       {
         ...page2Config.to.camera.rotation,
-        duration: 10,
-        ease: 'power2.inOut',
+        duration: 20,
         onComplete: () => {
+          camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
           if (!isScrollingRef.current) setValuePageIndex(1);
         },
         onReverseComplete: () => {
@@ -69,15 +68,14 @@ export const useValueCrossAnimations = ({
     tl.to(
       '#fixed-value-page-1',
       {
-        rotationX: 60,
-        rotationZ: 60,
+        rotationX: 30,
+        rotationZ: 30,
         z: 100,
         opacity: 0,
-        ease: 'power3.inOut',
         transformOrigin: '100% 0%',
-        duration: 3,
+        duration: 6,
       },
-      '-=3',
+      '-=5',
     );
     tl.fromTo(
       '#fixed-value-page-2',
@@ -94,7 +92,6 @@ export const useValueCrossAnimations = ({
         rotationZ: 0,
         z: 0,
         opacity: 1,
-        ease: 'power2.inOut',
         transformOrigin: '100% 50%',
         duration: 6,
       },
@@ -117,7 +114,6 @@ export const useValueCrossAnimations = ({
           drawSVG: true,
           duration: 0.1,
           delay: 0.3,
-          ease: 'power2.inOut',
         },
         '<',
       );
@@ -144,7 +140,6 @@ export const useValueCrossAnimations = ({
           drawSVG: true,
           duration: 1,
           delay: 0.3,
-          ease: 'power2.inOut',
         },
         '<',
       );
@@ -198,10 +193,9 @@ export const useValueCrossAnimations = ({
       camera.position,
       {
         ...page3Config.to.camera.position,
-        duration: 10,
-        ease: 'power2.inOut',
+        duration: 30,
         onUpdate: () => {
-          camera.lookAt(new Vector3(-0.506, -9.605, 0.395));
+          camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
         },
         onComplete: () => {
           if (!isScrollingRef.current) setValuePageIndex(2);
@@ -210,7 +204,7 @@ export const useValueCrossAnimations = ({
           if (!isScrollingRef.current) setValuePageIndex(1);
         },
       },
-      '-=5',
+      '-=8',
     );
     tl.to(
       '#fixed-value-page-2',
@@ -218,13 +212,12 @@ export const useValueCrossAnimations = ({
         rotationX: -90,
         rotationY: 0,
         rotationZ: 0,
-        z: 100,
+        z: 10,
         opacity: 0,
-        ease: 'power3.inOut',
         transformOrigin: '50% 100%',
-        duration: 3,
+        duration: 8,
       },
-      '-=3',
+      '-=20',
     );
     tl.fromTo(
       '#fixed-value-page-3',
@@ -241,12 +234,10 @@ export const useValueCrossAnimations = ({
         rotationZ: 0,
         z: 0,
         opacity: 1,
-        ease: 'power2.inOut',
         transformOrigin: 'top center',
-        duration: 6,
-        delay: 2,
+        duration: 8,
       },
-      '<',
+      '-=18',
     );
   };
 
