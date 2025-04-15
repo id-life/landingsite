@@ -5,6 +5,7 @@ import {
   innerPageTotalAtom,
   mobileCurrentPageAtom,
   mobileCurrentPageIndexAtom,
+  mobileIsScrollingAtom,
   navigateToAtom,
 } from '@/atoms';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
@@ -92,8 +93,10 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const { mobileNavChange } = useMobileNavigation();
+  const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
 
   const handleClick = useThrottle(() => {
+    if (mobileIsScrolling) return;
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
       // 有小进度条

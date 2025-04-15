@@ -25,7 +25,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
       'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.\n我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     mobileSVGElement: (
       <div className="opacity-0" id="value-1-svg-mobile">
-        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
+        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
           <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
             Evangelism
           </span>
@@ -40,7 +40,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
             awareness
           </span>
         </h2>
-        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
+        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
           <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem]">East / West</span>
           <span className="value-text-en whitespace-pre-wrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
             Access
@@ -70,7 +70,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
     buttonClass: 'ml-auto',
     mobileSVGElement: (
       <div className="opacity-0" id="value-2-svg-mobile">
-        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
+        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
           <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
             MOONSHOT
           </span>
@@ -83,7 +83,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
             and brave contrarian founders
           </span>
         </h2>
-        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-10 flex flex-col gap-1 whitespace-nowrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
+        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-30 flex flex-col gap-1 whitespace-nowrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
           <span className="value-text-en text-[3rem]/[3rem]">We pursue</span>
           <span className="value-text-en text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
             longer
@@ -117,7 +117,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
     mobileSVGElement: (
       <div
         id="value-3-svg-mobile"
-        className="bilingual-font pointer-events-none fixed inset-x-5 top-[6.25rem] z-10 flex flex-col gap-1 whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
+        className="bilingual-font pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
       >
         <p>
           <span className="text-red-500">Evangelism</span>

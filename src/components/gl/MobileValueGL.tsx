@@ -1,4 +1,10 @@
-import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom, mobileCurrentPageIndexAtom } from '@/atoms';
+import {
+  innerPageIndexAtom,
+  innerPageNavigateToAtom,
+  mobileCurrentPageAtom,
+  mobileCurrentPageIndexAtom,
+  mobileIsScrollingAtom,
+} from '@/atoms';
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -42,13 +48,14 @@ TitleSVG.displayName = 'TitleSVG';
 const VALUE_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
-    1: 0.5385,
+    1: 0.464,
     2: 1, // 出邮箱
   },
 } as const;
 function MobileValueGL() {
   const { camera } = useThree();
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
+  const setMobileIsScrolling = useSetAtom(mobileIsScrollingAtom);
   const modelRef = useRef<THREE.Group>(null);
   const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
@@ -227,19 +234,21 @@ function MobileValueGL() {
   }, []);
 
   useEffect(() => {
-    if (currentPageIndex !== VALUE_PAGE_INDEX || innerPageNavigateTo === null) return;
+    if (currentPageIndex !== VALUE_PAGE_INDEX || innerPageNavigateTo === null || isScrollingRef.current) return;
     const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
       if (innerPageNavigateTo === 2) {
         const st = ScrollTrigger.getById('valueTimeline');
         if (st) {
-          setIsSubscribeShow(true);
           isScrollingRef.current = true;
+          setMobileIsScrolling(true);
           gsap.to(window, {
-            duration: 1,
+            duration: 4,
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;
+              setMobileIsScrolling(false);
+              setIsSubscribeShow(true);
             },
           });
         }
@@ -247,12 +256,14 @@ function MobileValueGL() {
         const st = ScrollTrigger.getById('valueTimeline');
         if (st) {
           isScrollingRef.current = true;
+          setMobileIsScrolling(true);
           setIsSubscribeShow(false);
           gsap.to(window, {
-            duration: 2,
+            duration: 3,
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;
+              setMobileIsScrolling(false);
             },
           });
         }
@@ -260,7 +271,15 @@ function MobileValueGL() {
       setInnerPageIndex(innerPageNavigateTo);
       setInnerPageNavigateTo(null);
     }
-  }, [currentPageIndex, innerPageNavigateTo, progressMap, setInnerPageIndex, setInnerPageNavigateTo, setIsSubscribeShow]);
+  }, [
+    currentPageIndex,
+    innerPageNavigateTo,
+    progressMap,
+    setInnerPageIndex,
+    setInnerPageNavigateTo,
+    setIsSubscribeShow,
+    setMobileIsScrolling,
+  ]);
 
   return (
     <group>

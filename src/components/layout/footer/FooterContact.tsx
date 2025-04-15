@@ -15,7 +15,7 @@ import MediaSVG from '@/../public/svgs/media.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { isMobile } from 'react-device-detect';
 
-enum MediaLinkType {
+export enum MediaLinkType {
   Youtube = 'youtube',
   Linkedin = 'linkedin',
   Media = 'media',
@@ -98,21 +98,21 @@ export default function FooterContact() {
                   className="flex-center group relative h-10 w-10 cursor-pointer"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <YoutubeSVG className="fill-black group-hover:fill-red-600" />
+                  <YoutubeSVG className="size-6 fill-black group-hover:fill-red-600" />
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
                   className="flex-center group relative h-10 w-10 cursor-pointer"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <LinkedinSVG className="fill-black group-hover:fill-red-600" />
+                  <LinkedinSVG className="size-6 fill-black group-hover:fill-red-600" />
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Media)}
                   className="flex-center group relative h-10 w-10 cursor-pointer"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <MediaSVG className="fill-black group-hover:fill-red-600" />
+                  <MediaSVG className="size-6 fill-black group-hover:fill-red-600" />
                 </div>
               </div>
             </div>

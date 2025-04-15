@@ -1,8 +1,8 @@
-import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom, mobileIsScrollingAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { BACKGROUND_COLORS, BACKGROUND_THEME, BackgroundTheme } from '@/constants/config';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileNavigation() {
@@ -11,7 +11,7 @@ export function useMobileNavigation() {
   const isAnimatingRef = useRef(false);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
-
+  const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
   const changeBackground = useCallback((theme: BackgroundTheme) => {
     const root = document.documentElement;
     if (!root) return;
@@ -98,7 +98,7 @@ export function useMobileNavigation() {
   const mobileNavChange = useCallback(
     (item: NavItem) => {
       // 如果动画正在进行中，不响应新的切换请求
-      if (isAnimatingRef.current) return;
+      if (isAnimatingRef.current || mobileIsScrolling) return;
 
       setCurrentPage(item);
       if (item?.id === NAV_LIST[4].id) {
@@ -108,7 +108,7 @@ export function useMobileNavigation() {
         setInnerPageTotal(0);
       }
     },
-    [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
+    [mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
 
   return { mobileNavChange };
