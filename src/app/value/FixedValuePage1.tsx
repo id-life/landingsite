@@ -257,7 +257,7 @@ export default function FixedValuePage1() {
             />
           </svg>
         </div>
-        <p className="mt-36 w-[35rem] text-right text-xl/6 font-semibold capitalize">
+        <p className="mt-45 w-[35rem] text-right text-xl/6 font-semibold capitalize">
           Deep roots in both East and West, a conduit that bridges market, capital, institutions and more
         </p>
       </div>

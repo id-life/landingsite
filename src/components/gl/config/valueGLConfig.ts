@@ -4,16 +4,23 @@ export const VALUE_GL_CONFIG = [
   // Page 1
   {
     from: {
-      camera: { position: { x: 0, y: -10, z: 11 }, rotation: { x: 0, y: 0, z: 0 } },
+      camera: {
+        position: { x: 3.064, y: -12.494, z: -3.926 },
+        rotation: {
+          x: THREE.MathUtils.degToRad(122.89),
+          y: THREE.MathUtils.degToRad(-17.75),
+          z: THREE.MathUtils.degToRad(167.34),
+        },
+      },
       model: { position: { x: 15, y: -20, z: -10 }, rotation: { x: 0.785, y: 0.785, z: 0.785 } },
     },
     to: {
       camera: {
-        position: { x: -9.2, y: -13, z: -3 },
+        position: { x: -3.211, y: -12.187, z: -4.946 },
         rotation: {
-          x: 5.9,
-          y: -2.6,
-          z: 5.9,
+          x: THREE.MathUtils.degToRad(147.49),
+          y: THREE.MathUtils.degToRad(-30.75),
+          z: THREE.MathUtils.degToRad(167.34),
         },
       },
       model: {
@@ -54,7 +61,7 @@ export const VALUE_GL_CONFIG = [
   {
     from: {
       camera: {
-        position: { x: -5.982, y: -9.655, z: -4.286 },
+        position: { x: 5.982, y: -9.655, z: -4.286 },
         rotation: {
           x: THREE.MathUtils.degToRad(179.39),
           y: THREE.MathUtils.degToRad(54.19),
@@ -68,11 +75,11 @@ export const VALUE_GL_CONFIG = [
     },
     to: {
       camera: {
-        position: { x: 2.062, y: -0.861, z: -2.046 },
+        position: { x: 3.342, y: -0.815, z: -3.146 },
         rotation: {
-          x: THREE.MathUtils.degToRad(-107.01),
-          y: THREE.MathUtils.degToRad(18.99),
-          z: THREE.MathUtils.degToRad(117.06),
+          x: THREE.MathUtils.degToRad(-112.81),
+          y: THREE.MathUtils.degToRad(20.19),
+          z: THREE.MathUtils.degToRad(127.66),
         },
         model: {
           position: { x: 1, y: -12, z: -2 },

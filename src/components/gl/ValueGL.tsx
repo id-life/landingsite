@@ -2,7 +2,6 @@ import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNav
 import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
-
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
@@ -16,7 +15,6 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-const centerPoint = new THREE.Vector3(0, -10, 0);
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin);
 
 export const VALUE_PROGRESS_CONFIG = {
@@ -82,40 +80,47 @@ function ValueGL() {
       });
       tl.to('.fixed-top', { opacity: 1, top: '9.25rem' });
       tl.to('.fixed-bottom', { opacity: 1, bottom: '9.25rem', top: 'auto' }, '<');
-      tl.to(camera.position, { ...page1Config.to.camera.position });
+      tl.to(camera.position, { ...page1Config.from.camera.position });
+      tl.to(camera.rotation, { ...page1Config.from.camera.rotation });
       tl.to('#fixed-value', { opacity: 1 }, '<');
       tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
       if (!modelRef.current) return;
-      tl.fromTo(
-        modelRef.current.position,
-        { ...page1Config.from.model.position },
+      // tl.fromTo(
+      //   modelRef.current.position,
+      //   { ...page1Config.from.model.position },
+      //   {
+      //     ...page1Config.to.model.position,
+      //     ease: 'power3.inOut',
+      //     duration: 10,
+      //   },
+      // );
+      // tl.fromTo(
+      //   modelRef.current.rotation,
+      //   { ...page1Config.from.model.rotation },
+      //   {
+      //     ...page1Config.to.model.rotation,
+      //     ease: 'power3.inOut',
+      //     duration: 8,
+      //   },
+      //   '<',
+      // );
+      tl.to(
+        camera.position,
         {
-          ...page1Config.to.model.position,
-          ease: 'power3.inOut',
+          ...page1Config.to.camera.position,
           duration: 10,
+          onUpdate: () => {},
+          onComplete: () => {},
         },
-      );
-      tl.fromTo(
-        modelRef.current.rotation,
-        { ...page1Config.from.model.rotation },
-        {
-          ...page1Config.to.model.rotation,
-          ease: 'power3.inOut',
-          duration: 8,
-        },
-        '<',
+        // '<',
       );
       tl.to(
         camera.rotation,
         {
           ...page1Config.to.camera.rotation,
-          duration: 8,
-          onUpdate: () => {
-            camera.lookAt(centerPoint);
-          },
-          onComplete: () => {
-            camera.lookAt(centerPoint);
-          },
+          duration: 10,
+          onUpdate: () => {},
+          onComplete: () => {},
         },
         '<',
       );
@@ -253,7 +258,7 @@ function ValueGL() {
   }, [currentPageIndex, innerPageNavigateTo, progressMap, setInnerPageIndex, setInnerPageNavigateTo, enableScroll]);
 
   return (
-    <group>
+    <group position={[0, -10, 0]}>
       <AnimalModel ref={modelRef} />
     </group>
   );
