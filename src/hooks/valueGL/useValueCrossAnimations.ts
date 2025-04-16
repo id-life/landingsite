@@ -97,7 +97,7 @@ export const useValueCrossAnimations = ({
         transformOrigin: '100% 50%',
         duration: 6,
       },
-      '-=10',
+      '-=8',
     );
     const title8 = gsap.utils.toArray('.value-title8 path');
     const title9 = gsap.utils.toArray('.value-title9 path');

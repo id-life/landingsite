@@ -10,12 +10,13 @@ import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin, MotionPathPlugin);
 
 export const VALUE_PROGRESS_CONFIG = {
   desktop: {
@@ -85,27 +86,36 @@ function ValueGL() {
       tl.to('#fixed-value', { opacity: 1 }, '<');
       tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
       if (!modelRef.current) return;
-      tl.to(camera.position, { x: -4.471, y: -11.507, z: -4.146, duration: 10 }, 'camera1-move');
+      tl.to(camera.position, {
+        motionPath: {
+          path: [{ x: -2.38, y: -10.65, z: -4.4 }, { x: -4.8, y: -11.8, z: -4.1 }, { ...page1Config.to.camera.position }],
+        },
+        duration: 20,
+      });
       tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: 20 }, '<');
-      tl.to(camera.position, { ...page1Config.to.camera.position, duration: 10 }, '-=10');
       tl.fromTo(
         '#fixed-value-page-1',
         {
-          rotationX: -45,
-          rotationY: 30,
-          z: 500,
+          rotationX: -30,
+          rotationY: 0,
+          rotationZ: -30,
+          z: 100,
+          y: 300,
+          x: 300,
           opacity: 0,
         },
         {
           rotationX: 0,
           rotationY: 0,
+          rotationZ: 0,
+          y: 0,
+          x: 0,
           z: 0,
           opacity: 1,
-          ease: 'power3.inOut',
-          transformOrigin: '50% 50%',
+          transformOrigin: '100% 50%',
           duration: 8,
         },
-        'camera1-move',
+        '<',
       );
       const title6 = gsap.utils.toArray('.value-title6 path');
       const title7 = gsap.utils.toArray('.value-title7 path');
