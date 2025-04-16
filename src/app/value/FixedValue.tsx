@@ -24,15 +24,13 @@ const VALUE_CONTENT: ValueContentItem[] = [
     content:
       'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.\n我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     mobileSVGElement: (
-      <div className="opacity-0" id="value-1-svg-mobile">
-        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
-            Evangelism
-          </span>
+      <div className="relative z-30 opacity-0" id="value-1-svg-mobile">
+        <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase text-red-500">Evangelism</span>
           <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             布道者
           </span>
-          <span className="value-text-en text-[3rem]/[3rem]">
+          <span className="value-text-en text-[3rem]/[3rem] uppercase">
             OF global
             <br />
             Longevity
@@ -40,18 +38,16 @@ const VALUE_CONTENT: ValueContentItem[] = [
             awareness
           </span>
         </h2>
-        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem]">East / West</span>
-          <span className="value-text-en whitespace-pre-wrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
-            Access
-          </span>
+        <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-pre-wrap text-right font-oxanium font-semibold tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East / West</span>
+          <span className="value-text-en whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">Access</span>
           <span className="value-text-cn bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             桥梁
           </span>
-          <span className="value-text-en text-xs/4 capitalize tracking-normal">
-            Deep roots in both East and West, a conduit that
+          <span className="value-text-en mt-4 text-xs/4 font-semibold tracking-normal">
+            Deep Roots In Both East And West, A Conduit That
             <br />
-            bridges market, capital, institutions and more
+            Bridges Market Capital Institutions And More
           </span>
         </h2>
       </div>
@@ -69,23 +65,23 @@ const VALUE_CONTENT: ValueContentItem[] = [
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
-      <div className="opacity-0" id="value-2-svg-mobile">
-        <h2 className="pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold uppercase tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+      <div className="relative z-30 opacity-0" id="value-2-svg-mobile">
+        <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
             MOONSHOT
           </span>
           <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             逐月计划
           </span>
-          <span className="value-text-en relative left-1 text-xs/4 capitalize tracking-normal">
-            we stand with bold unorthodox ideas
+          <span className="value-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
+            We Stand With Bold Unorthodox Ideas
             <br />
-            and brave contrarian founders
+            And Brave Contrarian Founders
           </span>
         </h2>
-        <h2 className="pointer-events-none fixed inset-x-5 bottom-[6.25rem] z-30 flex flex-col gap-1 whitespace-nowrap text-right font-oxanium font-semibold uppercase tracking-[-4%]">
-          <span className="value-text-en text-[3rem]/[3rem]">We pursue</span>
-          <span className="value-text-en text-[3.5rem]/[4.625rem] tracking-normal text-red-500">
+        <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-nowrap text-right font-oxanium font-semibold tracking-[-4%]">
+          <span className="value-text-en text-[3rem]/[3rem] uppercase">We pursue</span>
+          <span className="value-text-en text-[3.5rem]/[4.625rem] uppercase text-red-500">
             longer
             <br />
             healthier
@@ -95,11 +91,11 @@ const VALUE_CONTENT: ValueContentItem[] = [
             <br />
             更健康
           </span>
-          <span className="value-text-en text-[3rem]/[3rem]">lives</span>
-          <span className="value-text-en text-xs/4 capitalize tracking-normal">
-            and less suffering from age-related ailments,
+          <span className="value-text-en text-[3rem]/[3rem] uppercase">lives</span>
+          <span className="value-text-en mt-5 text-xs/4 font-semibold tracking-normal">
+            And Less Suffering From Age-Related Ailments,
             <br />
-            endeavoring all our might to bring this vision to reality
+            Endeavoring All Our Might To Bring This Vision To Reality
           </span>
         </h2>
       </div>
@@ -117,9 +113,9 @@ const VALUE_CONTENT: ValueContentItem[] = [
     mobileSVGElement: (
       <div
         id="value-3-svg-mobile"
-        className="bilingual-font pointer-events-none fixed inset-x-5 top-[6.25rem] z-30 flex flex-col gap-1 whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
+        className="bilingual-font pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
       >
-        <p>
+        <p className="uppercase">
           <span className="text-red-500">Evangelism</span>
           <br />
           OF global Longevity
@@ -129,30 +125,29 @@ const VALUE_CONTENT: ValueContentItem[] = [
         <p className="mt-7.5">
           East / West <span className="text-red-500">Access</span>
         </p>
-        <p className="mt-2.5 text-xs/4 capitalize">
-          Deep roots in both East and West, a conduit that
+        <p className="mt-2.5 text-xs/4 font-semibold normal-case">
+          Deep Roots In Both East And West, A Conduit That
           <br />
-          bridges market, capital, institutions and more
+          Bridges Market Capital Institutions And More
         </p>
         <p className="mt-7.5 text-red-500">MOONSHOT</p>
-        <p className="mt-2.5 text-xs/4 capitalize">
-          we stand with bold unorthodox ideas
+        <p className="mt-2.5 text-xs/4 font-semibold normal-case">
+          We Stand With Bold Unorthodox Ideas
           <br />
-          and brave contrarian founders
+          And Brave Contrarian Founders
         </p>
         <p className="mt-7.5">
           We pursue&nbsp;
-          <span className="text-red-500">
+          <span className="whitespace-pre-wrap text-red-500">
             longer
             <br />
-            healthier
+            healthier <span className="whitespace-pre-wrap text-black">lives</span>
           </span>
-          &nbsp;lIVES
         </p>
-        <p className="mt-2.5 text-xs/4 capitalize">
-          and less suffering from age-related ailments,
+        <p className="mt-2.5 text-xs/4 font-semibold normal-case">
+          And Less Suffering From Age-Related Ailments,
           <br />
-          endeavoring all our might to bring this vision to reality
+          Endeavoring All Our Might To Bring This Vision To Reality
         </p>
       </div>
     ),

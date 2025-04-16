@@ -23,23 +23,24 @@ export const useMobileValueSVGAnimations = () => {
 
     if (!value1TextRedEn?.chars?.length || !value1TextNormalEn?.chars?.length) return;
     if (!hasRedEnterAnim) {
-      // 没有红字变换动画，只是单纯的渐入。
+      //  红字&正常字直接进入。
       tl.from([value1TextRedEn.chars, value1TextNormalEn.chars], {
         opacity: 1,
         y: 0,
       });
     } else {
+      // 红字&正常字渐入
       tl.fromTo(
         [value1TextRedEn.chars, value1TextNormalEn.chars],
         {
           opacity: 0,
-          y: 50,
+          // y: 50,
         },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
-          stagger: 0.02,
+          // stagger: 0.02,
         },
       );
     }
@@ -47,22 +48,22 @@ export const useMobileValueSVGAnimations = () => {
       // 只让红字淡出
       tl.to(value1TextRedEn.chars, {
         opacity: 0,
-        y: -50,
+        // y: -50,
         duration: 0.8,
-        stagger: 0.02,
+        // stagger: 0.02,
       })
         // 中文淡入
         .fromTo(
           value1TextCn.chars,
           {
             opacity: 0,
-            y: 50,
+            // y: 50,
           },
           {
             opacity: 1,
-            y: 0,
+            // y: 0,
             duration: 0.8,
-            stagger: 0.02,
+            // stagger: 0.02,
           },
         );
     }
@@ -76,29 +77,8 @@ export const useMobileValueSVGAnimations = () => {
     createMobileTextAnim(tl, 2);
   };
 
-  const createPage3SvgAnim = (tl: GSAPTimeline) => {
-    const valueText = new SplitText(`#value-3-svg-mobile p`, {
-      type: 'lines,words,chars',
-    });
-    // 中文淡入
-    tl.fromTo(
-      valueText.chars,
-      {
-        opacity: 0,
-        y: 50,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.02,
-      },
-    );
-  };
-
   return {
     createPage1SvgAnim,
     createPage2SvgAnim,
-    createPage3SvgAnim,
   };
 };

@@ -76,7 +76,7 @@ export function useMobileNavigation() {
       },
     });
 
-    if ([NAV_LIST[2].id, NAV_LIST[3].id].includes(currentPage.id)) {
+    if ([NAV_LIST[2].id, NAV_LIST[3].id, NAV_LIST[4].id].includes(currentPage.id)) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
         duration: 0.5,
