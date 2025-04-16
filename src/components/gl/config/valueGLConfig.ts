@@ -5,7 +5,7 @@ export const VALUE_GL_CONFIG = [
   {
     from: {
       camera: {
-        position: { x: 3.064, y: -12.494, z: -3.926 },
+        position: { x: 3.064, y: -14.494, z: -3.926 },
         rotation: {
           x: THREE.MathUtils.degToRad(122.89),
           y: THREE.MathUtils.degToRad(-17.75),
@@ -75,7 +75,7 @@ export const VALUE_GL_CONFIG = [
     },
     to: {
       camera: {
-        position: { x: 3.342, y: -0.815, z: -3.146 },
+        position: { x: 3.342, y: -0.815, z: -2.146 },
         rotation: {
           x: THREE.MathUtils.degToRad(-112.81),
           y: THREE.MathUtils.degToRad(20.19),

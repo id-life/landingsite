@@ -88,7 +88,7 @@ function ValueGL() {
       if (!modelRef.current) return;
       tl.to(camera.position, {
         motionPath: {
-          path: [{ x: -2.38, y: -10.65, z: -4.4 }, { x: -4.8, y: -11.8, z: -4.1 }, { ...page1Config.to.camera.position }],
+          path: [{ x: -2.38, y: -11.5, z: -4.4 }, { x: -4.8, y: -12.5, z: -4.1 }, { ...page1Config.to.camera.position }],
         },
         duration: 20,
       });
