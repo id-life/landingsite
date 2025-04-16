@@ -26,8 +26,10 @@ const VALUE_CONTENT: ValueContentItem[] = [
     mobileSVGElement: (
       <div className="relative z-30 opacity-0" id="value-1-svg-mobile">
         <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase text-red-500">Evangelism</span>
-          <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="value-text-en value-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
+            Evangelism
+          </span>
+          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             布道者
           </span>
           <span className="value-text-en text-[3rem]/[3rem] uppercase">
@@ -40,8 +42,10 @@ const VALUE_CONTENT: ValueContentItem[] = [
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-pre-wrap text-right font-oxanium font-semibold tracking-[-4%]">
           <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East / West</span>
-          <span className="value-text-en whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">Access</span>
-          <span className="value-text-cn bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="value-text-en value-text-en-2 whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
+            Access
+          </span>
+          <span className="value-text-cn value-text-cn-2 bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             桥梁
           </span>
           <span className="value-text-en mt-4 text-xs/4 font-semibold tracking-normal">
@@ -67,10 +71,10 @@ const VALUE_CONTENT: ValueContentItem[] = [
     mobileSVGElement: (
       <div className="relative z-30 opacity-0" id="value-2-svg-mobile">
         <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
+          <span className="value-text-en value-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
             MOONSHOT
           </span>
-          <span className="value-text-cn bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             逐月计划
           </span>
           <span className="value-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
@@ -81,14 +85,12 @@ const VALUE_CONTENT: ValueContentItem[] = [
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-nowrap text-right font-oxanium font-semibold tracking-[-4%]">
           <span className="value-text-en text-[3rem]/[3rem] uppercase">We pursue</span>
-          <span className="value-text-en text-[3.5rem]/[4.625rem] uppercase text-red-500">
-            longer
-            <br />
-            healthier
-          </span>
-          <span className="value-text-cn bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="value-text-en value-text-en-2 text-[3.5rem]/[4.625rem] uppercase text-red-500">longer</span>
+          <span className="value-text-en value-text-en-3 text-[3.5rem]/[4.625rem] uppercase text-red-500">healthier</span>
+          <span className="value-text-cn bilingual-font value-text-cn-2 absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更长久
-            <br />
+          </span>
+          <span className="value-text-cn bilingual-font value-text-cn-3 absolute right-0 top-[8.125rem] text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更健康
           </span>
           <span className="value-text-en text-[3rem]/[3rem] uppercase">lives</span>

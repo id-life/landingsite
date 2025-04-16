@@ -48,7 +48,7 @@ TitleSVG.displayName = 'TitleSVG';
 const VALUE_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
-    1: 0.5065,
+    1: 0.475,
     2: 1, // 出邮箱
   },
 } as const;
@@ -84,7 +84,6 @@ function MobileValueGL() {
       },
     });
     tl.to(camera.position, { ...page1Config.to.camera.position });
-    tl.to('#fixed-value', { opacity: 1 }, '<');
     tl.to(
       camera.rotation,
       {
@@ -113,81 +112,6 @@ function MobileValueGL() {
       },
       '<',
     );
-    // tl.fromTo(
-    //   '#fixed-value-page-1',
-    //   {
-    //     rotationX: -45,
-    //     rotationY: 30,
-    //     z: 500,
-    //     opacity: 0,
-    //   },
-    //   {
-    //     rotationX: 0,
-    //     rotationY: 0,
-    //     z: 0,
-    //     opacity: 1,
-    //     duration: 2,
-    //     ease: 'power3.inOut',
-    //     transformOrigin: '50% 50%',
-    //   },
-    //   '<',
-    // );
-    // const title1 = gsap.utils.toArray('.value-title1 path');
-    // const title2 = gsap.utils.toArray('.value-title2 path');
-    // title1.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(
-    //     item,
-    //     {
-    //       stroke: '#BB1212',
-    //       fill: 'none',
-    //       drawSVG: 0,
-    //     },
-    //     {
-    //       drawSVG: true,
-    //       duration: 0.5,
-    //       delay: 0.5,
-    //       ease: 'power3.inOut',
-    //     },
-    //     '<',
-    //   );
-    //   tl.to(
-    //     item,
-    //     {
-    //       fill: '#BB1212',
-    //       duration: 0.3,
-    //       delay: 0.3,
-    //     },
-    //     '<',
-    //   );
-    // });
-    // title2.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(
-    //     item,
-    //     {
-    //       stroke: '#BB1212',
-    //       fill: 'none',
-    //       drawSVG: 0,
-    //     },
-    //     {
-    //       drawSVG: true,
-    //       duration: 1,
-    //       delay: 0.5,
-    //       ease: 'power3.inOut',
-    //     },
-    //     '<',
-    //   );
-    //   tl.to(
-    //     item,
-    //     {
-    //       fill: '#BB1212',
-    //       duration: 0.3,
-    //       delay: 1,
-    //     },
-    //     '<',
-    //   );
-    // });
     tl.to('#value-1-svg-mobile', { opacity: 1 }, '<');
 
     startAnimTLRef.current = tl;
@@ -224,10 +148,12 @@ function MobileValueGL() {
     });
     // page1~2之间的 svg切换动画，红字消失变换为中文
     createPage1SvgAnim(tl);
+    tl.to(() => {}, { duration: 12 });
     createPage1CrossAnim(tl);
 
     // page2~3之间的 svg切换动画，红字消失变换为中文
     createPage2SvgAnim(tl);
+    tl.to(() => {}, { duration: 12 });
     createPage2CrossAnim(tl);
 
     createPage3SvgAnim(tl);

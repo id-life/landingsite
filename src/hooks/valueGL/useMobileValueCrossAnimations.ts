@@ -4,7 +4,6 @@ import { useThree } from '@react-three/fiber';
 import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { Group, Vector3 } from 'three';
-import gsap from 'gsap';
 
 export const centerPoint = new Vector3(0, -10, 0);
 
@@ -22,35 +21,7 @@ export const useMobileValueCrossAnimations = ({
 
   // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
-    if (!modelRef.current) return; // const title1 = gsap.utils.toArray('.value-title1 path');
-    // const title1cn = gsap.utils.toArray('.value-title1cn path');
-    // const title2 = gsap.utils.toArray('.value-title2 path');
-    // const title2cn = gsap.utils.toArray('.value-title2cn path');
-    // title1.forEach((item) => {
-    //   if (!item) return;
-    //   tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    // });
-    // title1cn.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
-    // });
-    // title2.forEach((item) => {
-    //   if (!item) return;
-    //   tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    // });
-    // title2cn.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
-    // });
-    // tl.to('#fixed-value-page-1', {
-    //   rotationX: 60,
-    //   rotationZ: 60,
-    //   z: 100,
-    //   opacity: 0,
-    //   ease: 'power3.inOut',
-    //   transformOrigin: '100% 0%',
-    //   duration: 3,
-    // });
+    if (!modelRef.current) return;
     tl.to(
       camera.position,
       {
@@ -58,7 +29,7 @@ export const useMobileValueCrossAnimations = ({
         duration: 10,
         ease: 'power2.inOut',
       },
-      '<',
+      // '<',
     );
     tl.to(
       camera.rotation,
@@ -82,131 +53,10 @@ export const useMobileValueCrossAnimations = ({
 
     tl.to('#value-1-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#value-2-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
-
-    // tl.fromTo(
-    //   '#fixed-value-page-2',
-    //   {
-    //     rotationX: -30,
-    //     rotationY: 0,
-    //     rotationZ: -30,
-    //     z: 100,
-    //     opacity: 0,
-    //   },
-    //   {
-    //     rotationX: 0,
-    //     rotationY: 0,
-    //     rotationZ: 0,
-    //     z: 0,
-    //     opacity: 1,
-    //     ease: 'power2.inOut',
-    //     transformOrigin: '100% 50%',
-    //     duration: 6,
-    //     delay: 2,
-    //   },
-    //   '<',
-    // );
-    // const title8 = gsap.utils.toArray('.value-title8 path');
-    // const title9 = gsap.utils.toArray('.value-title9 path');
-    // const title3 = gsap.utils.toArray('.value-title3 path');
-    // const title3cn = gsap.utils.toArray('.value-title3cn path');
-    // title8.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(
-    //     item,
-    //     {
-    //       stroke: 'black',
-    //       fill: 'none',
-    //       drawSVG: 0,
-    //     },
-    //     {
-    //       drawSVG: true,
-    //       duration: 0.1,
-    //       delay: 0.3,
-    //       ease: 'power2.inOut',
-    //     },
-    //     '<',
-    //   );
-    //   tl.to(
-    //     item,
-    //     {
-    //       fill: 'black',
-    //       duration: 0.1,
-    //       delay: 0.3,
-    //     },
-    //     '<',
-    //   );
-    // });
-    // title9.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(
-    //     item,
-    //     {
-    //       stroke: 'black',
-    //       fill: 'none',
-    //       drawSVG: 0,
-    //     },
-    //     {
-    //       drawSVG: true,
-    //       duration: 1,
-    //       delay: 0.3,
-    //       ease: 'power2.inOut',
-    //     },
-    //     '<',
-    //   );
-    //   tl.to(
-    //     item,
-    //     {
-    //       fill: 'black',
-    //       duration: 0.1,
-    //       delay: 0.3,
-    //     },
-    //     '<',
-    //   );
-    // });
-    // title3.forEach((item, index) => {
-    //   if (!item) return;
-    //   if (index === 0) {
-    //     tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '-=3');
-    //   }
-    //   tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '<');
-    // });
-    // title3cn.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 }, '<');
-    // });
   };
 
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
-    if (!modelRef.current) return; // const title4 = gsap.utils.toArray('.value-title4 path');
-    // const title4cn = gsap.utils.toArray('.value-title4cn path');
-    // const title5 = gsap.utils.toArray('.value-title5 path');
-    // const title5cn = gsap.utils.toArray('.value-title5cn path');
-    // title4.forEach((item) => {
-    //   if (!item) return;
-    //   tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    // });
-    // title5.forEach((item) => {
-    //   if (!item) return;
-    //   tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
-    // });
-    // title4cn.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
-    // });
-    // title5cn.forEach((item) => {
-    //   if (!item) return;
-    //   tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
-    // });
-    // tl.to('#fixed-value-page-2', {
-    //   rotationX: -90,
-    //   rotationY: 0,
-    //   rotationZ: 0,
-    //   z: 100,
-    //   opacity: 0,
-    //   ease: 'power3.inOut',
-    //   transformOrigin: '50% 100%',
-    //   duration: 3,
-    // });
+    if (!modelRef.current) return;
     tl.to(
       camera.position,
       {
@@ -214,7 +64,7 @@ export const useMobileValueCrossAnimations = ({
         duration: 10,
         ease: 'power2.inOut',
       },
-      '<',
+      // '<',
     );
     tl.to(
       camera.rotation,
@@ -238,29 +88,6 @@ export const useMobileValueCrossAnimations = ({
 
     tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
     tl.to('#value-3-svg-mobile', { opacity: 1, duration: 0, ease: 'power3.out' });
-
-    // tl.fromTo(
-    //   '#fixed-value-page-3',
-    //   {
-    //     rotationX: 120,
-    //     rotationY: 0,
-    //     rotationZ: 0,
-    //     z: 100,
-    //     opacity: 0,
-    //   },
-    //   {
-    //     rotationX: 0,
-    //     rotationY: 0,
-    //     rotationZ: 0,
-    //     z: 0,
-    //     opacity: 1,
-    //     ease: 'power2.inOut',
-    //     transformOrigin: 'top center',
-    //     duration: 6,
-    //     delay: 2,
-    //   },
-    //   '<',
-    // );
   };
 
   return {
