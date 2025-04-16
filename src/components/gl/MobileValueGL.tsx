@@ -48,7 +48,7 @@ TitleSVG.displayName = 'TitleSVG';
 const VALUE_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
-    1: 0.529,
+    1: 0.5065,
     2: 1, // 出邮箱
   },
 } as const;
@@ -67,7 +67,7 @@ function MobileValueGL() {
   const isScrollingRef = useRef(false);
   const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
 
-  const { createPage1SvgAnim, createPage2SvgAnim } = useMobileValueSVGAnimations();
+  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim } = useMobileValueSVGAnimations();
   const { createPage1CrossAnim, createPage2CrossAnim } = useMobileValueCrossAnimations({
     modelRef,
     isScrollingRef,
@@ -229,6 +229,8 @@ function MobileValueGL() {
     // page2~3之间的 svg切换动画，红字消失变换为中文
     createPage2SvgAnim(tl);
     createPage2CrossAnim(tl);
+
+    createPage3SvgAnim(tl);
   }, []);
 
   useEffect(() => {
@@ -241,7 +243,7 @@ function MobileValueGL() {
           isScrollingRef.current = true;
           setMobileIsScrolling(true);
           gsap.to(window, {
-            duration: 4,
+            duration: 3,
             scrollTo: st.start + (st.end - st.start) * progress,
             onComplete: () => {
               isScrollingRef.current = false;

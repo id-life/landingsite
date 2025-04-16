@@ -237,7 +237,7 @@ export const useMobileValueCrossAnimations = ({
     );
 
     tl.to('#value-2-svg-mobile', { opacity: 0, duration: 3.5, ease: 'power3.in' }, '<');
-    tl.to('#value-3-svg-mobile', { opacity: 1, duration: 3.5, ease: 'power3.out' }, '-=3.5');
+    tl.to('#value-3-svg-mobile', { opacity: 1, duration: 0, ease: 'power3.out' });
 
     // tl.fromTo(
     //   '#fixed-value-page-3',

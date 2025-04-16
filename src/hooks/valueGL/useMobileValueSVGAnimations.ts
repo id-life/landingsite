@@ -62,6 +62,9 @@ export const useMobileValueSVGAnimations = () => {
             // y: 0,
             duration: 0.8,
             // stagger: 0.02,
+            onComplete: () => {
+              console.log('SVG Complete');
+            },
           },
         );
     }
@@ -75,8 +78,13 @@ export const useMobileValueSVGAnimations = () => {
     createMobileTextAnim(tl, 2);
   };
 
+  const createPage3SvgAnim = (tl: GSAPTimeline) => {
+    tl.fromTo('#value-3-svg-mobile p', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' });
+  };
+
   return {
     createPage1SvgAnim,
     createPage2SvgAnim,
+    createPage3SvgAnim,
   };
 };
