@@ -81,7 +81,7 @@ export default function MobileFooterContact() {
             ease: 'easeInOut',
           }}
           ref={subscribeRef}
-          className="page-footer fixed inset-x-5 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-lg"
+          className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
           <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
           <form id="subscribe-form" className="mt-5 flex gap-3" onSubmit={onFormSubmit}>
