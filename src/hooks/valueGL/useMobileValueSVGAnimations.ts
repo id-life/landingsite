@@ -26,7 +26,6 @@ export const useMobileValueSVGAnimations = () => {
       //  红字&正常字直接进入。
       tl.from([value1TextRedEn.chars, value1TextNormalEn.chars], {
         opacity: 1,
-        y: 0,
       });
     } else {
       // 红字&正常字渐入
@@ -38,7 +37,6 @@ export const useMobileValueSVGAnimations = () => {
         },
         {
           opacity: 1,
-          y: 0,
           duration: 0.8,
           // stagger: 0.02,
         },

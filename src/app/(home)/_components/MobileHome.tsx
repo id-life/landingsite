@@ -7,6 +7,7 @@ import MobileValue from '@/app/value/MobileValue';
 import MobileVision from '@/app/vision/_components/MobileVision';
 import MobileThreeWrapper from '@/components/gl/MobileThreeWrapper';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
+import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
 
 export default function MobileHome() {
   return (
@@ -19,6 +20,7 @@ export default function MobileHome() {
         <MobileTwin />
         <MobileValue />
         <MobileFooter />
+        <MobileFooterContact />
       </div>
     </>
   );

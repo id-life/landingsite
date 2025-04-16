@@ -9,7 +9,7 @@ import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
@@ -65,7 +65,7 @@ function MobileValueGL() {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);
-  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
 
   const { createPage1SvgAnim, createPage2SvgAnim } = useMobileValueSVGAnimations();
   const { createPage1CrossAnim, createPage2CrossAnim } = useMobileValueCrossAnimations({
