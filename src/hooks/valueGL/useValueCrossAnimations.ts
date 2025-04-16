@@ -46,7 +46,8 @@ export const useValueCrossAnimations = ({
       camera.position,
       {
         ...page2Config.to.camera.position,
-        duration: 20,
+        duration: 30,
+        ease: 'power3.in',
       },
       '-=5',
     );
@@ -54,7 +55,8 @@ export const useValueCrossAnimations = ({
       camera.rotation,
       {
         ...page2Config.to.camera.rotation,
-        duration: 20,
+        duration: 30,
+        ease: 'power3.in',
         onComplete: () => {
           camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
           if (!isScrollingRef.current) setValuePageIndex(1);
@@ -75,7 +77,7 @@ export const useValueCrossAnimations = ({
         transformOrigin: '100% 0%',
         duration: 6,
       },
-      '-=5',
+      '-=12',
     );
     tl.fromTo(
       '#fixed-value-page-2',
@@ -95,7 +97,7 @@ export const useValueCrossAnimations = ({
         transformOrigin: '100% 50%',
         duration: 6,
       },
-      '-=3',
+      '-=10',
     );
     const title8 = gsap.utils.toArray('.value-title8 path');
     const title9 = gsap.utils.toArray('.value-title9 path');
@@ -204,7 +206,7 @@ export const useValueCrossAnimations = ({
           if (!isScrollingRef.current) setValuePageIndex(1);
         },
       },
-      '-=8',
+      '-=4',
     );
     tl.to(
       '#fixed-value-page-2',
@@ -217,7 +219,7 @@ export const useValueCrossAnimations = ({
         transformOrigin: '50% 100%',
         duration: 8,
       },
-      '-=20',
+      '-=18',
     );
     tl.fromTo(
       '#fixed-value-page-3',
@@ -237,7 +239,7 @@ export const useValueCrossAnimations = ({
         transformOrigin: 'top center',
         duration: 8,
       },
-      '-=18',
+      '-=16',
     );
   };
 

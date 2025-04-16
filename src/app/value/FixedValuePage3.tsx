@@ -1,7 +1,7 @@
 export default function FixedValuePage3() {
   return (
     <div id="fixed-value-page-3" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 h-screen w-screen">
-      <div className="absolute left-20 top-36 flex w-full justify-between gap-4 pr-32">
+      <div className="absolute left-20 top-48 flex w-full justify-between gap-4 pr-32">
         <div>
           <svg className="w-[19.8125rem]" viewBox="0 0 317 39" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -58,13 +58,12 @@ export default function FixedValuePage3() {
               fill="#BB1212"
             />
           </svg>
-          <svg className="mt-4 w-[8.3125rem]"  viewBox="0 0 133 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="mt-4 w-[8.3125rem]" viewBox="0 0 133 39" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M0.76 39V0.359997H7.592V32.784H25.064V39H0.76ZM28.9263 39V0.359997H35.7583V39H28.9263ZM39.3418 1.704L40.2378 0.359997H46.1738L55.7498 32.784H56.8138L66.3898 0.359997H72.3818L73.2218 1.704L61.7978 39H50.7098L39.3418 1.704ZM76.7822 39V0.359997H102.766V6.576H83.6142V15.872H101.086V22.088H83.6142V32.784H102.766V39H76.7822ZM106.386 36.424V32.784H123.69C125.332 32.784 126.154 31.9813 126.154 30.376V26.12C126.154 24.7013 125.519 23.8613 124.25 23.6L112.882 21.304C108.551 20.4453 106.386 17.5333 106.386 12.568V9.488C106.386 3.40266 109.428 0.359997 115.514 0.359997H128.562L131.866 2.936V6.576H115.682C114.039 6.576 113.218 7.37866 113.218 8.984V12.736C113.218 14.1547 113.852 14.9947 115.122 15.256L126.49 17.496C130.82 18.392 132.986 21.304 132.986 26.232V29.872C132.986 35.9573 129.943 39 123.858 39H109.69L106.386 36.424Z"
               fill="black"
             />
           </svg>
-
           <p className="mt-12 w-[28rem] text-left text-sm/4 font-semibold capitalize">
             and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality
           </p>

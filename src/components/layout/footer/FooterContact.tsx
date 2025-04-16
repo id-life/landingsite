@@ -65,7 +65,6 @@ export default function FooterContact() {
           start: 'top bottom+=100%',
           end: 'bottom bottom+=80%',
           scrub: true,
-          markers: true,
           onEnter: () => {
             setIsSubscribeShow(true);
           },

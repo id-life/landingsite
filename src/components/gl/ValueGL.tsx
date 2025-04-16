@@ -85,17 +85,9 @@ function ValueGL() {
       tl.to('#fixed-value', { opacity: 1 }, '<');
       tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
       if (!modelRef.current) return;
-      tl.to(camera.position, { ...page1Config.to.camera.position, duration: 10 });
-      tl.to(
-        camera.rotation,
-        {
-          ...page1Config.to.camera.rotation,
-          duration: 10,
-          onUpdate: () => {},
-          onComplete: () => {},
-        },
-        '<',
-      );
+      tl.to(camera.position, { x: -4.471, y: -11.507, z: -4.146, duration: 10 }, 'camera1-move');
+      tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: 20 }, '<');
+      tl.to(camera.position, { ...page1Config.to.camera.position, duration: 10 }, '-=10');
       tl.fromTo(
         '#fixed-value-page-1',
         {
@@ -113,7 +105,7 @@ function ValueGL() {
           transformOrigin: '50% 50%',
           duration: 8,
         },
-        '<',
+        'camera1-move',
       );
       const title6 = gsap.utils.toArray('.value-title6 path');
       const title7 = gsap.utils.toArray('.value-title7 path');
