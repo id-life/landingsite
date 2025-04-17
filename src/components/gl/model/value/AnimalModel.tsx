@@ -9,8 +9,8 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   return (
     <group ref={ref} {...props}>
       <Animal2Model />
-      <Animal3Model />
-      <Animal4Model />
+      {/*<Animal3Model />*/}
+      {/*<Animal4Model />*/}
     </group>
   );
 });

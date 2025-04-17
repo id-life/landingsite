@@ -12,7 +12,7 @@ export default function MobileVisionGL() {
   const { viewport } = useThree();
   const [scale, setScale] = useState(1);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const groupRef = useRef<Group>(null);
+  const modelRef = useRef<Group>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
@@ -31,20 +31,20 @@ export default function MobileVisionGL() {
       timelineRef.current = gsap.timeline();
 
       // 入场动画
-      if (groupRef.current) {
+      if (modelRef.current) {
         // 设置初始状态
-        groupRef.current.position.set(0, 0, 8);
-        groupRef.current.rotation.set(0, Math.PI / 2, 0);
-        groupRef.current.scale.set(0.8, 0.8, 0.8);
+        modelRef.current.position.set(0, 0, 8);
+        modelRef.current.rotation.set(0, Math.PI / 2, 0);
+        modelRef.current.scale.set(0.8, 0.8, 0.8);
 
         timelineRef.current
-          .to(groupRef.current.position, {
+          .to(modelRef.current.position, {
             z: 0,
             duration: 1.2,
             ease: 'power3.out',
           })
           .to(
-            groupRef.current.rotation,
+            modelRef.current.rotation,
             {
               y: 0,
               duration: 1.2,
@@ -53,7 +53,7 @@ export default function MobileVisionGL() {
             '<',
           )
           .to(
-            groupRef.current.scale,
+            modelRef.current.scale,
             {
               x: 1,
               y: 1,
@@ -74,16 +74,16 @@ export default function MobileVisionGL() {
       timelineRef.current = gsap.timeline();
 
       // 出场动画
-      if (groupRef.current) {
+      if (modelRef.current) {
         timelineRef.current
-          .to(groupRef.current.position, {
+          .to(modelRef.current.position, {
             y: 10,
             z: 10,
             duration: 1,
             ease: 'power2.in',
           })
-          .to(groupRef.current.rotation, { x: -Math.PI / 4, duration: 1, ease: 'power2.in' }, '<')
-          .to(groupRef.current, { opacity: 0, duration: 0.5 }, '<');
+          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: 1, ease: 'power2.in' }, '<')
+          .to(modelRef.current, { opacity: 0, duration: 0.5 }, '<');
       }
     }
 
@@ -95,9 +95,17 @@ export default function MobileVisionGL() {
     };
   }, [currentPage]);
 
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[4].id) {
+      gsap.set(modelRef.current, { visible: false });
+    } else {
+      gsap.set(modelRef.current, { visible: true });
+    }
+  }, [currentPage]);
+
   return (
     <group scale={scale}>
-      <group ref={groupRef}>
+      <group ref={modelRef}>
         <MobileCenterLogo />
         <MobileDragonModel />
       </group>

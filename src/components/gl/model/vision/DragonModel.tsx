@@ -7,8 +7,6 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
-import { currentModelAtom, PredictionModel } from '@/atoms/twin';
-import { useSetAtom } from 'jotai';
 
 const InitRotation = Math.PI / 2;
 export default function DragonModel(props: {}) {

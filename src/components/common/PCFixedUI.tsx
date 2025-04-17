@@ -14,6 +14,7 @@ import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
+import NewFixedValue from '@/app/value/NewFixedValue';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -41,7 +42,7 @@ export default function PCFixedUI() {
           itemHeight={48}
           duration={5}
           transition={0.6}
-          className="fixed bottom-10 left-10 w-[25rem] mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
+          className="scroll-title fixed bottom-10 left-10 w-[25rem] mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
         >
           {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
         </VerticalCarousel>
@@ -49,8 +50,9 @@ export default function PCFixedUI() {
       <ClientOnly>
         <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
       </ClientOnly>
-      <FixedValue />
+      {/*<FixedValue />*/}
       <FixedCard />
+      <NewFixedValue />
     </>
   );
 }

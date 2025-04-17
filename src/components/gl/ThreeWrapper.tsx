@@ -11,7 +11,6 @@ import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { OuterLoader } from './ProgressLoader';
 import Loader from '@/components/gl/Loader';
-// import { Perf } from 'r3f-perf';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);

@@ -16,10 +16,10 @@ export const mobilePortfolioPageNavigateToAtom = atom<number | null>(null);
 
 // inner 页面细长进度条
 export const innerPageTotalAtom = atom<number>(0); // 小进度条数量
-export const innerPageIndexAtom = atom<number>(0); // -1 表示该页面没有额外的小进度条
+export const innerPageIndexAtom = atom<number>(0);
 export const innerPageNavigateToAtom = atom<number | null>(null);
 
-export const isScrollingAtom = atom<boolean>(false);
+export const mobileIsScrollingAtom = atom<boolean>(false);
 
 // 移动端的新逻辑
 export const mobileCurrentPageAtom = atom<NavItem>(NAV_LIST[0]);

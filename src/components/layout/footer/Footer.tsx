@@ -1,15 +1,12 @@
 'use client';
 
 import { FormEvent, useRef, useState } from 'react';
-import gsap from 'gsap';
 import jsonp from '@/utils/jsonp';
 import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
-import { isMobile } from 'react-device-detect';
 
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -32,34 +29,6 @@ export default function Footer() {
       setIsSubmitted(true);
     });
   };
-
-  useGSAP(
-    () => {
-      if (!portalNode) return;
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: 'footerTimeline',
-          trigger: wrapperRef.current,
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          onEnter: () => {
-            setIsSubscribeShow(true);
-          },
-          onLeaveBack: () => {
-            setIsSubscribeShow(false);
-          },
-        },
-      });
-      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '6rem' });
-      timeline.to(
-        '.footer-box-clip',
-        isMobile ? { width: '100%', height: 'auto' } : { width: '40rem', height: '11.5rem' },
-        '<',
-      );
-    },
-    { dependencies: [portalNode, isMobile] },
-  );
 
   return (
     <>

@@ -9,9 +9,10 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
-import MobileValueGL from './MobileValueGL';
+// import MobileValueGL from './MobileValueGL';
 import MobileVisionGL from './MobileVisionGL';
 import ProgressLoader from './ProgressLoader';
+import MobileValueGL from './MobileValueGL';
 
 function Loader() {
   const { progress, active } = useProgress();

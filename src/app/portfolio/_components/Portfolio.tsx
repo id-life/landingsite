@@ -1,5 +1,4 @@
 import { currentPageAtom } from '@/atoms';
-import { globalLoadedAtom } from '@/atoms/geo';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -30,7 +29,6 @@ function Portfolio() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [imageIdx, setImageIdx] = useState(0);
   const showParticle = useMemo(() => active, [active]);
-  const globalLoaded = useAtomValue(globalLoadedAtom);
   const currentPage = useAtomValue(currentPageAtom);
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     // profile auto scroll to engagement
@@ -94,15 +92,13 @@ function Portfolio() {
     tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
     tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
     tl.to('#particle-gl', { opacity: 0 });
-    if (globalLoaded) {
-      tl.to('.fixed-top', { opacity: 0 });
-      tl.to('.fixed-bottom', { opacity: 0 }, '<');
-    }
+    tl.to('.fixed-top', { opacity: 0 });
+    tl.to('.fixed-bottom', { opacity: 0 }, '<');
     // 在整个动画完成后设置标志
     tl.add(() => {
       setEnableDownJudge(true);
     });
-  }, [globalLoaded]);
+  }, []);
 
   useGSAP(
     () => {

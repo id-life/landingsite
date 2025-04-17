@@ -1,22 +1,22 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
+import { isSubscribeShowAtom } from '@/atoms/footer';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
-import SubscribeDialog from './SubscribeDialog';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useThrottle } from '@/hooks/useThrottle';
 
 gsap.registerPlugin(useGSAP);
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
-  const [subsOpen, setSubOpen] = useState(false);
+  const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const isMobile = useIsMobile();
   const startAnim = useCallback(
@@ -60,15 +60,26 @@ function MobileNavDialog() {
         <div className="flex w-full flex-col">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <div
-              onClick={() => setSubOpen(true)}
-              className="group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
+              onClick={() => {
+                setSubsOpen(!subsOpen);
+              }}
+              className={cn(
+                'group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+                {
+                  'text-red-600': subsOpen,
+                },
+              )}
             >
-              <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-white duration-300 group-hover:stroke-red-600" />
+              <SubscribeBorderSVG
+                className={cn('absolute left-0 top-0 size-full stroke-white duration-300', {
+                  'stroke-red-600': subsOpen,
+                })}
+              />
               Subscribe
             </div>
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
-          <Dialog open={subsOpen} onOpenChange={setSubOpen} render={() => <SubscribeDialog />} />
+          {/* <Dialog open={subsOpen} onOpenChange={setSubOpen} render={() => <SubscribeDialog />} /> */}
           <div className="mt-16 font-tt">
             {NAV_LIST.map((item) => (
               <div
