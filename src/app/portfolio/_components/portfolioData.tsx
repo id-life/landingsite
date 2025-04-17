@@ -24,7 +24,7 @@ export const portfolio: PortfolioItemInfo[] = [
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
-    link: 'https://vitalia.city/',
+    // link: 'https://vitalia.city/',
   },
   {
     title: 'Unlimited Bio',
