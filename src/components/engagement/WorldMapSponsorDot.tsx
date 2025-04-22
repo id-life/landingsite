@@ -183,14 +183,6 @@ export function WorldMapSponsorDotContent({
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
-  // const onClick = useCallback(
-  //   (e: React.MouseEvent) => {
-  //     e.stopPropagation();
-  //     if (link) window.open(link, '_blank');
-  //   },
-  //   [link],
-  // );
-
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
@@ -214,42 +206,42 @@ export function WorldMapSponsorDotContent({
           }}
           // onClick={onClick}
         >
-          {/* <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4"> */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className="clip-sponsor-content absolute left-0 top-0 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium"
-            onMouseLeave={handleContentMouseLeave}
-            variants={{
-              hidden: {
-                opacity: 0,
-                y: -10,
-                transformOrigin: 'top left',
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transformOrigin: 'top left',
-              },
-            }}
-            transition={{
-              staggerChildren: 0.05,
-              duration: 0.3,
-              type: 'easeInOut',
-            }}
-          >
-            <VideoWithPoster
-              coverUrl={coverUrl}
-              videoUrl={videoUrl}
-              title={alt}
-              containerClass="-mt-5"
-              videoClass="size-[15.5rem]"
-              coverClass="size-[15.5rem]"
-            />
-            <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
-          </motion.div>
-          {/* </a> */}
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="clip-sponsor-content absolute left-0 top-0 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium"
+              onMouseLeave={handleContentMouseLeave}
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  y: -10,
+                  transformOrigin: 'top left',
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transformOrigin: 'top left',
+                },
+              }}
+              transition={{
+                staggerChildren: 0.05,
+                duration: 0.3,
+                type: 'easeInOut',
+              }}
+            >
+              <VideoWithPoster
+                coverUrl={coverUrl}
+                videoUrl={videoUrl}
+                title={alt}
+                containerClass="-mt-5"
+                videoClass="size-[15.5rem]"
+                coverClass="size-[15.5rem]"
+              />
+              <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
+            </motion.div>
+          </a>
         </div>
       )}
     </AnimatePresence>

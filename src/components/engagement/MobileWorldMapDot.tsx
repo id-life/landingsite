@@ -1,11 +1,11 @@
 import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG } from '../svg';
 import FeatherImg from './FeatherImg';
-import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -149,7 +149,7 @@ export function MobileWorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, mobileContentTransformClass, period, lat, lng } = dot;
+  const { title, imgs, mobileContentTransformClass, period, lat, lng, link } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -201,6 +201,11 @@ export function MobileWorldMapDotContent({
               mobileContentTransformClass,
             )}
           >
+            <a
+              href={link}
+              target="_blank"
+              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer"
+            ></a>
             <div className="pointer-events-auto absolute -inset-10"></div>
             <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28')}></div>
           </div>
@@ -229,7 +234,7 @@ export function MobileWorldMapDotContent({
             )}
           >
             {title && (
-              <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+              <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
                 <span className="mr-2">{title}</span>
                 {period}
               </h3>
