@@ -212,12 +212,12 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="-mt-3 flex cursor-pointer flex-col items-center gap-1"
+                className="-mt-3 flex cursor-pointer flex-col items-center gap-3"
               >
                 <h4 className="text-base/5 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
                   <LinkSVG className="size-4 fill-blue" />
-                  <p className="ml-1 whitespace-nowrap text-xs/3 text-blue">{desc} </p>
+                  <p className="ml-1 whitespace-nowrap text-xs/3 font-medium text-blue">{desc} </p>
                   <ArrowSVG className="size-4 -rotate-90 fill-blue" />
                 </div>
               </motion.div>

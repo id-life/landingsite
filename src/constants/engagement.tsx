@@ -276,7 +276,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
-    desc: 'Chinese ver Outlined by Boyang', // 描述
+    desc: 'Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
@@ -289,7 +289,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-02',
     title: 'Earth',
     bookTitle: 'bio/acc manifesto',
-    desc: 'Chinese ver Translated by Boyang', // 描述
+    desc: 'Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
