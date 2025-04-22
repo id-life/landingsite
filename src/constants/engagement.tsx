@@ -1,4 +1,4 @@
-import { AmericaSVG, ChineseSVG, EUnionSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
+import { AmericaSVG, ChineseSVG, HondurasSVG, MontenegroSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
 
 // 波纹动画配置
@@ -48,9 +48,9 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
   },
   {
-    lat: 42.5,
-    lng: 7,
-    icon: <EUnionSVG className="size-7 mobile:size-5.5" />,
+    lat: 40,
+    lng: 18,
+    icon: <MontenegroSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: -14,
@@ -72,11 +72,11 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     lng: 100,
     icon: <ThailandSVG className="size-7 mobile:size-5.5" />,
   },
-  {
-    lat: 55,
-    lng: -4,
-    icon: <UKSVG className="size-7 mobile:size-5.5" />,
-  },
+  // {
+  //   lat: 55,
+  //   lng: -4,
+  //   icon: <UKSVG className="size-7 mobile:size-5.5" />,
+  // },
 ];
 
 export type MapDotData = {
