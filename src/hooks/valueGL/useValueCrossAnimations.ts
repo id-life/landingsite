@@ -14,6 +14,7 @@ export const useValueCrossAnimations = ({
   isScrollingRef: React.RefObject<boolean>;
 }) => {
   const { camera } = useThree();
+  const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
   const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
   const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
 
@@ -21,6 +22,102 @@ export const useValueCrossAnimations = ({
 
   // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
+    tl.to('.fixed-top', { opacity: 1, top: '9.25rem' });
+    tl.to('.fixed-bottom', { opacity: 1, bottom: '9.25rem', top: 'auto' }, '<');
+    tl.to(camera.position, { ...page1Config.from.camera.position });
+    tl.to(camera.rotation, { ...page1Config.from.camera.rotation }, 'myLabel2');
+    tl.to('#fixed-value', { opacity: 1 }, '<');
+    tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
+    if (!modelRef.current) return;
+    tl.to(camera.position, {
+      motionPath: {
+        path: [{ x: -2.38, y: -11.5, z: -4.4 }, { x: -4.8, y: -12.5, z: -4.1 }, { ...page1Config.to.camera.position }],
+      },
+      duration: 20,
+    });
+    tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: 20 }, '<');
+    tl.fromTo(
+      '#fixed-value-page-1',
+      {
+        rotationX: -30,
+        rotationY: 0,
+        rotationZ: -30,
+        z: 100,
+        y: 300,
+        x: 300,
+        opacity: 0,
+      },
+      {
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        y: 0,
+        x: 0,
+        z: 0,
+        opacity: 1,
+        transformOrigin: '100% 50%',
+        duration: 8,
+      },
+      '<',
+    );
+    const title6 = gsap.utils.toArray('.value-title6 path');
+    const title7 = gsap.utils.toArray('.value-title7 path');
+    title6.forEach((item) => {
+      if (!item) return;
+      tl.fromTo(
+        item,
+        {
+          stroke: 'black',
+          fill: 'none',
+          drawSVG: 0,
+        },
+        {
+          drawSVG: true,
+          duration: 0.1,
+          delay: 0.3,
+          ease: 'power3.inOut',
+        },
+        '<',
+      );
+      tl.to(
+        item,
+        {
+          fill: 'black',
+          duration: 0.1,
+          delay: 0.3,
+        },
+        '<',
+      );
+    });
+    title7.forEach((item) => {
+      if (!item) return;
+      tl.fromTo(
+        item,
+        {
+          stroke: 'black',
+          fill: 'none',
+          drawSVG: 0,
+        },
+        {
+          drawSVG: true,
+          duration: 0.1,
+          delay: 0.3,
+          ease: 'power3.inOut',
+        },
+        '<',
+      );
+      tl.to(
+        item,
+        {
+          fill: 'black',
+          duration: 0.1,
+          delay: 0.3,
+        },
+        '<',
+      );
+    });
+  };
+  const createPage2CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
     const title1 = gsap.utils.toArray('.value-title1 path');
     const title1cn = gsap.utils.toArray('.value-title1cn path');
@@ -42,15 +139,14 @@ export const useValueCrossAnimations = ({
       if (!item) return;
       tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
     });
-    tl.to(
-      camera.position,
-      {
-        ...page2Config.to.camera.position,
-        duration: 30,
-        ease: 'power3.in',
-      },
-      '-=5',
-    );
+  };
+  const createPage3CrossAnim = (tl: GSAPTimeline) => {
+    if (!modelRef.current) return;
+    tl.to(camera.position, {
+      ...page2Config.to.camera.position,
+      duration: 30,
+      ease: 'power3.in',
+    });
     tl.to(
       camera.rotation,
       {
@@ -101,8 +197,6 @@ export const useValueCrossAnimations = ({
     );
     const title8 = gsap.utils.toArray('.value-title8 path');
     const title9 = gsap.utils.toArray('.value-title9 path');
-    const title3 = gsap.utils.toArray('.value-title3 path');
-    const title3cn = gsap.utils.toArray('.value-title3cn path');
     title8.forEach((item) => {
       if (!item) return;
       tl.fromTo(
@@ -155,25 +249,20 @@ export const useValueCrossAnimations = ({
         '<',
       );
     });
-    title3.forEach((item, index) => {
-      if (!item) return;
-      if (index === 0) {
-        tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '-=3');
-      }
-      tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 }, '<');
-    });
-    title3cn.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 }, '<');
-    });
   };
 
-  const createPage2CrossAnim = (tl: GSAPTimeline) => {
+  const createPage4CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
+    const title3 = gsap.utils.toArray('.value-title3 path');
+    const title3cn = gsap.utils.toArray('.value-title3cn path');
     const title4 = gsap.utils.toArray('.value-title4 path');
     const title4cn = gsap.utils.toArray('.value-title4cn path');
     const title5 = gsap.utils.toArray('.value-title5 path');
     const title5cn = gsap.utils.toArray('.value-title5cn path');
+    title3.forEach((item, index) => {
+      if (!item) return;
+      tl.to(item, { opacity: 0, duration: 0.2, delay: 0.2 });
+    });
     title4.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
@@ -181,6 +270,10 @@ export const useValueCrossAnimations = ({
     title5.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.1, delay: 0.1 });
+    });
+    title3cn.forEach((item) => {
+      if (!item) return;
+      tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
     });
     title4cn.forEach((item) => {
       if (!item) return;
@@ -190,24 +283,22 @@ export const useValueCrossAnimations = ({
       if (!item) return;
       tl.fromTo(item, { opacity: 0, delay: 0.1 }, { opacity: 1, duration: 0.1, delay: 0.1 });
     });
-
-    tl.to(
-      camera.position,
-      {
-        ...page3Config.to.camera.position,
-        duration: 30,
-        onUpdate: () => {
-          camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
-        },
-        onComplete: () => {
-          if (!isScrollingRef.current) setValuePageIndex(2);
-        },
-        onReverseComplete: () => {
-          if (!isScrollingRef.current) setValuePageIndex(1);
-        },
+  };
+  const createPage5CrossAnim = (tl: GSAPTimeline) => {
+    if (!modelRef.current) return;
+    tl.to(camera.position, {
+      ...page3Config.to.camera.position,
+      duration: 30,
+      onUpdate: () => {
+        camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
       },
-      '-=4',
-    );
+      onComplete: () => {
+        if (!isScrollingRef.current) setValuePageIndex(2);
+      },
+      onReverseComplete: () => {
+        if (!isScrollingRef.current) setValuePageIndex(1);
+      },
+    });
     tl.to(
       '#fixed-value-page-2',
       {
@@ -246,5 +337,8 @@ export const useValueCrossAnimations = ({
   return {
     createPage1CrossAnim,
     createPage2CrossAnim,
+    createPage3CrossAnim,
+    createPage4CrossAnim,
+    createPage5CrossAnim,
   };
 };
