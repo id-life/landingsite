@@ -80,9 +80,9 @@ function ValueGL() {
             if (!smoother || !tl1.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl1.scrollTrigger.end + 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -98,7 +98,7 @@ function ValueGL() {
             gsap.to(smoother, {
               scrollTop: twinShow,
               duration: 2,
-              ease: 'power2.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -123,7 +123,7 @@ function ValueGL() {
             gsap.to(smoother, {
               duration: 1,
               scrollTop: tl2.scrollTrigger.end + 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -137,7 +137,7 @@ function ValueGL() {
             gsap.to(smoother, {
               duration: 1,
               scrollTop: tl2.scrollTrigger.start - 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -160,9 +160,9 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl3.scrollTrigger.end + 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -174,9 +174,9 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl3.scrollTrigger.start - 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -199,9 +199,9 @@ function ValueGL() {
             if (!smoother || !tl4.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl4.scrollTrigger.end + 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -213,9 +213,9 @@ function ValueGL() {
             if (!smoother || !tl4.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl4.scrollTrigger.start - 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -238,9 +238,9 @@ function ValueGL() {
             if (!smoother || !tl5.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl5.scrollTrigger.end + 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
@@ -252,9 +252,9 @@ function ValueGL() {
             if (!smoother || !tl5.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl5.scrollTrigger.start - 50,
-              ease: 'power1.in',
+              ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
               },
