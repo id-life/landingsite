@@ -79,7 +79,7 @@ function ValueGL() {
             if (!smoother || !tl1.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2,
+              duration: 2.5,
               scrollTop: tl1.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -96,7 +96,7 @@ function ValueGL() {
             const twinShow = twinST?.labelToScroll('twin-show');
             gsap.to(smoother, {
               scrollTop: twinShow,
-              duration: 2.5,
+              duration: 3,
               ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
@@ -159,7 +159,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -173,7 +173,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {

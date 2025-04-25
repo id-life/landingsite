@@ -33,6 +33,7 @@ export const useValueCrossAnimations = ({
       motionPath: {
         path: [{ x: -2.38, y: -11.5, z: -4.4 }, { x: -4.8, y: -12.5, z: -4.1 }, { ...page1Config.to.camera.position }],
       },
+      ease: 'power1.out',
       duration: 30,
     });
     tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: 30 }, '<');
@@ -56,7 +57,7 @@ export const useValueCrossAnimations = ({
         z: 0,
         opacity: 1,
         transformOrigin: '100% 50%',
-        duration: 10,
+        duration: 15,
       },
       '<',
     );
