@@ -126,10 +126,14 @@ function Portfolio() {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         tl.to(div, { scale: 1.1 });
         const title = div.querySelector('.fund-title');
+        const selected = title?.querySelectorAll('img');
         const desc = div.querySelector('.fund-desc');
         const subtitle = div.querySelector('.fund-subtitle');
         if (title) {
-          tl.to(title, { fontSize: '26px', fontWeight: 600, lineHeight: '30px', textDecoration: 'underline' });
+          tl.to(title, { fontSize: '26px', fontWeight: 600, lineHeight: '30px' });
+        }
+        if (selected) {
+          tl.to(selected, { opacity: 1 });
         }
         if (desc) {
           tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
