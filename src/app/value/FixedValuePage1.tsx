@@ -212,7 +212,7 @@ export default function FixedValuePage1() {
             />
           </svg>
           <svg
-            className="value-title2cn absolute right-0 top-0 w-[17.0625rem]"
+            className="value-title2cn absolute right-0 top-6 w-[17.0625rem]"
             viewBox="0 0 273 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
