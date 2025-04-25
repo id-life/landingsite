@@ -10,14 +10,13 @@ import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin, MotionPathPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, MotionPathPlugin);
 
 export const VALUE_PROGRESS_CONFIG = {
   desktop: {
@@ -80,7 +79,7 @@ function ValueGL() {
             if (!smoother || !tl1.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 2,
               scrollTop: tl1.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -97,7 +96,7 @@ function ValueGL() {
             const twinShow = twinST?.labelToScroll('twin-show');
             gsap.to(smoother, {
               scrollTop: twinShow,
-              duration: 2,
+              duration: 2.5,
               ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
@@ -121,7 +120,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl2.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -135,7 +134,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1,
+              duration: 1.5,
               scrollTop: tl2.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -160,7 +159,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 1,
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -174,7 +173,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 1,
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -199,7 +198,7 @@ function ValueGL() {
             if (!smoother || !tl4.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 2,
               scrollTop: tl4.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -213,7 +212,7 @@ function ValueGL() {
             if (!smoother || !tl4.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 2,
               scrollTop: tl4.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -238,7 +237,7 @@ function ValueGL() {
             if (!smoother || !tl5.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 2,
               scrollTop: tl5.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -252,7 +251,7 @@ function ValueGL() {
             if (!smoother || !tl5.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 2,
               scrollTop: tl5.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {

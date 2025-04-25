@@ -60,84 +60,43 @@ export const useValueCrossAnimations = ({
       },
       '<',
     );
-    const title6 = gsap.utils.toArray('.value-title6 path');
-    const title7 = gsap.utils.toArray('.value-title7 path');
-    title6.forEach((item) => {
+    const title6 = gsap.utils.toArray('.value-title6 *');
+    const title7 = gsap.utils.toArray('.value-title7 *');
+    [...title6, ...title7].forEach((item, index) => {
       if (!item) return;
       tl.fromTo(
         item,
+        { opacity: 0 },
         {
-          stroke: 'black',
-          fill: 'none',
-          drawSVG: 0,
+          opacity: 1,
+          duration: 0.2,
+          delay: index,
         },
-        {
-          drawSVG: true,
-          duration: 0.5,
-          delay: 0.5,
-          ease: 'power3.inOut',
-        },
-        '<',
-      );
-      tl.to(
-        item,
-        {
-          fill: 'black',
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<',
-      );
-    });
-    title7.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(
-        item,
-        {
-          stroke: 'black',
-          fill: 'none',
-          drawSVG: 0,
-        },
-        {
-          drawSVG: true,
-          duration: 0.5,
-          delay: 0.5,
-          ease: 'power3.inOut',
-        },
-        '<',
-      );
-      tl.to(
-        item,
-        {
-          fill: 'black',
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<',
+        '0',
       );
     });
   };
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
-    const title1 = gsap.utils.toArray('.value-title1 path');
+    const title1 = gsap.utils.toArray('.value-title1 *');
     const title1cn = gsap.utils.toArray('.value-title1cn path');
-    const title2 = gsap.utils.toArray('.value-title2 path');
+    const title2 = gsap.utils.toArray('.value-title2 *');
     const title2cn = gsap.utils.toArray('.value-title2cn path');
     title1.forEach((item) => {
       if (!item) return;
-      tl.to(item, { opacity: 0, duration: 0.5, delay: 0.5 });
+      tl.to(item, { opacity: 0, duration: 0.5, delay: 1 });
     });
     title1cn.forEach((item) => {
       if (!item) return;
-      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5 });
+      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 1 });
     });
     title2.forEach((item) => {
       if (!item) return;
-      tl.to(item, { opacity: 0, duration: 0.5, delay: 0.5 });
+      tl.to(item, { opacity: 0, duration: 0.5, delay: 1 });
     });
     title2cn.forEach((item) => {
       if (!item) return;
-      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5 });
+      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 1 });
     });
   };
   const createPage3CrossAnim = (tl: GSAPTimeline) => {
@@ -195,73 +154,37 @@ export const useValueCrossAnimations = ({
       },
       '<',
     );
-    const title8 = gsap.utils.toArray('.value-title8 path');
-    const title9 = gsap.utils.toArray('.value-title9 path');
-    title8.forEach((item) => {
+    const title8 = gsap.utils.toArray('.value-title8 *');
+    title8.forEach((item, index) => {
       if (!item) return;
       tl.fromTo(
         item,
+        { opacity: 0 },
         {
-          stroke: 'black',
-          fill: 'none',
-          drawSVG: 0,
+          opacity: 1,
+          duration: 0.2,
+          delay: index,
         },
-        {
-          drawSVG: true,
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<50%',
-      );
-      tl.to(
-        item,
-        {
-          fill: 'black',
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<',
-      );
-    });
-    title9.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(
-        item,
-        {
-          stroke: 'black',
-          fill: 'none',
-          drawSVG: 0,
-        },
-        {
-          drawSVG: true,
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<',
-      );
-      tl.to(
-        item,
-        {
-          fill: 'black',
-          duration: 0.5,
-          delay: 0.5,
-        },
-        '<',
+        '-=30%',
       );
     });
   };
 
   const createPage4CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
-    const title3 = gsap.utils.toArray('.value-title3 path');
+    const title3 = gsap.utils.toArray('.value-title3 *');
     const title3cn = gsap.utils.toArray('.value-title3cn path');
-    const title4 = gsap.utils.toArray('.value-title4 path');
+    const title4 = gsap.utils.toArray('.value-title4 *');
     const title4cn = gsap.utils.toArray('.value-title4cn path');
-    const title5 = gsap.utils.toArray('.value-title5 path');
+    const title5 = gsap.utils.toArray('.value-title5 *');
     const title5cn = gsap.utils.toArray('.value-title5cn path');
     title3.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.5, delay: 0.5 });
+    });
+    title3cn.forEach((item) => {
+      if (!item) return;
+      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5 });
     });
     title4.forEach((item) => {
       if (!item) return;
@@ -270,10 +193,6 @@ export const useValueCrossAnimations = ({
     title5.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.5, delay: 0.5 });
-    });
-    title3cn.forEach((item) => {
-      if (!item) return;
-      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5 });
     });
     title4cn.forEach((item) => {
       if (!item) return;
