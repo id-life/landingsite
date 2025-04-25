@@ -125,7 +125,7 @@ export default function FixedValuePage2() {
         </p>
       </div>
       <div className="absolute right-20 top-1/4 flex flex-col items-end">
-        <svg className="value-title8 w-[16.625rem]" viewBox="0 0 266 78" xmlns="http://www.w3.org/2000/svg">
+        <svg className="value-title8 w-[12.875rem]" viewBox="0 0 206 78" xmlns="http://www.w3.org/2000/svg">
           {/*L*/}
           <path d="M0,77.3V0h13.7v64.8h34.9v12.4H0Z" />
           {/*I*/}
@@ -136,8 +136,6 @@ export default function FixedValuePage2() {
           <rect x="153" y="0" width="52.3" height="12.1" />
           <rect x="153" y="30.8" width="48.5" height="12.1" />
           <path d="M167,65.3h38.3v12.1h-52.3V0h14v65.3Z" />
-          {/*S*/}
-          <path d="M212,72.1v-7.3h34.6c3.3,0,4.9-1.6,4.9-4.8v-8.5c0-2.8-1.3-4.5-3.8-5l-22.7-4.6c-8.7-1.7-13-7.5-13-17.5v-6.2C212,6.1,218.1,0,230.3,0h26.1l6.6,5.2v7.3h-32.4c-3.3,0-4.9,1.6-4.9,4.8v7.5c0,2.8,1.3,4.5,3.8,5l22.7,4.5c8.7,1.8,13,7.6,13,17.5v7.3c0,12.2-6.1,18.3-18.3,18.3h-28.3l-6.6-5.2Z" />
         </svg>
         <div className="relative mt-4 h-[9rem]">
           <svg
