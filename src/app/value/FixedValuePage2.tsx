@@ -120,8 +120,8 @@ export default function FixedValuePage2() {
             />
           </svg>
         </div>
-        <p className="mt-12 w-[26rem] text-left text-xl/6 font-semibold capitalize">
-          we stand with bold unorthodox ideas and brave contrarian founders
+        <p className="mt-12 w-[26rem] text-left text-xl/6 font-semibold">
+          We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
         </p>
       </div>
       <div className="absolute right-20 top-1/4 flex flex-col items-end">
@@ -260,7 +260,7 @@ export default function FixedValuePage2() {
             />
           </svg>
         </div>
-        <p className="mt-12 w-[41rem] text-right text-xl/6 font-semibold capitalize">
+        <p className="mt-12 w-[41rem] text-right text-xl/6 font-semibold">
           Radical Lifespan Extension and Fulfilling Healthspan Extension Longevity as a Moral Imperative
         </p>
       </div>

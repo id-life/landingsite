@@ -29,8 +29,8 @@ export default function FixedValuePage3() {
               fill="#BB1212"
             />
           </svg>
-          <p className="mt-12 w-[22rem] text-left text-sm/4 font-semibold capitalize">
-            Deep roots in both East and West, a conduit that bridges market, capital, institutions and more
+          <p className="mt-12 w-[22rem] text-left text-sm/4 font-semibold">
+            Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
           </p>
         </div>
         <div>
@@ -41,8 +41,8 @@ export default function FixedValuePage3() {
             />
           </svg>
 
-          <p className="mt-12 w-[20rem] text-left text-sm/4 font-semibold capitalize">
-            we stand with bold unorthodox ideas and brave contrarian founders
+          <p className="mt-12 w-[20rem] text-left text-sm/4 font-semibold">
+            We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders{' '}
           </p>
         </div>
         <div>
@@ -58,7 +58,7 @@ export default function FixedValuePage3() {
               fill="#BB1212"
             />
           </svg>
-          <p className="mt-12 w-[28rem] text-left text-sm/4 font-semibold capitalize">
+          <p className="mt-12 w-[28rem] text-left text-sm/4 font-semibold">
             Radical Lifespan Extension and Fulfilling Healthspan Extension Longevity as a Moral Imperative
           </p>
         </div>
