@@ -244,7 +244,7 @@ export function WorldMapDotContent({
             <a
               href={link}
               target="_blank"
-              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer"
+              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38vh] cursor-pointer"
             ></a>
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
