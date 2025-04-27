@@ -282,16 +282,18 @@ export function WorldMapDotContent({
                 {period}
               </h3>
             )}
-            {imgs?.length ? (
-              <div
-                ref={scrollContainerRef}
-                className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-              >
-                {imgs.map((img) => (
-                  <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                ))}
-              </div>
-            ) : null}
+            <a href={link} target="_blank" className="pointer-events-auto">
+              {imgs?.length ? (
+                <div
+                  ref={scrollContainerRef}
+                  className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+                >
+                  {imgs.map((img) => (
+                    <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                  ))}
+                </div>
+              ) : null}
+            </a>
           </motion.div>
         </div>
       )}
