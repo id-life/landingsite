@@ -1,8 +1,7 @@
 'use client';
 
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
-import FixedCard from '@/app/value/FixedCard';
-import FixedValue from '@/app/value/FixedValue';
+import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { CAROUSEL_ITEMS } from '@/constants/config';
@@ -14,7 +13,6 @@ import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
-import NewFixedValue from '@/app/value/NewFixedValue';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -51,7 +49,6 @@ export default function PCFixedUI() {
         <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
       </ClientOnly>
       {/*<FixedValue />*/}
-      <FixedCard />
       <NewFixedValue />
     </>
   );
