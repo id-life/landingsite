@@ -53,7 +53,7 @@ export default function SwitchModel() {
       </div>
       <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
       <div className="relative grid gap-2 p-2">
-        <div className="absolute inset-0 animate-pulse-30 border-2 border-black"></div>
+        <div className="absolute inset-0 animate-pulse-10 border-2 border-black"></div>
         <div
           className={clsx('relative cursor-pointer', currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
           onClick={() => handleSwitchModel(PredictionModel.M1)}

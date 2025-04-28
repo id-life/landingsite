@@ -100,9 +100,9 @@ const config: Config = {
         scale: {
           '50%': { transform: 'scale(1.1)' },
         },
-        'pulse-30': {
+        'pulse-10': {
           '50%': {
-            opacity: '0.3',
+            opacity: '0.1',
           },
         },
         'move-right': {
@@ -111,7 +111,7 @@ const config: Config = {
       },
       animation: {
         scale: 'scale 2s linear infinite',
-        'pulse-30': 'pulse-30 2s linear infinite',
+        'pulse-10': 'pulse-10 2s linear infinite',
         'move-right': 'move-right 2s linear infinite',
       },
     },
