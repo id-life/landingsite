@@ -35,42 +35,76 @@ export function useNavigation() {
       if (!smoother) return;
 
       const id = item.id;
-
       if (id === NAV_LIST[0].id) {
         isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false, '1px');
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else if (id === NAV_LIST[1].id) {
         // portfolio 页 偏移 & contact 需要处理
         isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
+        ScrollTrigger.disable();
         smoother?.scrollTo(`#${id}`, false, 'top 10px');
+        ScrollTrigger.enable();
         requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`));
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else if (id === NAV_LIST[2].id) {
         // engagement 页
         isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
           gsap.set(window, { scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
         });
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else if (item.id === NAV_LIST[3].id) {
         isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
-        requestAnimationFrame(() => smoother?.scrollTo('#switch-model', false, `${window.innerHeight}px`));
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('twin-scroll-trigger');
+          const twinShow = st?.labelToScroll('twin-show');
+          if (!twinShow) return;
+          smoother?.scrollTo(twinShow, false);
+        });
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else if (item.id === NAV_LIST[4].id) {
         isNavScrollingRef.current = true;
-        // smoother?.scrollTo(`#${id}`, false, `${window.innerHeight}px`);
-        smoother?.scrollTo(`#${id}`, false, `center bottom`);
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        window.isNavScrolling = true;
+        smoother?.scrollTo(`#${item.id}`, false);
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('value-page1-scroll-trigger');
+          if (!st) return;
+          smoother?.scrollTo(st.end, false);
+        });
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else {
         // 其他 正常滚
         isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false);
-        setTimeout(() => (isNavScrollingRef.current = false), 500);
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       }
 
       setCurrentPage(item);

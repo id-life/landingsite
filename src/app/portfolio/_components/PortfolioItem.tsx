@@ -24,7 +24,11 @@ const PortfolioItem = memo(
       >
         <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{image}</div>
         <div className="mt-4 text-center font-semibold">
-          <h4 className="fund-title font-oxanium text-base/6 mobile:text-xl/6">{title}</h4>
+          <h4 className="fund-title flex-center gap-2.5 font-oxanium text-base/6 mobile:text-xl/6">
+            <img src="/svgs/select.svg" className="title-selected w-5.5 rotate-180 opacity-0" alt="" />
+            {title}
+            <img src="/svgs/select.svg" className="title-selected w-5.5 opacity-0" alt="" />
+          </h4>
           <p className="fund-desc mx-auto mt-3 w-72 text-xs/5">{description}</p>
           {subTitle && (
             <div className="fund-subtitle mx-auto mt-3 w-44 py-1.5 text-xs/3 font-semibold text-gray-350">{subTitle}</div>

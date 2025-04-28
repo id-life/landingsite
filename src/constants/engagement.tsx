@@ -1,4 +1,4 @@
-import { AmericaSVG, ChineseSVG, EUnionSVG, HondurasSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
+import { AmericaSVG, ChineseSVG, HondurasSVG, MontenegroSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
 
 // 波纹动画配置
@@ -48,9 +48,9 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
   },
   {
-    lat: 42.5,
-    lng: 7,
-    icon: <EUnionSVG className="size-7 mobile:size-5.5" />,
+    lat: 40,
+    lng: 18,
+    icon: <MontenegroSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: -14,
@@ -97,6 +97,7 @@ export type MapDotData = {
   index?: number; // 动画标识符
   pulseConfig?: PulseConfig; // 自定义波纹配置
   activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
+  link?: string; // 跳转链接
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -107,7 +108,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     label: 'Shanghai',
     period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    title: 'The 5th Timepie Longevity Forum', //上海timepie
+    title: 'The 5th Timepie Longevity Forum', //上海
+    link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     pcDotHotAreaClass: 'top-[25vh]',
@@ -146,6 +148,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/11',
     key: 'cm_lanna_2024', // Unique identifier for the dot
     title: 'Edge City Lanna',
+    link: 'https://www.edgecity.live/lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
     pcDotHotAreaClass: 'top-[25.5vh]',
@@ -180,6 +183,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum',
+    link: 'https://founderslongevity.co/#speakers',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
     pcDotHotAreaClass: 'top-[39.5vh]',
@@ -222,6 +226,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     period: '2024/01',
     key: 'roatan_vitalia_2024', // Unique identifier for the dot
     title: 'Vitalia @ Roatan, Honduras',
+    link: 'https://community.prospera.co/c/events/vitalia',
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
@@ -271,7 +276,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
-    desc: 'Chinese ver Outlined by Boyang', // 描述
+    desc: 'Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
@@ -284,7 +289,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-02',
     title: 'Earth',
     bookTitle: 'bio/acc manifesto',
-    desc: 'Chinese ver Translated by Boyang', // 描述
+    desc: 'Chinese Ver by Boyang', // 描述
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
     link: 'https://bioacc.life/zh/', // 跳转链接
@@ -314,10 +319,10 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -123.5,
     title: 'Berkeley, USA',
     key: 'sponsor-01',
-    alt: 'VITALISTBAY',
+    alt: 'VITALIST BAY',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
-    link: '',
+    link: 'https://www.vitalistbay.com/',
     sponsorText: 'Cohost',
   },
   {
@@ -330,7 +335,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'ethPanda',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
-    link: '',
+    link: 'https://ethpanda.org/',
     activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
   {
@@ -338,11 +343,12 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -1,
     title: 'Oxford, UK',
     key: 'sponsor-03',
-    alt: 'OXFORD\nLONGEVITY',
+    alt: 'Oxford Future Innovation Forum 2024',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
     activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1'],
-    link: '',
+    link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
+    sponsorText: 'Forum',
   },
 ];
 

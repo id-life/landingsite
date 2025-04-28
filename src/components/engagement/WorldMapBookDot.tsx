@@ -6,7 +6,7 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useEffect, useMemo } from 'react';
-import { ArrowSVG, BookSVG } from '../svg';
+import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 
 const pointVariants: Variants = {
@@ -238,11 +238,14 @@ export function WorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center gap-1"
+                className="flex cursor-pointer flex-col items-center gap-4"
               >
                 <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
-                <ArrowSVG className="size-4 rotate-180 fill-gray-350" />
-                <p className="text-xs/3 text-gray-350">{desc}</p>
+                <div className="flex items-center">
+                  <LinkSVG className="size-4 fill-blue" />
+                  <p className="ml-1 text-xs/3 font-medium text-blue">{desc} </p>
+                  <ArrowSVG className="size-4 -rotate-90 fill-blue" />
+                </div>
               </motion.div>
             </motion.div>
           </a>

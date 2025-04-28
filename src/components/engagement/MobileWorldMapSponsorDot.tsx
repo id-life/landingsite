@@ -166,14 +166,6 @@ export function MobileWorldMapSponsorDotContent({
     [calcPoint, lat, lng, mobileLat, mobileLng],
   );
 
-  // const onClick = useCallback(
-  //   (e: React.MouseEvent) => {
-  //     e.stopPropagation();
-  //     if (link) window.open(link, '_blank');
-  //   },
-  //   [link],
-  // );
-
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
@@ -195,46 +187,45 @@ export function MobileWorldMapSponsorDotContent({
             left: `${left}px`,
             top: `${top}px`,
           }}
-          // onClick={onClick}
         >
-          {/* <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4"> */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className={cn(
-              'clip-sponsor-content absolute left-0 top-2 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
-            )}
-            onMouseLeave={handleContentMouseLeave}
-            variants={{
-              hidden: {
-                opacity: 0,
-                y: -10,
-                transformOrigin: 'top left',
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transformOrigin: 'top left',
-              },
-            }}
-            transition={{
-              staggerChildren: 0.05,
-              duration: 0.3,
-              type: 'easeInOut',
-            }}
-          >
-            <VideoWithPoster
-              coverUrl={coverUrl}
-              videoUrl={videoUrl}
-              title={alt}
-              containerClass="-mt-4"
-              videoClass="size-[13.75rem]"
-              coverClass="size-[13.75rem]"
-            />
-            <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
-          </motion.div>
-          {/* </a> */}
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className={cn(
+                'clip-sponsor-content absolute left-0 top-2 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+              )}
+              onMouseLeave={handleContentMouseLeave}
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  y: -10,
+                  transformOrigin: 'top left',
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transformOrigin: 'top left',
+                },
+              }}
+              transition={{
+                staggerChildren: 0.05,
+                duration: 0.3,
+                type: 'easeInOut',
+              }}
+            >
+              <VideoWithPoster
+                coverUrl={coverUrl}
+                videoUrl={videoUrl}
+                title={alt}
+                containerClass="-mt-4"
+                videoClass="size-[13.75rem]"
+                coverClass="size-[13.75rem]"
+              />
+              <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
+            </motion.div>
+          </a>
         </div>
       )}
     </AnimatePresence>

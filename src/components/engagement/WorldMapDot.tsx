@@ -168,7 +168,7 @@ export function WorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass } = dot;
+  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
@@ -241,6 +241,11 @@ export function WorldMapDotContent({
             )}
             onMouseLeave={handleContentMouseLeave}
           >
+            <a
+              href={link}
+              target="_blank"
+              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38vh] cursor-pointer"
+            ></a>
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
               className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20 cursor-pointer', pcDotHotAreaClass)}
@@ -277,16 +282,18 @@ export function WorldMapDotContent({
                 {period}
               </h3>
             )}
-            {imgs?.length ? (
-              <div
-                ref={scrollContainerRef}
-                className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-              >
-                {imgs.map((img) => (
-                  <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                ))}
-              </div>
-            ) : null}
+            <a href={link} target="_blank" className="pointer-events-auto">
+              {imgs?.length ? (
+                <div
+                  ref={scrollContainerRef}
+                  className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+                >
+                  {imgs.map((img) => (
+                    <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                  ))}
+                </div>
+              ) : null}
+            </a>
           </motion.div>
         </div>
       )}
