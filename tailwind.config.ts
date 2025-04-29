@@ -110,9 +110,9 @@ const config: Config = {
         },
       },
       animation: {
-        scale: 'scale 2s linear infinite',
-        'pulse-10': 'pulse-10 2s linear infinite',
-        'move-right': 'move-right 2s linear infinite',
+        scale: 'scale 6s linear infinite',
+        'pulse-10': 'pulse-10 6s linear infinite',
+        'move-right': 'move-right 6s linear infinite',
       },
     },
   },
