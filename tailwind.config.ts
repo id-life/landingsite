@@ -49,6 +49,8 @@ const config: Config = {
         51.5: '12.875rem',
         55: '13.75rem',
         66.5: '16.625rem',
+        76: '19rem',
+        97: '24.25rem',
         100: '23rem',
         105: '26.25rem',
         112: '28rem',
@@ -93,6 +95,24 @@ const config: Config = {
         5.5: '1.375rem',
         7.5: '1.875rem',
         12: '3rem',
+      },
+      keyframes: {
+        scale: {
+          '50%': { transform: 'scale(1.1)' },
+        },
+        'pulse-10': {
+          '50%': {
+            opacity: '0.1',
+          },
+        },
+        'move-right': {
+          '50%': { transform: 'translateX(10px)' },
+        },
+      },
+      animation: {
+        scale: 'scale 4s linear infinite',
+        'pulse-10': 'pulse-10 4s linear infinite',
+        'move-right': 'move-right 4s linear infinite',
       },
     },
   },
