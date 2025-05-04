@@ -14,7 +14,7 @@ import '../utils/analytics';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
-  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
+  description: 'Immortal Dragons is a purpose-driven longevity fund.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -29,10 +29,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Immortal Dragons',
     siteName: 'Immortal Dragons',
-    description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
+    description: 'Immortal Dragons is a purpose-driven longevity fund.',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover.webp',
+        url: 'https://cdn.id.life/id-life-cover-2.webp',
       },
     ],
   },
@@ -41,11 +41,11 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  image: 'https://cdn.id.life/id-life-cover.webp',
+  image: 'https://cdn.id.life/id-life-cover-2.webp',
   url: 'https://www.id.life/',
   logo: 'https://cdn.id.life/id-logo-circle.png',
   name: 'Immortal Dragons',
-  description: 'Immortal Dragons is a purpose-driven longevity fund dedicated to unlimited human healthy lifespans.',
+  description: 'Immortal Dragons is a purpose-driven longevity fund.',
   email: 'contact@id.life',
   address: {
     '@type': 'PostalAddress',
