@@ -31,7 +31,7 @@ export default function MobileFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[5.5rem] mobile:h-2 mobile:w-2" />
       <FixedValue />
       <ClientOnly>
-        <ToggleSoundButton className="fixed bottom-7.5 right-5 z-10 w-14 px-1" />
+        <ToggleSoundButton className="fixed bottom-7.5 right-5 z-[101] w-14 px-1" />
       </ClientOnly>
     </>
   );

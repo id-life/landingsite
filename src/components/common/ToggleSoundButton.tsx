@@ -1,11 +1,13 @@
+import { mobileNavOpenAtom } from '@/atoms';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
+import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { isSafari } from 'react-device-detect';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
-import { isMobile, isSafari } from 'react-device-detect';
 
 function SoundLineItem() {
   return (
@@ -16,6 +18,8 @@ function SoundLineItem() {
 }
 
 export default function ToggleSoundButton({ className }: { className?: string }) {
+  const mobileNavOpen = useAtomValue(mobileNavOpenAtom);
+
   const list1Ref = useRef<HTMLUListElement>(null);
   const list2Ref = useRef<HTMLUListElement>(null);
   const tl1Ref = useRef<GSAPTimeline | null>(null);
@@ -82,18 +86,24 @@ export default function ToggleSoundButton({ className }: { className?: string })
         speed: 0.2,
       });
     }
-  }, [soundOff, isSafari, isMobile]);
+  }, [soundOff]);
 
   return (
     <>
       <div
         className={cn(
-          'sound-button group flex cursor-pointer items-center gap-0.5 rounded-full bg-foreground px-2 py-1 transition duration-300 hover:scale-110',
+          'sound-button group flex cursor-pointer items-center gap-0.5 rounded-full bg-foreground px-2.5 py-1 transition duration-300 hover:scale-110',
+          mobileNavOpen && 'bg-white',
           className,
         )}
         onClick={() => {
           setSoundOff(!soundOff);
         }}
+        style={
+          {
+            '--background': mobileNavOpen ? 'black' : undefined,
+          } as React.CSSProperties
+        }
       >
         <div className="relative flex h-5 w-10 items-center overflow-hidden">
           <SoundLineSVG className={cn('hidden h-2 w-full', { block: soundOff })} isOff />
