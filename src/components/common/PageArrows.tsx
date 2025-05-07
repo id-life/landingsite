@@ -48,7 +48,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
   }, [currentPage.id, innerPageIndex, innerPageTotal]);
 
   return (
-    <div className={cn('pointer-events-auto z-20 flex cursor-pointer flex-col items-center gap-5', className)}>
+    <div className={cn('pointer-events-auto z-20 flex flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
         {!isLastPageAndInnerPage && <ArrowItem />}
@@ -70,10 +70,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
                     : 'bg-[#B8B8B8]',
               )}
             >
-              <div
-                className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"
-                onClick={() => setInnerPageNavigateTo(index)}
-              />
+              <div className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full" />
             </div>
           ))}
         </div>
