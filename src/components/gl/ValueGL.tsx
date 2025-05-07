@@ -1,11 +1,10 @@
+import { memo, useCallback, useEffect, useRef, RefObject } from 'react';
 import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -13,21 +12,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, MotionPathPlugin);
 
-export const VALUE_PROGRESS_CONFIG = {
-  desktop: {
-    0: 0,
-    1: 0.69,
-    2: 1, // 出邮箱
-  },
-} as const;
-
 type TitleProps = {
-  titleRef: React.RefObject<THREE.Group>;
+  titleRef: RefObject<THREE.Group>;
   position: THREE.Vector3;
   rotation?: THREE.Euler;
   scale: number;
@@ -43,13 +33,10 @@ const TitleSVG = memo(({ titleRef, position, rotation, scale, titleName }: Title
 TitleSVG.displayName = 'TitleSVG';
 
 function ValueGL() {
-  const { camera } = useThree();
   const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
-  const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.desktop, []);
 
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const isScrollingRef = useRef(false);
@@ -58,10 +45,7 @@ function ValueGL() {
   }, []);
 
   const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim, createPage4CrossAnim, createPage5CrossAnim } =
-    useValueCrossAnimations({
-      modelRef,
-      isScrollingRef,
-    });
+    useValueCrossAnimations({ modelRef });
 
   useGSAP(
     () => {
@@ -125,6 +109,7 @@ function ValueGL() {
               ease: 'none',
               onComplete: () => {
                 setTimeout(() => smoother.paused(false), 300);
+                if (!isScrollingRef.current) setInnerPageIndex(1);
               },
             });
           },
@@ -138,6 +123,7 @@ function ValueGL() {
               scrollTop: tl2.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(0);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -163,6 +149,7 @@ function ValueGL() {
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(2);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -177,6 +164,7 @@ function ValueGL() {
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(1);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -202,6 +190,7 @@ function ValueGL() {
               scrollTop: tl4.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(3);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -216,6 +205,7 @@ function ValueGL() {
               scrollTop: tl4.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(2);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -241,6 +231,7 @@ function ValueGL() {
               scrollTop: tl5.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(4);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -255,6 +246,7 @@ function ValueGL() {
               scrollTop: tl5.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
+                if (!isScrollingRef.current) setInnerPageIndex(3);
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -267,39 +259,21 @@ function ValueGL() {
   );
   useEffect(() => {
     if (currentPageIndex !== 4 || innerPageNavigateTo === null) return;
-    const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
-    if (progress !== undefined) {
-      if (innerPageNavigateTo === 2) {
-        const st = ScrollTrigger.getById('footerTimeline');
-        if (st) {
-          isScrollingRef.current = true;
-          gsap.to(window, {
-            duration: 0.5,
-            scrollTo: st.end,
-            onComplete: () => {
-              isScrollingRef.current = false;
-              enableScroll();
-            },
-          });
-        }
-      } else {
-        const st = ScrollTrigger.getById('valueTimeline');
-        if (st) {
-          isScrollingRef.current = true;
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: st.start + (st.end - st.start) * progress,
-            onComplete: () => {
-              isScrollingRef.current = false;
-              enableScroll();
-            },
-          });
-        }
-      }
-      setInnerPageIndex(innerPageNavigateTo);
-      setInnerPageNavigateTo(null);
+    const st = ScrollTrigger.getById(`value-page${innerPageNavigateTo + 1}-scroll-trigger`);
+    if (st) {
+      isScrollingRef.current = true;
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: st.end,
+        onComplete: () => {
+          isScrollingRef.current = false;
+          enableScroll();
+        },
+      });
     }
-  }, [currentPageIndex, innerPageNavigateTo, progressMap, setInnerPageIndex, setInnerPageNavigateTo, enableScroll]);
+    setInnerPageIndex(innerPageNavigateTo);
+    setInnerPageNavigateTo(null);
+  }, [currentPageIndex, innerPageNavigateTo, setInnerPageIndex, setInnerPageNavigateTo, enableScroll]);
 
   return (
     <group position={[0, -10, 0]}>

@@ -16,6 +16,7 @@ import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 interface PageArrowsProps {
   className?: string;
 }
+
 export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
@@ -24,7 +25,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Value 页有
+    return 5; // 目前就一个 Value 页有
   }, [currentPage]);
 
   const pageIndexList = useMemo(() => {

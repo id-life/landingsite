@@ -6,13 +6,7 @@ import { useMemo } from 'react';
 import { Group, Vector3 } from 'three';
 import gsap from 'gsap';
 
-export const useValueCrossAnimations = ({
-  modelRef,
-  isScrollingRef,
-}: {
-  modelRef: React.RefObject<Group>;
-  isScrollingRef: React.RefObject<boolean>;
-}) => {
+export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group> }) => {
   const { camera } = useThree();
   const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
   const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
@@ -113,13 +107,13 @@ export const useValueCrossAnimations = ({
         ...page2Config.to.camera.rotation,
         duration: 20,
         ease: 'none',
-        onComplete: () => {
-          camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
-          if (!isScrollingRef.current) setValuePageIndex(1);
-        },
-        onReverseComplete: () => {
-          if (!isScrollingRef.current) setValuePageIndex(0);
-        },
+        // onComplete: () => {
+        //   camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
+        //   if (!isScrollingRef.current) setValuePageIndex(1);
+        // },
+        // onReverseComplete: () => {
+        //   if (!isScrollingRef.current) setValuePageIndex(0);
+        // },
       },
       '<',
     );
@@ -212,12 +206,12 @@ export const useValueCrossAnimations = ({
       onUpdate: () => {
         camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
       },
-      onComplete: () => {
-        if (!isScrollingRef.current) setValuePageIndex(2);
-      },
-      onReverseComplete: () => {
-        if (!isScrollingRef.current) setValuePageIndex(1);
-      },
+      // onComplete: () => {
+      //   if (!isScrollingRef.current) setValuePageIndex(2);
+      // },
+      // onReverseComplete: () => {
+      //   if (!isScrollingRef.current) setValuePageIndex(1);
+      // },
     });
     tl.to(
       '#fixed-value-page-2',
