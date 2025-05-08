@@ -35,7 +35,6 @@ export default function PCFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
       {CAROUSEL_ITEMS?.length > 0 && (
         <VerticalCarousel
-          isShuffle
           slideDown
           itemHeight={48}
           duration={5}

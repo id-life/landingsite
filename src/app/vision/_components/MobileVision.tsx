@@ -22,7 +22,6 @@ export default function MobileVision() {
     >
       {globalLoaded && (
         <VerticalCarousel
-          isShuffle
           slideDown
           itemHeight={40}
           duration={5}

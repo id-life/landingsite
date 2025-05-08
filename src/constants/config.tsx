@@ -44,12 +44,12 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   },
   {
     text: 'Bringing global awareness of longevity',
-    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[13.625rem] w-[17.125rem]',
   },
   {
     cnText: '连接全球创新网络',
-    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Harnessing collective recognition of the significance of Longevity',
