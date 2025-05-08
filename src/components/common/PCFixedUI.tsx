@@ -40,7 +40,7 @@ export default function PCFixedUI() {
           itemHeight={48}
           duration={5}
           transition={0.6}
-          className="scroll-title fixed bottom-10 left-10 w-[25rem] mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
+          className="scroll-title fixed bottom-10 left-10 w-[25rem]"
         >
           {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
         </VerticalCarousel>
