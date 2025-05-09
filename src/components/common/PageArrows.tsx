@@ -21,7 +21,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
-  const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
+  // const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
@@ -54,7 +54,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
         {!isLastPageAndInnerPage && <ArrowItem />}
       </div>
       {/* 细长方块进度条 */}
-      {pageIndexList?.length ? (
+      {/* {pageIndexList?.length ? (
         <div className="flex-center order-2 gap-3 mobile:order-1">
           {pageIndexList.map((_, index) => (
             <div
@@ -74,7 +74,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
             </div>
           ))}
         </div>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

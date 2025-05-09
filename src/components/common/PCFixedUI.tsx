@@ -24,7 +24,8 @@ export default function PCFixedUI() {
         <PageArrows
           className={cn(
             'fixed left-1/2 -translate-x-1/2',
-            HAS_INNER_PAGE_LIST.includes(currentPage.id) ? 'bottom-5 mobile:bottom-6' : 'bottom-11 mobile:bottom-6',
+            // HAS_INNER_PAGE_LIST.includes(currentPage.id) ? 'bottom-5 mobile:bottom-6' :
+            'bottom-11 mobile:bottom-6',
           )}
         />
       )}
