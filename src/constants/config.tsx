@@ -10,55 +10,55 @@ import { ReactNode } from 'react';
 export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; textClass?: string }[] = [
   {
     text: 'Immortal Dragons is a purpose-driven longevity fund',
-    icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[16.25rem] w-[18.125rem]',
   },
   {
     cnText: '破解永生密码',
-    icon: <VisionDecorationLogo_1 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Igniting longevity revolution',
-    icon: <VisionDecorationLogo_2 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     cnText: '解码生命永恒密码',
-    icon: <VisionDecorationLogo_2 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Catalysing longevity revolution',
-    icon: <VisionDecorationLogo_3 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     cnText: '突破衰老科学边界',
-    icon: <VisionDecorationLogo_3 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Setting forth unlimited human healthy lifespan',
-    icon: <VisionDecorationLogo_4 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[15.125rem] w-[17.25rem]',
   },
   {
     cnText: '重塑人类寿命极限',
-    icon: <VisionDecorationLogo_4 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Bringing global awareness of longevity',
-    icon: <VisionDecorationLogo_5 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[13.625rem] w-[17.125rem]',
   },
   {
     cnText: '连接全球创新网络',
-    icon: <VisionDecorationLogo_5 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   {
     text: 'Harnessing collective recognition of the significance of Longevity',
-    icon: <VisionDecorationLogo_6 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[17.375rem w-[19.875rem]',
   },
   {
     cnText: '加速长寿技术革命',
-    icon: <VisionDecorationLogo_6 className="h-12 w-12 fill-foreground mobile:h-10 mobile:w-10" />,
+    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
 ];
 

@@ -107,13 +107,6 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
         ...page2Config.to.camera.rotation,
         duration: 20,
         ease: 'none',
-        // onComplete: () => {
-        //   camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
-        //   if (!isScrollingRef.current) setValuePageIndex(1);
-        // },
-        // onReverseComplete: () => {
-        //   if (!isScrollingRef.current) setValuePageIndex(0);
-        // },
       },
       '<',
     );
@@ -158,9 +151,9 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
         {
           opacity: 1,
           duration: 0.2,
-          delay: index,
+          delay: index * 0.9,
         },
-        '-=30%',
+        0,
       );
     });
   };
@@ -206,12 +199,6 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       onUpdate: () => {
         camera.lookAt(new Vector3(-0.3647, -9.6052, 0.7945));
       },
-      // onComplete: () => {
-      //   if (!isScrollingRef.current) setValuePageIndex(2);
-      // },
-      // onReverseComplete: () => {
-      //   if (!isScrollingRef.current) setValuePageIndex(1);
-      // },
     });
     tl.to(
       '#fixed-value-page-2',

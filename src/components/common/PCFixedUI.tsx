@@ -35,12 +35,11 @@ export default function PCFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
       {CAROUSEL_ITEMS?.length > 0 && (
         <VerticalCarousel
-          isShuffle
           slideDown
           itemHeight={48}
           duration={5}
           transition={0.6}
-          className="scroll-title fixed bottom-10 left-10 w-[25rem] mobile:pointer-events-none mobile:inset-x-0 mobile:mobile:top-[calc(100svh_-_12.625rem)] mobile:w-auto"
+          className="scroll-title fixed bottom-10 left-10 w-[25rem]"
         >
           {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
         </VerticalCarousel>

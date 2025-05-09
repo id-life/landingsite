@@ -34,7 +34,6 @@ export default function Vision() {
         </div> */}
         {isMobile && globalLoaded && (
           <VerticalCarousel
-            isShuffle
             slideDown
             itemHeight={40}
             duration={5}
