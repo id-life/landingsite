@@ -1,4 +1,4 @@
-'use clinet';
+'use client';
 
 import React, { Suspense, useRef, useState } from 'react';
 import Geo, { ModelRef } from '@/components/gl/model/geo/Geo';
