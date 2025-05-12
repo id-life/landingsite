@@ -32,7 +32,7 @@ export default function ReportM03() {
                 </div>
               </div>
             </div>
-            <Drawer.Description className="overflow-scroll">
+            <div className="overflow-scroll">
               {isChinese ? (
                 <div className="mt-5 text-base font-medium">
                   <h3 className="font-bold">生活状态：</h3>
@@ -244,7 +244,7 @@ export default function ReportM03() {
                   <p>Strictly follows training and recovery day schedules</p>
                 </div>
               )}
-            </Drawer.Description>
+            </div>
           </div>
         </Drawer.Content>
       </Drawer.Portal>
