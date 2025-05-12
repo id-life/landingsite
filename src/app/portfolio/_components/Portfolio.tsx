@@ -17,7 +17,7 @@ import PortfolioItem from './PortfolioItem';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
 
-// 注册GSAP插件
+// register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
@@ -58,7 +58,7 @@ function Portfolio() {
         end: '+=300%',
         pin: true,
         scrub: true,
-        id: 'portfolio-trigger', // 添加ID以便后续引用
+        id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
           setActive(true);
@@ -94,7 +94,7 @@ function Portfolio() {
     tl.to('#particle-gl', { opacity: 0 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
-    // 在整个动画完成后设置标志
+    // set the flag after the entire animation is finished
     tl.add(() => {
       setEnableDownJudge(true);
     });
@@ -107,12 +107,12 @@ function Portfolio() {
       let isMouseInFundArea = false;
       const wrapper = wrapperRef.current?.querySelector('.page2-fund');
 
-      // 创建节流后的setImageIdx函数
+      // create a throttled setImageIdx function
       const throttledSetImageIdx = throttle((index: number) => {
         setImageIdx(index);
       }, 200);
 
-      // 添加整个基金区域的鼠标事件监听
+      // add mouse event listeners for the entire fund area
       wrapper?.addEventListener('mouseenter', () => {
         isMouseInFundArea = true;
       });
@@ -147,7 +147,7 @@ function Portfolio() {
         });
         div.addEventListener('mouseleave', () => {
           tl.reverse();
-          // 只有当鼠标真正离开整个基金区域时才重置图片索引
+          // reset the image index only when the mouse actually leaves the entire fund area
           if (!isMouseInFundArea) {
             throttledSetImageIdx(0);
           }
@@ -166,8 +166,8 @@ function Portfolio() {
             <div className="particle-mask"></div>
           </div>
         </div>
-        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund my-12 overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
+        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
+        <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
           <div className="grid grid-cols-4">
             {portfolio.slice(0, 4).map((item, index) => (
               <PortfolioItem
@@ -186,6 +186,7 @@ function Portfolio() {
               <PortfolioItem
                 key={item.title}
                 item={item}
+                className="w-76"
                 onClick={() => handleFundClick(item)}
                 ref={(element) => {
                   if (!element) return;
