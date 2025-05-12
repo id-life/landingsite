@@ -18,13 +18,13 @@ const PortfolioItem = memo(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-60 w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[30svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
+          'mobile:flex-center relative h-[17.5rem] w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[30svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
           className,
         )}
       >
         <div className="flex h-20 items-center justify-center mobile:h-[3.875rem]">{image}</div>
-        <div className="mt-4 text-center font-semibold">
-          <h4 className="fund-title flex-center gap-2.5 font-oxanium text-base/6 mobile:text-xl/6">
+        <div className="mt-7.5 text-center font-semibold mobile:mt-4">
+          <h4 className="fund-title flex-center gap-2.5 font-oxanium text-xl/6 tracking-normal">
             <img src="/svgs/select.svg" className="title-selected w-5.5 rotate-180 opacity-0" alt="" />
             {title}
             <img src="/svgs/select.svg" className="title-selected w-5.5 opacity-0" alt="" />
