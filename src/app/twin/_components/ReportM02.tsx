@@ -98,7 +98,7 @@ export default function ReportM02() {
                   </div>
 
                   <div className="mt-2">
-                    <span className="font-bold">Maintains a positive mindset with low stress levels</span>.
+                    <span className="font-bold">Maintains a positive mindset with low stress levels</span>.&nbsp;
                     <span className="text-red-600">Expresses emotions through sharing</span> life experiences, movie reviews,
                     and music reviews on social media. For nutritional support, takes B-complex vitamins (Thorne, after
                     breakfast), turmeric (Now, 300mg after lunch), spirulina (6 tablets before dinner), probiotics (50 billion
@@ -106,7 +106,7 @@ export default function ReportM02() {
                     <span className="text-red-600">Adjusting supplement plan every 3 months based on blood work.</span>
                   </div>
                   <div className="mt-2">
-                    <span className="font-bold">Maintain a diverse exercise routine,</span>, including
+                    <span className="font-bold">Maintain a diverse exercise routine</span>, including&nbsp;
                     <span className="text-red-600">strength training 4-6 times</span> a week with a “push-pull-legs” split to
                     ensure all muscle groups are targeted. At the same time, engage in aerobic exercise 2-3 times a week,
                     lasting 30-45 minutes each session. Additionally, perform&nbsp;
