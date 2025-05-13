@@ -17,7 +17,7 @@ export const portfolio: PortfolioItemInfo[] = [
     title: 'VitaDAO',
     subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
-    image: <img className="w-50 mobile:w-[9.375rem]" src="/imgs/investments/vita.webp" alt="vita" />,
+    image: <img className="w-50 mobile:w-[9.875rem]" src="/imgs/investments/vita.webp" alt="vita" />,
     link: 'https://www.vitadao.com/',
   },
   {
