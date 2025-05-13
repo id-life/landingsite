@@ -1,4 +1,4 @@
-import MillionLint from '@million/lint';
+import { withSentryConfig } from '@sentry/nextjs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -42,7 +42,14 @@ const nextConfig = {
   cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
 };
 
-export default MillionLint.next({
-  enabled: false,
-  rsc: true,
-})(nextConfig);
+// Make sure adding Sentry options is the last code to run before exporting
+export default withSentryConfig(nextConfig, {
+  org: 'immortal-dragons',
+  project: 'id-landingsite',
+  // Only print logs for uploading source maps in CI
+  // Set to `true` to suppress logs
+  silent: !process.env.CI,
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+  widenClientFileUpload: true,
+});
