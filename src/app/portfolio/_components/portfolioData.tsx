@@ -33,11 +33,11 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://unlimit.bio/',
   },
   {
-    title: 'BiohackerDAO',
-    description: 'Decentralized self-enhancement experiments and monetizes data',
+    title: 'Frontier Bio',
+    description: 'The Future of Engineered Tissue',
     image: (
       <>
-        <img className="w-19.5 mobile:hidden" src="/imgs/investments/biohacker.webp" alt="biohacker" />
+        <img className="w-68 mobile:hidden" src="/imgs/investments/frontier-bio.webp" alt="frontier-bio" />
         <img
           className="hidden mobile:block mobile:w-[3.625rem]"
           src="/imgs/investments/mobile-biohacker.webp"
@@ -45,7 +45,7 @@ export const portfolio: PortfolioItemInfo[] = [
         />
       </>
     ),
-    link: 'https://biohackerdao.com/',
+    link: 'https://www.frontierbio.com/',
   },
   {
     title: 'Mito Health',
@@ -59,11 +59,10 @@ export const portfolio: PortfolioItemInfo[] = [
     image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
   },
   {
-    title: 'BIO Protocol',
-    subTitle: 'via VITA allocation convert',
-    description: 'A new home for Decentralized Biotech',
-    image: <img className="w-[9.6875rem] mobile:w-[7.25rem]" src="/imgs/investments/bio.webp" alt="bio" />,
-    link: 'http://bio.xyz/',
+    title: 'ALIS',
+    description: 'Gold Standard Longevity Services Scaled Globally',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
+    link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
   },
   {
     title: 'Longevity.Technology',
