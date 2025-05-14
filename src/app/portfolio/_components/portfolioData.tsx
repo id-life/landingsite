@@ -14,10 +14,15 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://www.healthspancapital.vc/',
   },
   {
-    title: 'VitaDAO',
+    title: 'VitaDAO & Bio.Xyz',
     subTitle: 'via secondary market',
     description: 'New funding paradigm for unlikely bio projects',
-    image: <img className="w-50 mobile:w-[9.875rem]" src="/imgs/investments/vita.webp" alt="vita" />,
+    image: (
+      <div className="flex-center gap-4">
+        <img className="w-50 mobile:w-[9.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
+        <img className="w-[9.6875rem] mobile:w-[7.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
+      </div>
+    ),
     link: 'https://www.vitadao.com/',
   },
   {
