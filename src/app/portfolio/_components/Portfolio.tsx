@@ -168,11 +168,12 @@ function Portfolio() {
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-4">
-            {portfolio.slice(0, 4).map((item, index) => (
+          <div className="grid grid-cols-5">
+            {portfolio.slice(0, 5).map((item, index) => (
               <PortfolioItem
                 key={item.title}
                 item={item}
+                className="w-76"
                 onClick={() => handleFundClick(item)}
                 ref={(element) => {
                   if (!element) return;
@@ -181,16 +182,15 @@ function Portfolio() {
               />
             ))}
           </div>
-          <div className="grid grid-cols-5">
-            {portfolio.slice(4).map((item, index) => (
+          <div className="grid grid-cols-4">
+            {portfolio.slice(5).map((item, index) => (
               <PortfolioItem
                 key={item.title}
                 item={item}
-                className="w-76"
                 onClick={() => handleFundClick(item)}
                 ref={(element) => {
                   if (!element) return;
-                  portfolioRefs.current[4 + index] = element;
+                  portfolioRefs.current[5 + index] = element;
                 }}
               />
             ))}

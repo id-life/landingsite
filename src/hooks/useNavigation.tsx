@@ -47,9 +47,7 @@ export function useNavigation() {
         // portfolio 页 偏移 & contact 需要处理
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        ScrollTrigger.disable();
         smoother?.scrollTo(`#${id}`, false, 'top 10px');
-        ScrollTrigger.enable();
         requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`));
         setTimeout(() => {
           isNavScrollingRef.current = false;
