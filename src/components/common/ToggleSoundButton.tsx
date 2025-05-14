@@ -33,7 +33,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
   const handleUserInteraction = useCallback(() => {
     if (!audioRef.current || canAutoPlay) return;
     audioRef.current.volume = 0.3;
-    audioRef.current?.play().then();
+    audioRef.current?.play().catch((error) => console.error('autoplay error: ', error));
     window.removeEventListener('click', handleUserInteraction);
   }, [canAutoPlay]);
 
@@ -58,9 +58,12 @@ export default function ToggleSoundButton({ className }: { className?: string })
 
   useEffect(() => {
     if (audioRef.current) {
-      soundOff ? audioRef.current.pause() : isSafari ? null : audioRef.current?.play();
+      soundOff
+        ? audioRef.current.pause()
+        : isSafari
+          ? null
+          : audioRef.current?.play().catch((error) => console.error('autoplay error: ', error));
     }
-    // button animation
     if (soundOff) {
       tl1Ref?.current && tl1Ref.current?.pause();
       tl2Ref?.current && tl2Ref.current?.pause();

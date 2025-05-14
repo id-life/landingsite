@@ -31,9 +31,7 @@ const PortfolioItem = memo(
           </h4>
           <p className="fund-desc mx-auto mt-4 min-h-10 w-72 text-xs/5 mobile:mt-2 mobile:min-h-5">{description}</p>
           {subTitle && (
-            <div className="fund-subtitle mx-auto mt-5 w-44 py-1.5 text-xs/3 font-semibold text-gray-350 mobile:mt-3">
-              {subTitle}
-            </div>
+            <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-gray-350 mobile:mt-3">{subTitle}</div>
           )}
         </div>
       </div>
