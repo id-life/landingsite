@@ -3,7 +3,7 @@ import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPo
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 
@@ -118,35 +118,23 @@ export function MobileWorldMapDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
           {label ? `${label}, ` : ''}
           {country}
-          <AnimatePresence>
-            {isActive && (
-              <motion.div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
-                >
-                  <MeetingSVG className="size-4 fill-purple" />
-                  Conference
-                </motion.div>
-                {isSponsor && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.83 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
-                  >
-                    <SponsorSVG className="size-5 fill-orange" />
-                    Sponsor
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {isActive && (
+            <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
+              <div className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
+                <MeetingSVG className="size-4 fill-purple" />
+                Conference
+              </div>
+              {isSponsor && (
+                <div className="relative flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-sm/4 font-semibold text-orange after:absolute after:-inset-0 after:z-[-1] after:block after:rounded-lg after:bg-orange/20 after:backdrop-blur-2xl">
+                  <SponsorSVG className="size-5 fill-orange" />
+                  Sponsor
+                </div>
+              )}
+            </div>
+          )}
         </motion.p>
       </div>
     </motion.div>
