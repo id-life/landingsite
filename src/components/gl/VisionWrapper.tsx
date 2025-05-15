@@ -46,6 +46,7 @@ export default function VisionWrapper() {
         antialias: true,
         powerPreference: 'high-performance',
       }}
+      fallback={<div>Sorry no WebGL supported!</div>}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />

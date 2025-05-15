@@ -31,6 +31,7 @@ export function OuterLoader() {
   if (!glLoaded || !show) return null;
   return <ProgressLoader progress="100" />;
 }
+
 export default function ProgressLoader({ progress }: { progress: string }) {
   return (
     <Html center>

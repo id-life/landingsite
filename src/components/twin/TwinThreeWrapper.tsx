@@ -110,9 +110,7 @@ export default function TwinThreeWrapper() {
     }
   });
 
-  useEventBus(MessageType.RESET_ANIMATION, () => {
-    
-  });
+  useEventBus(MessageType.RESET_ANIMATION, () => {});
 
   // 镜头控制
   useEventBus(MessageType.SWITCH_CAMERA, (payload: { index: AnatomyCamera }) => {
@@ -226,6 +224,7 @@ export default function TwinThreeWrapper() {
             top: '0px',
             height: '100vh',
           }}
+          fallback={<div>Sorry no WebGL supported!</div>}
         >
           <Suspense fallback={<Loader />}>
             <View.Port />

@@ -32,11 +32,11 @@ export default function Footer() {
 
   return (
     <>
-      <div ref={wrapperRef} className="h-48" />
+      <div ref={wrapperRef} className="h-52" />
       <FloatingPortal>
         <div
           ref={subscribeRef}
-          className="page-footer fixed -bottom-40 z-30 flex h-48 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
+          className="page-footer fixed -bottom-40 z-30 flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
           <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
             <h3 className="font-oxanium text-3xl font-bold uppercase mobile:text-2xl/7.5">SUBSCRIBE</h3>
@@ -76,6 +76,10 @@ export default function Footer() {
                 />
               </div>
             </form>
+            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
+              <img className="h-4" src="/svgs/info.svg" alt="" />
+              Join our longevity circle for priority access to pioneer research
+            </div>
           </div>
         </div>
       </FloatingPortal>
