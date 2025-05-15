@@ -53,6 +53,14 @@ export function useNavigation() {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
+      } else if (id === NAV_LIST[2].id) {
+        isNavScrollingRef.current = true;
+        window.isNavScrolling = true;
+        smoother?.scrollTo(`#${id}`, false, 'top 10px');
+        setTimeout(() => {
+          isNavScrollingRef.current = false;
+          window.isNavScrolling = false;
+        }, 500);
       } else if (id === NAV_LIST[3].id) {
         // engagement 页
         isNavScrollingRef.current = true;

@@ -20,6 +20,7 @@ import { throttle } from 'lodash-es';
 import { useCallback, useEffect } from 'react';
 import { useEvent } from 'react-use';
 import FooterContact from '@/components/layout/footer/FooterContact';
+import Spectrum from '@/components/spectrum/Spectrum';
 
 export default function Home() {
   const setCurrentPage = useSetAtom(currentPageAtom);
@@ -61,6 +62,18 @@ export default function Home() {
       '--gradient-to': '#C111114C',
       '--background': '#000000',
       '--foreground': '#F0F0F0',
+    });
+    const spectrumTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[2].id}`,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: true,
+      },
+    });
+    spectrumTL.to(root, {
+      '--gradient-rotate': '300deg',
+      duration: 3,
     });
     const engagementTL = gsap.timeline({
       scrollTrigger: {
@@ -113,6 +126,7 @@ export default function Home() {
         <div id="content">
           <Vision />
           <Portfolio />
+          <Spectrum />
           <Engagement />
           <Twin />
           <Value />

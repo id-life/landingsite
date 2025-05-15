@@ -36,11 +36,9 @@ function Portfolio() {
     scrollFn: () => {
       if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
       console.log('Portfolio scrollFn down');
-      // const smoother = ScrollSmoother.get();
-      // smoother?.scrollTo(`#${NAV_LIST[3].id}`);
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      const st = ScrollTrigger.getById('spectrum-scroll-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) } });
     },
     isUp: false,
   });
@@ -82,18 +80,20 @@ function Portfolio() {
     });
     tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
     tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
-    tl.to('.page2-title', {
-      delay: 0.5,
-      y: (_, target) => -target.offsetHeight,
-      rotateX: -45,
-      rotateY: 15,
-      opacity: 0,
-    });
-    tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
-    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
-    tl.to('#particle-gl', { opacity: 0 });
-    tl.to('.fixed-top', { opacity: 0 });
-    tl.to('.fixed-bottom', { opacity: 0 }, '<');
+    // tl.to('.page2-title', {
+    //   delay: 0.5,
+    //   y: (_, target) => -target.offsetHeight,
+    //   rotateX: -45,
+    //   rotateY: 15,
+    //   opacity: 0,
+    // });
+    // tl.to('.page2-fund', {
+    //   y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
+    // tl.to('.page2-contact',
+    //   { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
+    // tl.to('#particle-gl', { opacity: 0 });
+    // tl.to('.fixed-top', { opacity: 0 });
+    // tl.to('.fixed-bottom', { opacity: 0 }, '<');
     // set the flag after the entire animation is finished
     tl.add(() => {
       setEnableDownJudge(true);
@@ -162,7 +162,7 @@ function Portfolio() {
       {active && <ParticleGL activeAnim={showParticle} imageIdx={imageIdx} id="particle-container" />}
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <div id="particle-gl">
-          <div id="particle-container" className={cn({ active })}>
+          <div id="particle-container" className={cn('particle-container', { active })}>
             <div className="particle-mask"></div>
           </div>
         </div>

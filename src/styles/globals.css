@@ -17,6 +17,7 @@
     --nav: #f0f0f0;
     --gradient-from: #ffffff;
     --gradient-to: #cbd6ea;
+    --gradient-rotate: 90deg;
   }
 
   /**::-webkit-scrollbar {*/
@@ -50,7 +51,7 @@
   }
 
   .base-background1 {
-    background-image: linear-gradient(90deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+    background-image: linear-gradient(var(--gradient-rotate, 90deg), var(--gradient-from) 0%, var(--gradient-to) 100%);
   }
 
   .base-background2 {

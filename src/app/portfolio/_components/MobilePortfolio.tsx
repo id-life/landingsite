@@ -118,10 +118,16 @@ function MobilePortfolio() {
 
       <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
         <div id="particle-gl">
-          <div id="particle-container-mobile-1" className={cn({ active: particleActive })}>
+          <div
+            id="particle-container-mobile-1"
+            className={cn('particle-container particle-container-mobile-1', { active: particleActive })}
+          >
             <div className="particle-mask"></div>
           </div>
-          <div id="particle-container-mobile-2" className={cn({ active: particleActive })}>
+          <div
+            id="particle-container-mobile-2"
+            className={cn('particle-container particle-container-mobile-2', { active: particleActive })}
+          >
             <div className="particle-mask"></div>
           </div>
         </div>

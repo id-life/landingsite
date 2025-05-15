@@ -18,7 +18,7 @@ function Engagement() {
     scrollFn: () => {
       if (!enableUpJudge || currentPage.id !== NAV_LIST[3].id) return;
       console.log('Engagement scrollFn Up');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
+      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[2].id}` } });
     },
     isUp: true,
   });
