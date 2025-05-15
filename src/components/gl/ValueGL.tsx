@@ -57,7 +57,7 @@ function ValueGL() {
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
-            setCurrentPage(NAV_LIST[4]);
+            setCurrentPage(NAV_LIST[5]);
             if (window.isNavScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;

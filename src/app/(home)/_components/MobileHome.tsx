@@ -1,6 +1,6 @@
 'use client';
 
-import MobileEngagement from '@/app/engagement/MobileEngagement';
+import MobileEngagement from '@/components/engagement/MobileEngagement';
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
 import MobileTwin from '@/app/twin/MobileTwin';
 import MobileValue from '@/app/value/MobileValue';

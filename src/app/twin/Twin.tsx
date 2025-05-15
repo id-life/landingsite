@@ -23,17 +23,17 @@ function Twin() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'twin-scroll-trigger',
-        trigger: `#${NAV_LIST[3].id}`,
+        trigger: `#${NAV_LIST[4].id}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[4]);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[4]);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
@@ -68,7 +68,7 @@ function Twin() {
   }, [inView]);
 
   return (
-    <div id={NAV_LIST[3].id} ref={ref} className="page-container twin">
+    <div id={NAV_LIST[4].id} ref={ref} className="page-container twin">
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>

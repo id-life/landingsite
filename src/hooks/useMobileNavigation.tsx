@@ -61,7 +61,7 @@ export function useMobileNavigation() {
   useEffect(() => {
     if (NAV_LIST[1].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK_RED);
-    } else if (NAV_LIST[2].id === currentPage.id) {
+    } else if (NAV_LIST[3].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK);
     } else {
       changeBackground(BACKGROUND_THEME.LIGHT);
@@ -76,7 +76,7 @@ export function useMobileNavigation() {
       },
     });
 
-    if ([NAV_LIST[2].id, NAV_LIST[3].id, NAV_LIST[4].id].includes(currentPage.id)) {
+    if ([NAV_LIST[3].id, NAV_LIST[4].id, NAV_LIST[5].id].includes(currentPage.id)) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
         duration: 0.5,
@@ -101,7 +101,7 @@ export function useMobileNavigation() {
       if (isAnimatingRef.current || mobileIsScrolling) return;
 
       setCurrentPage(item);
-      if (item?.id === NAV_LIST[4].id) {
+      if (item?.id === NAV_LIST[5].id) {
         setInnerPageIndex(0);
       } else {
         gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的

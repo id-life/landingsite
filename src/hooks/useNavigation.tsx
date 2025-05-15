@@ -53,7 +53,7 @@ export function useNavigation() {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
-      } else if (id === NAV_LIST[2].id) {
+      } else if (id === NAV_LIST[3].id) {
         // engagement 页
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
@@ -67,7 +67,7 @@ export function useNavigation() {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
-      } else if (item.id === NAV_LIST[3].id) {
+      } else if (item.id === NAV_LIST[4].id) {
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
@@ -81,7 +81,7 @@ export function useNavigation() {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
-      } else if (item.id === NAV_LIST[4].id) {
+      } else if (item.id === NAV_LIST[5].id) {
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -106,7 +106,7 @@ export function useNavigation() {
       }
 
       setCurrentPage(item);
-      if (id === NAV_LIST[4].id) {
+      if (id === NAV_LIST[5].id) {
         setInnerPageIndex(0);
       } else {
         setInnerPageTotal(0);

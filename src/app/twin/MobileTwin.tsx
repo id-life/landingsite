@@ -19,7 +19,7 @@ export default function MobileTwin() {
   const [, setCurrentModel] = useAtom(currentModelAtom);
   const [, setCurrentModelType] = useAtom(currentModelTypeAtom);
   useEffect(() => {
-    if (currentPage !== NAV_LIST[3]) {
+    if (currentPage !== NAV_LIST[4]) {
       resetModel();
     }
   }, [currentPage]);
@@ -38,9 +38,9 @@ export default function MobileTwin() {
 
   return (
     <div
-      id={NAV_LIST[3].id}
+      id={NAV_LIST[4].id}
       className={cn('page-container-mobile', {
-        hidden: currentPage.id !== NAV_LIST[3].id,
+        hidden: currentPage.id !== NAV_LIST[4].id,
       })}
     >
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">

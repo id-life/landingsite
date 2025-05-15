@@ -16,7 +16,7 @@ function Engagement() {
     // engagement auto scroll to profile
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[3].id) return;
       console.log('Engagement scrollFn Up');
       gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}` } });
     },
@@ -27,16 +27,16 @@ function Engagement() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'engagement-scroll-trigger',
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${NAV_LIST[3].id}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
       },
     });
@@ -101,7 +101,7 @@ function Engagement() {
   }, []);
 
   return (
-    <div id={NAV_LIST[2].id} className="page-container engagement">
+    <div id={NAV_LIST[3].id} className="page-container engagement">
       <div id="map-container" className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap
           dots={WORLD_MAP_DOTS}
