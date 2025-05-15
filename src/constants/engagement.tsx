@@ -375,10 +375,10 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     mobileLng: 80,
     title: 'Chengdu, China',
     key: 'sponsor-02',
-    alt: 'EthPanda',
+    alt: 'EthPanda 青年黑客远航计',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
-    link: 'https://ethpanda.org/',
+    link: 'https://x.com/ETHPanda_Org/status/1863865657454162277',
     activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
   {
