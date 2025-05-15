@@ -28,11 +28,6 @@ export default function Vision() {
   return (
     <div ref={wrapperRef} id={NAV_LIST[0].id} className="page-container">
       <div ref={visionBottomRef} className="group pointer-events-none absolute inset-0 -z-10 select-none">
-        {globalLoaded && (
-          <div className="absolute left-1/2 top-[calc(100svh_-_12rem)] -translate-x-1/2 items-center gap-2 font-oxanium text-3xl font-bold uppercase mobile:top-[calc(100svh_-5.625rem)] mobile:rounded-lg mobile:px-1.5 mobile:py-2">
-            a purpose-driven longevity fund backing 10+ pioneers
-          </div>
-        )}
         {isMobile && globalLoaded && (
           <VerticalCarousel
             slideDown

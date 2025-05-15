@@ -1,3 +1,4 @@
+import React from 'react';
 import Background from '@/components/common/Background';
 import FixedUI from '@/components/common/FixedUI';
 import Providers from '@/providers/root';

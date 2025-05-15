@@ -12,7 +12,6 @@ export default function CenterLogo() {
   const { pointer, size } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const smootherRef = useRef(ScrollSmoother.get());
-  const isMobile = useIsMobile();
   const LogoENRef = useRef<THREE.Group>(null);
   const LogoCNRef = useRef<THREE.Group>(null);
   const currentLogoRef = useRef<LogoType>(LogoType.EN);
@@ -63,9 +62,14 @@ export default function CenterLogo() {
   }, 800);
 
   return (
-    <Center onClick={handleClick} scale={isMobile ? 0.7 : 1} ref={groupRef} position={[0, 0, -5]}>
-      <Svg ref={LogoENRef} scale={0.06} src="/svgs/logo-en.svg" fillMaterial={{ opacity: 1 }} />
-      <Svg ref={LogoCNRef} scale={0.025} src="/svgs/logo-cn.svg" fillMaterial={{ opacity: 0 }} />
-    </Center>
+    <group ref={groupRef} position={[0, 0, -5]}>
+      <Center onClick={handleClick}>
+        <Svg ref={LogoENRef} scale={0.06} src="/svgs/logo-en.svg" fillMaterial={{ opacity: 1 }} />
+        <Svg ref={LogoCNRef} scale={0.025} src="/svgs/logo-cn.svg" fillMaterial={{ opacity: 0 }} />
+      </Center>
+      <Center position={[0, -3.5, 0]}>
+        <Svg scale={0.01} src="/svgs/main-description.svg" fillMaterial={{ opacity: 1 }} />
+      </Center>
+    </group>
   );
 }

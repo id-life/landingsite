@@ -1,5 +1,5 @@
 import { useProgress } from '@react-three/drei';
-import { useSetAtom } from 'jotai/index';
+import { useSetAtom } from 'jotai';
 import { glLoadedAtom } from '@/atoms/geo';
 import { useEffect } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
