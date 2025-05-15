@@ -4,7 +4,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
-import { MeetingSVG } from '../svg';
+import { MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 
 const pointVariants: Variants = {
@@ -21,7 +21,7 @@ export function MobileWorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
 
@@ -123,15 +123,28 @@ export function MobileWorldMapDotPoint({
           {country}
           <AnimatePresence>
             {isActive && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 0.83 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
-              >
-                <MeetingSVG className="size-4 fill-purple" />
-                Conference
-              </motion.span>
+              <motion.div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 0.83 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
+                >
+                  <MeetingSVG className="size-4 fill-purple" />
+                  Conference
+                </motion.div>
+                {isSponsor && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-5 fill-orange" />
+                    Sponsor
+                  </motion.div>
+                )}
+              </motion.div>
             )}
           </AnimatePresence>
         </motion.p>
@@ -201,55 +214,53 @@ export function MobileWorldMapDotContent({
               mobileContentTransformClass,
             )}
           >
-            <a
-              href={link}
-              target="_blank"
-              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer"
-            ></a>
             <div className="pointer-events-auto absolute -inset-10"></div>
             <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28')}></div>
           </div>
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={{
-              hidden: {
-                opacity: 0,
-                height: 0,
-              },
-              visible: {
-                opacity: 1,
-                height: '70vh',
-              },
-            }}
-            transition={{
-              staggerChildren: 0.1,
-              duration: 0.3,
-              type: 'easeInOut',
-            }}
-            className={cn(
-              'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
-              mobileContentTransformClass,
-            )}
-          >
-            {title && (
-              <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                <span className="mr-2">{title}</span>
-                {period}
-              </h3>
-            )}
-            {imgs?.length ? (
-              <div
-                ref={scrollContainerRef}
-                className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-              >
-                {imgs.map((img) => (
-                  <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                ))}
-              </div>
-            ) : null}
-          </motion.div>
+
+          <a href={link} target="_blank" className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  height: 0,
+                },
+                visible: {
+                  opacity: 1,
+                  height: '70vh',
+                },
+              }}
+              transition={{
+                staggerChildren: 0.1,
+                duration: 0.3,
+                type: 'easeInOut',
+              }}
+              className={cn(
+                'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+                mobileContentTransformClass,
+              )}
+            >
+              {title && (
+                <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+                  <span className="mr-2">{title}</span>
+                  {period}
+                </h3>
+              )}
+              {imgs?.length ? (
+                <div
+                  ref={scrollContainerRef}
+                  className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+                >
+                  {imgs.map((img) => (
+                    <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                  ))}
+                </div>
+              ) : null}
+            </motion.div>
+          </a>
         </div>
       )}
     </AnimatePresence>

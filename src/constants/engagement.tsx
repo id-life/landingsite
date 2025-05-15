@@ -1,24 +1,23 @@
 import { AmericaSVG, ChineseSVG, HondurasSVG, MontenegroSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
 import { ReactNode } from 'react';
 
-// 波纹动画配置
+// pulse animate config
 export type PulseConfig = {
-  svgSize: number; // SVG视图大小
-  centerRadius: number; // 中心点半径
+  svgSize: number; // SVG view size
+  centerRadius: number; // center point radius
   pulse1: {
-    fromRadius: number; // 第一个波纹初始半径
-    toRadius: number; // 第一个波纹最终半径
-    duration: number; // 动画持续时间(秒)
+    fromRadius: number; // first pulse initial radius
+    toRadius: number; // first pulse final radius
+    duration: number; // animation duration (seconds)
   };
   pulse2: {
-    fromRadius: number; // 第二个波纹初始半径
-    toRadius: number; // 第二个波纹最终半径
-    duration: number; // 动画持续时间(秒)
+    fromRadius: number; // second pulse initial radius
+    toRadius: number; // second pulse final radius
+    duration: number; // animation duration (seconds)
   };
-  color: string; // 颜色 (十六进制)
+  color: string; // color (hexadecimal)
 };
 
-// 默认波纹配置
 export const DEFAULT_PULSE_CONFIG: PulseConfig = {
   svgSize: 60,
   centerRadius: 4,
@@ -94,32 +93,27 @@ export type MapDotData = {
   contentTransformClass?: string;
   mobileContentTransformClass?: string;
   pcDotHotAreaClass?: string;
-  index?: number; // 动画标识符
-  pulseConfig?: PulseConfig; // 自定义波纹配置
-  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
-  link?: string; // 跳转链接
+  index?: number; // animation identifier
+  pulseConfig?: PulseConfig; // custom pulse config
+  activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
+  link?: string; // jump link
+  isSponsor?: boolean; // is also a sponsor dot
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 0,
     lat: 22,
     lng: 120,
-    country: 'China', // 新加的一个
+    country: 'China',
     label: 'Shanghai',
     period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    title: 'The 5th Timepie Longevity Forum', //上海
+    title: 'The 5th Timepie Longevity Forum',
     link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     pcDotHotAreaClass: 'top-[25vh]',
-    activeOtherDarkerDotIDs: [
-      'world-map-dot-sponsor-1',
-      'world-map-dot-1',
-      'world-map-dot-2',
-      'world-map-dot-book-0',
-      'world-map-dot-book-1',
-    ],
+    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-1', 'world-map-dot-2'],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Shanghai-01.webp',
@@ -152,13 +146,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
     pcDotHotAreaClass: 'top-[25.5vh]',
-    activeOtherDarkerDotIDs: [
-      'world-map-dot-sponsor-1',
-      'world-map-dot-0',
-      'world-map-dot-2',
-      'world-map-dot-book-0',
-      'world-map-dot-book-1',
-    ],
+    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-0', 'world-map-dot-2'],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Chiangmai-1.webp',
@@ -179,7 +167,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     lat: -19,
     lng: 101,
     label: 'Singapore',
-    country: 'Singapore', //如果为空就不显示
+    country: 'Singapore',
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum',
@@ -188,7 +176,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
     pcDotHotAreaClass: 'top-[39.5vh]',
     activeOtherDarkerDotIDs: [
-      'world-map-dot-sponsor-1',
+      'world-map-dot-sponsor-0',
       'world-map-dot-0',
       'world-map-dot-1',
       'world-map-dot-book-0',
@@ -230,6 +218,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
+    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1'],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-5.webp',
@@ -253,6 +242,48 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       },
     ],
   },
+  {
+    index: 4,
+    lat: 30,
+    lng: -123.5,
+    label: 'Berkeley',
+    country: 'USA',
+    period: '2025/05',
+    key: 'vitalistbay_berkeley_2025', // Unique identifier for the dot
+    title: 'Vitalist Bay Investor Forum',
+    link: 'https://www.vitalistbay.com/',
+    isSponsor: true,
+    contentTransformClass: 'translate-x-[85%] -translate-y-[35%]',
+    mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
+    pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
+    activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3'],
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-1.webp',
+        alt: 'vitalistbay-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-2.webp',
+        alt: 'vitalistbay-2.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-3.webp',
+        alt: 'vitalistbay-3.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-4.webp',
+        alt: 'vitalistbay-4.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-5.webp',
+        alt: 'vitalistbay-5.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/Berkeley-6.webp',
+        alt: 'vitalistbay-6.webp',
+      },
+    ],
+  },
 ];
 
 export type MapBookDotData = {
@@ -260,13 +291,13 @@ export type MapBookDotData = {
   lng: number;
   title?: string;
   bookTitle?: string;
-  desc?: string; // 灰字描述
+  desc?: string;
   key?: string;
   coverUrl?: string;
   videoUrl?: string;
-  link?: string; // 跳转链接
-  pulseConfig?: PulseConfig; // 自定义波纹配置
-  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
+  link?: string;
+  pulseConfig?: PulseConfig; // custom pulse config
+  activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   containerClass?: string;
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
@@ -276,11 +307,11 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
-    desc: 'Chinese Ver by Boyang', // 描述
+    desc: 'Chinese Version by Boyang',
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
-    link: 'https://www.thenetworkstate-zh.com/foreword/', // 跳转链接
-    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-1'],
+    link: 'https://www.thenetworkstate-zh.com/foreword/',
+    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0'],
     containerClass: 'scale-[0.9]',
   },
   {
@@ -289,11 +320,23 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-02',
     title: 'Earth',
     bookTitle: 'bio/acc manifesto',
-    desc: 'Chinese Ver by Boyang', // 描述
+    desc: 'Chinese Version by Boyang',
     coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
-    link: 'https://bioacc.life/zh/', // 跳转链接
+    link: 'https://bioacc.life/zh/',
     containerClass: 'scale-[1.2]',
+  },
+  {
+    lat: 18,
+    lng: -115,
+    key: 'publications-03',
+    title: 'Los Angeles, USA',
+    bookTitle: 'Better With Age 乐龄',
+    desc: 'Chinese Version',
+    coverUrl: 'https://cdn.id.life/engagement/book-03.webp',
+    videoUrl: 'https://cdn.id.life/engagement/book-03.webm',
+    containerClass: 'scale-[0.9]',
+    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4'],
   },
 ];
 
@@ -302,29 +345,29 @@ export type MapSponsorDotData = {
   lng: number;
   mobileLat?: number;
   mobileLng?: number;
-  alt?: string; // 灰字描述
+  alt?: string;
   key?: string;
   icon?: string;
-  link?: string; // 跳转链接
+  link?: string;
   coverUrl?: string;
   videoUrl?: string;
   title: string;
-  pulseConfig?: PulseConfig; // 自定义波纹配置
-  activeOtherDarkerDotIDs?: string[]; // 该点 active 时透明度更浅的其他点
+  pulseConfig?: PulseConfig; // custom pulse config
+  activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   sponsorText?: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
-  {
-    lat: 30,
-    lng: -123.5,
-    title: 'Berkeley, USA',
-    key: 'sponsor-01',
-    alt: 'VITALIST BAY',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
-    link: 'https://www.vitalistbay.com/',
-    sponsorText: 'Cohost',
-  },
+  // {
+  //   lat: 30,
+  //   lng: -123.5,
+  //   title: 'Berkeley, USA',
+  //   key: 'sponsor-01',
+  //   alt: 'VITALIST BAY',
+  //   coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
+  //   videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
+  //   link: 'https://www.vitalistbay.com/',
+  //   sponsorText: 'Cohost',
+  // },
   {
     lat: 19,
     lng: 85,
@@ -332,7 +375,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     mobileLng: 80,
     title: 'Chengdu, China',
     key: 'sponsor-02',
-    alt: 'ethPanda',
+    alt: 'EthPanda',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
     link: 'https://ethpanda.org/',
@@ -349,6 +392,17 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1'],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Forum',
+  },
+  {
+    lat: -20,
+    lng: -18,
+    title: 'Desci',
+    key: 'sponsor-04',
+    alt: 'BiohackerDAO',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.png',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.webm',
+    link: 'https://biohackerdao.org/',
+    sponsorText: 'Sponsorship',
   },
 ];
 

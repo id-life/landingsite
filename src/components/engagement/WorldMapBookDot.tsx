@@ -208,7 +208,7 @@ export function WorldMapBookDotContent({
         <div
           className={cn(
             `world-map-dot-book-content world-map-dot-book-content-${index}`,
-            'pointer-events-none absolute -mt-2 flex h-20 flex-col overflow-visible',
+            'pointer-events-none absolute z-20 -mt-2 flex h-20 flex-col overflow-visible',
           )}
           onClick={onClick}
           style={{
