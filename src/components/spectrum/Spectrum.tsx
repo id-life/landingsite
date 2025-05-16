@@ -7,11 +7,14 @@ import gsap from 'gsap';
 import { useAtom } from 'jotai';
 import { memo, useState } from 'react';
 import ParticleGL from '../gl/ParticleGL';
+import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
+import SpectrumItem from './SpectrumItem';
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
   const [imageIdx, setImageIdx] = useState(0);
+  const spectrumData = useSpectrumData();
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -43,7 +46,14 @@ function Spectrum() {
 
   return (
     <div id={NAV_LIST[2].id} className="page-container spectrum">
-      {active && <ParticleGL activeAnim={active} imageIdx={imageIdx} id="spectrum-particle-container" />}
+      {active && (
+        <ParticleGL
+          activeAnim={active}
+          imageIdx={imageIdx}
+          id="spectrum-particle-container"
+          getSourceImgInfos={spectrumGetSourceImgInfos}
+        />
+      )}
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
         <div id="spectrum-particle-gl">
@@ -53,13 +63,15 @@ function Spectrum() {
         </div>
         <div className="spectrum-fund mb-2.5 mt-12 overflow-hidden px-18">
           <div className="grid grid-cols-4">
-            <div className="size-96 bg-red-300"></div>
-            <div className="size-96 bg-red-300"></div>
-            <div className="size-96 bg-red-300"></div>
-            <div className="size-96 bg-red-300"></div>
-          </div>
-          <div className="grid grid-cols-4">
-            <div className="size-96 bg-red-300"></div>
+            {spectrumData.map((item) => (
+              <SpectrumItem
+                key={item.title}
+                item={item}
+                onClick={() => {
+                  console.log(item.title);
+                }}
+              />
+            ))}
           </div>
         </div>
       </div>

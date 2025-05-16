@@ -12,7 +12,7 @@ import { throttle } from 'lodash-es';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
-import { portfolio, PortfolioItemInfo } from './portfolioData';
+import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
@@ -159,7 +159,14 @@ function Portfolio() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && <ParticleGL activeAnim={showParticle} imageIdx={imageIdx} id="particle-container" />}
+      {active && (
+        <ParticleGL
+          activeAnim={showParticle}
+          imageIdx={imageIdx}
+          id="particle-container"
+          getSourceImgInfos={portfolioGetSourceImgInfos}
+        />
+      )}
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <div id="particle-gl">
           <div id="particle-container" className={cn('particle-container', { active })}>
