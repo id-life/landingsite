@@ -47,9 +47,14 @@ export default function MobileCenterLogo() {
   }, 800);
 
   return (
-    <Center onClick={handleClick} scale={0.7} ref={groupRef} position={[0, 0, -5]}>
-      <Svg ref={LogoENRef} scale={0.06} src="/svgs/logo-en.svg" fillMaterial={{ opacity: 1 }} />
-      <Svg ref={LogoCNRef} scale={0.025} src="/svgs/logo-cn.svg" fillMaterial={{ opacity: 0 }} />
-    </Center>
+    <group>
+      <Center onClick={handleClick} scale={0.7} ref={groupRef} position={[0, 0, -5]}>
+        <Svg ref={LogoENRef} scale={0.06} src="/svgs/logo-en.svg" fillMaterial={{ opacity: 1 }} />
+        <Svg ref={LogoCNRef} scale={0.025} src="/svgs/logo-cn.svg" fillMaterial={{ opacity: 0 }} />
+      </Center>
+      <Center position={[0, -2.6, 0]}>
+        <Svg scale={0.01} src="/svgs/main-description.svg" fillMaterial={{ opacity: 1 }} />
+      </Center>
+    </group>
   );
 }

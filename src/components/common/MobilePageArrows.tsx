@@ -57,30 +57,30 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
         {!isLastPageAndInnerPage && <ArrowItem />}
       </div>
       {/* value 页面 5个细长方块进度条 */}
-      {pageIndexList?.length ? (
-        <div className="flex-center order-2 gap-3 mobile:order-1">
-          {pageIndexList.map((_, index) => (
-            <div
-              key={`inner-page-index-${index}`}
-              className={cn(
-                'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                BLACK_ARROW_LIST.includes(currentPage.id)
-                  ? innerPageIndex !== index
-                    ? 'bg-white/20'
-                    : 'bg-white/40'
-                  : innerPageIndex === index
-                    ? 'bg-gray-800'
-                    : 'bg-[#B8B8B8]',
-              )}
-            >
-              <div
-                className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"
-                onClick={() => setInnerPageNavigateTo(index)}
-              />
-            </div>
-          ))}
-        </div>
-      ) : null}
+      {/*{pageIndexList?.length ? (*/}
+      {/*  <div className="flex-center order-2 gap-3 mobile:order-1">*/}
+      {/*    {pageIndexList.map((_, index) => (*/}
+      {/*      <div*/}
+      {/*        key={`inner-page-index-${index}`}*/}
+      {/*        className={cn(*/}
+      {/*          'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',*/}
+      {/*          BLACK_ARROW_LIST.includes(currentPage.id)*/}
+      {/*            ? innerPageIndex !== index*/}
+      {/*              ? 'bg-white/20'*/}
+      {/*              : 'bg-white/40'*/}
+      {/*            : innerPageIndex === index*/}
+      {/*              ? 'bg-gray-800'*/}
+      {/*              : 'bg-[#B8B8B8]',*/}
+      {/*        )}*/}
+      {/*      >*/}
+      {/*        <div*/}
+      {/*          className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"*/}
+      {/*          onClick={() => setInnerPageNavigateTo(index)}*/}
+      {/*        />*/}
+      {/*      </div>*/}
+      {/*    ))}*/}
+      {/*  </div>*/}
+      {/*) : null}*/}
     </div>
   );
 }

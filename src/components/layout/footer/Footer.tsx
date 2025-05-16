@@ -78,7 +78,7 @@ export default function Footer() {
             </form>
             <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
               <img className="h-4" src="/svgs/info.svg" alt="" />
-              Join our longevity circle for priority access to pioneer research
+              Join our Longevity Circle and receive the latest insights & research
             </div>
           </div>
         </div>
