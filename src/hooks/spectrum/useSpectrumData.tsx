@@ -5,7 +5,6 @@ export type SpectrumLinkItem = {
   label: string;
   link?: string; // jumpTo link
   onClick?: () => void; // jumpTo some where
-  linkElement?: JSX.Element; // jumpTo linkElement
   className?: string;
 };
 
@@ -22,7 +21,7 @@ export const useSpectrumData = () => {
       {
         title: 'Insights Sharing',
         titleCn: '演讲与洞见',
-        icon: <MeetingSVG className="size-7.5 fill-white" />,
+        icon: <MeetingSVG />,
         links: [
           {
             label: 'bio/acc manifesto',
@@ -33,7 +32,7 @@ export const useSpectrumData = () => {
       {
         title: 'Grant & Sponsorships',
         titleCn: '赞助',
-        icon: <SponsorSVG className="size-7.5 fill-white" />,
+        icon: <SponsorSVG />,
         links: [
           {
             label: 'Public Longevity Group',
@@ -62,12 +61,12 @@ export const useSpectrumData = () => {
 export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
   return [
     {
-      url: '/imgs/particle/1.png',
+      url: '/imgs/particle/0.png',
       scaleNum: isMobile ? 0.8 : 2.2,
       resize: [512, 300],
     },
     {
-      url: '/imgs/particle/0.png',
+      url: '/imgs/particle/1.png',
       resize: [600, 600],
       scaleNum: isMobile ? 0.4 : 0.8,
       loadPercentage: 0.005,
