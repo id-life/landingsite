@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { useProgress } from '@react-three/drei';
-import { currentModelAtom } from '@/atoms/twin';
 import { visionGlLoadedAtom } from '@/atoms/geo';
 import ProgressLoader from '@/components/gl/ProgressLoader';
 
 export default function Loader() {
-  const { progress, active, loaded } = useProgress();
+  const { progress, active } = useProgress();
   const setGLLoaded = useSetAtom(visionGlLoadedAtom);
-  const setCurrentModel = useSetAtom(currentModelAtom);
 
   // 设置全局加载完成
   useEffect(() => {
@@ -18,7 +16,7 @@ export default function Loader() {
     return () => {
       setGLLoaded(true);
     };
-  }, [active, setCurrentModel, setGLLoaded]);
+  }, [active, setGLLoaded]);
 
   return <ProgressLoader progress={progress.toFixed(2)} />;
 }
