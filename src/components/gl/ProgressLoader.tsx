@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Html } from '@react-three/drei';
+import { Html, useProgress } from '@react-three/drei';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Background from '@/components/common/Background';
@@ -7,13 +7,14 @@ import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { visionGlLoadedAtom, twinGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
 
 export function OuterLoader() {
+  const { progress } = useProgress();
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
   const visionGlLoaded = useAtomValue(visionGlLoadedAtom);
   const twinGlLoaded = useAtomValue(twinGlLoadedAtom);
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  const isLoaded = useMemo(() => visionGlLoaded && twinGlLoaded, [visionGlLoaded, twinGlLoaded]);
+  const isLoaded = useMemo(() => visionGlLoaded || twinGlLoaded, [visionGlLoaded, twinGlLoaded]);
 
   useEffect(() => {
     if (timer.current) {
@@ -21,7 +22,7 @@ export function OuterLoader() {
     }
     if (isLoaded) {
       timer.current = setTimeout(() => {
-        setShow(false); // TODO: 加载完后再延迟 1s 再设置全局加载完成，权宜之计，现在的加载管理还很不完善。
+        setShow(false);
         setGlobalLoaded(true);
       }, 500);
     }
@@ -38,8 +39,8 @@ export function OuterLoader() {
     smoother.paused(!isLoaded);
   }, [isLoaded]);
 
-  if (!isLoaded || !show) return null;
-  return <ProgressLoader progress="100" />;
+  if (!show) return null;
+  return <ProgressLoader progress={progress.toFixed(2)} />;
 }
 
 export default function ProgressLoader({ progress }: { progress: string }) {
