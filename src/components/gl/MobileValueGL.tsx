@@ -48,7 +48,7 @@ TitleSVG.displayName = 'TitleSVG';
 const VALUE_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
-    1: 0.475,
+    1: 0.425,
     2: 1, // 出邮箱
   },
 } as const;

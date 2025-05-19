@@ -11,6 +11,8 @@ export default function MobileCenterLogo() {
   const groupRef = useRef<THREE.Group>(null);
   const LogoENRef = useRef<THREE.Group>(null);
   const LogoCNRef = useRef<THREE.Group>(null);
+  const DescriptionCNRef = useRef<THREE.Group>(null);
+  const DescriptionENRef = useRef<THREE.Group>(null);
   const currentLogoRef = useRef<LogoType>(LogoType.EN);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
 
@@ -31,6 +33,16 @@ export default function MobileCenterLogo() {
           gsap.to(object.material, { opacity: 1, duration: 0.5, delay: 0.3 });
         }
       });
+      DescriptionENRef.current?.traverse((object: any) => {
+        if (object.material) {
+          gsap.to(object.material, { opacity: 0, duration: 0.5 });
+        }
+      });
+      DescriptionCNRef.current?.traverse((object: any) => {
+        if (object.material) {
+          gsap.to(object.material, { opacity: 1, duration: 0.5, delay: 0.3 });
+        }
+      });
     } else {
       currentLogoRef.current = LogoType.EN;
       LogoCNRef.current?.traverse((object: any) => {
@@ -39,6 +51,16 @@ export default function MobileCenterLogo() {
         }
       });
       LogoENRef.current?.traverse((object: any) => {
+        if (object.material) {
+          gsap.to(object.material, { opacity: 1, duration: 0.5, delay: 0.3 });
+        }
+      });
+      DescriptionCNRef.current?.traverse((object: any) => {
+        if (object.material) {
+          gsap.to(object.material, { opacity: 0, duration: 0.5 });
+        }
+      });
+      DescriptionENRef.current?.traverse((object: any) => {
         if (object.material) {
           gsap.to(object.material, { opacity: 1, duration: 0.5, delay: 0.3 });
         }
@@ -53,7 +75,10 @@ export default function MobileCenterLogo() {
         <Svg ref={LogoCNRef} scale={0.025} src="/svgs/logo-cn.svg" fillMaterial={{ opacity: 0 }} />
       </Center>
       <Center position={[0, -2.6, 0]}>
-        <Svg scale={0.01} src="/svgs/main-description.svg" fillMaterial={{ opacity: 1 }} />
+        <Svg ref={DescriptionENRef} scale={0.01} src="/svgs/main-description.svg" fillMaterial={{ opacity: 1 }} />
+      </Center>
+      <Center position={[0, -2.6, 0]}>
+        <Svg ref={DescriptionCNRef} scale={0.01} src="/svgs/main-description-cn.svg" fillMaterial={{ opacity: 0 }} />
       </Center>
     </group>
   );
