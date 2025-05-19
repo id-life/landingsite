@@ -125,8 +125,8 @@ export default function FooterContact() {
                 contact@id.life
               </div>
             </div>
-            <div className="font-oxanium text-base/5 font-bold uppercase">
-              <p className="opacity-50">SUBSCRIBE</p>
+            <div className="font-oxanium text-base/5 font-bold">
+              <p className="uppercase opacity-50">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
                 className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
@@ -163,6 +163,10 @@ export default function FooterContact() {
                   />
                 </div>
               </form>
+              <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
+                <img className="h-4" src="/svgs/info-2.svg" alt="" />
+                Join our longevity circle for priority access to pioneer research
+              </div>
             </div>
           </div>
         </div>

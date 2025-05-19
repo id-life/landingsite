@@ -5,6 +5,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { Fragment, useState, useEffect } from 'react';
+
 type ValueContentItem = {
   id: string;
   title: string;
@@ -41,7 +42,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
           </span>
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-pre-wrap text-right font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East / West</span>
+          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East & West</span>
           <span className="value-text-en value-text-en-2 whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
             Access
           </span>
@@ -49,9 +50,9 @@ const VALUE_CONTENT: ValueContentItem[] = [
             桥梁
           </span>
           <span className="value-text-en mt-4 text-xs/4 font-semibold tracking-normal">
-            Deep Roots In Both East And West, A Conduit That
+            Deep Roots in Both East & West, a Conduit that
             <br />
-            Bridges Market Capital Institutions And More
+            Bridges Markets, Capital, Institutions and More
           </span>
         </h2>
       </div>
@@ -62,10 +63,6 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'As an Evangelist 传播与共识',
     content:
       'We help the world come to a better understanding of life extension technologies, galvanizing global consciousness, talents & resources in the process.\n我们致力于成为生命延长技术的布道者，在促进全球共识、汇聚全球智慧与资源方面发挥关键作用',
-    // cn: {
-    //   title: '',
-    //   content: '',
-    // },
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
@@ -74,30 +71,32 @@ const VALUE_CONTENT: ValueContentItem[] = [
           <span className="value-text-en value-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
             MOONSHOT
           </span>
-          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
-            逐月计划
+          <span className="value-text-en value-text-en-4 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal">
+            VENTURES
+          </span>
+          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-10 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+            登月计划
           </span>
           <span className="value-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
-            We Stand With Bold Unorthodox Ideas
+            We Stand with Bold Unorthodox Ideas
             <br />
-            And Brave Contrarian Founders
+            and Brave Contrarian Founders
           </span>
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-nowrap text-right font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en text-[3rem]/[3rem] uppercase">We pursue</span>
-          <span className="value-text-en value-text-en-2 text-[3.5rem]/[4.625rem] uppercase text-red-500">longer</span>
-          <span className="value-text-en value-text-en-3 text-[3.5rem]/[4.625rem] uppercase text-red-500">healthier</span>
+          <span className="value-text-en text-[3rem]/[3rem] uppercase">LIVE</span>
+          <span className="value-text-en value-text-en-2 text-[3.5rem]/[4.625rem] uppercase text-red-500">LONGER</span>
+          <span className="value-text-en value-text-en-3 text-[3.5rem]/[4.625rem] uppercase text-red-500">HAPPIER</span>
           <span className="value-text-cn bilingual-font value-text-cn-2 absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更长久
           </span>
           <span className="value-text-cn bilingual-font value-text-cn-3 absolute right-0 top-[8.125rem] text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更健康
           </span>
-          <span className="value-text-en text-[3rem]/[3rem] uppercase">lives</span>
           <span className="value-text-en mt-5 text-xs/4 font-semibold tracking-normal">
-            And Less Suffering From Age-Related Ailments,
+            Radical Lifespan Extension and Fulfilling Healthspan Extension
             <br />
-            Endeavoring All Our Might To Bring This Vision To Reality
+            Longevity as a Moral Imperative
           </span>
         </h2>
       </div>
@@ -108,10 +107,6 @@ const VALUE_CONTENT: ValueContentItem[] = [
     title: 'A Moral Endeavor 卓越的道德探索',
     content:
       'We pursue longer, healthier lives and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality.\n我们矢志追求生命的延展与健康的永驻，化解年龄相关疾病带来的苦痛，全力以赴实现这一崇高愿景',
-    // cn: {
-    //   title: '',
-    //   content: '',
-    // },
     mobileSVGElement: (
       <div
         id="value-3-svg-mobile"
@@ -125,31 +120,31 @@ const VALUE_CONTENT: ValueContentItem[] = [
           awareness
         </p>
         <p className="mt-7.5">
-          East / West <span className="text-red-500">Access</span>
+          East & West <span className="text-red-500">Access</span>
         </p>
         <p className="mt-2.5 text-xs/4 font-semibold normal-case">
-          Deep Roots In Both East And West, A Conduit That
+          Deep Roots in Both East & West, a Conduit that
           <br />
-          Bridges Market Capital Institutions And More
+          Bridges Markets, Capital, Institutions and More
         </p>
         <p className="mt-7.5 text-red-500">MOONSHOT</p>
+        <p className="">VENTURES</p>
         <p className="mt-2.5 text-xs/4 font-semibold normal-case">
-          We Stand With Bold Unorthodox Ideas
+          We Stand with Bold Unorthodox Ideas
           <br />
-          And Brave Contrarian Founders
+          and Brave Contrarian Founders
         </p>
         <p className="mt-7.5">
-          We pursue&nbsp;
+          LIVE&nbsp;
           <span className="whitespace-pre-wrap text-red-500">
-            longer
+            LONGER
             <br />
-            healthier <span className="whitespace-pre-wrap text-black">lives</span>
+            HAPPIER
           </span>
         </p>
         <p className="mt-2.5 text-xs/4 font-semibold normal-case">
-          And Less Suffering From Age-Related Ailments,
-          <br />
-          Endeavoring All Our Might To Bring This Vision To Reality
+          Radical Lifespan Extension and Fulfilling Healthspan Extension <br />
+          Longevity as a Moral Imperative{' '}
         </p>
       </div>
     ),
@@ -215,8 +210,8 @@ const END_CONTENT_2: {
 } = {
   en: [
     {
-      title: 'East/West Access',
-      content: 'Deep roots in both East and West, a conduit that bridges market, capital, institutions and more.',
+      title: 'East & West Access',
+      content: 'Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More',
     },
     {
       title: 'Industry Expertise',

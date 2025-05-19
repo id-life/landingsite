@@ -5,7 +5,6 @@ import { Suspense, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
 import EnvironmentGroup from '@/components/twin/EnvironmentGroup';
 import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
-import Loader from './Loader';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
 import { useAtom, useSetAtom } from 'jotai';
@@ -28,6 +27,7 @@ import Model2Out from './model/Model2Out';
 import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
+import Loader from '@/components/twin/Loader';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -110,9 +110,7 @@ export default function TwinThreeWrapper() {
     }
   });
 
-  useEventBus(MessageType.RESET_ANIMATION, () => {
-    
-  });
+  useEventBus(MessageType.RESET_ANIMATION, () => {});
 
   // 镜头控制
   useEventBus(MessageType.SWITCH_CAMERA, (payload: { index: AnatomyCamera }) => {
@@ -226,6 +224,7 @@ export default function TwinThreeWrapper() {
             top: '0px',
             height: '100vh',
           }}
+          fallback={<div>Sorry no WebGL supported!</div>}
         >
           <Suspense fallback={<Loader />}>
             <View.Port />

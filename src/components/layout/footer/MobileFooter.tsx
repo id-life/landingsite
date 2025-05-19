@@ -121,6 +121,10 @@ export default function MobileFooter() {
               />
             </div>
           </form>
+          <div className="mt-2 flex items-center gap-1 text-xs font-semibold">
+            <img className="h-4" src="/svgs/info.svg" alt="" />
+            Join our Longevity Circle and receive the latest insights & research
+          </div>
         </motion.div>
       </AnimatePresence>
     </FloatingPortal>

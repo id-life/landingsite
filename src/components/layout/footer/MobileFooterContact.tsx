@@ -118,6 +118,10 @@ export default function MobileFooterContact() {
               />
             </div>
           </form>
+          <div className="mt-2 flex gap-1 font-poppins text-xs font-semibold">
+            <img className="h-4" src="/svgs/info-2.svg" alt="" />
+            Join our longevity circle for priority access to pioneer research
+          </div>
           <div className="mb-1.5 mt-4 h-px w-full bg-black/10" />
           <div className="flex-center">
             <div

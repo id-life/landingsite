@@ -41,6 +41,7 @@ export default function Intervention() {
           dpr={[1, 2]}
           camera={{ position: [0, 0, 2], far: 1000 }}
           gl={{ powerPreference: 'high-performance', depth: false }}
+          fallback={<div>Sorry no WebGL supported!</div>}
         >
           <pointLight position={[-10, -10, -10]} intensity={1} />
           <ambientLight intensity={0.4} />

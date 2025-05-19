@@ -1,5 +1,5 @@
 import { mobileCurrentPageAtom } from '@/atoms';
-import { glLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
+import { visionGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useProgress } from '@react-three/drei';
@@ -16,7 +16,7 @@ import MobileValueGL from './MobileValueGL';
 
 function Loader() {
   const { progress, active } = useProgress();
-  const setGLLoaded = useSetAtom(glLoadedAtom);
+  const setGLLoaded = useSetAtom(visionGlLoadedAtom);
   // 设置全局加载完成
   useEffect(() => {
     if (!active) {
@@ -29,7 +29,7 @@ function Loader() {
 
 function OuterLoader() {
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const glLoaded = useAtomValue(glLoadedAtom);
+  const glLoaded = useAtomValue(visionGlLoadedAtom);
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
@@ -53,6 +53,7 @@ function OuterLoader() {
   if (!glLoaded || !show) return null;
   return <ProgressLoader progress="100" />;
 }
+
 export default function MobileThreeWrapper() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const showCanvas = useMemo(() => [NAV_LIST[0].id, NAV_LIST[NAV_LIST.length - 1].id].includes(currentPage.id), [currentPage]);
@@ -69,6 +70,7 @@ export default function MobileThreeWrapper() {
         antialias: true,
         powerPreference: 'high-performance',
       }}
+      fallback={<div>Sorry no WebGL supported!</div>}
     >
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
       <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />

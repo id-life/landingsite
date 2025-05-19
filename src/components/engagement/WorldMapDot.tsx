@@ -6,7 +6,7 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { MeetingSVG } from '../svg';
+import { MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 
 const pointVariants: Variants = {
@@ -23,7 +23,7 @@ export function WorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor } = dot;
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
@@ -142,15 +142,28 @@ export function WorldMapDotPoint({
           {country}
           <AnimatePresence>
             {isActive && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 0.83 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                className="absolute top-[calc(100%_+_0.25rem)] flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
-              >
-                <MeetingSVG className="size-5 fill-purple" />
-                Conference
-              </motion.span>
+              <motion.div className="absolute -left-0.5 top-[calc(100%_+_0.25rem)] flex items-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 0.83 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
+                >
+                  <MeetingSVG className="size-5 fill-purple" />
+                  Conference
+                </motion.div>
+                {isSponsor && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-5 fill-orange" />
+                    Sponsor
+                  </motion.div>
+                )}
+              </motion.div>
             )}
           </AnimatePresence>
         </motion.p>
@@ -252,37 +265,37 @@ export function WorldMapDotContent({
               onClick={handleClick}
             ></div>
           </div>
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={{
-              hidden: {
-                opacity: 0,
-                height: 0,
-              },
-              visible: {
-                opacity: 1,
-                height: '70vh',
-              },
-            }}
-            transition={{
-              staggerChildren: 0.1,
-              duration: 0.3,
-              type: 'easeInOut',
-            }}
-            className={cn(
-              'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
-              contentTransformClass,
-            )}
-          >
-            {title && (
-              <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                <span className="mr-2">{title}</span>
-                {period}
-              </h3>
-            )}
-            <a href={link} target="_blank" className="pointer-events-auto">
+          <a href={link} target="_blank" className="pointer-events-auto">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: {
+                  opacity: 0,
+                  height: 0,
+                },
+                visible: {
+                  opacity: 1,
+                  height: '70vh',
+                },
+              }}
+              transition={{
+                staggerChildren: 0.1,
+                duration: 0.3,
+                type: 'easeInOut',
+              }}
+              className={cn(
+                'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+                contentTransformClass,
+              )}
+            >
+              {title && (
+                <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+                  <span className="mr-2">{title}</span>
+                  {period}
+                </h3>
+              )}
               {imgs?.length ? (
                 <div
                   ref={scrollContainerRef}
@@ -293,8 +306,8 @@ export function WorldMapDotContent({
                   ))}
                 </div>
               ) : null}
-            </a>
-          </motion.div>
+            </motion.div>
+          </a>
         </div>
       )}
     </AnimatePresence>

@@ -28,10 +28,6 @@ export default function Vision() {
   return (
     <div ref={wrapperRef} id={NAV_LIST[0].id} className="page-container">
       <div ref={visionBottomRef} className="group pointer-events-none absolute inset-0 -z-10 select-none">
-        {/* <div className="absolute left-1/2 top-[calc(100svh_-_6rem)] -translate-x-1/2 items-center gap-2 mobile:top-[calc(100svh_-5.625rem)] mobile:rounded-lg mobile:px-1.5 mobile:py-2">
-          <VisionDecorationBottomScrollSVG className="mx-auto h-12 w-10 mobile:h-9 mobile:w-7.5" />
-          <p className="font-migrena text-xl/6 font-bold uppercase mobile:text-xs/5">SCROLL</p>
-        </div> */}
         {isMobile && globalLoaded && (
           <VerticalCarousel
             slideDown

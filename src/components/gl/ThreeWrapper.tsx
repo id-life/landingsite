@@ -31,6 +31,7 @@ export default function ThreeWrapper() {
         powerPreference: 'high-performance',
       }}
       onClick={handleClick}
+      fallback={<div>Sorry no WebGL supported!</div>}
     >
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
       <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />

@@ -40,6 +40,19 @@ const nextConfig = {
     return config;
   },
   cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Document-Policy',
+            value: 'js-profiling',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Make sure adding Sentry options is the last code to run before exporting
