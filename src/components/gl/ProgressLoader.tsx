@@ -1,34 +1,44 @@
-import { glLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
-import Background from '@/components/common/Background';
-import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Html } from '@react-three/drei';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import Background from '@/components/common/Background';
+import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
+import { visionGlLoadedAtom, twinGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
 
 export function OuterLoader() {
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const glLoaded = useAtomValue(glLoadedAtom);
+  const visionGlLoaded = useAtomValue(visionGlLoadedAtom);
+  const twinGlLoaded = useAtomValue(twinGlLoadedAtom);
   const [show, setShow] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
+
+  const isLoaded = useMemo(() => visionGlLoaded && twinGlLoaded, [visionGlLoaded, twinGlLoaded]);
 
   useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    if (glLoaded) {
+    if (isLoaded) {
       timer.current = setTimeout(() => {
         setShow(false); // TODO: 加载完后再延迟 1s 再设置全局加载完成，权宜之计，现在的加载管理还很不完善。
         setGlobalLoaded(true);
-      }, 1000);
+      }, 500);
     }
     return () => {
       if (timer.current) {
         clearTimeout(timer.current);
       }
     };
-  }, [glLoaded, setGlobalLoaded]);
+  }, [isLoaded, setGlobalLoaded]);
 
-  if (!glLoaded || !show) return null;
+  useEffect(() => {
+    const smoother = ScrollSmoother.get();
+    if (!smoother) return;
+    smoother.paused(!isLoaded);
+  }, [isLoaded]);
+
+  if (!isLoaded || !show) return null;
   return <ProgressLoader progress="100" />;
 }
 

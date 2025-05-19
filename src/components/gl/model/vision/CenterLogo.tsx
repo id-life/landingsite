@@ -3,7 +3,6 @@ import { gsap } from 'gsap';
 import * as THREE from 'three';
 import { Center, Svg } from '@react-three/drei';
 import { LogoType } from '@/components/nav/Logo';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';

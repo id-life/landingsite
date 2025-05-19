@@ -53,9 +53,6 @@ export default function VisionWrapper() {
       <Suspense fallback={<Loader />}>
         <VisionGL />
       </Suspense>
-      {/* <EffectComposer>
-        <Fluid />
-      </EffectComposer> */}
     </Canvas>
   );
 }

@@ -1,30 +1,24 @@
-import { useProgress } from '@react-three/drei';
-import { useSetAtom } from 'jotai';
-import { glLoadedAtom } from '@/atoms/geo';
 import { useEffect } from 'react';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useSetAtom } from 'jotai';
+import { useProgress } from '@react-three/drei';
+import { currentModelAtom } from '@/atoms/twin';
+import { visionGlLoadedAtom } from '@/atoms/geo';
 import ProgressLoader from '@/components/gl/ProgressLoader';
-import { currentModelAtom, PredictionModel } from '@/atoms/twin';
 
 export default function Loader() {
-  const { progress, active } = useProgress();
-  // const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const setGLLoaded = useSetAtom(glLoadedAtom);
+  const { progress, active, loaded } = useProgress();
+  const setGLLoaded = useSetAtom(visionGlLoadedAtom);
   const setCurrentModel = useSetAtom(currentModelAtom);
+
   // 设置全局加载完成
   useEffect(() => {
     if (!active) {
-      // setGlobalLoaded(true); // 看 OuterLoader
       setGLLoaded(true);
-      setCurrentModel(PredictionModel.M0);
     }
+    return () => {
+      setGLLoaded(true);
+    };
   }, [active, setCurrentModel, setGLLoaded]);
-
-  useEffect(() => {
-    const smoother = ScrollSmoother.get();
-    if (!smoother) return;
-    smoother.paused(active);
-  }, [active]);
 
   return <ProgressLoader progress={progress.toFixed(2)} />;
 }
