@@ -165,7 +165,7 @@ export function MobileWorldMapBookDotContent({
   const onClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      window.open(link, '_blank');
+      if (link) window.open(link, '_blank');
     },
     [link],
   );
@@ -182,9 +182,9 @@ export function MobileWorldMapBookDotContent({
             left: `${left}px`,
             top: `${top}px`,
           }}
-          onClick={onClick}
+          // onClick={onClick}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+          <a href={link || undefined} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4" onClick={onClick}>
             <motion.div
               initial="hidden"
               animate="visible"
@@ -216,9 +216,11 @@ export function MobileWorldMapBookDotContent({
               >
                 <h4 className="text-base/5 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
-                  <LinkSVG className="size-4 fill-blue" />
-                  <p className="ml-1 whitespace-nowrap text-xs/3 font-medium text-blue">{desc} </p>
-                  <ArrowSVG className="size-4 -rotate-90 fill-blue" />
+                  <LinkSVG className={cn('size-4 fill-blue', { 'fill-gray-400': !link })} />
+                  <p className={cn('ml-1 whitespace-nowrap text-xs/3 font-medium text-blue', { 'text-gray-400': !link })}>
+                    {desc}
+                  </p>
+                  <ArrowSVG className={cn('size-4 -rotate-90 fill-blue', { 'fill-gray-400': !link })} />
                 </div>
               </motion.div>
             </motion.div>
