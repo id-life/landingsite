@@ -8,6 +8,8 @@ import { isSafari } from 'react-device-detect';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 function SoundLineItem() {
   return (
@@ -29,6 +31,8 @@ export default function ToggleSoundButton({ className }: { className?: string })
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [canAutoPlay, setCanAutoPlay] = useState(true);
+
+  const { trackEvent } = useGA();
 
   const handleUserInteraction = useCallback(() => {
     if (!audioRef.current || canAutoPlay) return;
@@ -91,6 +95,14 @@ export default function ToggleSoundButton({ className }: { className?: string })
     }
   }, [soundOff]);
 
+  const onSoundButtonClick = () => {
+    setSoundOff(!soundOff);
+    trackEvent({
+      name: GA_EVENT_NAMES.MUSIC_TOGGLE,
+      label: !soundOff ? GA_EVENT_LABELS.MUSIC_TOGGLE.OFF : GA_EVENT_LABELS.MUSIC_TOGGLE.ON,
+    });
+  };
+
   return (
     <>
       <div
@@ -99,9 +111,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
           mobileNavOpen && 'bg-white',
           className,
         )}
-        onClick={() => {
-          setSoundOff(!soundOff);
-        }}
+        onClick={() => onSoundButtonClick()}
         style={
           {
             '--background': mobileNavOpen ? 'black' : undefined,

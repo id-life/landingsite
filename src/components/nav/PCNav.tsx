@@ -13,6 +13,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { NAV_LIST } from './nav';
 import { useEvent } from 'react-use';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -22,7 +24,14 @@ export default function PCNav() {
   const timelineRef = useRef(gsap.timeline({ paused: true }));
   const globalLoaded = useAtomValue(globalLoadedAtom);
 
+  const { trackEvent } = useGA();
+
   const onSubscribeClick = () => {
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
+    });
+
     if (isSubscribeShow) {
       if (playingRef.current) return;
       playingRef.current = true;

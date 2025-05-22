@@ -6,6 +6,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -150,10 +152,12 @@ export function MobileWorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, mobileContentTransformClass, period, lat, lng, link } = dot;
+  const { title, imgs, mobileContentTransformClass, period, lat, lng, link, label, country } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const { trackEvent } = useGA();
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -182,6 +186,16 @@ export function MobileWorldMapDotContent({
     };
   }, [isActive]);
 
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (link) {
+      trackEvent({
+        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
+        label: `${label ? `${label}, ` : ''}${country}`,
+      });
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isActive && (
@@ -206,7 +220,12 @@ export function MobileWorldMapDotContent({
             <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28')}></div>
           </div>
 
-          <a href={link} target="_blank" className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer">
+          <a
+            href={link}
+            target="_blank"
+            className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer"
+            onClick={handleLinkClick}
+          >
             <motion.div
               initial="hidden"
               animate="visible"

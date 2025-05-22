@@ -13,12 +13,16 @@ import { AnimatePresence, motion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { MediaLinkType } from './FooterContact';
 import { cn } from '@/utils';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function MobileFooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
+
+  const { trackEvent } = useGA();
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -38,24 +42,30 @@ export default function MobileFooterContact() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
-  const onFormSubmit = useCallback(
-    async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (isSubmitting) return;
-      const formData = new FormData(event.currentTarget);
-      const params = new URLSearchParams();
-      formData.forEach((value: any, key) => params.append(key, value));
-      const querystring = params.toString();
-      setIsSubmitting(true);
-      jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-      });
-    },
-    [isSubmitting, setIsSubmitting, setIsSubmitted],
-  );
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+    const formData = new FormData(event.currentTarget);
+    const params = new URLSearchParams();
+    formData.forEach((value: any, key) => params.append(key, value));
+    const querystring = params.toString();
+    setIsSubmitting(true);
+    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    });
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
+    });
+  };
 
-  const handleLinkClick = useCallback((type: MediaLinkType) => {
+  const handleLinkClick = (type: MediaLinkType) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.MEDIUM_CLICK,
+      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
+    });
+
     if (type === MediaLinkType.Youtube) {
       window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
     }
@@ -65,7 +75,7 @@ export default function MobileFooterContact() {
     if (type === MediaLinkType.Media) {
       window.open('https://drive.google.com/drive/folders/1MGFLw-cX8gHeuo5XpY2K02XgbtKIXGNW?usp=sharing', '__blank');
     }
-  }, []);
+  };
 
   return (
     <FloatingPortal>

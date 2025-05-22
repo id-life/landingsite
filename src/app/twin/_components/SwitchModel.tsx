@@ -7,12 +7,23 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { ModelType } from '@/components/twin/model/type';
 import { gsap } from 'gsap';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
 
+  const { trackEvent } = useGA();
+
   const handleSwitchModel = (model: PredictionModel | null) => {
+    if (model) {
+      trackEvent({
+        name: GA_EVENT_NAMES.TWIN_SWITCH,
+        label: GA_EVENT_LABELS.TWIN_SWITCH[model],
+      });
+    }
+
     gsap.to('.twin-title', { opacity: 0 });
     gsap.to('#ytb-demo', { opacity: 0 });
     gsap.to('#switch-skin', { bottom: '8rem' });

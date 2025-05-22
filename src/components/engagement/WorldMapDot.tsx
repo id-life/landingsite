@@ -8,6 +8,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -181,11 +183,13 @@ export function WorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link } = dot;
+  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link, label, country } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const { trackEvent } = useGA();
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   // 打开时禁用弹窗内的滚动, overscroll-none 不顶用
@@ -233,6 +237,16 @@ export function WorldMapDotContent({
     }
   };
 
+  const handleLinkClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (link) {
+      trackEvent({
+        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
+        label: `${label ? `${label}, ` : ''}${country}`,
+      });
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isActive && (
@@ -265,7 +279,7 @@ export function WorldMapDotContent({
               onClick={handleClick}
             ></div>
           </div>
-          <a href={link} target="_blank" className="pointer-events-auto">
+          <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
             <motion.div
               initial="hidden"
               animate="visible"
