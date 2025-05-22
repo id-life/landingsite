@@ -4,12 +4,21 @@ import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
 import { useAtom, useAtomValue } from 'jotai';
 import { currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
 import clsx from 'clsx';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES, GA_EVENT_LABELS } from '@/constants/ga';
 
 export default function SwitchSkin() {
   const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
 
+  const { trackEvent } = useGA();
+
   const handleModelTypeChange = (type: ModelType) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.MODEL_SWITCH,
+      label: type === ModelType.Skin ? GA_EVENT_LABELS.MODEL_SWITCH.SKIN : GA_EVENT_LABELS.MODEL_SWITCH.ANATOMY,
+      twin_type: currentModel ? GA_EVENT_LABELS.TWIN_SWITCH[currentModel] : '',
+    });
     setCurrentModelType(type);
   };
 

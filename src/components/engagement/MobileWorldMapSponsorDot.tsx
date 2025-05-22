@@ -8,6 +8,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
 import { SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -157,7 +159,7 @@ export function MobileWorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng, title } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
@@ -166,12 +168,24 @@ export function MobileWorldMapSponsorDotContent({
     [calcPoint, lat, lng, mobileLat, mobileLng],
   );
 
+  const { trackEvent } = useGA();
+
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
     // 检查鼠标是否移出到非点区域
     if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
       handleMouseLeave(e, index, 'sponsor');
+    }
+  };
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (link) {
+      trackEvent({
+        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
+        label: title,
+      });
     }
   };
 
@@ -188,7 +202,7 @@ export function MobileWorldMapSponsorDotContent({
             top: `${top}px`,
           }}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4">
+          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4" onClick={handleLinkClick}>
             <motion.div
               initial="hidden"
               animate="visible"

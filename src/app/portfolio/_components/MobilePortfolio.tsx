@@ -11,6 +11,8 @@ import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { portfolio, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 SwiperType.use([FreeMode]);
 
@@ -25,10 +27,17 @@ function MobilePortfolio() {
   const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [particleActive, setParticleActive] = useState(false);
-  const handleFundClick = useCallback((item: PortfolioItemInfo) => {
+
+  const { trackEvent } = useGA();
+
+  const handleFundClick = (item: PortfolioItemInfo) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+      label: item.title,
+    });
     if (!item.link) return;
     window.open(item.link, '_blank');
-  }, []);
+  };
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   // 创建入场动画

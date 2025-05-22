@@ -3,7 +3,7 @@ import Background from '@/components/common/Background';
 import FixedUI from '@/components/common/FixedUI';
 import Providers from '@/providers/root';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { clsx } from 'clsx';
 import type { Metadata } from 'next';
 import ScrollBehavior from '@/components/common/ScrollBehavior';
@@ -11,7 +11,6 @@ import ClientNav from '@/components/nav/CilentNav';
 
 import '@/styles/globals.css';
 import 'swiper/css';
-import '../utils/analytics';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -69,10 +68,15 @@ const jsonLd = {
     'Immortal Dragons',
   ],
 };
+
+const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <GoogleTagManager gtmId="GTM-NZKZJ38H" />
+      {gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
       <body
         className={clsx(
           xirod.variable,
