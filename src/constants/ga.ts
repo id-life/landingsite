@@ -6,7 +6,7 @@ export const GA_EVENT_NAMES = {
   // common
   MUSIC_TOGGLE: 'music_toggle',
   SUBSCRIBE_LETTER: 'subscribe_letter',
-  MEDIA_CLICK: 'media_click',
+  MEDIUM_CLICK: 'medium_click',
   ID_PAGE_VIEW: 'id_page_view',
 
   // portfolio
@@ -53,7 +53,7 @@ export const GA_EVENT_LABELS = {
     C02: 'C02',
     C03: 'C03',
   },
-  MEDIA_CLICK: {
+  MEDIUM_CLICK: {
     YOUTUBE: 'youtube',
     LINKEDIN: 'linkedin',
     MEDIA: 'drive',
@@ -80,13 +80,13 @@ export const GA_EVENT_LABELS = {
   | 'DT_DEMO'
   | 'TWIN_SWITCH'
   | 'MODEL_SWITCH'
-  | 'MEDIA_CLICK'
+  | 'MEDIUM_CLICK'
   | 'ANATOMY_SWITCH'
   | 'ID_PAGE_VIEW'
   | 'VALUE_VIEW'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
-  MEDIA_CLICK: Record<Uppercase<keyof typeof MediaLinkType>, string>;
+  MEDIUM_CLICK: Record<Uppercase<keyof typeof MediaLinkType>, string>;
   ANATOMY_SWITCH: Record<keyof typeof AnatomyCamera, string>;
 };

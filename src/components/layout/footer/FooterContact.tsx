@@ -53,8 +53,8 @@ export default function FooterContact() {
 
   const handleLinkClick = (type: MediaLinkType) => {
     trackEvent({
-      name: GA_EVENT_NAMES.MEDIA_CLICK,
-      label: GA_EVENT_LABELS.MEDIA_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
+      name: GA_EVENT_NAMES.MEDIUM_CLICK,
+      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
     });
 
     if (type === MediaLinkType.Youtube) {
