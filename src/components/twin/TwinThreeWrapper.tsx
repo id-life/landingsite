@@ -28,6 +28,7 @@ import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -214,62 +215,64 @@ export default function TwinThreeWrapper() {
           paddingRight: currentModel ? '10%' : '0%',
         }}
       >
-        <Canvas
-          id="model-canvas"
-          dpr={[1, 2]}
-          gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-          style={{
-            pointerEvents: 'none',
-            position: 'absolute',
-            top: '0px',
-            height: '100vh',
-          }}
-          fallback={<div>Sorry no WebGL supported!</div>}
-        >
-          <Suspense fallback={<Loader />}>
-            <View.Port />
-          </Suspense>
-        </Canvas>
-        {currentModel && (
-          <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-            <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            {modelType === ModelType.Skin && <Model0Out />}
-            {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
-            <EnvironmentGroup />
-            <LightGroup ambientIntensity={1.6} />
-            <ExtendedCameraControls ref={controlRefs[0]} />
-          </View>
-        )}
-        {currentModel === PredictionModel.M1 && (
-          <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-            <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            {modelType === ModelType.Skin && <Model1Out />}
-            {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
-            <EnvironmentGroup />
-            <LightGroup ambientIntensity={1.6} />
-            <ExtendedCameraControls ref={controlRefs[1]} />
-          </View>
-        )}
-        {currentModel === PredictionModel.M2 && (
-          <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-            <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            {modelType === ModelType.Skin && <Model2Out />}
-            {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
-            <EnvironmentGroup />
-            <LightGroup ambientIntensity={1.6} />
-            <ExtendedCameraControls ref={controlRefs[1]} />
-          </View>
-        )}
-        {currentModel === PredictionModel.M3 && (
-          <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-            <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-            {modelType === ModelType.Skin && <Model3Out />}
-            {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
-            <EnvironmentGroup />
-            <LightGroup ambientIntensity={1.6} />
-            <ExtendedCameraControls ref={controlRefs[1]} />
-          </View>
-        )}
+        <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+          <Canvas
+            id="model-canvas"
+            dpr={[1, 2]}
+            gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+            style={{
+              pointerEvents: 'none',
+              position: 'absolute',
+              top: '0px',
+              height: '100vh',
+            }}
+            fallback={<div>Sorry no WebGL supported!</div>}
+          >
+            <Suspense fallback={<Loader />}>
+              <View.Port />
+            </Suspense>
+          </Canvas>
+          {currentModel && (
+            <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+              {modelType === ModelType.Skin && <Model0Out />}
+              {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
+              <EnvironmentGroup />
+              <LightGroup ambientIntensity={1.6} />
+              <ExtendedCameraControls ref={controlRefs[0]} />
+            </View>
+          )}
+          {currentModel === PredictionModel.M1 && (
+            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+              {modelType === ModelType.Skin && <Model1Out />}
+              {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
+              <EnvironmentGroup />
+              <LightGroup ambientIntensity={1.6} />
+              <ExtendedCameraControls ref={controlRefs[1]} />
+            </View>
+          )}
+          {currentModel === PredictionModel.M2 && (
+            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+              {modelType === ModelType.Skin && <Model2Out />}
+              {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
+              <EnvironmentGroup />
+              <LightGroup ambientIntensity={1.6} />
+              <ExtendedCameraControls ref={controlRefs[1]} />
+            </View>
+          )}
+          {currentModel === PredictionModel.M3 && (
+            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+              {modelType === ModelType.Skin && <Model3Out />}
+              {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
+              <EnvironmentGroup />
+              <LightGroup ambientIntensity={1.6} />
+              <ExtendedCameraControls ref={controlRefs[1]} />
+            </View>
+          )}
+        </ErrorBoundary>
       </div>
     </div>
   );

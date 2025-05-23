@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { OuterLoader } from './ProgressLoader';
 import Loader from '@/components/gl/Loader';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
@@ -22,29 +23,31 @@ export default function ThreeWrapper() {
   }, 200);
 
   return (
-    <Canvas
-      id="vision-canvas"
-      style={{ position: 'fixed', zIndex: 1 }}
-      gl={{
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
-      }}
-      onClick={handleClick}
-      fallback={<div>Sorry no WebGL supported!</div>}
-    >
-      <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
-      <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
-      <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-      {/* <Perf deepAnalyze={true} /> */}
-      <OuterLoader />
-      <Suspense fallback={<Loader />}>
-        <VisionGL />
-        <ValueGL />
-      </Suspense>
-      <EffectComposer>
-        <Fluid />
-      </EffectComposer>
-    </Canvas>
+    <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+      <Canvas
+        id="vision-canvas"
+        style={{ position: 'fixed', zIndex: 1 }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance',
+        }}
+        onClick={handleClick}
+        fallback={<div>Sorry no WebGL supported!</div>}
+      >
+        <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
+        <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
+        <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+        {/* <Perf deepAnalyze={true} /> */}
+        <OuterLoader />
+        <Suspense fallback={<Loader />}>
+          <VisionGL />
+          <ValueGL />
+        </Suspense>
+        <EffectComposer>
+          <Fluid />
+        </EffectComposer>
+      </Canvas>
+    </ErrorBoundary>
   );
 }

@@ -3,7 +3,7 @@ import { Fluid } from './fluid/Fluid';
 import { Canvas } from '@react-three/fiber';
 import VisionGL from '@/components/gl/VisionGL';
 import { Html, useProgress } from '@react-three/drei';
-import { EffectComposer } from '@react-three/postprocessing';
+import { ErrorBoundary } from 'react-error-boundary';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 function Loader() {
@@ -37,22 +37,24 @@ function Loader() {
 
 export default function VisionWrapper() {
   return (
-    <Canvas
-      id="vision-canvas"
-      style={{ position: 'fixed', zIndex: 1 }}
-      camera={{ position: [0, 0, 10], fov: 40 }}
-      gl={{
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
-      }}
-      fallback={<div>Sorry no WebGL supported!</div>}
-    >
-      <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
-      <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-      <Suspense fallback={<Loader />}>
-        <VisionGL />
-      </Suspense>
-    </Canvas>
+    <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+      <Canvas
+        id="vision-canvas"
+        style={{ position: 'fixed', zIndex: 1 }}
+        camera={{ position: [0, 0, 10], fov: 40 }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance',
+        }}
+        fallback={<div>Sorry no WebGL supported!</div>}
+      >
+        <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
+        <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+        <Suspense fallback={<Loader />}>
+          <VisionGL />
+        </Suspense>
+      </Canvas>
+    </ErrorBoundary>
   );
 }
