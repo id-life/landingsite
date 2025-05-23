@@ -1,16 +1,28 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
-import { Html, useProgress } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { useSetAtom } from 'jotai';
+import { useGSAP } from '@gsap/react';
+import { twinGlLoadedAtom } from '@/atoms/geo';
+import { Html, useProgress } from '@react-three/drei';
 
 export default function Loader() {
-  const { progress } = useProgress();
+  const { progress, active } = useProgress();
   const [maxProgress, setMaxProgress] = useState(0);
+  const setTwinLoaded = useSetAtom(twinGlLoadedAtom);
 
   const fillRef = useRef(null);
   const inverseTextRef = useRef(null);
+
+  useEffect(() => {
+    if (!active) {
+      setTwinLoaded(true);
+    }
+    return () => {
+      setTwinLoaded(true);
+    };
+  }, [active, setTwinLoaded]);
 
   useEffect(() => {
     setMaxProgress((state) => (state > progress ? state : progress));

@@ -18,10 +18,10 @@ import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 interface PageArrowsProps {
   className?: string;
 }
+
 export default function MobilePageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
-  const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
   const getTotal = useCallback(() => {
@@ -56,31 +56,6 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
         <ArrowItem isUp />
         {!isLastPageAndInnerPage && <ArrowItem />}
       </div>
-      {/* value 页面 5个细长方块进度条 */}
-      {pageIndexList?.length ? (
-        <div className="flex-center order-2 gap-3 mobile:order-1">
-          {pageIndexList.map((_, index) => (
-            <div
-              key={`inner-page-index-${index}`}
-              className={cn(
-                'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                BLACK_ARROW_LIST.includes(currentPage.id)
-                  ? innerPageIndex !== index
-                    ? 'bg-white/20'
-                    : 'bg-white/40'
-                  : innerPageIndex === index
-                    ? 'bg-gray-800'
-                    : 'bg-[#B8B8B8]',
-              )}
-            >
-              <div
-                className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full cursor-pointer"
-                onClick={() => setInnerPageNavigateTo(index)}
-              />
-            </div>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -114,24 +89,6 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
     }
     mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
   }, 1000);
-
-  // const handleClick = useThrottle(() => {
-  //   if (innerPageIndex !== -1) {
-  //     // 有小进度条
-  //     // 第三页 ValueGL
-  //     if (innerPageIndex === 0 && isUp) {
-  //       // 小进度开头 往上翻
-  //       mobileNavChange(NAV_LIST[currentPageIndex - 1]);
-  //       return;
-  //     } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
-  //       // 小进度结尾 往下翻
-  //       mobileNavChange(NAV_LIST[currentPageIndex + 1]);
-  //       return;
-  //     }
-  //     setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
-  //   } else mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-  //   setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-  // }, 1000);
 
   return (
     <div

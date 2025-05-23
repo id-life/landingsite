@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
+
 gsap.registerPlugin(SplitText);
 
 export const useMobileValueSVGAnimations = () => {
@@ -164,6 +165,9 @@ export const useMobileValueSVGAnimations = () => {
     const valueTextRedEn3 = new SplitText(`#value-2-svg-mobile .value-text-en-3`, {
       type: 'lines,words,chars',
     });
+    const valueTextBlackEn4 = new SplitText(`#value-2-svg-mobile .value-text-en-4`, {
+      type: 'lines,words,chars',
+    });
     const valueTextNormalEn = new SplitText(`#value-2-svg-mobile .value-text-en:not(.text-red-500)`, {
       type: 'lines,words,chars',
     });
@@ -183,7 +187,7 @@ export const useMobileValueSVGAnimations = () => {
     const tl2 = gsap.timeline();
     const tl3 = gsap.timeline();
     // 红字英文淡出
-    tl1.to(valueTextRedEn1.chars, {
+    tl1.to([...valueTextRedEn1.chars, ...valueTextBlackEn4.chars], {
       opacity: 0,
       // y: -50,
       duration: 0.8,

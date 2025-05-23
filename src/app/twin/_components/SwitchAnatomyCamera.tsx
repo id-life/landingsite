@@ -16,13 +16,23 @@ import AnatomyM21 from '@/../public/svgs/twin/anatomy-m2-1.svg?component';
 import AnatomyM22 from '@/../public/svgs/twin/anatomy-m2-2.svg?component';
 import AnatomyM23 from '@/../public/svgs/twin/anatomy-m2-3.svg?component';
 import AnatomyM31 from '@/../public/svgs/twin/anatomy-m3-1.svg?component';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function SwitchAnatomyCamera() {
   const currentModel = useAtomValue(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const [currentAnatomyCamera, setCurrentAnatomyCamera] = useAtom(currentAnatomyCameraAtom);
 
+  const { trackEvent } = useGA();
+
   const handleSwitchAnatomyCamera = (index: AnatomyCamera) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.ANATOMY_SWITCH,
+      label: index.toString(),
+      twin_type: currentModel ? GA_EVENT_LABELS.TWIN_SWITCH[currentModel] : '',
+    });
+
     setCurrentAnatomyCamera(index);
     eventBus.next({ type: MessageType.SWITCH_ANATOMY_MODULE, payload: { index } });
     eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });

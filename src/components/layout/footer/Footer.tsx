@@ -2,19 +2,19 @@
 
 import { FormEvent, useRef, useState } from 'react';
 import jsonp from '@/utils/jsonp';
-import { useSetAtom } from 'jotai';
-import { isSubscribeShowAtom } from '@/atoms/footer';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
+import { FloatingPortal } from '@floating-ui/react';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
-  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
-  const portalNode = useFloatingPortalNode();
+
+  const { trackEvent } = useGA();
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,6 +27,11 @@ export default function Footer() {
     jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+    });
+
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
     });
   };
 
@@ -78,7 +83,7 @@ export default function Footer() {
             </form>
             <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
               <img className="h-4" src="/svgs/info.svg" alt="" />
-              Join our longevity circle for priority access to pioneer research
+              Join our Longevity Circle and receive the latest insights & research
             </div>
           </div>
         </div>

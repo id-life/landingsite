@@ -1,10 +1,7 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import MediaSVG from '@/../public/svgs/media.svg?component';
-import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
@@ -12,6 +9,8 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { MediaLinkType } from './FooterContact';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function MobileFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -19,6 +18,8 @@ export default function MobileFooter() {
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+
+  const { trackEvent } = useGA();
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -38,22 +39,23 @@ export default function MobileFooter() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
-  const onFormSubmit = useCallback(
-    async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (isSubmitting) return;
-      const formData = new FormData(event.currentTarget);
-      const params = new URLSearchParams();
-      formData.forEach((value: any, key) => params.append(key, value));
-      const querystring = params.toString();
-      setIsSubmitting(true);
-      jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-      });
-    },
-    [isSubmitting, setIsSubmitting, setIsSubmitted],
-  );
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+    const formData = new FormData(event.currentTarget);
+    const params = new URLSearchParams();
+    formData.forEach((value: any, key) => params.append(key, value));
+    const querystring = params.toString();
+    setIsSubmitting(true);
+    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    });
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
+    });
+  };
 
   const handleLinkClick = useCallback((type: MediaLinkType) => {
     if (type === MediaLinkType.Youtube) {
@@ -121,6 +123,10 @@ export default function MobileFooter() {
               />
             </div>
           </form>
+          <div className="mt-2 flex items-center gap-1 text-xs font-semibold">
+            <img className="h-4" src="/svgs/info.svg" alt="" />
+            Join our Longevity Circle and receive the latest insights & research
+          </div>
         </motion.div>
       </AnimatePresence>
     </FloatingPortal>

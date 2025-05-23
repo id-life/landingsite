@@ -14,6 +14,8 @@ import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { isMobile } from 'react-device-detect';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export enum MediaLinkType {
   Youtube = 'youtube',
@@ -29,6 +31,8 @@ export default function FooterContact() {
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
   const portalNode = useFloatingPortalNode();
 
+  const { trackEvent } = useGA();
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
@@ -41,9 +45,18 @@ export default function FooterContact() {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
+    });
   };
 
   const handleLinkClick = (type: MediaLinkType) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.MEDIUM_CLICK,
+      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
+    });
+
     if (type === MediaLinkType.Youtube) {
       window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
     }
@@ -125,8 +138,8 @@ export default function FooterContact() {
                 contact@id.life
               </div>
             </div>
-            <div className="font-oxanium text-base/5 font-bold uppercase">
-              <p className="opacity-50">SUBSCRIBE</p>
+            <div className="font-oxanium text-base/5 font-bold">
+              <p className="uppercase opacity-50">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
                 className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
@@ -147,12 +160,12 @@ export default function FooterContact() {
                 </div>
                 <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
                   {isSubmitting ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
                       <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                     </div>
                   ) : null}
                   {isSubmitted ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white font-bold">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
                       <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                     </div>
                   ) : null}
@@ -163,6 +176,10 @@ export default function FooterContact() {
                   />
                 </div>
               </form>
+              <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
+                <img className="h-4" src="/svgs/info-2.svg" alt="" />
+                Join our longevity circle for priority access to pioneer research
+              </div>
             </div>
           </div>
         </div>

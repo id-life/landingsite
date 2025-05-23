@@ -3,12 +3,24 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
+
+  const { trackEvent } = useGA();
+
   const handleSwitchModel = (model: PredictionModel | null) => {
+    if (model) {
+      trackEvent({
+        name: GA_EVENT_NAMES.TWIN_SWITCH,
+        label: GA_EVENT_LABELS.TWIN_SWITCH[model],
+      });
+    }
+
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0 });
     gsap.to('#ytb-demo', { opacity: 0, left: '-80rem' });

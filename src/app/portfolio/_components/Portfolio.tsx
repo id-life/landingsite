@@ -16,6 +16,8 @@ import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './port
 import PortfolioItem from './PortfolioItem';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -43,10 +45,16 @@ function Portfolio() {
     isUp: false,
   });
 
-  const handleFundClick = useCallback((item: PortfolioItemInfo) => {
+  const { trackEvent } = useGA();
+
+  const handleFundClick = (item: PortfolioItemInfo) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+      label: item.title,
+    });
     if (!item.link) return;
     window.open(item.link, '_blank');
-  }, []);
+  };
 
   useGSAP(() => {
     const tl = gsap.timeline({

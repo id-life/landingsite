@@ -1,9 +1,20 @@
 import { Drawer } from 'vaul';
 import SwitchLanguage from './SwitchLanguage';
 import { useState } from 'react';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function ReportM01() {
   const [isChinese, setIsChinese] = useState(false);
+
+  const { trackEvent } = useGA();
+
+  const handleClick = () => {
+    trackEvent({
+      name: GA_EVENT_NAMES.TWIN_DESCRIPTION,
+      label: GA_EVENT_LABELS.TWIN_DESCRIPTION.C01,
+    });
+  };
 
   const handleLanguageChange = (isChinese: boolean) => {
     setIsChinese(isChinese);
@@ -11,7 +22,10 @@ export default function ReportM01() {
 
   return (
     <Drawer.Root direction="left">
-      <Drawer.Trigger className="text-red-600"> More &gt;</Drawer.Trigger>
+      <Drawer.Trigger className="text-red-600" onClick={handleClick}>
+        {' '}
+        More &gt;
+      </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />
         <Drawer.Content className="fixed bottom-0 left-0 top-0 z-[100] flex w-[42rem] bg-white outline-none">

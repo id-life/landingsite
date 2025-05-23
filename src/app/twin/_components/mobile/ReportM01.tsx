@@ -2,9 +2,20 @@ import { Drawer } from 'vaul';
 import SwitchLanguage from '../SwitchLanguage';
 import { useState } from 'react';
 import Tag from './Tag';
+import { GA_EVENT_NAMES, GA_EVENT_LABELS } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
 
 export default function ReportM01() {
   const [isChinese, setIsChinese] = useState(false);
+
+  const { trackEvent } = useGA();
+
+  const handleClick = () => {
+    trackEvent({
+      name: GA_EVENT_NAMES.TWIN_DESCRIPTION,
+      label: GA_EVENT_LABELS.TWIN_DESCRIPTION.C01,
+    });
+  };
 
   const handleLanguageChange = (isChinese: boolean) => {
     setIsChinese(isChinese);
@@ -12,7 +23,10 @@ export default function ReportM01() {
 
   return (
     <Drawer.Root direction="bottom" disablePreventScroll={true}>
-      <Drawer.Trigger className="text-xs/3 font-semibold text-red-600"> More &gt;</Drawer.Trigger>
+      <Drawer.Trigger className="text-xs/3 font-semibold text-red-600" onClick={handleClick}>
+        {' '}
+        More &gt;
+      </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[50] bg-black/40 backdrop-blur" />
         <Drawer.Content className="fixed bottom-0 left-0 top-[200px] z-[100] flex w-full bg-white outline-none">
@@ -85,19 +99,21 @@ export default function ReportM01() {
                   <h3 className="font-bold">Living State: </h3>
                   Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s activities.
                   Long-term irregular living patterns, often staying up until 3-4 AM,
-                  <span className="text-red-600">&nbsp;rarely able to maintain a regular sleep schedule throughout the week</span>.
-                  &nbsp;Uses electronic devices intensively for over 14 hours daily, rarely goes out, usually stays at home all day,
-                  remaining sedentary.
+                  <span className="text-red-600">
+                    &nbsp;rarely able to maintain a regular sleep schedule throughout the week
+                  </span>
+                  . &nbsp;Uses electronic devices intensively for over 14 hours daily, rarely goes out, usually stays at home
+                  all day, remaining sedentary.
                   <h3 className="mt-2 font-bold">Eating Habits: </h3>
                   <span className="text-red-600">
                     Skips breakfast, never cooks, relies mainly on takeout for lunch and dinner
-                  </span>.
-                  &nbsp;Prefers high-fat and high-sugar foods, enjoys fried foods. Often eats dinner after 1 AM with large portions.
-                  Has hotpot or barbecue at least 4 times per week.
-                  <span className="text-red-600">&nbsp;High consumption of sugary drinks</span>, at least 1.5L of cola daily and an
-                  average of 2 bubble teas per day. Snacks mainly consist of spicy strips and chips, consuming over 300g daily
-                  on average. <span className="text-red-600">Rarely eats fruits and vegetables</span>, mainly consumes refined
-                  grains as staples.
+                  </span>
+                  . &nbsp;Prefers high-fat and high-sugar foods, enjoys fried foods. Often eats dinner after 1 AM with large
+                  portions. Has hotpot or barbecue at least 4 times per week.
+                  <span className="text-red-600">&nbsp;High consumption of sugary drinks</span>, at least 1.5L of cola daily and
+                  an average of 2 bubble teas per day. Snacks mainly consist of spicy strips and chips, consuming over 300g
+                  daily on average. <span className="text-red-600">Rarely eats fruits and vegetables</span>, mainly consumes
+                  refined grains as staples.
                   <h3 className="mt-2 font-bold">Work Situation: </h3>
                   <span className="text-red-600">
                     Works all day in an air-conditioned office, job requires long hours of staring at computer screens.
@@ -107,15 +123,16 @@ export default function ReportM01() {
                   minutes.
                   <span className="text-red-600">
                     &nbsp;Low work efficiency, frequently experiences fatigue, uses energy drinks for relief
-                  </span>.
-                  <h3 className="mt-2 font-bold">Psychological State: </h3>
+                  </span>
+                  .<h3 className="mt-2 font-bold">Psychological State: </h3>
                   <span className="text-red-600">Completely unconcerned</span> about weight and health conditions, has moderate
                   anxiety but never addresses it, relieves stress through shopping and late-night snacking. Experiences
-                  <span className="text-red-600">&nbsp;significant mood swings</span>, alternating between excitement and depression.
+                  <span className="text-red-600">&nbsp;significant mood swings</span>, alternating between excitement and
+                  depression.
                   <h3 className="mt-2 font-bold">Nutritional Intake: </h3>
                   Takes <span className="text-red-600">no</span> vitamins or nutritional supplements whatsoever. Has
-                  <span className="text-red-600">&nbsp;no</span> understanding of nutritional knowledge, believes regular eating is
-                  sufficient. Occasionally takes stimulants due to lack of energy.
+                  <span className="text-red-600">&nbsp;no</span> understanding of nutritional knowledge, believes regular eating
+                  is sufficient. Occasionally takes stimulants due to lack of energy.
                   <h3 className="mt-2 font-bold">Medication Intake: </h3>
                   Frequently takes caffeine pills for energy.
                   <h3 className="mt-2 font-bold">Exercise Habits: </h3>
@@ -126,8 +143,8 @@ export default function ReportM01() {
                   <h3 className="mt-2 font-bold">Environmental Exposure: </h3>
                   Lives long-term in <span className="text-red-600">sealed, air-conditioned environments</span>, rarely opens
                   windows for ventilation. Often uses phone in dark environments after work. Living environment is
-                  <span className="text-red-600">&nbsp;damp but never addressed</span>. Bedroom never receives sunlight, poor air
-                  quality. Never gets sun exposure, stays in air-conditioned rooms right after waking up, long-term lack of
+                  <span className="text-red-600">&nbsp;damp but never addressed</span>. Bedroom never receives sunlight, poor
+                  air quality. Never gets sun exposure, stays in air-conditioned rooms right after waking up, long-term lack of
                   outdoor activities.
                   <h3 className="mt-2 font-bold">Social Interaction: </h3>
                   Primarily engages in <span className="text-red-600">online social interaction</span>, spending over 6 hours

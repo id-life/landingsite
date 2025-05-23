@@ -15,17 +15,31 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useSetAtom } from 'jotai/index';
+import { useAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { useCallback, useEffect } from 'react';
 import { useEvent } from 'react-use';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import Spectrum from '@/components/spectrum/Spectrum';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function Home() {
-  const setCurrentPage = useSetAtom(currentPageAtom);
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
+
+  const { trackEvent } = useGA();
+
+  useEffect(() => {
+    if (isMounted && !isMobile) {
+      trackEvent({
+        name: GA_EVENT_NAMES.ID_PAGE_VIEW,
+        label: currentPage.id,
+      });
+    }
+  }, [currentPage, isMobile, isMounted]);
+
   const initFontSize = useCallback(() => {
     if (!isMounted || isMobile) {
       document.documentElement.style.fontSize = '16px';

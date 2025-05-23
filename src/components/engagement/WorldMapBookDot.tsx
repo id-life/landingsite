@@ -8,6 +8,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -185,13 +187,18 @@ export function WorldMapBookDotContent({
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
-  const onClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
+  const { trackEvent } = useGA();
+
+  const onClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (link) {
       window.open(link, '_blank');
-    },
-    [link],
-  );
+      trackEvent({
+        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
+        label: title,
+      });
+    }
+  };
 
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeBookDotClickOpen) return;
@@ -210,13 +217,13 @@ export function WorldMapBookDotContent({
             `world-map-dot-book-content world-map-dot-book-content-${index}`,
             'pointer-events-none absolute z-20 -mt-2 flex h-20 flex-col overflow-visible',
           )}
-          onClick={onClick}
+          // onClick={onClick}
           style={{
             left: `${left}px`,
             top: `${top}px`,
           }}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto">
+          <a href={link || undefined} target="_blank" rel="noreferrer" className="pointer-events-auto" onClick={onClick}>
             <motion.div
               initial="hidden"
               animate="visible"
@@ -242,9 +249,9 @@ export function WorldMapBookDotContent({
               >
                 <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
-                  <LinkSVG className="size-4 fill-blue" />
-                  <p className="ml-1 text-xs/3 font-medium text-blue">{desc} </p>
-                  <ArrowSVG className="size-4 -rotate-90 fill-blue" />
+                  <LinkSVG className={cn('size-4 fill-blue', { 'fill-gray-400': !link })} />
+                  <p className={cn('ml-1 text-xs/3 font-medium text-blue', { 'text-gray-400': !link })}>{desc} </p>
+                  <ArrowSVG className={cn('size-4 -rotate-90 fill-blue', { 'fill-gray-400': !link })} />
                 </div>
               </motion.div>
             </motion.div>
