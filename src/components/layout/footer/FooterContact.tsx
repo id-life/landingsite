@@ -177,7 +177,7 @@ export default function FooterContact() {
                 </div>
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
-                <img className="h-4" src="/svgs/info-2.svg" alt="" />
+                <img className="ml-2 h-4" src="/svgs/info-2.svg" alt="" />
                 Join our longevity circle for priority access to pioneer research
               </div>
             </div>
