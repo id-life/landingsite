@@ -4,7 +4,7 @@ import React, { Suspense, useRef, useState } from 'react';
 import Geo, { ModelRef } from '@/components/gl/model/geo/Geo';
 import { Canvas } from '@react-three/fiber';
 import { NAV_LIST } from '@/components/nav/nav';
-import Effects from '@/components/gl/model/geo/Effect';
+import { ErrorBoundary } from 'react-error-boundary';
 import { OrbitControls } from '@react-three/drei';
 import { GeoData, GeoLabel } from '@/components/gl/model/geo/config';
 import ChartWrapper from '@/components/charts/ChartWrapper';
@@ -36,48 +36,49 @@ export default function Intervention() {
         </div>
       </div>
       <div className="page-height relative mt-12">
-        <Canvas
-          shadows
-          dpr={[1, 2]}
-          camera={{ position: [0, 0, 2], far: 1000 }}
-          gl={{ powerPreference: 'high-performance', depth: false }}
-          fallback={<div>Sorry no WebGL supported!</div>}
-        >
-          <pointLight position={[-10, -10, -10]} intensity={1} />
-          <ambientLight intensity={0.4} />
-          <spotLight
-            castShadow
-            angle={0.3}
-            penumbra={1}
-            position={[0, 10, 20]}
-            intensity={5}
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-          />
-          <spotLight
-            castShadow
-            angle={0.3}
-            penumbra={1}
-            position={[0, 10, 20]}
-            intensity={5}
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
-          />
-          <Suspense fallback={null}>
-            <Geo
-              ref={(ref) => {
-                ref && (geoRef.current = ref);
-              }}
-              controlsRef={controls}
-              onLabelClick={(item) => {
-                setGeoLabel(item);
-                setIsOpen(true);
-              }}
+        <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+          <Canvas
+            shadows
+            dpr={[1, 2]}
+            camera={{ position: [0, 0, 2], far: 1000 }}
+            gl={{ powerPreference: 'high-performance', depth: false }}
+            fallback={<div>Sorry no WebGL supported!</div>}
+          >
+            <pointLight position={[-10, -10, -10]} intensity={1} />
+            <ambientLight intensity={0.4} />
+            <spotLight
+              castShadow
+              angle={0.3}
+              penumbra={1}
+              position={[0, 10, 20]}
+              intensity={5}
+              shadow-mapSize-width={1024}
+              shadow-mapSize-height={1024}
             />
-          </Suspense>
-          {/*<Effects />*/}
-          <OrbitControls ref={controls} autoRotate autoRotateSpeed={1} enableDamping enableZoom={false} target={[0, 0, 0]} />
-        </Canvas>
+            <spotLight
+              castShadow
+              angle={0.3}
+              penumbra={1}
+              position={[0, 10, 20]}
+              intensity={5}
+              shadow-mapSize-width={1024}
+              shadow-mapSize-height={1024}
+            />
+            <Suspense fallback={null}>
+              <Geo
+                ref={(ref) => {
+                  ref && (geoRef.current = ref);
+                }}
+                controlsRef={controls}
+                onLabelClick={(item) => {
+                  setGeoLabel(item);
+                  setIsOpen(true);
+                }}
+              />
+            </Suspense>
+            <OrbitControls ref={controls} autoRotate autoRotateSpeed={1} enableDamping enableZoom={false} target={[0, 0, 0]} />
+          </Canvas>
+        </ErrorBoundary>
       </div>
       <ChartWrapper
         open={isOpen}

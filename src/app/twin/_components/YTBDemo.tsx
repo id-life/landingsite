@@ -1,10 +1,17 @@
 import DemoBorderSVG from '@/../public/svgs/twin/demo-border.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import RightSVG from '@/../public/svgs/twin/right.svg?component';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function YTBDemo() {
+  const { trackEvent } = useGA();
+
   const handleYTBLinkClick = (url: string) => {
     window.open(url, '_blank');
+    trackEvent({
+      name: GA_EVENT_NAMES.DT_DEMO,
+    });
   };
 
   return (

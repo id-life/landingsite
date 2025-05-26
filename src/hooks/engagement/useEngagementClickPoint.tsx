@@ -1,6 +1,10 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
 import { useAtom } from 'jotai';
 import { useThrottle } from '../useThrottle';
+import { useEffect } from 'react';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { TrackEventOptions, useGA } from '../useGA';
+import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/engagement';
 
 export type EngagementClickPointType = 'meeting' | 'book' | 'sponsor';
 
@@ -9,22 +13,27 @@ export function useEngagementClickPoint() {
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
+  const { trackEvent } = useGA();
+
   const handleClickPoint = (type: EngagementClickPointType, index: number, openState?: boolean) => {
     if (type === 'meeting') {
       const newState = openState === undefined ? toggleDotIndex(index, activeMeetingDot) : openState ? index : null;
       setActiveMeetingDot(newState);
       setActiveBookDot(null);
       setActiveSponsorDot(null);
+      newState && trackEngagementEvent(type, newState, 'click');
     } else if (type === 'book') {
       const newState = openState === undefined ? toggleDotIndex(index, activeBookDot) : openState ? index : null;
       setActiveBookDot(newState);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
+      newState && trackEngagementEvent(type, newState, 'click');
     } else if (type === 'sponsor') {
       const newState = openState === undefined ? toggleDotIndex(index, activeSponsorDot) : openState ? index : null;
       setActiveSponsorDot(newState);
       setActiveMeetingDot(null);
       setActiveBookDot(null);
+      newState && trackEngagementEvent(type, newState, 'click');
     }
   };
 
@@ -34,14 +43,17 @@ export function useEngagementClickPoint() {
       setActiveMeetingDot(index);
       setActiveBookDot(null);
       setActiveSponsorDot(null);
+      trackEngagementEvent(type, index, 'mouseenter');
     } else if (type === 'book') {
       setActiveBookDot(index);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
+      trackEngagementEvent(type, index, 'mouseenter');
     } else if (type === 'sponsor') {
       setActiveSponsorDot(index);
       setActiveMeetingDot(null);
       setActiveBookDot(null);
+      trackEngagementEvent(type, index, 'mouseenter');
     }
   }, 400);
 
@@ -72,6 +84,30 @@ export function useEngagementClickPoint() {
       setActiveSponsorDot(null);
     }
   }, 400);
+
+  function trackEngagementEvent(type: EngagementClickPointType, activeDot: number, action: 'click' | 'mouseenter') {
+    const options: TrackEventOptions = {
+      name: GA_EVENT_NAMES.PRESENCE_VIEW,
+      action,
+    };
+
+    switch (type) {
+      case 'meeting':
+        const label = WORLD_MAP_DOTS[activeDot].label;
+        options.label = `${label ? `${label}, ` : ''}${WORLD_MAP_DOTS[activeDot].country}`;
+        break;
+      case 'book':
+        options.label = MAP_BOOK_DOTS[activeDot].title;
+        break;
+      case 'sponsor':
+        options.label = MAP_SPONSOR_DOTS[activeDot].title;
+        break;
+      default:
+        return;
+    }
+
+    trackEvent(options);
+  }
 
   return {
     handleClickPoint,

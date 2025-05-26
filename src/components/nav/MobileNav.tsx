@@ -10,16 +10,23 @@ import { useAtom, useAtomValue } from 'jotai';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
 import { cn } from '@/utils';
-import { useCallback } from 'react';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function MobileNav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
 
-  const onSubscribeClick = useCallback(() => {
+  const { trackEvent } = useGA();
+
+  const onSubscribeClick = () => {
     setIsSubscribeShow((pre) => !pre);
-  }, []);
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
+      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
+    });
+  };
 
   if (!globalLoaded) return null;
   return (

@@ -13,6 +13,7 @@ import { Fluid } from './fluid/Fluid';
 import MobileVisionGL from './MobileVisionGL';
 import ProgressLoader from './ProgressLoader';
 import MobileValueGL from './MobileValueGL';
+import { ErrorBoundary } from 'react-error-boundary';
 
 function Loader() {
   const { progress, active } = useProgress();
@@ -60,28 +61,30 @@ export default function MobileThreeWrapper() {
   const isMounted = useIsMounted();
   if (!isMounted) return null;
   return (
-    <Canvas
-      id="vision-canvas"
-      className={cn('pointer-events-none', { 'pointer-events-none hidden': !showCanvas })}
-      style={{ position: 'fixed', zIndex: 1 }}
-      camera={{ position: [0, 0, 10], fov: 40 }}
-      gl={{
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
-      }}
-      fallback={<div>Sorry no WebGL supported!</div>}
-    >
-      <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
-      <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-      <OuterLoader />
-      <Suspense fallback={<Loader />}>
-        <MobileVisionGL />
-        <MobileValueGL />
-      </Suspense>
-      <EffectComposer>
-        <Fluid />
-      </EffectComposer>
-    </Canvas>
+    <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+      <Canvas
+        id="vision-canvas"
+        className={cn('pointer-events-none', { 'pointer-events-none hidden': !showCanvas })}
+        style={{ position: 'fixed', zIndex: 1 }}
+        camera={{ position: [0, 0, 10], fov: 40 }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance',
+        }}
+        fallback={<div>Sorry no WebGL supported!</div>}
+      >
+        <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
+        <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+        <OuterLoader />
+        <Suspense fallback={<Loader />}>
+          <MobileVisionGL />
+          <MobileValueGL />
+        </Suspense>
+        <EffectComposer>
+          <Fluid />
+        </EffectComposer>
+      </Canvas>
+    </ErrorBoundary>
   );
 }

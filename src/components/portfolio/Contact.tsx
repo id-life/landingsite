@@ -4,13 +4,24 @@ import { useCopyToClipboard } from 'react-use';
 import CopySVG from '@/../public/svgs/copy-btn.svg?component';
 import CheckmarkSVG from '@/../public/svgs/checkmark.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function Contact() {
   const [state, copyToClipboard] = useCopyToClipboard();
 
+  const { trackEvent } = useGA();
+
+  const handleClick = () => {
+    copyToClipboard('contact@id.life');
+    trackEvent({
+      name: GA_EVENT_NAMES.CONTACT_EMAIL,
+    });
+  };
+
   return (
     <div
-      onClick={() => copyToClipboard('contact@id.life')}
+      onClick={handleClick}
       className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 hover:text-red-600 mobile:w-44 mobile:text-xs/5"
     >
       <SubscribeBorderSVG

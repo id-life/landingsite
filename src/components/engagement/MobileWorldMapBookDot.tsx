@@ -8,6 +8,8 @@ import { useCallback, useMemo } from 'react';
 import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -162,13 +164,18 @@ export function MobileWorldMapBookDotContent({
   const isActive = activeBookDot === index;
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
-  const onClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (link) window.open(link, '_blank');
-    },
-    [link],
-  );
+  const { trackEvent } = useGA();
+
+  const onClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (link) {
+      // window.open(link, '_blank');
+      trackEvent({
+        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
+        label: title,
+      });
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
