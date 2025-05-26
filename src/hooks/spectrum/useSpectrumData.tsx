@@ -1,5 +1,14 @@
 import { useMemo } from 'react';
-import { MeetingSVG, SponsorSVG } from '../../components/svg';
+import {
+  BookSVG,
+  DigitalTwinSVG,
+  InternSVG,
+  MeetingSVG,
+  MuseumSVG,
+  PodcastSVG,
+  RelationSVG,
+  SponsorSVG,
+} from '../../components/svg';
 
 export type SpectrumLinkItem = {
   label: string;
@@ -24,8 +33,47 @@ export const useSpectrumData = () => {
         icon: <MeetingSVG />,
         links: [
           {
-            label: 'bio/acc manifesto',
+            label: 'Timepie Longevity Forum',
             // onClick: jumpTo engagement meetings
+          },
+          {
+            label: "Founder's Longevity Forum",
+            // onClick: jumpTo engagement meetings
+          },
+          {
+            label: 'Vitalist Bay Investor Forum',
+            // onClick: jumpTo engagement meetings
+          },
+          {
+            label: 'Edge City Lanna',
+            // onClick: jumpTo engagement meetings
+          },
+          {
+            label: 'Oxford Future Innovation Forum',
+            // onClick: jumpTo engagement meetings
+          },
+        ],
+      },
+      {
+        title: 'Translation & Publishing',
+        titleCn: '翻译与出版',
+        icon: <BookSVG />,
+        links: [
+          {
+            label: 'bio/acc manifesto',
+            // onClick: jumpTo engagement book
+          },
+          {
+            label: 'The Network State',
+            // onClick: jumpTo engagement book
+          },
+          {
+            label: 'The case against death',
+            // onClick: jumpTo engagement book
+          },
+          {
+            label: 'Better With Age',
+            // onClick: jumpTo engagement book
           },
         ],
       },
@@ -52,6 +100,59 @@ export const useSpectrumData = () => {
           },
         ],
       },
+      {
+        title: 'Podcast',
+        titleCn: '播客',
+        icon: <PodcastSVG />,
+        links: [
+          {
+            label: 'Immortal Dragon  不朽真龙',
+          },
+          {
+            label: 'Long Talk  龙门阵',
+          },
+        ],
+      },
+      {
+        title: 'Evanglism',
+        titleCn: '布道者',
+        icon: <RelationSVG />,
+        links: [
+          {
+            label: 'Influence Network',
+          },
+        ],
+      },
+      {
+        title: 'Digital Twin',
+        titleCn: '数字孪生',
+        icon: <DigitalTwinSVG />,
+        links: [
+          {
+            label: 'Access Digital Twin',
+          },
+        ],
+      },
+      {
+        title: 'ID Gallery Museum',
+        titleCn: '总部办公室',
+        icon: <MuseumSVG />,
+        links: [
+          {
+            label: 'Coming Soon',
+          },
+        ],
+      },
+      {
+        title: 'Global Internship',
+        titleCn: '实习生计划',
+        icon: <InternSVG />,
+        links: [
+          {
+            label: 'Contact Us  Apply (CN)  /  Apply (EN)',
+          },
+        ],
+      },
     ];
     return data;
   }, []);
@@ -68,14 +169,50 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
     {
       url: '/imgs/particle/spectrum/01.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.8,
-      loadPercentage: 0.005,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
     },
     {
       url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.8,
-      loadPercentage: 0.005,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/03.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/04.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/05.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/06.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/07.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
+    },
+    {
+      url: '/imgs/particle/spectrum/08.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: 0.003,
     },
   ];
 };

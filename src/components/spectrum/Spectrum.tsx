@@ -76,8 +76,8 @@ function Spectrum() {
         const icon = div?.querySelectorAll('.spectrum-icon');
         if (title) tl.to(title, { fontSize: '1.875rem', lineHeight: '2.25rem' });
         if (titleCn) tl.to(titleCn, { fontSize: '1.5rem', lineHeight: '1.75rem' }, '<');
-        if (selected) tl.to(selected, { opacity: 1 }, '<');
         if (icon) tl.to(icon, { width: '2.25rem', height: '2.25rem' }, '<');
+        if (selected) tl.to(selected, { opacity: 1 });
 
         div.addEventListener('mouseenter', () => {
           throttledSetImageIdx(idx + 1);
@@ -113,7 +113,7 @@ function Spectrum() {
           </div>
         </div>
         <div className="spectrum-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-4" ref={wrapperRef}>
+          <div className="grid grid-cols-4 gap-6" ref={wrapperRef}>
             {spectrumData.map((item, index) => (
               <SpectrumItem
                 key={item.title}
