@@ -1,3 +1,4 @@
+import { NAV_LIST } from '@/components/nav/nav';
 import { useMemo } from 'react';
 import {
   BookSVG,
@@ -9,9 +10,10 @@ import {
   RelationSVG,
   SponsorSVG,
 } from '../../components/svg';
-import { useNavigation } from '../useNavigation';
-import { NAV_LIST } from '@/components/nav/nav';
 import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
+import { useIsMobile } from '../useIsMobile';
+import { useMobileNavigation } from '../useMobileNavigation';
+import { useNavigation } from '../useNavigation';
 
 export type SpectrumLinkItem = {
   label: string;
@@ -29,24 +31,26 @@ export type SpectrumItemInfo = {
 };
 
 export const useSpectrumData = () => {
+  const isMobile = useIsMobile();
   const { handleNavClick } = useNavigation();
+  const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint();
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const handleClickMeeting = (index: number) => {
-      handleNavClick(NAV_LIST[3]);
+      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
       setTimeout(() => {
         handleClickPoint('meeting', index, true);
       }, 300);
     };
     const handleClickBook = (index: number) => {
-      handleNavClick(NAV_LIST[3]);
+      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
       setTimeout(() => {
         handleClickPoint('book', index, true);
       }, 300);
     };
     const handleClickSponsor = (index: number) => {
-      handleNavClick(NAV_LIST[3]);
+      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
       setTimeout(() => {
         handleClickPoint('sponsor', index, true);
       }, 300);
@@ -158,7 +162,7 @@ export const useSpectrumData = () => {
           {
             label: 'Access Digital Twin',
             onClick: () => {
-              handleNavClick(NAV_LIST[4]);
+              isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
             },
           },
         ],
@@ -192,7 +196,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickPoint, handleNavClick]);
+  }, [handleClickPoint, mobileNavChange, handleNavClick, isMobile]);
 
   return spectrumData;
 };
@@ -201,56 +205,56 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
   return [
     {
       url: '/imgs/particle/0.png',
-      scaleNum: isMobile ? 0.3 : 2.2,
+      scaleNum: isMobile ? 0.4 : 2.2,
       resize: [512, 300],
     },
     {
       url: '/imgs/particle/spectrum/01.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/03.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/04.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/05.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/06.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/07.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
     {
       url: '/imgs/particle/spectrum/08.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.3 : 0.9,
-      loadPercentage: isMobile ? 0.003 : 0.003,
+      scaleNum: isMobile ? 0.4 : 0.9,
+      loadPercentage: isMobile ? 0.0025 : 0.003,
     },
   ];
 };
