@@ -174,7 +174,7 @@ export const WorldMap = memo(function WorldMapComponent({
   // 确保在组件卸载时重置状态
   useEffect(() => {
     if (!globalLoaded) return;
-    if (currentPage?.id !== NAV_LIST[2].id) {
+    if (currentPage?.id !== NAV_LIST[3].id) {
       setActiveBookDot(null);
       setActiveSponsorDot(null);
       setActiveMeetingDot(null);

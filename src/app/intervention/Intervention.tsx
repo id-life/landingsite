@@ -19,7 +19,7 @@ export default function Intervention() {
   const [geoLabel, setGeoLabel] = useState<GeoData | undefined>(undefined);
 
   return (
-    <div id={NAV_LIST[4].id} className="mt-56 px-12 mobile:mt-56 mobile:p-0 mobile:pt-9">
+    <div id={NAV_LIST[5].id} className="mt-56 px-12 mobile:mt-56 mobile:p-0 mobile:pt-9">
       <h2 className="page-title">Intervention partner network</h2>
       <div className="mt-9 flex gap-7 mobile:mt-5 mobile:grid mobile:grid-cols-1 mobile:gap-3">
         <div className="processes-clip px-3.5 py-2 text-xl/5 font-medium capitalize text-white mobile:w-fit mobile:py-1 mobile:text-sm/5">

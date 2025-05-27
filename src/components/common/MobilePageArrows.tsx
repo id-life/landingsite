@@ -45,7 +45,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
-    return currentPage.id === NAV_LIST[4].id && innerPageIndex === innerPageTotal - 1;
+    return currentPage.id === NAV_LIST[5].id && innerPageIndex === innerPageTotal - 1;
   }, [currentPage.id, innerPageIndex, innerPageTotal]);
 
   console.log({ currentPage, innerPageIndex, innerPageTotal });
@@ -94,7 +94,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        [NAV_LIST[1].id, NAV_LIST[2].id].includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        [NAV_LIST[1].id, NAV_LIST[3].id].includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

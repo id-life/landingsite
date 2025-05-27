@@ -5,8 +5,20 @@ const DynamicReactP5Wrapper = dynamic(() => import('./DynamicParticleGL').then((
   ssr: false,
 });
 
-const ParticleGL = ({ activeAnim, imageIdx, id }: { activeAnim?: boolean; imageIdx: number; id?: string }) => {
-  return <DynamicReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
+const ParticleGL = ({
+  activeAnim,
+  imageIdx,
+  id,
+  getSourceImgInfos,
+}: {
+  activeAnim?: boolean;
+  imageIdx: number;
+  id?: string;
+  getSourceImgInfos: (
+    isMobile: boolean,
+  ) => { scaleNum?: number; resize?: number[]; url: string; loadPercentage?: number; resolution?: number }[];
+}) => {
+  return <DynamicReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} getSourceImgInfos={getSourceImgInfos} />;
 };
 
 export default ParticleGL;

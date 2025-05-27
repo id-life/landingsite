@@ -20,7 +20,7 @@ export default function VisionGL() {
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[4].id}`,
+        trigger: `#${NAV_LIST[5].id}`,
         scrub: true,
         onEnter: () => {
           if (!modelRef.current) return;

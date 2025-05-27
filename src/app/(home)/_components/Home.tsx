@@ -1,6 +1,6 @@
 'use client';
 
-import Engagement from '@/app/engagement/Engagement';
+import Engagement from '@/components/engagement/Engagement';
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
 import Value from '@/app/value/Value';
@@ -22,6 +22,7 @@ import { useEvent } from 'react-use';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import Spectrum from '@/components/spectrum/Spectrum';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -76,9 +77,21 @@ export default function Home() {
       '--background': '#000000',
       '--foreground': '#F0F0F0',
     });
-    const engagementTL = gsap.timeline({
+    const spectrumTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: true,
+      },
+    });
+    spectrumTL.to(root, {
+      '--gradient-rotate': '300deg',
+      duration: 3,
+    });
+    const engagementTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[3].id}`,
         start: 'top bottom',
         end: 'top center',
         scrub: true,
@@ -98,15 +111,15 @@ export default function Home() {
     });
     const twinTL = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[3].id}`,
+        trigger: `#${NAV_LIST[4].id}`,
         start: 'top bottom',
         end: 'top center',
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[3]);
         },
       },
     });
@@ -127,6 +140,7 @@ export default function Home() {
         <div id="content">
           <Vision />
           <Portfolio />
+          <Spectrum />
           <Engagement />
           <Twin />
           <Value />
