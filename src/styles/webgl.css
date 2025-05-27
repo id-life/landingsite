@@ -14,7 +14,7 @@
   position: absolute;
   top: calc(14rem + 4svh);
   left: 50%;
-  transform: translateX(-50%) translateY(-50%) scale(0.9);
+  transform: translateX(-50%) translateY(-50%);
   z-index: -1;
 }
 .particle-container.particle-container-mobile-2 {
@@ -23,24 +23,24 @@
   position: absolute;
   top: calc(14rem + 37svh);
   left: 50%;
-  transform: translateX(-50%) translateY(-50%) scale(0.9);
+  transform: translateX(-50%) translateY(-50%);
   z-index: -1;
 }
 
-.particle-container .particle-mask,
+/* .particle-container .particle-mask,
 .particle-container-mobile-1 .particle-mask,
 .particle-container-mobile-2 .particle-mask {
   position: absolute;
   inset: 0;
-}
+} */
 
 .particle-container.active {
   opacity: 0.8;
   pointer-events: auto;
 }
 
-/* .particle-container.particle-container-mobile-1.active,
+.particle-container.particle-container-mobile-1.active,
 .particle-container.particle-container-mobile-2.active {
   opacity: 0.5;
   pointer-events: auto;
-} */
+}

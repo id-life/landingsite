@@ -5,7 +5,7 @@ import { cloneElement, forwardRef, memo } from 'react';
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   isHover?: boolean;
 }

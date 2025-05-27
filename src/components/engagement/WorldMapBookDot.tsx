@@ -54,7 +54,7 @@ export function WorldMapBookDotPoint({
   };
   useEffect(() => {
     if (!activeBookDot) setActiveBookDotClickOpen(false);
-  }, [activeBookDot]);
+  }, [activeBookDot, setActiveBookDotClickOpen]);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 

@@ -12,6 +12,7 @@ export function useMobileNavigation() {
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
+
   const changeBackground = useCallback((theme: BackgroundTheme) => {
     const root = document.documentElement;
     if (!root) return;
@@ -59,7 +60,7 @@ export function useMobileNavigation() {
   }, []);
 
   useEffect(() => {
-    if (NAV_LIST[1].id === currentPage.id) {
+    if (NAV_LIST[1].id === currentPage.id || NAV_LIST[2].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK_RED);
     } else if (NAV_LIST[3].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK);

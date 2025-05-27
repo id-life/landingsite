@@ -1,10 +1,4 @@
-import {
-  mobileCurrentPageAtom,
-  mobileCurrentPageIndexAtom,
-  mobilePortfolioPageIndexAtom,
-  mobilePortfolioPageNavigateToAtom,
-  innerPageNavigateToAtom,
-} from '@/atoms';
+import { innerPageNavigateToAtom, mobileCurrentPageAtom, mobileCurrentPageIndexAtom } from '@/atoms';
 import { useAtom } from 'jotai';
 
 export function useMobileCurrentPage() {
