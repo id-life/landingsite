@@ -130,7 +130,7 @@ export const useSpectrumData = () => {
         icon: <PodcastSVG />,
         links: [
           {
-            label: 'Immortal Dragon  不朽真龙',
+            label: 'Immortal Dragons  不朽真龙',
             link: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',
           },
           {

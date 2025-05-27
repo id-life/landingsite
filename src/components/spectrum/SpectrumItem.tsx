@@ -17,18 +17,8 @@ const SpectrumItem = memo(
       <div
         ref={ref}
         onClick={onClick}
-        className={cn('spectrum-item group relative h-[17.5rem] w-[23.75rem] cursor-pointer text-foreground', className)}
+        className={cn('spectrum-item relative h-[17.5rem] w-[23.75rem] cursor-pointer text-foreground', className)}
       >
-        <img
-          src="/svgs/select.svg"
-          className="spectrum-selected-icon absolute left-0 top-1/2 w-5.5 -translate-y-1/2 rotate-180 opacity-0"
-          alt=""
-        />
-        <img
-          src="/svgs/select.svg"
-          className="spectrum-selected-icon absolute right-0 top-1/2 w-5.5 -translate-y-1/2 opacity-0"
-          alt=""
-        />
         <div className="flex items-start gap-1.5">
           {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
           <div className="flex flex-col">
@@ -40,8 +30,9 @@ const SpectrumItem = memo(
               {links?.length
                 ? links.map((item) => {
                     const { label, link, isComingSoon, onClick } = item;
+                    const hasLink = Boolean(link || onClick);
                     return (
-                      <div key={label} className="flex items-center gap-1">
+                      <div key={label} className="relative flex items-center gap-1">
                         <a
                           href={link}
                           target="_blank"
@@ -53,12 +44,31 @@ const SpectrumItem = memo(
                           }}
                         >
                           <p
-                            className={cn('spectrum-link-text relative font-poppins text-xs/5 font-medium capitalize', {
+                            className={cn('spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize', {
                               'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
-                                link || onClick,
+                                hasLink,
                             })}
                           >
                             {label}
+                            {hasLink && (
+                              <>
+                                <img
+                                  src="/svgs/select.svg"
+                                  className="spectrum-selected-icon absolute -left-10 top-1/2 w-5.5 -translate-y-1/2 rotate-180 opacity-0 group-hover:opacity-100"
+                                  alt=""
+                                />
+                                <img
+                                  src="/svgs/select.svg"
+                                  className={cn(
+                                    'spectrum-selected-icon absolute -right-10 top-1/2 w-5.5 -translate-y-1/2 opacity-0 group-hover:opacity-100',
+                                    {
+                                      '-right-[112px]': isComingSoon,
+                                    },
+                                  )}
+                                  alt=""
+                                />
+                              </>
+                            )}
                           </p>
                         </a>
                         {isComingSoon && (

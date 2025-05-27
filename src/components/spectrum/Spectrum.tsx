@@ -72,12 +72,12 @@ function Spectrum() {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         const title = div.querySelector('.spectrum-title');
         const titleCn = div.querySelector('.spectrum-title-cn');
-        const selected = div?.querySelectorAll('.spectrum-selected-icon');
+        // const selected = div?.querySelectorAll('.spectrum-selected-icon');
         const icon = div?.querySelectorAll('.spectrum-icon');
         if (title) tl.to(title, { fontSize: '1.875rem', lineHeight: '2.25rem' });
         if (titleCn) tl.to(titleCn, { fontSize: '1.5rem', lineHeight: '1.75rem' }, '<');
         if (icon) tl.to(icon, { width: '2.25rem', height: '2.25rem' }, '<');
-        if (selected) tl.to(selected, { opacity: 1 });
+        // if (selected) tl.to(selected, { opacity: 1 });
 
         div.addEventListener('mouseenter', () => {
           throttledSetImageIdx(idx + 1);
