@@ -47,8 +47,13 @@ export function useNavigation() {
         // portfolio 页 偏移 & contact 需要处理
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        smoother?.scrollTo(`#${id}`, false, 'top 10px');
-        requestAnimationFrame(() => smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`));
+        smoother?.scrollTo(`#${id}`, false);
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('portfolio-trigger');
+          if (!st) return;
+          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.965 } });
+          smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`);
+        });
         setTimeout(() => {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
@@ -56,7 +61,12 @@ export function useNavigation() {
       } else if (id === NAV_LIST[2].id) {
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        smoother?.scrollTo(`#${id}`, false, 'top 10px');
+        smoother?.scrollTo(`#${id}`, false);
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('spectrum-trigger');
+          if (!st) return;
+          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+        });
         setTimeout(() => {
           isNavScrollingRef.current = false;
           window.isNavScrolling = false;
