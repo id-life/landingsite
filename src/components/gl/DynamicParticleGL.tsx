@@ -325,7 +325,7 @@ const DynamicParticleGL = ({
 
       return p5;
     };
-  }, []);
+  }, [getSourceImgInfos]);
   return <ReactP5Wrapper sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };
 

@@ -38,7 +38,7 @@ export default function Home() {
         label: currentPage.id,
       });
     }
-  }, [currentPage, isMobile, isMounted]);
+  }, [currentPage, isMobile, isMounted, trackEvent]);
 
   const initFontSize = useCallback(() => {
     if (!isMounted || isMobile) {
