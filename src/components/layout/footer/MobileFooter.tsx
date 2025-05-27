@@ -65,7 +65,7 @@ export default function MobileFooter() {
       window.open('https://www.linkedin.com/company/immortaldragons/', '__blank');
     }
     if (type === MediaLinkType.Media) {
-      window.open('https://drive.google.com/drive/folders/1MGFLw-cX8gHeuo5XpY2K02XgbtKIXGNW?usp=sharing', '__blank');
+      window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
     }
   }, []);
 
