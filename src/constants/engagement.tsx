@@ -98,6 +98,7 @@ export type MapDotData = {
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   link?: string; // jump link
   isSponsor?: boolean; // is also a sponsor dot
+  videoUrl?: string;
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -257,6 +258,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3'],
+    videoUrl: 'https://www.youtube.com/watch?v=1guhKQPCDTg',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Berkeley-1.webp',

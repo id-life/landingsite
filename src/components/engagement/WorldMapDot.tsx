@@ -6,10 +6,11 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { MeetingSVG, SponsorSVG } from '../svg';
+import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -25,7 +26,7 @@ export function WorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, isSponsor } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl } = dot;
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
@@ -183,7 +184,7 @@ export function WorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link, label, country } = dot;
+  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link, label, country, videoUrl } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
@@ -275,9 +276,29 @@ export function WorldMapDotContent({
             ></a>
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
-              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20 cursor-pointer', pcDotHotAreaClass)}
+              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20', pcDotHotAreaClass, {
+                'top-[22vh] h-36': videoUrl,
+              })}
               onClick={handleClick}
             ></div>
+            {videoUrl && (
+              <motion.a
+                href={videoUrl}
+                target="_blank"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22vh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
+              >
+                <div className="clip-talk-content bg-white p-0.5">
+                  <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:12px]">
+                    <YoutubeSVG className="size-5 fill-white" />
+                    <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
+                    <ArrowSVG className="size-4 -rotate-90 fill-white" />
+                  </div>
+                </div>
+              </motion.a>
+            )}
           </div>
           <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
             <motion.div
