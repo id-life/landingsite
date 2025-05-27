@@ -9,12 +9,16 @@ import {
   RelationSVG,
   SponsorSVG,
 } from '../../components/svg';
+import { useNavigation } from '../useNavigation';
+import { NAV_LIST } from '@/components/nav/nav';
+import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 
 export type SpectrumLinkItem = {
   label: string;
   link?: string; // jumpTo link
   onClick?: () => void; // jumpTo some where
   className?: string;
+  isComingSoon?: boolean;
 };
 
 export type SpectrumItemInfo = {
@@ -25,7 +29,28 @@ export type SpectrumItemInfo = {
 };
 
 export const useSpectrumData = () => {
+  const { handleNavClick } = useNavigation();
+  const { handleClickPoint } = useEngagementClickPoint();
+
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
+    const handleClickMeeting = (index: number) => {
+      handleNavClick(NAV_LIST[3]);
+      setTimeout(() => {
+        handleClickPoint('meeting', index, true);
+      }, 300);
+    };
+    const handleClickBook = (index: number) => {
+      handleNavClick(NAV_LIST[3]);
+      setTimeout(() => {
+        handleClickPoint('book', index, true);
+      }, 300);
+    };
+    const handleClickSponsor = (index: number) => {
+      handleNavClick(NAV_LIST[3]);
+      setTimeout(() => {
+        handleClickPoint('sponsor', index, true);
+      }, 300);
+    };
     const data: SpectrumItemInfo[] = [
       {
         title: 'Insights Sharing',
@@ -34,23 +59,23 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Timepie Longevity Forum',
-            // onClick: jumpTo engagement meetings
+            onClick: () => handleClickMeeting(0),
           },
           {
             label: "Founder's Longevity Forum",
-            // onClick: jumpTo engagement meetings
+            onClick: () => handleClickMeeting(2),
           },
           {
             label: 'Vitalist Bay Investor Forum',
-            // onClick: jumpTo engagement meetings
+            onClick: () => handleClickMeeting(4),
           },
           {
             label: 'Edge City Lanna',
-            // onClick: jumpTo engagement meetings
+            onClick: () => handleClickMeeting(1),
           },
           {
             label: 'Oxford Future Innovation Forum',
-            // onClick: jumpTo engagement meetings
+            onClick: () => handleClickSponsor(1),
           },
         ],
       },
@@ -61,19 +86,19 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'bio/acc manifesto',
-            // onClick: jumpTo engagement book
+            onClick: () => handleClickBook(1),
           },
           {
             label: 'The Network State',
-            // onClick: jumpTo engagement book
-          },
-          {
-            label: 'The case against death',
-            // onClick: jumpTo engagement book
+            onClick: () => handleClickBook(0),
           },
           {
             label: 'Better With Age',
-            // onClick: jumpTo engagement book
+            onClick: () => handleClickBook(2),
+          },
+          {
+            label: 'The case against death',
+            isComingSoon: true,
           },
         ],
       },
@@ -82,21 +107,20 @@ export const useSpectrumData = () => {
         titleCn: '赞助',
         icon: <SponsorSVG />,
         links: [
-          {
-            label: 'Public Longevity Group',
-            // onClick: jumpTo engagement sponsors
-          },
+          // {
+          //   label: 'Public Longevity Group',
+          // },
           {
             label: 'EthPanda',
-            // onClick: jumpTo engagement sponsors
+            onClick: () => handleClickSponsor(0),
           },
           {
             label: 'BiohackerDAO',
-            // onClick: jumpTo engagement sponsors
+            onClick: () => handleClickSponsor(2),
           },
           {
             label: 'Vitalist Bay',
-            // onClick: jumpTo engagement sponsors
+            onClick: () => handleClickMeeting(4),
           },
         ],
       },
@@ -107,9 +131,11 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Immortal Dragon  不朽真龙',
+            link: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',
           },
           {
             label: 'Long Talk  龙门阵',
+            link: 'https://www.xiaoyuzhoufm.com/podcast/67cff760566d55be46eb7ead ',
           },
         ],
       },
@@ -120,6 +146,7 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
+            isComingSoon: true,
           },
         ],
       },
@@ -130,6 +157,9 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Access Digital Twin',
+            onClick: () => {
+              handleNavClick(NAV_LIST[4]);
+            },
           },
         ],
       },
@@ -139,7 +169,9 @@ export const useSpectrumData = () => {
         icon: <MuseumSVG />,
         links: [
           {
-            label: 'Coming Soon',
+            label: '3 Biopolis Dr Singapore 138623',
+            link: 'https://maps.app.goo.gl/vJKVYdnnjgxaydfq9',
+            isComingSoon: true,
           },
         ],
       },
@@ -149,13 +181,19 @@ export const useSpectrumData = () => {
         icon: <InternSVG />,
         links: [
           {
-            label: 'Contact Us  Apply (CN)  /  Apply (EN)',
+            label: 'Contact Us  Apply (CN)',
+            link: 'https://id.life/career',
+          },
+          {
+            label: 'Contact Us  Apply (EN)',
+            link: 'https://id.life/career-en',
           },
         ],
       },
     ];
     return data;
-  }, []);
+  }, [handleClickPoint, handleNavClick]);
+
   return spectrumData;
 };
 

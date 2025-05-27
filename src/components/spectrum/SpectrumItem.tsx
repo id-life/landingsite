@@ -38,18 +38,37 @@ const SpectrumItem = memo(
             <h4 className="spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize">{titleCn}</h4>
             <div className="mt-5 flex flex-col">
               {links?.length
-                ? links.map((link) => (
-                    <div key={link.label} className="flex items-center gap-1">
-                      <p
-                        className={cn(
-                          'spectrum-link-text relative font-poppins text-xs/5 font-medium capitalize',
-                          'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+                ? links.map((item) => {
+                    const { label, link, isComingSoon, onClick } = item;
+                    return (
+                      <div key={label} className="flex items-center gap-1">
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            if (!link && !onClick) return;
+                            if (onClick) onClick();
+                            if (link) window.open(link, '_blank');
+                          }}
+                        >
+                          <p
+                            className={cn('spectrum-link-text relative font-poppins text-xs/5 font-medium capitalize', {
+                              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
+                                link || onClick,
+                            })}
+                          >
+                            {label}
+                          </p>
+                        </a>
+                        {isComingSoon && (
+                          <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+                            coming soon
+                          </span>
                         )}
-                      >
-                        {link.label}
-                      </p>
-                    </div>
-                  ))
+                      </div>
+                    );
+                  })
                 : null}
             </div>
           </div>
