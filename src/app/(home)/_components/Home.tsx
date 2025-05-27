@@ -20,9 +20,9 @@ import { throttle } from 'lodash-es';
 import { useCallback, useEffect } from 'react';
 import { useEvent } from 'react-use';
 import FooterContact from '@/components/layout/footer/FooterContact';
-import Spectrum from '@/components/spectrum/Spectrum';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import Spectrum from '@/components/spectrum/Spectrum';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);

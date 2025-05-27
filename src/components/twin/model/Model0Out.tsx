@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export default function Model0Out() {
-  const { scene, animations } = useGLTF('https://cdn.id.life/full_male/test-v2.glb');
+  const { scene, animations } = useGLTF('https://cdn.id.life/full_male/test-v3.glb');
   const currentActionRef = useRef<THREE.AnimationAction | null>(null); // 存储当前动画
   const animationLoopRef = useRef<NodeJS.Timeout | null>(null);
   const { actions } = useAnimations(animations, scene);
