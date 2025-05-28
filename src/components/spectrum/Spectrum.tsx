@@ -143,6 +143,7 @@ function Spectrum() {
     <div id={NAV_LIST[2].id} className="page-container spectrum">
       {active && (
         <ParticleGL
+          isStatic
           activeAnim={active}
           imageIdx={imageIdx}
           id="spectrum-particle-container"

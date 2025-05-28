@@ -148,12 +148,14 @@ function MobileSpectrum() {
       })}
     >
       <ParticleGL
+        isStatic
         imageIdx={mobileImageIdx1}
         activeAnim={particleActive}
         id="spectrum-particle-container-mobile-1"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
       <ParticleGL
+        isStatic
         imageIdx={mobileImageIdx2}
         activeAnim={particleActive}
         id="spectrum-particle-container-mobile-2"

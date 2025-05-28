@@ -238,55 +238,57 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
     {
       url: '/imgs/particle/0.png',
       scaleNum: isMobile ? 0.4 : 2.2,
+      loadPercentage: isMobile ? 0.01 : 0.015,
+
       resize: [512, 300],
     },
     {
       url: '/imgs/particle/spectrum/01.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/03.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/04.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/05.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/06.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/07.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/08.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
-      loadPercentage: isMobile ? 0.0025 : 0.0028,
+      loadPercentage: isMobile ? 0.01 : 0.015,
     },
   ];
 };
