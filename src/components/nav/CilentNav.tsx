@@ -1,14 +1,17 @@
 'use client';
 
-import { globalLoadedAtom } from '@/atoms/geo';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import dynamic from 'next/dynamic';
 import { useAtomValue } from 'jotai';
-import MobileNav from './MobileNav';
-import PCNav from './PCNav';
+import { isLoadingUIAtom } from '@/atoms/geo';
+import { useIsMobile } from '@/hooks/useIsMobile';
+
+const PCNav = dynamic(() => import('./PCNav'), { ssr: false });
+const MobileNav = dynamic(() => import('./MobileNav'), { ssr: false });
 
 export default function ClientNav() {
   const isMobile = useIsMobile();
-  const globalLoaded = useAtomValue(globalLoadedAtom);
-  if (!globalLoaded) return null;
+  const isLoadingUI = useAtomValue(isLoadingUIAtom);
+  if (!isLoadingUI) return null;
+
   return isMobile ? <MobileNav /> : <PCNav />;
 }

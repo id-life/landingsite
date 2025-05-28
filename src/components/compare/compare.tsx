@@ -19,6 +19,7 @@ interface CompareProps {
   autoplayDuration?: number;
   isVideo?: boolean;
 }
+
 export const Compare = ({
   firstImage = '',
   secondImage = '',
@@ -90,7 +91,7 @@ export const Compare = ({
                 };
                 secondVideoRef.current.addEventListener('canplaythrough', handleCanPlay);
               }
-            })
+            }),
           ]);
 
           // 确保两个视频都准备好后，同时开始播放
@@ -98,42 +99,41 @@ export const Compare = ({
             // 先暂停两个视频
             firstVideoRef.current.pause();
             secondVideoRef.current.pause();
-            
+
             // 重置时间
             firstVideoRef.current.currentTime = 0;
             secondVideoRef.current.currentTime = 0;
 
             // 使用 requestAnimationFrame 确保在下一帧同时开始播放
             requestAnimationFrame(() => {
-              Promise.all([
-                firstVideoRef.current?.play(),
-                secondVideoRef.current?.play()
-              ]).then(() => {
-                // 设置加载进度为100%
-                setLoadProgress(100);
-                if (fillRef.current) {
-                  gsap.to(fillRef.current, {
-                    width: '100%',
-                    duration: 0.5,
-                    ease: 'none',
-                  });
-                }
-                if (inverseTextRef.current) {
-                  gsap.to(inverseTextRef.current, {
-                    clipPath: 'inset(0 0% 0 0)',
-                    duration: 0.5,
-                    ease: 'none',
-                  });
-                }
+              Promise.all([firstVideoRef.current?.play(), secondVideoRef.current?.play()])
+                .then(() => {
+                  // 设置加载进度为100%
+                  setLoadProgress(100);
+                  if (fillRef.current) {
+                    gsap.to(fillRef.current, {
+                      width: '100%',
+                      duration: 0.5,
+                      ease: 'none',
+                    });
+                  }
+                  if (inverseTextRef.current) {
+                    gsap.to(inverseTextRef.current, {
+                      clipPath: 'inset(0 0% 0 0)',
+                      duration: 0.5,
+                      ease: 'none',
+                    });
+                  }
 
-                // 延迟隐藏加载指示器
-                setTimeout(() => {
+                  // 延迟隐藏加载指示器
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 100);
+                })
+                .catch((error) => {
+                  console.error('视频播放失败:', error);
                   setIsLoading(false);
-                }, 100);
-              }).catch((error) => {
-                console.error('视频播放失败:', error);
-                setIsLoading(false);
-              });
+                });
             });
           } catch (error) {
             console.error('视频播放失败:', error);
@@ -152,7 +152,8 @@ export const Compare = ({
       const checkSync = () => {
         if (firstVideoRef.current && secondVideoRef.current) {
           const timeDiff = Math.abs(firstVideoRef.current.currentTime - secondVideoRef.current.currentTime);
-          if (timeDiff > 0.1) { // 如果时间差大于0.1秒
+          if (timeDiff > 0.1) {
+            // 如果时间差大于0.1秒
             // 同步视频时间
             const targetTime = Math.min(firstVideoRef.current.currentTime, secondVideoRef.current.currentTime);
             firstVideoRef.current.currentTime = targetTime;

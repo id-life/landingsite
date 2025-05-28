@@ -4,6 +4,7 @@ import { GeoData } from '@/components/gl/model/geo/config';
 export const visionGlLoadedAtom = atom<boolean>(false);
 export const twinGlLoadedAtom = atom<boolean>(false);
 export const globalLoadedAtom = atom<boolean>(false);
+export const isLoadingUIAtom = atom<boolean>(false);
 export const geoLabelAtom = atom<GeoData | undefined>(undefined);
 export const isChartOpenAtom = atom<boolean>(false);
 

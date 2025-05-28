@@ -1,14 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+import { isNull } from 'lodash-es';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import Home from './_components/Home';
-import MobileHome from './_components/MobileHome';
-// import { useFetchTestData } from '@/hooks/fetch';
+
+const Home = dynamic(() => import('./_components/Home'), { ssr: false });
+const MobileHome = dynamic(() => import('./_components/MobileHome'), { ssr: false });
 
 export default function HomePage() {
   const isMobile = useIsMobile();
-  // TODO: Del fetch test
-  // const { data, isLoading, refetch } = useFetchTestData(1);
+  if (isNull(isMobile)) return null;
 
   return isMobile ? <MobileHome /> : <Home />;
 }

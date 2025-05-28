@@ -38,6 +38,7 @@ export const webviewPatterns = [
   // old chrome android webview agent
   'Linux; U; Android',
 ];
+
 export function judgeIsWebView(): boolean {
   if (typeof window === 'undefined') return false;
   const userAgent = window.navigator.userAgent.toLowerCase();

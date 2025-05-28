@@ -4,10 +4,11 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Background from '@/components/common/Background';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
-import { visionGlLoadedAtom, twinGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
+import { visionGlLoadedAtom, twinGlLoadedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 
 export function OuterLoader() {
   const { progress } = useProgress();
+  const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
   const visionGlLoaded = useAtomValue(visionGlLoadedAtom);
   const twinGlLoaded = useAtomValue(twinGlLoadedAtom);
@@ -21,6 +22,7 @@ export function OuterLoader() {
       clearTimeout(timer.current);
     }
     if (isLoaded) {
+      setIsLoadingUI(true);
       timer.current = setTimeout(() => {
         setShow(false);
         setGlobalLoaded(true);
@@ -31,7 +33,7 @@ export function OuterLoader() {
         clearTimeout(timer.current);
       }
     };
-  }, [isLoaded, setGlobalLoaded]);
+  }, [isLoaded, setGlobalLoaded, setIsLoadingUI]);
 
   useEffect(() => {
     const smoother = ScrollSmoother.get();

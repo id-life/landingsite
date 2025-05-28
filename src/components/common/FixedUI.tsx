@@ -1,14 +1,19 @@
 'use client';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
-import MobileFixedUI from './MobileFixedUI';
-import PCFixedUI from './PCFixedUI';
 import { cn } from '@/utils';
+import dynamic from 'next/dynamic';
+import { isNull } from 'lodash-es';
 import { useAtomValue } from 'jotai';
-import { globalLoadedAtom } from '@/atoms/geo';
+import { isLoadingUIAtom } from '@/atoms/geo';
+import { useIsMobile } from '@/hooks/useIsMobile';
+
+const PCFixedUI = dynamic(() => import('./PCFixedUI'), { ssr: false });
+const MobileFixedUI = dynamic(() => import('./MobileFixedUI'), { ssr: false });
 
 export default function FixedUI() {
   const isMobile = useIsMobile();
-  const globalLoaded = useAtomValue(globalLoadedAtom);
-  return <div className={cn(globalLoaded ? 'opacity-100' : 'opacity-0')}>{isMobile ? <MobileFixedUI /> : <PCFixedUI />}</div>;
+  const isLoadingUI = useAtomValue(isLoadingUIAtom);
+  if (isNull(isMobile)) return null;
+
+  return <div className={cn(isLoadingUI ? 'opacity-100' : 'opacity-0')}>{isMobile ? <MobileFixedUI /> : <PCFixedUI />}</div>;
 }

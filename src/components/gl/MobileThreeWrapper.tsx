@@ -1,5 +1,5 @@
 import { mobileCurrentPageAtom } from '@/atoms';
-import { visionGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
+import { visionGlLoadedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import { useProgress } from '@react-three/drei';
@@ -9,7 +9,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { Fluid } from './fluid/Fluid';
-// import MobileValueGL from './MobileValueGL';
 import MobileVisionGL from './MobileVisionGL';
 import ProgressLoader from './ProgressLoader';
 import MobileValueGL from './MobileValueGL';
@@ -29,6 +28,7 @@ function Loader() {
 }
 
 function OuterLoader() {
+  const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
   const glLoaded = useAtomValue(visionGlLoadedAtom);
   const [show, setShow] = useState(true);
@@ -39,6 +39,7 @@ function OuterLoader() {
       clearTimeout(timer.current);
     }
     if (glLoaded) {
+      setIsLoadingUI(true);
       timer.current = setTimeout(() => {
         setShow(false); // 加载完后再延迟1s
         setGlobalLoaded(true);
@@ -49,7 +50,7 @@ function OuterLoader() {
         clearTimeout(timer.current);
       }
     };
-  }, [glLoaded, setGlobalLoaded]);
+  }, [glLoaded, setGlobalLoaded, setIsLoadingUI]);
 
   if (!glLoaded || !show) return null;
   return <ProgressLoader progress="100" />;
