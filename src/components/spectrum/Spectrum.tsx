@@ -10,6 +10,11 @@ import ParticleGL from '../gl/ParticleGL';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import SpectrumItem from './SpectrumItem';
 import { useThrottle } from '@/hooks/useThrottle';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -18,6 +23,18 @@ function Spectrum() {
   const spectrumData = useSpectrumData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
+  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
+    // profile auto scroll to engagement
+    triggerId: 'spectrum-trigger',
+    scrollFn: () => {
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
+      // console.log('Spectrum scrollFn down');
+      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      if (!st) return;
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) } });
+    },
+    isUp: false,
+  });
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -30,21 +47,33 @@ function Spectrum() {
         // markers: true,
         id: 'spectrum-trigger', // add an ID for later reference
         onEnter: () => {
-          if (currentPage.id !== NAV_LIST[2].id) setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(NAV_LIST[2]);
           setActive(true);
         },
         onEnterBack: () => {
-          if (currentPage.id !== NAV_LIST[2].id) setCurrentPage(NAV_LIST[2]);
-          !active && setActive(true);
+          setCurrentPage(NAV_LIST[2]);
+          setActive(true);
         },
         onLeaveBack: () => {
-          !active && setActive(false);
+          setActive(false);
         },
       },
     });
+    tl.from('.spectrum-title', {
+      delay: 3,
+      y: (_, target) => target.offsetHeight,
+      rotateX: 45,
+      rotateY: 15,
+      opacity: 0,
+    });
+    tl.from('.spectrum-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
+
     tl.to(() => {}, { duration: 5 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
+    tl.add(() => {
+      setEnableDownJudge(true);
+    });
   }, []);
 
   const throttledSetImageIdx = useThrottle((index: number) => {

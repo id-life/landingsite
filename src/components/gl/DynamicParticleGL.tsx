@@ -1,4 +1,3 @@
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { P5CanvasInstance, ReactP5Wrapper, SketchProps } from '@p5-wrapper/react';
 import P5 from 'p5';
 import { useMemo } from 'react';
@@ -28,7 +27,6 @@ const DynamicParticleGL = ({
     resolution?: number;
   }[];
 }) => {
-  const isMobile = useIsMobile();
   const wrappedSketch = useMemo(() => {
     return function sketch(p5: P5CanvasInstance<MySketchProps>) {
       // console.log('sketch 函数开始执行');

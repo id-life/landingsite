@@ -96,10 +96,10 @@ export default function Home() {
         end: 'top center',
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[1]);
+          setCurrentPage(NAV_LIST[3]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[1]);
+          setCurrentPage(NAV_LIST[3]);
         },
       },
     });
@@ -116,10 +116,10 @@ export default function Home() {
         end: 'top center',
         scrub: true,
         onEnter: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[4]);
         },
         onEnterBack: () => {
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(NAV_LIST[4]);
         },
       },
     });

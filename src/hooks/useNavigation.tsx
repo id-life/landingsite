@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { engagementProgressMap } from './engagement/useEngagementJumpTo';
+import { useThrottle } from './useThrottle';
 
 export function useNavigation() {
   const isNavScrollingRef = useRef(false);
@@ -29,7 +30,7 @@ export function useNavigation() {
     });
   });
 
-  const handleNavClick = useCallback(
+  const handleNavClickImpl = useCallback(
     (item: NavItem) => {
       const smoother = ScrollSmoother.get();
       if (!smoother) return;
@@ -75,7 +76,7 @@ export function useNavigation() {
         // engagement 页
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        smoother?.scrollTo(`#${id}`, false);
+        gsap.set(window, { scrollTo: { y: `#${id}` } });
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
@@ -132,6 +133,8 @@ export function useNavigation() {
     },
     [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
+
+  const handleNavClick = useThrottle(handleNavClickImpl, 500);
 
   useEffect(() => {
     if (navigateTo) {
