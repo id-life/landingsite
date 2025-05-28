@@ -156,8 +156,8 @@ function Spectrum() {
             {/* <div className="particle-mask"></div> */}
           </div>
         </div>
-        <div className="spectrum-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-4 gap-6" ref={wrapperRef}>
+        <div className="spectrum-fund mt-12 overflow-hidden px-18">
+          <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
             {spectrumData.map((item, index) => (
               <SpectrumItem
                 key={item.title}

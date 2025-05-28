@@ -30,6 +30,7 @@ export type SpectrumItemInfo = {
   titleCn: string;
   icon: JSX.Element;
   links?: SpectrumLinkItem[];
+  className?: string;
 };
 
 export const useSpectrumData = () => {
@@ -115,6 +116,7 @@ export const useSpectrumData = () => {
         title: 'Translation & Publishing',
         titleCn: '翻译与出版',
         icon: <BookSVG />,
+        className: '-ml-8',
         links: [
           {
             label: 'bio/acc manifesto',
@@ -187,6 +189,7 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
+        className: '-ml-8',
         links: [
           {
             label: 'Access Digital Twin',

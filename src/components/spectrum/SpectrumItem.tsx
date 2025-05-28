@@ -12,14 +12,17 @@ interface SpectrumItemProps {
 
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, isHover }, ref) => {
-    const { title, titleCn, icon, links } = item;
+    const { title, titleCn, icon, links, className: itemClassName } = item;
     return (
       <div
         ref={ref}
         onClick={onClick}
-        className={cn('spectrum-item relative h-[17.5rem] w-[23.75rem] cursor-pointer text-foreground', className)}
+        className={cn(
+          'spectrum-item relative h-[13.75rem] w-[25rem] cursor-pointer overflow-visible p-4 text-foreground',
+          className,
+        )}
       >
-        <div className="flex items-start gap-1.5">
+        <div className={cn('flex items-start gap-1.5', itemClassName)}>
           {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
           <div className="flex flex-col">
             <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
