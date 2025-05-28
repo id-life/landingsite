@@ -38,9 +38,9 @@ function Portfolio() {
     scrollFn: () => {
       if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
       console.log('Portfolio scrollFn down');
-      const st = ScrollTrigger.getById('spectrum-scroll-trigger');
+      const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) } });
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
     },
     isUp: false,
   });

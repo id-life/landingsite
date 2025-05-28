@@ -23,6 +23,18 @@ function Spectrum() {
   const spectrumData = useSpectrumData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // engagement auto scroll to profile
+    triggerId: 'spectrum-trigger',
+    scrollFn: () => {
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      const st = ScrollTrigger.getById('portfolio-trigger');
+      if (!st) return;
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
+    },
+    isUp: true,
+  });
+
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     // profile auto scroll to engagement
     triggerId: 'spectrum-trigger',
@@ -59,8 +71,11 @@ function Spectrum() {
         },
       },
     });
+    tl.add(() => {
+      setEnableUpJudge(true);
+    });
     tl.from('.spectrum-title', {
-      delay: 3,
+      delay: 1,
       y: (_, target) => target.offsetHeight,
       rotateX: 45,
       rotateY: 15,
