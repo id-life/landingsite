@@ -111,9 +111,10 @@ export const useSpectrumData = () => {
         titleCn: '赞助',
         icon: <SponsorSVG />,
         links: [
-          // {
-          //   label: 'Public Longevity Group',
-          // },
+          {
+            label: 'Public Longevity Group',
+            onClick: () => handleClickSponsor(3),
+          },
           {
             label: 'EthPanda',
             onClick: () => handleClickSponsor(0),

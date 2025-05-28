@@ -50,7 +50,7 @@ const SpectrumItem = memo(
                             })}
                           >
                             {label}
-                            {hasLink && (
+                            {/* {hasLink && (
                               <>
                                 <img
                                   src="/svgs/select.svg"
@@ -68,7 +68,7 @@ const SpectrumItem = memo(
                                   alt=""
                                 />
                               </>
-                            )}
+                            )} */}
                           </p>
                         </a>
                         {isComingSoon && (

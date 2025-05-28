@@ -246,7 +246,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   {
     index: 4,
     lat: 30,
-    lng: -123.5,
+    lng: -118,
     label: 'Berkeley',
     country: 'USA',
     period: '2025/05',
@@ -257,7 +257,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: 'translate-x-[85%] -translate-y-[35%]',
     mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3'],
+    activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3', 'world-map-dot-sponsor-3'],
     videoUrl: 'https://www.youtube.com/watch?v=1guhKQPCDTg',
     imgs: [
       {
@@ -329,8 +329,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     containerClass: 'scale-[1.2]',
   },
   {
-    lat: 18,
-    lng: -115,
+    lat: 15,
+    lng: -112,
     key: 'publications-03',
     title: 'Los Angeles, USA',
     bookTitle: 'Better With Age 乐龄',
@@ -338,7 +338,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-03.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-03.webm',
     containerClass: 'scale-[0.9]',
-    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4'],
+    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-sponsor-3'],
   },
 ];
 
@@ -348,7 +348,6 @@ export type MapSponsorDotData = {
   mobileLat?: number;
   mobileLng?: number;
   alt?: string;
-  key?: string;
   icon?: string;
   link?: string;
   coverUrl?: string;
@@ -359,24 +358,12 @@ export type MapSponsorDotData = {
   sponsorText?: string;
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
-  // {
-  //   lat: 30,
-  //   lng: -123.5,
-  //   title: 'Berkeley, USA',
-  //   key: 'sponsor-01',
-  //   alt: 'VITALIST BAY',
-  //   coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.png',
-  //   videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-01.webm',
-  //   link: 'https://www.vitalistbay.com/',
-  //   sponsorText: 'Cohost',
-  // },
   {
     lat: 19,
     lng: 85,
     mobileLat: 20,
     mobileLng: 80,
     title: 'Chengdu, China',
-    key: 'sponsor-02',
     alt: 'EthPanda\n青年黑客远航计',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
@@ -387,7 +374,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lat: 51,
     lng: -1,
     title: 'Oxford, UK',
-    key: 'sponsor-03',
     alt: 'Oxford Future Innovation Forum 2024',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
@@ -399,12 +385,22 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lat: -20,
     lng: -18,
     title: 'Desci',
-    key: 'sponsor-04',
     alt: 'BiohackerDAO',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.webm',
     link: 'https://biohackerdao.org/',
     sponsorText: 'Sponsorship',
+  },
+  {
+    lat: 24,
+    lng: -123.5,
+    title: 'San Francisco, uSA',
+    alt: 'Public Longevity\nGroup',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
+    link: 'https://biohackerdao.org/',
+    sponsorText: 'Sponsorship',
+    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
 ];
 
