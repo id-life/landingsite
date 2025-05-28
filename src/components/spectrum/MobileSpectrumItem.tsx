@@ -18,7 +18,7 @@ const MobileSpectrumItem = memo(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'spectrum-item group relative flex h-[17.5rem] w-[23.75rem] cursor-pointer flex-col items-center justify-start text-foreground',
+          'spectrum-item group relative flex h-full cursor-pointer flex-col items-center justify-center text-foreground',
           className,
         )}
       >

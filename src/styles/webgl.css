@@ -27,6 +27,13 @@
   z-index: -1;
 }
 
+#spectrum-particle-container-mobile-1.particle-container-mobile-1 {
+  top: calc(14rem + 2svh);
+}
+
+#spectrum-particle-container-mobile-2.particle-container-mobile-2 {
+  top: calc(14rem + 40svh);
+}
 /* .particle-container .particle-mask,
 .particle-container-mobile-1 .particle-mask,
 .particle-container-mobile-2 .particle-mask {

@@ -45,7 +45,7 @@ export function WorldMapDotPoint({
 
   useEffect(() => {
     if (!activeMeetingDot) setActiveMeetingDotClickOpen(false);
-  }, [activeMeetingDot]);
+  }, [activeMeetingDot, setActiveMeetingDotClickOpen]);
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation(); // 防止冒泡

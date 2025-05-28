@@ -54,7 +54,8 @@ export function WorldMapSponsorDotPoint({
 
   useEffect(() => {
     if (!activeSponsorDot) setActiveSponsorDotClickOpen(false);
-  }, [activeSponsorDot]);
+  }, [activeSponsorDot, setActiveSponsorDotClickOpen]);
+
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // 使用自定义配置或默认配置

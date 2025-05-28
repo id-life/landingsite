@@ -193,7 +193,7 @@ function MobileSpectrum() {
             {spectrumData.map((item, index) => (
               <SwiperSlide key={item.title} className="h-[30svh]">
                 <MobileSpectrumItem
-                  className="px-7.5 pt-7.5"
+                  className="px-7.5"
                   item={item}
                   ref={(element) => {
                     if (!element) return;

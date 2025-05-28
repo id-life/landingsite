@@ -11,6 +11,9 @@ export const activeSponsorDotClickOpenAtom = atom<boolean>(false);
 export const activeMeetingDotAtom = atom<number | null>(null);
 export const activeMeetingDotClickOpenAtom = atom<boolean>(false);
 
+// 是否是移动端从 spectrum 跳转过来的
+export const isMobileEngagementJumpAtom = atom<boolean>(false);
+
 // 切换点的展开状态的函数
 export const toggleDotIndex = (index: number, currentActive: number | null) => {
   if (currentActive === index) {

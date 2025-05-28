@@ -1,5 +1,7 @@
+import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useMemo } from 'react';
+import { useSetAtom } from 'jotai';
+import { useCallback, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -35,24 +37,50 @@ export const useSpectrumData = () => {
   const { handleNavClick } = useNavigation();
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint();
+  const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
+
+  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
+    const scrollContainer = document.querySelector('.world-map-container');
+    const activeEle =
+      type === 'meeting'
+        ? document.querySelector(`.world-map-dot-${index}`)
+        : type === 'book'
+          ? document.querySelector(`.world-map-dot-book-${index}`)
+          : document.querySelector(`.world-map-dot-sponsor-${index}`);
+    if (scrollContainer && activeEle) {
+      const activeEleRect = activeEle.getBoundingClientRect();
+      const scrollContainerRect = scrollContainer.getBoundingClientRect();
+      const scrollLeft = activeEleRect.left - scrollContainerRect.left;
+      scrollContainer.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const handleClickMeeting = (index: number) => {
       isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
+      isMobile && setIsMobileEngagementJump(true);
       setTimeout(() => {
         handleClickPoint('meeting', index, true);
+        if (isMobile) scrollToActivePoint('meeting', index);
       }, 300);
     };
     const handleClickBook = (index: number) => {
       isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
+      isMobile && setIsMobileEngagementJump(true);
       setTimeout(() => {
         handleClickPoint('book', index, true);
+        if (isMobile) scrollToActivePoint('book', index);
       }, 300);
     };
     const handleClickSponsor = (index: number) => {
       isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
+      isMobile && setIsMobileEngagementJump(true);
       setTimeout(() => {
         handleClickPoint('sponsor', index, true);
+        if (isMobile) scrollToActivePoint('sponsor', index);
       }, 300);
     };
     const data: SpectrumItemInfo[] = [
@@ -197,7 +225,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickPoint, mobileNavChange, handleNavClick, isMobile]);
+  }, [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint]);
 
   return spectrumData;
 };

@@ -1,8 +1,8 @@
-import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useCallback, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileEngagementAnim() {
   const enterTLRef = useRef<gsap.core.Timeline | null>(null);
@@ -12,6 +12,8 @@ export function useMobileEngagementAnim() {
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const isMobileEngagementJump = useAtomValue(isMobileEngagementJumpAtom);
+  const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
 
   // 用户交互处理函数
   const handleUserInteraction = useCallback(() => {
@@ -147,7 +149,8 @@ export function useMobileEngagementAnim() {
       ease: 'power2.out',
       stagger: 0.02,
     });
-    enterTLRef.current?.play();
+
+    if (!isMobileEngagementJump) enterTLRef.current?.play();
 
     // 添加事件监听器以便在用户交互时停止自动滚动
     const mapContainer = document.querySelector('.world-map-container');
@@ -159,7 +162,10 @@ export function useMobileEngagementAnim() {
     }
 
     enterTL.eventCallback('onComplete', () => {
-      // 在入场动画完成后开始自动滚动
+      if (isMobileEngagementJump) {
+        setIsMobileEngagementJump(false);
+        return;
+      }
       startAutoScroll();
       startAutoDotShow();
     });
@@ -176,7 +182,7 @@ export function useMobileEngagementAnim() {
         mapContainer.removeEventListener('mousedown', handleUserInteraction);
       }
     };
-  }, [handleUserInteraction, startAutoDotShow, startAutoScroll]);
+  }, [isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoScroll, startAutoDotShow]);
 
   return {
     enterAnimate,
