@@ -118,7 +118,7 @@ const MobileCharacterRelation = () => {
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
           <Background />
-          <CharacterRelationGraph data={data} />
+          {isMobileCharacterRelationShow && <CharacterRelationGraph data={data} />}
         </motion.div>
         {isBePartOfItShow && (
           <BePartOfIt key="mobile-be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />

@@ -2,22 +2,12 @@
 
 import { memo, useEffect, useMemo, useRef } from 'react';
 import RelationGraph, { RelationGraphInstance } from 'relation-graph-react';
-import type {
-  JsonLine,
-  JsonNode,
-  RGJsonData,
-  RGLine,
-  RGLink,
-  RGNode,
-  RGNodeSlotProps,
-  RGOptions,
-  RelationGraphExpose,
-} from 'relation-graph-react';
+import type { JsonLine, JsonNode, RGJsonData, RGNodeSlotProps, RGOptions, RelationGraphExpose } from 'relation-graph-react';
 import { CharacterRelationTransformedData } from './CharacterRelation';
 import { cn } from '@/utils';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
-import { useAtomValue } from 'jotai';
-import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
+// import { useAtomValue } from 'jotai';
+// import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 const BASE_NODE_SIZE = 8;
 const BASE_NODE_SIZE_DELTA = 0;
@@ -28,12 +18,13 @@ interface CharacterRelationGraphProps {
   data?: CharacterRelationTransformedData;
 }
 
+// https://github.com/seeksdream/relation-graph/issues/317
 const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   const { data } = props;
-  const graphRef = useRef<RelationGraphExpose>(null);
+  const graphRef = useRef<RelationGraphExpose | null>(null);
 
-  const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
-  const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
+  // const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
+  // const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const jsonData = useMemo<RGJsonData>(
     () => ({
@@ -100,16 +91,20 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
       // Link & Line: https://www.relation-graph.com/#/docs/link
       graphRef.current?.setJsonData(jsonData, (instance: RelationGraphInstance) => {
         instance.setZoom(78);
-        instance.moveToCenter();
+        // instance.moveToCenter();
       });
     }
+
+    return () => {
+      graphRef.current = null;
+    };
   }, [jsonData]);
 
-  useEffect(() => {
-    if (isCharacterRelationShow || isMobileCharacterRelationShow) {
-      graphRef.current?.getInstance().doLayout();
-    }
-  }, [isCharacterRelationShow, isMobileCharacterRelationShow]);
+  // useEffect(() => {
+  //   if (isCharacterRelationShow || isMobileCharacterRelationShow) {
+  //     graphRef.current?.getInstance().doLayout();
+  //   }
+  // }, [isCharacterRelationShow, isMobileCharacterRelationShow]);
 
   // https://www.relation-graph.com/?open_in_browser=true#/docs/graph
   const options: RGOptions = {
@@ -128,12 +123,14 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     defaultNodeShape: 0,
     defaultNodeBorderWidth: 0,
 
+    placeOtherGroup: true,
+
     // https://www.relation-graph.com/?open_in_browser=true#/docs/layout
     layout: {
       layoutName: 'force',
-      maxLayoutTimes: 50000,
-      force_node_repulsion: 0.5,
-      force_line_elastic: 1.8,
+      maxLayoutTimes: 10000,
+      force_node_repulsion: 0.6,
+      force_line_elastic: 1.4,
       allowAutoLayoutIfSupport: true,
     },
   };

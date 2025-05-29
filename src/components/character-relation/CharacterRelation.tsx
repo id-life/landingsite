@@ -132,7 +132,7 @@ const CharacterRelation = () => {
         >
           <Background />
           <div ref={refs.setFloating} style={floatingStyles} className="character-relation-graph-wrapper h-full w-full">
-            <CharacterRelationGraph data={data} />
+            {isCharacterRelationShow && <CharacterRelationGraph data={data} />}
           </div>
         </motion.div>
         {isBePartOfItShow && <BePartOfIt key="be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />}
