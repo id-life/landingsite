@@ -108,6 +108,7 @@ const CharacterRelation = () => {
     <FloatingPortal key="character-relation-portal">
       <AnimatePresence>
         <motion.div
+          key="character-relation-motion-wrapper"
           animate={isCharacterRelationShow ? 'open' : 'close'}
           variants={{
             open: {
@@ -134,7 +135,7 @@ const CharacterRelation = () => {
             <CharacterRelationGraph data={data} />
           </div>
         </motion.div>
-        {isBePartOfItShow && <BePartOfIt ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />}
+        {isBePartOfItShow && <BePartOfIt key="be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />}
       </AnimatePresence>
     </FloatingPortal>
   );

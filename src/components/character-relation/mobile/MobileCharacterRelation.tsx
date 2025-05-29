@@ -95,6 +95,7 @@ const MobileCharacterRelation = () => {
     <FloatingPortal key="mobile-character-relation-portal">
       <AnimatePresence>
         <motion.div
+          key="mobile-character-relation-motion-wrapper"
           animate={isMobileCharacterRelationShow ? 'open' : 'close'}
           variants={{
             open: {
@@ -119,7 +120,9 @@ const MobileCharacterRelation = () => {
           <Background />
           <CharacterRelationGraph data={data} />
         </motion.div>
-        {isBePartOfItShow && <BePartOfIt ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />}
+        {isBePartOfItShow && (
+          <BePartOfIt key="mobile-be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />
+        )}
       </AnimatePresence>
     </FloatingPortal>
   );
