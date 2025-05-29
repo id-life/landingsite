@@ -364,7 +364,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     mobileLat: 20,
     mobileLng: 80,
     title: 'Chengdu, China',
-    alt: 'EthPanda\n青年黑客远航计',
+    alt: 'EthPanda\n青年黑客远航计划',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
     link: 'https://x.com/ETHPanda_Org/status/1863865657454162277',

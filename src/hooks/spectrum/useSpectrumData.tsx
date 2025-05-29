@@ -205,7 +205,7 @@ export const useSpectrumData = () => {
         icon: <MuseumSVG />,
         links: [
           {
-            label: '3 Biopolis Dr Singapore 138623',
+            label: '3 Biopolis Dr, Singapore 138623',
             link: 'https://maps.app.goo.gl/vJKVYdnnjgxaydfq9',
             isComingSoon: true,
           },

@@ -2,9 +2,7 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
-import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';

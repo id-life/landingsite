@@ -62,11 +62,12 @@ export function useNavigation() {
       } else if (id === NAV_LIST[2].id) {
         isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        smoother?.scrollTo(`#${id}`, false);
+        gsap.set(window, { scrollTo: { y: `#${id}` } });
+        // smoother?.scrollTo(`#${id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('spectrum-trigger');
           if (!st) return;
-          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+          gsap.set(window, { scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
         });
         setTimeout(() => {
           isNavScrollingRef.current = false;
