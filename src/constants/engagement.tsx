@@ -258,7 +258,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3', 'world-map-dot-sponsor-3'],
-    videoUrl: 'https://www.youtube.com/watch?v=1guhKQPCDTg',
+    videoUrl: 'https://www.youtube.com/watch?v=2FJi1k7xNuo&t=1382s',
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Berkeley-1.webp',

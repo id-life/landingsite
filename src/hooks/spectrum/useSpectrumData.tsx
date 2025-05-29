@@ -54,31 +54,23 @@ export const useSpectrumData = () => {
     }
   }, []);
 
+  const handleClickDigitalTwin = useCallback(() => {
+    isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
+  }, [isMobile, mobileNavChange, handleNavClick]);
+
+  const handleClickDot = useCallback(
+    (type: 'book' | 'sponsor' | 'meeting', index: number) => {
+      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
+      isMobile && setIsMobileEngagementJump(true);
+      setTimeout(() => {
+        handleClickPoint(type, index, true);
+        if (isMobile) scrollToActivePoint(type, index);
+      }, 300);
+    },
+    [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
+  );
+
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
-    const handleClickMeeting = (index: number) => {
-      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
-      isMobile && setIsMobileEngagementJump(true);
-      setTimeout(() => {
-        handleClickPoint('meeting', index, true);
-        if (isMobile) scrollToActivePoint('meeting', index);
-      }, 300);
-    };
-    const handleClickBook = (index: number) => {
-      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
-      isMobile && setIsMobileEngagementJump(true);
-      setTimeout(() => {
-        handleClickPoint('book', index, true);
-        if (isMobile) scrollToActivePoint('book', index);
-      }, 300);
-    };
-    const handleClickSponsor = (index: number) => {
-      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
-      isMobile && setIsMobileEngagementJump(true);
-      setTimeout(() => {
-        handleClickPoint('sponsor', index, true);
-        if (isMobile) scrollToActivePoint('sponsor', index);
-      }, 300);
-    };
     const data: SpectrumItemInfo[] = [
       {
         title: 'Insights Sharing',
@@ -87,23 +79,23 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Timepie Longevity Forum',
-            onClick: () => handleClickMeeting(0),
+            onClick: () => handleClickDot('meeting', 0),
           },
           {
             label: "Founder's Longevity Forum",
-            onClick: () => handleClickMeeting(2),
+            onClick: () => handleClickDot('meeting', 2),
           },
           {
             label: 'Vitalist Bay Investor Forum',
-            onClick: () => handleClickMeeting(4),
+            onClick: () => handleClickDot('meeting', 4),
           },
           {
             label: 'Edge City Lanna',
-            onClick: () => handleClickMeeting(1),
+            onClick: () => handleClickDot('meeting', 1),
           },
           {
             label: 'Oxford Future Innovation Forum',
-            onClick: () => handleClickSponsor(1),
+            onClick: () => handleClickDot('sponsor', 1),
           },
         ],
       },
@@ -115,16 +107,16 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'bio/acc manifesto',
-            onClick: () => handleClickBook(1),
+            onClick: () => handleClickDot('book', 1),
           },
           {
             label: 'The Network State',
-            onClick: () => handleClickBook(0),
+            onClick: () => handleClickDot('book', 0),
             labelClassName: 'italic',
           },
           {
             label: 'Better With Age',
-            onClick: () => handleClickBook(2),
+            onClick: () => handleClickDot('book', 2),
             labelClassName: 'italic',
           },
           {
@@ -141,19 +133,19 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Public Longevity Group',
-            onClick: () => handleClickSponsor(3),
+            onClick: () => handleClickDot('sponsor', 3),
           },
           {
-            label: 'EthPanda',
-            onClick: () => handleClickSponsor(0),
+            label: 'ETHPanda 青年黑客远航计划',
+            onClick: () => handleClickDot('sponsor', 0),
           },
           {
             label: 'BiohackerDAO',
-            onClick: () => handleClickSponsor(2),
+            onClick: () => handleClickDot('sponsor', 2),
           },
           {
             label: 'Vitalist Bay',
-            onClick: () => handleClickMeeting(4),
+            onClick: () => handleClickDot('sponsor', 4),
           },
         ],
       },
@@ -191,9 +183,7 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Access Digital Twin',
-            onClick: () => {
-              isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
-            },
+            onClick: handleClickDigitalTwin,
           },
         ],
       },
@@ -226,7 +216,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint]);
+  }, [handleClickDigitalTwin, handleClickDot]);
 
   return spectrumData;
 };
