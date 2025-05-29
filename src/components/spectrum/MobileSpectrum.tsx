@@ -18,12 +18,11 @@ SwiperType.use([FreeMode]);
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const [imageIdx, setImageIdx] = useState(0);
   const spectrumData = useSpectrumData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
-  const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
-  const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
+  const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
+  const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
   const swiperRef = useRef<SwiperType>();
   const [particleActive, setParticleActive] = useState(false);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -81,63 +80,14 @@ function MobileSpectrum() {
   useEffect(() => {
     if (currentPage.id === NAV_LIST[2].id) {
       setParticleActive(true);
-      setMobileImageIdx1(1);
-      setMobileImageIdx2(2);
       createEnterAnimation();
     } else {
       setParticleActive(false);
       createExitAnimation();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
-
-  const throttledSetImageIdx = useThrottle((index: number) => {
-    setImageIdx(index);
-  }, 200);
-
-  useGSAP(
-    () => {
-      if (!spectrumRefs.current.length) return;
-      const wrapper = wrapperRef.current;
-      if (!wrapper) return;
-
-      let isMouseInFundArea = false;
-      // add mouse event listeners for the entire fund area
-      wrapper?.addEventListener('mouseenter', () => {
-        isMouseInFundArea = true;
-      });
-
-      wrapper?.addEventListener('mouseleave', () => {
-        isMouseInFundArea = false;
-        throttledSetImageIdx(0);
-      });
-
-      spectrumRefs.current.forEach((div, idx) => {
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
-        const title = div.querySelector('.spectrum-title');
-        const titleCn = div.querySelector('.spectrum-title-cn');
-        // const selected = div?.querySelectorAll('.spectrum-selected-icon');
-        const icon = div?.querySelectorAll('.spectrum-icon');
-        if (title) tl.to(title, { fontSize: '1.875rem', lineHeight: '2.25rem' });
-        if (titleCn) tl.to(titleCn, { fontSize: '1.5rem', lineHeight: '1.75rem' }, '<');
-        if (icon) tl.to(icon, { width: '2.25rem', height: '2.25rem' }, '<');
-        // if (selected) tl.to(selected, { opacity: 1 });
-
-        div.addEventListener('mouseenter', () => {
-          throttledSetImageIdx(idx + 1);
-          tl.play();
-        });
-        div.addEventListener('mouseleave', () => {
-          tl.reverse();
-          // reset the image index only when the mouse actually leaves the entire fund area
-          if (!isMouseInFundArea) {
-            throttledSetImageIdx(0);
-          }
-        });
-      });
-    },
-    { scope: wrapperRef, dependencies: [] },
-  );
+    setMobileImageIdx1(1);
+    setMobileImageIdx2(2);
+  }, [createEnterAnimation, createExitAnimation, currentPage]);
 
   return (
     <div

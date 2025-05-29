@@ -42,7 +42,6 @@ const StaticParticleGL = ({
       const closeEnoughTarget = 100;
       const speed = 3;
       const particleSize = IS_MOBILE ? 3 : 8;
-      const mouseSize = 50;
       let currentImageIdx = 0;
       let isAnimActive: boolean = activeAnim;
       const sourceImgInfos: {
@@ -231,7 +230,8 @@ const StaticParticleGL = ({
         const height = width / ratio;
         canvas = p5.createCanvas(width, height);
         canvas.parent(id);
-        if (!IS_MOBILE) setImageIdx(0);
+        // both mobile and desktop should set initial image index
+        setImageIdx(currentImageIdx);
       };
 
       function setImageIdx(idx: number) {
@@ -314,6 +314,7 @@ const StaticParticleGL = ({
       }
 
       p5.draw = () => {
+        if (!isAnimActive) return;
         p5.clear();
         p5.background(255, 0); // transparent background
 

@@ -28,11 +28,11 @@
 }
 
 #spectrum-particle-container-mobile-1.particle-container-mobile-1 {
-  top: calc(14rem + 2svh);
+  top: calc(50% - 8rem);
 }
 
 #spectrum-particle-container-mobile-2.particle-container-mobile-2 {
-  top: calc(14rem + 40svh);
+  top: calc(50% + 9rem);
 }
 /* .particle-container .particle-mask,
 .particle-container-mobile-1 .particle-mask,
