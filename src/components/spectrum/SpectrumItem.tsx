@@ -32,7 +32,7 @@ const SpectrumItem = memo(
             <div className="mt-5 flex flex-col">
               {links?.length
                 ? links.map((item) => {
-                    const { label, link, isComingSoon, onClick } = item;
+                    const { label, link, isComingSoon, onClick, labelClassName } = item;
                     const hasLink = Boolean(link || onClick);
                     return (
                       <div key={label} className="relative flex items-center gap-1">
@@ -47,10 +47,14 @@ const SpectrumItem = memo(
                           }}
                         >
                           <p
-                            className={cn('spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize', {
-                              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
-                                hasLink,
-                            })}
+                            className={cn(
+                              'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+                              {
+                                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
+                                  hasLink,
+                              },
+                              labelClassName,
+                            )}
                           >
                             {label}
                             {/* {hasLink && (

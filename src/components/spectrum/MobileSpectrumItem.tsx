@@ -34,7 +34,7 @@ const MobileSpectrumItem = memo(
         <div className="mt-5 flex flex-col">
           {links?.length
             ? links.map((item) => {
-                const { label, link, isComingSoon, onClick } = item;
+                const { label, link, isComingSoon, onClick, labelClassName } = item;
                 return (
                   <div key={label} className="flex-center gap-1 text-center">
                     <a
@@ -48,10 +48,14 @@ const MobileSpectrumItem = memo(
                       }}
                     >
                       <p
-                        className={cn('spectrum-link-text relative font-poppins text-xs/5 font-medium capitalize', {
-                          'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
-                            link || onClick,
-                        })}
+                        className={cn(
+                          'spectrum-link-text relative font-poppins text-xs/5 font-medium capitalize',
+                          {
+                            'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
+                              link || onClick,
+                          },
+                          labelClassName,
+                        )}
                       >
                         {label}
                       </p>

@@ -23,6 +23,7 @@ export type SpectrumLinkItem = {
   onClick?: () => void; // jumpTo some where
   className?: string;
   isComingSoon?: boolean;
+  labelClassName?: string;
 };
 
 export type SpectrumItemInfo = {
@@ -125,14 +126,17 @@ export const useSpectrumData = () => {
           {
             label: 'The Network State',
             onClick: () => handleClickBook(0),
+            labelClassName: 'italic',
           },
           {
             label: 'Better With Age',
             onClick: () => handleClickBook(2),
+            labelClassName: 'italic',
           },
           {
             label: 'The case against death',
             isComingSoon: true,
+            labelClassName: 'italic',
           },
         ],
       },
