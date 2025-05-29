@@ -61,7 +61,8 @@ export function WorldMapDotPoint({
     <motion.div
       className={cn(
         `world-map-dot world-map-dot-${index}`,
-        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        isActive && 'z-20',
       )}
       onClick={handleClick}
       onMouseEnter={(e) => {
@@ -286,12 +287,12 @@ export function WorldMapDotContent({
                 href={videoUrl}
                 target="_blank"
                 initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={{ opacity: 1, scale: 0.85 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22vh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
               >
                 <div className="clip-talk-content bg-white p-0.5">
-                  <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:12px]">
+                  <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
                     <YoutubeSVG className="size-5 fill-white" />
                     <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
                     <ArrowSVG className="size-4 -rotate-90 fill-white" />
