@@ -50,13 +50,7 @@ export const useSpectrumData = () => {
           ? document.querySelector(`.world-map-dot-book-${index}`)
           : document.querySelector(`.world-map-dot-sponsor-${index}`);
     if (scrollContainer && activeEle) {
-      const activeEleRect = activeEle.getBoundingClientRect();
-      const scrollContainerRect = scrollContainer.getBoundingClientRect();
-      const scrollLeft = activeEleRect.left - scrollContainerRect.left;
-      scrollContainer.scrollTo({
-        left: scrollLeft,
-        behavior: 'smooth',
-      });
+      activeEle.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
   }, []);
 

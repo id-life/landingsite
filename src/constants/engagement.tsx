@@ -404,14 +404,17 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   },
 ];
 
-export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number; duration?: number }[] = [
-  { type: 'sponsor', index: 0 },
+export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number; offset?: number }[] = [
+  { type: 'sponsor', index: 3, offset: 40 },
+  { type: 'meeting', index: 4, offset: 20 },
+  { type: 'book', index: 2, offset: 80 },
   { type: 'meeting', index: 3 },
-  { type: 'sponsor', index: 2 },
-  { type: 'book', index: 0 },
-  { type: 'book', index: 1 },
-  { type: 'sponsor', index: 1 },
-  { type: 'meeting', index: 2 },
-  { type: 'meeting', index: 1 },
-  { type: 'meeting', index: 0 },
+  { type: 'sponsor', index: 2, offset: 80 },
+  { type: 'sponsor', index: 1, offset: 80 },
+  { type: 'book', index: 0, offset: 40 },
+  { type: 'book', index: 1, offset: 40 },
+  { type: 'sponsor', index: 0, offset: 50 },
+  { type: 'meeting', index: 2, offset: 180 },
+  { type: 'meeting', index: 1, offset: 180 },
+  { type: 'meeting', index: 0, offset: 180 },
 ];

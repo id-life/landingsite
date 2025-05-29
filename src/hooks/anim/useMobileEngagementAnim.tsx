@@ -15,6 +15,22 @@ export function useMobileEngagementAnim() {
   const isMobileEngagementJump = useAtomValue(isMobileEngagementJumpAtom);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
 
+  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
+    const scrollContainer = document.querySelector('.world-map-container');
+    const activeEle =
+      type === 'meeting'
+        ? document.querySelector(`.world-map-dot-${index}`)
+        : type === 'book'
+          ? document.querySelector(`.world-map-dot-book-${index}`)
+          : document.querySelector(`.world-map-dot-sponsor-${index}`);
+    if (scrollContainer && activeEle) {
+      const containerEl = scrollContainer as HTMLDivElement;
+      const eleEl = activeEle as HTMLDivElement;
+      const targetScrollLeft = eleEl.offsetLeft - offset;
+      containerEl.scrollTo({ behavior: 'smooth', left: targetScrollLeft });
+    }
+  }, []);
+
   // 用户交互处理函数
   const handleUserInteraction = useCallback(() => {
     userInteractedRef.current = true;
@@ -43,7 +59,7 @@ export function useMobileEngagementAnim() {
       }
 
       const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
-      const { type, index } = point;
+      const { type, index, offset } = point;
       // 重置之前激活的点
       setActiveBookDot(null);
       setActiveMeetingDot(null);
@@ -57,8 +73,9 @@ export function useMobileEngagementAnim() {
       } else if (type === 'sponsor') {
         setActiveSponsorDot(index);
       }
+      scrollToActivePoint(type, index, offset);
     },
-    [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
+    [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
   );
   // 自动展示点
   const startAutoDotShow = useCallback(() => {
@@ -71,40 +88,40 @@ export function useMobileEngagementAnim() {
     dotShowIntervalRef.current = setInterval(() => {
       showPoint(currentIndex);
       currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    }, 7000); // 每 7 秒展示一个新点
+    }, 2000);
   }, [showPoint]);
 
-  // 自动横向滚动
-  const startAutoScroll = useCallback(() => {
-    const mapContainer = document.querySelector('.world-map-container');
-    if (!mapContainer || userInteractedRef.current) return;
+  // // 自动横向滚动
+  // const startAutoScroll = useCallback(() => {
+  //   const mapContainer = document.querySelector('.world-map-container');
+  //   if (!mapContainer || userInteractedRef.current) return;
 
-    // 计算可滚动范围
-    const scrollWidth = mapContainer.scrollWidth;
-    const clientWidth = mapContainer.clientWidth;
-    const maxScrollLeft = scrollWidth - clientWidth - scrollWidth * 0.05;
+  //   // 计算可滚动范围
+  //   const scrollWidth = mapContainer.scrollWidth;
+  //   const clientWidth = mapContainer.clientWidth;
+  //   const maxScrollLeft = scrollWidth - clientWidth - scrollWidth * 0.05;
 
-    if (maxScrollLeft <= 0) return; // 没有可滚动区域
+  //   if (maxScrollLeft <= 0) return; // 没有可滚动区域
 
-    // 创建自动滚动动画
-    autoScrollRef.current = gsap.to(mapContainer, {
-      scrollLeft: maxScrollLeft,
-      duration: 40, // 缓慢滚动，40 秒
-      ease: 'none',
-      onUpdate: () => {
-        // 如果用户交互了，停止滚动
-        if (userInteractedRef.current && autoScrollRef.current) {
-          autoScrollRef.current.kill();
-          autoScrollRef.current = null;
-        }
-      },
-    });
-    return () => {
-      if (autoScrollRef.current) {
-        autoScrollRef.current.kill();
-      }
-    };
-  }, []);
+  //   // 创建自动滚动动画
+  //   autoScrollRef.current = gsap.to(mapContainer, {
+  //     scrollLeft: maxScrollLeft,
+  //     duration: 50, // 缓慢滚动，50 秒
+  //     ease: 'none',
+  //     onUpdate: () => {
+  //       // 如果用户交互了，停止滚动
+  //       if (userInteractedRef.current && autoScrollRef.current) {
+  //         autoScrollRef.current.kill();
+  //         autoScrollRef.current = null;
+  //       }
+  //     },
+  //   });
+  //   return () => {
+  //     if (autoScrollRef.current) {
+  //       autoScrollRef.current.kill();
+  //     }
+  //   };
+  // }, []);
 
   const enterAnimate = useCallback(() => {
     console.log('enterAnimate');
@@ -166,7 +183,7 @@ export function useMobileEngagementAnim() {
         setIsMobileEngagementJump(false);
         return;
       }
-      startAutoScroll();
+      // startAutoScroll();
       startAutoDotShow();
     });
 
@@ -182,7 +199,7 @@ export function useMobileEngagementAnim() {
         mapContainer.removeEventListener('mousedown', handleUserInteraction);
       }
     };
-  }, [isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoScroll, startAutoDotShow]);
+  }, [isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoDotShow]);
 
   return {
     enterAnimate,
