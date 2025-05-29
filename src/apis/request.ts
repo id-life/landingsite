@@ -1,11 +1,5 @@
 import axios from 'axios';
 
-export type Response<T> = {
-  code: number;
-  message: string;
-  data: T;
-};
-
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_PREFIX,
   timeout: 15_000,

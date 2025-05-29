@@ -50,6 +50,7 @@
     "react-intersection-observer": "^9.16.0",
     "react-responsive": "^10.0.0",
     "react-use": "^17.5.1",
+    "relation-graph-react": "^2.2.11",
     "rxjs": "^7.8.2",
     "swiper": "^11.1.15",
     "tailwind-merge": "^2.5.2",

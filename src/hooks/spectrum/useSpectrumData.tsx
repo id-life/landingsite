@@ -1,7 +1,7 @@
 import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useSetAtom } from 'jotai';
-import { useCallback, useMemo } from 'react';
+import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -16,6 +16,7 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
+import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 export type SpectrumLinkItem = {
   label: string;
@@ -32,6 +33,7 @@ export type SpectrumItemInfo = {
   icon: JSX.Element;
   links?: SpectrumLinkItem[];
   className?: string;
+  onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 };
 
 export const useSpectrumData = () => {
@@ -40,6 +42,8 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint();
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
+  const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
+  const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -69,6 +73,10 @@ export const useSpectrumData = () => {
     },
     [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
   );
+
+  const handleCharacterRelationShow = useCallback(() => {
+    isMobile ? setIsMobileCharacterRelationShow(true) : setIsCharacterRelationShow(true);
+  }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -171,9 +179,9 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            isComingSoon: true,
           },
         ],
+        onClick: () => handleCharacterRelationShow(),
       },
       {
         title: 'Digital Twin',
