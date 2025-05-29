@@ -46,6 +46,12 @@ export function useMobileNavigation() {
           duration: 0.5,
         });
         break;
+      case BACKGROUND_THEME.BLACK_RED_2:
+        tl.set('.base-background2', { opacity: 0 }).to(root, {
+          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK_RED_2],
+          duration: 0.5,
+        });
+        break;
       default:
         tl.to(
           root,
@@ -60,8 +66,10 @@ export function useMobileNavigation() {
   }, []);
 
   useEffect(() => {
-    if (NAV_LIST[1].id === currentPage.id || NAV_LIST[2].id === currentPage.id) {
+    if (NAV_LIST[1].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK_RED);
+    } else if (NAV_LIST[2].id === currentPage.id) {
+      changeBackground(BACKGROUND_THEME.BLACK_RED_2);
     } else if (NAV_LIST[3].id === currentPage.id) {
       changeBackground(BACKGROUND_THEME.BLACK);
     } else {

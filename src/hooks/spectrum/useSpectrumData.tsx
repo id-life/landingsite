@@ -235,9 +235,8 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
   return [
     {
       url: '/imgs/particle/0.png',
-      scaleNum: isMobile ? 0.4 : 2.2,
+      scaleNum: isMobile ? 0.4 : 1.8,
       loadPercentage: isMobile ? 0.01 : 0.015,
-
       resize: [512, 300],
     },
     {

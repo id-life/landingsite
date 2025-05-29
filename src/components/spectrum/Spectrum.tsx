@@ -1,17 +1,17 @@
 'use client';
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
+import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
 import { memo, useRef, useState } from 'react';
 import ParticleGL from '../gl/ParticleGL';
-import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import SpectrumItem from './SpectrumItem';
-import { useThrottle } from '@/hooks/useThrottle';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);

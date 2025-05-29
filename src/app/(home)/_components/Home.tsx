@@ -73,10 +73,13 @@ export default function Home() {
     visionTL.to('.base-background2', { opacity: 0 });
     visionTL.to(root, {
       '--gradient-from': '#000000',
+      '--gradient-via': '#1E0000',
+      '--gradient-via-percent': '50%',
       '--gradient-to': '#C111114C',
       '--background': '#000000',
       '--foreground': '#F0F0F0',
     });
+
     const spectrumTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
@@ -86,9 +89,12 @@ export default function Home() {
       },
     });
     spectrumTL.to(root, {
+      '--gradient-via': '#C1111111',
+      '--gradient-via-percent': '80%',
       '--gradient-rotate': '300deg',
       duration: 3,
     });
+
     const engagementTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[3].id}`,
@@ -105,6 +111,7 @@ export default function Home() {
     });
     engagementTL.to(root, {
       '--gradient-from': '#000000',
+      '--gradient-via': '#000000',
       '--gradient-to': '#000000',
       '--background': '#000000',
       '--foreground': '#FFFFFF',
@@ -125,6 +132,8 @@ export default function Home() {
     });
     twinTL.to(root, {
       '--gradient-from': '#FFFFFF',
+      '--gradient-via': '#e5ebf5',
+      '--gradient-via-percent': '50%',
       '--gradient-to': '#CBD6EA',
       '--background': '#F0F0F0',
       '--foreground': '#000000',

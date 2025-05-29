@@ -68,6 +68,7 @@ export const BACKGROUND_THEME = {
   LIGHT: 'light',
   BLACK: 'black',
   BLACK_RED: 'black-red',
+  BLACK_RED_2: 'black-red-2', // Spectrum page
 } as const;
 
 export type ValueOf<T> = T[keyof T];
@@ -80,17 +81,32 @@ export const BACKGROUND_COLORS = {
     '--gradient-to': '#CBD6EA',
     '--background': '#F0F0F0',
     '--foreground': '#000000',
+    '--gradient-via': '#e5ebf5',
+    '--gradient-via-percent': '50%',
   },
   [BACKGROUND_THEME.BLACK]: {
     '--gradient-from': '#000000',
     '--gradient-to': '#000000',
     '--background': '#000000',
     '--foreground': '#FFFFFF',
+    '--gradient-via': '#000000',
+    '--gradient-via-percent': '50%',
   },
   [BACKGROUND_THEME.BLACK_RED]: {
     '--gradient-from': '#000000',
     '--gradient-to': '#C111114C',
     '--background': '#000000',
     '--foreground': '#F0F0F0',
+    '--gradient-via': '#1E0000',
+    '--gradient-via-percent': '50%',
+  },
+  [BACKGROUND_THEME.BLACK_RED_2]: {
+    '--gradient-from': '#000000',
+    '--gradient-to': '#C111114C',
+    '--background': '#000000',
+    '--foreground': '#F0F0F0',
+    '--gradient-via': '#C1111111',
+    '--gradient-via-percent': '80%',
+    '--gradient-rotate': '300deg',
   },
 } as const;
