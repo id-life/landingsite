@@ -133,5 +133,11 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       scaleNum: isMobile ? 0.5 : 1.2,
       loadPercentage: 0.0012,
     },
+    {
+      url: '/imgs/particle/10.png',
+      resize: [512, 262],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.0012,
+    },
   ];
 };
