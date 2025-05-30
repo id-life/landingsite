@@ -1,17 +1,18 @@
-import { memo, useCallback, useEffect, useRef, RefObject } from 'react';
 import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
+import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { memo, RefObject, useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, MotionPathPlugin);
@@ -57,7 +58,7 @@ function ValueGL() {
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
-            setCurrentPage(NAV_LIST[4]);
+            setCurrentPage(NAV_LIST[5]);
             if (window.isNavScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
@@ -258,7 +259,7 @@ function ValueGL() {
     { dependencies: [] },
   );
   useEffect(() => {
-    if (currentPageIndex !== 4 || innerPageNavigateTo === null) return;
+    if (currentPageIndex !== VALUE_PAGE_INDEX || innerPageNavigateTo === null) return;
     const st = ScrollTrigger.getById(`value-page${innerPageNavigateTo + 1}-scroll-trigger`);
     if (st) {
       isScrollingRef.current = true;

@@ -24,7 +24,7 @@ export default function Value() {
   }, [innerPageIndex, currentPage]);
 
   return (
-    <div id={NAV_LIST[4].id} className="page-container value">
+    <div id={NAV_LIST[5].id} className="page-container value">
       <div id="value-page1" className="-z-10 h-screen w-screen" />
       <div className="value-gap h-25" />
       <div id="value-page2" className="-z-10 h-screen w-screen" />

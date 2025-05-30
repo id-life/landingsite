@@ -54,7 +54,8 @@ export function WorldMapSponsorDotPoint({
 
   useEffect(() => {
     if (!activeSponsorDot) setActiveSponsorDotClickOpen(false);
-  }, [activeSponsorDot]);
+  }, [activeSponsorDot, setActiveSponsorDotClickOpen]);
+
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // 使用自定义配置或默认配置
@@ -70,7 +71,8 @@ export function WorldMapSponsorDotPoint({
     <motion.div
       className={cn(
         `world-map-dot-sponsor world-map-dot-sponsor-${index}`,
-        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        isActive && 'z-20',
       )}
       initial="initial"
       whileHover="active"

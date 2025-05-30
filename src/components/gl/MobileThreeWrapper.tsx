@@ -1,59 +1,15 @@
-import { mobileCurrentPageAtom } from '@/atoms';
-import { visionGlLoadedAtom, globalLoadedAtom } from '@/atoms/geo';
-import { useIsMounted } from '@/hooks/useIsMounted';
+import { Suspense, useMemo } from 'react';
 import { cn } from '@/utils';
-import { useProgress } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { EffectComposer } from '@react-three/postprocessing';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { NAV_LIST } from '../nav/nav';
+import { useAtomValue } from 'jotai';
 import { Fluid } from './fluid/Fluid';
-// import MobileValueGL from './MobileValueGL';
-import MobileVisionGL from './MobileVisionGL';
-import ProgressLoader from './ProgressLoader';
+import { NAV_LIST } from '../nav/nav';
+import { Canvas } from '@react-three/fiber';
 import MobileValueGL from './MobileValueGL';
+import MobileVisionGL from './MobileVisionGL';
+import { mobileCurrentPageAtom } from '@/atoms';
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { ErrorBoundary } from 'react-error-boundary';
-
-function Loader() {
-  const { progress, active } = useProgress();
-  const setGLLoaded = useSetAtom(visionGlLoadedAtom);
-  // 设置全局加载完成
-  useEffect(() => {
-    if (!active) {
-      setGLLoaded(true);
-    }
-  }, [active, setGLLoaded]);
-
-  return <ProgressLoader progress={progress.toFixed(2)} />;
-}
-
-function OuterLoader() {
-  const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const glLoaded = useAtomValue(visionGlLoadedAtom);
-  const [show, setShow] = useState(true);
-  const timer = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-    if (glLoaded) {
-      timer.current = setTimeout(() => {
-        setShow(false); // 加载完后再延迟1s
-        setGlobalLoaded(true);
-      }, 1000);
-    }
-    return () => {
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-    };
-  }, [glLoaded, setGlobalLoaded]);
-
-  if (!glLoaded || !show) return null;
-  return <ProgressLoader progress="100" />;
-}
+import { EffectComposer } from '@react-three/postprocessing';
 
 export default function MobileThreeWrapper() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -76,8 +32,7 @@ export default function MobileThreeWrapper() {
       >
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-        <OuterLoader />
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={null}>
           <MobileVisionGL />
           <MobileValueGL />
         </Suspense>

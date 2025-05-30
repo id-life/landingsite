@@ -1,6 +1,6 @@
 'use client';
 
-import Engagement from '@/app/engagement/Engagement';
+import Engagement from '@/components/engagement/Engagement';
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
 import Value from '@/app/value/Value';
@@ -22,6 +22,8 @@ import { useEvent } from 'react-use';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import Spectrum from '@/components/spectrum/Spectrum';
+import { OuterLoader } from '@/components/gl/ProgressLoader';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -37,7 +39,7 @@ export default function Home() {
         label: currentPage.id,
       });
     }
-  }, [currentPage, isMobile, isMounted]);
+  }, [currentPage, isMobile, isMounted, trackEvent]);
 
   const initFontSize = useCallback(() => {
     if (!isMounted || isMobile) {
@@ -72,46 +74,55 @@ export default function Home() {
     visionTL.to('.base-background2', { opacity: 0 });
     visionTL.to(root, {
       '--gradient-from': '#000000',
+      '--gradient-via': '#1E0000',
+      '--gradient-via-percent': '50%',
       '--gradient-to': '#C111114C',
       '--background': '#000000',
       '--foreground': '#F0F0F0',
     });
-    const engagementTL = gsap.timeline({
+
+    const spectrumTL = gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[2].id}`,
         start: 'top bottom',
         end: 'top center',
         scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[1]);
-        },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[1]);
-        },
+      },
+    });
+    spectrumTL.to(root, {
+      '--gradient-via': '#C1111111',
+      '--gradient-via-percent': '80%',
+      '--gradient-rotate': '300deg',
+      duration: 3,
+    });
+
+    const engagementTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: `#${NAV_LIST[3].id}`,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: true,
       },
     });
     engagementTL.to(root, {
       '--gradient-from': '#000000',
+      '--gradient-via': '#000000',
       '--gradient-to': '#000000',
       '--background': '#000000',
       '--foreground': '#FFFFFF',
     });
     const twinTL = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[3].id}`,
+        trigger: `#${NAV_LIST[4].id}`,
         start: 'top bottom',
         end: 'top center',
         scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[2]);
-        },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[2]);
-        },
       },
     });
     twinTL.to(root, {
       '--gradient-from': '#FFFFFF',
+      '--gradient-via': '#e5ebf5',
+      '--gradient-via-percent': '50%',
       '--gradient-to': '#CBD6EA',
       '--background': '#F0F0F0',
       '--foreground': '#000000',
@@ -121,12 +132,14 @@ export default function Home() {
 
   return (
     <>
+      <OuterLoader />
       <ThreeWrapper />
       <TwinThreeWrapper />
       <div id="wrapper">
         <div id="content">
           <Vision />
           <Portfolio />
+          <Spectrum />
           <Engagement />
           <Twin />
           <Value />

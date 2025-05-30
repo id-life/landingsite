@@ -12,7 +12,7 @@ function MobileEngagement() {
   const { enterAnimate } = useMobileEngagementAnim();
 
   useEffect(() => {
-    if (currentPage?.id !== NAV_LIST[2].id) return;
+    if (currentPage?.id !== NAV_LIST[3].id) return;
     const cleanup = enterAnimate();
     return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -20,9 +20,9 @@ function MobileEngagement() {
 
   return (
     <div
-      id={NAV_LIST[2].id}
+      id={NAV_LIST[3].id}
       className={cn('relative h-[100svh] w-full overflow-auto text-white transition-all duration-300', {
-        hidden: currentPage?.id !== NAV_LIST[2].id,
+        hidden: currentPage?.id !== NAV_LIST[3].id,
       })}
     >
       <MobileWorldMap

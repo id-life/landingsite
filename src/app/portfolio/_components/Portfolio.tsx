@@ -2,6 +2,9 @@ import { currentPageAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -9,15 +12,11 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
-import { portfolio, PortfolioItemInfo } from './portfolioData';
+import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -30,19 +29,27 @@ function Portfolio() {
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [imageIdx, setImageIdx] = useState(0);
-  const showParticle = useMemo(() => active, [active]);
   const currentPage = useAtomValue(currentPageAtom);
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // profile auto scroll to engagement
+    triggerId: 'portfolio-trigger',
+    scrollFn: () => {
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[1].id) return;
+      const smoother = ScrollSmoother.get();
+      smoother?.scrollTo(`#${NAV_LIST[0].id}`, true, '1px');
+    },
+    isUp: true,
+  });
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     // profile auto scroll to engagement
     triggerId: 'portfolio-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[1].id || window.isNavScrolling) return;
       console.log('Portfolio scrollFn down');
-      // const smoother = ScrollSmoother.get();
-      // smoother?.scrollTo(`#${NAV_LIST[2].id}`);
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
     },
     isUp: false,
   });
@@ -80,7 +87,11 @@ function Portfolio() {
         },
       },
     });
+    tl.add(() => {
+      setEnableUpJudge(true);
+    });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
+
     tl.from('.page2-title', {
       delay: 0.5,
       y: (_, target) => target.offsetHeight,
@@ -90,18 +101,20 @@ function Portfolio() {
     });
     tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
     tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
-    tl.to('.page2-title', {
-      delay: 0.5,
-      y: (_, target) => -target.offsetHeight,
-      rotateX: -45,
-      rotateY: 15,
-      opacity: 0,
-    });
-    tl.to('.page2-fund', { y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
-    tl.to('.page2-contact', { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
-    tl.to('#particle-gl', { opacity: 0 });
-    tl.to('.fixed-top', { opacity: 0 });
-    tl.to('.fixed-bottom', { opacity: 0 }, '<');
+    // tl.to('.page2-title', {
+    //   delay: 0.5,
+    //   y: (_, target) => -target.offsetHeight,
+    //   rotateX: -45,
+    //   rotateY: 15,
+    //   opacity: 0,
+    // });
+    // tl.to('.page2-fund', {
+    //   y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
+    // tl.to('.page2-contact',
+    //   { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
+    // tl.to('#particle-gl', { opacity: 0 });
+    // tl.to('.fixed-top', { opacity: 0 });
+    // tl.to('.fixed-bottom', { opacity: 0 }, '<');
     // set the flag after the entire animation is finished
     tl.add(() => {
       setEnableDownJudge(true);
@@ -167,17 +180,22 @@ function Portfolio() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && <ParticleGL activeAnim={showParticle} imageIdx={imageIdx} id="particle-container" />}
+      <ParticleGL
+        activeAnim={active}
+        imageIdx={imageIdx}
+        id="particle-container"
+        getSourceImgInfos={portfolioGetSourceImgInfos}
+      />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <div id="particle-gl">
-          <div id="particle-container" className={cn({ active })}>
+          <div id="particle-container" className={cn('particle-container', { active })}>
             <div className="particle-mask"></div>
           </div>
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
           <div className="grid grid-cols-5">
-            {portfolio.slice(0, 5).map((item, index) => (
+            {portfolio.map((item, index) => (
               <PortfolioItem
                 key={item.title}
                 item={item}
@@ -186,19 +204,6 @@ function Portfolio() {
                 ref={(element) => {
                   if (!element) return;
                   portfolioRefs.current[index] = element;
-                }}
-              />
-            ))}
-          </div>
-          <div className="grid grid-cols-4">
-            {portfolio.slice(5).map((item, index) => (
-              <PortfolioItem
-                key={item.title}
-                item={item}
-                onClick={() => handleFundClick(item)}
-                ref={(element) => {
-                  if (!element) return;
-                  portfolioRefs.current[5 + index] = element;
                 }}
               />
             ))}

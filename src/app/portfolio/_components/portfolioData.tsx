@@ -48,8 +48,8 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'New funding paradigm for unlikely bio projects',
     image: (
       <div className="flex-center gap-4">
-        <img className="w-50 mobile:w-[9.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
-        <img className="w-[9.6875rem] mobile:w-[7.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
+        <img className="w-[9.25rem] mobile:w-[7.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
+        <img className="w-[7.25rem] mobile:w-[5.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
       </div>
     ),
     link: 'https://www.vitadao.com/',
@@ -66,4 +66,78 @@ export const portfolio: PortfolioItemInfo[] = [
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
     link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
   },
+  {
+    title: 'VIBE SCIENCE',
+    description: 'Builds consumer brain wellness technology',
+    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
+  },
 ];
+
+export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
+  return [
+    {
+      url: '/imgs/particle/0.png',
+      scaleNum: isMobile ? 0.8 : 2.2,
+      resize: [512, 300],
+    },
+    {
+      url: '/imgs/particle/1.png',
+      resize: [600, 600],
+      scaleNum: isMobile ? 0.4 : 0.8,
+      loadPercentage: 0.005,
+    },
+    {
+      url: '/imgs/particle/2.png',
+      resize: [600, 536],
+      scaleNum: isMobile ? 0.35 : 0.7,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/3.png',
+      resize: [600, 576],
+      scaleNum: isMobile ? 0.5 : 1,
+    },
+    {
+      url: '/imgs/particle/4.png',
+      resize: [300, 300],
+      scaleNum: isMobile ? 0.7 : 1.4,
+      loadPercentage: 0.002,
+    },
+    {
+      url: '/imgs/particle/5.png',
+      resize: [950, 140],
+      loadPercentage: 0.004,
+      scaleNum: isMobile ? 0.5 : 1.2,
+    },
+    {
+      url: '/imgs/particle/6.png',
+      resize: [860, 82],
+      loadPercentage: 0.004,
+      scaleNum: isMobile ? 0.5 : 1.2,
+    },
+    {
+      url: '/imgs/particle/7.png',
+      resize: [594, 264],
+      scaleNum: isMobile ? 0.7 : 1.4,
+      loadPercentage: 0.002,
+    },
+    {
+      url: '/imgs/particle/8.png',
+      resize: [600, 600],
+      loadPercentage: 0.0012,
+      scaleNum: isMobile ? 0.5 : 1,
+    },
+    {
+      url: '/imgs/particle/9.png',
+      resize: [512, 272],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/10.png',
+      resize: [512, 262],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.0012,
+    },
+  ];
+};

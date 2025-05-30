@@ -4,9 +4,30 @@ import dynamic from 'next/dynamic';
 const DynamicReactP5Wrapper = dynamic(() => import('./DynamicParticleGL').then((mod) => mod.default), {
   ssr: false,
 });
+const StaticReactP5Wrapper = dynamic(() => import('./StaticParticleGL').then((mod) => mod.default), {
+  ssr: false,
+});
 
-const ParticleGL = ({ activeAnim, imageIdx, id }: { activeAnim?: boolean; imageIdx: number; id?: string }) => {
-  return <DynamicReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
+const ParticleGL = ({
+  activeAnim,
+  imageIdx,
+  id,
+  getSourceImgInfos,
+  isStatic,
+}: {
+  activeAnim?: boolean;
+  imageIdx: number;
+  id?: string;
+  isStatic?: boolean;
+  getSourceImgInfos: (
+    isMobile: boolean,
+  ) => { scaleNum?: number; resize?: number[]; url: string; loadPercentage?: number; resolution?: number }[];
+}) => {
+  return isStatic ? (
+    <StaticReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} getSourceImgInfos={getSourceImgInfos} />
+  ) : (
+    <DynamicReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} getSourceImgInfos={getSourceImgInfos} />
+  );
 };
 
 export default ParticleGL;

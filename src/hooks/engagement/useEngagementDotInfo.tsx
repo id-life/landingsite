@@ -47,7 +47,7 @@ export function useEngagementDotInfo({ id, index, type }: { id: string; index: n
       return res;
     }
     return res;
-  }, [activeMeetingDot, activeBookDot, activeSponsorDot, isActive]);
+  }, [isActive, activeMeetingDot, activeBookDot, activeSponsorDot, id]);
 
   return dotInfo;
 }

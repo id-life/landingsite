@@ -3,7 +3,7 @@ import Value from './_components/Value';
 
 export default function Processes() {
   return (
-    <div id={NAV_LIST[3].id} className="page-container bg-gray-200 bg-none px-12 pt-24 mobile:px-5 mobile:pt-9">
+    <div id={NAV_LIST[4].id} className="page-container bg-gray-200 bg-none px-12 pt-24 mobile:px-5 mobile:pt-9">
       <video
         autoPlay
         muted

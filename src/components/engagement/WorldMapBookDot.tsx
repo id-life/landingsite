@@ -54,7 +54,7 @@ export function WorldMapBookDotPoint({
   };
   useEffect(() => {
     if (!activeBookDot) setActiveBookDotClickOpen(false);
-  }, [activeBookDot]);
+  }, [activeBookDot, setActiveBookDotClickOpen]);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -71,7 +71,8 @@ export function WorldMapBookDotPoint({
     <motion.div
       className={cn(
         `world-map-dot-book world-map-dot-book-${index} `,
-        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        isActive && 'z-20',
       )}
       initial="initial"
       whileHover="active"

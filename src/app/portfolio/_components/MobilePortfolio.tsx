@@ -9,7 +9,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { portfolio, PortfolioItemInfo } from './portfolioData';
+import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
@@ -122,15 +122,30 @@ function MobilePortfolio() {
         hidden: currentPage?.id !== NAV_LIST[1].id,
       })}
     >
-      <ParticleGL imageIdx={mobileImageIdx1} activeAnim={particleActive} id="particle-container-mobile-1" />
-      <ParticleGL imageIdx={mobileImageIdx2} activeAnim={particleActive} id="particle-container-mobile-2" />
-
+      <ParticleGL
+        imageIdx={mobileImageIdx1}
+        activeAnim={particleActive}
+        id="particle-container-mobile-1"
+        getSourceImgInfos={portfolioGetSourceImgInfos}
+      />
+      <ParticleGL
+        imageIdx={mobileImageIdx2}
+        activeAnim={particleActive}
+        id="particle-container-mobile-2"
+        getSourceImgInfos={portfolioGetSourceImgInfos}
+      />
       <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
         <div id="particle-gl">
-          <div id="particle-container-mobile-1" className={cn({ active: particleActive })}>
+          <div
+            id="particle-container-mobile-1"
+            className={cn('particle-container particle-container-mobile-1', { active: particleActive })}
+          >
             <div className="particle-mask"></div>
           </div>
-          <div id="particle-container-mobile-2" className={cn({ active: particleActive })}>
+          <div
+            id="particle-container-mobile-2"
+            className={cn('particle-container particle-container-mobile-2', { active: particleActive })}
+          >
             <div className="particle-mask"></div>
           </div>
         </div>

@@ -7,7 +7,7 @@ import ReplicationSVG from '@/components/svg/ReplicationSVG';
 export default function Insight() {
   return (
     <div
-      // id={NAV_LIST[3].id}
+      // id={NAV_LIST[4].id}
       className="mt-[16.625rem] p-12 mobile:mt-56 mobile:px-0 mobile:pt-9"
     >
       <h2 className="page-title">Immortal Insight</h2>

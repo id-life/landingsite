@@ -16,7 +16,10 @@
     --foreground: #000000;
     --nav: #f0f0f0;
     --gradient-from: #ffffff;
+    --gradient-via: #e5ebf5;
+    --gradient-via-percent: 50%;
     --gradient-to: #cbd6ea;
+    --gradient-rotate: 90deg;
   }
 
   /**::-webkit-scrollbar {*/
@@ -50,7 +53,12 @@
   }
 
   .base-background1 {
-    background-image: linear-gradient(90deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+    background-image: linear-gradient(
+      var(--gradient-rotate, 90deg),
+      var(--gradient-from) 0%,
+      var(--gradient-via) var(--gradient-via-percent),
+      var(--gradient-to) 100%
+    );
   }
 
   .base-background2 {
@@ -227,5 +235,10 @@
   .clip-sponsor-content {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
     clip-path: polygon(0 0, 100% 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%, 0 100%, 0 0);
+  }
+
+  .clip-talk-content {
+    -webkit-clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
+    clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
   }
 }

@@ -1,13 +1,14 @@
+import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engagement';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useEffect, useMemo, useRef } from 'react';
-import { MeetingSVG, SponsorSVG } from '../svg';
+import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -23,7 +24,7 @@ export function MobileWorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, isSponsor } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
 
@@ -47,7 +48,8 @@ export function MobileWorldMapDotPoint({
     <motion.div
       className={cn(
         `world-map-dot world-map-dot-${index}`,
-        'pointer-events-auto absolute z-20 origin-[center_left] cursor-pointer overflow-visible',
+        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        isActive && 'z-20',
       )}
       onClick={handleClick}
       variants={pointVariants}
@@ -125,15 +127,33 @@ export function MobileWorldMapDotPoint({
           {country}
           {isActive && (
             <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
-              <div className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
+              <div className="relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
                 <MeetingSVG className="size-4 fill-purple" />
                 Conference
               </div>
               {isSponsor && (
-                <div className="relative flex items-center gap-1 rounded-lg p-1 px-2 py-1 text-sm/4 font-semibold text-orange after:absolute after:-inset-0 after:z-[-1] after:block after:rounded-lg after:bg-orange/20 after:backdrop-blur-2xl">
+                <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
                   <SponsorSVG className="size-5 fill-orange" />
                   Sponsor
                 </div>
+              )}
+              {videoUrl && (
+                <motion.a
+                  href={videoUrl}
+                  target="_blank"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 0.85 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="pointer-events-auto flex cursor-pointer flex-col"
+                >
+                  <div className="clip-talk-content -ml-1 bg-white p-0.5">
+                    <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
+                      <YoutubeSVG className="size-5 fill-white" />
+                      <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
+                      <ArrowSVG className="size-4 -rotate-90 fill-white" />
+                    </div>
+                  </div>
+                </motion.a>
               )}
             </div>
           )}
