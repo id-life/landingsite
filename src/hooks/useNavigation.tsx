@@ -57,7 +57,7 @@ export function useNavigation() {
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('portfolio-trigger');
           if (!st) return;
-          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.965 } });
+          smoother?.scrollTo(st.start + (st.end - st.start) * 0.965, false);
         });
         setTimeout(() => {
           window.isNavScrolling = false;
