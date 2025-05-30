@@ -6,10 +6,10 @@ import { CharacterRelation, CharacterRelationData, CharacterRelationImpression }
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { addCharacterRelationData } from '@/apis';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useMutationCharacterRelation } from '@/hooks/useMutationCharacterRelation';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = { character: '', impression: CHARACTER_RELATION_IMPRESSION.GOOD };
 
@@ -26,11 +26,15 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const [relation, setRelation] = useState<CharacterRelationData['relation']>([CHARACTER_RELATION_PLAIN_DATA]);
 
   const isSubmittingRef = useRef(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const submittedMsgRef = useRef<HTMLDivElement>(null);
   const [countdown, setCountdown] = useState(5);
+
+  const {
+    mutateAsync: addCharacterRelationData,
+    isPending: isMutationPending,
+    isSuccess: isMutationSuccess,
+  } = useMutationCharacterRelation();
 
   const handleRelationCharacterChange = (value: string, index: number) => {
     setRelation((prev) => {
@@ -57,33 +61,29 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSubmitting || isSubmitted) return;
+    if (isMutationPending || isMutationSuccess) return;
 
     const relationData: CharacterRelationData = {
       character,
       relation: relation.filter((rel) => !!rel.character),
     };
 
-    setIsSubmitting(true);
-    addCharacterRelationData(relationData).then(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
+    addCharacterRelationData(relationData);
   };
 
   useEffect(() => {
-    if (isSubmitted && countdown > 0) {
+    if (isMutationSuccess && countdown > 0) {
       const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
       return () => clearTimeout(timer);
     }
 
-    if (isSubmitted && countdown === 0) {
+    if (isMutationSuccess && countdown === 0) {
       onCountdownEnd?.();
     }
-  }, [countdown, isSubmitted, onCountdownEnd]);
+  }, [countdown, isMutationSuccess, onCountdownEnd]);
 
   useEffect(() => {
-    if (isSubmitted) {
+    if (isMutationSuccess) {
       if (isMobile) {
         gsap.to(submittedMsgRef.current, {
           bottom: '-1.25rem',
@@ -97,7 +97,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         });
       }
     }
-  }, [isSubmitted, isMobile]);
+  }, [isMutationSuccess, isMobile]);
 
   return (
     <div
@@ -129,7 +129,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             placeholder="Enter your name"
             value={character}
             required
-            disabled={isSubmitting || isSubmitted}
+            disabled={isMutationPending || isMutationSuccess}
             onChange={(e) => setCharacter(e.target.value)}
           />
           {relation.map((rel, i) => (
@@ -138,7 +138,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               mode="introducer"
               placeholder={i === 0 ? 'Who inspired you?' : 'Anyone else? If not, just press confirm.'}
               required={i === 0}
-              disabled={isSubmitting || isSubmitted}
+              disabled={isMutationPending || isMutationSuccess}
               value={rel.character}
               impression={rel.impression}
               onBlur={() => handleAddRelation(i)}
@@ -156,12 +156,12 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           onPointerDown={() => (isSubmittingRef.current = true)}
           onPointerUp={() => (isSubmittingRef.current = false)}
         >
-          {isSubmitting ? (
+          {isMutationPending ? (
             <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
               <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
             </div>
           ) : null}
-          {isSubmitted ? (
+          {isMutationSuccess ? (
             <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
               <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
             </div>

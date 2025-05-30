@@ -88,7 +88,7 @@ const CharacterRelation = () => {
     return () => {
       resetBePartOfItState();
     };
-  }, [isCharacterRelationShow, currentPageIndex]);
+  }, [isCharacterRelationShow, currentPageIndex, createClipPath]);
 
   function resetBePartOfItState() {
     if (bePartOfItTimerRef.current) {

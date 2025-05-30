@@ -18,7 +18,7 @@ export interface CharacterRelation {
   impression: CharacterRelationImpression;
 }
 
-export type CharacterRelattionDataResponse = ({ id: number } & CharacterRelationData)[];
+export type CharacterRelationDataResponse = ({ id: number } & CharacterRelationData)[];
 
 export type AddCharacterRelationData = Omit<CharacterRelationData, 'relation'> & {
   relation: CharacterRelation[];

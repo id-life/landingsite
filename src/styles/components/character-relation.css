@@ -91,6 +91,8 @@
   --foreground: #000000;
   --nav: #f0f0f0;
   --gradient-from: #ffffff;
+  --gradient-via: #e5ebf5;
+  --gradient-via-percent: 50%;
   --gradient-to: #cbd6ea;
   --gradient-rotate: 90deg;
 }
