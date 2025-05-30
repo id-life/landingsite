@@ -23,6 +23,7 @@ import FooterContact from '@/components/layout/footer/FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import Spectrum from '@/components/spectrum/Spectrum';
+import CharacterRelation from '@/components/character-relation/CharacterRelation';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
 
 export default function Home() {
@@ -145,6 +146,7 @@ export default function Home() {
           <Value />
           <Footer />
           <FooterContact />
+          <CharacterRelation />
         </div>
       </div>
     </>

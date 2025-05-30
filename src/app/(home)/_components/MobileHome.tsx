@@ -15,6 +15,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
+import MobileCharacterRelation from '@/components/character-relation/mobile/MobileCharacterRelation';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
 
 export default function MobileHome() {
@@ -30,7 +31,7 @@ export default function MobileHome() {
       name: GA_EVENT_NAMES.ID_PAGE_VIEW,
       label: mobileCurrentPage.id,
     });
-  }, [mobileCurrentPage, isMobile]);
+  }, [mobileCurrentPage, isMobile, trackEvent]);
 
   return (
     <>
@@ -45,6 +46,7 @@ export default function MobileHome() {
         <MobileValue />
         <MobileFooter />
         <MobileFooterContact />
+        <MobileCharacterRelation />
       </div>
     </>
   );

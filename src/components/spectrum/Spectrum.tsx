@@ -146,8 +146,9 @@ function Spectrum() {
               <SpectrumItem
                 key={item.title}
                 item={item}
-                onClick={() => {
+                onClick={(e) => {
                   console.log(item.title);
+                  item.onClick?.(e);
                 }}
                 ref={(element) => {
                   if (!element) return;

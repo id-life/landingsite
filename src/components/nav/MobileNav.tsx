@@ -12,11 +12,13 @@ import MenuOpenSVG from '../svg/MenuOpenSVG';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 export default function MobileNav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const { trackEvent } = useGA();
 
@@ -32,7 +34,10 @@ export default function MobileNav() {
   return (
     <div
       id="nav"
-      className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5"
+      className={cn(
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5',
+        isMobileCharacterRelationShow && 'character-relation-css-vars-inject z-[51]',
+      )}
     >
       <Logo />
       <div className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">

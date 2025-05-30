@@ -1,0 +1,98 @@
+/* origin is scroll-button-ripple-init */
+.ripple-button-ripple-init {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 0.7px solid #2e2f31;
+  border-radius: 9999px;
+  width: 6.375rem;
+  height: 2.5rem;
+}
+
+/* origin is footer-contact-clip */
+.be-part-of-it-clip {
+  clip-path: polygon(2.125rem 0, 100% 0, 100% calc(100% - 2.125rem), 100% 100%, 0 100%, 0 2.125rem);
+  position: relative;
+}
+
+/* pseudo-element to mimic the border */
+.be-part-of-it-clip::before {
+  --border-width-half: calc(2px / 2);
+
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  clip-path: polygon(
+    0 0,
+    calc(2.125rem - (var(--sqrt2) * var(--border-width-half))) 0,
+    0 calc(2.125rem - (var(--sqrt2) * var(--border-width-half)))
+  );
+  background: white;
+}
+
+.be-part-of-it-tag-active-clip {
+  clip-path: polygon(0.40625rem 0, 100% 0, 100% calc(100% - 0.40625rem), 100% 100%, 0 100%, 0 0.40625rem);
+  position: relative;
+}
+
+.be-part-of-it-tag-active-clip::before {
+  --border-width-half: calc(1px / 2);
+
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  clip-path: polygon(
+    0 0,
+    calc(0.40625rem - (var(--sqrt2) * var(--border-width-half))) 0,
+    0 calc(0.40625rem - (var(--sqrt2) * var(--border-width-half)))
+  );
+  @apply bg-red-600;
+}
+
+.be-part-of-it-tag-inactive-clip {
+  clip-path: polygon(0.40625rem 0, 100% 0, 100% calc(100% - 0.40625rem), 100% 100%, 0 100%, 0 0.40625rem);
+  position: relative;
+}
+
+.be-part-of-it-tag-inactive-clip::before {
+  --border-width-half: calc(1px / 2);
+
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  clip-path: polygon(
+    0 0,
+    calc(0.40625rem - (var(--sqrt2) * var(--border-width-half))) 0,
+    0 calc(0.40625rem - (var(--sqrt2) * var(--border-width-half)))
+  );
+  @apply bg-gray-800;
+}
+
+/* line will over the node tag */
+/* .character-relation-graph-wrapper .relation-graph .rel-linediv {
+  z-index: 51;
+} */
+
+.character-relation-css-vars-inject {
+  --background: #f0f0f0;
+  --foreground: #000000;
+  --nav: #f0f0f0;
+  --gradient-from: #ffffff;
+  --gradient-via: #e5ebf5;
+  --gradient-via-percent: 50%;
+  --gradient-to: #cbd6ea;
+  --gradient-rotate: 90deg;
+}

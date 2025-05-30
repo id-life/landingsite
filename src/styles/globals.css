@@ -1,5 +1,6 @@
 @import './webgl.css';
 @import './components/button.css';
+@import './components/character-relation.css';
 @import './loading.css';
 
 @tailwind base;
@@ -20,6 +21,7 @@
     --gradient-via-percent: 50%;
     --gradient-to: #cbd6ea;
     --gradient-rotate: 90deg;
+    --sqrt2: 1.4142135623730951;
   }
 
   /**::-webkit-scrollbar {*/

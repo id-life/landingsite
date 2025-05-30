@@ -1,6 +1,8 @@
-import request, { Response } from '@/apis/request';
-import { TestDataRes } from '@/apis/types';
+import request from '@/apis/request';
+import { AddCharacterRelationData, BaseResponse, CharacterRelationDataResponse } from '@/apis/types';
 
-// TODO: Del fetch test
-export const fetchTestData = (testId?: number) =>
-  request.get<any, Response<TestDataRes[]>>('/api/test', { params: { testId } });
+export const fetchCharacterRelationData = () =>
+  request.get<any, BaseResponse<CharacterRelationDataResponse>>('/official/character-relation');
+
+export const addCharacterRelationData = (data: AddCharacterRelationData) =>
+  request.post<any, Omit<BaseResponse, 'data'>>('/official/character-relation', data);
