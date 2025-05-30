@@ -48,8 +48,8 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'New funding paradigm for unlikely bio projects',
     image: (
       <div className="flex-center gap-4">
-        <img className="w-50 mobile:w-[9.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
-        <img className="w-[9.6875rem] mobile:w-[7.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
+        <img className="w-[9.25rem] mobile:w-[7.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
+        <img className="w-[7.25rem] mobile:w-[5.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
       </div>
     ),
     link: 'https://www.vitadao.com/',
@@ -65,6 +65,11 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'Gold Standard Longevity Services Scaled Globally',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
     link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
+  },
+  {
+    title: 'VIBE SCIENCE',
+    description: 'Builds consumer brain wellness technology',
+    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
   },
 ];
 
