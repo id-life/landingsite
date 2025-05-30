@@ -7,13 +7,27 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { engagementProgressMap } from './engagement/useEngagementJumpTo';
 import { useThrottle } from './useThrottle';
+import { useGSAP } from '@gsap/react';
 
 export function useNavigation() {
-  const isNavScrollingRef = useRef(false);
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
+
+  useGSAP(() => {
+    ScrollTrigger.create({
+      trigger: `#${NAV_LIST[1].id}`,
+      start: 'top bottom',
+      endTrigger: `#${NAV_LIST[1].id}`,
+      end: 'top top',
+      onEnter: () => {
+        if (window.isNavScrolling) return;
+        const height = window.innerHeight;
+        gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
+      },
+    });
+  });
 
   const handleNavClickImpl = useCallback(
     (item: NavItem) => {
@@ -22,16 +36,13 @@ export function useNavigation() {
 
       const id = item.id;
       if (id === NAV_LIST[0].id) {
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false, '1px');
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else if (id === NAV_LIST[1].id) {
         // portfolio 页 偏移 & contact 需要处理
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false);
         requestAnimationFrame(() => {
@@ -41,39 +52,32 @@ export function useNavigation() {
           smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`);
         });
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else if (id === NAV_LIST[2].id) {
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        gsap.set(window, { scrollTo: { y: `#${id}` } });
-        // smoother?.scrollTo(`#${id}`, false);
+        smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('spectrum-trigger');
           if (!st) return;
-          gsap.set(window, { scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+          smoother?.scrollTo(st.start + (st.end - st.start) * 0.4, false);
         });
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else if (id === NAV_LIST[3].id) {
         // engagement 页
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
-        gsap.set(window, { scrollTo: { y: `#${id}` } });
+        smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('engagement-scroll-trigger');
           if (!st) return;
-          gsap.set(window, { scrollTo: { y: st.start + (st.end - st.start) * engagementProgressMap[0] } });
+          smoother?.scrollTo(st.start + (st.end - st.start) * engagementProgressMap[0], false);
         });
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else if (item.id === NAV_LIST[4].id) {
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
         requestAnimationFrame(() => {
@@ -83,11 +87,9 @@ export function useNavigation() {
           smoother?.scrollTo(twinShow, false);
         });
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else if (item.id === NAV_LIST[5].id) {
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
@@ -96,16 +98,13 @@ export function useNavigation() {
           smoother?.scrollTo(st.end, false);
         });
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       } else {
         // 其他 正常滚
-        isNavScrollingRef.current = true;
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false);
         setTimeout(() => {
-          isNavScrollingRef.current = false;
           window.isNavScrolling = false;
         }, 500);
       }
