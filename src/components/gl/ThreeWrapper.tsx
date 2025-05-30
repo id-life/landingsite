@@ -9,8 +9,6 @@ import { EffectComposer } from '@react-three/postprocessing';
 import { useSetAtom } from 'jotai';
 import { Suspense } from 'react';
 import { Fluid } from './fluid/Fluid';
-import { OuterLoader } from './ProgressLoader';
-import Loader from '@/components/gl/Loader';
 import { ErrorBoundary } from 'react-error-boundary';
 
 export default function ThreeWrapper() {
@@ -39,8 +37,7 @@ export default function ThreeWrapper() {
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* <Perf deepAnalyze={true} /> */}
-        <OuterLoader />
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={null}>
           <VisionGL />
           <ValueGL />
         </Suspense>
