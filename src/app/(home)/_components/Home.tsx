@@ -102,12 +102,6 @@ export default function Home() {
         start: 'top bottom',
         end: 'top center',
         scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[3]);
-        },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[3]);
-        },
       },
     });
     engagementTL.to(root, {
@@ -123,12 +117,6 @@ export default function Home() {
         start: 'top bottom',
         end: 'top center',
         scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[4]);
-        },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[4]);
-        },
       },
     });
     twinTL.to(root, {

@@ -1,6 +1,5 @@
 import { currentPageAtom, innerPageIndexAtom, innerPageTotalAtom, navigateToAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,20 +14,6 @@ export function useNavigation() {
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
-
-  useGSAP(() => {
-    ScrollTrigger.create({
-      trigger: `#${NAV_LIST[1].id}`,
-      start: 'top bottom',
-      endTrigger: `#${NAV_LIST[1].id}`,
-      end: 'top top',
-      onEnter: () => {
-        if (isNavScrollingRef.current) return;
-        const height = window.innerHeight;
-        gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
-      },
-    });
-  });
 
   const handleNavClickImpl = useCallback(
     (item: NavItem) => {
