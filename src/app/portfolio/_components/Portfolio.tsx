@@ -2,6 +2,9 @@ import { currentPageAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -9,15 +12,11 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
-import { engagementProgressMap } from '@/hooks/engagement/useEngagementJumpTo';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -31,11 +30,22 @@ function Portfolio() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [imageIdx, setImageIdx] = useState(0);
   const currentPage = useAtomValue(currentPageAtom);
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // profile auto scroll to engagement
+    triggerId: 'portfolio-trigger',
+    scrollFn: () => {
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[1].id) return;
+      const smoother = ScrollSmoother.get();
+      smoother?.scrollTo(`#${NAV_LIST[0].id}`, true, '1px');
+    },
+    isUp: true,
+  });
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     // profile auto scroll to engagement
     triggerId: 'portfolio-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[1].id) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[1].id || window.isNavScrolling) return;
       console.log('Portfolio scrollFn down');
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
@@ -77,7 +87,11 @@ function Portfolio() {
         },
       },
     });
+    tl.add(() => {
+      setEnableUpJudge(true);
+    });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
+
     tl.from('.page2-title', {
       delay: 0.5,
       y: (_, target) => target.offsetHeight,

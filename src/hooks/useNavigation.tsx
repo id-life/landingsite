@@ -23,8 +23,17 @@ export function useNavigation() {
       end: 'top top',
       onEnter: () => {
         if (window.isNavScrolling) return;
-        const height = window.innerHeight;
-        gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[1].id}`, offsetY: -height * 0.85 } });
+        window.isNavScrolling = true;
+        const smoother = ScrollSmoother.get();
+        smoother?.scrollTo(`#${NAV_LIST[1].id}`, false);
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('portfolio-trigger');
+          if (!st) return;
+          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.95 } });
+        });
+        setTimeout(() => {
+          window.isNavScrolling = false;
+        }, 200);
       },
     });
   });
@@ -49,7 +58,6 @@ export function useNavigation() {
           const st = ScrollTrigger.getById('portfolio-trigger');
           if (!st) return;
           gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.965 } });
-          smoother?.scrollTo('.page2-contact', false, `${window.innerHeight}px`);
         });
         setTimeout(() => {
           window.isNavScrolling = false;
