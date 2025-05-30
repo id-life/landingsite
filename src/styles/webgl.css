@@ -51,7 +51,7 @@
 }
 
 #spectrum-particle-container.particle-container.active {
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .particle-container.particle-container-mobile-1.active,

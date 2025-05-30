@@ -36,12 +36,13 @@ const StaticParticleGL = ({
       const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const defaultConfig = {
         scaleNum: 1,
-        loadPercentage: 0.015,
+        loadPercentage: IS_MOBILE ? 0.01 : 0.02,
         resolution: IS_MOBILE ? 15 : 5,
+        particleSize: IS_MOBILE ? 3 : 5,
       };
       const closeEnoughTarget = 100;
       const speed = 3;
-      const particleSize = IS_MOBILE ? 3 : 8;
+      let particleSize = defaultConfig.particleSize;
       let currentImageIdx = 0;
       let isAnimActive: boolean = activeAnim;
       const sourceImgInfos: {
@@ -50,6 +51,7 @@ const StaticParticleGL = ({
         url: string;
         loadPercentage?: number;
         resolution?: number;
+        particleSize?: number;
       }[] = getSourceImgInfos ? getSourceImgInfos(IS_MOBILE) : [];
 
       p5.updateWithProps = (props) => {
@@ -239,8 +241,9 @@ const StaticParticleGL = ({
           loadPercentage = defaultConfig.loadPercentage,
           resolution = defaultConfig.resolution,
           resize = [0, 0],
+          particleSize: configParticleSize,
         } = sourceImgInfos[idx] ?? {};
-
+        particleSize = configParticleSize ?? defaultConfig.particleSize;
         const sourceImg = sourceImgs[idx];
         if (!sourceImg) return;
 

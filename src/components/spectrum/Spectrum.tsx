@@ -19,7 +19,7 @@ gsap.registerPlugin(ScrollTrigger);
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
-  const [imageIdx, setImageIdx] = useState(0);
+  const [imageIdx, setImageIdx] = useState(1);
   const spectrumData = useSpectrumData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -101,17 +101,6 @@ function Spectrum() {
       const wrapper = wrapperRef.current;
       if (!wrapper) return;
 
-      let isMouseInFundArea = false;
-      // add mouse event listeners for the entire fund area
-      wrapper?.addEventListener('mouseenter', () => {
-        isMouseInFundArea = true;
-      });
-
-      wrapper?.addEventListener('mouseleave', () => {
-        isMouseInFundArea = false;
-        throttledSetImageIdx(0);
-      });
-
       spectrumRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         const title = div.querySelector('.spectrum-title');
@@ -129,10 +118,6 @@ function Spectrum() {
         });
         div.addEventListener('mouseleave', () => {
           tl.reverse();
-          // reset the image index only when the mouse actually leaves the entire fund area
-          if (!isMouseInFundArea) {
-            throttledSetImageIdx(0);
-          }
         });
       });
     },
