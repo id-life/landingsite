@@ -1,4 +1,6 @@
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo } from '@/hooks/spectrum/useSpectrumData';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { cloneElement, forwardRef, memo } from 'react';
 
@@ -13,6 +15,9 @@ interface SpectrumItemProps {
 const MobileSpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, isHover }, ref) => {
     const { title, titleCn, icon, links } = item;
+
+    const { trackEvent } = useGA();
+
     return (
       <div
         ref={ref}
@@ -43,6 +48,10 @@ const MobileSpectrumItem = memo(
                       rel="noopener noreferrer"
                       onClick={() => {
                         if (!link && !onClick) return;
+                        trackEvent({
+                          name: GA_EVENT_NAMES.SPECTRUM_CLICK,
+                          label,
+                        });
                         if (onClick) onClick();
                         if (link) window.open(link, '_blank');
                       }}

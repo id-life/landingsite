@@ -38,7 +38,7 @@ export const useSpectrumData = () => {
   const isMobile = useIsMobile();
   const { handleNavClick } = useNavigation();
   const { mobileNavChange } = useMobileNavigation();
-  const { handleClickPoint } = useEngagementClickPoint();
+  const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
