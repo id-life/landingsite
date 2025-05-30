@@ -53,9 +53,7 @@ const StaticParticleGL = ({
       }[] = getSourceImgInfos ? getSourceImgInfos(IS_MOBILE) : [];
 
       p5.updateWithProps = (props) => {
-        if (props.activeAnim !== undefined) {
-          isAnimActive = props.activeAnim;
-        }
+        isAnimActive = props.activeAnim ?? false;
         if (props.imageIdx !== undefined && props.imageIdx !== currentImageIdx) {
           currentImageIdx = props.imageIdx;
           setImageIdx(currentImageIdx);
@@ -159,6 +157,7 @@ const StaticParticleGL = ({
         }
 
         draw() {
+          if (!isAnimActive) return;
           // color blend
           this.currentColor = p5.lerpColor(this.currentColor, this.endColor, this.colorBlendRate);
 
@@ -332,7 +331,7 @@ const StaticParticleGL = ({
 
       return p5;
     };
-  }, [activeAnim, getSourceImgInfos]);
+  }, [getSourceImgInfos]);
 
   return <ReactP5Wrapper sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };

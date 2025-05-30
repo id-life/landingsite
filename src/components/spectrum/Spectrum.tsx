@@ -141,15 +141,13 @@ function Spectrum() {
 
   return (
     <div id={NAV_LIST[2].id} className="page-container spectrum">
-      {active && (
-        <ParticleGL
-          isStatic
-          activeAnim={active}
-          imageIdx={imageIdx}
-          id="spectrum-particle-container"
-          getSourceImgInfos={spectrumGetSourceImgInfos}
-        />
-      )}
+      <ParticleGL
+        isStatic
+        activeAnim={active}
+        imageIdx={imageIdx}
+        id="spectrum-particle-container"
+        getSourceImgInfos={spectrumGetSourceImgInfos}
+      />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
         <div id="spectrum-particle-gl">

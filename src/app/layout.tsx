@@ -95,11 +95,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ClientNav />
           {children}
           <FixedUI />
-          {/**
-           * p5.js has default loading ui, should remove
-           * https://stackoverflow.com/questions/77782145/how-to-customize-p5-js-default-loading-animation-in-preload
-           */}
-          <div id="p5_loading" className="hidden"></div>
           <Background />
         </Providers>
       </body>

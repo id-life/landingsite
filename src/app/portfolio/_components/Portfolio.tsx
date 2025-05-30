@@ -30,7 +30,6 @@ function Portfolio() {
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [imageIdx, setImageIdx] = useState(0);
-  const showParticle = useMemo(() => active, [active]);
   const currentPage = useAtomValue(currentPageAtom);
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
     // profile auto scroll to engagement
@@ -167,14 +166,12 @@ function Portfolio() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      {active && (
-        <ParticleGL
-          activeAnim={showParticle}
-          imageIdx={imageIdx}
-          id="particle-container"
-          getSourceImgInfos={portfolioGetSourceImgInfos}
-        />
-      )}
+      <ParticleGL
+        activeAnim={active}
+        imageIdx={imageIdx}
+        id="particle-container"
+        getSourceImgInfos={portfolioGetSourceImgInfos}
+      />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <div id="particle-gl">
           <div id="particle-container" className={cn('particle-container', { active })}>
