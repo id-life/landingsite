@@ -95,7 +95,7 @@ export default function DragonModel(props: {}) {
         z: 10,
         ease: 'power3.out',
         duration: 1.5,
-        delay: 1,
+        delay: 0.3,
       });
       gsap.from(modelRef.current.rotation, {
         x: Math.PI,
@@ -103,7 +103,7 @@ export default function DragonModel(props: {}) {
         z: Math.PI,
         ease: 'power3.out',
         duration: 1.5,
-        delay: 1,
+        delay: 0.3,
         onComplete: () => {
           clock.start();
           autoSwingRef.current = true;

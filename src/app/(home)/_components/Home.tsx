@@ -24,6 +24,7 @@ import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import Spectrum from '@/components/spectrum/Spectrum';
 import CharacterRelation from '@/components/character-relation/CharacterRelation';
+import { OuterLoader } from '@/components/gl/ProgressLoader';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -144,6 +145,7 @@ export default function Home() {
 
   return (
     <>
+      <OuterLoader />
       <ThreeWrapper />
       <TwinThreeWrapper />
       <div id="wrapper">

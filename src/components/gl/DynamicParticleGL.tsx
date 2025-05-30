@@ -55,9 +55,7 @@ const DynamicParticleGL = ({
       }[] = getSourceImgInfos ? getSourceImgInfos(IS_MOBILE) : [];
 
       p5.updateWithProps = (props) => {
-        if (props.activeAnim) {
-          activeAnim = true;
-        } else activeAnim = false;
+        activeAnim = props.activeAnim ?? false;
         setImageIdx(props?.imageIdx || 0);
         id = props?.id ?? 'particle-container';
         if (canvas) canvas?.parent(id);
@@ -323,7 +321,7 @@ const DynamicParticleGL = ({
 
       return p5;
     };
-  }, [getSourceImgInfos]);
+  }, []);
   return <ReactP5Wrapper sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };
 

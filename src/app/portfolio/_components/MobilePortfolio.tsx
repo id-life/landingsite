@@ -134,7 +134,6 @@ function MobilePortfolio() {
         id="particle-container-mobile-2"
         getSourceImgInfos={portfolioGetSourceImgInfos}
       />
-
       <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
         <div id="particle-gl">
           <div
