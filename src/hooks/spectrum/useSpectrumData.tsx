@@ -179,9 +179,9 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
+            onClick: () => handleCharacterRelationShow(),
           },
         ],
-        onClick: () => handleCharacterRelationShow(),
       },
       {
         title: 'Digital Twin',
@@ -224,7 +224,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickDigitalTwin, handleClickDot]);
+  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot]);
 
   return spectrumData;
 };
