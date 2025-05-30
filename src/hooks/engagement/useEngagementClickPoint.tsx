@@ -8,7 +8,12 @@ import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/eng
 
 export type EngagementClickPointType = 'meeting' | 'book' | 'sponsor';
 
-export function useEngagementClickPoint() {
+/**
+ * Hook to manage engagement click points (meeting, book, sponsor) on the world map.
+ * It handles click and hover events, tracks user interactions, and manages active states.
+ * @param {boolean} needTrack - Whether to track events with Google Analytics.
+ */
+export function useEngagementClickPoint(needTrack = true) {
   const [activeMeetingDot, setActiveMeetingDot] = useAtom(activeMeetingDotAtom);
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
@@ -86,6 +91,8 @@ export function useEngagementClickPoint() {
   }, 400);
 
   function trackEngagementEvent(type: EngagementClickPointType, activeDot: number, action: 'click' | 'mouseenter') {
+    if (!needTrack) return;
+
     const options: TrackEventOptions = {
       name: GA_EVENT_NAMES.PRESENCE_VIEW,
       action,

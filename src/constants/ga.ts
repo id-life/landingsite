@@ -13,6 +13,10 @@ export const GA_EVENT_NAMES = {
   PORTFOLIO_VIEW: 'portfolio_view',
   CONTACT_EMAIL: 'contact_email',
 
+  // spectrum
+  SPECTRUM_HOVER: 'spectrum_hover',
+  SPECTRUM_CLICK: 'spectrum_click',
+
   // engagement
   PRESENCE_VIEW: 'presence_view',
   PRESENCE_DETAIL: 'presence_detail',
@@ -84,6 +88,8 @@ export const GA_EVENT_LABELS = {
   | 'ANATOMY_SWITCH'
   | 'ID_PAGE_VIEW'
   | 'VALUE_VIEW'
+  | 'SPECTRUM_HOVER'
+  | 'SPECTRUM_CLICK'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
