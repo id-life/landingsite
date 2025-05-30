@@ -15,6 +15,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
+import { OuterLoader } from '@/components/gl/ProgressLoader';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
@@ -33,6 +34,7 @@ export default function MobileHome() {
 
   return (
     <>
+      <OuterLoader />
       <MobileThreeWrapper />
       <div id="wrapper" className="">
         <MobileVision />
