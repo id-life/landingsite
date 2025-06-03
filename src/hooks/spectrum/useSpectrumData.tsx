@@ -194,8 +194,7 @@ export const useSpectrumData = () => {
         links: [
           {
             label: '3 Biopolis Dr, Singapore 138623',
-            link: 'https://maps.app.goo.gl/vJKVYdnnjgxaydfq9',
-            isComingSoon: true,
+            link: 'https://maps.app.goo.gl/sXGuujRuCP8nmjJF9',
           },
         ],
       },
@@ -205,11 +204,11 @@ export const useSpectrumData = () => {
         icon: <InternSVG />,
         links: [
           {
-            label: 'Contact Us  Apply (CN)',
+            label: 'Apply (CN)',
             link: 'https://id.life/career',
           },
           {
-            label: 'Contact Us  Apply (EN)',
+            label: 'Apply (EN)',
             link: 'https://id.life/career-en',
           },
         ],
