@@ -18,7 +18,7 @@ const PortfolioItem = memo(
         ref={ref}
         onClick={onClick}
         className={cn(
-          'mobile:flex-center relative h-[17.5rem] w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[30svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
+          'mobile:flex-center relative h-[15.5rem] w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:h-[30svh] mobile:w-[100dvw] mobile:flex-col mobile:pt-0',
           className,
         )}
       >
