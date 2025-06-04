@@ -24,16 +24,16 @@ export function useNavigation() {
       onEnter: () => {
         if (window.isNavScrolling) return;
         window.isNavScrolling = true;
-        const smoother = ScrollSmoother.get();
-        smoother?.scrollTo(`#${NAV_LIST[1].id}`, false);
-        requestAnimationFrame(() => {
-          const st = ScrollTrigger.getById('portfolio-trigger');
-          if (!st) return;
-          gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.95 } });
+        const st = ScrollTrigger.getById('portfolio-trigger');
+        if (!st) return;
+        gsap.to(window, {
+          duration: 3,
+          scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
+          onComplete: () => {
+            window.isNavScrolling = false;
+          },
+          ease: 'power4.inOut',
         });
-        setTimeout(() => {
-          window.isNavScrolling = false;
-        }, 200);
       },
     });
   });

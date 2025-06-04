@@ -36,8 +36,7 @@ function Portfolio() {
     triggerId: 'portfolio-trigger',
     scrollFn: () => {
       if (!enableUpJudge || currentPage.id !== NAV_LIST[1].id) return;
-      const smoother = ScrollSmoother.get();
-      smoother?.scrollTo(`#${NAV_LIST[0].id}`, true, '1px');
+      gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[0].id}` } });
     },
     isUp: true,
   });
@@ -46,7 +45,6 @@ function Portfolio() {
     triggerId: 'portfolio-trigger',
     scrollFn: () => {
       if (!enableJudge || currentPage.id !== NAV_LIST[1].id || window.isNavScrolling) return;
-      console.log('Portfolio scrollFn down');
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
       gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
@@ -87,11 +85,10 @@ function Portfolio() {
         },
       },
     });
+    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
     tl.add(() => {
       setEnableUpJudge(true);
     });
-    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
-
     tl.from('.page2-title', {
       delay: 0.5,
       y: (_, target) => target.offsetHeight,
