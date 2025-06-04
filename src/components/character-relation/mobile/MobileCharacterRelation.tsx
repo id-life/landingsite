@@ -1,9 +1,13 @@
 'use client';
 
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
+import {
+  isMobileBePartOfItShowAtom,
+  isMobileBePartOfItSubmittedAtom,
+  isMobileCharacterRelationShowAtom,
+} from '@/atoms/character-relation';
 import Background from '@/components/common/Background';
 import { FloatingPortal } from '@floating-ui/react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { mobileCurrentPageIndexAtom } from '@/atoms/nav';
@@ -16,11 +20,12 @@ import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
 const MobileCharacterRelation = () => {
   const mobileCurrentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
+  const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isMobileBePartOfItShowAtom);
+  const isMobileBePartOfItSubmitted = useAtomValue(isMobileBePartOfItSubmittedAtom);
 
   const bePartOfItTimerRef = useRef<NodeJS.Timeout | null>(null);
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
-  const [isBePartOfItShow, setIsBePartOfItShow] = useState(false);
 
   const { data } = useFetchCharacterRelation();
 
@@ -39,44 +44,54 @@ const MobileCharacterRelation = () => {
     return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
   }, []);
 
+  const resetBePartOfItTimer = useCallback(() => {
+    if (bePartOfItTimerRef.current) {
+      clearTimeout(bePartOfItTimerRef.current);
+      bePartOfItTimerRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
     if (mobileCurrentPageIndex !== SPECTRUM_PAGE_INDEX) return;
 
     if (isMobileCharacterRelationShow) {
       // Set opening clipPath animation
       setClipPathValue(createClipPath(true));
-
-      // show BePartOfIt after 3 seconds when character relation is shown
-      bePartOfItTimerRef.current = setTimeout(() => {
-        setIsBePartOfItShow(true);
-      }, 3000);
       gsap.set('.base-background2', { opacity: 100, delay: 0.5 });
+      console.log('MobileCharacterRelation: ', isMobileBePartOfItSubmitted);
+      if (!isMobileBePartOfItSubmitted) {
+        // show BePartOfIt after 3 seconds when character relation is shown
+        bePartOfItTimerRef.current = setTimeout(() => {
+          setIsBePartOfItShow(true);
+        }, 3000);
+      } else {
+        resetBePartOfItTimer();
+      }
     } else {
       // Set closing clipPath animation
       setClipPathValue(createClipPath(false));
-
       gsap.set('.base-background2', { opacity: 0 });
-      resetBePartOfItState();
+      resetBePartOfItTimer();
+      setIsBePartOfItShow(false);
     }
 
     return () => {
-      resetBePartOfItState();
+      resetBePartOfItTimer();
     };
-  }, [isMobileCharacterRelationShow, mobileCurrentPageIndex, createClipPath]);
+  }, [
+    isMobileCharacterRelationShow,
+    mobileCurrentPageIndex,
+    isMobileBePartOfItSubmitted,
+    createClipPath,
+    setIsBePartOfItShow,
+    resetBePartOfItTimer,
+  ]);
 
-  function resetBePartOfItState() {
-    if (bePartOfItTimerRef.current) {
-      clearTimeout(bePartOfItTimerRef.current);
-      bePartOfItTimerRef.current = null;
+  const handleBePartOfItClose = useCallback(() => {
+    if (isBePartOfItShow) {
+      setIsBePartOfItShow(false);
     }
-    setIsBePartOfItShow(false);
-  }
-
-  const handleCountdownEnd = useCallback(() => {
-    if (!bePartOfItTimelineRef.current.reversed()) {
-      bePartOfItTimelineRef.current.reverse();
-    }
-  }, []);
+  }, [isBePartOfItShow, setIsBePartOfItShow]);
 
   useEffect(() => {
     if (bePartOfItRef.current) {
@@ -105,23 +120,28 @@ const MobileCharacterRelation = () => {
               top: 0,
             },
             close: {
-              zIndex: -1,
-              opacity: 0,
+              zIndex: 50,
+              opacity: 1,
               clipPath: clipPathValue,
               top: 0,
             },
           }}
           transition={{
             duration: 0.5,
-            ease: 'easeIn',
+            ease: 'easeInOut',
           }}
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
           <Background />
           {isMobileCharacterRelationShow && <CharacterRelationGraph data={data} />}
         </motion.div>
-        {isBePartOfItShow && (
-          <BePartOfIt key="mobile-be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />
+        {isMobileCharacterRelationShow && (
+          <BePartOfIt
+            key="mobile-be-part-of-it-comp"
+            ref={bePartOfItRef}
+            onCountdownEnd={handleBePartOfItClose}
+            onClose={handleBePartOfItClose}
+          />
         )}
       </AnimatePresence>
     </FloatingPortal>

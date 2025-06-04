@@ -10,23 +10,37 @@ import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMutationCharacterRelation } from '@/hooks/useMutationCharacterRelation';
+import CloseSVG from '@/../public/svgs/close-3.svg?component';
+import { useAtomValue, useSetAtom } from 'jotai';
+import {
+  isBePartOfItShowAtom,
+  isBePartOfItSubmittedAtom,
+  isMobileBePartOfItShowAtom,
+  isMobileBePartOfItSubmittedAtom,
+} from '@/atoms/character-relation';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = { character: '', impression: CHARACTER_RELATION_IMPRESSION.GOOD };
 
 interface BePartOfItProps {
   onCountdownEnd?: () => void;
+  onClose?: () => void;
 }
 
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
-  const { onCountdownEnd } = props;
+  const { onCountdownEnd, onClose } = props;
 
   const isMobile = useIsMobile();
+  const isBePartOfItShow = useAtomValue(isBePartOfItShowAtom);
+  const setIsBePartOfItSubmitted = useSetAtom(isBePartOfItSubmittedAtom);
+  const isMobileBePartOfItShow = useAtomValue(isMobileBePartOfItShowAtom);
+  const setIsMobileBePartOfItSubmitted = useSetAtom(isMobileBePartOfItSubmittedAtom);
 
   const [character, setCharacter] = useState<CharacterRelationData['character']>('');
   const [relation, setRelation] = useState<CharacterRelationData['relation']>([CHARACTER_RELATION_PLAIN_DATA]);
 
   const isSubmittingRef = useRef(false);
 
+  const submittedMsgTimelineRef = useRef(gsap.timeline({ paused: true }));
   const submittedMsgRef = useRef<HTMLDivElement>(null);
   const [countdown, setCountdown] = useState(5);
 
@@ -34,6 +48,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     mutateAsync: addCharacterRelationData,
     isPending: isMutationPending,
     isSuccess: isMutationSuccess,
+    reset: resetMutation,
   } = useMutationCharacterRelation();
 
   const handleRelationCharacterChange = (value: string, index: number) => {
@@ -59,6 +74,14 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
   };
 
+  const onMutationSuccess = () => {
+    if (isMobile) {
+      setIsMobileBePartOfItSubmitted(true);
+    } else {
+      setIsBePartOfItSubmitted(true);
+    }
+  };
+
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isMutationPending || isMutationSuccess) return;
@@ -68,7 +91,15 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       relation: relation.filter((rel) => !!rel.character),
     };
 
-    addCharacterRelationData(relationData);
+    addCharacterRelationData(relationData, {
+      onSuccess: () => onMutationSuccess(),
+    });
+  };
+
+  const handleClose = () => {
+    if (isMutationPending || isSubmittingRef.current) return;
+
+    onClose?.();
   };
 
   useEffect(() => {
@@ -84,20 +115,35 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
   useEffect(() => {
     if (isMutationSuccess) {
+      submittedMsgTimelineRef.current.clear();
       if (isMobile) {
-        gsap.to(submittedMsgRef.current, {
+        submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
           bottom: '-1.25rem',
           translateY: '100%',
           opacity: 1,
           zIndex: 102,
         });
       } else {
-        gsap.to(submittedMsgRef.current, {
+        submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
           top: '2.5rem',
         });
       }
+      submittedMsgTimelineRef.current.play(0);
     }
   }, [isMutationSuccess, isMobile]);
+
+  useEffect(() => {
+    if (isBePartOfItShow || isMobileBePartOfItShow) return;
+
+    setTimeout(() => {
+      setCharacter('');
+      setRelation([CHARACTER_RELATION_PLAIN_DATA]);
+      setCountdown(5);
+      submittedMsgTimelineRef.current.revert();
+
+      resetMutation();
+    }, 500);
+  }, [isBePartOfItShow, isMobileBePartOfItShow, resetMutation]);
 
   return (
     <div
@@ -106,9 +152,12 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[51] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
         '-bottom-full mobile:w-full mobile:p-8 mobile:py-5',
+        isMobile && isMutationSuccess && 'mobile:z-[102]',
       )}
     >
       <div className="font-oxanium text-3xl font-bold tracking-normal">BE PART OF IT</div>
+
+      {/* submit msg */}
       <div
         ref={submittedMsgRef}
         className={cn(
@@ -121,6 +170,17 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <span className="inline-block min-w-2.5 text-center">{countdown}</span>
         S)
       </div>
+
+      {/* close */}
+      <div
+        className={cn('absolute right-6 top-6 flex cursor-pointer fill-black', isMutationPending && 'cursor-not-allowed')}
+        onClick={handleClose}
+        onPointerDown={() => (isSubmittingRef.current = true)}
+        onPointerUp={() => (isSubmittingRef.current = false)}
+      >
+        <CloseSVG />
+      </div>
+
       <form className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
         <div className={cn('flex w-full gap-x-6', 'mobile:flex mobile:flex-col')}>
           <BePartOfItInput

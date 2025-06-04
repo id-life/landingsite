@@ -7,19 +7,20 @@ import { currentPageAtom } from '@/atoms';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, ReactNode, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
-import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
+import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import RippleButton from './RippleButton';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
   const [isCharacterRelationShow, setIsCharacterRelationShow] = useAtom(isCharacterRelationShowAtom);
+  const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
 
   return (
     <>
@@ -51,13 +52,19 @@ export default function PCFixedUI() {
       {/*<FixedValue />*/}
       <NewFixedValue />
       {isCharacterRelationShow && (
-        <RippleButton
-          className="fixed bottom-11 left-1/2 z-[51] -translate-x-1/2"
-          onClick={() => setIsCharacterRelationShow(false)}
-        >
-          <BackSVG className="fill-white" />
-          <p className="font-migrena text-base/4 font-bold uppercase text-white">Back</p>
-        </RippleButton>
+        <div className="fixed bottom-11 left-1/2 z-[51] flex -translate-x-1/2 items-center gap-x-7.5">
+          <button
+            className="w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
+            onClick={() => setIsBePartOfItShow(true)}
+          >
+            BE PART OF IT +
+          </button>
+
+          <RippleButton onClick={() => setIsCharacterRelationShow(false)}>
+            <BackSVG className="fill-white" />
+            <p className="font-migrena text-base/4 font-bold uppercase text-white">Back</p>
+          </RippleButton>
+        </div>
       )}
     </>
   );

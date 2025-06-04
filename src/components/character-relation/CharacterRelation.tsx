@@ -1,8 +1,8 @@
 import { CharacterRelationImpression } from '@/apis/types';
-import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
+import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import Background from '@/components/common/Background';
 import { useFloating, FloatingPortal } from '@floating-ui/react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BePartOfIt from './BePartOfIt';
 import gsap from 'gsap';
@@ -35,11 +35,12 @@ export interface CharacterRelationTransformedData {
 const CharacterRelation = () => {
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
+  const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
+  const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
 
   const bePartOfItTimerRef = useRef<NodeJS.Timeout | null>(null);
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
-  const [isBePartOfItShow, setIsBePartOfItShow] = useState(false);
 
   const { refs, floatingStyles } = useFloating();
   const { data } = useFetchCharacterRelation();
@@ -70,39 +71,50 @@ const CharacterRelation = () => {
     }
   }, [isBePartOfItShow, bePartOfItRef]);
 
+  const resetBePartOfItTimer = useCallback(() => {
+    if (bePartOfItTimerRef.current) {
+      clearTimeout(bePartOfItTimerRef.current);
+      bePartOfItTimerRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
     if (currentPageIndex !== SPECTRUM_PAGE_INDEX) return;
 
     if (isCharacterRelationShow) {
       setClipPathValue(createClipPath(true));
 
-      // show BePartOfIt after 3 seconds when character relation is shown
-      bePartOfItTimerRef.current = setTimeout(() => {
-        setIsBePartOfItShow(true);
-      }, 3000);
+      if (!isBePartOfItSubmitted) {
+        // show BePartOfIt after 3 seconds when character relation is shown
+        bePartOfItTimerRef.current = setTimeout(() => {
+          setIsBePartOfItShow(true);
+        }, 3000);
+      } else {
+        resetBePartOfItTimer();
+      }
     } else {
       setClipPathValue(createClipPath(false));
-      resetBePartOfItState();
+      resetBePartOfItTimer();
+      setIsBePartOfItShow(false);
     }
 
     return () => {
-      resetBePartOfItState();
+      resetBePartOfItTimer();
     };
-  }, [isCharacterRelationShow, currentPageIndex, createClipPath]);
+  }, [
+    isCharacterRelationShow,
+    currentPageIndex,
+    isBePartOfItSubmitted,
+    createClipPath,
+    setIsBePartOfItShow,
+    resetBePartOfItTimer,
+  ]);
 
-  function resetBePartOfItState() {
-    if (bePartOfItTimerRef.current) {
-      clearTimeout(bePartOfItTimerRef.current);
-      bePartOfItTimerRef.current = null;
+  const handleBePartOfItClose = useCallback(() => {
+    if (isBePartOfItShow) {
+      setIsBePartOfItShow(false);
     }
-    setIsBePartOfItShow(false);
-  }
-
-  const handleCountdownEnd = useCallback(() => {
-    if (!bePartOfItTimelineRef.current.reversed()) {
-      bePartOfItTimelineRef.current.reverse();
-    }
-  }, []);
+  }, [isBePartOfItShow, setIsBePartOfItShow]);
 
   return (
     <FloatingPortal key="character-relation-portal">
@@ -118,15 +130,15 @@ const CharacterRelation = () => {
               top: 0,
             },
             close: {
-              zIndex: -1,
-              opacity: 0,
+              zIndex: 50,
+              opacity: 1,
               clipPath: clipPathValue,
               top: 0,
             },
           }}
           transition={{
             duration: 0.5,
-            ease: 'easeIn',
+            ease: 'easeInOut',
           }}
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
@@ -135,7 +147,14 @@ const CharacterRelation = () => {
             {isCharacterRelationShow && <CharacterRelationGraph data={data} />}
           </div>
         </motion.div>
-        {isBePartOfItShow && <BePartOfIt key="be-part-of-it-comp" ref={bePartOfItRef} onCountdownEnd={handleCountdownEnd} />}
+        {isCharacterRelationShow && (
+          <BePartOfIt
+            key="be-part-of-it-comp"
+            ref={bePartOfItRef}
+            onCountdownEnd={handleBePartOfItClose}
+            onClose={handleBePartOfItClose}
+          />
+        )}
       </AnimatePresence>
     </FloatingPortal>
   );

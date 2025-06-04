@@ -26,61 +26,79 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   // const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
   // const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
-  const jsonData = useMemo<RGJsonData>(
-    () => ({
-      nodes: Object.entries(data?.individuals || {}).map<JsonNode>(([character, info]) => {
-        const isSpecialNode = info.count > 5;
-        const nodeSize = isSpecialNode ? SPECIAL_NODE_SIZE : BASE_NODE_SIZE + info.count * BASE_NODE_SIZE_DELTA;
+  const jsonData = useMemo<RGJsonData>(() => {
+    let maxCountNode: JsonNode;
 
-        return {
-          id: character,
-          text: character,
-          disableDefaultClickEffect: true,
-          data: {
-            count: info.count,
-            type: info.type,
-            isSpecialNode,
-          },
-          width: nodeSize,
-          height: nodeSize,
-        };
-      }),
+    const nodes = Object.entries(data?.individuals || {}).map<JsonNode>(([character, info]) => {
+      const isSpecialNode = info.count > 5;
+      const nodeSize = isSpecialNode ? SPECIAL_NODE_SIZE : BASE_NODE_SIZE + info.count * BASE_NODE_SIZE_DELTA;
+      const node: JsonNode = {
+        id: character,
+        text: character,
+        disableDefaultClickEffect: true,
+        data: {
+          count: info.count,
+          type: info.type,
+          isSpecialNode,
+        },
+        width: nodeSize,
+        height: nodeSize,
+      };
 
-      lines:
-        data?.relations.reduce<JsonLine[]>((result, curr) => {
-          const id = `${curr.from}-${curr.to}`;
-          const oppositeId = `${curr.to}-${curr.from}`;
+      if (!maxCountNode) {
+        maxCountNode = node;
+      } else {
+        if (info.count > maxCountNode.data?.count) {
+          maxCountNode = node;
+        }
+      }
 
-          const existedLine = result.find((line) => line.id === id || line.id === oppositeId);
+      return node;
+    });
 
-          if (existedLine) {
-            existedLine.color = '#c11111';
-          } else {
-            const isImpressionGood = curr.impression === CHARACTER_RELATION_IMPRESSION.GOOD;
+    const lines =
+      data?.relations.reduce<JsonLine[]>((result, curr) => {
+        const id = `${curr.from}-${curr.to}`;
+        const oppositeId = `${curr.to}-${curr.from}`;
 
-            const line: JsonLine = {
-              id: `${curr.from}-${curr.to}`,
-              from: curr.from,
-              to: curr.to,
-              text: '',
-              isHideArrow: true,
-              styleClass: 'z-10',
-              color: isImpressionGood ? '#c11111' : '#00329a',
-              data: {
-                impression: curr.impression,
-              },
-              fromJunctionPoint: 'border',
-              toJunctionPoint: 'border',
-            };
+        const existedLine = result.find((line) => line.id === id || line.id === oppositeId);
+        const isSelfRelation = curr.from === curr.to;
 
-            result.push(line);
-          }
+        if (existedLine) {
+          existedLine.color = '#c11111';
+        }
+        // if the line is self-relation, skip adding it
+        else if (isSelfRelation) {
+        } else {
+          const isImpressionGood = curr.impression === CHARACTER_RELATION_IMPRESSION.GOOD;
 
-          return result;
-        }, []) || [],
-    }),
-    [data],
-  );
+          const line: JsonLine = {
+            id: `${curr.from}-${curr.to}`,
+            from: curr.from,
+            to: curr.to,
+            text: '',
+            isHideArrow: true,
+            styleClass: 'z-10',
+            color: isImpressionGood ? '#c11111' : '#00329a',
+            data: {
+              impression: curr.impression,
+            },
+            fromJunctionPoint: 'border',
+            toJunctionPoint: 'border',
+          };
+
+          result.push(line);
+        }
+
+        return result;
+      }, []) || [];
+
+    return {
+      rootId: maxCountNode!.id,
+      nodes,
+      lines,
+    };
+  }, [data]);
 
   useEffect(() => {
     renderGraph();
@@ -90,8 +108,8 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
       // Node: https://www.relation-graph.com/#/docs/node
       // Link & Line: https://www.relation-graph.com/#/docs/link
       graphRef.current?.setJsonData(jsonData, (instance: RelationGraphInstance) => {
-        instance.setZoom(78);
         // instance.moveToCenter();
+        // instance.setZoom(78);
       });
     }
 
@@ -128,9 +146,9 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     // https://www.relation-graph.com/?open_in_browser=true#/docs/layout
     layout: {
       layoutName: 'force',
-      maxLayoutTimes: 10000,
-      force_node_repulsion: 0.6,
-      force_line_elastic: 1.4,
+      maxLayoutTimes: 500000,
+      force_node_repulsion: 0.8,
+      force_line_elastic: 1,
       allowAutoLayoutIfSupport: true,
     },
   };
@@ -147,13 +165,13 @@ function CustomNode(props: RGNodeSlotProps) {
   return !!node.data?.isSpecialNode && !isVisitorOnly ? (
     <div className="relative flex h-full w-full items-center justify-center rounded-full bg-[#d9b8be]">
       <div className="h-[76px] w-[76px] rounded-full bg-red-600/20"></div>
-      <div className="absolute left-1/2 top-1/2 h-[40px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600 px-[12px] font-poppins text-[28px] font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
+      <div className="absolute left-1/2 top-1/2 h-[40px] w-max -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600 px-[12px] font-poppins text-[28px] font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
         {node.text}
       </div>
     </div>
   ) : (
     <div className={cn('relative h-full w-full rounded-full', isVisitorOnly ? 'bg-[#00329a]' : 'bg-red-600')}>
-      <div className="absolute right-0 top-1/2 -z-10 h-[28px] -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-poppins text-[16px] font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
+      <div className="absolute right-0 top-1/2 -z-10 h-[28px] w-max -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-poppins text-[16px] font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
         {node.text}
       </div>
     </div>
