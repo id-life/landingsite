@@ -526,7 +526,7 @@ const manageableData = [
 const curableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'names',
-    header: 'Names',
+    header: 'Name',
     cell: (info) => info.getValue(),
   },
   {
@@ -536,7 +536,7 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
   },
   {
     accessorKey: 'introduction',
-    header: 'Introduction',
+    header: 'Introduction to the Disease',
     cell: (info) => info.getValue(),
   },
 ];
@@ -562,7 +562,7 @@ const manageableDiseasesColumns: ColumnDef<DataType>[] = [
 export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
   {
     img: '/imgs/particle/spectrum/09.png',
-    title: 'How many diseases are curable?',
+    title: 'How Many Diseases Are Curable?',
     counts: [801, 669],
     data: curableData,
     columns: curableDiseasesColumns,
@@ -570,7 +570,7 @@ export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
   },
   {
     img: '/imgs/particle/spectrum/10.png',
-    title: 'How many rare diseases are manageable?',
+    title: 'How Many Rare Diseases Are Manageable?',
     counts: [1333, 5332],
     data: manageableData,
     columns: manageableDiseasesColumns,

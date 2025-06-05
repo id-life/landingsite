@@ -20,7 +20,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-  const showDiseaseManagementContent = useAtomValue(showDiseaseManagementContentAtom);
   const [active, setActive] = useState<boolean>(false);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
