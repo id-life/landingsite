@@ -8,21 +8,32 @@ import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom } from 'jotai';
-import { memo, useRef, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { memo, useCallback, useRef, useState } from 'react';
 import ParticleGL from '../gl/ParticleGL';
 import SpectrumItem from './SpectrumItem';
+import DiseaseManagementStatus from './DiseaseManagementStatus';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+  const showDiseaseManagementContent = useAtomValue(showDiseaseManagementContentAtom);
   const [active, setActive] = useState<boolean>(false);
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const [imageIdx, setImageIdx] = useState(1);
-  const spectrumData = useSpectrumData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
+
+  const handleBackToSpectrum = useCallback(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [setIsShowingDiseaseManagement]);
+
+  const spectrumData = useSpectrumData();
+
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
     // engagement auto scroll to profile
     triggerId: 'spectrum-trigger',
@@ -123,6 +134,14 @@ function Spectrum() {
     },
     { scope: wrapperRef, dependencies: [] },
   );
+
+  if (isShowingDiseaseManagement) {
+    return (
+      <div id={NAV_LIST[2].id} className="page-container spectrum">
+        <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+      </div>
+    );
+  }
 
   return (
     <div id={NAV_LIST[2].id} className="page-container spectrum">
