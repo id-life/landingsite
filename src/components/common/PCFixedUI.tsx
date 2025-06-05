@@ -13,6 +13,7 @@ import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
+import DesktopMusicPlayer from '@/components/music/DesktopMusicPlayer';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -47,6 +48,7 @@ export default function PCFixedUI() {
       )}
       <ClientOnly>
         <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
+        <DesktopMusicPlayer className="fixed bottom-15 right-10 z-10" />
       </ClientOnly>
       {/*<FixedValue />*/}
       <NewFixedValue />
