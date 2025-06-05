@@ -56,7 +56,9 @@ export function useLogoTextures(): LogoTextures {
       // texture.flipY = true is the default for proper texture orientation
 
       // Moderate anisotropy - balance between quality and performance
-      texture.anisotropy = Math.min(8, window.devicePixelRatio * 4); // Adaptive based on device capability
+      // Check if window exists to prevent SSR errors
+      const devicePixelRatio = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
+      texture.anisotropy = Math.min(8, devicePixelRatio * 4); // Adaptive based on device capability
 
       // Ensure proper wrapping
       texture.wrapS = THREE.ClampToEdgeWrapping;

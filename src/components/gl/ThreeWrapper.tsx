@@ -7,14 +7,21 @@ import { PerspectiveCamera, Preload } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useSetAtom } from 'jotai';
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Perf } from 'r3f-perf';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
+  const isMounted = useIsMounted();
+
+  const devicePixelRatio = useMemo(() => {
+    if (!isMounted) return 1;
+    return typeof window !== 'undefined' ? window.devicePixelRatio : 1;
+  }, [isMounted]);
 
   const handleClick = useThrottle(() => {
     if (!isMobile) return;
@@ -30,9 +37,9 @@ export default function ThreeWrapper() {
           alpha: true,
           antialias: !isMobile,
           powerPreference: 'high-performance',
-          pixelRatio: Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2),
+          pixelRatio: Math.min(devicePixelRatio, isMobile ? 1.5 : 2),
         }}
-        dpr={Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)}
+        dpr={Math.min(devicePixelRatio, isMobile ? 1.5 : 2)}
         onClick={handleClick}
         fallback={<div>Sorry no WebGL supported!</div>}
       >
