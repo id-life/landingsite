@@ -29,6 +29,7 @@ import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import { ErrorBoundary } from 'react-error-boundary';
+import { Perf } from 'r3f-perf';
 
 export default function TwinThreeWrapper() {
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
@@ -228,6 +229,7 @@ export default function TwinThreeWrapper() {
             }}
             fallback={<div>Sorry no WebGL supported!</div>}
           >
+            {/* {process.env.NODE_ENV === 'development' && <Perf />} */}
             <Suspense fallback={<Loader />}>
               <View.Port />
             </Suspense>
