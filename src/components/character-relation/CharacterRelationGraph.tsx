@@ -107,9 +107,11 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
       // The node and line in the above data can refer to the options in "Node" and "Link & Line" for configuration.
       // Node: https://www.relation-graph.com/#/docs/node
       // Link & Line: https://www.relation-graph.com/#/docs/link
-      graphRef.current?.setJsonData(jsonData, (instance: RelationGraphInstance) => {
+      graphRef.current?.setJsonData(jsonData, async (instance: RelationGraphInstance) => {
         // instance.moveToCenter();
         // instance.setZoom(78);
+        instance.setZoom(0);
+        await instance.animateToZoom(100, 800);
       });
     }
 
