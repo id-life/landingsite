@@ -36,16 +36,16 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         columns={columns}
         data={showedData}
         className="w-full"
-        tableClassName="text-xs border-none"
+        tableClassName="border-none"
         headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
-        headerRowClass="border-none bg-[#191919] top-0"
-        bodyClass="bg-transparent [&_td:last-child]:text-left pt-1"
+        headerRowClass="border-none bg-white/10 backdrop-blur top-0 [&_th]:text-xs"
+        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:pl-5 pt-1"
         rowClass="border-none bg-transparent hover:bg-white/5"
-        cellClass="font-normal pr-2 font-light truncate"
+        cellClass="font-normal text-xs font-light truncate pr-2 py-2.5 max-w-[30svw]"
         stickyHeader={true}
       />
       <div className="p-2.5 text-center">
-        <span className="cursor-pointer font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
+        <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
           See More
         </span>
       </div>
@@ -55,14 +55,14 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
-    <div className="relative flex flex-col space-y-7.5 px-5 pt-[5.1875rem]">
+    <div className="relative flex flex-col space-y-7.5 px-5 pb-20 pt-[5.1875rem]">
       {diseaseManagementStatusItems.map((item) => (
         <DiseaseManagementStatusItem key={item.title} {...item} />
       ))}
 
       <button
         onClick={onBack}
-        className="absolute left-4 top-0 flex items-center gap-1 rounded-md fill-white text-base font-semibold text-white"
+        className="absolute left-4 top-[5.1875rem] flex items-center gap-1 rounded-md fill-white text-base font-semibold text-white"
       >
         <ArrowSVG className="w-4 rotate-90" />
         <span>Back</span>

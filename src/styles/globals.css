@@ -174,7 +174,7 @@
   }
 
   .corner-button-top {
-    @apply corner-button border-b border-white/20 bg-[#191919] backdrop-blur-[50px] backdrop-filter;
+    @apply corner-button border-b border-white/20 bg-white/10 backdrop-blur-[50px] backdrop-filter;
   }
 
   .corner-button-top > span::before,

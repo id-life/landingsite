@@ -100,7 +100,7 @@ function MobileSpectrum() {
     return (
       <div
         id={NAV_LIST[2].id}
-        className={cn('relative text-white', {
+        className={cn('relative h-[100svh] overflow-y-auto text-white', {
           hidden: currentPage?.id !== NAV_LIST[2].id,
         })}
       >

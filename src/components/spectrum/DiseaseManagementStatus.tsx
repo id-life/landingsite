@@ -12,8 +12,8 @@ interface DiseaseManagementStatusProps {
 const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img, title, counts, data, columns, pdf }) => {
   return (
     <div className="flex w-full flex-col items-center font-semibold text-white">
-      <img src={img} alt="" className="mb-[3.125rem] h-[26.125rem]" />
-      <span className="mb-4 text-xl leading-6">{title}</span>
+      <img src={img} alt="" className="mb-[3.125rem] h-[26.125rem] w-[26.125rem]" />
+      <span className="mb-4 text-center text-xl leading-6">{title}</span>
       <div className="mb-1 flex space-x-8 text-2xl leading-7">
         <DotCount className="bg-green-500">{counts[0]}</DotCount>
         <DotCount className="bg-red-500">{counts[1]}</DotCount>
@@ -34,7 +34,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         className="w-full"
         tableClassName="text-xs border-none"
         headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
-        headerRowClass="border-none bg-[#191919] top-0"
+        headerRowClass="border-none bg-white/10 top-0 backdrop-blur"
         bodyClass="bg-transparent [&_td:last-child]:text-left pt-1"
         rowClass="border-none bg-transparent hover:bg-white/5"
         cellClass="font-normal pr-2"
