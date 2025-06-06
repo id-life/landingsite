@@ -12,7 +12,7 @@ export function useFetchCharacterRelation() {
     queryFn: () => fetchCharacterRelationData(),
     select: (res) => {
       const transformedData =
-        res.code === 20000
+        res.code === 200
           ? res.data.reduce<CharacterRelationTransformedData>(
               (result, curr) => {
                 handleIndividual(result.individuals, curr.character, 'visitor');

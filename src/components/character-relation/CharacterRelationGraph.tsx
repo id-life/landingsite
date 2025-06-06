@@ -27,7 +27,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   // const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const jsonData = useMemo<RGJsonData>(() => {
-    let maxCountNode: JsonNode;
+    let maxCountNode: JsonNode | null = null;
 
     const nodes = Object.entries(data?.individuals || {}).map<JsonNode>(([character, info]) => {
       const isSpecialNode = info.count > 5;
@@ -94,7 +94,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
       }, []) || [];
 
     return {
-      rootId: maxCountNode!.id,
+      rootId: maxCountNode ? (maxCountNode as JsonNode).id : undefined,
       nodes,
       lines,
     };
