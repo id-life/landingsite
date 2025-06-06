@@ -53,6 +53,7 @@ export const PodcastData: AudioDataItem[] = [
     description:
       '近期，不朽真龙 Immortal Dragons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body ons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body',
     createdAt: '2025-06-03',
+    xyzLink: 'https://www.xiaoyuzhoufm.com/episode/67d2f2dd0766616acdc41231?s=eyJ1IjogIjVmNGZjZWU4ZTBmNWU3MjNiYmFjNzM3OSJ9',
   },
   {
     id: 5,
@@ -65,6 +66,7 @@ export const PodcastData: AudioDataItem[] = [
     description:
       '近期，不朽真龙 Immortal Dragons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body ons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body',
     createdAt: '2025-06-04',
+    xyzLink: 'https://www.xiaoyuzhoufm.com/episode/67d2fbca0766616acdc60b33?s=eyJ1IjogIjVmNGZjZWU4ZTBmNWU3MjNiYmFjNzM3OSJ9',
   },
   {
     id: 6,
@@ -77,5 +79,7 @@ export const PodcastData: AudioDataItem[] = [
     description:
       '近期，不朽真龙 Immortal Dragons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body ons 完成了对一家 Whole Body Replacement 领域的公司的投资。Whole Body',
     createdAt: '2025-06-05',
+    xyzLink: 'https://www.xiaoyuzhoufm.com/episode/67d414a0e924d4525aa2c606',
+    podcastLink: 'https://brainvat.sg.larksuite.com/minutes/obsgaaqpwa5cyjas9k9f8438?from=from_parent_docs',
   },
 ] as const;

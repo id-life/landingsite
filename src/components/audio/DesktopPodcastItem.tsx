@@ -26,6 +26,11 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onProgressChange }:
     onProgressChange?.(progress);
   };
 
+  const handleOpenLink = (url?: string) => {
+    if (!url) return;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="flex items-start gap-2.5">
       <img className="size-12.5" src={data.album} alt="" />
@@ -65,8 +70,22 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onProgressChange }:
               {dayjs.duration(data.duration, 'seconds').format('m')}min {dayjs(data.createdAt).format('YYYY/MM/DD')}
             </div>
             <div className="flex items-center gap-1">
-              <img className="w-4 cursor-pointer" src="/imgs/player/fm_xiaoyuzhou.png" alt="" />
-              <img className="w-4 cursor-pointer" src="/imgs/player/fm_podcast.png" alt="" />
+              {data.xyzLink && (
+                <img
+                  onClick={() => handleOpenLink(data.xyzLink)}
+                  className="w-4 cursor-pointer"
+                  src="/imgs/player/fm_xiaoyuzhou.png"
+                  alt=""
+                />
+              )}
+              {data.podcastLink && (
+                <img
+                  onClick={() => handleOpenLink(data.podcastLink)}
+                  className="w-4 cursor-pointer"
+                  src="/imgs/player/fm_podcast.png"
+                  alt=""
+                />
+              )}
             </div>
           </div>
         </div>
