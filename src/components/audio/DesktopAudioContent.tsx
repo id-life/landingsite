@@ -2,39 +2,46 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
-import { MusicData, MusicDataItem, PodcastData } from './music-data';
-
-const PlayList = {
-  MUSIC: 'MUSIC',
-  PODCAST: 'PODCAST',
-} as const;
-type PlayListKey = keyof typeof PlayList;
-
-const PlayOrder = {
-  ORDER: 'ORDER',
-  SHUFFLE: 'SHUFFLE',
-  REPEAT: 'REPEAT',
-  REPEAT_ONE: 'REPEAT_ONE',
-} as const;
-type PlayOrderKey = keyof typeof PlayOrder;
+import { AudioDataItem, MusicData, PodcastData } from './audio-data';
+import {
+  audioControlsAtom,
+  currentAudioAtom,
+  playModeAtom,
+  PlayList,
+  PlayListKey,
+  playlistAtom,
+  currentPlayListAtom,
+} from '@/atoms/audio-player';
+import { PlayMode } from '@/atoms/audio-player';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 const underLineClassName =
   'after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-9 after:bg-gray-800';
 
 export default function DesktopMusicContent() {
-  const [currentList, setCurrentList] = useState<PlayListKey>(PlayList.MUSIC);
-  const [playOrder, setPlayOrder] = useState<PlayOrderKey>(PlayOrder.ORDER);
-  const [currentMusic, setCurrentMusic] = useState<MusicDataItem | null>(null);
+  const [currentList, setCurrentList] = useAtom<PlayListKey>(currentPlayListAtom);
+  const playMode = useAtomValue(playModeAtom);
+  const [playlist, setPlaylist] = useAtom(playlistAtom);
+  const [currentMusic, setCurrentMusic] = useAtom(currentAudioAtom);
+  const dispatch = useSetAtom(audioControlsAtom);
 
-  const handleChangeList = (list: keyof typeof PlayList) => {
+  const handleChangeList = (list: PlayListKey) => {
     setCurrentList(list);
   };
 
-  const handleChangePlayOrder = () => {
-    setPlayOrder((v) => {
-      const nextOrder = Object.values(PlayOrder)[(Object.values(PlayOrder).indexOf(v) + 1) % Object.values(PlayOrder).length];
-      return nextOrder;
-    });
+  const handleChangePlayMode = () => {
+    const nextMode = Object.values(PlayMode)[(Object.values(PlayMode).indexOf(playMode) + 1) % Object.values(PlayMode).length];
+    dispatch({ type: 'SET_PLAY_MODE', value: nextMode });
+  };
+
+  const handleChangeAudio = (audio: AudioDataItem) => {
+    setCurrentMusic(audio);
+    if (audio.type === playlist[0].type) return;
+    if (audio.type === PlayList.MUSIC) {
+      setPlaylist(MusicData);
+    } else {
+      setPlaylist(PodcastData);
+    }
   };
 
   return (
@@ -55,28 +62,28 @@ export default function DesktopMusicContent() {
           </div>
         </div>
         <div
-          onClick={handleChangePlayOrder}
+          onClick={handleChangePlayMode}
           className="flex-center h-6.5 cursor-pointer select-none gap-0.5 rounded-full bg-white px-2 text-center text-ss/3 font-semibold"
         >
-          {playOrder === PlayOrder.ORDER && (
+          {playMode === PlayMode.ORDER && (
             <>
               <img className="w-4" src="/svgs/player/play_order.svg" alt="" />
               <div className="w-18">Play in Order</div>
             </>
           )}
-          {playOrder === PlayOrder.SHUFFLE && (
+          {playMode === PlayMode.SHUFFLE && (
             <>
               <img className="w-4" src="/svgs/player/play_shuffle.svg" alt="" />
               <div className="w-18">Shuffle</div>
             </>
           )}
-          {playOrder === PlayOrder.REPEAT && (
+          {playMode === PlayMode.REPEAT_ALL && (
             <>
               <img className="w-4" src="/svgs/player/play_repeat.svg" alt="" />
               <div className="w-18">Repeat All</div>
             </>
           )}
-          {playOrder === PlayOrder.REPEAT_ONE && (
+          {playMode === PlayMode.REPEAT_ONE && (
             <>
               <img className="w-4" src="/svgs/player/play_repeat_one.svg" alt="" />
               <div className="w-18">Repeat One</div>
@@ -88,19 +95,21 @@ export default function DesktopMusicContent() {
         {currentList === PlayList.MUSIC &&
           MusicData.map((item) => (
             <DesktopMusicItem
-              currentMusicId={currentMusic?.id}
               key={item.id}
               data={item}
-              onClick={() => setCurrentMusic(item)}
+              currentMusicId={currentMusic?.id}
+              onClick={() => handleChangeAudio(item)}
+              onProgressChange={(value) => dispatch({ type: 'SEEK_TO', value })}
             />
           ))}
         {currentList === PlayList.PODCAST &&
           PodcastData.map((item) => (
             <DesktopPodcastItem
-              currentMusicId={currentMusic?.id}
-              onClick={() => setCurrentMusic(item)}
               key={item.id}
               data={item}
+              currentMusicId={currentMusic?.id}
+              onClick={() => handleChangeAudio(item)}
+              onProgressChange={(value) => dispatch({ type: 'SEEK_TO', value })}
             />
           ))}
       </div>

@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
+import { useAtom, useSetAtom } from 'jotai';
+import { MusicData } from './audio-data';
 import * as Popover from '@radix-ui/react-popover';
+import DesktopMusicContent from './DesktopAudioContent';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
-import DesktopMusicContent from './DesktopMusicContent';
+import { currentAudioAtom, currentPlayStatusAtom, playlistAtom } from '@/atoms/audio-player';
+import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 
-function DesktopMusicPlayer({ className }: { className?: string }) {
-  const [playStatus, setPlayStatus] = useState(false);
+function DesktopAudioPlayer({ className }: { className?: string }) {
+  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
   const [isOpen, setIsOpen] = useState(false);
+  const setCurrentMusic = useSetAtom(currentAudioAtom);
+  const setPlaylistAtom = useSetAtom(playlistAtom);
+  const { data } = useCurrentMusicControl();
+
+  useEffect(() => {
+    setCurrentMusic(MusicData[0]);
+    setPlaylistAtom(MusicData);
+  }, [setCurrentMusic]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -25,9 +37,9 @@ function DesktopMusicPlayer({ className }: { className?: string }) {
           )}
         >
           <div className="flex-1"></div>
-          <div className="w-37 truncate text-xs/3.5 font-semibold text-background">我们为何投资 Whole Body Replacement</div>
+          <div className="w-37 truncate text-xs/3.5 font-semibold text-background">{data?.title}</div>
           <div onClick={handleChangePlayStatus} className="size-4">
-            {playStatus ? <PlaySVG className="w-full fill-background" /> : <PauseSVG className="w-full fill-background" />}
+            {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>
         </div>
       </Popover.Trigger>
@@ -41,4 +53,4 @@ function DesktopMusicPlayer({ className }: { className?: string }) {
   );
 }
 
-export default React.memo(DesktopMusicPlayer);
+export default React.memo(DesktopAudioPlayer);
