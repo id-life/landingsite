@@ -1,5 +1,5 @@
 import { currentPageAtom } from '@/atoms';
-import ParticleGL from '@/components/gl/ParticleGL';
+import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';

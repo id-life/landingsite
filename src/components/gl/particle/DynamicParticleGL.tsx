@@ -1,10 +1,11 @@
 import { P5CanvasInstance, ReactP5Wrapper, SketchProps } from '@p5-wrapper/react';
 import P5 from 'p5';
 import { useMemo } from 'react';
+import { Particle } from './particle-stuct';
 
 export const fundLogoLength = 2;
 
-type MySketchProps = SketchProps & {
+export type MySketchProps = SketchProps & {
   activeAnim: boolean;
   imageIdx: number;
   id?: string;
@@ -40,11 +41,6 @@ const DynamicParticleGL = ({
         loadPercentage: 0.0007,
         resolution: IS_MOBILE ? 15 : 5,
       };
-      const closeEnoughTarget = 100;
-      const speed = 3;
-      const particleSize = IS_MOBILE ? 4 : 8;
-      const mouseSize = 50;
-      const scaleRatio = 1;
       let activeAnim = false;
       const sourceImgInfos: {
         scaleNum?: number;
@@ -60,161 +56,6 @@ const DynamicParticleGL = ({
         id = props?.id ?? 'particle-container';
         if (canvas) canvas?.parent(id);
       };
-
-      function generateRandomPos(x: number, y: number, mag: number) {
-        const pos = new P5.Vector(x, y);
-
-        const randomDirection = new P5.Vector(p5.random(p5.width), p5.random(p5.height));
-
-        const vel = P5.Vector.sub(randomDirection, pos);
-        vel.normalize();
-        vel.mult(mag);
-        pos.add(vel);
-
-        return pos;
-      }
-
-      /**
-   particle.js https://openprocessing.org/sketch/2097742
-   A particle that uses a seek behaviour to move to its target.
-   @param {number} x
-   @param {number} y
-   */
-      class Particle {
-        pos: P5.Vector;
-        vel: P5.Vector;
-        acc: P5.Vector;
-        target: P5.Vector;
-        isKilled: boolean;
-
-        maxSpeed: number;
-        maxForce: number;
-
-        currentColor: P5.Color;
-        endColor: P5.Color;
-        colorBlendRate: number;
-
-        currentSize: number;
-        distToTarget: number;
-
-        noiseOffsetX: number;
-        noiseOffsetY: number;
-
-        constructor(x: number, y: number) {
-          this.pos = new P5.Vector(x, y);
-          this.vel = new P5.Vector(0, 0);
-          this.acc = new P5.Vector(0, 0);
-          this.target = new P5.Vector(0, 0);
-          this.isKilled = false;
-
-          this.maxSpeed = p5.random(0.25, 2); // How fast it can move per frame.
-          this.maxForce = p5.random(8, 15); // Its speed limit.
-
-          this.currentColor = p5.color(0);
-          this.endColor = p5.color(0);
-          this.colorBlendRate = p5.random(0.01, 0.05);
-
-          this.currentSize = 0;
-
-          // Saving as class const so it doesn't need to calculate twice.
-          this.distToTarget = 0;
-
-          this.noiseOffsetX = p5.random(1000); // 噪声偏移量X
-          this.noiseOffsetY = p5.random(1000); // 噪声偏移量Y
-          // console.log('this.pos', this.pos);
-        }
-
-        public move() {
-          // 添加基于噪声的轻微扰动
-          const noiseScale = 0.005; // 噪声的缩放系数
-          const noiseStrength = 0.6; // 噪声的强度
-          this.acc.add(
-            p5.noise(this.noiseOffsetX + this.pos.x * noiseScale, this.pos.y * noiseScale) * noiseStrength - noiseStrength / 2,
-            p5.noise(this.noiseOffsetY + this.pos.y * noiseScale, this.pos.x * noiseScale) * noiseStrength - noiseStrength / 2,
-          );
-
-          this.distToTarget = p5.dist(this.pos.x, this.pos.y, this.target.x, this.target.y);
-
-          // If it's close enough to its target, the slower it'll get
-          // so that it can settle.
-          let proximityMult = 1;
-          if (this.distToTarget < closeEnoughTarget) {
-            proximityMult = this.distToTarget / closeEnoughTarget;
-            this.vel.mult(0.9);
-          } else {
-            proximityMult = 1;
-            this.vel.mult(0.95);
-          }
-
-          // Steer towards its target.
-          if (this.distToTarget > 1) {
-            const steer = P5.Vector.sub(this.target, this.pos);
-            steer.normalize();
-            steer.mult(this.maxSpeed * proximityMult * speed);
-            this.acc.add(steer);
-          }
-
-          const scaledMouseX = p5.mouseX / scaleRatio;
-          const scaledMouseY = p5.mouseY / scaleRatio;
-
-          const mouseDist = p5.dist(this.pos.x, this.pos.y, scaledMouseX, scaledMouseY);
-
-          // Interact with mouse.
-          let push = new P5.Vector(0, 0);
-          if (mouseDist < mouseSize) {
-            if (p5.mouseIsPressed) {
-              // Push towards mouse.
-              push = new P5.Vector(scaledMouseX, scaledMouseY);
-              push.sub(new P5.Vector(this.pos.x, this.pos.y));
-            } else {
-              // Push away from mouse.
-              push = new P5.Vector(this.pos.x, this.pos.y);
-              push.sub(new P5.Vector(scaledMouseX, scaledMouseY));
-            }
-            push.normalize();
-            push.mult((mouseSize - mouseDist) * 0.05);
-            this.acc.add(push);
-          }
-
-          // Move it.
-          this.vel.add(this.acc);
-          this.vel.limit(this.maxForce * speed);
-          this.pos.add(this.vel);
-          this.acc.mult(0);
-          this.noiseOffsetX += 0.01;
-          this.noiseOffsetY += 0.01;
-        }
-
-        public draw() {
-          if (!activeAnim) return;
-          this.currentColor = p5.lerpColor(this.currentColor, this.endColor, this.colorBlendRate);
-          p5.stroke(this.currentColor);
-
-          let targetSize = 2;
-          if (!this.isKilled) {
-            // Size is bigger the closer it is to its target.
-            targetSize = p5.map(p5.min(this.distToTarget, closeEnoughTarget), closeEnoughTarget, 0, 0, particleSize);
-          } else {
-            targetSize = 2;
-          }
-
-          this.currentSize = p5.lerp(this.currentSize, targetSize, 0.1);
-          p5.strokeWeight(this.currentSize);
-          p5.point(this.pos.x, this.pos.y);
-        }
-
-        public kill() {
-          if (!this.isKilled) {
-            this.target = generateRandomPos(p5.width / 2, p5.height / 2, p5.max(p5.width, p5.height));
-            this.endColor = p5.color(0);
-            this.isKilled = true;
-          }
-        }
-
-        public isOutOfBounds() {
-          return this.pos.x < 0 || this.pos.x > p5.width || this.pos.y < 0 || this.pos.y > p5.height;
-        }
-      }
 
       p5.preload = () => {
         // console.log('p5.preload 开始执行');
@@ -288,7 +129,7 @@ const DynamicParticleGL = ({
               newParticle = allParticles[index];
             } else {
               // Create a new particle.
-              newParticle = new Particle(p5.width / 2, p5.height / 2);
+              newParticle = new Particle(p5.width / 2, p5.height / 2, p5);
               allParticles.push(newParticle);
               // console.log('创建了新粒子', newParticle);
             }
@@ -321,7 +162,7 @@ const DynamicParticleGL = ({
 
       return p5;
     };
-  }, []);
+  }, [getSourceImgInfos]);
   return <ReactP5Wrapper sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };
 
