@@ -1,39 +1,63 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
+import WaveSurfer from 'wavesurfer.js';
 import { AudioDataItem } from './audio-data';
 import { downloadFile } from '@/utils/download';
-import { audioControlsAtom } from '@/atoms/audio-player';
+import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
 
 type DesktopMusicItemProps = {
   onClick?: () => void;
   data: AudioDataItem;
   currentMusicId?: number;
-  onProgressChange?: (value: number) => void;
+  onSeekTo?: (value: number) => void;
 };
 
-function DesktopMusicItem({ onClick, data, currentMusicId, onProgressChange }: DesktopMusicItemProps) {
+function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMusicItemProps) {
   const controls = useAtomValue(audioControlsAtom);
+  const playStatus = useAtomValue(currentPlayStatusAtom);
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const wavesurferRef = useRef<WaveSurfer | null>(null);
 
   const handleDownload = () => {
     if (!data) return;
     downloadFile(data.url, `${data.title}-${data.artist}`);
   };
 
-  const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
-    const { left, width } = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - left;
-    const progress = x / width;
-    onProgressChange?.(progress);
-  };
+  useEffect(() => {
+    if (wavesurferRef.current) return;
+    if (!containerRef.current || !isCurrent) return;
+    const wavesurfer = WaveSurfer.create({
+      container: containerRef.current,
+      height: 'auto',
+      waveColor: '#BDBDBD',
+      progressColor: '#C11111',
+      cursorWidth: 0,
+      barWidth: 2,
+      barGap: 2,
+      barAlign: 'bottom',
+      url: data.url,
+    });
+    wavesurfer.setMuted(true);
+    wavesurfer.on('interaction', (newTime) => {
+      onSeekTo?.(newTime);
+    });
+    wavesurferRef.current = wavesurfer;
+  }, [data.url, isCurrent, onSeekTo]);
+
+  useEffect(() => {
+    if (!wavesurferRef.current) return;
+    if (playStatus && isCurrent) {
+      wavesurferRef.current.setTime(controls.currentTime);
+    }
+  }, [playStatus, isCurrent, controls.currentTime]);
 
   return (
     <div className="">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-0.5">
           {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
-
           <div onClick={onClick} className={clsx('cursor-pointer text-xs/5 font-semibold', isCurrent && 'text-red-600')}>
             <div></div>
             {data.title} - {data.artist}
@@ -43,17 +67,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onProgressChange }: D
           <img onClick={handleDownload} className="w-4 cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
         ) : null}
       </div>
-      {isCurrent ? (
-        <div onClick={handleProgressChange} className="relative mt-1 cursor-pointer overflow-hidden">
-          <img
-            style={{ clipPath: `inset(0 calc(100% - ${controls.progress * 100}%) 0 0)` }}
-            className="absolute left-0 top-0 w-full object-cover"
-            src="/imgs/player/play_bg_red.png"
-            alt=""
-          />
-          <img className="w-full object-cover" src="/imgs/player/play_bg_gray.png" alt="" />
-        </div>
-      ) : null}
+      <div ref={containerRef} className={clsx('relative mt-1 h-0 cursor-pointer overflow-hidden', isCurrent && 'h-5')} />
     </div>
   );
 }

@@ -27,6 +27,7 @@
     "@tsparticles/slim": "^3.8.1",
     "@types/lodash-es": "^4.17.12",
     "@types/p5": "^1.7.6",
+    "@wavesurfer/react": "^1.0.11",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -58,7 +59,8 @@
     "tailwind-merge": "^2.5.2",
     "three": "0.169.0",
     "twgl.js": "^5.5.4",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "wavesurfer.js": "^7.9.5"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

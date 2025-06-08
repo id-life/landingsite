@@ -48,8 +48,8 @@ export const audioControlsAtom = atom(
     switch (type) {
       case 'SEEK_TO':
         if (audioRef && !isNaN(audioRef.duration)) {
-          audioRef.currentTime = audioRef.duration * value;
-          set(progressAtom, value);
+          audioRef.currentTime = value;
+          set(progressAtom, value / audioRef.duration);
           set(currentTimeAtom, audioRef.currentTime);
         }
         break;

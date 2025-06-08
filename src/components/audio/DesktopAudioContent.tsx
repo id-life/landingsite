@@ -99,7 +99,7 @@ export default function DesktopMusicContent() {
               data={item}
               currentMusicId={currentMusic?.id}
               onClick={() => handleChangeAudio(item)}
-              onProgressChange={(value) => dispatch({ type: 'SEEK_TO', value })}
+              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
             />
           ))}
         {currentList === PlayList.PODCAST &&
@@ -109,7 +109,7 @@ export default function DesktopMusicContent() {
               data={item}
               currentMusicId={currentMusic?.id}
               onClick={() => handleChangeAudio(item)}
-              onProgressChange={(value) => dispatch({ type: 'SEEK_TO', value })}
+              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
             />
           ))}
       </div>

@@ -12,10 +12,10 @@ type DesktopPodcastItemProps = {
   data: AudioDataItem;
   onClick: () => void;
   currentMusicId?: number;
-  onProgressChange?: (value: number) => void;
+  onSeekTo?: (value: number) => void;
 };
 
-function DesktopPodcastItem({ data, onClick, currentMusicId, onProgressChange }: DesktopPodcastItemProps) {
+function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo }: DesktopPodcastItemProps) {
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const controls = useAtomValue(audioControlsAtom);
 
@@ -23,7 +23,8 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onProgressChange }:
     const { left, width } = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - left;
     const progress = x / width;
-    onProgressChange?.(progress);
+    const seekTo = progress * controls.duration;
+    onSeekTo?.(seekTo);
   };
 
   const handleOpenLink = (url?: string) => {
