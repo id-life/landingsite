@@ -55,7 +55,7 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://www.vitadao.com/',
   },
   {
-    title: 'Unlimited Health',
+    title: 'Unlimited bio',
     description: 'Accelerate clinical trials',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
     link: 'https://www.unlimit.bio/',
