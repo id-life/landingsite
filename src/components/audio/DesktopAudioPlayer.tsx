@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
-import { useAtom, useSetAtom } from 'jotai';
 import { MusicData } from './audio-data';
+import { useAtom, useSetAtom } from 'jotai';
 import * as Popover from '@radix-ui/react-popover';
 import DesktopMusicContent from './DesktopAudioContent';
+import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
-import { currentAudioAtom, currentPlayStatusAtom, playlistAtom } from '@/atoms/audio-player';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
+import { currentAudioAtom, currentPlayStatusAtom, playlistAtom } from '@/atoms/audio-player';
 
 function DesktopAudioPlayer({ className }: { className?: string }) {
-  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
-  const [isOpen, setIsOpen] = useState(false);
-  const setCurrentMusic = useSetAtom(currentAudioAtom);
-  const setPlaylistAtom = useSetAtom(playlistAtom);
   const { data } = useCurrentMusicControl();
+  const [isOpen, setIsOpen] = useState(false);
+  const setPlaylistAtom = useSetAtom(playlistAtom);
+  const setCurrentMusic = useSetAtom(currentAudioAtom);
+  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
 
   useEffect(() => {
     setCurrentMusic(MusicData[0]);
     setPlaylistAtom(MusicData);
-  }, [setCurrentMusic]);
+  }, [setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -32,11 +33,11 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <div
           onClick={() => setIsOpen((v) => !v)}
           className={clsx(
-            'flex w-71 cursor-pointer gap-2.5 rounded-full bg-foreground px-2 py-1 transition duration-300 hover:scale-110',
+            'flex w-71 cursor-pointer items-center gap-2.5 rounded-full bg-foreground px-2 transition duration-300 hover:scale-110',
             className,
           )}
         >
-          <div className="flex-1"></div>
+          <DesktopAudioSiriWave />
           <div className="w-37 truncate text-xs/3.5 font-semibold text-background">{data?.title}</div>
           <div onClick={handleChangePlayStatus} className="size-4">
             {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}

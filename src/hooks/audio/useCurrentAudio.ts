@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { currentAudioAtom, currentPlayStatusAtom, PlayModeKey, playNextTrackAtom } from '@/atoms/audio-player';
 import {
@@ -87,23 +87,5 @@ export default function useCurrentAudio() {
     }
   }, [playStatus, controls.canPlay, audioRef]);
 
-  const seekTo = (value: number) => {
-    dispatch({ type: 'SEEK_TO', value });
-  };
-
-  const nextTrack = () => {
-    dispatch({ type: 'PLAY_NEXT' });
-  };
-
-  const setPlayMode = (mode: PlayModeKey) => {
-    dispatch({ type: 'SET_PLAY_MODE', value: mode });
-  };
-
-  return {
-    data: currentAudio,
-    ...controls,
-    seekTo,
-    nextTrack,
-    setPlayMode,
-  };
+  return useMemo(() => ({ data: currentAudio, ...controls }), [controls, currentAudio]);
 }
