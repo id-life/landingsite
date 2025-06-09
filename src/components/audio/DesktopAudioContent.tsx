@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
 import { AudioDataItem, MusicData, PodcastData } from './audio-data';
@@ -91,27 +90,27 @@ export default function DesktopMusicContent() {
           )}
         </div>
       </div>
-      <div className="mt-5 grid grid-cols-1 gap-5">
-        {currentList === PlayList.MUSIC &&
-          MusicData.map((item) => (
-            <DesktopMusicItem
-              key={item.id}
-              data={item}
-              currentMusicId={currentMusic?.id}
-              onClick={() => handleChangeAudio(item)}
-              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
-            />
-          ))}
-        {currentList === PlayList.PODCAST &&
-          PodcastData.map((item) => (
-            <DesktopPodcastItem
-              key={item.id}
-              data={item}
-              currentMusicId={currentMusic?.id}
-              onClick={() => handleChangeAudio(item)}
-              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
-            />
-          ))}
+      <div className={clsx('mt-5 grid grid-cols-1 gap-5', currentList !== PlayList.MUSIC && 'hidden')}>
+        {MusicData.map((item) => (
+          <DesktopMusicItem
+            key={item.id}
+            data={item}
+            currentMusicId={currentMusic?.id}
+            onClick={() => handleChangeAudio(item)}
+            onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
+          />
+        ))}
+      </div>
+      <div className={clsx('mt-5 grid grid-cols-1 gap-5', currentList !== PlayList.PODCAST && 'hidden')}>
+        {PodcastData.map((item) => (
+          <DesktopPodcastItem
+            key={item.id}
+            data={item}
+            currentMusicId={currentMusic?.id}
+            onClick={() => handleChangeAudio(item)}
+            onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
+          />
+        ))}
       </div>
     </div>
   );

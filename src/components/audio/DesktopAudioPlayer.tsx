@@ -45,8 +45,13 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         </div>
       </Popover.Trigger>
       <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
-      <Popover.Portal>
-        <Popover.Content align="end" sideOffset={16} className="z-10 w-100 rounded-lg border-2 border-white bg-[#cbd6ea] p-5">
+      <Popover.Portal forceMount>
+        <Popover.Content
+          forceMount
+          align="end"
+          sideOffset={16}
+          className="z-10 w-100 rounded-lg border-2 border-white bg-[#cbd6ea] p-5 data-[state=closed]:hidden"
+        >
           <DesktopMusicContent />
         </Popover.Content>
       </Popover.Portal>

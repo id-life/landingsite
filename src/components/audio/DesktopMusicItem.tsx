@@ -67,7 +67,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMu
           <img onClick={handleDownload} className="w-4 cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
         ) : null}
       </div>
-      <div ref={containerRef} className={clsx('relative mt-1 h-0 cursor-pointer overflow-hidden', isCurrent && 'h-5')} />
+      <div ref={containerRef} className={clsx('relative mt-1 h-5 cursor-pointer overflow-hidden', !isCurrent && 'hidden')} />
     </div>
   );
 }
