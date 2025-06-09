@@ -33,11 +33,11 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo }: Desktop
   };
 
   return (
-    <div className="flex items-start gap-2.5">
+    <div className="flex items-start gap-2.5 mobile:w-full mobile:overflow-hidden">
       <img className="size-12.5" src={data.album} alt="" />
-      <div className="flex items-start gap-0.5">
+      <div className="flex items-start gap-0.5 mobile:w-[calc(100%_-_60px)]">
         {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
-        <div className={clsx(isCurrent ? 'w-71' : 'w-75')}>
+        <div className={clsx(isCurrent ? 'w-71 mobile:w-[calc(100%_-_20px)]' : 'w-75 mobile:w-full')}>
           <div
             onClick={onClick}
             className={clsx('w-full cursor-pointer truncate text-xs/5 font-semibold', isCurrent && 'text-red-600')}
