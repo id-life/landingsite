@@ -16,6 +16,7 @@ import gsap from 'gsap';
 import BePartOfIt from '../BePartOfIt';
 import CharacterRelationGraph from '../CharacterRelationGraph';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
+import CharacterRelationLegend from '../CharacterRelationLegend';
 
 const MobileCharacterRelation = () => {
   const mobileCurrentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
@@ -134,6 +135,7 @@ const MobileCharacterRelation = () => {
         >
           <Background />
           {isMobileCharacterRelationShow && <CharacterRelationGraph data={data} />}
+          <CharacterRelationLegend />
         </motion.div>
         {isMobileCharacterRelationShow && (
           <BePartOfIt

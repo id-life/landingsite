@@ -11,6 +11,7 @@ import { currentPageIndexAtom } from '@/atoms';
 import { SPECTRUM_PAGE_INDEX } from '@/constants/config';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
 import { AnimatePresence, motion } from 'motion/react';
+import CharacterRelationLegend from './CharacterRelationLegend';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -146,6 +147,7 @@ const CharacterRelation = () => {
           <div ref={refs.setFloating} style={floatingStyles} className="character-relation-graph-wrapper h-full w-full">
             {isCharacterRelationShow && <CharacterRelationGraph data={data} />}
           </div>
+          <CharacterRelationLegend />
         </motion.div>
         {isCharacterRelationShow && (
           <BePartOfIt

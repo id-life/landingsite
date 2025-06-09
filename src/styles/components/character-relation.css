@@ -96,3 +96,29 @@
   --gradient-to: #cbd6ea;
   --gradient-rotate: 90deg;
 }
+
+.legend-button {
+  --border-width: 2px;
+
+  &::before,
+  &::after,
+  section::after,
+  section::before {
+    content: '';
+    display: block;
+    border-width: var(--border-width);
+    @apply absolute size-3 border-red-600;
+  }
+  &::before {
+    @apply left-0 top-0 -translate-x-[calc(var(--border-width)/2)] border-b-0 border-r-0;
+  }
+  &::after {
+    @apply right-0 top-0 translate-x-[calc(var(--border-width)/2)] border-b-0 border-l-0;
+  }
+  & > section::before {
+    @apply bottom-0 left-0 -translate-x-[calc(var(--border-width)/2)] border-r-0 border-t-0;
+  }
+  & > section::after {
+    @apply bottom-0 right-0 translate-x-[calc(var(--border-width)/2)] border-l-0 border-t-0;
+  }
+}
