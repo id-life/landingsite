@@ -135,7 +135,7 @@ const DynamicParticleGL = ({
               newParticle = allParticles[index];
             } else {
               // Create a new particle.
-              newParticle = new Particle(p5.width / 2, p5.height / 2, p5);
+              newParticle = new Particle(p5.width / 2, p5.height / 2, p5, IS_MOBILE);
               allParticles.push(newParticle);
               // console.log('创建了新粒子', newParticle);
             }

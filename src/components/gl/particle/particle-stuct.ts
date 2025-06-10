@@ -55,7 +55,7 @@ export class Particle {
   private tempVec2: P5.Vector;
   private tempVec3: P5.Vector;
 
-  constructor(x: number, y: number, p5: P5CanvasInstance<MySketchProps>, config?: ParticleConfig, isMobile?: boolean) {
+  constructor(x: number, y: number, p5: P5CanvasInstance<MySketchProps>, isMobile?: boolean, config?: ParticleConfig) {
     this.p5 = p5;
     this.config = config ?? {
       closeEnoughTarget: 100,
