@@ -9,7 +9,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import ParticleGL from '../gl/ParticleGL';
+import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import MobileDiseaseManagementStatus from './MobileDiseaseManagementStatus';

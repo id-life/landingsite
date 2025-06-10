@@ -10,7 +10,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useRef, useState } from 'react';
-import ParticleGL from '../gl/ParticleGL';
+import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 import DiseaseManagementStatus from './DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';

@@ -1,5 +1,5 @@
 import { mobileCurrentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
-import ParticleGL from '@/components/gl/ParticleGL';
+import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { cn } from '@/utils';
