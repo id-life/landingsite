@@ -2,7 +2,7 @@ import { P5CanvasInstance } from '@p5-wrapper/react';
 import P5 from 'p5';
 import { MySketchProps } from './DynamicParticleGL';
 
-function generateRandomPos(x: number, y: number, mag: number, p5: P5CanvasInstance<MySketchProps>) {
+export function generateRandomPos(x: number, y: number, mag: number, p5: P5CanvasInstance<MySketchProps>) {
   const pos = new P5.Vector(x, y);
 
   const randomDirection = new P5.Vector(p5.random(p5.width), p5.random(p5.height));
