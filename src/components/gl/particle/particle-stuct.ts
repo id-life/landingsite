@@ -50,6 +50,11 @@ export class Particle {
   noiseOffsetX: number;
   noiseOffsetY: number;
 
+  // Reusable vectors to reduce garbage collection
+  private tempVec1: P5.Vector;
+  private tempVec2: P5.Vector;
+  private tempVec3: P5.Vector;
+
   constructor(x: number, y: number, p5: P5CanvasInstance<MySketchProps>, config?: ParticleConfig, isMobile?: boolean) {
     this.p5 = p5;
     this.config = config ?? {
@@ -77,23 +82,32 @@ export class Particle {
     // Saving as class const so it doesn't need to calculate twice.
     this.distToTarget = 0;
 
-    this.noiseOffsetX = p5.random(1000); // 噪声偏移量X
-    this.noiseOffsetY = p5.random(1000); // 噪声偏移量Y
-    // console.log('this.pos', this.pos);
+    this.noiseOffsetX = p5.random(1000);
+    this.noiseOffsetY = p5.random(1000);
+
+    // Initialize reusable vectors
+    this.tempVec1 = new P5.Vector();
+    this.tempVec2 = new P5.Vector();
+    this.tempVec3 = new P5.Vector();
   }
 
   public move() {
     const p5 = this.p5;
     const { closeEnoughTarget, speed, scaleRatio, mouseSize } = this.config;
-    // 添加基于噪声的轻微扰动
-    const noiseScale = 0.005; // 噪声的缩放系数
-    const noiseStrength = 0.6; // 噪声的强度
-    this.acc.add(
+
+    // add a little noise to the particle using reusable vector
+    const noiseScale = 0.005; // noise scale
+    const noiseStrength = 0.6; // noise strength
+    this.tempVec1.set(
       p5.noise(this.noiseOffsetX + this.pos.x * noiseScale, this.pos.y * noiseScale) * noiseStrength - noiseStrength / 2,
       p5.noise(this.noiseOffsetY + this.pos.y * noiseScale, this.pos.x * noiseScale) * noiseStrength - noiseStrength / 2,
     );
+    this.acc.add(this.tempVec1);
 
-    this.distToTarget = p5.dist(this.pos.x, this.pos.y, this.target.x, this.target.y);
+    const dx = this.target.x - this.pos.x;
+    const dy = this.target.y - this.pos.y;
+    const distSq = dx * dx + dy * dy;
+    this.distToTarget = Math.sqrt(distSq); // Only calculate when needed
 
     // If it's close enough to its target, the slower it'll get
     // so that it can settle.
@@ -106,34 +120,37 @@ export class Particle {
       this.vel.mult(0.95);
     }
 
-    // Steer towards its target.
-    if (this.distToTarget > 1) {
-      const steer = P5.Vector.sub(this.target, this.pos);
-      steer.normalize();
-      steer.mult(this.maxSpeed * proximityMult * speed);
-      this.acc.add(steer);
+    // Steer towards its target using reusable vector
+    if (distSq > 1) {
+      // Use squared distance for comparison
+      this.tempVec2.set(this.target.x - this.pos.x, this.target.y - this.pos.y);
+      this.tempVec2.normalize();
+      this.tempVec2.mult(this.maxSpeed * proximityMult * speed);
+      this.acc.add(this.tempVec2);
     }
 
     const scaledMouseX = p5.mouseX / scaleRatio;
     const scaledMouseY = p5.mouseY / scaleRatio;
 
-    const mouseDist = p5.dist(this.pos.x, this.pos.y, scaledMouseX, scaledMouseY);
+    // Use squared distance for mouse interaction
+    const mouseDx = scaledMouseX - this.pos.x;
+    const mouseDy = scaledMouseY - this.pos.y;
+    const mouseDistSq = mouseDx * mouseDx + mouseDy * mouseDy;
+    const mouseSizeSq = mouseSize * mouseSize;
 
-    // Interact with mouse.
-    let push = new P5.Vector(0, 0);
-    if (mouseDist < mouseSize) {
+    if (mouseDistSq < mouseSizeSq) {
+      const mouseDist = Math.sqrt(mouseDistSq); // Only calculate sqrt when needed
+
       if (p5.mouseIsPressed) {
-        // Push towards mouse.
-        push = new P5.Vector(scaledMouseX, scaledMouseY);
-        push.sub(new P5.Vector(this.pos.x, this.pos.y));
+        // Push towards mouse
+        this.tempVec3.set(mouseDx, mouseDy);
       } else {
-        // Push away from mouse.
-        push = new P5.Vector(this.pos.x, this.pos.y);
-        push.sub(new P5.Vector(scaledMouseX, scaledMouseY));
+        // Push away from mouse
+        this.tempVec3.set(-mouseDx, -mouseDy);
       }
-      push.normalize();
-      push.mult((mouseSize - mouseDist) * 0.05);
-      this.acc.add(push);
+      this.tempVec3.normalize();
+      this.tempVec3.mult((mouseSize - mouseDist) * 0.05);
+      this.acc.add(this.tempVec3);
     }
 
     // Move it.

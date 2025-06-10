@@ -34,7 +34,7 @@ const DynamicParticleGL = ({
       let id = 'particle-container';
       let canvas: P5.Renderer;
       const sourceImgs: P5.Image[] = [];
-      let allParticles: Particle[] = [];
+      const allParticles: Particle[] = [];
       const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const defaultConfig = {
         scaleNum: 1,
@@ -102,6 +102,10 @@ const DynamicParticleGL = ({
 
         const [imgWidth, imgHeight] = [sourceImg.width, sourceImg.height];
         // console.log('imgWidth', imgWidth, 'imgHeight', imgHeight);
+
+        // Pre-calculate random numbers for better performance
+        const randomThreshold = loadPercentage * resolution;
+
         // Go through each pixel of the image.
         for (let y = 0; y < imgHeight; y++) {
           for (let x = 0; x < imgWidth; x++) {
@@ -116,16 +120,18 @@ const DynamicParticleGL = ({
               continue; // 跳过这个像素，不为其创建粒子
             }
             // Give it small odds that we'll assign a particle to this pixel.
-            if (p5.random(1.0) > loadPercentage * resolution) {
+            if (p5.random(1.0) > randomThreshold) {
               continue;
             }
 
             const pixelColor = p5.color(pixelR, pixelG, pixelB);
             let newParticle: Particle;
             if (preParticleIndexes.length > 0) {
-              // Re-use existing particle.
-              const randomIndex = p5.random(preParticleIndexes.length - 1);
-              const index = preParticleIndexes.splice(randomIndex, 1)[0];
+              // Re-use existing particle - optimized random selection
+              const randomIndex = Math.floor(p5.random(preParticleIndexes.length));
+              const index = preParticleIndexes[randomIndex];
+              preParticleIndexes[randomIndex] = preParticleIndexes[preParticleIndexes.length - 1];
+              preParticleIndexes.pop();
               newParticle = allParticles[index];
             } else {
               // Create a new particle.
@@ -149,15 +155,27 @@ const DynamicParticleGL = ({
         }
       }
       p5.draw = () => {
-        if (!activeAnim) return;
+        if (!activeAnim || !allParticles?.length) return;
         p5.clear();
-        const len = allParticles.length;
-        for (let i = len - 1; i >= 0; i--) {
-          const particle = allParticles[i];
+
+        let writeIndex = 0;
+
+        for (let readIndex = 0; readIndex < allParticles.length; readIndex++) {
+          const particle = allParticles[readIndex];
+
           particle.move();
           particle.draw();
+
+          if (!particle.isKilled && !particle.isOutOfBounds()) {
+            if (writeIndex !== readIndex) {
+              allParticles[writeIndex] = allParticles[readIndex];
+            }
+            writeIndex++;
+          }
         }
-        allParticles = allParticles.filter((particle) => !particle.isKilled && !particle.isOutOfBounds());
+
+        // Truncate array to new length
+        allParticles.length = writeIndex;
       };
 
       return p5;
