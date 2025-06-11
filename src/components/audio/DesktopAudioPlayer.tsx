@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
-import { MusicData } from './audio-data';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as Popover from '@radix-ui/react-popover';
 import DesktopMusicContent from './DesktopAudioContent';
+import { useFetchAudioData } from '@/hooks/audio/fetch';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
-import { currentAudioAtom, currentPlayStatusAtom, playlistAtom } from '@/atoms/audio-player';
+import { currentAudioAtom, currentPlayStatusAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 
 function DesktopAudioPlayer({ className }: { className?: string }) {
+  useFetchAudioData();
+  const musicList = useAtomValue(musicListAtom);
   const { data } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
@@ -18,9 +20,10 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
 
   useEffect(() => {
-    setCurrentMusic(MusicData[0]);
-    setPlaylistAtom(MusicData);
-  }, [setCurrentMusic, setPlaylistAtom]);
+    if (!musicList.length) return;
+    setCurrentMusic(musicList[0]);
+    setPlaylistAtom(musicList);
+  }, [musicList, setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

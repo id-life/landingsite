@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
-import { AudioDataItem, MusicData, PodcastData } from './audio-data';
 import {
   audioControlsAtom,
   currentAudioAtom,
@@ -10,7 +9,10 @@ import {
   PlayListKey,
   playlistAtom,
   currentPlayListAtom,
+  musicListAtom,
+  podcastListAtom,
 } from '@/atoms/audio-player';
+import { AudioDataItem } from '@/apis/types';
 import { PlayMode } from '@/atoms/audio-player';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
@@ -18,6 +20,8 @@ const underLineClassName =
   'after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-9 after:bg-gray-800';
 
 export default function DesktopMusicContent() {
+  const musicList = useAtomValue(musicListAtom);
+  const podcastList = useAtomValue(podcastListAtom);
   const [currentList, setCurrentList] = useAtom<PlayListKey>(currentPlayListAtom);
   const playMode = useAtomValue(playModeAtom);
   const [playlist, setPlaylist] = useAtom(playlistAtom);
@@ -35,11 +39,11 @@ export default function DesktopMusicContent() {
 
   const handleChangeAudio = (audio: AudioDataItem) => {
     setCurrentMusic(audio);
-    if (audio.type === playlist[0].type) return;
-    if (audio.type === PlayList.MUSIC) {
-      setPlaylist(MusicData);
+    if (audio.category === playlist[0].category) return;
+    if (audio.category === PlayList.MUSIC) {
+      setPlaylist(musicList);
     } else {
-      setPlaylist(PodcastData);
+      setPlaylist(podcastList);
     }
   };
 
@@ -91,7 +95,7 @@ export default function DesktopMusicContent() {
         </div>
       </div>
       <div className={clsx('mt-5 grid grid-cols-1 gap-5', currentList !== PlayList.MUSIC && 'hidden')}>
-        {MusicData.map((item) => (
+        {musicList.map((item) => (
           <DesktopMusicItem
             key={item.id}
             data={item}
@@ -102,7 +106,7 @@ export default function DesktopMusicContent() {
         ))}
       </div>
       <div className={clsx('mt-5 grid grid-cols-1 gap-5', currentList !== PlayList.PODCAST && 'hidden')}>
-        {PodcastData.map((item) => (
+        {podcastList.map((item) => (
           <DesktopPodcastItem
             key={item.id}
             data={item}

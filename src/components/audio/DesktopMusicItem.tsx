@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
 import WaveSurfer from 'wavesurfer.js';
-import { AudioDataItem } from './audio-data';
+import { AudioDataItem } from '@/apis/types';
 import { downloadFile } from '@/utils/download';
 import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
 
@@ -71,4 +71,5 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMu
     </div>
   );
 }
+
 export default React.memo(DesktopMusicItem);

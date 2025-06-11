@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 import { ValueOf } from '@/constants/config';
-import { AudioDataItem } from '@/components/audio/audio-data';
+import { AudioDataItem } from '@/apis/types';
 
 export const PlayList = {
   MUSIC: 'music',
@@ -21,6 +21,9 @@ export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
 export const currentPlayStatusAtom = atom<boolean>(false);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
+
+export const musicListAtom = atom<AudioDataItem[]>([]);
+export const podcastListAtom = atom<AudioDataItem[]>([]);
 
 export const playlistAtom = atom<AudioDataItem[]>([]);
 

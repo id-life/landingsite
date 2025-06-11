@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { AudioDataItem } from './audio-data';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useAtomValue } from 'jotai';
+import { AudioDataItem } from '@/apis/types';
 import dayjsDuration from 'dayjs/plugin/duration';
 import { audioControlsAtom } from '@/atoms/audio-player';
 
