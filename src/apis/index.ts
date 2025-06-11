@@ -4,3 +4,5 @@ import { TestDataRes } from '@/apis/types';
 // TODO: Del fetch test
 export const fetchTestData = (testId?: number) =>
   request.get<any, Response<TestDataRes[]>>('/api/test', { params: { testId } });
+
+export const fetchNewsList = () => request.get<any, Response<any[]>>('/geo/list');
