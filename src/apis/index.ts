@@ -1,8 +1,5 @@
+import { NewsContent, NewsListItem } from '@/apis/types';
 import request, { Response } from '@/apis/request';
-import { TestDataRes } from '@/apis/types';
 
-// TODO: Del fetch test
-export const fetchTestData = (testId?: number) =>
-  request.get<any, Response<TestDataRes[]>>('/api/test', { params: { testId } });
-
-export const fetchNewsList = () => request.get<any, Response<any[]>>('/geo/list');
+export const fetchNewsList = () => request.get<any, Response<NewsListItem[]>>('/geo/list');
+export const fetchNewsContent = (id: string) => request.get<any, Response<NewsContent>>('/geo/content', { params: { id } });

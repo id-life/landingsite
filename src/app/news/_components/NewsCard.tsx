@@ -1,14 +1,17 @@
 'use client';
 
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
+import { NewsListItem } from '@/apis/types';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
-export default function NewsCard() {
+dayjs.extend(relativeTime);
+
+export default function NewsCard({ data }: { data: NewsListItem }) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    router.push(
-      '/news/the_immortal_ragons_approach_to_longevity_investment_balancing_radical_innovation_with_scientific_rigor',
-    );
+    router.push(`/news/${data.id}`);
   };
 
   return (
@@ -17,18 +20,11 @@ export default function NewsCard() {
         <img src="/imgs/news/article_logo.webp" className="size-6" alt="" />
         Immortal Dragons
       </div>
-      <h3 className="mt-2.5 line-clamp-3 text-lg font-semibold">
-        The Immortal Dragons Approach to Longevity Investment: Balancing Radical Innovation with Scientific Rigor
-      </h3>
+      <h3 className="mt-2.5 line-clamp-2 h-14 text-lg font-semibold">{data.title}</h3>
       <div className="mt-4 font-medium text-black/50">
-        Article <span className="px-1">·</span> 2 Hours Ago
+        Article <span className="px-1">·</span> {dayjs(data.category).fromNow()}
       </div>
-      <p className="mt-4 line-clamp-3 text-sm font-medium">
-        &quot;The Case Against Death&quot; represents a comprehensive philosophical examination of death from a rationalist
-        perspective. While specific details of the book may vary (as there are several works with similar titles in the
-        anti-death literature), such works typically present structured arguments against the acceptance of death as a natural
-        or necessary part of human existence.
-      </p>
+      <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief}</p>
     </div>
   );
 }

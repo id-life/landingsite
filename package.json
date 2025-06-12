@@ -29,6 +29,7 @@
     "@types/p5": "^1.7.6",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "dotted-map": "^2.2.3",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",

@@ -53,10 +53,17 @@ export default function NewsFooter() {
     if (type === MediaLinkType.Media) {
       window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
     }
+
+    if (type === MediaLinkType.Podcast) {
+      window.open('https://podcasts.apple.com/cn/podcast/不朽真龙-immortaldragons/id1815210084', '__blank');
+    }
+    if (type === MediaLinkType.Xyz) {
+      window.open('https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8', '__blank');
+    }
   };
 
   return (
-    <div className="flex items-stretch justify-between pb-15 pt-30">
+    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10 mobile:px-4">
       <div className="flex flex-col items-start justify-between">
         <img className="w-[14.2rem]" src="/svgs/logo-en.svg" alt="" />
         <div className="flex items-center gap-7">
@@ -95,13 +102,14 @@ export default function NewsFooter() {
       </div>
       <div className="font-oxanium text-base/5">
         <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
-        <form id="subscribe-form" className="mt-7 flex flex-col mobile:mt-5 mobile:gap-3 mobile:px-0" onSubmit={onFormSubmit}>
+        <form id="subscribe-form" className="mt-7 flex flex-col" onSubmit={onFormSubmit}>
           <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
           <input type="hidden" name="amp;id" value="af9154d6b5" />
           <input type="hidden" name="amp;f_id" value="00e418e1f0" />
-          <div className="flex-1 border-2 border-black p-2 mobile:border">
+          <div className="flex-1 border-2 border-black p-2">
             <input
-              className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
+              id="news-subscribe-email"
+              className="w-[18rem] bg-transparent text-sm font-semibold"
               placeholder="Please enter email"
               type="email"
               name="EMAIL"
@@ -113,7 +121,7 @@ export default function NewsFooter() {
             <img className="ml-2 h-4" src="/svgs/info-2.svg" alt="" />
             Join our longevity circle for priority access to pioneer research
           </div>
-          <div className="footer-submit-clip mt-3 w-[10.5rem] self-end bg-red-600 text-white mobile:w-[5.625rem]">
+          <div className="footer-submit-clip mt-3 w-[10.5rem] self-end bg-red-600 text-white">
             {isSubmitting ? (
               <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
                 <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
@@ -124,11 +132,7 @@ export default function NewsFooter() {
                 <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
               </div>
             ) : null}
-            <input
-              className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
-              type="submit"
-              value="Subscribe"
-            />
+            <input className="w-full cursor-pointer py-3 text-base/5 font-bold" type="submit" value="Subscribe" />
           </div>
         </form>
       </div>
