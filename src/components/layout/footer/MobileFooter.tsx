@@ -8,7 +8,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { MediaLinkType } from './FooterContact';
+import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
@@ -56,18 +56,6 @@ export default function MobileFooter() {
       label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
     });
   };
-
-  const handleLinkClick = useCallback((type: MediaLinkType) => {
-    if (type === MediaLinkType.Youtube) {
-      window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
-    }
-    if (type === MediaLinkType.Linkedin) {
-      window.open('https://www.linkedin.com/company/immortaldragons/', '__blank');
-    }
-    if (type === MediaLinkType.Media) {
-      window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
-    }
-  }, []);
 
   return (
     <FloatingPortal>
