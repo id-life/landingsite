@@ -1,227 +1,158 @@
 import { cn } from '@/utils';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useRef, useState } from 'react';
 import { WorldMapSVG } from '../svg';
-import gsap from 'gsap';
 
 interface WorldMapAnimBackgroundProps {
   className?: string;
-  radius?: number; // 鼠标影响半径
-  animationDuration?: number; // 动画持续时间
-  animationScale?: number; // 动画缩放比例
-  fadeOutThreshold?: number; // 开始淡出的阈值 (0-1)
+  radius?: number;
 }
 
 // SVG viewBox dimensions matching WorldMapSVG's inherent size for coordinate mapping
 // Assuming WorldMapSVG's default viewBox is "0 0 126 60" based on usage below.
 // If WorldMapSVG's viewBox changes, this needs to be updated.
 
-export const WorldMapAnimBackground = forwardRef<SVGSVGElement, WorldMapAnimBackgroundProps>(function WorldMapAnimBackground(
-  {
-    className,
-    radius = 70,
-    animationDuration = 0.6,
-    animationScale = 1.5,
-    fadeOutThreshold = 0.1, // 默认在10%半径处开始淡出
-  },
-  ref, // This ref is for the WorldMapSVG itself
-) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const particlesRef = useRef<SVGCircleElement[]>([]);
-  const animationRef = useRef<{ [key: string]: gsap.core.Tween | gsap.core.Timeline | null }>({});
+export const WorldMapAnimBackground = memo(
+  forwardRef<SVGSVGElement, WorldMapAnimBackgroundProps>(function WorldMapAnimBackground(
+    { className, radius = 80 },
+    ref, // This ref is for the WorldMapSVG itself
+  ) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [isMouseInside, setIsMouseInside] = useState(false);
+    const filterId = `pulse-filter-${Math.random().toString(36).substr(2, 9)}`;
 
-  // Initialize particle and background light animation
-  useEffect(() => {
-    if (!containerRef.current) return;
+    // Handle mouse movement
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
 
-    // --- Particle Initialization ---
-    const circles = containerRef.current.querySelectorAll('svg.world-map-img circle'); // Target circles within the map SVG
-    particlesRef.current = Array.from(circles) as SVGCircleElement[];
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setMousePosition({ x, y });
+      };
 
-    particlesRef.current.forEach((circle) => {
-      circle.setAttribute('data-original-fill', circle.getAttribute('fill') || '#ffffff33');
-      circle.setAttribute('data-original-r', circle.getAttribute('r') || '0.245');
-    });
+      const handleMouseEnter = () => {
+        setIsMouseInside(true);
+      };
 
-    return () => {
-      // Cleanup particle animations
-      Object.values(animationRef.current).forEach((animation) => {
-        if (animation) animation.kill();
-      });
-    };
-  }, []); // Run only once on mount
+      const handleMouseLeave = () => {
+        setIsMouseInside(false);
+      };
 
-  // Handle mouse move for particle interaction
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseenter', handleMouseEnter);
+      container.addEventListener('mouseleave', handleMouseLeave);
 
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      return () => {
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }, []);
 
-    setMousePosition({ x, y });
+    return (
+      <div ref={containerRef} className={cn('relative', className)}>
+        {/* Background WorldMapSVG - normal display */}
+        <WorldMapSVG
+          ref={ref}
+          className={cn(
+            'world-map-img pointer-events-none select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+            // 'opacity-0', // anim init state
+          )}
+        />
 
-    // 检查每个粒子是否在鼠标影响范围内
-    particlesRef.current.forEach((circle) => {
-      const cx = parseFloat(circle.getAttribute('cx') || '0');
-      const cy = parseFloat(circle.getAttribute('cy') || '0');
+        {/* Effect layer - only visible in circular area around mouse */}
+        {isMouseInside && (
+          <div className="absolute inset-0">
+            {/* SVG for filters and masks */}
+            <svg className="pointer-events-none absolute inset-0 size-0">
+              <defs>
+                {/* Pulse filter */}
+                <filter id={filterId} x="-100%" y="-100%" width="300%" height="300%">
+                  {/* Convert everything to pure white with moderate intensity */}
+                  <feColorMatrix
+                    in="SourceGraphic"
+                    type="matrix"
+                    values="0 0 0 0 0.6
+                          0 0 0 0 0.6
+                          0 0 0 0 0.6
+                          0 0 0 8 0"
+                    result="pureWhite"
+                  />
 
-      // 将SVG坐标转换为屏幕坐标
-      const svgRect = circle.ownerSVGElement?.getBoundingClientRect();
-      if (!svgRect) return;
+                  {/* Create a tight glow for size enhancement - larger but still crisp */}
+                  <feGaussianBlur in="pureWhite" stdDeviation="0.9" result="tightGlow" />
 
-      const svgWidth = svgRect.width;
-      const svgHeight = svgRect.height;
+                  {/* Create a medium glow for smoothing */}
+                  <feGaussianBlur in="pureWhite" stdDeviation="1.3" result="mediumGlow" />
 
-      const screenX = (cx / 126) * svgWidth;
-      const screenY = (cy / 60) * svgHeight;
+                  {/* Moderate brightness for tight glow */}
+                  <feColorMatrix
+                    in="tightGlow"
+                    type="matrix"
+                    values="1 0 0 0 0
+                          0 1 0 0 0
+                          0 0 1 0 0
+                          0 0 0 3.5 0"
+                    result="brightTightGlow"
+                  />
 
-      // 计算距离
-      const distance = Math.sqrt(Math.pow(screenX - x, 2) + Math.pow(screenY - y, 2));
+                  {/* Subtle brightness for medium glow */}
+                  <feColorMatrix
+                    in="mediumGlow"
+                    type="matrix"
+                    values="1 0 0 0 0
+                          0 1 0 0 0
+                          0 0 1 0 0
+                          0 0 0 1 0"
+                    result="brightMediumGlow"
+                  />
 
-      // 如果粒子在影响范围内
-      if (distance < radius) {
-        const particleId = circle.getAttribute('data-id') || Math.random().toString();
-        circle.setAttribute('data-id', particleId);
+                  {/* Layer effects: original particles + enhanced glows for bigger appearance */}
+                  <feComposite in="pureWhite" in2="brightTightGlow" operator="screen" result="layer1" />
+                  <feComposite in="layer1" in2="brightMediumGlow" operator="screen" />
+                </filter>
 
-        // 计算影响强度 (0-1)
-        const intensity = 1 - distance / radius;
+                {/* Radial gradient for soft circular mask */}
+                <radialGradient id={`pulse-gradient-${filterId}`}>
+                  <stop offset="0%" stopColor="white" stopOpacity="1" />
+                  <stop offset="25%" stopColor="white" stopOpacity="1" />
+                  <stop offset="40%" stopColor="white" stopOpacity="0.6" />
+                  <stop offset="55%" stopColor="white" stopOpacity="0.5" />
+                  <stop offset="70%" stopColor="white" stopOpacity="0.2" />
+                  <stop offset="85%" stopColor="white" stopOpacity="0.05" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0" />
+                </radialGradient>
 
-        // 如果粒子已经有动画，先停止
-        if (animationRef.current[particleId]) {
-          animationRef.current[particleId]?.kill();
-        }
+                {/* Soft circular mask using radial gradient */}
+                <mask id={`pulse-mask-${filterId}`}>
+                  <rect width="100%" height="100%" fill="black" />
+                  <circle
+                    cx={mousePosition.x}
+                    cy={mousePosition.y}
+                    r={radius * 1.0}
+                    fill={`url(#pulse-gradient-${filterId})`}
+                  />
+                </mask>
+              </defs>
+            </svg>
 
-        // 创建新动画
-        const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
-        const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
-
-        // 根据强度调整动画参数
-        // 使用自定义的淡出阈值，确保最外层的粒子不会完全消失
-        let targetOpacity = 0.8;
-        if (intensity < fadeOutThreshold) {
-          // 在阈值以下，粒子保持原始状态
-          targetOpacity = 0.2;
-        } else {
-          // 在阈值以上，粒子逐渐变亮
-          targetOpacity = 0.2 + 0.6 * ((intensity - fadeOutThreshold) / (1 - fadeOutThreshold));
-        }
-
-        const targetScale = 1 + (animationScale - 1) * intensity;
-
-        // --- 使用 GSAP Timeline 创建脉冲动画 ---
-        const tl = gsap.timeline({
-          onInterrupt: () => {
-            // Ensure cleanup if interrupted (e.g., by mouse moving away quickly)
-            if (animationRef.current[particleId]) {
-              gsap.to(circle, {
-                // Force back to original state on interrupt if needed
-                attr: { r: originalR },
-                fill: originalFill,
-                duration: animationDuration * 0.5, // Quick revert
-                ease: 'power1.out',
-                overwrite: true, // Overwrite any ongoing animation on this element
-              });
-            }
-          },
-        });
-
-        // 1. 动画到基础高亮状态
-        tl.to(circle, {
-          attr: { r: originalR * targetScale },
-          fill: `rgba(255, 255, 255, ${targetOpacity})`,
-          duration: animationDuration * 0.7, // 分配部分时间给基础动画
-          ease: 'power2.out',
-        });
-
-        // 2. 添加脉冲效果: 更加舒缓
-        tl.to(
-          circle,
-          {
-            attr: { r: originalR * targetScale * 1.2 }, // 保持较小的峰值
-            duration: animationDuration * 1.8, // 大幅增加脉冲时间
-            ease: 'power2.inOut', // 尝试更平滑的缓动
-            yoyo: true, // 自动反向播放（缩小回targetScale）
-            repeat: -1, // 无限重复
-          },
-          // '-=' + animationDuration * 0.2,
-        ); // 调整重叠时间
-
-        // 存储 Timeline 实例
-        animationRef.current[particleId] = tl;
-      } else {
-        // 如果粒子不在影响范围内，恢复原始状态
-        const particleId = circle.getAttribute('data-id');
-        if (particleId && animationRef.current[particleId]) {
-          // 停止当前动画 (Timeline 或 Tween)
-          animationRef.current[particleId]?.kill();
-          animationRef.current[particleId] = null; // 清理引用
-
-          const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
-          const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
-
-          // 使用 gsap.to 平滑恢复到原始状态
-          gsap.to(circle, {
-            attr: { r: originalR },
-            fill: originalFill,
-            duration: animationDuration, // 使用标准动画时间恢复
-            ease: 'power2.out',
-            overwrite: true, // 确保覆盖掉可能存在的残留动画状态
-          });
-        }
-      }
-    });
-  };
-
-  // 处理鼠标离开
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-
-    // 恢复所有粒子的原始状态
-    particlesRef.current.forEach((circle) => {
-      const particleId = circle.getAttribute('data-id');
-      // 检查是否有活动的动画需要停止
-      if (particleId && animationRef.current[particleId]) {
-        animationRef.current[particleId]?.kill();
-        animationRef.current[particleId] = null; // 清理引用
-      }
-      // 无论是否有动画在进行，都强制恢复其视觉状态
-      const originalFill = circle.getAttribute('data-original-fill') || '#ffffff33';
-      const originalR = parseFloat(circle.getAttribute('data-original-r') || '0.245');
-
-      // 使用gsap.to确保平滑恢复，即使没有进行中的动画也设置状态
-      gsap.to(circle, {
-        attr: { r: originalR },
-        fill: originalFill,
-        duration: animationDuration, // 使用标准动画时间恢复
-        ease: 'power2.out',
-        overwrite: true, // 覆盖任何可能存在的动画状态
-      });
-    });
-  };
-
-  // 处理鼠标进入
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-  };
-
-  return (
-    <div
-      ref={containerRef}
-      className={cn('relative', className)}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
-    >
-      {/* The actual World Map with particles */}
-      <WorldMapSVG
-        ref={ref}
-        className={cn(
-          'world-map-img pointer-events-none select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-          // 'opacity-0', // anim init state
+            {/* Enhanced WorldMapSVG layer with white effect */}
+            <WorldMapSVG
+              className={cn(
+                'world-map-img pointer-events-none absolute inset-0 select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+              )}
+              style={{
+                filter: `url(#${filterId})`,
+                mask: `url(#pulse-mask-${filterId})`,
+              }}
+            />
+          </div>
         )}
-      />
-    </div>
-  );
-});
+      </div>
+    );
+  }),
+);
+WorldMapAnimBackground.displayName = 'WorldMapAnimBackground';

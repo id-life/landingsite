@@ -61,6 +61,8 @@ export const GA_EVENT_LABELS = {
     YOUTUBE: 'youtube',
     LINKEDIN: 'linkedin',
     MEDIA: 'drive',
+    PODCAST: 'podcast',
+    XYZ: 'xyz',
   },
   ANATOMY_SWITCH: {
     CAMERA0: '0',

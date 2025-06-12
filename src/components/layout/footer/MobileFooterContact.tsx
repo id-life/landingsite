@@ -11,7 +11,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { MediaLinkType } from './FooterContact';
+import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
@@ -60,7 +60,7 @@ export default function MobileFooterContact() {
     });
   };
 
-  const handleLinkClick = (type: MediaLinkType) => {
+  const handleLinkClick = (type: MediaLinkTypeKey) => {
     trackEvent({
       name: GA_EVENT_NAMES.MEDIUM_CLICK,
       label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],

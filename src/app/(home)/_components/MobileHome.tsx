@@ -16,6 +16,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
+import MobileFixedUI from '@/components/common/MobileFixedUI';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
@@ -46,6 +47,7 @@ export default function MobileHome() {
         <MobileFooter />
         <MobileFooterContact />
       </div>
+      <MobileFixedUI />
     </>
   );
 }

@@ -16,6 +16,7 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export type SpectrumLinkItem = {
   label: string;
@@ -40,6 +41,7 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
+  const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -69,6 +71,10 @@ export const useSpectrumData = () => {
     },
     [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
   );
+
+  const handleDiseaseManagementClick = useCallback(() => {
+    setShowDiseaseManagement(true);
+  }, [setShowDiseaseManagement]);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -173,6 +179,12 @@ export const useSpectrumData = () => {
             label: 'Influence Network',
             isComingSoon: true,
           },
+          {
+            label: 'Disease Management & Cure Status',
+            onClick: () => {
+              setShowDiseaseManagement(true);
+            },
+          },
         ],
       },
       {
@@ -215,7 +227,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickDigitalTwin, handleClickDot]);
+  }, [handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
 
   return spectrumData;
 };
