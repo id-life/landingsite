@@ -8,7 +8,7 @@ import '@/styles/markdown.css';
 
 dayjs.extend(relativeTime);
 
-export const revalidate = 60; // TODO: change 5min
+export const revalidate = 300; // 5min
 export const dynamicParams = true;
 
 const getCacheNewsContent = cache(async (id: string) => {
