@@ -1,13 +1,12 @@
 import React from 'react';
-import Background from '@/components/common/Background';
-import FixedUI from '@/components/common/FixedUI';
-import Providers from '@/providers/root';
-import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
-import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { clsx } from 'clsx';
-import type { Metadata } from 'next';
-import ScrollBehavior from '@/components/common/ScrollBehavior';
+import Providers from '@/providers/root';
 import ClientNav from '@/components/nav/CilentNav';
+import Background from '@/components/common/Background';
+import ScrollBehavior from '@/components/common/ScrollBehavior';
+import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
+import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
+import type { Metadata } from 'next';
 
 import '@/styles/globals.css';
 import 'swiper/css';
@@ -94,7 +93,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ScrollBehavior />
           <ClientNav />
           {children}
-          <FixedUI />
           <Background />
         </Providers>
       </body>

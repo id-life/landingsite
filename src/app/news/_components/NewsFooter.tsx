@@ -63,10 +63,10 @@ export default function NewsFooter() {
   };
 
   return (
-    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10 mobile:px-4">
+    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10">
       <div className="flex flex-col items-start justify-between">
         <img className="w-[14.2rem]" src="/svgs/logo-en.svg" alt="" />
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-7 mobile:mt-6">
           <YoutubeSVG
             onClick={() => handleLinkClick(MediaLinkType.Youtube)}
             className="size-6 cursor-pointer fill-black hover:fill-red-600"

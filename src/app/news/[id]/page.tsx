@@ -1,3 +1,4 @@
+import React, { cache } from 'react';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -10,10 +11,21 @@ dayjs.extend(relativeTime);
 export const revalidate = 60; // TODO: change 5min
 export const dynamicParams = true;
 
+const getCacheNewsContent = cache(async (id: string) => {
+  const res = await fetchNewsContent(id);
+  return res.code == 200 ? res.data : undefined;
+});
+
 export async function generateStaticParams() {
   const data = await fetchNewsList();
   const news = data.code == 200 ? data.data : [];
   return news.map((item) => ({ id: item.id.toString() }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const data = await getCacheNewsContent(id);
+  return { title: data ? `${data.title} - Immortal Dragons` : 'Immortal Dragons' };
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
@@ -34,8 +46,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
           <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
           Immortal Dragons
         </div>
-        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold capitalize">{data?.title}</h1>
-        <div className="mx-auto mb-15 mt-10 w-80 border-b border-dashed border-black" />
         <div className="markdown-body">
           <Markdown>{data?.content}</Markdown>
         </div>

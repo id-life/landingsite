@@ -1,8 +1,11 @@
-import '@/styles/geo.css';
 import { fetchNewsList } from '@/apis';
 import NewsCard from './_components/NewsCard';
+import type { Metadata } from 'next';
+import '@/styles/geo.css';
 
 export const revalidate = 60; // TODO: change 5min
+
+export const metadata: Metadata = { title: 'News-Immortal Dragons' };
 
 export default async function NewsPage() {
   const data = await fetchNewsList();
