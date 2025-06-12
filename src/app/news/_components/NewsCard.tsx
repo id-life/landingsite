@@ -22,7 +22,7 @@ export default function NewsCard({ data }: { data: NewsListItem }) {
       </div>
       <h3 className="mt-2.5 line-clamp-2 h-14 text-lg font-semibold">{data.title}</h3>
       <div className="mt-4 font-medium text-black/50">
-        Article <span className="px-1">·</span> {dayjs(data.category).fromNow()}
+        Article <span className="px-1">·</span> {dayjs(data.createdAt).fromNow()}
       </div>
       <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief}</p>
     </div>

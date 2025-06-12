@@ -2,7 +2,7 @@ import '@/styles/geo.css';
 import { fetchNewsList } from '@/apis';
 import NewsCard from './_components/NewsCard';
 
-export const revalidate = 60; // 5min
+export const revalidate = 60; // TODO: change 5min
 
 export default async function NewsPage() {
   const data = await fetchNewsList();

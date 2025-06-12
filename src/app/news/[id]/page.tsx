@@ -7,7 +7,7 @@ import '@/styles/markdown.css';
 
 dayjs.extend(relativeTime);
 
-export const revalidate = 60;
+export const revalidate = 60; // TODO: change 5min
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
