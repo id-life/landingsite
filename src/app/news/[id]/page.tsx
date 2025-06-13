@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent, fetchNewsList } from '@/apis';
+import rehypeRaw from 'rehype-raw';
 import 'github-markdown-css';
 import '@/styles/markdown.css';
 
@@ -47,7 +48,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
           Immortal Dragons
         </div>
         <div className="markdown-body">
-          <Markdown>{data?.content}</Markdown>
+          <Markdown rehypePlugins={[rehypeRaw]}>{data?.content}</Markdown>
         </div>
       </div>
     </div>
