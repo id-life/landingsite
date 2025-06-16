@@ -83,6 +83,10 @@ export const BACKGROUND_COLORS = {
     '--foreground': '#000000',
     '--gradient-via': '#e5ebf5',
     '--gradient-via-percent': '50%',
+    '--audio-player': '#2E2F31',
+    '--audio-content': '#E2E8F4',
+    '--audio-border': '#EEF4FF',
+    '--audio-order': '#ffffff',
   },
   [BACKGROUND_THEME.BLACK]: {
     '--gradient-from': '#000000',
@@ -91,6 +95,10 @@ export const BACKGROUND_COLORS = {
     '--foreground': '#FFFFFF',
     '--gradient-via': '#000000',
     '--gradient-via-percent': '50%',
+    '--audio-player': '#F0F0F0',
+    '--audio-content': '#101010',
+    '--audio-border': '#1C1C1C',
+    '--audio-order': '#222222',
   },
   [BACKGROUND_THEME.BLACK_RED]: {
     '--gradient-from': '#000000',
@@ -99,6 +107,10 @@ export const BACKGROUND_COLORS = {
     '--foreground': '#F0F0F0',
     '--gradient-via': '#1E0000',
     '--gradient-via-percent': '50%',
+    '--audio-player': '#F0F0F0',
+    '--audio-content': '#101010',
+    '--audio-border': '#1C1C1C',
+    '--audio-order': '#222222',
   },
   [BACKGROUND_THEME.BLACK_RED_2]: {
     '--gradient-from': '#000000',
@@ -108,5 +120,9 @@ export const BACKGROUND_COLORS = {
     '--gradient-via': '#C1111111',
     '--gradient-via-percent': '80%',
     '--gradient-rotate': '300deg',
+    '--audio-player': '#F0F0F0',
+    '--audio-content': '#101010',
+    '--audio-border': '#1C1C1C',
+    '--audio-order': '#222222',
   },
 } as const;

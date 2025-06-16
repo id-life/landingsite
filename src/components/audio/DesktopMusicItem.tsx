@@ -59,7 +59,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMu
         <div className="flex items-center gap-0.5">
           {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
           <div onClick={onClick} className={clsx('cursor-pointer text-xs/5 font-semibold', isCurrent && 'text-red-600')}>
-            <div></div>
             {data.title} - {data.artist}
           </div>
         </div>

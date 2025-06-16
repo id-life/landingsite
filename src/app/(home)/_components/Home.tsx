@@ -80,6 +80,10 @@ export default function Home() {
       '--gradient-to': '#C111114C',
       '--background': '#000000',
       '--foreground': '#F0F0F0',
+      '--audio-player': '#F0F0F0',
+      '--audio-content': '#101010',
+      '--audio-border': '#1C1C1C',
+      '--audio-order': '#222222',
     });
 
     const spectrumTL = gsap.timeline({
@@ -138,6 +142,10 @@ export default function Home() {
       '--gradient-to': '#CBD6EA',
       '--background': '#F0F0F0',
       '--foreground': '#000000',
+      '--audio-player': '#2E2F31',
+      '--audio-content': '#E2E8F4',
+      '--audio-border': '#EEF4FF',
+      '--audio-order': '#ffffff',
     });
     twinTL.to('.base-background2', { opacity: 1 });
   });

@@ -36,7 +36,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <div
           onClick={() => setIsOpen((v) => !v)}
           className={clsx(
-            'flex w-71 cursor-pointer items-center gap-2.5 rounded-full bg-foreground px-2 transition duration-300 hover:scale-110',
+            'flex w-71 cursor-pointer items-center gap-2.5 rounded-full bg-audio-player px-2 transition duration-300 hover:scale-110',
             className,
           )}
         >
@@ -53,7 +53,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           forceMount
           align="end"
           sideOffset={16}
-          className="z-10 w-100 rounded-lg border-2 border-white bg-[#cbd6ea] p-5 data-[state=closed]:hidden"
+          className="z-10 w-100 rounded-lg border-2 border-audio-border bg-audio-content p-5 data-[state=closed]:hidden"
         >
           <DesktopMusicContent />
         </Popover.Content>

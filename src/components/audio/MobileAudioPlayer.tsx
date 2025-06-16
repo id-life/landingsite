@@ -51,7 +51,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           <Popover.Content
             align="end"
             sideOffset={16}
-            className="z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-white bg-[#cbd6ea] p-5"
+            className="z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5"
           >
             <DesktopMusicContent />
           </Popover.Content>

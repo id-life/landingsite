@@ -70,6 +70,7 @@ const config: Config = {
           350: '#999999',
           400: '#9C979D',
           700: '#444444',
+          750: '#2E2F31',
           800: '#222222',
         },
         orange: {
@@ -96,6 +97,10 @@ const config: Config = {
         },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        'audio-player': 'var(--audio-player)',
+        'audio-content': 'var(--audio-content)',
+        'audio-border': 'var(--audio-border)',
+        'audio-order': 'var(--audio-order)',
       },
       lineHeight: {
         3.5: '0.875rem',

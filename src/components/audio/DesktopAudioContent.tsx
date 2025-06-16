@@ -15,9 +15,13 @@ import {
 import { AudioDataItem } from '@/apis/types';
 import { PlayMode } from '@/atoms/audio-player';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import PlayOrderSVG from '@/../public/svgs/player/play_order.svg?component';
+import PlayShuffleSVG from '@/../public/svgs/player/play_shuffle.svg?component';
+import PlayRepeatSVG from '@/../public/svgs/player/play_repeat.svg?component';
+import PlayRepeatOneSVG from '@/../public/svgs/player/play_repeat_one.svg?component';
 
 const underLineClassName =
-  'after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-9 after:bg-gray-800';
+  'after:absolute after:-bottom-2 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-9 after:bg-foreground';
 
 export default function DesktopMusicContent() {
   const musicList = useAtomValue(musicListAtom);
@@ -48,7 +52,7 @@ export default function DesktopMusicContent() {
   };
 
   return (
-    <div>
+    <div className="text-foreground">
       <div className="flex items-center justify-between">
         <div className="flex-center gap-3 text-xs/3 font-bold">
           <div
@@ -66,29 +70,29 @@ export default function DesktopMusicContent() {
         </div>
         <div
           onClick={handleChangePlayMode}
-          className="flex-center h-6.5 cursor-pointer select-none gap-0.5 rounded-full bg-white px-2 text-center text-ss/3 font-semibold"
+          className="flex-center h-6.5 cursor-pointer select-none gap-0.5 rounded-full bg-audio-order px-2 text-center text-ss/3 font-semibold"
         >
           {playMode === PlayMode.ORDER && (
             <>
-              <img className="w-4" src="/svgs/player/play_order.svg" alt="" />
+              <PlayOrderSVG className="w-4 stroke-foreground" />
               <div className="w-18">Play in Order</div>
             </>
           )}
           {playMode === PlayMode.SHUFFLE && (
             <>
-              <img className="w-4" src="/svgs/player/play_shuffle.svg" alt="" />
+              <PlayShuffleSVG className="w-4 stroke-foreground" />
               <div className="w-18">Shuffle</div>
             </>
           )}
           {playMode === PlayMode.REPEAT_ALL && (
             <>
-              <img className="w-4" src="/svgs/player/play_repeat.svg" alt="" />
+              <PlayRepeatSVG className="w-4 stroke-foreground" />
               <div className="w-18">Repeat All</div>
             </>
           )}
           {playMode === PlayMode.REPEAT_ONE && (
             <>
-              <img className="w-4" src="/svgs/player/play_repeat_one.svg" alt="" />
+              <PlayRepeatOneSVG className="w-4 stroke-foreground" />
               <div className="w-18">Repeat One</div>
             </>
           )}

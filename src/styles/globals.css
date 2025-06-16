@@ -19,6 +19,10 @@
     --gradient-via-percent: 50%;
     --gradient-to: #cbd6ea;
     --gradient-rotate: 90deg;
+    --audio-player: #2e2f31;
+    --audio-content: #e2e8f4;
+    --audio-border: #eef4ff;
+    --audio-order: #ffffff;
   }
 
   /**::-webkit-scrollbar {*/

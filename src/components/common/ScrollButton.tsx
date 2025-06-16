@@ -55,7 +55,7 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
         <div ref={rippleRef1} className="scroll-button-ripple-init" />
         <div ref={rippleRef2} className="scroll-button-ripple-init" />
         <div ref={rippleRef3} className="scroll-button-ripple-init" />
-        <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-black">
+        <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-gray-750">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
           <p className="font-migrena text-base/4 font-bold uppercase text-white">SCROLL</p>
         </div>
