@@ -282,8 +282,8 @@
     transform: translate(-50%, -50%);
     border: 0.7px solid black;
     border-radius: 9999px;
-    width: 122px;
-    height: 40px;
+    width: 7.625rem;
+    height: 2.5rem;
   }
 
   .hide-scrollbar {
