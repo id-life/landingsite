@@ -56,7 +56,7 @@ export default function Home() {
   useEvent('resize', throttle(initFontSize, 1000));
 
   useGSAP(() => {
-    ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: true, smoothTouch: 0.1 });
+    ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: false, smoothTouch: 0.1 });
     const root = document.documentElement;
     const visionTL = gsap.timeline({
       scrollTrigger: {

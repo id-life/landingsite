@@ -3,16 +3,16 @@
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
-import ToggleSoundButton from '@/components/common/ToggleSoundButton';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { ReactNode, useMemo } from 'react';
-import { HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
+import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
+import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -21,13 +21,7 @@ export default function PCFixedUI() {
       {currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
-        <PageArrows
-          className={cn(
-            'fixed left-1/2 -translate-x-1/2',
-            // HAS_INNER_PAGE_LIST.includes(currentPage.id) ? 'bottom-5 mobile:bottom-6' :
-            'bottom-11 mobile:bottom-6',
-          )}
-        />
+        <PageArrows className={cn('fixed left-1/2 -translate-x-1/2', 'bottom-11 mobile:bottom-6')} />
       )}
       <div className="fixed-top fixed left-10 top-[calc(50%_-_18rem)] h-2 w-6 bg-foreground transition duration-300 mobile:left-5 mobile:top-[7.5rem] mobile:h-1 mobile:w-3" />
       <div className="fixed-bottom fixed left-10 top-[calc(50%_+_16rem)] h-2 w-9 bg-foreground transition duration-300 mobile:bottom-[7.5rem] mobile:left-5 mobile:top-auto mobile:h-1 mobile:w-4.5" />
@@ -46,9 +40,8 @@ export default function PCFixedUI() {
         </VerticalCarousel>
       )}
       <ClientOnly>
-        <ToggleSoundButton className="fixed bottom-10 right-10 z-10" />
+        <DesktopAudioPlayer className="fixed bottom-10 right-10 z-10" />
       </ClientOnly>
-      {/*<FixedValue />*/}
       <NewFixedValue />
     </>
   );
