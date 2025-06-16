@@ -22,8 +22,8 @@ export default function RippleButton({ className, children, onClick }: PropsWith
     // Create looping animation
     const createRippleAnim = (el: HTMLElement, delay: number) => {
       gsap.to(el, {
-        width: 138,
-        height: 76,
+        width: '8.625rem',
+        height: '4.75rem',
         opacity: 0,
         duration: 2,
         delay,

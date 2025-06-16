@@ -20,6 +20,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
     className,
     maxLength = 20,
     value = '',
+    autoComplete = 'name',
     mode = 'visitor',
     impression,
     onBlur,
@@ -53,6 +54,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
             'mobile:w-full',
             className,
           )}
+          autoComplete={autoComplete}
           maxLength={maxLength}
           value={value}
           onFocus={handleFocus}

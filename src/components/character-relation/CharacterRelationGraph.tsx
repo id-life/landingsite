@@ -111,7 +111,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
         // instance.moveToCenter();
         // instance.setZoom(78);
         instance.setZoom(0);
-        await instance.animateToZoom(100, 800);
+        await instance.animateToZoom(75, 800);
       });
     }
 
