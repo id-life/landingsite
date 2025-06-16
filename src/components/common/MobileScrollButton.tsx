@@ -38,8 +38,8 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
     // 创建循环动画
     const createRippleAnim = (el: HTMLElement, delay: number) => {
       gsap.to(el, {
-        width: 158, // 7.625rem = 122px
-        height: 76, // 2.5rem = 40px
+        width: '9.875rem',
+        height: '4.75rem',
         opacity: 0,
         duration: 2,
         delay,
