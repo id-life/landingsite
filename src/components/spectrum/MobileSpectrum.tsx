@@ -4,19 +4,22 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import ParticleGL from '../gl/ParticleGL';
+import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import MobileDiseaseManagementStatus from './MobileDiseaseManagementStatus';
 
 SwiperType.use([FreeMode]);
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const spectrumData = useSpectrumData();
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
   const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
@@ -24,6 +27,12 @@ function MobileSpectrum() {
   const swiperRef = useRef<SwiperType>();
   const [particleActive, setParticleActive] = useState(false);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+
+  const handleBackToSpectrum = useCallback(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [setIsShowingDiseaseManagement]);
+
+  const spectrumData = useSpectrumData();
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -86,6 +95,19 @@ function MobileSpectrum() {
     setMobileImageIdx1(1);
     setMobileImageIdx2(2);
   }, [createEnterAnimation, createExitAnimation, currentPage]);
+
+  if (isShowingDiseaseManagement) {
+    return (
+      <div
+        id={NAV_LIST[2].id}
+        className={cn('relative h-[100svh] overflow-y-auto text-white', {
+          hidden: currentPage?.id !== NAV_LIST[2].id,
+        })}
+      >
+        <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
+      </div>
+    );
+  }
 
   return (
     <div

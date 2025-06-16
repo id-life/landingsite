@@ -5,6 +5,8 @@ import gsap from 'gsap';
 import jsonp from '@/utils/jsonp';
 import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
+import { useGA } from '@/hooks/useGA';
+import { isMobile } from 'react-device-detect';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
@@ -13,15 +15,18 @@ import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
-import { isMobile } from 'react-device-detect';
-import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { ValueOf } from '@/constants/config';
 
-export enum MediaLinkType {
-  Youtube = 'youtube',
-  Linkedin = 'linkedin',
-  Media = 'media',
-}
+export const MediaLinkType = {
+  Youtube: 'youtube',
+  Linkedin: 'linkedin',
+  Media: 'media',
+  Podcast: 'podcast',
+  Xyz: 'xyz',
+} as const;
+
+export type MediaLinkTypeKey = ValueOf<typeof MediaLinkType>;
 
 export default function FooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -51,10 +56,10 @@ export default function FooterContact() {
     });
   };
 
-  const handleLinkClick = (type: MediaLinkType) => {
+  const handleLinkClick = (type: MediaLinkTypeKey) => {
     trackEvent({
       name: GA_EVENT_NAMES.MEDIUM_CLICK,
-      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
+      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<MediaLinkTypeKey>],
     });
 
     if (type === MediaLinkType.Youtube) {
