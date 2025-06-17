@@ -1,11 +1,4 @@
-
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
-
-export type BaseResponse<T = any> = {
-  code: number;
-  message: string;
-  data: T;
-};
 
 export interface CharacterRelationData {
   character: string;
@@ -23,7 +16,7 @@ export type CharacterRelationDataResponse = ({ id: number } & CharacterRelationD
 
 export type AddCharacterRelationData = Omit<CharacterRelationData, 'relation'> & {
   relation: CharacterRelation[];
-}
+};
 
 export type NewsListItem = {
   id: number;
