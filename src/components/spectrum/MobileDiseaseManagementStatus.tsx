@@ -1,9 +1,9 @@
 import { FC, useMemo, useState } from 'react';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
-import { ArrowSVG } from '../svg';
 import FileSVG from '@/../public/svgs/file.svg?component';
 import DotCount from './DotCount';
+import BackButton from './BackButton';
 
 interface DiseaseManagementStatusProps {
   onBack: () => void;
@@ -55,19 +55,16 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
-    <div className="relative flex flex-col space-y-7.5 px-5 pb-20 pt-[5.1875rem]">
-      {diseaseManagementStatusItems.map((item) => (
-        <DiseaseManagementStatusItem key={item.title} {...item} />
-      ))}
-
-      <button
-        onClick={onBack}
-        className="absolute left-4 top-[5.1875rem] flex items-center gap-1 rounded-md fill-white text-base font-semibold text-white"
-      >
-        <ArrowSVG className="w-4 rotate-90" />
-        <span>Back</span>
-      </button>
-    </div>
+    <>
+      <div className="h-screen overflow-y-auto px-5 pb-28 pt-[5.1875rem]">
+        <div className="flex flex-col space-y-7.5">
+          {diseaseManagementStatusItems.map((item) => (
+            <DiseaseManagementStatusItem key={item.title} {...item} />
+          ))}
+        </div>
+      </div>
+      <BackButton onClick={onBack} className="fixed bottom-25 left-1/2 -translate-x-1/2 mobile:bottom-20" />
+    </>
   );
 };
 

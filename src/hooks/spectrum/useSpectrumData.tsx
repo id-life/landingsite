@@ -72,10 +72,6 @@ export const useSpectrumData = () => {
     [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
   );
 
-  const handleDiseaseManagementClick = useCallback(() => {
-    setShowDiseaseManagement(true);
-  }, [setShowDiseaseManagement]);
-
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
       {

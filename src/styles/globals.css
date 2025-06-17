@@ -290,6 +290,17 @@
     height: 2.5rem;
   }
 
+  .back-button-ripple-init {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 0.7px solid white;
+    border-radius: 9999px;
+    width: 7.625rem;
+    height: 2.5rem;
+  }
+
   .hide-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
