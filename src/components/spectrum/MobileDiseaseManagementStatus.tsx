@@ -2,6 +2,7 @@ import { FC, useMemo, useState } from 'react';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import FileSVG from '@/../public/svgs/file.svg?component';
+import LogoSVG from '@/../public/svgs/logo-monochrome.svg?component';
 import DotCount from './DotCount';
 import BackButton from './BackButton';
 
@@ -11,12 +12,22 @@ interface DiseaseManagementStatusProps {
 
 const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img, title, counts, data, columns, pdf }) => {
   const [showAmount, setShowAmount] = useState(4);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   const showedData = useMemo(() => data.slice(0, showAmount), [data, showAmount]);
 
   return (
     <div className="flex w-full flex-col items-center font-semibold text-white">
-      <img src={img} alt="" className="mb-5 h-[13.6875rem] w-[14.8125rem]" />
+      <div className="mb-5 flex h-[13.6875rem] w-[14.8125rem] flex-shrink-0 items-center justify-center">
+        {isImageLoading && <LogoSVG className="w-[13rem] animate-pulse text-[#1c1c1c]" />}
+        <img
+          src={img}
+          alt={title}
+          className={`h-full w-full object-cover ${isImageLoading ? 'hidden' : 'block'}`}
+          onLoad={() => setIsImageLoading(false)}
+          onError={() => setIsImageLoading(false)}
+        />
+      </div>
       <span className="mb-3 text-base leading-5">{title}</span>
       <div className="mb-7 flex space-x-8 text-xl leading-5">
         <DotCount className="h-[3px] w-[3px] bg-green-500">{counts[0]}</DotCount>
