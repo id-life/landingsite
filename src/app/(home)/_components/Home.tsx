@@ -25,6 +25,7 @@ import { GA_EVENT_NAMES } from '@/constants/ga';
 import Spectrum from '@/components/spectrum/Spectrum';
 import CharacterRelation from '@/components/character-relation/CharacterRelation';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
+import PCFixedUI from '@/components/common/PCFixedUI';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -92,6 +93,7 @@ export default function Home() {
     });
     spectrumTL.to(root, {
       '--gradient-via': '#C1111111',
+      '--gradient-to': '#C111114C',
       '--gradient-via-percent': '80%',
       '--gradient-rotate': '300deg',
       duration: 3,
@@ -108,6 +110,16 @@ export default function Home() {
     engagementTL.to(root, {
       '--gradient-from': '#000000',
       '--gradient-via': '#000000',
+      '--gradient-via-percent': '50%',
+      '--gradient-to': '#000000',
+      '--background': '#000000',
+      '--foreground': '#FFFFFF',
+      duration: 0.01, // set the duration to 0.01 to avoid the flash
+    });
+    engagementTL.to(root, {
+      '--gradient-from': '#000000',
+      '--gradient-via': '#000000',
+      '--gradient-via-percent': '50%',
       '--gradient-to': '#000000',
       '--background': '#000000',
       '--foreground': '#FFFFFF',
@@ -149,6 +161,7 @@ export default function Home() {
           <CharacterRelation />
         </div>
       </div>
+      <PCFixedUI />
     </>
   );
 }

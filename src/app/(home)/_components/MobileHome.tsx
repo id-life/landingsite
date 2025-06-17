@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
 import MobileCharacterRelation from '@/components/character-relation/mobile/MobileCharacterRelation';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
+import MobileFixedUI from '@/components/common/MobileFixedUI';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
@@ -48,6 +49,7 @@ export default function MobileHome() {
         <MobileFooterContact />
         <MobileCharacterRelation />
       </div>
+      <MobileFixedUI />
     </>
   );
 }

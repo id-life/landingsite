@@ -1,3 +1,4 @@
+
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 
 export type BaseResponse<T = any> = {
@@ -22,4 +23,22 @@ export type CharacterRelationDataResponse = ({ id: number } & CharacterRelationD
 
 export type AddCharacterRelationData = Omit<CharacterRelationData, 'relation'> & {
   relation: CharacterRelation[];
+}
+
+export type NewsListItem = {
+  id: number;
+  title: string;
+  brief: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NewsContent = {
+  id: number;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
 };

@@ -17,6 +17,7 @@ import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
 import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export type SpectrumLinkItem = {
   label: string;
@@ -44,6 +45,7 @@ export const useSpectrumData = () => {
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
   const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
   const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
+  const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -77,6 +79,11 @@ export const useSpectrumData = () => {
   const handleCharacterRelationShow = useCallback(() => {
     isMobile ? setIsMobileCharacterRelationShow(true) : setIsCharacterRelationShow(true);
   }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
+
+  const handleDiseaseManagementClick = useCallback(() => {
+    setShowDiseaseManagement(true);
+  }, [setShowDiseaseManagement]);
+
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -181,6 +188,12 @@ export const useSpectrumData = () => {
             label: 'Influence Network',
             onClick: () => handleCharacterRelationShow(),
           },
+          {
+            label: 'Disease Management & Cure Status',
+            onClick: () => {
+              setShowDiseaseManagement(true);
+            },
+          },
         ],
       },
       {
@@ -223,7 +236,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot]);
+  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
 
   return spectrumData;
 };

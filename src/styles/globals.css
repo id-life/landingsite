@@ -142,6 +142,66 @@
     /* 设置字体优先级：先尝试 poppins (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
     font-family: var(--font-poppins), var(--font-source-han-sans-cn), sans-serif;
   }
+
+  .corner-button::before,
+  .corner-button::after,
+  .corner-button span::before,
+  .corner-button span::after {
+    content: '';
+    display: block;
+    border-color: #979797;
+    @apply absolute size-3 border-2;
+  }
+
+  .corner-button::before {
+    @apply left-0 top-0 border-b-0 border-r-0;
+  }
+
+  .corner-button::after {
+    @apply right-0 top-0 border-b-0 border-l-0;
+  }
+
+  .corner-button > span::before {
+    @apply bottom-0 left-0 border-r-0 border-t-0;
+  }
+
+  .corner-button > span::after {
+    @apply bottom-0 right-0 border-l-0 border-t-0;
+  }
+
+  .corner-button:hover::before,
+  .corner-button:hover::after,
+  .corner-button:hover span::before,
+  .corner-button:hover span::after {
+    @apply border-white;
+  }
+
+  .corner-button-top {
+    @apply corner-button border-b border-white/20 bg-white/10 backdrop-blur-[50px] backdrop-filter;
+  }
+
+  .corner-button-top > span::before,
+  .corner-button-top > span::after {
+    display: none;
+  }
+
+  .corner-button-top::before,
+  .corner-button-top::after,
+  .corner-button-top span::before,
+  .corner-button-top span::after {
+    @apply size-2 border-white;
+  }
+
+  .corner-button-top:hover {
+    @apply fill-[#b41010] text-[#b41010];
+  }
+
+  .corner-button-top:hover::before,
+  .corner-button-top:hover::after,
+  .corner-button-top:hover span::before,
+  .corner-button-top:hover span::after {
+    @apply border-[#b41010];
+  }
 }
 
 @layer utilities {
