@@ -10,6 +10,7 @@ import { CharacterRelationImpression } from '@/apis/types';
 interface BePartOfItInputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   mode?: Exclude<IndividualType, 'all'>;
+  tagPlaceholderHeight?: string;
   impression?: CharacterRelationImpression;
   onImpressionChange?: (impression: CharacterRelationImpression) => void;
 }
@@ -22,6 +23,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
     value = '',
     autoComplete = 'name',
     mode = 'visitor',
+    tagPlaceholderHeight = 'h-7.5',
     impression,
     onBlur,
     onFocus,
@@ -45,7 +47,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
   const isTagActive = impression !== CHARACTER_RELATION_IMPRESSION.MIXED;
 
   return (
-    <div>
+    <div className="w-full">
       <label className="relative block">
         <input
           type={type}
@@ -73,7 +75,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
         </span>
       </label>
       {!isIntroducer || (isIntroducer && !isFocused) ? (
-        <div className="h-7.5 w-full"></div>
+        <div className={cn('w-full', tagPlaceholderHeight)}></div>
       ) : (
         <div onPointerDown={(e) => e.preventDefault()} className="pl-3 pt-2.5 mobile:mb-4">
           <div className="flex items-center gap-2">

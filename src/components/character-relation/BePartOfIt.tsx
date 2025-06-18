@@ -182,7 +182,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       </div>
 
       <form className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
-        <div className={cn('flex w-full gap-x-6', 'mobile:flex mobile:flex-col')}>
+        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col')}>
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
@@ -192,45 +192,65 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             disabled={isMutationPending || isMutationSuccess}
             onChange={(e) => setCharacter(e.target.value)}
           />
-          {relation.map((rel, i) => (
-            <BePartOfItInput
-              key={`introducer-input-${i}`}
-              mode="introducer"
-              placeholder={i === 0 ? 'Who inspired you?' : 'Anyone else? If not, just press confirm.'}
-              required={i === 0}
-              disabled={isMutationPending || isMutationSuccess}
-              value={rel.character}
-              impression={rel.impression}
-              onBlur={() => handleAddRelation(i)}
-              onChange={(e) => handleRelationCharacterChange(e.target.value, i)}
-              onImpressionChange={(impression) => handleRelationImpressionChange(impression, i)}
-            />
-          ))}
+          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col')}>
+            {relation.map((rel, i) => (
+              <BePartOfItInput
+                key={`introducer-input-${i}`}
+                mode="introducer"
+                placeholder={i === 0 ? 'Who inspired you?' : 'Anyone else? If not, just press confirm.'}
+                required={i === 0}
+                disabled={isMutationPending || isMutationSuccess}
+                value={rel.character}
+                impression={rel.impression}
+                tagPlaceholderHeight="h-4"
+                onBlur={() => handleAddRelation(i)}
+                onChange={(e) => handleRelationCharacterChange(e.target.value, i)}
+                onImpressionChange={(impression) => handleRelationImpressionChange(impression, i)}
+              />
+            ))}
+          </div>
         </div>
 
-        <div
-          className={cn(
-            'footer-submit-clip relative mt-1.5 w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]',
-            'mobile:w-full',
-          )}
-          onPointerDown={() => (isSubmittingRef.current = true)}
-          onPointerUp={() => (isSubmittingRef.current = false)}
-        >
-          {isMutationPending ? (
-            <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
-              <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
-            </div>
-          ) : null}
-          {isMutationSuccess ? (
-            <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
-              <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
-            </div>
-          ) : null}
-          <input
-            className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
-            type="submit"
-            value="Confirm"
-          />
+        <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
+          <div className="font-poppins text-xs font-medium tracking-normal text-black/50 mobile:mt-3">
+            This page is a derived work from{' '}
+            <a
+              href="https://agingbiotech.info/people/"
+              target="_blank"
+              className={cn(
+                'relative text-red-600',
+                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-red-600 after:transition after:duration-300 hover:after:scale-x-100',
+              )}
+            >
+              https://agingbiotech.info/people/
+            </a>
+            . For more comprehensive information, please visit the original website.
+          </div>
+
+          <div
+            className={cn(
+              'footer-submit-clip relative mt-1.5 w-[10.5rem] flex-shrink-0 bg-red-600 text-white mobile:w-[5.625rem]',
+              'mobile:mt-3.5 mobile:w-full',
+            )}
+            onPointerDown={() => (isSubmittingRef.current = true)}
+            onPointerUp={() => (isSubmittingRef.current = false)}
+          >
+            {isMutationPending ? (
+              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+              </div>
+            ) : null}
+            {isMutationSuccess ? (
+              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+              </div>
+            ) : null}
+            <input
+              className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
+              type="submit"
+              value="Confirm"
+            />
+          </div>
         </div>
       </form>
     </div>
