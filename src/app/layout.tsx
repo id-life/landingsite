@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import Providers from '@/providers/root';
 import ClientNav from '@/components/nav/CilentNav';
 import Background from '@/components/common/Background';
+import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import ScrollBehavior from '@/components/common/ScrollBehavior';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <Background />
         </Providers>
+        <NewsArticle1 />
       </body>
     </html>
   );
