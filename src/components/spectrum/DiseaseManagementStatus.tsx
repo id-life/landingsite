@@ -44,13 +44,13 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
       <DataTable
         columns={columns}
         data={data}
-        className="w-full overflow-visible"
+        className="w-full table-fixed overflow-visible"
         tableClassName="text-xs border-none"
         headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
         headerRowClass="border-none bg-white/10 top-0 backdrop-blur"
-        bodyClass="bg-transparent [&_td:last-child]:text-left pt-1"
+        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-[10rem] [&_td:last-child]:max-w-[20rem] pt-1"
         rowClass="border-none bg-transparent hover:bg-white/5"
-        cellClass="font-normal pr-2"
+        cellClass="font-normal pr-5 truncate"
       />
     </div>
   );

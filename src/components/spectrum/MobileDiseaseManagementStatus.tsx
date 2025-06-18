@@ -50,10 +50,9 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         tableClassName="border-none"
         headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
         headerRowClass="border-none bg-white/10 backdrop-blur top-0 [&_th]:text-xs truncate max-w-[30svw]"
-        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:pl-5 pt-1"
+        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-25 [&_td:first-child]:truncate [&_td:first-child]:pl-5 pt-1"
         rowClass="border-none bg-transparent hover:bg-white/5"
-        cellClass="font-normal text-xs font-light truncate pr-2 py-2.5 max-w-[30svw]"
-        stickyHeader={true}
+        cellClass="font-normal text-xs font-light truncate pr-5 py-2.5 max-w-[30svw]"
       />
       <div className="p-2.5 text-center">
         <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
