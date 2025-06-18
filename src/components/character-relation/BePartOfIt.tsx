@@ -202,7 +202,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
                 disabled={isMutationPending || isMutationSuccess}
                 value={rel.character}
                 impression={rel.impression}
-                tagPlaceholderHeight="h-4"
+                tagPlaceholderHeight={isMobile ? 'h-4' : 'h-7.5'}
                 onBlur={() => handleAddRelation(i)}
                 onChange={(e) => handleRelationCharacterChange(e.target.value, i)}
                 onImpressionChange={(impression) => handleRelationImpressionChange(impression, i)}
