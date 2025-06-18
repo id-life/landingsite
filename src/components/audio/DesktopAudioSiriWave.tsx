@@ -15,8 +15,10 @@ function DesktopAudioSiriWave({ className }: { className?: string }) {
   }, [playStatus]);
 
   return (
-    <div className={cn('flex-center h-6 flex-1 overflow-hidden pt-1.5', className)}>
-      <Siriwave width={100} height={30} amplitude={0} theme="ios9" onInit={(siriwave) => (siriwaveRef.current = siriwave)} />
+    <div className={cn('flex-center relative h-6 flex-1 overflow-hidden', className)}>
+      <div className="translate-y-[10%]">
+        <Siriwave width={100} height={30} amplitude={0} theme="ios9" onInit={(siriwave) => (siriwaveRef.current = siriwave)} />
+      </div>
     </div>
   );
 }

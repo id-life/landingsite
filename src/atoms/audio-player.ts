@@ -4,7 +4,8 @@ import { AudioDataItem } from '@/apis/types';
 
 export const PlayList = {
   MUSIC: 'music',
-  PODCAST: 'podcast',
+  PODCAST_ID: 'podcast_id',
+  PODCAST_LT: 'podcast_lt',
 } as const;
 export type PlayListKey = ValueOf<typeof PlayList>;
 
@@ -16,14 +17,19 @@ export const PlayMode = {
 } as const;
 export type PlayModeKey = ValueOf<typeof PlayMode>;
 
+export type PlayPodcastKey = Exclude<PlayListKey, 'music'>;
+
 export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
+
+export const currentPlayPodcastAtom = atom<PlayPodcastKey>(PlayList.PODCAST_ID);
 
 export const currentPlayStatusAtom = atom<boolean>(false);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
 
 export const musicListAtom = atom<AudioDataItem[]>([]);
-export const podcastListAtom = atom<AudioDataItem[]>([]);
+export const podcastIDAtom = atom<AudioDataItem[]>([]);
+export const podcastLTAtom = atom<AudioDataItem[]>([]);
 
 export const playlistAtom = atom<AudioDataItem[]>([]);
 

@@ -9,9 +9,11 @@ import React, { useEffect, useState } from 'react';
 import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
+import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
+  useCurrentMusicControl();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
