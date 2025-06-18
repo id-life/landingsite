@@ -523,6 +523,11 @@ const manageableData = [
   },
 ];
 
+function capitalizeFirstLetter(str: string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const curableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'names',
@@ -532,7 +537,7 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'curable',
     header: 'Curable?',
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue() as string),
   },
   {
     accessorKey: 'introduction',
@@ -550,7 +555,7 @@ const manageableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'manageable',
     header: 'Manageable?',
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue() as string),
   },
   {
     accessorKey: 'possibleCause',
