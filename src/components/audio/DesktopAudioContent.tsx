@@ -113,37 +113,36 @@ export default function DesktopMusicContent() {
         </div>
       )}
       <div className="hide-scrollbar mt-5 grid max-h-[17rem] grid-cols-1 gap-5 overflow-y-auto overflow-x-hidden">
-        {currentList === PlayList.MUSIC &&
-          musicList.map((item) => (
-            <DesktopMusicItem
-              key={item.id}
-              data={item}
-              currentMusicId={currentMusic?.id}
-              onClick={() => handleChangeAudio(item)}
-              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
-            />
-          ))}
-
-        {currentList === PlayList.PODCAST_ID &&
-          podcastID.map((item) => (
-            <DesktopPodcastItem
-              key={item.id}
-              data={item}
-              currentMusicId={currentMusic?.id}
-              onClick={() => handleChangeAudio(item)}
-              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
-            />
-          ))}
-        {currentList === PlayList.PODCAST_LT &&
-          podcastLT.map((item) => (
-            <DesktopPodcastItem
-              key={item.id}
-              data={item}
-              currentMusicId={currentMusic?.id}
-              onClick={() => handleChangeAudio(item)}
-              onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
-            />
-          ))}
+        {musicList.map((item) => (
+          <DesktopMusicItem
+            key={item.id}
+            data={item}
+            className={currentList !== PlayList.MUSIC ? 'hidden' : ''}
+            currentMusicId={currentMusic?.id}
+            onClick={() => handleChangeAudio(item)}
+            onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
+          />
+        ))}
+        {podcastID.map((item) => (
+          <DesktopPodcastItem
+            key={item.id}
+            data={item}
+            className={currentList !== PlayList.PODCAST_ID ? 'hidden' : ''}
+            currentMusicId={currentMusic?.id}
+            onClick={() => handleChangeAudio(item)}
+            onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
+          />
+        ))}
+        {podcastLT.map((item) => (
+          <DesktopPodcastItem
+            key={item.id}
+            data={item}
+            className={currentList !== PlayList.PODCAST_LT ? 'hidden' : ''}
+            currentMusicId={currentMusic?.id}
+            onClick={() => handleChangeAudio(item)}
+            onSeekTo={(value) => dispatch({ type: 'SEEK_TO', value })}
+          />
+        ))}
       </div>
     </div>
   );

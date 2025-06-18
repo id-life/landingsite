@@ -13,9 +13,10 @@ type DesktopPodcastItemProps = {
   onClick: () => void;
   currentMusicId?: number;
   onSeekTo?: (value: number) => void;
+  className?: string;
 };
 
-function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo }: DesktopPodcastItemProps) {
+function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className }: DesktopPodcastItemProps) {
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const controls = useAtomValue(audioControlsAtom);
 
@@ -33,7 +34,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo }: Desktop
   };
 
   return (
-    <div className="flex items-start gap-2.5 mobile:w-full mobile:overflow-hidden">
+    <div className={clsx('flex items-start gap-2.5 mobile:w-full mobile:overflow-hidden', className)}>
       <img className="size-12.5" src={data.album} alt="" />
       <div className="flex flex-1 items-start gap-0.5 overflow-hidden mobile:w-[calc(100%_-_60px)]">
         {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
@@ -67,8 +68,10 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo }: Desktop
             </>
           ) : null}
           <div className="mt-2 flex items-center justify-between">
-            <div className="text-ss/3.5 font-medium">
-              {dayjs.duration(data.duration, 'seconds').format('m')}min {dayjs(data.createdAt).format('YYYY/MM/DD')}
+            <div className="flex-center gap-1 text-ss/3.5 font-medium opacity-50">
+              <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>
+              <span>·</span>
+              <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
             </div>
             <div className="flex items-center gap-1">
               {data.xyzLink && (

@@ -11,9 +11,10 @@ type DesktopMusicItemProps = {
   data: AudioDataItem;
   currentMusicId?: number;
   onSeekTo?: (value: number) => void;
+  className?: string;
 };
 
-function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMusicItemProps) {
+function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }: DesktopMusicItemProps) {
   const controls = useAtomValue(audioControlsAtom);
   const playStatus = useAtomValue(currentPlayStatusAtom);
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
@@ -54,7 +55,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo }: DesktopMu
   }, [playStatus, isCurrent, controls.currentTime]);
 
   return (
-    <div className="">
+    <div className={className}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-0.5">
           {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
