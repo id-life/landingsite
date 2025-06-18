@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import FileSVG from '@/../public/svgs/file.svg?component';
+import LogoSVG from '@/../public/svgs/logo-monochrome.svg?component';
 import DotCount from './DotCount';
 import BackButton from './BackButton';
 
@@ -11,9 +12,20 @@ interface DiseaseManagementStatusProps {
 }
 
 const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img, title, counts, data, columns, pdf }) => {
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
   return (
     <div className="flex w-full flex-col items-center font-semibold text-white">
-      <img src={img} alt="" className="mb-[3.125rem] h-[20.9rem] w-[20.9rem]" />
+      <div className="mb-[3.125rem] flex h-[20.9rem] w-[20.9rem] flex-shrink-0 items-center justify-center">
+        {isImageLoading && <LogoSVG className="w-[13rem] animate-pulse text-[#1c1c1c]" />}
+        <img
+          src={img}
+          alt={title}
+          className={`h-full w-full object-cover ${isImageLoading ? 'hidden' : 'block'}`}
+          onLoad={() => setIsImageLoading(false)}
+          onError={() => setIsImageLoading(false)}
+        />
+      </div>
       <span className="mb-4 text-center text-xl leading-6">{title}</span>
       <div className="mb-1 flex space-x-8 text-2xl leading-7">
         <DotCount className="bg-green-500">{counts[0]}</DotCount>
