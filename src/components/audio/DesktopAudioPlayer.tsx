@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as Popover from '@radix-ui/react-popover';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import DesktopMusicContent from './DesktopAudioContent';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
+import AudioTitle from '@/components/audio/AudioTitle';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
@@ -41,7 +42,12 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           )}
         >
           <DesktopAudioSiriWave />
-          <div className="w-[148px] truncate text-[12px]/[14px] font-semibold text-background">{data?.title}</div>
+          {/*<div className="w-[148px] text-[12px]/[14px] font-semibold text-background">*/}
+          {/*  <div>*/}
+          {/*    {data?.title} - {data?.artist}*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          <AudioTitle width={148} title={`${data?.title} - ${data?.artist}`} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
             {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>

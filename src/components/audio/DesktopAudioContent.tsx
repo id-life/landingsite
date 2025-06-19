@@ -24,7 +24,7 @@ import PlayRepeatOneSVG from '@/../public/svgs/player/play_repeat_one.svg?compon
 import PodcastSelected from '@/components/audio/PodcastSelected';
 
 const underLineClassName =
-  'after:absolute after:-bottom-2 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-9 after:bg-foreground';
+  'after:absolute after:-bottom-2 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-[36px] after:bg-foreground';
 
 export default function DesktopMusicContent() {
   const musicList = useAtomValue(musicListAtom);
