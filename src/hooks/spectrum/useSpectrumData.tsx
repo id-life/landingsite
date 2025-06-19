@@ -179,12 +179,12 @@ export const useSpectrumData = () => {
             label: 'Influence Network',
             isComingSoon: true,
           },
-          {
-            label: 'Disease Management & Cure Status',
-            onClick: () => {
-              setShowDiseaseManagement(true);
-            },
-          },
+          // {
+          //   label: 'Disease Management & Cure Status',
+          //   onClick: () => {
+          //     setShowDiseaseManagement(true);
+          //   },
+          // },
         ],
       },
       {
