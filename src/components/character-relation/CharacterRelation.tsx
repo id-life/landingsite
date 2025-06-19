@@ -44,7 +44,7 @@ const CharacterRelation = () => {
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
   const { refs, floatingStyles } = useFloating();
-  const { data } = useFetchCharacterRelation();
+  const { data, refetch } = useFetchCharacterRelation();
 
   const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
   const createClipPath = useCallback((isOpening: boolean) => {
@@ -83,6 +83,7 @@ const CharacterRelation = () => {
     if (currentPageIndex !== SPECTRUM_PAGE_INDEX) return;
 
     if (isCharacterRelationShow) {
+      refetch();
       setClipPathValue(createClipPath(true));
 
       if (!isBePartOfItSubmitted) {
@@ -109,6 +110,7 @@ const CharacterRelation = () => {
     createClipPath,
     setIsBePartOfItShow,
     resetBePartOfItTimer,
+    refetch,
   ]);
 
   const handleBePartOfItClose = useCallback(() => {
@@ -145,7 +147,7 @@ const CharacterRelation = () => {
         >
           <Background />
           <div ref={refs.setFloating} style={floatingStyles} className="character-relation-graph-wrapper h-full w-full">
-            {isCharacterRelationShow && <CharacterRelationGraph data={data} />}
+            {isCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
           </div>
           <CharacterRelationLegend />
         </motion.div>

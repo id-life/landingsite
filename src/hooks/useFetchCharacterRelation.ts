@@ -10,6 +10,7 @@ export function useFetchCharacterRelation() {
   return useQuery({
     queryKey: ['character-relation'],
     queryFn: () => fetchCharacterRelationData(),
+    enabled: false,
     select: (res) => {
       const transformedData =
         res.code === 200
