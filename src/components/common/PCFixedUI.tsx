@@ -13,12 +13,16 @@ import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   return (
     <>
-      {currentPage.id === NAV_LIST[0].id ? (
+      {isShowingDiseaseManagement ? (
+        <></>
+      ) : currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
         <PageArrows className={cn('fixed left-1/2 -translate-x-1/2', 'bottom-11 mobile:bottom-6')} />

@@ -59,7 +59,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 const DiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
     <>
-      <div className="flex h-screen flex-col px-32 pb-[10rem] pt-[9.5625rem]">
+      <div className="flex h-screen flex-col space-y-[3.25rem] px-32 pb-[2.75rem] pt-[9.5625rem]">
         <div
           className="flex flex-1 space-x-15 overflow-y-auto"
           onWheel={(e) => e.stopPropagation()}
@@ -69,11 +69,8 @@ const DiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) =
             <DiseaseManagementStatusItem key={item.title} {...item} />
           ))}
         </div>
+        <BackButton onClick={onBack} className="mx-auto" />
       </div>
-      {createPortal(
-        <BackButton onClick={onBack} className="fixed bottom-25 left-1/2 -translate-x-1/2 mobile:bottom-20" />,
-        document.body,
-      )}
     </>
   );
 };
