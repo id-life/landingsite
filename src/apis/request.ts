@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export type Response<T> = {
+export type Response<T = any> = {
   code: number;
   message: string;
   data: T;

@@ -4,15 +4,21 @@ import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration
 import FixedValue from '@/app/value/FixedValue';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import ToggleSoundButton from '@/components/common/ToggleSoundButton';
+import { isMobileBePartOfItShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
+import RippleButton from './RippleButton';
+import BackSVG from '@/../public/svgs/back.svg?component';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const [isMobileCharacterRelationShow, setIsMobileCharacterRelationShow] = useAtom(isMobileCharacterRelationShowAtom);
+  const setIsMobileBePartOfItShow = useSetAtom(isMobileBePartOfItShowAtom);
+
   return (
     <>
       {currentPage.id === NAV_LIST[0].id ? (
@@ -31,8 +37,30 @@ export default function MobileFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[5.5rem] mobile:h-2 mobile:w-2" />
       <FixedValue />
       <ClientOnly>
-        <ToggleSoundButton className="fixed bottom-7.5 right-5 z-[101] w-14 px-1.5" />
+        <ToggleSoundButton
+          className={cn(
+            'fixed bottom-7.5 right-5 z-[101] w-14 px-1.5',
+            isMobileCharacterRelationShow && 'character-relation-css-vars-inject',
+          )}
+        />
       </ClientOnly>
+      {isMobileCharacterRelationShow && (
+        <>
+          <button
+            className="fixed bottom-6 left-5 z-[51] w-[5.25rem] cursor-pointer rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
+            onClick={() => setIsMobileBePartOfItShow(true)}
+          >
+            JOIN +
+          </button>
+          <RippleButton
+            className="fixed bottom-7 left-1/2 z-[51] -translate-x-1/2"
+            onClick={() => setIsMobileCharacterRelationShow(false)}
+          >
+            <BackSVG className="fill-white" />
+            <p className="font-migrena text-base/4 font-bold uppercase text-white">Back</p>
+          </RippleButton>
+        </>
+      )}
     </>
   );
 }
