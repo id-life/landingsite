@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
 import * as Popover from '@radix-ui/react-popover';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -31,6 +31,11 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     setPlayStatus(!playStatus);
   };
 
+  const title = useMemo(
+    () => (data?.artist ? `${data?.title} - ${data?.artist}` : `${data?.title}`),
+    [data?.title, data?.artist],
+  );
+
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
@@ -42,12 +47,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           )}
         >
           <DesktopAudioSiriWave />
-          {/*<div className="w-[148px] text-[12px]/[14px] font-semibold text-background">*/}
-          {/*  <div>*/}
-          {/*    {data?.title} - {data?.artist}*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          <AudioTitle width={148} title={`${data?.title} - ${data?.artist}`} />
+          <AudioTitle width={148} title={title} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
             {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>

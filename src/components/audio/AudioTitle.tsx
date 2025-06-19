@@ -23,7 +23,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
 
     if (titleWidth > containerWidth) {
       const diff = titleWidth - containerWidth;
-      const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.5 });
       tl.fromTo(
         wrapper,
         { x: 0 },
@@ -31,7 +31,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
           x: -diff,
           duration: diff / 30,
           ease: 'linear',
-          delay: 1,
+          delay: 1.5,
         },
       );
       animationRef.current = tl;
