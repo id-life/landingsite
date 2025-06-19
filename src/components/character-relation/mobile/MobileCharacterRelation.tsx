@@ -28,7 +28,9 @@ const MobileCharacterRelation = () => {
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
-  const { data } = useFetchCharacterRelation();
+  const { data, refetch } = useFetchCharacterRelation();
+
+  console.log('===>', data);
 
   // clipPath animation state
   const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
@@ -56,6 +58,8 @@ const MobileCharacterRelation = () => {
     if (mobileCurrentPageIndex !== SPECTRUM_PAGE_INDEX) return;
 
     if (isMobileCharacterRelationShow) {
+      refetch();
+
       // Set opening clipPath animation
       setClipPathValue(createClipPath(true));
       gsap.set('.base-background2', { opacity: 100, delay: 0.5 });
@@ -86,6 +90,7 @@ const MobileCharacterRelation = () => {
     createClipPath,
     setIsBePartOfItShow,
     resetBePartOfItTimer,
+    refetch,
   ]);
 
   const handleBePartOfItClose = useCallback(() => {
@@ -134,7 +139,7 @@ const MobileCharacterRelation = () => {
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
           <Background />
-          {isMobileCharacterRelationShow && <CharacterRelationGraph data={data} />}
+          {isMobileCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
           <CharacterRelationLegend />
         </motion.div>
         {isMobileCharacterRelationShow && (
