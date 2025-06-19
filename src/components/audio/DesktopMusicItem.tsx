@@ -57,20 +57,23 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
   return (
     <div className={className}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-0.5">
-          {isCurrent ? <img className="w-4" src="/svgs/player/play_status.svg" alt="" /> : null}
+        <div className="flex items-center gap-[2px]">
+          {isCurrent ? <img className="w-[16px]" src="/svgs/player/play_status.svg" alt="" /> : null}
           <div
             onClick={onClick}
-            className={clsx('cursor-pointer truncate text-xs/5 font-semibold', isCurrent && 'text-red-600')}
+            className={clsx('cursor-pointer truncate text-[12px]/[20px] font-semibold', isCurrent && 'text-red-600')}
           >
             {data.title} - {data.artist}
           </div>
         </div>
         {isCurrent ? (
-          <img onClick={handleDownload} className="w-4 cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
+          <img onClick={handleDownload} className="w-[16px] cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
         ) : null}
       </div>
-      <div ref={containerRef} className={clsx('relative mt-1 h-5 cursor-pointer overflow-hidden', !isCurrent && 'hidden')} />
+      <div
+        ref={containerRef}
+        className={clsx('relative mt-[4px] h-[20px] cursor-pointer overflow-hidden', !isCurrent && 'hidden')}
+      />
     </div>
   );
 }

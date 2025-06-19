@@ -36,24 +36,24 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <div
           onClick={() => setIsOpen((v) => !v)}
           className={clsx(
-            'flex w-71 cursor-pointer items-center gap-2.5 rounded-full bg-audio-player px-2 transition duration-300 hover:scale-110',
+            'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-audio-player px-[8px]',
             className,
           )}
         >
           <DesktopAudioSiriWave />
-          <div className="w-37 truncate text-xs/3.5 font-semibold text-background">{data?.title}</div>
-          <div onClick={handleChangePlayStatus} className="size-4">
+          <div className="w-[148px] truncate text-[12px]/[14px] font-semibold text-background">{data?.title}</div>
+          <div onClick={handleChangePlayStatus} className="size-[16px]">
             {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>
         </div>
       </Popover.Trigger>
-      <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
+      <Popover.Anchor className={clsx('pointer-events-none h-[26px] w-[284px]', className)} />
       <Popover.Portal forceMount>
         <Popover.Content
           forceMount
           align="end"
           sideOffset={16}
-          className="z-10 w-100 rounded-lg border-2 border-audio-border bg-audio-content p-5 data-[state=closed]:hidden"
+          className="z-10 w-[400px] rounded-lg border-2 border-audio-border bg-audio-content p-[20px] data-[state=closed]:hidden"
         >
           <DesktopMusicContent />
         </Popover.Content>

@@ -63,7 +63,7 @@ export default function DesktopMusicContent() {
   return (
     <div className="text-foreground">
       <div className="flex items-center justify-between">
-        <div className="flex-center gap-3 text-xs/3 font-bold">
+        <div className="flex-center gap-[12px] text-[12px]/[12px] font-bold">
           <div
             className={clsx('relative cursor-pointer', currentList === PlayList.MUSIC && underLineClassName)}
             onClick={() => handleChangeList(PlayList.MUSIC)}
@@ -79,40 +79,40 @@ export default function DesktopMusicContent() {
         </div>
         <div
           onClick={handleChangePlayMode}
-          className="flex-center h-6.5 cursor-pointer select-none gap-0.5 rounded-full bg-audio-order px-2 text-center text-ss/3 font-semibold"
+          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-audio-order px-[8px] text-center text-[10px]/[12px] font-semibold"
         >
           {playMode === PlayMode.ORDER && (
             <>
-              <PlayOrderSVG className="w-4 stroke-foreground" />
-              <div className="w-18">Play in Order</div>
+              <PlayOrderSVG className="w-[16px] stroke-foreground" />
+              <div className="w-[72px]">Play in Order</div>
             </>
           )}
           {playMode === PlayMode.SHUFFLE && (
             <>
-              <PlayShuffleSVG className="w-4 stroke-foreground" />
-              <div className="w-18">Shuffle</div>
+              <PlayShuffleSVG className="w-[16px] stroke-foreground" />
+              <div className="w-[72px]">Shuffle</div>
             </>
           )}
           {playMode === PlayMode.REPEAT_ALL && (
             <>
-              <PlayRepeatSVG className="w-4 stroke-foreground" />
-              <div className="w-18">Repeat All</div>
+              <PlayRepeatSVG className="w-[16px] stroke-foreground" />
+              <div className="w-[72px]">Repeat All</div>
             </>
           )}
           {playMode === PlayMode.REPEAT_ONE && (
             <>
-              <PlayRepeatOneSVG className="w-4 stroke-foreground" />
-              <div className="w-18">Repeat One</div>
+              <PlayRepeatOneSVG className="w-[16px] stroke-foreground" />
+              <div className="w-[72px]">Repeat One</div>
             </>
           )}
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (
-        <div className="mt-4 flex items-center justify-start">
+        <div className="mt-[16px] flex items-center justify-start">
           <PodcastSelected />
         </div>
       )}
-      <div className="hide-scrollbar mt-5 grid max-h-[17rem] grid-cols-1 gap-5 overflow-y-auto overflow-x-hidden">
+      <div className="hide-scrollbar mt-[20px] grid max-h-[272px] grid-cols-1 gap-[20px] overflow-y-auto overflow-x-hidden">
         {musicList.map((item) => (
           <DesktopMusicItem
             key={item.id}
