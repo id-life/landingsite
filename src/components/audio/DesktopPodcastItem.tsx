@@ -5,6 +5,8 @@ import { useAtomValue } from 'jotai';
 import { AudioDataItem } from '@/apis/types';
 import dayjsDuration from 'dayjs/plugin/duration';
 import { audioControlsAtom } from '@/atoms/audio-player';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 dayjs.extend(dayjsDuration);
 
@@ -19,6 +21,7 @@ type DesktopPodcastItemProps = {
 function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className }: DesktopPodcastItemProps) {
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const controls = useAtomValue(audioControlsAtom);
+  const { trackEvent } = useGA();
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -76,7 +79,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
             <div className="flex items-center gap-[4px]">
               {data.xyzLink && (
                 <img
-                  onClick={() => handleOpenLink(data.xyzLink)}
+                  onClick={() => {
+                    trackEvent({
+                      name: GA_EVENT_NAMES.PODCAST_LINK_XYZ,
+                      label: data.title,
+                    });
+                    handleOpenLink(data.xyzLink);
+                  }}
                   className="w-[16px] cursor-pointer"
                   src="/imgs/player/fm_xiaoyuzhou.png"
                   alt=""
@@ -84,7 +93,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
               )}
               {data.podcastLink && (
                 <img
-                  onClick={() => handleOpenLink(data.podcastLink)}
+                  onClick={() => {
+                    trackEvent({
+                      name: GA_EVENT_NAMES.PODCAST_LINK_APPLE,
+                      label: data.title,
+                    });
+                    handleOpenLink(data.podcastLink);
+                  }}
                   className="w-[16px] cursor-pointer"
                   src="/imgs/player/fm_podcast.png"
                   alt=""

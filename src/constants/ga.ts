@@ -1,3 +1,4 @@
+import { PlayMode } from '@/atoms/audio-player';
 import { AnatomyCamera, PredictionModel } from '@/atoms/twin';
 import { MediaLinkType } from '@/components/layout/footer/FooterContact';
 import { ModelType } from '@/components/twin/model/type';
@@ -30,6 +31,17 @@ export const GA_EVENT_NAMES = {
 
   // value
   VALUE_VIEW: 'value_view',
+
+  // music player
+  MUSIC_PLAYER_START: 'music_player_start',
+  MUSIC_PLAYER_END: 'music_player_end',
+  MUSIC_SWITCH: 'music_switch',
+  PODCAST_MENU: 'podcast_menu',
+  PLAYER_MENU: 'player_menu',
+  PLAYER_TYPE: 'player_type',
+  PODCAST_LINK_XYZ: 'podcast_link_xyz',
+  PODCAST_LINK_APPLE: 'podcast_link_apple',
+  MUSIC_DOWNLOAD: 'music_download',
 } as const;
 
 export const GA_EVENT_LABELS = {
@@ -77,6 +89,24 @@ export const GA_EVENT_LABELS = {
     CAMERA9: '9',
     CAMERA10: '10',
   },
+  MUSIC_PLAYER_START: {
+    START: 'start',
+    PAUSE: 'pause',
+  },
+  PODCAST_MENU: {
+    LONG_TALK: 'longtalk',
+    IMMORTAL_DRAGONS: 'immortaldragons',
+  },
+  PLAYER_MENU: {
+    MUSIC: 'music',
+    PODCAST: 'podcast',
+  },
+  PLAYER_TYPE: {
+    ORDER: 'order',
+    REPEAT_ONE: 'repeat_one',
+    REPEAT_ALL: 'repeat_all',
+    SHUFFLE: 'shuffle',
+  },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,
   | 'PORTFOLIO_VIEW'
@@ -92,9 +122,15 @@ export const GA_EVENT_LABELS = {
   | 'VALUE_VIEW'
   | 'SPECTRUM_HOVER'
   | 'SPECTRUM_CLICK'
+  | 'MUSIC_PLAYER_END'
+  | 'MUSIC_SWITCH'
+  | 'PODCAST_LINK_XYZ'
+  | 'PODCAST_LINK_APPLE'
+  | 'MUSIC_DOWNLOAD'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
   MEDIUM_CLICK: Record<Uppercase<keyof typeof MediaLinkType>, string>;
   ANATOMY_SWITCH: Record<keyof typeof AnatomyCamera, string>;
+  PLAYER_TYPE: Record<keyof typeof PlayMode, string>;
 };
