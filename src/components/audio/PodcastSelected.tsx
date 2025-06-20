@@ -11,8 +11,8 @@ type PodcastSelectedProps = {
 const PodcastCategoryList = [PlayList.PODCAST_ID, PlayList.PODCAST_LT];
 
 const PodcastCategoryMap = {
-  [PlayList.PODCAST_ID]: '不朽真龙 IMMORTAL DRAGONS',
-  [PlayList.PODCAST_LT]: '龙门阵 LONG TALK',
+  [PlayList.PODCAST_ID]: '不朽真龙 Immortal Dragons',
+  [PlayList.PODCAST_LT]: '龙门阵 Long Talk',
 };
 
 function PodcastSelected({ className }: PodcastSelectedProps) {

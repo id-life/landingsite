@@ -32,7 +32,6 @@ export default function MobileFixedUI() {
       <FixedValue />
       <ClientOnly>
         <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
-        {/* <ToggleSoundButton className="fixed bottom-7.5 right-5 z-[101] w-14 px-1.5" /> */}
       </ClientOnly>
     </>
   );
