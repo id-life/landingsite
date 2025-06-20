@@ -541,7 +541,7 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
   },
   {
     accessorKey: 'introduction',
-    header: 'Introduction to the Disease',
+    header: 'Introduction',
     cell: (info) => info.getValue(),
   },
 ];
@@ -549,7 +549,7 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
 const manageableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'nameOfDisease',
-    header: 'Name of disease',
+    header: 'Name',
     cell: (info) => info.getValue(),
   },
   {
