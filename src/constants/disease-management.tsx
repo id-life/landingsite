@@ -571,7 +571,7 @@ export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
     counts: [801, 669],
     data: curableData,
     columns: curableDiseasesColumns,
-    pdf: 'https://cdn.id.life/curable%20disease%20survey.csv',
+    pdf: 'https://cdn.id.life/curable_disease_survey.csv',
   },
   {
     img: '/imgs/particle/spectrum/10.png',
@@ -579,6 +579,6 @@ export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
     counts: [1333, 5332],
     data: manageableData,
     columns: manageableDiseasesColumns,
-    pdf: 'https://cdn.id.life//manageable%20rare%20disease%20survey.csv',
+    pdf: 'https://cdn.id.life/manageable_rare_disease_survey.csv',
   },
 ];

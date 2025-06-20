@@ -10,18 +10,28 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { isMobileBePartOfItShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import RippleButton from './RippleButton';
 import BackSVG from '@/../public/svgs/back.svg?component';
+import { useEffect } from 'react';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const [isMobileCharacterRelationShow, setIsMobileCharacterRelationShow] = useAtom(isMobileCharacterRelationShowAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const setIsMobileBePartOfItShow = useSetAtom(isMobileBePartOfItShowAtom);
+
+  useEffect(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [currentPage.id, setIsShowingDiseaseManagement]);
 
   return (
     <>
-      {currentPage.id === NAV_LIST[0].id ? (
+      {isShowingDiseaseManagement ? (
+        <></>
+      ) : currentPage.id === NAV_LIST[0].id ? (
         <MobileScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
         <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />

@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 
 import '@/styles/globals.css';
 import 'swiper/css';
+import BodyScrollManager from '@/components/common/BodyScrollManager';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Providers>
+          <BodyScrollManager />
           <ScrollBehavior />
           <ClientNav />
           {children}

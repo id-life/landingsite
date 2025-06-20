@@ -48,7 +48,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         tableClassName="text-xs border-none"
         headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
         headerRowClass="border-none bg-white/10 top-0 backdrop-blur"
-        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-[10rem] [&_td:last-child]:max-w-[20rem] pt-1"
+        bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-[10rem] [&_td:first-child]:pl-[1.25rem] [&_td:last-child]:max-w-[20rem] pt-1"
         rowClass="border-none bg-transparent hover:bg-white/5"
         cellClass="font-normal pr-5 truncate"
       />
@@ -59,19 +59,18 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 const DiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
     <>
-      <div
-        className="mb-32 flex h-[100svh] space-x-15 overflow-y-scroll px-32 pt-[9.5625rem]"
-        onWheel={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-      >
-        {diseaseManagementStatusItems.map((item) => (
-          <DiseaseManagementStatusItem key={item.title} {...item} />
-        ))}
+      <div className="flex h-screen flex-col space-y-[3.25rem] px-32 pb-[2.75rem] pt-[9.5625rem]">
+        <div
+          className="flex flex-1 space-x-15 overflow-y-auto"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          {diseaseManagementStatusItems.map((item) => (
+            <DiseaseManagementStatusItem key={item.title} {...item} />
+          ))}
+        </div>
+        <BackButton onClick={onBack} className="mx-auto" />
       </div>
-      {createPortal(
-        <BackButton onClick={onBack} className="fixed bottom-25 left-1/2 -translate-x-1/2 mobile:bottom-20" />,
-        document.body,
-      )}
     </>
   );
 };

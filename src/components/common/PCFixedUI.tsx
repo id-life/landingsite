@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, ReactNode, useMemo } from 'react';
+import { memo, ReactNode, useEffect, useMemo } from 'react';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
@@ -16,15 +16,24 @@ import VerticalCarousel from './VerticalCarousel';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import RippleButton from './RippleButton';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const [isCharacterRelationShow, setIsCharacterRelationShow] = useAtom(isCharacterRelationShowAtom);
   const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
 
+  useEffect(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [currentPage, setIsShowingDiseaseManagement]);
+
   return (
     <>
-      {currentPage.id === NAV_LIST[0].id ? (
+      {isShowingDiseaseManagement ? (
+        <></>
+      ) : currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
         <PageArrows className={cn('fixed left-1/2 -translate-x-1/2', 'bottom-11 mobile:bottom-6')} />

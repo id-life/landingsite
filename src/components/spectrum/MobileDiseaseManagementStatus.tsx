@@ -66,14 +66,14 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
     <>
-      <div className="h-screen overflow-y-auto px-5 pb-28 pt-[5.1875rem]">
-        <div className="flex flex-col space-y-7.5">
+      <div className="flex h-screen flex-col px-5 pb-[5.5rem] pt-[5.1875rem]">
+        <div className="flex flex-1 flex-col space-y-7.5 overflow-y-auto">
           {diseaseManagementStatusItems.map((item) => (
             <DiseaseManagementStatusItem key={item.title} {...item} />
           ))}
         </div>
       </div>
-      <BackButton onClick={onBack} className="fixed bottom-25 left-1/2 -translate-x-1/2 mobile:bottom-20" />
+      <BackButton onClick={onBack} className="fixed bottom-[1.75rem] left-1/2 -translate-x-1/2" />
     </>
   );
 };
