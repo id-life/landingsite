@@ -1,13 +1,12 @@
 'use client';
 
-import { memo, ReactNode, useMemo } from 'react';
+import { memo, ReactNode, useEffect, useMemo } from 'react';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
-import { ReactNode, useEffect, useMemo } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
