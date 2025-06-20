@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { currentAudioAtom, currentPlayStatusAtom, PlayModeKey, playNextTrackAtom } from '@/atoms/audio-player';
 import {
@@ -11,8 +11,9 @@ import {
 } from '@/atoms/audio-player';
 
 export default function useCurrentAudio() {
+  const [hasInteracted, setHasInteracted] = useState(false);
   const currentAudio = useAtomValue(currentAudioAtom);
-  const playStatus = useAtomValue(currentPlayStatusAtom);
+  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setCanPlay = useSetAtom(canPlayAtom);
@@ -78,14 +79,38 @@ export default function useCurrentAudio() {
     if (playStatus) {
       const playPromise = audioRef.play();
       if (playPromise !== undefined) {
+        playPromise.then(() => {
+          setHasInteracted(true);
+        });
         playPromise.catch((error) => {
           console.error('播放失败:', error);
+          setPlayStatus(false);
         });
       }
     } else {
       audioRef.pause();
     }
-  }, [playStatus, controls.canPlay, audioRef]);
+  }, [playStatus, controls.canPlay, audioRef, setPlayStatus]);
+
+  useEffect(() => {
+    const enableAutoplay = () => setHasInteracted(true);
+
+    document.addEventListener('click', enableAutoplay);
+    document.addEventListener('touchstart', enableAutoplay);
+    document.addEventListener('keydown', enableAutoplay);
+
+    return () => {
+      document.removeEventListener('click', enableAutoplay);
+      document.removeEventListener('touchstart', enableAutoplay);
+      document.removeEventListener('keydown', enableAutoplay);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hasInteracted) {
+      setPlayStatus(true);
+    }
+  }, [hasInteracted, setPlayStatus]);
 
   return useMemo(() => ({ data: currentAudio, ...controls }), [controls, currentAudio]);
 }

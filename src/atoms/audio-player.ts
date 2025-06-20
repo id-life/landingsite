@@ -23,7 +23,7 @@ export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
 
 export const currentPlayPodcastAtom = atom<PlayPodcastKey>(PlayList.PODCAST_ID);
 
-export const currentPlayStatusAtom = atom<boolean>(false);
+export const currentPlayStatusAtom = atom<boolean>(true);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
 

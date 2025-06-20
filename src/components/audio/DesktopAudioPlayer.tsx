@@ -24,7 +24,6 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
     if (!musicList.length) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-    setPlayStatus(true);
   }, [musicList, setCurrentMusic, setPlaylistAtom, setPlayStatus]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
