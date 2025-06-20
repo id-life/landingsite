@@ -93,13 +93,15 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
     addCharacterRelationData(relationData, {
       onSuccess: () => onMutationSuccess(),
+      onSettled: () => (isSubmittingRef.current = false),
     });
   };
 
   const handleClose = () => {
-    if (isMutationPending || isSubmittingRef.current) return;
+    if (isMutationPending) return;
 
     onClose?.();
+    isSubmittingRef.current = false;
   };
 
   useEffect(() => {
@@ -161,13 +163,12 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 z-[102] w-max rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white',
-          !isMobile && relation.length > 1 ? 'left-1/2 -translate-x-1/2' : 'right-10',
+          'fixed -top-17 left-1/2 z-[102] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white',
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2 mobile:opacity-0',
         )}
       >
-        You will be part of the network soon! After we examine your information (
-        <span className="inline-block min-w-2.5 text-center">{countdown}</span>
+        You Will Be Part Of The Network Soon! After We Examine Your Information (
+        <span className="inline-block min-w-2.5 text-center leading-5">{countdown}</span>
         S)
       </div>
 
@@ -176,7 +177,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         className={cn('absolute right-6 top-6 flex cursor-pointer fill-black', isMutationPending && 'cursor-not-allowed')}
         onClick={handleClose}
         onPointerDown={() => (isSubmittingRef.current = true)}
-        onPointerUp={() => (isSubmittingRef.current = false)}
       >
         <CloseSVG />
       </div>
@@ -233,7 +233,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               'mobile:mt-3.5 mobile:w-full',
             )}
             onPointerDown={() => (isSubmittingRef.current = true)}
-            onPointerUp={() => (isSubmittingRef.current = false)}
           >
             {isMutationPending ? (
               <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">

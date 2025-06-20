@@ -30,8 +30,6 @@ const MobileCharacterRelation = () => {
 
   const { data, refetch } = useFetchCharacterRelation();
 
-  console.log('===>', data);
-
   // clipPath animation state
   const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
 
@@ -63,7 +61,7 @@ const MobileCharacterRelation = () => {
       // Set opening clipPath animation
       setClipPathValue(createClipPath(true));
       gsap.set('.base-background2', { opacity: 100, delay: 0.5 });
-      console.log('MobileCharacterRelation: ', isMobileBePartOfItSubmitted);
+
       if (!isMobileBePartOfItSubmitted) {
         // show BePartOfIt after 3 seconds when character relation is shown
         bePartOfItTimerRef.current = setTimeout(() => {
@@ -139,7 +137,9 @@ const MobileCharacterRelation = () => {
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
           <Background />
-          {isMobileCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
+          <div className="h-full w-full pb-17 pt-15">
+            {isMobileCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
+          </div>
           <CharacterRelationLegend />
         </motion.div>
         {isMobileCharacterRelationShow && (
