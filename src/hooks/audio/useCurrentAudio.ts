@@ -47,6 +47,7 @@ export default function useCurrentAudio() {
 
     audio.oncanplay = () => {
       setCanPlay(true);
+      setPlayStatus(true);
     };
 
     audio.ontimeupdate = () => {
