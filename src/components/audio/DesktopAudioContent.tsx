@@ -22,6 +22,8 @@ import PlayShuffleSVG from '@/../public/svgs/player/play_shuffle.svg?component';
 import PlayRepeatSVG from '@/../public/svgs/player/play_repeat.svg?component';
 import PlayRepeatOneSVG from '@/../public/svgs/player/play_repeat_one.svg?component';
 import PodcastSelected from '@/components/audio/PodcastSelected';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
 
 const underLineClassName =
   'after:absolute after:-bottom-2 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-[36px] after:bg-foreground';
@@ -36,17 +38,30 @@ export default function DesktopMusicContent() {
   const [playlist, setPlaylist] = useAtom(playlistAtom);
   const [currentMusic, setCurrentMusic] = useAtom(currentAudioAtom);
   const dispatch = useSetAtom(audioControlsAtom);
+  const { trackEvent } = useGA();
 
   const handleChangeList = (list: PlayListKey) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.PLAYER_MENU,
+      label: list === PlayList.MUSIC ? GA_EVENT_LABELS.PLAYER_MENU.MUSIC : GA_EVENT_LABELS.PLAYER_MENU.PODCAST,
+    });
     setCurrentList(list);
   };
 
   const handleChangePlayMode = () => {
     const nextMode = Object.values(PlayMode)[(Object.values(PlayMode).indexOf(playMode) + 1) % Object.values(PlayMode).length];
+    trackEvent({
+      name: GA_EVENT_NAMES.PLAYER_TYPE,
+      label: nextMode,
+    });
     dispatch({ type: 'SET_PLAY_MODE', value: nextMode });
   };
 
   const handleChangeAudio = (audio: AudioDataItem) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.MUSIC_SWITCH,
+      label: audio.title,
+    });
     setCurrentMusic(audio);
     if (audio.category === playlist[0].category) return;
     if (audio.category === PlayList.MUSIC) {

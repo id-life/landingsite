@@ -3,6 +3,8 @@ import { clsx } from 'clsx';
 import { useAtom, useSetAtom } from 'jotai';
 import { currentPlayListAtom, currentPlayPodcastAtom, PlayList, PlayPodcastKey } from '@/atoms/audio-player';
 import ArrowSVG from '@/../public/svgs/player/arrow.svg?component';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 type PodcastSelectedProps = {
   className?: string;
@@ -19,14 +21,23 @@ function PodcastSelected({ className }: PodcastSelectedProps) {
   const [isOpen, setIsOpen] = useState(false);
   const setCurrentPlayList = useSetAtom(currentPlayListAtom);
   const [selected, setSelected] = useAtom(currentPlayPodcastAtom);
+  const { trackEvent } = useGA();
 
   const handleChangePodcast = (key: PlayPodcastKey) => {
     setSelected(key);
     setIsOpen(false);
     if (key === PlayList.PODCAST_ID) {
+      trackEvent({
+        name: GA_EVENT_NAMES.PODCAST_MENU,
+        label: GA_EVENT_LABELS.PODCAST_MENU.IMMORTAL_DRAGONS,
+      });
       setCurrentPlayList(PlayList.PODCAST_ID);
     }
     if (key === PlayList.PODCAST_LT) {
+      trackEvent({
+        name: GA_EVENT_NAMES.PODCAST_MENU,
+        label: GA_EVENT_LABELS.PODCAST_MENU.LONG_TALK,
+      });
       setCurrentPlayList(PlayList.PODCAST_LT);
     }
   };

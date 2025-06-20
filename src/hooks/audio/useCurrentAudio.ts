@@ -1,14 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { currentAudioAtom, currentPlayStatusAtom, PlayModeKey, playNextTrackAtom } from '@/atoms/audio-player';
 import {
+  audioControlsAtom,
   audioRefAtom,
   canPlayAtom,
-  progressAtom,
+  currentAudioAtom,
+  currentPlayStatusAtom,
   currentTimeAtom,
   durationAtom,
-  audioControlsAtom,
+  playNextTrackAtom,
+  progressAtom,
 } from '@/atoms/audio-player';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function useCurrentAudio() {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -23,6 +27,8 @@ export default function useCurrentAudio() {
 
   const [controls, dispatch] = useAtom(audioControlsAtom);
   const playNextTrack = useSetAtom(playNextTrackAtom);
+
+  const { trackEvent } = useGA();
 
   useEffect(() => {
     // 清除上一个音频实例
@@ -60,6 +66,12 @@ export default function useCurrentAudio() {
     };
 
     audio.onended = () => {
+      // console.log('播放结束', currentAudio);
+      // 播放结束埋点
+      trackEvent({
+        name: GA_EVENT_NAMES.MUSIC_PLAYER_END,
+        label: currentAudio.title,
+      });
       playNextTrack();
     };
 
@@ -84,6 +96,11 @@ export default function useCurrentAudio() {
         playPromise
           .then(() => {
             setHasInteracted(true);
+            // console.log('播放开始', currentAudio);
+            trackEvent({
+              name: GA_EVENT_NAMES.MUSIC_PLAYER_START,
+              label: GA_EVENT_LABELS.MUSIC_PLAYER_START.START,
+            });
           })
           .catch((error) => {
             console.error('播放失败:', error);
@@ -91,9 +108,15 @@ export default function useCurrentAudio() {
           });
       }
     } else {
+      // console.log('播放暂停', currentAudio);
       audioRef.pause();
+      trackEvent({
+        name: GA_EVENT_NAMES.MUSIC_PLAYER_END,
+        label: GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE,
+      });
     }
-  }, [playStatus, controls.canPlay, audioRef, setPlayStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playStatus, controls.canPlay, audioRef, setPlayStatus, currentAudio]);
 
   useEffect(() => {
     const enableAutoplay = () => setHasInteracted(true);
