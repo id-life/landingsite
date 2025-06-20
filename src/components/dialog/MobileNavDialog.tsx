@@ -7,10 +7,11 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
+import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 gsap.registerPlugin(useGSAP);
 
@@ -18,6 +19,7 @@ function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
+  const setMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
   const isMobile = useIsMobile();
   const startAnim = useCallback(
     (isOpen: boolean) => {
@@ -35,6 +37,7 @@ function MobileNavDialog() {
 
   const handleNavClick = useThrottle((item: NavItem) => {
     startAnim(false);
+    setMobileCharacterRelationShow(false);
     setTimeout(() => {
       setOpen(false);
       setCurrentPage(item);

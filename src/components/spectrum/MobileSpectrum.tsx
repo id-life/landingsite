@@ -171,6 +171,10 @@ function MobileSpectrum() {
                     if (!element) return;
                     spectrumRefs.current[index] = element;
                   }}
+                  onClick={(e) => {
+                    console.log(item.title);
+                    item.onClick?.(e);
+                  }}
                 />
               </SwiperSlide>
             ))}

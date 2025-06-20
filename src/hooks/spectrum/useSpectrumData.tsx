@@ -1,7 +1,7 @@
 import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useSetAtom } from 'jotai';
-import { useCallback, useMemo } from 'react';
+import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -16,6 +16,7 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
+import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export type SpectrumLinkItem = {
@@ -33,6 +34,7 @@ export type SpectrumItemInfo = {
   icon: JSX.Element;
   links?: SpectrumLinkItem[];
   className?: string;
+  onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 };
 
 export const useSpectrumData = () => {
@@ -41,6 +43,8 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
+  const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
+  const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
   const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
@@ -71,6 +75,14 @@ export const useSpectrumData = () => {
     },
     [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
   );
+
+  const handleCharacterRelationShow = useCallback(() => {
+    isMobile ? setIsMobileCharacterRelationShow(true) : setIsCharacterRelationShow(true);
+  }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
+
+  const handleDiseaseManagementClick = useCallback(() => {
+    setShowDiseaseManagement(true);
+  }, [setShowDiseaseManagement]);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -173,7 +185,7 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            isComingSoon: true,
+            onClick: () => handleCharacterRelationShow(),
           },
           {
             label: 'Disease Management & Cure Status',
@@ -223,7 +235,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
+  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
 
   return spectrumData;
 };

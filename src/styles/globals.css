@@ -1,4 +1,5 @@
 @import './webgl.css';
+@import './components/character-relation.css';
 @import './loading.css';
 
 @tailwind base;
@@ -23,6 +24,7 @@
     --audio-content: #e2e8f4;
     --audio-border: #eef4ff;
     --audio-order: #ffffff;
+    --sqrt2: 1.4142135623730951;
   }
 
   /**::-webkit-scrollbar {*/
@@ -314,11 +316,5 @@
   .clip-talk-content {
     -webkit-clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
     clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
-  }
-
-  .text-ss {
-    font-size: 0.75rem;
-    transform: scale(0.833);
-    transform-origin: left top;
   }
 }
