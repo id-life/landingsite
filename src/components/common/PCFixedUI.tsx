@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, ReactNode, useMemo } from 'react';
 import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
@@ -7,7 +8,6 @@ import { currentPageAtom } from '@/atoms';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, ReactNode, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
@@ -36,13 +36,10 @@ export default function PCFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_18rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[7.5rem] mobile:h-2 mobile:w-2" />
       <CarouselWrapper />
       <ClientOnly>
-        <DesktopAudioPlayer className="fixed bottom-10 right-10 z-10" />
-        {/*<ToggleSoundButton*/}
-        {/*  className={cn(*/}
-        {/*    'fixed bottom-10 right-10 z-10',*/}
-        {/*    isCharacterRelationShow && 'character-relation-css-vars-inject z-[51]',*/}
-        {/*  )}*/}
-        {/*/>*/}
+        <DesktopAudioPlayer
+          className="fixed bottom-10 right-10 z-[51]"
+          injectClassName={isCharacterRelationShow ? 'character-relation-css-vars-inject' : ''}
+        />
       </ClientOnly>
       <NewFixedValue />
       {isCharacterRelationShow && (

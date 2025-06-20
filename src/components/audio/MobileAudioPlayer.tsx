@@ -11,7 +11,7 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 
-function MobileAudioPlayer({ className }: { className?: string }) {
+function MobileAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
   useFetchAudioData();
   useCurrentMusicControl();
   const musicList = useAtomValue(musicListAtom);
@@ -38,6 +38,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         className={clsx(
           'flex w-[4.875rem] cursor-pointer items-center gap-1 rounded-full bg-foreground px-1.5 transition duration-300',
           className,
+          injectClassName,
         )}
       >
         <DesktopAudioSiriWave className="w-6 overflow-hidden" />
@@ -54,7 +55,10 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           <Popover.Content
             align="end"
             sideOffset={16}
-            className="z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5"
+            className={clsx(
+              'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5',
+              injectClassName,
+            )}
           >
             <DesktopMusicContent />
           </Popover.Content>

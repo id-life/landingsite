@@ -11,7 +11,7 @@ import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { currentAudioAtom, currentPlayStatusAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 
-function DesktopAudioPlayer({ className }: { className?: string }) {
+function DesktopAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
   useFetchAudioData();
   const musicList = useAtomValue(musicListAtom);
   const { data } = useCurrentMusicControl();
@@ -45,6 +45,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           className={clsx(
             'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-audio-player px-[8px]',
             className,
+            injectClassName,
           )}
         >
           <DesktopAudioSiriWave />
@@ -60,7 +61,10 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           forceMount
           align="end"
           sideOffset={16}
-          className="z-10 w-[400px] rounded-lg border-2 border-audio-border bg-audio-content p-[20px] data-[state=closed]:hidden"
+          className={clsx(
+            'z-[51] w-[400px] rounded-lg border-2 border-audio-border bg-audio-content p-[20px] data-[state=closed]:hidden',
+            injectClassName,
+          )}
         >
           <DesktopMusicContent />
         </Popover.Content>

@@ -37,13 +37,10 @@ export default function MobileFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[5.5rem] mobile:h-2 mobile:w-2" />
       <FixedValue />
       <ClientOnly>
-        <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
-        {/*<ToggleSoundButton*/}
-        {/*  className={cn(*/}
-        {/*    'fixed bottom-7.5 right-5 z-[101] w-14 px-1.5',*/}
-        {/*    isMobileCharacterRelationShow && 'character-relation-css-vars-inject',*/}
-        {/*  )}*/}
-        {/*/>*/}
+        <MobileAudioPlayer
+          className="fixed bottom-8.5 right-5 z-10"
+          injectClassName={isMobileCharacterRelationShow ? 'character-relation-css-vars-inject z-[101]' : ''}
+        />
       </ClientOnly>
       {isMobileCharacterRelationShow && (
         <>
