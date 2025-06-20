@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { useAtomValue } from 'jotai';
+import { currentPlayStatusAtom } from '@/atoms/audio-player';
 
 type MusicTitleProps = {
   width?: number;
@@ -7,15 +9,17 @@ type MusicTitleProps = {
 };
 
 function AudioTitle({ width, title }: MusicTitleProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const playStatus = useAtomValue(currentPlayStatusAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     if (animationRef.current) {
+      animationRef.current.restart();
       animationRef.current.kill();
     }
-    if (!wrapperRef.current || !containerRef.current) return;
+    if (!wrapperRef.current || !containerRef.current || !playStatus) return;
     const wrapper = wrapperRef.current;
     const container = containerRef.current;
     const titleWidth = wrapper.clientWidth;
@@ -48,10 +52,11 @@ function AudioTitle({ width, title }: MusicTitleProps) {
 
     return () => {
       if (animationRef.current) {
+        animationRef.current.restart();
         animationRef.current.kill();
       }
     };
-  }, [title]);
+  }, [title, playStatus]);
 
   return (
     <div

@@ -42,6 +42,7 @@ export default function useCurrentAudio() {
     setDuration(0);
 
     const audio = new Audio(currentAudio.url);
+    audio.load();
     setAudioRef(audio);
 
     audio.oncanplay = () => {
@@ -79,13 +80,14 @@ export default function useCurrentAudio() {
     if (playStatus) {
       const playPromise = audioRef.play();
       if (playPromise !== undefined) {
-        playPromise.then(() => {
-          setHasInteracted(true);
-        });
-        playPromise.catch((error) => {
-          console.error('播放失败:', error);
-          setPlayStatus(false);
-        });
+        playPromise
+          .then(() => {
+            setHasInteracted(true);
+          })
+          .catch((error) => {
+            console.error('播放失败:', error);
+            setPlayStatus(false);
+          });
       }
     } else {
       audioRef.pause();
@@ -96,13 +98,8 @@ export default function useCurrentAudio() {
     const enableAutoplay = () => setHasInteracted(true);
 
     document.addEventListener('click', enableAutoplay);
-    document.addEventListener('touchstart', enableAutoplay);
-    document.addEventListener('keydown', enableAutoplay);
-
     return () => {
       document.removeEventListener('click', enableAutoplay);
-      document.removeEventListener('touchstart', enableAutoplay);
-      document.removeEventListener('keydown', enableAutoplay);
     };
   }, []);
 

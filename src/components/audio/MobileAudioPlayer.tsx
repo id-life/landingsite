@@ -24,7 +24,6 @@ function MobileAudioPlayer({ className, injectClassName }: { className?: string;
     if (!musicList.length) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-    setPlayStatus(true);
   }, [musicList, setCurrentMusic, setPlaylistAtom, setPlayStatus]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -51,12 +50,13 @@ function MobileAudioPlayer({ className, injectClassName }: { className?: string;
           </div>
         </Popover.Trigger>
         <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
-        <Popover.Portal>
+        <Popover.Portal forceMount>
           <Popover.Content
+            forceMount
             align="end"
             sideOffset={16}
             className={clsx(
-              'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5',
+              'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5 data-[state=closed]:hidden',
               injectClassName,
             )}
           >
