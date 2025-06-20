@@ -5,16 +5,23 @@ import FixedValue from '@/app/value/FixedValue';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import MobileAudioPlayer from '../audio/MobileAudioPlayer';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { useEffect } from 'react';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+
+  useEffect(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [currentPage.id, setIsShowingDiseaseManagement]);
+
   return (
     <>
       {isShowingDiseaseManagement ? (

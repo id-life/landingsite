@@ -5,8 +5,8 @@ import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
-import { ReactNode, useMemo } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { ReactNode, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import PageArrows from './PageArrows';
@@ -18,6 +18,12 @@ import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+
+  useEffect(() => {
+    setIsShowingDiseaseManagement(false);
+  }, [currentPage, setIsShowingDiseaseManagement]);
+
   return (
     <>
       {isShowingDiseaseManagement ? (
