@@ -1,8 +1,9 @@
 import React, { cache } from 'react';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
+import { notFound } from 'next/navigation';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { fetchNewsContent, fetchNewsList } from '@/apis';
+import { fetchNewsContent } from '@/apis';
 import rehypeRaw from 'rehype-raw';
 import 'github-markdown-css';
 import '@/styles/markdown.css';
@@ -11,6 +12,9 @@ dayjs.extend(relativeTime);
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
+export const dynamic = 'force-static';
+
+const excludeNews = [1, 59];
 
 const getCacheNewsContent = cache(async (id: string) => {
   const res = await fetchNewsContent(id);
@@ -18,9 +22,7 @@ const getCacheNewsContent = cache(async (id: string) => {
 });
 
 export async function generateStaticParams() {
-  const data = await fetchNewsList();
-  const news = data.code == 200 ? data.data : [];
-  return news.map((item) => ({ id: item.id.toString() }));
+  return [];
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -31,8 +33,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const res = await fetchNewsContent(id);
-  const data = res.code == 200 ? res.data : undefined;
+  if (excludeNews.includes(Number(id))) return notFound();
+
+  const data = await getCacheNewsContent(id);
 
   return (
     <div>
@@ -47,6 +50,8 @@ export default async function ArticlePage({ params }: { params: { id: string } }
           <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
           Immortal Dragons
         </div>
+        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold capitalize">{data?.title}</h1>
+        <div className="mx-auto mb-15 mt-10 w-80 border-b border-dashed border-black" />
         <div className="markdown-body">
           <Markdown rehypePlugins={[rehypeRaw]}>{data?.content}</Markdown>
         </div>

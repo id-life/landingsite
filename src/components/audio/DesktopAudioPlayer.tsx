@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import * as Popover from '@radix-ui/react-popover';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import DesktopMusicContent from './DesktopAudioContent';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
+import AudioTitle from '@/components/audio/AudioTitle';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { currentAudioAtom, currentPlayStatusAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 
-function DesktopAudioPlayer({ className }: { className?: string }) {
+function DesktopAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
   useFetchAudioData();
   const musicList = useAtomValue(musicListAtom);
   const { data } = useCurrentMusicControl();
@@ -23,12 +24,17 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     if (!musicList.length) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom]);
+  }, [musicList, setCurrentMusic, setPlaylistAtom, setPlayStatus]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setPlayStatus(!playStatus);
   };
+
+  const title = useMemo(
+    () => (data?.artist ? `${data?.title} - ${data?.artist}` : `${data?.title}`),
+    [data?.title, data?.artist],
+  );
 
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -36,24 +42,28 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <div
           onClick={() => setIsOpen((v) => !v)}
           className={clsx(
-            'flex w-71 cursor-pointer items-center gap-2.5 rounded-full bg-audio-player px-2 transition duration-300 hover:scale-110',
+            'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-audio-player px-[8px]',
             className,
+            injectClassName,
           )}
         >
           <DesktopAudioSiriWave />
-          <div className="w-37 truncate text-xs/3.5 font-semibold text-background">{data?.title}</div>
-          <div onClick={handleChangePlayStatus} className="size-4">
+          <AudioTitle width={148} title={title} />
+          <div onClick={handleChangePlayStatus} className="size-[16px]">
             {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>
         </div>
       </Popover.Trigger>
-      <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
+      <Popover.Anchor className={clsx('pointer-events-none h-[26px] w-[284px]', className)} />
       <Popover.Portal forceMount>
         <Popover.Content
           forceMount
           align="end"
           sideOffset={16}
-          className="z-10 w-100 rounded-lg border-2 border-audio-border bg-audio-content p-5 data-[state=closed]:hidden"
+          className={clsx(
+            'z-[51] w-[400px] rounded-lg border-2 border-audio-border bg-audio-content p-[20px] data-[state=closed]:hidden',
+            injectClassName,
+          )}
         >
           <DesktopMusicContent />
         </Popover.Content>

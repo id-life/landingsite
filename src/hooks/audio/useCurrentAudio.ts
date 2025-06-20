@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { currentAudioAtom, currentPlayStatusAtom, PlayModeKey, playNextTrackAtom } from '@/atoms/audio-player';
 import {
@@ -11,8 +11,9 @@ import {
 } from '@/atoms/audio-player';
 
 export default function useCurrentAudio() {
+  const [hasInteracted, setHasInteracted] = useState(false);
   const currentAudio = useAtomValue(currentAudioAtom);
-  const playStatus = useAtomValue(currentPlayStatusAtom);
+  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setCanPlay = useSetAtom(canPlayAtom);
@@ -41,10 +42,12 @@ export default function useCurrentAudio() {
     setDuration(0);
 
     const audio = new Audio(currentAudio.url);
+    audio.load();
     setAudioRef(audio);
 
     audio.oncanplay = () => {
       setCanPlay(true);
+      setPlayStatus(true);
     };
 
     audio.ontimeupdate = () => {
@@ -78,14 +81,34 @@ export default function useCurrentAudio() {
     if (playStatus) {
       const playPromise = audioRef.play();
       if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.error('播放失败:', error);
-        });
+        playPromise
+          .then(() => {
+            setHasInteracted(true);
+          })
+          .catch((error) => {
+            console.error('播放失败:', error);
+            setPlayStatus(false);
+          });
       }
     } else {
       audioRef.pause();
     }
-  }, [playStatus, controls.canPlay, audioRef]);
+  }, [playStatus, controls.canPlay, audioRef, setPlayStatus]);
+
+  useEffect(() => {
+    const enableAutoplay = () => setHasInteracted(true);
+
+    document.addEventListener('click', enableAutoplay);
+    return () => {
+      document.removeEventListener('click', enableAutoplay);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hasInteracted) {
+      setPlayStatus(true);
+    }
+  }, [hasInteracted, setPlayStatus]);
 
   return useMemo(() => ({ data: currentAudio, ...controls }), [controls, currentAudio]);
 }

@@ -5,18 +5,23 @@ import FixedValue from '@/app/value/FixedValue';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import { cn } from '@/utils';
-import { useAtomValue, useSetAtom } from 'jotai';
 import MobileAudioPlayer from '../audio/MobileAudioPlayer';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { isMobileBePartOfItShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
+import RippleButton from './RippleButton';
+import BackSVG from '@/../public/svgs/back.svg?component';
 import { useEffect } from 'react';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+  const [isMobileCharacterRelationShow, setIsMobileCharacterRelationShow] = useAtom(isMobileCharacterRelationShowAtom);
+  const setIsMobileBePartOfItShow = useSetAtom(isMobileBePartOfItShowAtom);
 
   useEffect(() => {
     setIsShowingDiseaseManagement(false);
@@ -42,9 +47,28 @@ export default function MobileFixedUI() {
       <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[5.5rem] mobile:h-2 mobile:w-2" />
       <FixedValue />
       <ClientOnly>
-        <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
-        {/* <ToggleSoundButton className="fixed bottom-7.5 right-5 z-[101] w-14 px-1.5" /> */}
+        <MobileAudioPlayer
+          className="fixed bottom-8.5 right-5 z-10"
+          injectClassName={isMobileCharacterRelationShow ? 'character-relation-css-vars-inject z-[101]' : ''}
+        />
       </ClientOnly>
+      {isMobileCharacterRelationShow && (
+        <>
+          <button
+            className="fixed bottom-6 left-5 z-[51] w-[5.25rem] cursor-pointer rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
+            onClick={() => setIsMobileBePartOfItShow(true)}
+          >
+            JOIN +
+          </button>
+          <RippleButton
+            className="fixed bottom-7 left-1/2 z-[51] -translate-x-1/2"
+            onClick={() => setIsMobileCharacterRelationShow(false)}
+          >
+            <BackSVG className="fill-white" />
+            <p className="font-migrena text-base/4 font-bold uppercase text-white">Back</p>
+          </RippleButton>
+        </>
+      )}
     </>
   );
 }

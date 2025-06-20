@@ -2,14 +2,14 @@ import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo } from '@/hooks/spectrum/useSpectrumData';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import { cloneElement, forwardRef, memo } from 'react';
+import { cloneElement, forwardRef, HTMLAttributes, memo } from 'react';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
-  onClick?: () => void;
   className?: string;
   isHover?: boolean;
+  onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 }
 
 const MobileSpectrumItem = memo(

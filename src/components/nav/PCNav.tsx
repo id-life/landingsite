@@ -15,6 +15,8 @@ import { NAV_LIST } from './nav';
 import { useEvent } from 'react-use';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
+import { cn } from '@/utils';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -23,6 +25,7 @@ export default function PCNav() {
   const playingRef = useRef<boolean>(false);
   const timelineRef = useRef(gsap.timeline({ paused: true }));
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
 
   const { trackEvent } = useGA();
 
@@ -89,10 +92,13 @@ export default function PCNav() {
   return (
     <div
       id="nav"
-      className="fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5"
+      className={cn(
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5',
+        isCharacterRelationShow && 'character-relation-css-vars-inject z-[51]',
+      )}
     >
       <Logo />
-      <div className="flex gap-8 text-sm font-semibold mobile:hidden">
+      <div className={cn('flex gap-8 text-sm font-semibold mobile:hidden', isCharacterRelationShow && 'hidden')}>
         {NAV_LIST.map((item) => (
           <div
             onClick={() => handleNavClick(item)}

@@ -1,4 +1,5 @@
 import { PlayListKey } from '@/atoms/audio-player';
+import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 
 export type AudioDataItem = {
   id: number;
@@ -12,7 +13,25 @@ export type AudioDataItem = {
   createdAt?: string;
   xyzLink?: string;
   podcastLink?: string;
+};
+
+export interface CharacterRelationData {
+  character: string;
+  relation: CharacterRelation[];
 }
+
+export type CharacterRelationImpression = (typeof CHARACTER_RELATION_IMPRESSION)[keyof typeof CHARACTER_RELATION_IMPRESSION];
+
+export interface CharacterRelation {
+  character: string;
+  impression: CharacterRelationImpression;
+}
+
+export type CharacterRelationDataResponse = ({ id: number } & CharacterRelationData)[];
+
+export type AddCharacterRelationData = Omit<CharacterRelationData, 'relation'> & {
+  relation: CharacterRelation[];
+};
 
 export type NewsListItem = {
   id: number;

@@ -1,13 +1,14 @@
-import { fetchAudioData } from '@/apis';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { musicListAtom, PlayList, podcastListAtom } from '@/atoms/audio-player';
-import { AudioDataItem } from '@/apis/types';
 import { useSetAtom } from 'jotai';
+import { fetchAudioData } from '@/apis';
+import { AudioDataItem } from '@/apis/types';
+import { useQuery } from '@tanstack/react-query';
+import { musicListAtom, PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
 export function useFetchAudioData() {
   const setMusicList = useSetAtom(musicListAtom);
-  const setPodcastList = useSetAtom(podcastListAtom);
+  const setPodcastID = useSetAtom(podcastIDAtom);
+  const setPodcastLT = useSetAtom(podcastLTAtom);
 
   const { data } = useQuery({
     queryKey: ['fetch_audio_data'],
@@ -18,18 +19,23 @@ export function useFetchAudioData() {
   useEffect(() => {
     if (!data) return;
     const musicList: AudioDataItem[] = [];
-    const podcastList: AudioDataItem[] = [];
+    const podcastIDList: AudioDataItem[] = [];
+    const podcastLTList: AudioDataItem[] = [];
 
     data.forEach((item) => {
       if (item.category === PlayList.MUSIC) {
         musicList.push(item);
       }
-      if (item.category === PlayList.PODCAST) {
-        podcastList.push(item);
+      if (item.category === PlayList.PODCAST_ID) {
+        podcastIDList.push(item);
+      }
+      if (item.category === PlayList.PODCAST_LT) {
+        podcastLTList.push(item);
       }
     });
 
-    setPodcastList(podcastList);
+    setPodcastID(podcastIDList);
+    setPodcastLT(podcastLTList);
     setMusicList(musicList);
-  }, [data, setMusicList, setPodcastList]);
+  }, [data, setMusicList, setPodcastID, setPodcastLT]);
 }

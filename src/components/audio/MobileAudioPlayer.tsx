@@ -9,9 +9,11 @@ import React, { useEffect, useState } from 'react';
 import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
+import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 
-function MobileAudioPlayer({ className }: { className?: string }) {
+function MobileAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
   useFetchAudioData();
+  useCurrentMusicControl();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
@@ -22,7 +24,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     if (!musicList.length) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom]);
+  }, [musicList, setCurrentMusic, setPlaylistAtom, setPlayStatus]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -35,6 +37,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         className={clsx(
           'flex w-[4.875rem] cursor-pointer items-center gap-1 rounded-full bg-foreground px-1.5 transition duration-300',
           className,
+          injectClassName,
         )}
       >
         <DesktopAudioSiriWave className="w-6 overflow-hidden" />
@@ -47,11 +50,15 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           </div>
         </Popover.Trigger>
         <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
-        <Popover.Portal>
+        <Popover.Portal forceMount>
           <Popover.Content
+            forceMount
             align="end"
             sideOffset={16}
-            className="z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5"
+            className={clsx(
+              'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 border-audio-border bg-audio-content p-4.5 data-[state=closed]:hidden',
+              injectClassName,
+            )}
           >
             <DesktopMusicContent />
           </Popover.Content>
