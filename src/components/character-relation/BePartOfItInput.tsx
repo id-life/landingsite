@@ -21,7 +21,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
     className,
     maxLength = 20,
     value = '',
-    autoComplete = 'off',
+    autoComplete = 'new-password',
     mode = 'visitor',
     tagPlaceholderHeight = 'h-7.5',
     impression,
