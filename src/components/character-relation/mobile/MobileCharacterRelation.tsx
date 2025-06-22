@@ -16,6 +16,7 @@ import gsap from 'gsap';
 import BePartOfIt from '../BePartOfIt';
 import CharacterRelationGraph from '../CharacterRelationGraph';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
+import { useBrowserZoom } from '@/hooks/useBrowserZoom';
 import CharacterRelationLegend from '../CharacterRelationLegend';
 
 const MobileCharacterRelation = () => {
@@ -29,6 +30,9 @@ const MobileCharacterRelation = () => {
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
   const { data, refetch } = useFetchCharacterRelation();
+
+  // disable browser zoom when mobile character relation is shown
+  useBrowserZoom(isMobileCharacterRelationShow && mobileCurrentPageIndex === SPECTRUM_PAGE_INDEX);
 
   // clipPath animation state
   const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
