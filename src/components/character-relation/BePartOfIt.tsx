@@ -167,9 +167,11 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2 mobile:opacity-0',
         )}
       >
-        You Will Be Part Of The Network Soon! After We Examine Your Information (
-        <span className="inline-block min-w-2.5 text-center leading-5">{countdown}</span>
-        S)
+        <span className="align-middle">
+          You’re almost in! We’ll complete your review shortly. (
+          <span className="inline-block min-w-2.5 text-center leading-5">{countdown}</span>
+          S)
+        </span>
       </div>
 
       {/* close */}
