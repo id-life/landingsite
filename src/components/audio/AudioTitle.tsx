@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
-import { currentPlayStatusAtom } from '@/atoms/audio-player';
 
 type MusicTitleProps = {
   width?: number;
@@ -9,9 +7,9 @@ type MusicTitleProps = {
 };
 
 function AudioTitle({ width, title }: MusicTitleProps) {
-  const playStatus = useAtomValue(currentPlayStatusAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
@@ -19,21 +17,31 @@ function AudioTitle({ width, title }: MusicTitleProps) {
       animationRef.current.restart();
       animationRef.current.kill();
     }
-    if (!wrapperRef.current || !containerRef.current || !playStatus) return;
+    if (!wrapperRef.current || !containerRef.current || !titleRef.current) return;
     const wrapper = wrapperRef.current;
+    const title = titleRef.current;
     const container = containerRef.current;
-    const titleWidth = wrapper.clientWidth;
+    const titleWidth = title.clientWidth;
     const containerWidth = container.clientWidth;
 
+    const children = Array.from(wrapper.children);
+    children.forEach((child, index) => {
+      if (index > 0) {
+        wrapper.removeChild(child);
+      }
+    });
+
     if (titleWidth > containerWidth) {
-      const diff = titleWidth - containerWidth;
+      const clone = title.cloneNode(true);
+      wrapper.appendChild(clone);
+      const offsetX = titleWidth + 16;
       const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.5 });
       tl.fromTo(
         wrapper,
         { x: 0 },
         {
-          x: -diff,
-          duration: diff / 30,
+          x: -offsetX,
+          duration: offsetX / 30,
           ease: 'linear',
           delay: 1.5,
         },
@@ -56,16 +64,16 @@ function AudioTitle({ width, title }: MusicTitleProps) {
         animationRef.current.kill();
       }
     };
-  }, [title, playStatus]);
+  }, [title]);
 
   return (
     <div
       ref={containerRef}
-      style={{ maxWidth: width ?? 'auto' }}
-      className="overflow-hidden text-[12px]/[14px] font-semibold text-background"
+      style={{ width: width ?? 'auto' }}
+      className="relative h-[14px] overflow-hidden text-[12px]/[14px] font-semibold text-background"
     >
-      <div ref={wrapperRef} className="inline-block text-nowrap">
-        {title}
+      <div ref={wrapperRef} className="absolute flex gap-[16px] text-nowrap">
+        <div ref={titleRef}>{title}</div>
       </div>
     </div>
   );
