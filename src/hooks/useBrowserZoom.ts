@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { isSafari, isAndroid, isMobile, isTablet, isDesktop } from 'react-device-detect';
+import { isIOS, isAndroid, isMobile, isTablet, isDesktop } from 'react-device-detect';
 
 // Types for better type safety
 interface ViewportManager {
@@ -24,7 +24,7 @@ interface SafariZoomManager {
  */
 const getDeviceInfo = () => ({
   isAndroid,
-  isSafari,
+  isIOS,
   isMobile,
   isTablet,
   isDesktop,
@@ -131,7 +131,7 @@ const createTouchGestureManager = (options: {
       if (deviceInfo.isAndroid) {
         // Android devices typically need higher threshold due to touch sensitivity
         threshold = 15;
-      } else if (deviceInfo.isSafari && deviceInfo.isMobile) {
+      } else if (deviceInfo.isIOS && deviceInfo.isMobile) {
         // Safari mobile needs lower threshold for better responsiveness
         threshold = 8;
       } else if (deviceInfo.isTablet) {
@@ -173,7 +173,7 @@ const createTouchGestureManager = (options: {
     }
 
     // Safari-specific gesture events (only for Safari)
-    if (options.includeSafariSpecific && deviceInfo.isSafari) {
+    if (options.includeSafariSpecific && deviceInfo.isIOS) {
       addListener('gesturestart', preventDefault, { passive: false });
       addListener('gesturechange', preventDefault, { passive: false });
       addListener('gestureend', preventDefault, { passive: false });
@@ -244,7 +244,7 @@ const createSafariZoomManager = (options: {
   const deviceInfo = getDeviceInfo();
 
   const setup = (): (() => void) => {
-    if (typeof window === 'undefined' || !deviceInfo.isSafari) return () => {};
+    if (typeof window === 'undefined' || !deviceInfo.isIOS) return () => {};
 
     // Initialize scale reference
     lastScale = window.visualViewport?.scale || 1;
