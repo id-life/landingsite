@@ -35,7 +35,7 @@ export default function MobileFixedUI() {
       ) : (
         <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
       )}
-      <MobileFixedParticles />
+      <MobileFixedParticles isOverlay={isShowingDiseaseManagement} />
 
       <FixedValue />
       <ClientOnly>

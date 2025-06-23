@@ -38,7 +38,7 @@ export default function PCFixedUI() {
       ) : (
         <PageArrows className={cn('fixed left-1/2 -translate-x-1/2', 'bottom-11 mobile:bottom-6')} />
       )}
-      <FixedParticles />
+      <FixedParticles isOverlay={isShowingDiseaseManagement} />
 
       <CarouselWrapper />
       <ClientOnly>
