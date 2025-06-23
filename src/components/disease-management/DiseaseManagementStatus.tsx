@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import FileSVG from '@/../public/svgs/file.svg?component';

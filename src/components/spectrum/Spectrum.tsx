@@ -12,11 +12,8 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
-import DiseaseManagementStatus from './DiseaseManagementStatus';
+import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import { FloatingPortal } from '@floating-ui/react';
-import { AnimatePresence, motion } from 'motion/react';
-import OverlayContainer from '../common/OverlayContainer';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -26,10 +23,10 @@ function Spectrum() {
   const [active, setActive] = useState<boolean>(false);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
-  const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
+  const animTimeline = useRef<gsap.core.Timeline | null>(null);
 
   const handleBackToSpectrum = useCallback(() => {
     setIsShowingDiseaseManagement(false);
@@ -47,15 +44,38 @@ function Spectrum() {
     return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
   }, []);
 
-  useEffect(() => {
-    if (isShowingDiseaseManagement) {
-      setClipPathValue(createClipPath(true));
-    } else {
-      setClipPathValue(createClipPath(false));
-    }
-  }, [isShowingDiseaseManagement, createClipPath]);
-
   const spectrumData = useSpectrumData();
+
+  useGSAP(() => {
+    if (isShowingDiseaseManagement) {
+      if (animTimeline.current) animTimeline.current.kill();
+      animTimeline.current = gsap.timeline();
+      animTimeline.current
+        .to(['.spectrum-content-wrapper', '#spectrum-particle-gl'], {
+          opacity: 0,
+          duration: 0.4,
+          pointerEvents: 'none',
+        })
+        .fromTo(
+          '.disease-management-wrapper',
+          {
+            clipPath: 'circle(0% at 50% 50%)',
+            pointerEvents: 'none',
+          },
+          {
+            clipPath: 'circle(100% at 50% 50%)',
+            duration: 0.8,
+            ease: 'easeInOut',
+            pointerEvents: 'auto',
+          },
+          '-=0.2',
+        );
+    } else {
+      if (animTimeline?.current && animTimeline.current?.progress() > 0) {
+        animTimeline.current.reverse();
+      }
+    }
+  }, [isShowingDiseaseManagement]);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
     // engagement auto scroll to profile
@@ -194,38 +214,13 @@ function Spectrum() {
             </div>
           </div>
         </div>
+        <div
+          className="disease-management-wrapper pointer-events-none absolute inset-0 z-[65] bg-black"
+          style={{ clipPath: 'circle(0% at 50% 50%)' }}
+        >
+          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+        </div>
       </div>
-
-      <FloatingPortal key="disease-management-portal">
-        <AnimatePresence>
-          {isShowingDiseaseManagement && (
-            <motion.div
-              key="disease-management-motion-wrapper"
-              initial={{
-                opacity: 1,
-                clipPath: createClipPath(false),
-              }}
-              animate={{
-                opacity: 1,
-                clipPath: clipPathValue,
-              }}
-              exit={{
-                opacity: 1,
-                clipPath: createClipPath(false),
-              }}
-              transition={{
-                duration: 1,
-                ease: 'easeInOut',
-              }}
-              className="fixed inset-0 z-[60] bg-black"
-            >
-              <OverlayContainer>
-                <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-              </OverlayContainer>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </FloatingPortal>
     </>
   );
 }

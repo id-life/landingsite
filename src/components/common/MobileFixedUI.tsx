@@ -1,10 +1,8 @@
 'use client';
 
-import VisionDecorationCircleSVG from '@/../public/svgs/vision/vision-decoration-3.svg?component';
 import FixedValue from '@/app/value/FixedValue';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { ClientOnly } from '@/components/common/ClientOnly';
-import { cn } from '@/utils';
 import MobileAudioPlayer from '../audio/MobileAudioPlayer';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
@@ -37,13 +35,8 @@ export default function MobileFixedUI() {
       ) : (
         <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
       )}
-      <div
-        className={cn(
-          'fixed-top fixed left-10 top-[calc(50%_-_14rem)] h-2 w-6 bg-foreground transition duration-300 mobile:left-5 mobile:top-[5.5rem] mobile:h-1 mobile:w-3',
-        )}
-      />
       <MobileFixedParticles />
-      <VisionDecorationCircleSVG className="fixed-top fixed right-10 top-[calc(50%_-_14rem)] h-4 w-4 fill-foreground stroke-foreground transition duration-300 mobile:right-5 mobile:top-[5.5rem] mobile:h-2 mobile:w-2" />
+
       <FixedValue />
       <ClientOnly>
         <MobileAudioPlayer
