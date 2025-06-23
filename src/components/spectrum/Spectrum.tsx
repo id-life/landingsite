@@ -9,11 +9,14 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 import DiseaseManagementStatus from './DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { FloatingPortal } from '@floating-ui/react';
+import { AnimatePresence, motion } from 'motion/react';
+import OverlayContainer from '../common/OverlayContainer';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -23,6 +26,7 @@ function Spectrum() {
   const [active, setActive] = useState<boolean>(false);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+  const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -30,6 +34,26 @@ function Spectrum() {
   const handleBackToSpectrum = useCallback(() => {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
+
+  const createClipPath = useCallback((isOpening: boolean) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    const maxRadius = Math.hypot(
+      Math.max(centerX, window.innerWidth - centerX),
+      Math.max(centerY, window.innerHeight - centerY),
+    );
+
+    return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
+  }, []);
+
+  useEffect(() => {
+    if (isShowingDiseaseManagement) {
+      setClipPathValue(createClipPath(true));
+    } else {
+      setClipPathValue(createClipPath(false));
+    }
+  }, [isShowingDiseaseManagement, createClipPath]);
 
   const spectrumData = useSpectrumData();
 
@@ -134,50 +158,75 @@ function Spectrum() {
     { scope: wrapperRef, dependencies: [] },
   );
 
-  if (isShowingDiseaseManagement) {
-    return (
-      <div id={NAV_LIST[2].id} className="page-container spectrum">
-        <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-      </div>
-    );
-  }
-
   return (
-    <div id={NAV_LIST[2].id} className="page-container spectrum">
-      <ParticleGL
-        isStatic
-        activeAnim={active}
-        imageIdx={imageIdx}
-        id="spectrum-particle-container"
-        getSourceImgInfos={spectrumGetSourceImgInfos}
-      />
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
-        <div id="spectrum-particle-gl">
-          <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
-            {/* <div className="particle-mask"></div> */}
+    <>
+      <div id={NAV_LIST[2].id} className="page-container spectrum">
+        <ParticleGL
+          isStatic
+          activeAnim={active}
+          imageIdx={imageIdx}
+          id="spectrum-particle-container"
+          getSourceImgInfos={spectrumGetSourceImgInfos}
+        />
+        <div className="relative flex h-[100svh] flex-col items-center justify-center">
+          <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
+          <div id="spectrum-particle-gl">
+            <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
+              {/* <div className="particle-mask"></div> */}
+            </div>
           </div>
-        </div>
-        <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
-            {spectrumData.map((item, index) => (
-              <SpectrumItem
-                key={item.title}
-                item={item}
-                onClick={(e) => {
-                  console.log(item.title);
-                  item.onClick?.(e);
-                }}
-                ref={(element) => {
-                  if (!element) return;
-                  spectrumRefs.current[index] = element;
-                }}
-              />
-            ))}
+          <div className="spectrum-fund mt-12 overflow-hidden px-18">
+            <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
+              {spectrumData.map((item, index) => (
+                <SpectrumItem
+                  key={item.title}
+                  item={item}
+                  onClick={(e) => {
+                    console.log(item.title);
+                    item.onClick?.(e);
+                  }}
+                  ref={(element) => {
+                    if (!element) return;
+                    spectrumRefs.current[index] = element;
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <FloatingPortal key="disease-management-portal">
+        <AnimatePresence>
+          {isShowingDiseaseManagement && (
+            <motion.div
+              key="disease-management-motion-wrapper"
+              initial={{
+                opacity: 1,
+                clipPath: createClipPath(false),
+              }}
+              animate={{
+                opacity: 1,
+                clipPath: clipPathValue,
+              }}
+              exit={{
+                opacity: 1,
+                clipPath: createClipPath(false),
+              }}
+              transition={{
+                duration: 1,
+                ease: 'easeInOut',
+              }}
+              className="fixed inset-0 z-[60] bg-black"
+            >
+              <OverlayContainer>
+                <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+              </OverlayContainer>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </FloatingPortal>
+    </>
   );
 }
 

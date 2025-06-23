@@ -61,7 +61,7 @@ const DiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) =
     <>
       <div className="flex h-screen flex-col space-y-[3.25rem] px-32 pb-[2.75rem] pt-[9.5625rem]">
         <div
-          className="flex flex-1 space-x-15 overflow-y-auto"
+          className="hide-scrollbar flex flex-1 space-x-15 overflow-y-auto"
           onWheel={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
         >

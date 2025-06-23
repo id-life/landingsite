@@ -67,7 +67,7 @@ const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBac
   return (
     <>
       <div className="flex h-screen flex-col px-5 pb-[5.5rem] pt-[5.1875rem]">
-        <div className="flex flex-1 flex-col space-y-7.5 overflow-y-auto">
+        <div className="hide-scrollbar flex flex-1 flex-col space-y-7.5 overflow-y-auto">
           {diseaseManagementStatusItems.map((item) => (
             <DiseaseManagementStatusItem key={item.title} {...item} />
           ))}
