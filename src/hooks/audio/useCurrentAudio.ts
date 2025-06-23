@@ -49,6 +49,7 @@ export default function useCurrentAudio() {
 
     const audio = new Audio(currentAudio.url);
     audio.load();
+    audio.volume = 0.5;
     setAudioRef(audio);
 
     audio.oncanplay = () => {
