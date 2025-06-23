@@ -85,6 +85,7 @@ export default function Home() {
       '--audio-content': '#101010',
       '--audio-border': '#1C1C1C',
       '--audio-order': '#222222',
+      '--audio-desc': '#999999',
     });
 
     const spectrumTL = gsap.timeline({
@@ -147,6 +148,7 @@ export default function Home() {
       '--audio-content': '#E2E8F4',
       '--audio-border': '#EEF4FF',
       '--audio-order': '#ffffff',
+      '--audio-desc': '#222222',
     });
     twinTL.to('.base-background2', { opacity: 1 });
   });

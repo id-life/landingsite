@@ -44,11 +44,14 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
         <div className="overflow-hidden">
           <div
             onClick={onClick}
-            className={clsx('w-full cursor-pointer truncate text-[12px]/[20px] font-semibold', isCurrent && 'text-red-600')}
+            className={clsx(
+              'w-full cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-600',
+              isCurrent && 'text-red-600',
+            )}
           >
             {data.title}
           </div>
-          <div className="mt-[2px] line-clamp-2 text-[10px]/[14px]">{data.description}</div>
+          <div className="mt-[2px] line-clamp-2 text-[10px]/[14px] text-audio-desc">{data.description}</div>
           {isCurrent ? (
             <>
               <div onClick={handleProgressChange} className="flex h-[16px] cursor-pointer items-center justify-start">
@@ -71,7 +74,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
             </>
           ) : null}
           <div className="mt-[8px] flex items-center justify-between">
-            <div className="flex-center gap-[4px] text-[10px]/[14px] font-medium opacity-50">
+            <div className="flex-center gap-[4px] text-[10px]/[14px] font-medium text-gray-500">
               <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>
               <span>·</span>
               <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>

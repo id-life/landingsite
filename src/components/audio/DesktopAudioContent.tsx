@@ -26,7 +26,7 @@ import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 
 const underLineClassName =
-  'after:absolute after:-bottom-2 after:left-0 after:right-0 after:mx-auto after:h-0.5 after:w-[36px] after:bg-foreground';
+  'after:absolute after:-bottom-[8px] after:left-0 after:right-0 after:mx-auto after:h-[2px] after:w-[36px] after:bg-foreground';
 
 export default function DesktopMusicContent() {
   const musicList = useAtomValue(musicListAtom);
@@ -78,7 +78,7 @@ export default function DesktopMusicContent() {
   return (
     <div className="text-foreground">
       <div className="flex items-center justify-between">
-        <div className="flex-center gap-[12px] text-[12px]/[12px] font-bold">
+        <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold">
           <div
             className={clsx('relative cursor-pointer', currentList === PlayList.MUSIC && underLineClassName)}
             onClick={() => handleChangeList(PlayList.MUSIC)}
@@ -96,30 +96,10 @@ export default function DesktopMusicContent() {
           onClick={handleChangePlayMode}
           className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-audio-order px-[8px] text-center text-[10px]/[12px] font-semibold"
         >
-          {playMode === PlayMode.ORDER && (
-            <>
-              <PlayOrderSVG className="w-[16px] stroke-foreground" />
-              <div className="w-[72px]">Play in Order</div>
-            </>
-          )}
-          {playMode === PlayMode.SHUFFLE && (
-            <>
-              <PlayShuffleSVG className="w-[16px] stroke-foreground" />
-              <div className="w-[72px]">Shuffle</div>
-            </>
-          )}
-          {playMode === PlayMode.REPEAT_ALL && (
-            <>
-              <PlayRepeatSVG className="w-[16px] stroke-foreground" />
-              <div className="w-[72px]">Repeat All</div>
-            </>
-          )}
-          {playMode === PlayMode.REPEAT_ONE && (
-            <>
-              <PlayRepeatOneSVG className="w-[16px] stroke-foreground" />
-              <div className="w-[72px]">Repeat One</div>
-            </>
-          )}
+          {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-foreground" />}
+          {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-foreground" />}
+          {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-foreground" />}
+          {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-foreground" />}
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (

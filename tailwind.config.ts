@@ -69,6 +69,7 @@ const config: Config = {
           200: '#D4D4D4',
           350: '#999999',
           400: '#9C979D',
+          500: '#7b7b7d',
           700: '#444444',
           750: '#2E2F31',
           800: '#222222',
@@ -101,6 +102,7 @@ const config: Config = {
         'audio-content': 'var(--audio-content)',
         'audio-border': 'var(--audio-border)',
         'audio-order': 'var(--audio-order)',
+        'audio-desc': 'var(--audio-desc)',
       },
       lineHeight: {
         3.5: '0.875rem',

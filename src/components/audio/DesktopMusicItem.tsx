@@ -68,7 +68,10 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
           {isCurrent ? <img className="w-[16px]" src="/svgs/player/play_status.svg" alt="" /> : null}
           <div
             onClick={onClick}
-            className={clsx('cursor-pointer truncate text-[12px]/[20px] font-semibold', isCurrent && 'text-red-600')}
+            className={clsx(
+              'cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-600',
+              isCurrent && 'text-red-600',
+            )}
           >
             {data.title} - {data.artist}
           </div>
