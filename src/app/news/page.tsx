@@ -2,18 +2,15 @@ import { fetchNewsList } from '@/apis';
 import NewsCard from './_components/NewsCard';
 import type { Metadata } from 'next';
 import '@/styles/geo.css';
-import NewsArticle59 from '@/app/news/_components/NewsArticle59';
 
 export const revalidate = 300; // 5min
 
 export const metadata: Metadata = { title: 'News-Immortal Dragons' };
 
-const excludeNews = [1, 57, 59];
 export default async function NewsPage() {
   const data = await fetchNewsList();
   const news = data.code == 200 ? data.data : [];
-  const newsFilter = news.filter((item) => !excludeNews.includes(item.id));
-  const insight = newsFilter[0];
+  const insight = news[0];
 
   return (
     <div>
@@ -32,12 +29,11 @@ export default async function NewsPage() {
         )}
         <h2 className="mt-16 text-4xl/[3.375rem] font-semibold">Latest News</h2>
         <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1">
-          {newsFilter.map((item) => (
+          {news.map((item) => (
             <NewsCard data={item} key={item.id} />
           ))}
         </div>
       </div>
-      <NewsArticle59 />
     </div>
   );
 }

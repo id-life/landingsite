@@ -14,8 +14,6 @@ export const revalidate = 300; // 5min
 export const dynamicParams = true;
 export const dynamic = 'force-static';
 
-const excludeNews = [1, 59];
-
 const getCacheNewsContent = cache(async (id: string) => {
   const res = await fetchNewsContent(id);
   return res.code == 200 ? res.data : undefined;
@@ -33,7 +31,6 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
   const { id } = await params;
-  if (excludeNews.includes(Number(id))) return notFound();
 
   const data = await getCacheNewsContent(id);
 
