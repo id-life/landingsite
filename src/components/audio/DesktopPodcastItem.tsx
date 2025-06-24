@@ -54,7 +54,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
           <div className="mt-[2px] line-clamp-2 text-[10px]/[14px] text-audio-desc">{data.description}</div>
           {isCurrent ? (
             <>
-              <div onClick={handleProgressChange} className="flex h-[16px] cursor-pointer items-center justify-start">
+              <div onClick={handleProgressChange} className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start">
                 <div className="relative h-[2px] w-full bg-[#BDBDBD]">
                   <div style={{ width: `${controls.progress * 100}%` }} className="absolute left-0 top-0 h-[2px] bg-red-600" />
                   <div
@@ -67,7 +67,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   />
                 </div>
               </div>
-              <div className="mt-[4px] flex items-center justify-between text-[10px]/[14px] font-medium">
+              <div className="mt-[4px] flex items-center justify-between text-[10px]/[14px] font-medium text-audio-desc">
                 <p>{dayjs.duration(controls.currentTime, 'seconds').format('mm:ss')}</p>
                 <p>{dayjs.duration(controls.duration, 'seconds').format('mm:ss')}</p>
               </div>

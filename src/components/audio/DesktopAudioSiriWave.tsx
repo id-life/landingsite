@@ -14,7 +14,7 @@ function DesktopAudioSiriWave({ className }: { className?: string }) {
 
   useEffect(() => {
     if (!siriwaveRef.current) return;
-    siriwaveRef.current.setAmplitude(playStatus ? 2 : 0);
+    siriwaveRef.current.setAmplitude(playStatus ? 1.5 : 0);
   }, [playStatus]);
 
   return (

@@ -55,7 +55,7 @@ function PodcastSelected({ className }: PodcastSelectedProps) {
         <ArrowSVG className={clsx('absolute right-[8px] top-[6px] w-[18px] fill-foreground', isOpen && 'rotate-180')} />
       </div>
       {isOpen && (
-        <div className="absolute left-0 top-10 z-10 w-full bg-audio-order text-center text-[12px]/[12px] font-semibold shadow-lg">
+        <div className="absolute left-0 top-[38px] z-10 w-full bg-audio-order text-center text-[12px]/[12px] font-semibold shadow-lg">
           {PodcastCategoryList.map((key) => (
             <div
               key={key}

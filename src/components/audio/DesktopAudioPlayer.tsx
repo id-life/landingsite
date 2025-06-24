@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
+import { useGA } from '@/hooks/useGA';
 import * as Popover from '@radix-ui/react-popover';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import DesktopMusicContent from './DesktopAudioContent';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
 import AudioTitle from '@/components/audio/AudioTitle';
@@ -9,26 +10,29 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
-import { currentAudioAtom, currentPlayStatusAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
+import { AUDIO_DISPATCH, currentAudioAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 function DesktopAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
   useFetchAudioData();
+  const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
-  const { data } = useCurrentMusicControl();
+  const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
-  const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
 
   useEffect(() => {
     if (!musicList.length) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom, setPlayStatus]);
+  }, [musicList, setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    setPlayStatus(!playStatus);
+    const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
+    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label });
+    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
   };
 
   const title = useMemo(
@@ -50,7 +54,7 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
           <DesktopAudioSiriWave />
           <AudioTitle width={148} title={title} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
-            {playStatus ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
+            {isPlaying ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
           </div>
         </div>
       </Popover.Trigger>

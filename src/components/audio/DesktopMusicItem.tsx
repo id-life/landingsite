@@ -68,7 +68,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
         <div
           onClick={onClick}
           className={clsx(
-            'cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-600',
+            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-600',
             isCurrent && 'text-red-600',
           )}
         >

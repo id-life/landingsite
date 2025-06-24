@@ -1,4 +1,6 @@
+import { useEffect, useMemo, useState } from 'react';
 import {
+  AUDIO_DISPATCH,
   audioControlsAtom,
   audioRefAtom,
   canPlayAtom,
@@ -6,18 +8,19 @@ import {
   currentPlayStatusAtom,
   currentTimeAtom,
   durationAtom,
+  lastPlayStatusAtom,
   playNextTrackAtom,
   progressAtom,
 } from '@/atoms/audio-player';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
 
 export default function useCurrentAudio() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const currentAudio = useAtomValue(currentAudioAtom);
   const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
+  const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setCanPlay = useSetAtom(canPlayAtom);
@@ -54,7 +57,8 @@ export default function useCurrentAudio() {
 
     audio.oncanplay = () => {
       setCanPlay(true);
-      setPlayStatus(true);
+      if (!lastPlayStatus) return;
+      dispatch({ type: AUDIO_DISPATCH.PLAY });
     };
 
     audio.ontimeupdate = () => {
@@ -67,12 +71,7 @@ export default function useCurrentAudio() {
     };
 
     audio.onended = () => {
-      // console.log('播放结束', currentAudio);
-      // 播放结束埋点
-      trackEvent({
-        name: GA_EVENT_NAMES.MUSIC_PLAYER_END,
-        label: currentAudio.title,
-      });
+      trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label: currentAudio.title });
       playNextTrack();
     };
 
@@ -90,49 +89,35 @@ export default function useCurrentAudio() {
   }, [currentAudio]);
 
   useEffect(() => {
-    if (!audioRef || !controls.canPlay) return;
+    if (!audioRef || !controls.canPlay || !lastPlayStatus) return;
     if (playStatus) {
       const playPromise = audioRef.play();
       if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setHasInteracted(true);
-            // console.log('播放开始', currentAudio);
-            trackEvent({
-              name: GA_EVENT_NAMES.MUSIC_PLAYER_START,
-              label: GA_EVENT_LABELS.MUSIC_PLAYER_START.START,
-            });
-          })
-          .catch((error) => {
-            console.error('播放失败:', error);
-            setPlayStatus(false);
-          });
+        playPromise.then(() => setLastPlayStatus(true)).catch(() => setPlayStatus(false));
       }
-    } else {
-      // console.log('播放暂停', currentAudio);
-      audioRef.pause();
-      trackEvent({
-        name: GA_EVENT_NAMES.MUSIC_PLAYER_END,
-        label: GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE,
-      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playStatus, controls.canPlay, audioRef, setPlayStatus, currentAudio]);
+  }, [playStatus, controls.canPlay, audioRef, setPlayStatus, lastPlayStatus]);
 
   useEffect(() => {
-    const enableAutoplay = () => setHasInteracted(true);
+    const savePlayStatus = () => setLastPlayStatus(playStatus);
+    window.addEventListener('beforeunload', savePlayStatus);
+    return () => {
+      window.removeEventListener('beforeunload', savePlayStatus);
+    };
+  }, [playStatus, setLastPlayStatus]);
 
+  useEffect(() => {
+    const enableAutoplay = () => {
+      if (hasInteracted || !lastPlayStatus || playStatus) return;
+      setPlayStatus(true);
+      setHasInteracted(true);
+    };
     document.addEventListener('click', enableAutoplay);
     return () => {
       document.removeEventListener('click', enableAutoplay);
     };
-  }, []);
+  }, [hasInteracted, lastPlayStatus, playStatus, setPlayStatus]);
 
-  useEffect(() => {
-    if (hasInteracted) {
-      setPlayStatus(true);
-    }
-  }, [hasInteracted, setPlayStatus]);
-
-  return useMemo(() => ({ data: currentAudio, ...controls }), [controls, currentAudio]);
+  return useMemo(() => ({ data: currentAudio, dispatch, ...controls }), [controls, currentAudio, dispatch]);
 }

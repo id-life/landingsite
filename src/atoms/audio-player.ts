@@ -1,6 +1,8 @@
 import { atom } from 'jotai';
 import { ValueOf } from '@/constants/config';
 import { AudioDataItem } from '@/apis/types';
+import { atomWithStorage } from 'jotai/utils';
+import { STORAGE_KEY } from '@/constants/storage';
 
 export const PlayList = {
   MUSIC: 'music',
@@ -23,7 +25,8 @@ export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
 
 export const currentPlayPodcastAtom = atom<PlayPodcastKey>(PlayList.PODCAST_ID);
 
-export const currentPlayStatusAtom = atom<boolean>(true);
+export const currentPlayStatusAtom = atomWithStorage<boolean>(STORAGE_KEY.AUDIO_PLAY, true);
+export const lastPlayStatusAtom = atomWithStorage<boolean>(STORAGE_KEY.LAST_AUDIO_PLAY, true);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
 
@@ -43,6 +46,16 @@ export const progressAtom = atom(0);
 export const currentTimeAtom = atom(0);
 export const durationAtom = atom(0);
 
+export const AUDIO_DISPATCH = {
+  SEEK_TO: 'SEEK_TO',
+  PLAY_NEXT: 'PLAY_NEXT',
+  SET_PLAY_MODE: 'SET_PLAY_MODE',
+  TOGGLE_PLAY: 'TOGGLE_PLAY',
+  PLAY: 'PLAY',
+  PAUSE: 'PAUSE',
+} as const;
+export type AudioDispatchKey = ValueOf<typeof AUDIO_DISPATCH>;
+
 export const audioControlsAtom = atom(
   (get) => ({
     audioRef: get(audioRefAtom),
@@ -50,23 +63,41 @@ export const audioControlsAtom = atom(
     progress: get(progressAtom),
     currentTime: get(currentTimeAtom),
     duration: get(durationAtom),
+    isPlaying: get(currentPlayStatusAtom),
   }),
-  (get, set, { type, value }: { type: string; value?: any }) => {
+  (get, set, { type, value }: { type: AudioDispatchKey; value?: any }) => {
     const audioRef = get(audioRefAtom);
 
     switch (type) {
-      case 'SEEK_TO':
+      case AUDIO_DISPATCH.SEEK_TO:
         if (audioRef && !isNaN(audioRef.duration)) {
           audioRef.currentTime = value;
           set(progressAtom, value / audioRef.duration);
           set(currentTimeAtom, audioRef.currentTime);
+          set(currentPlayStatusAtom, true);
+          audioRef.play().catch(() => set(currentPlayStatusAtom, false));
         }
         break;
-      case 'PLAY_NEXT':
+      case AUDIO_DISPATCH.PLAY_NEXT:
         set(playNextTrackAtom);
         break;
-      case 'SET_PLAY_MODE':
+      case AUDIO_DISPATCH.SET_PLAY_MODE:
         set(playModeAtom, value);
+        break;
+      case AUDIO_DISPATCH.TOGGLE_PLAY:
+        set(togglePlayAtom);
+        break;
+      case AUDIO_DISPATCH.PLAY:
+        if (audioRef) {
+          audioRef.play().catch(() => set(currentPlayStatusAtom, false));
+          set(currentPlayStatusAtom, true);
+        }
+        break;
+      case AUDIO_DISPATCH.PAUSE:
+        if (audioRef) {
+          audioRef.pause();
+          set(currentPlayStatusAtom, false);
+        }
         break;
     }
   },
@@ -119,5 +150,21 @@ export const playNextTrackAtom = atom(null, (get, set) => {
     }
   } else {
     set(currentPlayStatusAtom, false);
+  }
+});
+
+export const togglePlayAtom = atom(null, (get, set) => {
+  const isPlaying = get(currentPlayStatusAtom);
+  const audioRef = get(audioRefAtom);
+  const currentAudio = get(currentAudioAtom);
+
+  if (!audioRef || !currentAudio) return;
+
+  if (isPlaying) {
+    audioRef.pause();
+    set(currentPlayStatusAtom, false);
+  } else {
+    audioRef.play().catch(() => set(currentPlayStatusAtom, false));
+    set(currentPlayStatusAtom, true);
   }
 });
