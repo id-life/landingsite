@@ -76,7 +76,7 @@ export default function DesktopMusicContent() {
   };
 
   return (
-    <div className="text-foreground">
+    <div className="text-white">
       <div className="flex items-center justify-between">
         <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold">
           <div
@@ -94,12 +94,12 @@ export default function DesktopMusicContent() {
         </div>
         <div
           onClick={handleChangePlayMode}
-          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-audio-order px-[8px] text-center text-[10px]/[12px] font-semibold"
+          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-[#272727] px-[8px] text-center text-[10px]/[12px] font-semibold"
         >
-          {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-foreground" />}
-          {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-foreground" />}
-          {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-foreground" />}
-          {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-foreground" />}
+          {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white" />}
+          {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white" />}
+          {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white" />}
+          {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white" />}
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (

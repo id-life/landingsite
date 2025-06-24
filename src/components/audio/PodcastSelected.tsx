@@ -47,19 +47,19 @@ function PodcastSelected({ className }: PodcastSelectedProps) {
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={clsx(
-          'relative cursor-pointer gap-[4px] rounded-full bg-audio-order p-[8px] text-center text-[12px]/[14px] font-semibold',
+          'relative cursor-pointer gap-[4px] rounded-full bg-gray-770 p-[8px] text-center text-[12px]/[14px] font-semibold',
           className,
         )}
       >
         {PodcastCategoryMap[selected]}
-        <ArrowSVG className={clsx('absolute right-[8px] top-[6px] w-[18px] fill-foreground', isOpen && 'rotate-180')} />
+        <ArrowSVG className={clsx('absolute right-[8px] top-[6px] w-[18px] fill-white', isOpen && 'rotate-180')} />
       </div>
       {isOpen && (
-        <div className="absolute left-0 top-[38px] z-10 w-full bg-audio-order text-center text-[12px]/[12px] font-semibold shadow-lg">
+        <div className="absolute left-0 top-[38px] z-10 w-full bg-gray-770 text-center text-[12px]/[12px] font-semibold shadow-lg">
           {PodcastCategoryList.map((key) => (
             <div
               key={key}
-              className="cursor-pointer text-nowrap px-[8px] py-[14px] hover:bg-audio-border"
+              className="cursor-pointer text-nowrap px-[8px] py-[14px] hover:bg-[#222]"
               onClick={() => handleChangePodcast(key)}
             >
               {PodcastCategoryMap[key]}

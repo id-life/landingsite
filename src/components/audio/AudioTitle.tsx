@@ -70,7 +70,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
     <div
       ref={containerRef}
       style={{ width: width ?? 'auto' }}
-      className="relative h-[14px] overflow-hidden text-[12px]/[14px] font-semibold text-background"
+      className="relative h-[14px] overflow-hidden text-[12px]/[14px] font-semibold text-white"
     >
       <div ref={wrapperRef} className="absolute flex gap-[16px] text-nowrap">
         <div ref={titleRef}>{title}</div>

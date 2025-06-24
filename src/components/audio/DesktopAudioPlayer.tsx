@@ -46,7 +46,7 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
         <div
           onClick={() => setIsOpen((v) => !v)}
           className={clsx(
-            'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-audio-player px-[8px]',
+            'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 px-[8px]',
             className,
             injectClassName,
           )}
@@ -54,7 +54,7 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
           <DesktopAudioSiriWave />
           <AudioTitle width={148} title={title} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
-            {isPlaying ? <PauseSVG className="w-full fill-background" /> : <PlaySVG className="w-full fill-background" />}
+            {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
           </div>
         </div>
       </Popover.Trigger>
@@ -65,7 +65,8 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
           align="end"
           sideOffset={16}
           className={clsx(
-            'z-[51] w-[400px] rounded-lg border-2 border-audio-border bg-audio-content p-[20px] data-[state=closed]:hidden',
+            // 'z-[51] w-[400px] rounded-lg border-2 border-gray-760 bg-gray-900 p-[20px] data-[state=closed]:hidden',
+            'z-[51] w-[400px] rounded-lg bg-[#121212CC] p-[20px] backdrop-blur data-[state=closed]:hidden',
             injectClassName,
           )}
         >

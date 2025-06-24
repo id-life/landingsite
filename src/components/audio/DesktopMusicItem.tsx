@@ -39,7 +39,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
     const wavesurfer = WaveSurfer.create({
       container: containerRef.current,
       height: 'auto',
-      waveColor: '#BDBDBD',
+      waveColor: '#333333',
       progressColor: '#C11111',
       cursorWidth: 0,
       barWidth: 2,
