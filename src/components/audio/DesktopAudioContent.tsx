@@ -94,7 +94,7 @@ export default function DesktopMusicContent() {
         </div>
         <div
           onClick={handleChangePlayMode}
-          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-[#272727] px-[8px] text-center text-[10px]/[12px] font-semibold"
+          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-[10px]/[12px] font-semibold"
         >
           {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white" />}
           {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white" />}

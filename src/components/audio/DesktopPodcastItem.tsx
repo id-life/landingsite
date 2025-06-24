@@ -55,13 +55,12 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
           {isCurrent ? (
             <>
               <div onClick={handleProgressChange} className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start">
-                <div className="relative h-[2px] w-full bg-[#BDBDBD]">
+                <div className="relative h-[2px] w-full bg-[#57595C]">
                   <div style={{ width: `${controls.progress * 100}%` }} className="absolute left-0 top-0 h-[2px] bg-red-600" />
                   <div
                     style={{
                       left: `${controls.progress * 100}%`,
-                      background:
-                        'linear-gradient(180deg, rgba(193, 17, 17, 0.00) 0%, #C11111 50%, rgba(193, 17, 17, 0.00) 100%)',
+                      background: 'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, #C11111 50%, rgba(193, 17, 17, 0) 100%)',
                     }}
                     className="absolute top-1/2 h-[16px] w-[2px] -translate-y-1/2"
                   />

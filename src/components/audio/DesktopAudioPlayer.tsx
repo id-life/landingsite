@@ -65,8 +65,7 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
           align="end"
           sideOffset={16}
           className={clsx(
-            // 'z-[51] w-[400px] rounded-lg border-2 border-gray-760 bg-gray-900 p-[20px] data-[state=closed]:hidden',
-            'z-[51] w-[400px] rounded-lg bg-[#121212CC] p-[20px] backdrop-blur data-[state=closed]:hidden',
+            'z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur data-[state=closed]:hidden',
             injectClassName,
           )}
         >
