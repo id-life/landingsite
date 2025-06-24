@@ -21,18 +21,18 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Mito Health',
-    description: 'AI Powered Concierge Doctor',
+    description: 'AI powered concierge doctor',
     image: <img className="w-36 mobile:w-[6.75rem]" src="/imgs/investments/mito.webp" alt="mito" />,
     link: 'https://mitohealth.com/',
   },
   {
     title: 'R3 Bio',
-    description: 'Wholebody replacement',
+    description: 'Stealth mode biotech',
     image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
   },
   {
     title: 'Frontier Bio',
-    description: 'The Future of Engineered Tissue',
+    description: 'The future of engineered tissue',
     image: <img className="w-68 mobile:w-[13rem]" src="/imgs/investments/frontier-bio.webp" alt="frontier-bio" />,
     link: 'https://www.frontierbio.com/',
   },
@@ -62,7 +62,7 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'ALIS',
-    description: 'Gold Standard Longevity Services Scaled Globally',
+    description: 'Gold standard longevity services scaled globally',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
     link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
   },
