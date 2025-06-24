@@ -9,10 +9,10 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
-import DiseaseManagementStatus from './DiseaseManagementStatus';
+import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 // register GSAP plugins
@@ -26,12 +26,56 @@ function Spectrum() {
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
+  const animTimeline = useRef<gsap.core.Timeline | null>(null);
 
   const handleBackToSpectrum = useCallback(() => {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
+  const createClipPath = useCallback((isOpening: boolean) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    const maxRadius = Math.hypot(
+      Math.max(centerX, window.innerWidth - centerX),
+      Math.max(centerY, window.innerHeight - centerY),
+    );
+
+    return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
+  }, []);
+
   const spectrumData = useSpectrumData();
+
+  useGSAP(() => {
+    if (isShowingDiseaseManagement) {
+      if (animTimeline.current) animTimeline.current.kill();
+      animTimeline.current = gsap.timeline();
+      animTimeline.current
+        .to(['.spectrum-content-wrapper', '#spectrum-particle-gl'], {
+          opacity: 0,
+          duration: 0.4,
+          pointerEvents: 'none',
+        })
+        .fromTo(
+          '.disease-management-wrapper',
+          {
+            clipPath: 'circle(0% at 50% 50%)',
+            pointerEvents: 'none',
+          },
+          {
+            clipPath: 'circle(100% at 50% 50%)',
+            duration: 0.8,
+            ease: 'easeInOut',
+            pointerEvents: 'auto',
+          },
+          '-=0.2',
+        );
+    } else {
+      if (animTimeline?.current && animTimeline.current?.progress() > 0) {
+        animTimeline.current.reverse();
+      }
+    }
+  }, [isShowingDiseaseManagement]);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
     // engagement auto scroll to profile
@@ -134,50 +178,50 @@ function Spectrum() {
     { scope: wrapperRef, dependencies: [] },
   );
 
-  if (isShowingDiseaseManagement) {
-    return (
-      <div id={NAV_LIST[2].id} className="page-container spectrum">
-        <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-      </div>
-    );
-  }
-
   return (
-    <div id={NAV_LIST[2].id} className="page-container spectrum">
-      <ParticleGL
-        isStatic
-        activeAnim={active}
-        imageIdx={imageIdx}
-        id="spectrum-particle-container"
-        getSourceImgInfos={spectrumGetSourceImgInfos}
-      />
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
-        <div id="spectrum-particle-gl">
-          <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
-            {/* <div className="particle-mask"></div> */}
+    <>
+      <div id={NAV_LIST[2].id} className="page-container spectrum">
+        <ParticleGL
+          isStatic
+          activeAnim={active}
+          imageIdx={imageIdx}
+          id="spectrum-particle-container"
+          getSourceImgInfos={spectrumGetSourceImgInfos}
+        />
+        <div className="relative flex h-[100svh] flex-col items-center justify-center">
+          <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
+          <div id="spectrum-particle-gl">
+            <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
+              {/* <div className="particle-mask"></div> */}
+            </div>
+          </div>
+          <div className="spectrum-fund mt-12 overflow-hidden px-18">
+            <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
+              {spectrumData.map((item, index) => (
+                <SpectrumItem
+                  key={item.title}
+                  item={item}
+                  onClick={(e) => {
+                    console.log(item.title);
+                    item.onClick?.(e);
+                  }}
+                  ref={(element) => {
+                    if (!element) return;
+                    spectrumRefs.current[index] = element;
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
-            {spectrumData.map((item, index) => (
-              <SpectrumItem
-                key={item.title}
-                item={item}
-                onClick={(e) => {
-                  console.log(item.title);
-                  item.onClick?.(e);
-                }}
-                ref={(element) => {
-                  if (!element) return;
-                  spectrumRefs.current[index] = element;
-                }}
-              />
-            ))}
-          </div>
+        <div
+          className="disease-management-wrapper pointer-events-none absolute inset-0 z-[65] bg-black"
+          style={{ clipPath: 'circle(0% at 50% 50%)' }}
+        >
+          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

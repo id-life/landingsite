@@ -12,7 +12,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import MobileDiseaseManagementStatus from './MobileDiseaseManagementStatus';
+import MobileDiseaseManagementStatus from '../disease-management/MobileDiseaseManagementStatus';
+import { useGSAP } from '@gsap/react';
 
 SwiperType.use([FreeMode]);
 
@@ -21,12 +22,13 @@ function MobileSpectrum() {
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
   const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const animTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const pageTransitionTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
   const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
   const swiperRef = useRef<SwiperType>();
   const [particleActive, setParticleActive] = useState(false);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   const handleBackToSpectrum = useCallback(() => {
     setIsShowingDiseaseManagement(false);
@@ -45,12 +47,10 @@ function MobileSpectrum() {
     if (!wrapperRef.current) return;
 
     // 如果存在之前的动画，先清理
-    if (timelineRef.current) {
-      timelineRef.current.kill();
-    }
+    if (pageTransitionTimelineRef.current) pageTransitionTimelineRef.current.kill();
 
     const tl = gsap.timeline();
-    timelineRef.current = tl;
+    pageTransitionTimelineRef.current = tl;
 
     tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
 
@@ -67,12 +67,12 @@ function MobileSpectrum() {
   const createExitAnimation = useCallback(() => {
     if (!wrapperRef.current) return;
 
-    if (timelineRef.current) {
-      timelineRef.current.kill();
+    if (pageTransitionTimelineRef.current) {
+      pageTransitionTimelineRef.current.kill();
     }
 
     const tl = gsap.timeline();
-    timelineRef.current = tl;
+    pageTransitionTimelineRef.current = tl;
 
     tl.to(wrapperRef.current, {
       opacity: 0,
@@ -96,24 +96,34 @@ function MobileSpectrum() {
     setMobileImageIdx2(2);
   }, [createEnterAnimation, createExitAnimation, currentPage]);
 
-  if (isShowingDiseaseManagement) {
-    return (
-      <div
-        id={NAV_LIST[2].id}
-        className={cn('relative h-[100svh] overflow-y-auto text-white', {
-          hidden: currentPage?.id !== NAV_LIST[2].id,
-        })}
-      >
-        <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
-      </div>
-    );
-  }
+  useGSAP(() => {
+    if (isShowingDiseaseManagement) {
+      if (animTimelineRef.current) animTimelineRef.current.kill();
+      animTimelineRef.current = gsap.timeline();
+      animTimelineRef.current
+        .to(['.spectrum-content-wrapper-mobile', '#spectrum-particle-gl-mobile'], {
+          opacity: 0,
+          duration: 0.4,
+          pointerEvents: 'none',
+        })
+        .fromTo(
+          '.disease-management-wrapper-mobile',
+          { clipPath: 'circle(0% at 50% 50%)', pointerEvents: 'none' },
+          { clipPath: 'circle(100% at 50% 50%)', duration: 0.8, ease: 'easeInOut', pointerEvents: 'auto' },
+          '-=0.2',
+        );
+    } else {
+      if (animTimelineRef.current && animTimelineRef.current?.progress() > 0) {
+        animTimelineRef.current.reverse();
+      }
+    }
+  }, [isShowingDiseaseManagement]);
 
   return (
     <div
       ref={wrapperRef}
       id={NAV_LIST[2].id}
-      className={cn('page-container-mobile text-white', {
+      className={cn('page-container-mobile relative text-white', {
         hidden: currentPage?.id !== NAV_LIST[2].id,
       })}
     >
@@ -172,7 +182,6 @@ function MobileSpectrum() {
                     spectrumRefs.current[index] = element;
                   }}
                   onClick={(e) => {
-                    console.log(item.title);
                     item.onClick?.(e);
                   }}
                 />
@@ -180,6 +189,12 @@ function MobileSpectrum() {
             ))}
           </Swiper>
         </div>
+      </div>
+      <div
+        className="disease-management-wrapper-mobile pointer-events-none absolute inset-0 z-[65] bg-black"
+        style={{ clipPath: 'circle(0% at 50% 50%)' }}
+      >
+        <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
       </div>
     </div>
   );

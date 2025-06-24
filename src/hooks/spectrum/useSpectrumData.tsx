@@ -189,9 +189,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Disease Management & Cure Status',
-            onClick: () => {
-              setShowDiseaseManagement(true);
-            },
+            onClick: () => handleDiseaseManagementClick(),
           },
         ],
       },
