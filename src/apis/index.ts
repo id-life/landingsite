@@ -1,5 +1,13 @@
 import request, { Response } from '@/apis/request';
-import { AddCharacterRelationData, CharacterRelationDataResponse, NewsContent, NewsListItem } from '@/apis/types';
+import {
+  AddCharacterRelationData,
+  CharacterRelationDataResponse,
+  AudioDataItem,
+  NewsContent,
+  NewsListItem,
+} from '@/apis/types';
+
+export const fetchAudioData = () => request.get<any, Response<AudioDataItem[]>>('/music-player/list');
 
 export const fetchCharacterRelationData = () =>
   request.get<any, Response<CharacterRelationDataResponse>>('/character-relation');

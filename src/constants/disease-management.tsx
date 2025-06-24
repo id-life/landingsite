@@ -523,6 +523,11 @@ const manageableData = [
   },
 ];
 
+function capitalizeFirstLetter(str: string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const curableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'names',
@@ -532,11 +537,11 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'curable',
     header: 'Curable?',
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue() as string),
   },
   {
     accessorKey: 'introduction',
-    header: 'Introduction to the Disease',
+    header: 'Introduction',
     cell: (info) => info.getValue(),
   },
 ];
@@ -544,13 +549,13 @@ const curableDiseasesColumns: ColumnDef<DataType>[] = [
 const manageableDiseasesColumns: ColumnDef<DataType>[] = [
   {
     accessorKey: 'nameOfDisease',
-    header: 'Name of disease',
+    header: 'Name',
     cell: (info) => info.getValue(),
   },
   {
     accessorKey: 'manageable',
     header: 'Manageable?',
-    cell: (info) => info.getValue(),
+    cell: (info) => capitalizeFirstLetter(info.getValue() as string),
   },
   {
     accessorKey: 'possibleCause',
@@ -566,7 +571,7 @@ export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
     counts: [801, 669],
     data: curableData,
     columns: curableDiseasesColumns,
-    pdf: 'https://cdn.id.life/curable%20disease%20survey.csv',
+    pdf: 'https://cdn.id.life/curable_disease_survey.csv',
   },
   {
     img: '/imgs/particle/spectrum/10.png',
@@ -574,6 +579,6 @@ export const diseaseManagementStatusItems: DiseaseManagementStatusItemType[] = [
     counts: [1333, 5332],
     data: manageableData,
     columns: manageableDiseasesColumns,
-    pdf: 'https://cdn.id.life//manageable%20rare%20disease%20survey.csv',
+    pdf: 'https://cdn.id.life/manageable_rare_disease_survey.csv',
   },
 ];

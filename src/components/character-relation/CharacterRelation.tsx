@@ -146,7 +146,11 @@ const CharacterRelation = () => {
           className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
         >
           <Background />
-          <div ref={refs.setFloating} style={floatingStyles} className="character-relation-graph-wrapper h-full w-full">
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className="character-relation-graph-wrapper h-full w-full px-10 pb-[6.875rem] pt-[6.5rem]"
+          >
             {isCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
           </div>
           <CharacterRelationLegend />

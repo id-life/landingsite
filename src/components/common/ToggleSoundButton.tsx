@@ -44,20 +44,20 @@ export default function ToggleSoundButton({ className }: { className?: string })
   useEffect(() => {
     if (!isMounted || soundOff) return;
 
-    try {
-      audioRef.current?.play().catch(() => {
-        setCanAutoPlay(false);
-        console.log('autoplay error');
-      });
-    } catch (error) {
-      console.log('播放操作异常', error);
-    }
+    // try {
+    //   audioRef.current?.play().catch(() => {
+    //     setCanAutoPlay(false);
+    //     console.log('autoplay error');
+    //   });
+    // } catch (error) {
+    //   console.log('播放操作异常', error);
+    // }
 
-    window.addEventListener('click', handleUserInteraction);
+    // window.addEventListener('click', handleUserInteraction);
 
-    return () => {
-      window.removeEventListener('click', handleUserInteraction);
-    };
+    // return () => {
+    //   window.removeEventListener('click', handleUserInteraction);
+    // };
   }, [handleUserInteraction, isMounted, soundOff]);
 
   useEffect(() => {

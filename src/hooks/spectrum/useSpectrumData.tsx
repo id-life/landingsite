@@ -84,7 +84,6 @@ export const useSpectrumData = () => {
     setShowDiseaseManagement(true);
   }, [setShowDiseaseManagement]);
 
-
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
       {
@@ -188,12 +187,10 @@ export const useSpectrumData = () => {
             label: 'Influence Network',
             onClick: () => handleCharacterRelationShow(),
           },
-          // {
-          //   label: 'Disease Management & Cure Status',
-          //   onClick: () => {
-          //     setShowDiseaseManagement(true);
-          //   },
-          // },
+          {
+            label: 'Disease Management & Cure Status',
+            onClick: () => handleDiseaseManagementClick(),
+          },
         ],
       },
       {

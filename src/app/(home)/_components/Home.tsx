@@ -57,7 +57,7 @@ export default function Home() {
   useEvent('resize', throttle(initFontSize, 1000));
 
   useGSAP(() => {
-    ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: true, smoothTouch: 0.1 });
+    ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: false, smoothTouch: 0.1 });
     const root = document.documentElement;
     const visionTL = gsap.timeline({
       scrollTrigger: {
@@ -81,6 +81,11 @@ export default function Home() {
       '--gradient-to': '#C111114C',
       '--background': '#000000',
       '--foreground': '#F0F0F0',
+      '--audio-player': '#F0F0F0',
+      '--audio-content': '#101010',
+      '--audio-border': '#1C1C1C',
+      '--audio-order': '#222222',
+      '--audio-desc': '#999999',
     });
 
     const spectrumTL = gsap.timeline({
@@ -139,6 +144,11 @@ export default function Home() {
       '--gradient-to': '#CBD6EA',
       '--background': '#F0F0F0',
       '--foreground': '#000000',
+      '--audio-player': '#2E2F31',
+      '--audio-content': '#E2E8F4',
+      '--audio-border': '#EEF4FF',
+      '--audio-order': '#ffffff',
+      '--audio-desc': '#222222',
     });
     twinTL.to('.base-background2', { opacity: 1 });
   });

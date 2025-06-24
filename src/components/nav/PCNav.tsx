@@ -17,6 +17,8 @@ import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { cn } from '@/utils';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { useGSAP } from '@gsap/react';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -26,6 +28,7 @@ export default function PCNav() {
   const timelineRef = useRef(gsap.timeline({ paused: true }));
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
+  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
 
   const { trackEvent } = useGA();
 
@@ -86,6 +89,14 @@ export default function PCNav() {
     }
   };
 
+  useGSAP(() => {
+    gsap.to('.main-nav-links', {
+      opacity: isShowingDiseaseManagement ? 0 : 1,
+      pointerEvents: isShowingDiseaseManagement ? 'none' : 'auto',
+      duration: 0.5,
+    });
+  }, [isShowingDiseaseManagement]);
+
   useEvent('mousedown', handleClickOutside);
 
   if (!globalLoaded) return null;
@@ -94,11 +105,16 @@ export default function PCNav() {
       id="nav"
       className={cn(
         'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5',
-        isCharacterRelationShow && 'character-relation-css-vars-inject z-[51]',
+        isCharacterRelationShow && 'character-relation-css-vars-inject z-[51] pb-4',
       )}
     >
       <Logo />
-      <div className={cn('flex gap-8 text-sm font-semibold mobile:hidden', isCharacterRelationShow && 'hidden')}>
+      <div
+        className={cn(
+          'main-nav-links flex gap-8 text-sm font-semibold mobile:hidden',
+          (isCharacterRelationShow || isShowingDiseaseManagement) && 'hidden',
+        )}
+      >
         {NAV_LIST.map((item) => (
           <div
             onClick={() => handleNavClick(item)}

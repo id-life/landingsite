@@ -20,6 +20,11 @@
     --gradient-via-percent: 50%;
     --gradient-to: #cbd6ea;
     --gradient-rotate: 90deg;
+    --audio-player: #2e2f31;
+    --audio-content: #e2e8f4;
+    --audio-border: #eef4ff;
+    --audio-order: #ffffff;
+    --audio-desc: #222222;
     --sqrt2: 1.4142135623730951;
   }
 
@@ -84,10 +89,29 @@
 
     &.nav-active,
     &:hover {
-      width: 50%;
-
       &::after {
         width: 50%;
+      }
+    }
+  }
+
+  .audio-tab-item {
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      height: 2px;
+      width: 0;
+      transform: translateX(-50%);
+      transition: width 0.3s;
+      background: #ffffff;
+    }
+
+    &.audio-tab-active,
+    &:hover {
+      &::after {
+        width: 36px;
       }
     }
   }
@@ -284,8 +308,19 @@
     transform: translate(-50%, -50%);
     border: 0.7px solid black;
     border-radius: 9999px;
-    width: 122px;
-    height: 40px;
+    width: 7.625rem;
+    height: 2.5rem;
+  }
+
+  .back-button-ripple-init {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 0.7px solid white;
+    border-radius: 9999px;
+    width: 7.625rem;
+    height: 2.5rem;
   }
 
   .hide-scrollbar {

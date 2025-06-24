@@ -38,8 +38,8 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
     // 创建循环动画
     const createRippleAnim = (el: HTMLElement, delay: number) => {
       gsap.to(el, {
-        width: 158, // 7.625rem = 122px
-        height: 76, // 2.5rem = 40px
+        width: '9.875rem',
+        height: '4.75rem',
         opacity: 0,
         duration: 2,
         delay,
@@ -67,7 +67,7 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
         <div ref={rippleRef1} className="scroll-button-ripple-init" />
         <div ref={rippleRef2} className="scroll-button-ripple-init" />
         <div ref={rippleRef3} className="scroll-button-ripple-init" />
-        <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-black">
+        <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-gray-750">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
           <p className="font-migrena text-base/4 font-bold uppercase text-white">START</p>
         </div>
