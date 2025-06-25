@@ -37,38 +37,38 @@ function MobileAudioPlayer({ className, injectClassName }: { className?: string;
 
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <div
-        className={clsx(
-          'flex w-[4.875rem] cursor-pointer items-center gap-1 rounded-full bg-gray-750 px-1.5 transition duration-300',
-          className,
-          injectClassName,
-        )}
-      >
-        <DesktopAudioSiriWave className="w-6 overflow-hidden" />
-        <div onClick={handleChangePlayStatus} className="size-4">
-          {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
-        </div>
-        <Popover.Trigger asChild>
-          <div onClick={() => setIsOpen((v) => !v)} className="size-4">
-            <PlayListSVG className="w-full fill-background" />
+      <Popover.Trigger asChild>
+        <div
+          className={clsx(
+            'flex w-[4.875rem] cursor-pointer items-center gap-1 rounded-full bg-gray-750 px-1.5 transition duration-300',
+            className,
+            injectClassName,
+          )}
+          onClick={() => setIsOpen((v) => !v)}
+        >
+          <DesktopAudioSiriWave className="w-6 overflow-hidden" />
+          <div onClick={handleChangePlayStatus} className="size-4">
+            {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
           </div>
-        </Popover.Trigger>
-        <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
-        <Popover.Portal forceMount>
-          <Popover.Content
-            forceMount
-            align="end"
-            sideOffset={16}
-            className={clsx(
-              // 'border-gray-760 z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg border-2 bg-gray-900 p-4.5 data-[state=closed]:hidden',
-              'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 backdrop-blur data-[state=closed]:hidden',
-              injectClassName,
-            )}
-          >
-            <DesktopMusicContent />
-          </Popover.Content>
-        </Popover.Portal>
-      </div>
+          <div className="size-4">
+            <PlayListSVG className="w-full fill-white" />
+          </div>
+        </div>
+      </Popover.Trigger>
+      <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
+      <Popover.Portal forceMount>
+        <Popover.Content
+          forceMount
+          align="end"
+          sideOffset={16}
+          className={clsx(
+            'z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur data-[state=closed]:hidden',
+            injectClassName,
+          )}
+        >
+          <DesktopMusicContent />
+        </Popover.Content>
+      </Popover.Portal>
     </Popover.Root>
   );
 }
