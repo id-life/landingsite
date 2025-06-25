@@ -50,7 +50,7 @@ function MobileAudioPlayer({ className, injectClassName }: { className?: string;
         </div>
         <Popover.Trigger asChild>
           <div onClick={() => setIsOpen((v) => !v)} className="size-4">
-            <PlayListSVG className="w-full fill-background" />
+            <PlayListSVG className="w-full fill-white" />
           </div>
         </Popover.Trigger>
         <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
