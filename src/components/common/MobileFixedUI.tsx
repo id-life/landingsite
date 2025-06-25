@@ -39,10 +39,7 @@ export default function MobileFixedUI() {
 
       <FixedValue />
       <ClientOnly>
-        <MobileAudioPlayer
-          className="fixed bottom-8.5 right-5 z-10"
-          injectClassName={isMobileCharacterRelationShow ? 'character-relation-css-vars-inject z-[101]' : ''}
-        />
+        <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
       </ClientOnly>
       {isMobileCharacterRelationShow && (
         <>
