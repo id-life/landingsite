@@ -42,10 +42,7 @@ export default function PCFixedUI() {
 
       <CarouselWrapper />
       <ClientOnly>
-        <DesktopAudioPlayer
-          className="fixed bottom-10 right-10 z-[51]"
-          injectClassName={isCharacterRelationShow ? 'character-relation-css-vars-inject' : ''}
-        />
+        <DesktopAudioPlayer className="fixed bottom-10 right-10 z-[51]" />
       </ClientOnly>
       <NewFixedValue />
       {isCharacterRelationShow && (

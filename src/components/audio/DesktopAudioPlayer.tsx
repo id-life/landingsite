@@ -12,8 +12,28 @@ import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { AUDIO_DISPATCH, currentAudioAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { motion, AnimatePresence } from 'motion/react';
 
-function DesktopAudioPlayer({ className, injectClassName }: { className?: string; injectClassName?: string }) {
+export const motionVariants = {
+  visible: {
+    opacity: 1,
+    scale: 1,
+    visibility: 'visible',
+  },
+  hidden: {
+    opacity: 0,
+    scale: 0.3,
+    visibility: 'hidden',
+  },
+} as const;
+
+export const motionTransition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 24,
+} as const;
+
+function DesktopAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
@@ -45,11 +65,7 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
       <Popover.Trigger asChild>
         <div
           onClick={() => setIsOpen((v) => !v)}
-          className={clsx(
-            'flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 px-[8px]',
-            className,
-            injectClassName,
-          )}
+          className={clsx('flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 px-[8px]', className)}
         >
           <DesktopAudioSiriWave />
           <AudioTitle width={148} title={title} />
@@ -60,17 +76,21 @@ function DesktopAudioPlayer({ className, injectClassName }: { className?: string
       </Popover.Trigger>
       <Popover.Anchor className={clsx('pointer-events-none h-[26px] w-[284px]', className)} />
       <Popover.Portal forceMount>
-        <Popover.Content
-          forceMount
-          align="end"
-          sideOffset={16}
-          className={clsx(
-            'z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur data-[state=closed]:hidden',
-            injectClassName,
-          )}
-        >
-          <DesktopMusicContent />
-        </Popover.Content>
+        <AnimatePresence>
+          <Popover.Content asChild align="end" sideOffset={16}>
+            <motion.div
+              layout
+              variants={motionVariants}
+              transition={motionTransition}
+              initial="hidden"
+              animate={isOpen ? 'visible' : 'hidden'}
+              style={{ originX: 1, originY: 1 }}
+              className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
+            >
+              <DesktopMusicContent />
+            </motion.div>
+          </Popover.Content>
+        </AnimatePresence>
       </Popover.Portal>
     </Popover.Root>
   );
