@@ -79,7 +79,6 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <AnimatePresence>
           <Popover.Content asChild align="end" sideOffset={16}>
             <motion.div
-              layout
               variants={motionVariants}
               transition={motionTransition}
               initial="hidden"

@@ -59,12 +59,12 @@ function MobileAudioPlayer({ className }: { className?: string }) {
       <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
       <Popover.Portal forceMount>
         <AnimatePresence>
-          <Popover.Content align="end" sideOffset={16}>
+          <Popover.Content align="end" asChild sideOffset={16}>
             <motion.div
               variants={motionVariants}
               transition={motionTransition}
               initial="hidden"
-              className="z-10 ml-4 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur"
+              className="z-10 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur"
               animate={isOpen ? 'visible' : 'hidden'}
               style={{ transformOrigin: 'bottom right' }}
             >
