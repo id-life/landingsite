@@ -28,7 +28,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
           onError={() => setIsImageLoading(false)}
         />
       </div>
-      <span className="mb-3 text-base leading-5">{title}</span>
+      <span className="mb-3 text-center text-base leading-5">{title}</span>
       <div className="mb-7 flex space-x-8 text-xl leading-5">
         <DotCount className="h-[3px] w-[3px] bg-green-500">{counts[0]}</DotCount>
         <DotCount className="h-[3px] w-[3px] bg-red-500">{counts[1]}</DotCount>
@@ -65,7 +65,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
-    <div className="flex h-screen flex-col space-y-6 px-5 pb-[1.8rem] pt-[5.1875rem]">
+    <div className="flex h-screen flex-col space-y-6 px-5 pb-8.5 pt-[5.1875rem]">
       <div className="hide-scrollbar flex flex-1 flex-col space-y-7.5 overflow-y-auto">
         {diseaseManagementStatusItems.map((item) => (
           <DiseaseManagementStatusItem key={item.title} {...item} />

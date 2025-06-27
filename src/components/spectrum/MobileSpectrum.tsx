@@ -108,8 +108,13 @@ function MobileSpectrum() {
         })
         .fromTo(
           '.disease-management-wrapper-mobile',
-          { clipPath: 'circle(0% at 50% 50%)', pointerEvents: 'none' },
-          { clipPath: 'circle(100% at 50% 50%)', duration: 0.8, ease: 'easeInOut', pointerEvents: 'auto' },
+          { clipPath: 'circle(0px at 50% 50%)', pointerEvents: 'none' },
+          {
+            clipPath: `circle(${Math.hypot(window.innerWidth, window.innerHeight)}px at 50% 50%)`,
+            duration: 0.8,
+            ease: 'easeInOut',
+            pointerEvents: 'auto',
+          },
           '-=0.2',
         );
     } else {
@@ -192,7 +197,7 @@ function MobileSpectrum() {
       </div>
       <div
         className="disease-management-wrapper-mobile pointer-events-none absolute inset-0 z-[65] bg-black"
-        style={{ clipPath: 'circle(0% at 50% 50%)' }}
+        style={{ clipPath: 'circle(0px at 50% 50%)' }}
       >
         <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
       </div>

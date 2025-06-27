@@ -32,22 +32,17 @@ function Spectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const createClipPath = useCallback((isOpening: boolean) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    const maxRadius = Math.hypot(
-      Math.max(centerX, window.innerWidth - centerX),
-      Math.max(centerY, window.innerHeight - centerY),
-    );
-
-    return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
-  }, []);
-
   const spectrumData = useSpectrumData();
 
   useGSAP(() => {
     if (isShowingDiseaseManagement) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const maxRadius = Math.hypot(
+        Math.max(centerX, window.innerWidth - centerX),
+        Math.max(centerY, window.innerHeight - centerY),
+      );
+
       if (animTimeline.current) animTimeline.current.kill();
       animTimeline.current = gsap.timeline();
       animTimeline.current
@@ -59,11 +54,11 @@ function Spectrum() {
         .fromTo(
           '.disease-management-wrapper',
           {
-            clipPath: 'circle(0% at 50% 50%)',
+            clipPath: `circle(0px at ${centerX}px ${centerY}px)`,
             pointerEvents: 'none',
           },
           {
-            clipPath: 'circle(100% at 50% 50%)',
+            clipPath: `circle(${maxRadius}px at ${centerX}px ${centerY}px)`,
             duration: 0.8,
             ease: 'easeInOut',
             pointerEvents: 'auto',
@@ -216,7 +211,7 @@ function Spectrum() {
         </div>
         <div
           className="disease-management-wrapper pointer-events-none absolute inset-0 z-[65] bg-black"
-          style={{ clipPath: 'circle(0% at 50% 50%)' }}
+          style={{ clipPath: 'circle(0px at 50% 50%)' }}
         >
           <DiseaseManagementStatus onBack={handleBackToSpectrum} />
         </div>
