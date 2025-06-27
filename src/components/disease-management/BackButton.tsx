@@ -32,7 +32,7 @@ export default function BackButton({ className, onClick }: BackButtonProps) {
         repeat: -1,
         ease: 'none',
         onStart: () => {
-          gsap.set(el, { width: 0, height: 0, opacity: 1 });
+          gsap.set(el, { width: 0, height: 0, opacity: initialOpacity });
         },
       });
     };

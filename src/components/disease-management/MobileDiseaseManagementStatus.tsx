@@ -28,7 +28,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
           onError={() => setIsImageLoading(false)}
         />
       </div>
-      <span className="mb-3 text-base leading-5">{title}</span>
+      <span className="mb-3 text-center text-base leading-5">{title}</span>
       <div className="mb-7 flex space-x-8 text-xl leading-5">
         <DotCount className="h-[3px] w-[3px] bg-green-500">{counts[0]}</DotCount>
         <DotCount className="h-[3px] w-[3px] bg-red-500">{counts[1]}</DotCount>
