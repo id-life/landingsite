@@ -12,12 +12,12 @@ import { useFetchAudioData } from '@/hooks/audio/fetch';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { motionTransition, motionVariants } from '@/components/audio/DesktopAudioPlayer';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
-  const { isPlaying, dispatch } = useCurrentMusicControl();
+  const { isPlaying, dispatch, amplitude, waveSpeed } = useCurrentMusicControl();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           )}
           onClick={() => setIsOpen((v) => !v)}
         >
-          <DesktopAudioSiriWave className="w-6 overflow-hidden" />
+          <DesktopAudioSiriWave className="w-6 overflow-hidden" amplitude={amplitude} speed={waveSpeed} />
           <div onClick={handleChangePlayStatus} className="size-4">
             {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
           </div>
@@ -58,20 +58,18 @@ function MobileAudioPlayer({ className }: { className?: string }) {
       </Popover.Trigger>
       <Popover.Anchor className={clsx('pointer-events-none h-6.5 w-71', className)} />
       <Popover.Portal forceMount>
-        <AnimatePresence>
-          <Popover.Content align="end" asChild sideOffset={16}>
-            <motion.div
-              variants={motionVariants}
-              transition={motionTransition}
-              initial="hidden"
-              className="z-10 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur"
-              animate={isOpen ? 'visible' : 'hidden'}
-              style={{ transformOrigin: 'bottom right' }}
-            >
-              <DesktopMusicContent />
-            </motion.div>
-          </Popover.Content>
-        </AnimatePresence>
+        <Popover.Content asChild align="end" side="top" avoidCollisions={false} sideOffset={16}>
+          <motion.div
+            variants={motionVariants}
+            transition={motionTransition}
+            initial="hidden"
+            className="z-10 w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur"
+            animate={isOpen ? 'visible' : 'hidden'}
+            style={{ originX: 1, originY: 1 }}
+          >
+            <DesktopMusicContent />
+          </motion.div>
+        </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
   );
