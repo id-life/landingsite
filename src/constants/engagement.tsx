@@ -90,6 +90,11 @@ export type MapDotData = {
     src: string;
     alt: string;
   }[];
+  secondTitle?: string;
+  secondImgs?: {
+    src: string;
+    alt: string;
+  }[];
   contentTransformClass?: string;
   mobileContentTransformClass?: string;
   pcDotHotAreaClass?: string;
@@ -219,7 +224,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
-    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1'],
+    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5'],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-5.webp',
@@ -286,6 +291,56 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       },
     ],
   },
+  {
+    index: 5,
+    lat: 45,
+    lng: 2,
+    label: 'London',
+    country: 'UK',
+    link: 'https://founderslongevity.co/',
+    key: 'flf_global_2025', // Unique identifier for the dot
+    title: 'Founders Longevity Forum\nGlobal 2025 / 05',
+    secondTitle: 'Founders Longevity Forum\nLondon 2025 / 05',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
+    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
+    pcDotHotAreaClass: 'top-[12vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-book-0',
+      'world-map-dot-4',
+      'world-map-dot-sponsor-3',
+      'world-map-dot-book-2',
+      'world-map-dot-3',
+    ],
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/London-1.webp',
+        alt: 'London-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/London-2.webp',
+        alt: 'London-21.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/London-3.webp',
+        alt: 'London-3.webp',
+      },
+    ],
+    secondImgs: [
+      {
+        src: 'https://cdn.id.life/engagement/London-Global-1.webp',
+        alt: 'London-Global-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/London-Global-2.webp',
+        alt: 'London-Global-2.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/London-Global-3.webp',
+        alt: 'London-Global-3.webp',
+      },
+    ],
+  },
 ];
 
 export type MapBookDotData = {
@@ -313,7 +368,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0'],
+    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
   },
   {
@@ -377,7 +432,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'Oxford Future Innovation Forum 2024',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1'],
+    activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1', 'world-map-dot-5'],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Forum',
   },

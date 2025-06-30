@@ -185,7 +185,21 @@ export function WorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, contentTransformClass, period, lat, lng, pcDotHotAreaClass, link, label, country, videoUrl } = dot;
+  const {
+    title,
+    imgs,
+    contentTransformClass,
+    period,
+    lat,
+    lng,
+    pcDotHotAreaClass,
+    link,
+    label,
+    country,
+    videoUrl,
+    secondImgs,
+    secondTitle,
+  } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
@@ -301,49 +315,85 @@ export function WorldMapDotContent({
               </motion.a>
             )}
           </div>
-          <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  height: 0,
-                },
-                visible: {
-                  opacity: 1,
-                  height: '70vh',
-                },
-              }}
-              transition={{
-                staggerChildren: 0.1,
-                duration: 0.3,
-                type: 'easeInOut',
-              }}
-              className={cn(
-                'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
-                contentTransformClass,
-              )}
-            >
-              {title && (
-                <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                  <span className="mr-2">{title}</span>
-                  {period}
-                </h3>
-              )}
-              {imgs?.length ? (
-                <div
-                  ref={scrollContainerRef}
-                  className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+          <div className={cn('absolute inset-0 top-4 flex size-max origin-top-left items-center gap-4', contentTransformClass)}>
+            <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    height: 0,
+                  },
+                  visible: {
+                    opacity: 1,
+                    height: '70vh',
+                  },
+                }}
+                transition={{
+                  staggerChildren: 0.1,
+                  duration: 0.3,
+                  type: 'easeInOut',
+                }}
+                className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
+              >
+                {title && (
+                  <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+                    <span className="mr-2 whitespace-pre-wrap">{title}</span>
+                    {period}
+                  </h3>
+                )}
+                {imgs?.length ? (
+                  <div
+                    ref={scrollContainerRef}
+                    className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+                  >
+                    {imgs.map((img) => (
+                      <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                    ))}
+                  </div>
+                ) : null}
+              </motion.div>
+            </a>
+            {secondTitle && (
+              <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      height: 0,
+                    },
+                    visible: {
+                      opacity: 1,
+                      height: '70vh',
+                    },
+                  }}
+                  transition={{
+                    staggerChildren: 0.1,
+                    duration: 0.3,
+                    type: 'easeInOut',
+                  }}
+                  className={cn('flex h-full w-[20.25rem] flex-col items-center gap-4 font-oxanium')}
                 >
-                  {imgs.map((img) => (
-                    <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                  ))}
-                </div>
-              ) : null}
-            </motion.div>
-          </a>
+                  <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+                    <span className="mr-2 whitespace-pre-wrap">{secondTitle}</span>
+                    {period}
+                  </h3>
+                  {secondImgs?.length ? (
+                    <div className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
+                      {secondImgs.map((img) => (
+                        <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+                      ))}
+                    </div>
+                  ) : null}
+                </motion.div>
+              </a>
+            )}
+          </div>
         </div>
       )}
     </AnimatePresence>
