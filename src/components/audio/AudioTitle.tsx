@@ -17,12 +17,12 @@ function AudioTitle({ width, title }: MusicTitleProps) {
       animationRef.current.restart();
       animationRef.current.kill();
     }
-    if (!wrapperRef.current || !containerRef.current || !titleRef.current) return;
+    if (!wrapperRef.current || !containerRef.current || !titleRef.current || !width) return;
     const wrapper = wrapperRef.current;
     const title = titleRef.current;
     const container = containerRef.current;
     const titleWidth = title.clientWidth;
-    const containerWidth = container.clientWidth;
+    // const containerWidth = container.clientWidth;
 
     const children = Array.from(wrapper.children);
     children.forEach((child, index) => {
@@ -31,7 +31,8 @@ function AudioTitle({ width, title }: MusicTitleProps) {
       }
     });
 
-    if (titleWidth > containerWidth) {
+    if (titleWidth > width) {
+      container.style.setProperty('width', `${width}px`);
       const clone = title.cloneNode(true);
       wrapper.appendChild(clone);
       const offsetX = titleWidth + 16;
@@ -56,6 +57,8 @@ function AudioTitle({ width, title }: MusicTitleProps) {
         container.removeEventListener('mouseenter', pauseAnimation);
         container.removeEventListener('mouseleave', resumeAnimation);
       };
+    } else {
+      container.style.setProperty('width', `${titleWidth}px`);
     }
 
     return () => {
@@ -64,12 +67,12 @@ function AudioTitle({ width, title }: MusicTitleProps) {
         animationRef.current.kill();
       }
     };
-  }, [title]);
+  }, [title, width]);
 
   return (
     <div
       ref={containerRef}
-      style={{ width: width ?? 'auto' }}
+      style={{ maxWidth: width ?? 'auto' }}
       className="relative h-[14px] overflow-hidden text-[12px]/[14px] font-semibold text-white"
     >
       <div ref={wrapperRef} className="absolute flex gap-[16px] text-nowrap">

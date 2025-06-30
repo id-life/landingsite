@@ -12,18 +12,18 @@ import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { AUDIO_DISPATCH, currentAudioAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 export const motionVariants = {
   visible: {
     opacity: 1,
     scale: 1,
-    visibility: 'visible',
+    display: 'block',
   },
   hidden: {
     opacity: 0,
-    scale: 0.3,
-    visibility: 'hidden',
+    scale: 0.5,
+    display: 'none',
   },
 } as const;
 
@@ -37,7 +37,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
-  const { data, isPlaying, dispatch } = useCurrentMusicControl();
+  const { data, isPlaying, dispatch, amplitude, waveSpeed } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
@@ -65,32 +65,29 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
       <Popover.Trigger asChild>
         <div
           onClick={() => setIsOpen((v) => !v)}
-          className={clsx('flex w-[284px] cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 px-[8px]', className)}
+          className={clsx('flex cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 pl-[12px] pr-[8px]', className)}
         >
-          <DesktopAudioSiriWave />
+          <DesktopAudioSiriWave amplitude={amplitude} speed={waveSpeed} />
           <AudioTitle width={148} title={title} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
             {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
           </div>
         </div>
       </Popover.Trigger>
-      <Popover.Anchor className={clsx('pointer-events-none h-[26px] w-[284px]', className)} />
+      <Popover.Anchor className={clsx('pointer-events-none h-[26px]', className)} />
       <Popover.Portal forceMount>
-        <AnimatePresence>
-          <Popover.Content asChild align="end" sideOffset={16}>
-            <motion.div
-              layout
-              variants={motionVariants}
-              transition={motionTransition}
-              initial="hidden"
-              animate={isOpen ? 'visible' : 'hidden'}
-              style={{ originX: 1, originY: 1 }}
-              className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
-            >
-              <DesktopMusicContent />
-            </motion.div>
-          </Popover.Content>
-        </AnimatePresence>
+        <Popover.Content asChild align="end" side="top" avoidCollisions={false} sideOffset={16}>
+          <motion.div
+            variants={motionVariants}
+            transition={motionTransition}
+            initial="hidden"
+            animate={isOpen ? 'visible' : 'hidden'}
+            style={{ originX: 1, originY: 1 }}
+            className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
+          >
+            <DesktopMusicContent />
+          </motion.div>
+        </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
   );
