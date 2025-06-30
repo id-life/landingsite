@@ -21,7 +21,13 @@ function DesktopAudioSiriWave({ className, amplitude, speed }: { className?: str
     <div className={cn('relative h-[26px] w-[84px] overflow-hidden mobile:my-[2px] mobile:h-[22px]', className)}>
       <div className="absolute top-1/2 -z-10 h-[0.5px] w-full -translate-y-1/2 bg-white" />
       <div className="absolute left-1/2 top-1/2 mt-[3px] -translate-x-1/2 -translate-y-1/2">
-        <Siriwave width={120} amplitude={0} height={60} theme="ios9" onInit={(siriwave) => (siriwaveRef.current = siriwave)} />
+        <Siriwave
+          width={120}
+          amplitude={playStatus ? 1 : 0}
+          height={60}
+          theme="ios9"
+          onInit={(siriwave) => (siriwaveRef.current = siriwave)}
+        />
       </div>
     </div>
   );
