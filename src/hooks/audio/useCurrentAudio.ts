@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AUDIO_DISPATCH,
   audioControlsAtom,
@@ -16,11 +16,30 @@ import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioContext.createAnalyser();
+const approxVisualisationUpdateFrequency = 5;
+
+const RA = (f: number) =>
+  (12194 ** 2 * f ** 4) /
+  ((f ** 2 + 20.6 ** 2) * Math.sqrt((f ** 2 + 107.7 ** 2) * (f ** 2 + 737.9 ** 2)) * (f ** 2 + 12194 ** 2));
+const A = (f: number) => 20 * Math.log10(RA(f)) + 2.0;
+
+const uint8TodB = (byteLevel: number) =>
+  (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
+
 export default function useCurrentAudio() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const currentAudio = useAtomValue(currentAudioAtom);
   const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
   const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
+  const waveFormRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
+  const spectrumRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
+  const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
+  const lastExecutionTimeRef = useRef<number>(0);
+  const [amplitude, setAmplitude] = useState(0);
+  const [waveSpeed, setWaveSpeed] = useState(0);
+  const weightingsRef = useRef<number[]>([-100]);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setCanPlay = useSetAtom(canPlayAtom);
@@ -51,9 +70,29 @@ export default function useCurrentAudio() {
     setDuration(0);
 
     const audio = new Audio(currentAudio.url);
+    audio.crossOrigin = 'anonymous';
     audio.load();
     audio.volume = 0.5;
     setAudioRef(audio);
+
+    audio.onloadedmetadata = () => {
+      const source = audioContext.createMediaElementSource(audio);
+      const sampleRate = audioContext.sampleRate;
+      const totalNumberOfSamples = sampleRate / approxVisualisationUpdateFrequency;
+
+      analyser.fftSize = 2 ** Math.floor(Math.log2(totalNumberOfSamples));
+
+      for (let i = 1; i < analyser.frequencyBinCount; i++) {
+        weightingsRef.current[i] = A((i * sampleRate) / 2 / analyser.frequencyBinCount);
+      }
+
+      waveFormRef.current = new Uint8Array(analyser.frequencyBinCount);
+      spectrumRef.current = new Uint8Array(analyser.frequencyBinCount);
+      dBASpectrumRef.current = new Float32Array(analyser.frequencyBinCount);
+
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    };
 
     audio.oncanplay = () => {
       setCanPlay(true);
@@ -64,6 +103,26 @@ export default function useCurrentAudio() {
     audio.ontimeupdate = () => {
       setCurrentTime(audio.currentTime);
       setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+      const now = Date.now();
+      if (now - lastExecutionTimeRef.current < 1000 / approxVisualisationUpdateFrequency) return;
+      lastExecutionTimeRef.current = now;
+      const spectrum = spectrumRef.current;
+      const waveForm = waveFormRef.current;
+      const dBASpectrum = dBASpectrumRef.current;
+      const sampleRate = audioContext.sampleRate;
+      analyser.getByteFrequencyData(spectrum);
+      spectrum.forEach((byteLevel, idx) => {
+        dBASpectrum[idx] = uint8TodB(byteLevel) + weightingsRef.current[idx];
+      });
+      const highestPowerBin = dBASpectrum.reduce(
+        ([maxPower, iMax], y, idx) => (y > maxPower ? [y, idx] : [maxPower, iMax]),
+        [-120, 0],
+      )[1];
+      const maxPowerFrequency = highestPowerBin * (sampleRate / 2 / analyser.frequencyBinCount);
+      analyser.getByteTimeDomainData(waveForm);
+      const result = waveForm.reduce((acc, y) => Math.max(acc, y), 128) - 128;
+      setAmplitude((result / 128) * 10);
+      setWaveSpeed(maxPowerFrequency / 2000);
     };
 
     audio.ondurationchange = () => {
@@ -119,5 +178,14 @@ export default function useCurrentAudio() {
     };
   }, [hasInteracted, lastPlayStatus, playStatus, setPlayStatus]);
 
-  return useMemo(() => ({ data: currentAudio, dispatch, ...controls }), [controls, currentAudio, dispatch]);
+  return useMemo(
+    () => ({
+      data: currentAudio,
+      dispatch,
+      amplitude,
+      waveSpeed,
+      ...controls,
+    }),
+    [amplitude, controls, currentAudio, dispatch, waveSpeed],
+  );
 }
