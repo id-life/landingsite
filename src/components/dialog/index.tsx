@@ -20,6 +20,7 @@ type DialogProps = {
   className?: string;
   overlayClassName?: string;
   contentClassName?: string;
+  fixClassName?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   render: (props: { close: () => void }) => React.ReactNode;
@@ -32,6 +33,7 @@ type DialogProps = {
 function Dialog({
   className,
   overlayClassName,
+  fixClassName,
   contentClassName,
   render,
   open: passedOpen = false,
@@ -100,17 +102,12 @@ function Dialog({
           <>
             <FloatingOverlay className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} style={styles} />
             <FloatingFocusManager context={context}>
-              <div className="fixed inset-0 z-[100] grid place-items-center" style={styles}>
+              <div className={cn('fixed inset-0 z-[100] grid place-items-center', fixClassName)} style={styles}>
                 <div
                   className={cn('overflow-visible border border-gray-800 bg-white', className)}
                   {...getFloatingProps({ ref: setFloating })}
                 >
-                  <div
-                    className={cn(
-                      'relative min-h-28 min-w-56 mobile:min-h-[20.375rem] mobile:min-w-[18.25rem]',
-                      contentClassName,
-                    )}
-                  >
+                  <div className={cn('relative min-h-28 min-w-56 mobile:min-w-[18.25rem]', contentClassName)}>
                     {showCloseButton && (
                       <div className="absolute right-7 top-7 size-3.5 cursor-pointer">
                         <CloseSVG onClick={() => onChange(false)} className="size-3.5" />

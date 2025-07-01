@@ -300,7 +300,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     link: 'https://founderslongevity.co/',
     key: 'flf_global_2025', // Unique identifier for the dot
     title: 'Founders Longevity Forum\nLondon 2025 / 05',
-    secondTitle: 'Founders Forum\nGlobal 2025 / 05',
+    secondTitle: 'Founders Forum Global\n2025 / 05',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
     pcDotHotAreaClass: 'top-[12vh]',
