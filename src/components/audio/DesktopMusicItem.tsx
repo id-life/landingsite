@@ -24,15 +24,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const { trackEvent } = useGA();
 
-  const handleDownload = () => {
-    if (!data) return;
-    trackEvent({
-      name: GA_EVENT_NAMES.MUSIC_DOWNLOAD,
-      label: data.title,
-    });
-    downloadFile(data.url, `${data.title}-${data.artist}`);
-  };
-
   useEffect(() => {
     if (wavesurferRef.current) return;
     if (!containerRef.current || !isCurrent) return;
@@ -74,9 +65,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
         >
           {data.title} - {data.artist}
         </div>
-        {isCurrent ? (
-          <img onClick={handleDownload} className="w-[16px] cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
-        ) : null}
       </div>
       <div
         ref={containerRef}
