@@ -37,7 +37,7 @@ export const hasInteractedAtom = atom<boolean>(false);
 
 export const playlistAtom = atom<AudioDataItem[]>([]);
 
-export const playModeAtom = atom<PlayModeKey>(PlayMode.ORDER);
+export const playModeAtom = atom<PlayModeKey>(PlayMode.REPEAT_ALL);
 
 // audio
 
