@@ -1,7 +1,7 @@
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
-import { AUDIO_DISPATCH, currentAudioAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
+import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import * as Popover from '@radix-ui/react-popover';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -17,12 +17,13 @@ import { motionTransition, motionVariants } from '@/components/audio/DesktopAudi
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
-  const { isPlaying, dispatch, amplitude, waveSpeed } = useCurrentMusicControl();
+  const { isPlaying, dispatch, audioContext } = useCurrentMusicControl();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
+  const setHasInteracted = useSetAtom(hasInteractedAtom);
 
   useEffect(() => {
     if (!musicList.length) return;
@@ -32,6 +33,10 @@ function MobileAudioPlayer({ className }: { className?: string }) {
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    setHasInteracted(true);
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label });
     dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
@@ -47,7 +52,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           )}
           onClick={() => setIsOpen((v) => !v)}
         >
-          <DesktopAudioSiriWave className="w-6 overflow-hidden" amplitude={amplitude} speed={waveSpeed} />
+          <DesktopAudioSiriWave className="w-6 overflow-hidden" />
           <div onClick={handleChangePlayStatus} className="size-4">
             {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
           </div>
