@@ -14,6 +14,7 @@ import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { FloatingPortal } from '@floating-ui/react';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -21,8 +22,7 @@ gsap.registerPlugin(ScrollTrigger);
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
-  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -209,12 +209,14 @@ function Spectrum() {
             </div>
           </div>
         </div>
-        <div
-          className="disease-management-wrapper pointer-events-none absolute inset-0 z-[65] bg-black"
-          style={{ clipPath: 'circle(0px at 50% 50%)' }}
-        >
-          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-        </div>
+        <FloatingPortal>
+          <div
+            className="disease-management-wrapper pointer-events-none fixed inset-0 z-20 bg-black"
+            style={{ clipPath: 'circle(0px at 50% 50%)' }}
+          >
+            <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+          </div>
+        </FloatingPortal>
       </div>
     </>
   );
