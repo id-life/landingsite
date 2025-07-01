@@ -176,7 +176,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     country: 'Singapore',
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
-    title: 'Founders Longevity Forum',
+    title: 'Founders Longevity Forum Singapore',
     link: 'https://founderslongevity.co/#speakers',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
@@ -256,8 +256,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     country: 'USA',
     period: '2025/05',
     key: 'vitalistbay_berkeley_2025', // Unique identifier for the dot
-    title: 'Vitalist Bay Investor Forum',
-    link: 'https://www.vitalistbay.com/',
+    title: 'Vitalist Bay Summit',
+    link: 'https://www.vitalistbay.com/summit',
     isSponsor: true,
     contentTransformClass: 'translate-x-[85%] -translate-y-[35%]',
     mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
@@ -299,7 +299,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     country: 'UK',
     link: 'https://founderslongevity.co/',
     key: 'flf_global_2025', // Unique identifier for the dot
-    title: 'Founders Longevity Forum\nGlobal 2025 / 05',
+    title: 'Founders Forum\nGlobal 2025 / 05',
     secondTitle: 'Founders Longevity Forum\nLondon 2025 / 05',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
     mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
@@ -312,7 +312,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       'world-map-dot-book-2',
       'world-map-dot-3',
     ],
-    imgs: [
+    secondImgs: [
       {
         src: 'https://cdn.id.life/engagement/London-1.webp',
         alt: 'London-1.webp',
@@ -326,7 +326,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'London-3.webp',
       },
     ],
-    secondImgs: [
+    imgs: [
       {
         src: 'https://cdn.id.life/engagement/London-Global-1.webp',
         alt: 'London-Global-1.webp',
