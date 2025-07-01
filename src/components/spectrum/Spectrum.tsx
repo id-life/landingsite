@@ -76,7 +76,7 @@ function Spectrum() {
     // engagement auto scroll to profile
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
       gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
@@ -88,7 +88,7 @@ function Spectrum() {
     // profile auto scroll to engagement
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
       // console.log('Spectrum scrollFn down');
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) return;
