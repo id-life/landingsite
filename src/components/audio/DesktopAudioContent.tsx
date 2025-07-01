@@ -1,32 +1,36 @@
-import React from 'react';
-import clsx from 'clsx';
-import DesktopMusicItem from './DesktopMusicItem';
-import DesktopPodcastItem from './DesktopPodcastItem';
-import {
-  audioControlsAtom,
-  currentAudioAtom,
-  playModeAtom,
-  PlayList,
-  PlayListKey,
-  playlistAtom,
-  currentPlayListAtom,
-  musicListAtom,
-  podcastIDAtom,
-  podcastLTAtom,
-  currentPlayPodcastAtom,
-  AUDIO_DISPATCH,
-  lastPlayStatusAtom,
-} from '@/atoms/audio-player';
-import { AudioDataItem } from '@/apis/types';
-import { PlayMode } from '@/atoms/audio-player';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import PauseSVG from '@/../public/svgs/player/pause.svg?component';
+import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PlayOrderSVG from '@/../public/svgs/player/play_order.svg?component';
-import PlayShuffleSVG from '@/../public/svgs/player/play_shuffle.svg?component';
 import PlayRepeatSVG from '@/../public/svgs/player/play_repeat.svg?component';
 import PlayRepeatOneSVG from '@/../public/svgs/player/play_repeat_one.svg?component';
+import PlayShuffleSVG from '@/../public/svgs/player/play_shuffle.svg?component';
+import { AudioDataItem } from '@/apis/types';
+import {
+  AUDIO_DISPATCH,
+  PlayList,
+  PlayListKey,
+  PlayMode,
+  audioControlsAtom,
+  currentAudioAtom,
+  currentPlayListAtom,
+  currentPlayPodcastAtom,
+  lastPlayStatusAtom,
+  musicListAtom,
+  playModeAtom,
+  playlistAtom,
+  podcastIDAtom,
+  podcastLTAtom,
+} from '@/atoms/audio-player';
 import PodcastSelected from '@/components/audio/PodcastSelected';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { useGA } from '@/hooks/useGA';
+import clsx from 'clsx';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import React from 'react';
+import DesktopAudioSiriWave from './DesktopAudioSiriWave';
+import DesktopMusicItem from './DesktopMusicItem';
+import DesktopPodcastItem from './DesktopPodcastItem';
 
 export default function DesktopMusicContent() {
   const musicList = useAtomValue(musicListAtom);
@@ -40,6 +44,7 @@ export default function DesktopMusicContent() {
   const dispatch = useSetAtom(audioControlsAtom);
   const setLastPlayStatus = useSetAtom(lastPlayStatusAtom);
   const { trackEvent } = useGA();
+  const { isPlaying, audioContext } = useCurrentMusicControl();
 
   const handleChangeList = (list: PlayListKey) => {
     trackEvent({
@@ -71,6 +76,15 @@ export default function DesktopMusicContent() {
     }
   };
 
+  const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+    const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
+    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label });
+    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
+  };
   const handleSeekTo = (value: number) => {
     setLastPlayStatus(true);
     dispatch({ type: AUDIO_DISPATCH.SEEK_TO, value });
@@ -79,12 +93,12 @@ export default function DesktopMusicContent() {
   return (
     <div className="text-white">
       <div className="flex items-center justify-between">
-        <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold">
+        <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold mobile:gap-3 mobile:text-xs/3">
           <div
             className={clsx('audio-tab-item relative cursor-pointer', currentList === PlayList.MUSIC && 'audio-tab-active')}
             onClick={() => handleChangeList(PlayList.MUSIC)}
           >
-            MUSIC 音乐
+            TRACKS 专辑
           </div>
           <div
             className={clsx('audio-tab-item relative cursor-pointer', currentList !== PlayList.MUSIC && 'audio-tab-active')}
@@ -93,14 +107,22 @@ export default function DesktopMusicContent() {
             PODCAST 播客
           </div>
         </div>
-        <div
-          onClick={handleChangePlayMode}
-          className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-[10px]/[12px] font-semibold"
-        >
-          {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white" />}
-          {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white" />}
-          {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white" />}
-          {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white" />}
+        <div className="flex items-center gap-2.5">
+          <div className="z-[101] flex h-[26px] cursor-pointer items-center gap-[8px] rounded-full bg-white/10 px-[8px] transition duration-300">
+            <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[22px]" />
+            <div onClick={handleChangePlayStatus} className="size-[22px]">
+              {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
+            </div>
+          </div>
+          <div
+            onClick={handleChangePlayMode}
+            className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-[10px]/[12px] font-semibold"
+          >
+            {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white" />}
+            {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white" />}
+            {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white" />}
+            {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white" />}
+          </div>
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (

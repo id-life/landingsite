@@ -3,15 +3,15 @@ import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
 import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import Dialog from '@/components/dialog';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { useFetchAudioData } from '@/hooks/audio/fetch';
+import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
+import { useGA } from '@/hooks/useGA';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
-import { useFetchAudioData } from '@/hooks/audio/fetch';
-import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
@@ -44,15 +44,15 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     <Dialog
       open={isOpen}
       onOpenChange={setIsOpen}
-      overlayClassName="bg-black/50 backdrop-blur-sm"
+      overlayClassName="backdrop-blur-[2px] bg-transparent"
       className="border-0 bg-transparent shadow-none"
-      contentClassName="mobile:min-h-[22.625rem]"
+      contentClassName="mobile:min-h-[22.625rem] pb-20"
       fixClassName="align-bottom items-end"
       showCloseButton={false}
       isDismiss={true}
       anim="fade"
       render={() => (
-        <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:-z-10 before:block before:backdrop-blur">
+        <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:bottom-[4.75rem] before:-z-10 before:block before:backdrop-blur">
           <DesktopMusicContent />
         </div>
       )}
@@ -62,7 +62,6 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           'z-[101] flex h-8 cursor-pointer items-center gap-1 rounded-full bg-gray-750 px-1.5 transition duration-300',
           className,
         )}
-        onClick={() => setIsOpen((v) => !v)}
       >
         <DesktopAudioSiriWave className="w-6 overflow-hidden" />
         <div onClick={handleChangePlayStatus} className="size-5">

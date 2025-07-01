@@ -28,7 +28,7 @@ function DesktopAudioSiriWave({ className }: { className?: string; amplitude?: n
   }, [playStatus]);
 
   return (
-    <div className={cn('relative h-[26px] w-[84px] overflow-hidden mobile:my-0.5 mobile:h-8', className)}>
+    <div className={cn('relative h-[26px] w-[84px] overflow-hidden mobile:my-0.5 mobile:h-[28px]', className)}>
       <div className="absolute top-1/2 -z-10 h-[0.5px] w-full -translate-y-1/2 bg-white" />
       <div className="absolute left-1/2 top-1/2 mt-[3px] -translate-x-1/2 -translate-y-1/2">
         <Siriwave
