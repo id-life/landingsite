@@ -54,11 +54,13 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         rowClass="border-none bg-transparent hover:bg-white/5"
         cellClass="font-normal text-xs font-light truncate pr-5 py-2.5 max-w-[30svw]"
       />
-      <div className="p-2.5 text-center">
-        <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
-          See More
-        </span>
-      </div>
+      {showAmount < data.length && (
+        <div className="p-2.5 text-center">
+          <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
+            See More
+          </span>
+        </div>
+      )}
     </div>
   );
 };
