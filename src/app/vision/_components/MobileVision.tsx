@@ -26,7 +26,7 @@ export default function MobileVision() {
           itemHeight={40}
           duration={5}
           transition={0.6}
-          className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60vh_+_7.5rem)] w-auto -translate-y-1/2"
+          className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2"
         >
           {CAROUSEL_ITEMS.map((item) => (
             <CarouselItem key={item.cnText ?? item.text} {...item} />
