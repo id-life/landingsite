@@ -466,11 +466,11 @@ export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; inde
   { type: 'meeting', index: 3 },
   { type: 'sponsor', index: 2, offset: 80 },
   { type: 'sponsor', index: 1, offset: 80 },
+  { type: 'meeting', index: 5, offset: 220 },
   { type: 'book', index: 0, offset: 40 },
   { type: 'book', index: 1, offset: 40 },
   { type: 'sponsor', index: 0, offset: 50 },
   { type: 'meeting', index: 2, offset: 180 },
   { type: 'meeting', index: 1, offset: 180 },
   { type: 'meeting', index: 0, offset: 180 },
-  { type: 'meeting', index: 5, offset: 180 },
 ];
