@@ -20,8 +20,7 @@ import FixedParticles from './FixedParticles';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
-  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [isCharacterRelationShow, setIsCharacterRelationShow] = useAtom(isCharacterRelationShowAtom);
   const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
 
@@ -75,7 +74,7 @@ const CarouselWrapper = memo(() => {
         duration={5}
         transition={0.6}
         className={cn(
-          'scroll-title fixed bottom-10 left-10 w-[25rem]',
+          'scroll-title fixed bottom-10 left-10 z-30 w-[25rem]',
           isCharacterRelationShow && 'character-relation-css-vars-inject',
         )}
       >

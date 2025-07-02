@@ -33,10 +33,11 @@ export const currentAudioAtom = atom<AudioDataItem | null>(null);
 export const musicListAtom = atom<AudioDataItem[]>([]);
 export const podcastIDAtom = atom<AudioDataItem[]>([]);
 export const podcastLTAtom = atom<AudioDataItem[]>([]);
+export const hasInteractedAtom = atom<boolean>(false);
 
 export const playlistAtom = atom<AudioDataItem[]>([]);
 
-export const playModeAtom = atom<PlayModeKey>(PlayMode.ORDER);
+export const playModeAtom = atom<PlayModeKey>(PlayMode.REPEAT_ALL);
 
 // audio
 
@@ -89,7 +90,10 @@ export const audioControlsAtom = atom(
         break;
       case AUDIO_DISPATCH.PLAY:
         if (audioRef) {
-          audioRef.play().catch(() => set(currentPlayStatusAtom, false));
+          audioRef.play().catch((error) => {
+            console.log('error: ', error);
+            set(currentPlayStatusAtom, false);
+          });
           set(currentPlayStatusAtom, true);
         }
         break;
@@ -164,7 +168,10 @@ export const togglePlayAtom = atom(null, (get, set) => {
     audioRef.pause();
     set(currentPlayStatusAtom, false);
   } else {
-    audioRef.play().catch(() => set(currentPlayStatusAtom, false));
+    audioRef.play().catch((error) => {
+      console.log('error: ', error);
+      set(currentPlayStatusAtom, false);
+    });
     set(currentPlayStatusAtom, true);
   }
 });

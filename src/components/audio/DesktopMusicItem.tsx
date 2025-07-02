@@ -3,10 +3,7 @@ import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
 import WaveSurfer from 'wavesurfer.js';
 import { AudioDataItem } from '@/apis/types';
-import { downloadFile } from '@/utils/download';
 import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 
 type DesktopMusicItemProps = {
   onClick?: () => void;
@@ -22,16 +19,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const { trackEvent } = useGA();
-
-  const handleDownload = () => {
-    if (!data) return;
-    trackEvent({
-      name: GA_EVENT_NAMES.MUSIC_DOWNLOAD,
-      label: data.title,
-    });
-    downloadFile(data.url, `${data.title}-${data.artist}`);
-  };
 
   useEffect(() => {
     if (wavesurferRef.current) return;
@@ -74,9 +61,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
         >
           {data.title} - {data.artist}
         </div>
-        {isCurrent ? (
-          <img onClick={handleDownload} className="w-[16px] cursor-pointer" src="/svgs/player/play_download.svg" alt="" />
-        ) : null}
       </div>
       <div
         ref={containerRef}

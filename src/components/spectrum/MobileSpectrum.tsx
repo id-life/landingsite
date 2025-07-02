@@ -14,6 +14,7 @@ import MobileSpectrumItem from './MobileSpectrumItem';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import MobileDiseaseManagementStatus from '../disease-management/MobileDiseaseManagementStatus';
 import { useGSAP } from '@gsap/react';
+import { FloatingPortal } from '@floating-ui/react';
 
 SwiperType.use([FreeMode]);
 
@@ -108,8 +109,13 @@ function MobileSpectrum() {
         })
         .fromTo(
           '.disease-management-wrapper-mobile',
-          { clipPath: 'circle(0% at 50% 50%)', pointerEvents: 'none' },
-          { clipPath: 'circle(100% at 50% 50%)', duration: 0.8, ease: 'easeInOut', pointerEvents: 'auto' },
+          { clipPath: 'circle(0px at 50% 50%)', pointerEvents: 'none' },
+          {
+            clipPath: `circle(${Math.hypot(window.innerWidth, window.innerHeight)}px at 50% 50%)`,
+            duration: 0.8,
+            ease: 'easeInOut',
+            pointerEvents: 'auto',
+          },
           '-=0.2',
         );
     } else {
@@ -190,12 +196,14 @@ function MobileSpectrum() {
           </Swiper>
         </div>
       </div>
-      <div
-        className="disease-management-wrapper-mobile pointer-events-none absolute inset-0 z-[65] bg-black"
-        style={{ clipPath: 'circle(0% at 50% 50%)' }}
-      >
-        <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
-      </div>
+      <FloatingPortal>
+        <div
+          className="disease-management-wrapper-mobile pointer-events-none absolute inset-0 z-[41] bg-black"
+          style={{ clipPath: 'circle(0px at 50% 50%)' }}
+        >
+          <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
+        </div>
+      </FloatingPortal>
     </div>
   );
 }

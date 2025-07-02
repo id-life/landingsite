@@ -38,6 +38,7 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
       pixelDepth: props.pixelDepth ?? 0.02,
       lerpSpeed: props.lerpSpeed ?? 0.01,
       curveDefinition: props.curveDefinition,
+      ratio: 2,
     });
 
     if (typeof props.onInit === 'function') props.onInit(siriwave);
@@ -46,6 +47,7 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
       siriwave.dispose();
     };
   }, [
+    props,
     props.amplitude,
     props.autostart,
     props.color,

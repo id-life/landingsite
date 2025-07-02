@@ -8,6 +8,7 @@ import {
   currentPlayStatusAtom,
   currentTimeAtom,
   durationAtom,
+  hasInteractedAtom,
   lastPlayStatusAtom,
   playNextTrackAtom,
   progressAtom,
@@ -15,6 +16,8 @@ import {
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = audioContext.createAnalyser();
@@ -29,7 +32,7 @@ const uint8TodB = (byteLevel: number) =>
   (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
 
 export default function useCurrentAudio() {
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useAtom(hasInteractedAtom);
   const currentAudio = useAtomValue(currentAudioAtom);
   const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
   const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
@@ -37,8 +40,6 @@ export default function useCurrentAudio() {
   const spectrumRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
   const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
   const lastExecutionTimeRef = useRef<number>(0);
-  const [amplitude, setAmplitude] = useState(0);
-  const [waveSpeed, setWaveSpeed] = useState(0);
   const weightingsRef = useRef<number[]>([-100]);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
@@ -121,8 +122,10 @@ export default function useCurrentAudio() {
       const maxPowerFrequency = highestPowerBin * (sampleRate / 2 / analyser.frequencyBinCount);
       analyser.getByteTimeDomainData(waveForm);
       const result = waveForm.reduce((acc, y) => Math.max(acc, y), 128) - 128;
-      setAmplitude((result / 128) * 10);
-      setWaveSpeed(maxPowerFrequency / 2000);
+      eventBus.next({
+        type: MessageType.SIRI_WAVE_CONFIG,
+        payload: { amplitude: (result / 128) * 10, speed: maxPowerFrequency / 2000 },
+      });
     };
 
     audio.ondurationchange = () => {
@@ -171,21 +174,23 @@ export default function useCurrentAudio() {
       if (hasInteracted || !lastPlayStatus || playStatus) return;
       setPlayStatus(true);
       setHasInteracted(true);
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
     };
     document.addEventListener('click', enableAutoplay);
     return () => {
       document.removeEventListener('click', enableAutoplay);
     };
-  }, [hasInteracted, lastPlayStatus, playStatus, setPlayStatus]);
+  }, [hasInteracted, lastPlayStatus, playStatus, setHasInteracted, setPlayStatus]);
 
   return useMemo(
     () => ({
       data: currentAudio,
       dispatch,
-      amplitude,
-      waveSpeed,
+      audioContext,
       ...controls,
     }),
-    [amplitude, controls, currentAudio, dispatch, waveSpeed],
+    [controls, currentAudio, dispatch],
   );
 }

@@ -18,6 +18,7 @@ export function useFetchAudioData() {
 
   useEffect(() => {
     if (!data) return;
+    data.sort((a, b) => a.sequence - b.sequence);
     const musicList: AudioDataItem[] = [];
     const podcastIDList: AudioDataItem[] = [];
     const podcastLTList: AudioDataItem[] = [];

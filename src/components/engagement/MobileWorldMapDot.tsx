@@ -172,7 +172,7 @@ export function MobileWorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, mobileContentTransformClass, period, lat, lng, link, label, country } = dot;
+  const { title, imgs, mobileContentTransformClass, period, lat, lng, link, label, country, secondImgs, secondTitle } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -229,22 +229,11 @@ export function MobileWorldMapDotContent({
             top: `${top}px`,
           }}
         >
-          {/* 移出判断热区 */}
           <div
             className={cn(
-              'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+              'absolute -inset-4 z-10 flex size-max origin-top-left cursor-pointer items-center gap-4',
               mobileContentTransformClass,
             )}
-          >
-            <div className="pointer-events-auto absolute -inset-10"></div>
-            <div className={cn('pointer-events-auto absolute -right-72 left-[90%] h-28')}></div>
-          </div>
-
-          <a
-            href={link}
-            target="_blank"
-            className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-14 cursor-pointer"
-            onClick={handleLinkClick}
           >
             <motion.div
               initial="hidden"
@@ -257,7 +246,7 @@ export function MobileWorldMapDotContent({
                 },
                 visible: {
                   opacity: 1,
-                  height: '70vh',
+                  height: '70dvh',
                 },
               }}
               transition={{
@@ -265,29 +254,75 @@ export function MobileWorldMapDotContent({
                 duration: 0.3,
                 type: 'easeInOut',
               }}
-              className={cn(
-                'absolute inset-0 top-4 flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
-                mobileContentTransformClass,
-              )}
+              className={cn('flex h-full max-w-[20rem] flex-col items-center gap-4 font-oxanium')}
             >
               {title && (
                 <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                  <span className="mr-2">{title}</span>
+                  <span className="mr-2 whitespace-pre-wrap">{title}</span>
                   {period}
                 </h3>
               )}
-              {imgs?.length ? (
-                <div
-                  ref={scrollContainerRef}
-                  className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-                >
-                  {imgs.map((img) => (
-                    <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                  ))}
-                </div>
-              ) : null}
+              <a
+                href={link}
+                target="_blank"
+                className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]"
+                onClick={handleLinkClick}
+              >
+                {imgs?.length ? (
+                  <div
+                    ref={scrollContainerRef}
+                    className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+                  >
+                    {imgs.map((img) => (
+                      <FeatherImg className="h-[6.875rem] w-[12.5rem]" key={img.src} src={img.src} alt={img.alt} />
+                    ))}
+                  </div>
+                ) : null}
+              </a>
             </motion.div>
-          </a>
+            {secondTitle && (
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    height: 0,
+                  },
+                  visible: {
+                    opacity: 1,
+                    height: '70dvh',
+                  },
+                }}
+                transition={{
+                  staggerChildren: 0.1,
+                  duration: 0.3,
+                  type: 'easeInOut',
+                }}
+                className="flex h-full max-w-[20rem] flex-col items-center gap-4 font-oxanium"
+              >
+                <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+                  <span className="mr-2 whitespace-pre-wrap">{secondTitle}</span>
+                  {period}
+                </h3>
+                <a
+                  href={link}
+                  target="_blank"
+                  className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]"
+                  onClick={handleLinkClick}
+                >
+                  {secondImgs?.length ? (
+                    <div className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
+                      {secondImgs.map((img) => (
+                        <FeatherImg className="h-[6.875rem] w-[12.5rem]" key={img.src} src={img.src} alt={img.alt} />
+                      ))}
+                    </div>
+                  ) : null}
+                </a>
+              </motion.div>
+            )}
+          </div>
         </div>
       )}
     </AnimatePresence>

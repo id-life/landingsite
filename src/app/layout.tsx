@@ -3,15 +3,16 @@ import { clsx } from 'clsx';
 import Providers from '@/providers/root';
 import ClientNav from '@/components/nav/CilentNav';
 import Background from '@/components/common/Background';
+import { WebVitals } from '@/app/_components/web-vitals';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import ScrollBehavior from '@/components/common/ScrollBehavior';
+import BodyScrollManager from '@/components/common/BodyScrollManager';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata } from 'next';
 
 import '@/styles/globals.css';
 import 'swiper/css';
-import BodyScrollManager from '@/components/common/BodyScrollManager';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <GoogleTagManager gtmId="GTM-NZKZJ38H" />
       {gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
+      <WebVitals />
       <body
         className={clsx(
           xirod.variable,

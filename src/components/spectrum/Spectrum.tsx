@@ -14,6 +14,7 @@ import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { FloatingPortal } from '@floating-ui/react';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -21,8 +22,7 @@ gsap.registerPlugin(ScrollTrigger);
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
-  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
+  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -32,22 +32,17 @@ function Spectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const createClipPath = useCallback((isOpening: boolean) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    const maxRadius = Math.hypot(
-      Math.max(centerX, window.innerWidth - centerX),
-      Math.max(centerY, window.innerHeight - centerY),
-    );
-
-    return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
-  }, []);
-
   const spectrumData = useSpectrumData();
 
   useGSAP(() => {
     if (isShowingDiseaseManagement) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const maxRadius = Math.hypot(
+        Math.max(centerX, window.innerWidth - centerX),
+        Math.max(centerY, window.innerHeight - centerY),
+      );
+
       if (animTimeline.current) animTimeline.current.kill();
       animTimeline.current = gsap.timeline();
       animTimeline.current
@@ -59,11 +54,11 @@ function Spectrum() {
         .fromTo(
           '.disease-management-wrapper',
           {
-            clipPath: 'circle(0% at 50% 50%)',
+            clipPath: `circle(0px at ${centerX}px ${centerY}px)`,
             pointerEvents: 'none',
           },
           {
-            clipPath: 'circle(100% at 50% 50%)',
+            clipPath: `circle(${maxRadius}px at ${centerX}px ${centerY}px)`,
             duration: 0.8,
             ease: 'easeInOut',
             pointerEvents: 'auto',
@@ -81,7 +76,7 @@ function Spectrum() {
     // engagement auto scroll to profile
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
       gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
@@ -93,7 +88,7 @@ function Spectrum() {
     // profile auto scroll to engagement
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
       // console.log('Spectrum scrollFn down');
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) return;
@@ -214,12 +209,14 @@ function Spectrum() {
             </div>
           </div>
         </div>
-        <div
-          className="disease-management-wrapper pointer-events-none absolute inset-0 z-[65] bg-black"
-          style={{ clipPath: 'circle(0% at 50% 50%)' }}
-        >
-          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-        </div>
+        <FloatingPortal>
+          <div
+            className="disease-management-wrapper pointer-events-none fixed inset-0 z-20 bg-black"
+            style={{ clipPath: 'circle(0px at 50% 50%)' }}
+          >
+            <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+          </div>
+        </FloatingPortal>
       </div>
     </>
   );

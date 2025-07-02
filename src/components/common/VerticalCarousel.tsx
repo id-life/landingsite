@@ -41,27 +41,34 @@ export default function VerticalCarousel({
     if (!isMounted) return children;
     let result = [...children];
     result = shuffle(result);
-    // 不再需要在items中添加额外的第一个元素，我们将在渲染时处理
     return result;
   }, [children, isMounted]);
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const isActiveRef = useRef<boolean>(true); // 跟踪当前页面是否激活
 
-  useEffect(() => {
+  // 创建动画的函数
+  const createAnimation = () => {
     if (!containerRef.current) return;
+
+    // 清理之前的动画
+    if (tlRef.current) {
+      tlRef.current.kill();
+    }
+
+    // 重置容器位置和子元素样式
+    gsap.set(containerRef.current, { y: 0 });
+    const elements = containerRef.current.children;
+    Array.from(elements).forEach((el) => {
+      gsap.set(el, { opacity: 1 });
+    });
 
     tlRef.current = gsap.timeline({
       repeat: -1,
       smoothChildTiming: true, // 确保子动画平滑过渡
     });
     const tl = tlRef.current;
-    const elements = containerRef.current.children;
     const totalItems = items.length;
-
-    // 如果是移动端且不在首页，暂停动画
-    if (isMobile && mobileCurrentPage.id !== NAV_LIST[0]?.id) {
-      tl.pause();
-    }
 
     if (slideDown) {
       // 向下滑动的动画逻辑
@@ -153,21 +160,43 @@ export default function VerticalCarousel({
       });
     }
 
+    // 如果当前页面不是首页，立即暂停动画
+    if (isMobile && mobileCurrentPage.id !== NAV_LIST[0]?.id) {
+      tl.pause();
+    }
+  };
+
+  useEffect(() => {
+    createAnimation();
     return () => {
-      tl?.kill();
-      tlRef.current = null;
+      if (tlRef.current) {
+        tlRef.current.kill();
+        tlRef.current = null;
+      }
     };
-  }, [items, itemHeight, duration, transition, slideDown, isMobile, mobileCurrentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, itemHeight, duration, transition, slideDown]);
 
   // 监听页面变化，控制动画
   useEffect(() => {
     if (!isMobile || !tlRef.current || !mobileCurrentPage) return;
 
-    if (mobileCurrentPage.id === NAV_LIST[0].id) {
+    const isCurrentlyActive = mobileCurrentPage.id === NAV_LIST[0].id;
+
+    if (isCurrentlyActive && !isActiveRef.current) {
+      // 从非首页切换回首页时，重新创建动画以确保从头开始
+      createAnimation();
+      isActiveRef.current = true;
+    } else if (isCurrentlyActive && isActiveRef.current) {
+      // 在首页且之前也在首页，恢复动画
       tlRef.current.play();
+      isActiveRef.current = true;
     } else {
+      // 不在首页，暂停动画
       tlRef.current.pause();
+      isActiveRef.current = false;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mobileCurrentPage, isMobile]);
 
   return (

@@ -28,7 +28,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
           onError={() => setIsImageLoading(false)}
         />
       </div>
-      <span className="mb-3 text-base leading-5">{title}</span>
+      <span className="mb-3 text-center text-base leading-5">{title}</span>
       <div className="mb-7 flex space-x-8 text-xl leading-5">
         <DotCount className="h-[3px] w-[3px] bg-green-500">{counts[0]}</DotCount>
         <DotCount className="h-[3px] w-[3px] bg-red-500">{counts[1]}</DotCount>
@@ -54,24 +54,30 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
         rowClass="border-none bg-transparent hover:bg-white/5"
         cellClass="font-normal text-xs font-light truncate pr-5 py-2.5 max-w-[30svw]"
       />
-      <div className="p-2.5 text-center">
-        <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
-          See More
-        </span>
-      </div>
+      {showAmount < data.length && (
+        <div className="p-2.5 text-center">
+          <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
+            See More
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
   return (
-    <div className="flex h-screen flex-col space-y-6 px-5 pb-[1.8rem] pt-[5.1875rem]">
-      <div className="hide-scrollbar flex flex-1 flex-col space-y-7.5 overflow-y-auto">
+    <div className="flex h-screen flex-col space-y-6 px-5 pb-[12rem] pt-[5.1875rem]">
+      <div
+        className="hide-scrollbar flex flex-1 flex-col space-y-7.5 overflow-y-auto"
+        onWheel={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
         {diseaseManagementStatusItems.map((item) => (
           <DiseaseManagementStatusItem key={item.title} {...item} />
         ))}
       </div>
-      <BackButton onClick={onBack} className="mx-auto" />
+      <BackButton onClick={onBack} className="fixed bottom-8.5 left-1/2 z-10 -translate-x-1/2" />
     </div>
   );
 };

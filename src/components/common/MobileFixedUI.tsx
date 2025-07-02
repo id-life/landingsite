@@ -17,9 +17,8 @@ import MobileFixedParticles from './MobileFixedParticles';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [isMobileCharacterRelationShow, setIsMobileCharacterRelationShow] = useAtom(isMobileCharacterRelationShowAtom);
-  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const setIsMobileBePartOfItShow = useSetAtom(isMobileBePartOfItShowAtom);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
-import { AUDIO_DISPATCH, currentAudioAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
+import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { motion } from 'motion/react';
 
@@ -37,10 +37,11 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
-  const { data, isPlaying, dispatch, amplitude, waveSpeed } = useCurrentMusicControl();
+  const { data, isPlaying, dispatch, audioContext } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
+  const setHasInteracted = useSetAtom(hasInteractedAtom);
 
   useEffect(() => {
     if (!musicList.length) return;
@@ -50,6 +51,10 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    setHasInteracted(true);
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label });
     dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
@@ -67,7 +72,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           onClick={() => setIsOpen((v) => !v)}
           className={clsx('flex cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 pl-[12px] pr-[8px]', className)}
         >
-          <DesktopAudioSiriWave amplitude={amplitude} speed={waveSpeed} />
+          <DesktopAudioSiriWave />
           <AudioTitle width={148} title={title} />
           <div onClick={handleChangePlayStatus} className="size-[16px]">
             {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
@@ -85,7 +90,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             style={{ originX: 1, originY: 1 }}
             className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
           >
-            <DesktopMusicContent />
+            <DesktopMusicContent isPlaying={isPlaying} audioContext={audioContext} />
           </motion.div>
         </Popover.Content>
       </Popover.Portal>
