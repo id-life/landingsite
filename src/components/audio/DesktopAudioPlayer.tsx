@@ -90,7 +90,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             style={{ originX: 1, originY: 1 }}
             className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
           >
-            <DesktopMusicContent />
+            <DesktopMusicContent isPlaying={isPlaying} audioContext={audioContext} />
           </motion.div>
         </Popover.Content>
       </Popover.Portal>
