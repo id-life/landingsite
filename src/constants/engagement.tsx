@@ -117,7 +117,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'The 5th Timepie Longevity Forum',
     link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[35%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[35%]',
     pcDotHotAreaClass: 'top-[25vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-1', 'world-map-dot-2'],
     imgs: [
@@ -150,7 +150,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     link: 'https://www.edgecity.live/lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[50%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[50%]',
     pcDotHotAreaClass: 'top-[25.5vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-0', 'world-map-dot-2'],
     imgs: [
@@ -179,7 +179,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum Singapore',
     link: 'https://founderslongevity.co/#speakers',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
-    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[70%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[70%]',
     pcDotHotAreaClass: 'top-[39.5vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-0',
@@ -222,7 +222,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalia @ Roatan, Honduras',
     link: 'https://community.prospera.co/c/events/vitalia',
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
-    mobileContentTransformClass: 'translate-x-[65%] -translate-y-[60%]',
+    mobileContentTransformClass: 'translate-x-1/2 -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5'],
     imgs: [
@@ -302,7 +302,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum\nLondon 2025 / 05',
     secondTitle: 'Founders Forum Global\n2025 / 05',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
-    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[20%]',
     pcDotHotAreaClass: 'top-[12vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-1',
