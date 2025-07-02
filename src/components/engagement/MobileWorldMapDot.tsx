@@ -232,7 +232,7 @@ export function MobileWorldMapDotContent({
           {/* 移出判断热区 */}
           <div
             className={cn(
-              'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+              'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
               mobileContentTransformClass,
             )}
           >
@@ -257,7 +257,7 @@ export function MobileWorldMapDotContent({
                   },
                   visible: {
                     opacity: 1,
-                    height: '70vh',
+                    height: '70dvh',
                   },
                 }}
                 transition={{

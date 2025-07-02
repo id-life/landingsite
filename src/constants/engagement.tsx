@@ -117,7 +117,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'The 5th Timepie Longevity Forum',
     link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
+    mobileContentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[35%]',
     pcDotHotAreaClass: 'top-[25vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-1', 'world-map-dot-2'],
     imgs: [

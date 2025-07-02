@@ -279,7 +279,7 @@ export function WorldMapDotContent({
           {/* 移出判断热区 */}
           <div
             className={cn(
-              'absolute inset-0 top-4 -z-10 flex h-[70vh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+              'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
               contentTransformClass,
             )}
             onMouseLeave={handleContentMouseLeave}
@@ -287,12 +287,12 @@ export function WorldMapDotContent({
             <a
               href={link}
               target="_blank"
-              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38vh] cursor-pointer"
+              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38dvh] cursor-pointer"
             ></a>
             <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
             <div
               className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20', pcDotHotAreaClass, {
-                'top-[22vh] h-36': videoUrl,
+                'top-[22dvh] h-36': videoUrl,
               })}
               onClick={handleClick}
             ></div>
@@ -303,7 +303,7 @@ export function WorldMapDotContent({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.85 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22vh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
+                className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
               >
                 <div className="clip-talk-content bg-white p-0.5">
                   <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
@@ -328,7 +328,7 @@ export function WorldMapDotContent({
                   },
                   visible: {
                     opacity: 1,
-                    height: '70vh',
+                    height: '70dvh',
                   },
                 }}
                 transition={{
@@ -369,7 +369,7 @@ export function WorldMapDotContent({
                     },
                     visible: {
                       opacity: 1,
-                      height: '70vh',
+                      height: '70dvh',
                     },
                   }}
                   transition={{
