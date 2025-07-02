@@ -8,6 +8,7 @@ export type AudioDataItem = {
   duration: number;
   url: string;
   category: PlayListKey;
+  sequence: number;
   album?: string;
   description?: string;
   createdAt?: string;

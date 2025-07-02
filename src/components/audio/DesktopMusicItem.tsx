@@ -3,10 +3,7 @@ import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
 import WaveSurfer from 'wavesurfer.js';
 import { AudioDataItem } from '@/apis/types';
-import { downloadFile } from '@/utils/download';
 import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 
 type DesktopMusicItemProps = {
   onClick?: () => void;
@@ -22,7 +19,6 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const { trackEvent } = useGA();
 
   useEffect(() => {
     if (wavesurferRef.current) return;
