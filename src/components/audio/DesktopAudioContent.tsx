@@ -23,7 +23,6 @@ import {
 } from '@/atoms/audio-player';
 import PodcastSelected from '@/components/audio/PodcastSelected';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { useGA } from '@/hooks/useGA';
 import clsx from 'clsx';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -32,7 +31,7 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
 
-export default function DesktopMusicContent() {
+export default function DesktopMusicContent({ isPlaying, audioContext }: { isPlaying: boolean; audioContext: AudioContext }) {
   const musicList = useAtomValue(musicListAtom);
   const podcastID = useAtomValue(podcastIDAtom);
   const podcastLT = useAtomValue(podcastLTAtom);
@@ -44,7 +43,6 @@ export default function DesktopMusicContent() {
   const dispatch = useSetAtom(audioControlsAtom);
   const setLastPlayStatus = useSetAtom(lastPlayStatusAtom);
   const { trackEvent } = useGA();
-  const { isPlaying, audioContext } = useCurrentMusicControl();
 
   const handleChangeList = (list: PlayListKey) => {
     trackEvent({

@@ -53,7 +53,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
       anim="fade"
       render={() => (
         <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:bottom-[4.75rem] before:-z-10 before:block before:backdrop-blur">
-          <DesktopMusicContent />
+          <DesktopMusicContent isPlaying={isPlaying} audioContext={audioContext} />
         </div>
       )}
     >
