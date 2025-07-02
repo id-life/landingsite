@@ -17,7 +17,7 @@ type AnimalConfig = {
 };
 export const ANIMAL_CONFIG: AnimalConfig[] = [
   {
-    path: 'https://cdn.id.life/animal2_v2.glb',
+    path: '/models/animal2_v2.glb',
     scale: 1,
     animation: 0,
     resolution: 32,

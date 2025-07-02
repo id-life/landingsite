@@ -1,6 +1,23 @@
 {
   "redirects": [
-    { "source": "/career", "destination": "https://lcnb62fcmrr6.feishu.cn/wiki/Eh7PwnSl5iNYPOk0yQnc07EKnog" },
-    { "source": "/career-en", "destination": "https://brainvat.sg.larksuite.com/docx/G8j3d5P97o2uFQx02aelNWihgYc" }
+    {
+      "source": "/career",
+      "destination": "https://lcnb62fcmrr6.feishu.cn/wiki/Eh7PwnSl5iNYPOk0yQnc07EKnog"
+    },
+    {
+      "source": "/career-en",
+      "destination": "https://brainvat.sg.larksuite.com/docx/G8j3d5P97o2uFQx02aelNWihgYc"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/models/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public,max-age=31536000,immutable"
+        }
+      ]
+    }
   ]
 }
