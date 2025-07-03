@@ -107,9 +107,11 @@ export default function DesktopMusicContent({ isPlaying, audioContext }: { isPla
         </div>
         <div className="flex items-center gap-2.5">
           <div className="z-[101] flex h-[26px] cursor-pointer items-center gap-[8px] rounded-full bg-white/10 px-[8px] transition duration-300">
-            <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[22px]" />
-            <div onClick={handleChangePlayStatus} className="size-[22px]">
-              {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
+            <div onClick={handleChangePlayStatus} className="flex items-center gap-[8px]">
+              <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[22px]" />
+              <div className="size-[22px]">
+                {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
+              </div>
             </div>
           </div>
           <div

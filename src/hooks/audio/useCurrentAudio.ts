@@ -8,8 +8,6 @@ import {
   currentPlayStatusAtom,
   currentTimeAtom,
   durationAtom,
-  hasInteractedAtom,
-  lastPlayStatusAtom,
   playNextTrackAtom,
   progressAtom,
 } from '@/atoms/audio-player';
@@ -32,10 +30,10 @@ const uint8TodB = (byteLevel: number) =>
   (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
 
 export default function useCurrentAudio() {
-  const [hasInteracted, setHasInteracted] = useAtom(hasInteractedAtom);
+  // const [hasInteracted, setHasInteracted] = useAtom(hasInteractedAtom);
   const currentAudio = useAtomValue(currentAudioAtom);
   const [playStatus, setPlayStatus] = useAtom(currentPlayStatusAtom);
-  const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
+  // const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
   const waveFormRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
   const spectrumRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
   const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
@@ -97,7 +95,7 @@ export default function useCurrentAudio() {
 
     audio.oncanplay = () => {
       setCanPlay(true);
-      if (!lastPlayStatus) return;
+      // if (!lastPlayStatus) return;
       dispatch({ type: AUDIO_DISPATCH.PLAY });
     };
 
@@ -151,38 +149,40 @@ export default function useCurrentAudio() {
   }, [currentAudio]);
 
   useEffect(() => {
-    if (!audioRef || !controls.canPlay || !lastPlayStatus) return;
+    // if (!audioRef || !controls.canPlay || !lastPlayStatus) return;
+    if (!audioRef || !controls.canPlay) return;
     if (playStatus) {
       const playPromise = audioRef.play();
       if (playPromise !== undefined) {
-        playPromise.then(() => setLastPlayStatus(true)).catch(() => setPlayStatus(false));
+        // playPromise.then(() => setLastPlayStatus(true)).catch(() => setPlayStatus(false));
+        playPromise.then().catch(() => setPlayStatus(false));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playStatus, controls.canPlay, audioRef, setPlayStatus, lastPlayStatus]);
+  }, [playStatus, controls.canPlay, audioRef, setPlayStatus]);
 
-  useEffect(() => {
-    const savePlayStatus = () => setLastPlayStatus(playStatus);
-    window.addEventListener('beforeunload', savePlayStatus);
-    return () => {
-      window.removeEventListener('beforeunload', savePlayStatus);
-    };
-  }, [playStatus, setLastPlayStatus]);
+  // useEffect(() => {
+  //   const savePlayStatus = () => setLastPlayStatus(playStatus);
+  //   window.addEventListener('beforeunload', savePlayStatus);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', savePlayStatus);
+  //   };
+  // }, [playStatus, setLastPlayStatus]);
 
-  useEffect(() => {
-    const enableAutoplay = () => {
-      if (hasInteracted || !lastPlayStatus || playStatus) return;
-      setPlayStatus(true);
-      setHasInteracted(true);
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-    };
-    document.addEventListener('click', enableAutoplay);
-    return () => {
-      document.removeEventListener('click', enableAutoplay);
-    };
-  }, [hasInteracted, lastPlayStatus, playStatus, setHasInteracted, setPlayStatus]);
+  // useEffect(() => {
+  //   const enableAutoplay = () => {
+  //     if (hasInteracted || !lastPlayStatus || playStatus) return;
+  //     setPlayStatus(true);
+  //     setHasInteracted(true);
+  //     if (audioContext.state === 'suspended') {
+  //       audioContext.resume();
+  //     }
+  //   };
+  //   document.addEventListener('click', enableAutoplay);
+  //   return () => {
+  //     document.removeEventListener('click', enableAutoplay);
+  //   };
+  // }, [hasInteracted, lastPlayStatus, playStatus, setHasInteracted, setPlayStatus]);
 
   return useMemo(
     () => ({

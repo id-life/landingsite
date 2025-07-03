@@ -63,13 +63,17 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           className,
         )}
       >
-        <DesktopAudioSiriWave className="w-6 overflow-hidden" />
-        <div onClick={handleChangePlayStatus} className="size-5">
-          {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
+        <div className="flex items-center gap-1" onClick={handleChangePlayStatus}>
+          <DesktopAudioSiriWave className="w-6 overflow-hidden" />
+          <div className="size-5">
+            {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
+          </div>
         </div>
         <div className="mx-0.5 h-4 w-px bg-[#57595C]" />
-        <div className="size-5">
-          <PlayListSVG className="size-full fill-white" />
+        <div className="relative size-5">
+          <div className="absolute left-0 top-1/2 flex size-12 -translate-y-1/2 items-center">
+            <PlayListSVG className="size-5 fill-white" />
+          </div>
         </div>
       </div>
     </Dialog>
