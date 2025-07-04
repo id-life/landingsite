@@ -21,7 +21,6 @@ export default function NewsArticle1() {
       </p>
       <h3>Comprehensive Business Layout</h3>
       <p>
-        {' '}
         Immortal Dragons&apos; business scope extends far beyond traditional investment funds, forming a complete longevity
         science ecosystem:
       </p>
