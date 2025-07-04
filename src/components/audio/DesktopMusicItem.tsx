@@ -27,7 +27,7 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
       container: containerRef.current,
       height: 'auto',
       waveColor: '#57595C',
-      progressColor: '#C11111',
+      progressColor: '#FF1717',
       cursorWidth: 0,
       barWidth: 2,
       barGap: 2,
@@ -55,8 +55,8 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
         <div
           onClick={onClick}
           className={clsx(
-            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-600',
-            isCurrent && 'text-red-600',
+            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-800',
+            isCurrent && 'text-red-800',
           )}
         >
           {data.title} - {data.artist}

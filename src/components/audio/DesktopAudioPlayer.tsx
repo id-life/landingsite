@@ -13,6 +13,7 @@ import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
 import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { motion } from 'motion/react';
+import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
 
 export const motionVariants = {
   visible: {
@@ -70,12 +71,20 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
       <Popover.Trigger asChild>
         <div
           onClick={() => setIsOpen((v) => !v)}
-          className={clsx('flex cursor-pointer items-center gap-[10px] rounded-full bg-gray-750 pl-[12px] pr-[8px]', className)}
+          className={clsx('flex cursor-pointer items-center rounded-full bg-gray-750', className)}
         >
-          <DesktopAudioSiriWave />
-          <AudioTitle width={148} title={title} />
-          <div onClick={handleChangePlayStatus} className="size-[16px]">
-            {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
+          <div onClick={handleChangePlayStatus} className="flex items-center">
+            <div className="px-[8px]">
+              <DesktopAudioSiriWave />
+            </div>
+            <div className="size-[16px]">
+              {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
+            </div>
+          </div>
+          <div className="mx-[4px] flex select-none items-center gap-[8px] pr-[4px]">
+            <AudioTitle width={148} title={title} />
+            <div className="h-[14px] w-px bg-[#57595C]" />
+            <PlayListSVG className="size-[16px] fill-white" />
           </div>
         </div>
       </Popover.Trigger>

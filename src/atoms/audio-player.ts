@@ -25,7 +25,7 @@ export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
 
 export const currentPlayPodcastAtom = atom<PlayPodcastKey>(PlayList.PODCAST_ID);
 
-export const currentPlayStatusAtom = atomWithStorage<boolean>(STORAGE_KEY.AUDIO_PLAY, true);
+export const currentPlayStatusAtom = atom<boolean>(false);
 export const lastPlayStatusAtom = atomWithStorage<boolean>(STORAGE_KEY.LAST_AUDIO_PLAY, true);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
@@ -75,8 +75,10 @@ export const audioControlsAtom = atom(
           audioRef.currentTime = value;
           set(progressAtom, value / audioRef.duration);
           set(currentTimeAtom, audioRef.currentTime);
-          set(currentPlayStatusAtom, true);
-          audioRef.play().catch(() => set(currentPlayStatusAtom, false));
+          audioRef
+            .play()
+            .then(() => set(currentPlayStatusAtom, true))
+            .catch(() => set(currentPlayStatusAtom, false));
         }
         break;
       case AUDIO_DISPATCH.PLAY_NEXT:
@@ -90,11 +92,13 @@ export const audioControlsAtom = atom(
         break;
       case AUDIO_DISPATCH.PLAY:
         if (audioRef) {
-          audioRef.play().catch((error) => {
-            console.log('error: ', error);
-            set(currentPlayStatusAtom, false);
-          });
-          set(currentPlayStatusAtom, true);
+          audioRef
+            .play()
+            .then(() => set(currentPlayStatusAtom, true))
+            .catch((error) => {
+              console.log('error: ', error);
+              set(currentPlayStatusAtom, false);
+            });
         }
         break;
       case AUDIO_DISPATCH.PAUSE:
@@ -167,11 +171,18 @@ export const togglePlayAtom = atom(null, (get, set) => {
   if (isPlaying) {
     audioRef.pause();
     set(currentPlayStatusAtom, false);
+    set(lastPlayStatusAtom, false);
   } else {
-    audioRef.play().catch((error) => {
-      console.log('error: ', error);
-      set(currentPlayStatusAtom, false);
-    });
-    set(currentPlayStatusAtom, true);
+    audioRef
+      .play()
+      .then(() => {
+        set(currentPlayStatusAtom, true);
+        set(lastPlayStatusAtom, true);
+      })
+      .catch((error) => {
+        console.log('error: ', error);
+        set(currentPlayStatusAtom, false);
+        set(lastPlayStatusAtom, false);
+      });
   }
 });
