@@ -84,7 +84,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           <div className="mx-[4px] flex select-none items-center gap-[8px] pr-[4px]">
             <AudioTitle width={148} title={title} />
             <div className="h-[14px] w-px bg-[#57595C]" />
-            <PlayListSVG className="size-4 fill-white" />
+            <PlayListSVG className="size-[16px] fill-white" />
           </div>
         </div>
       </Popover.Trigger>
