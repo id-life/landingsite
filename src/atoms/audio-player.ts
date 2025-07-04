@@ -90,11 +90,13 @@ export const audioControlsAtom = atom(
         break;
       case AUDIO_DISPATCH.PLAY:
         if (audioRef) {
-          audioRef.play().catch((error) => {
-            console.log('error: ', error);
-            set(currentPlayStatusAtom, false);
-          });
-          set(currentPlayStatusAtom, true);
+          audioRef
+            .play()
+            .then(() => set(currentPlayStatusAtom, true))
+            .catch((error) => {
+              console.log('error: ', error);
+              set(currentPlayStatusAtom, false);
+            });
         }
         break;
       case AUDIO_DISPATCH.PAUSE:
@@ -167,11 +169,14 @@ export const togglePlayAtom = atom(null, (get, set) => {
   if (isPlaying) {
     audioRef.pause();
     set(currentPlayStatusAtom, false);
+    set(lastPlayStatusAtom, false);
   } else {
     audioRef.play().catch((error) => {
       console.log('error: ', error);
       set(currentPlayStatusAtom, false);
+      set(lastPlayStatusAtom, false);
     });
     set(currentPlayStatusAtom, true);
+    set(lastPlayStatusAtom, true);
   }
 });
