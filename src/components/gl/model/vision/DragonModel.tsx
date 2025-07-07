@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { useGSAP } from '@gsap/react';
@@ -103,11 +103,22 @@ const TRANSMISSION_KEYFRAMES = [
   DEFAULT_TRANSMISSION_CONFIG,
 ] as const;
 
+function useOptimizedGLTF() {
+  const { nodes } = useGLTF('/models/logo_v1.glb');
+
+  const logoGeometry = useMemo(() => {
+    const logoNode = nodes.logo as THREE.Mesh;
+    return logoNode?.geometry;
+  }, [nodes]);
+
+  return { geometry: logoGeometry };
+}
+
 interface DragonModelProps {}
 
 export default function DragonModel(props: DragonModelProps) {
   const { events, size, clock } = useThree();
-  const { nodes } = useGLTF('/models/logo_v1.glb');
+  const { geometry } = useOptimizedGLTF();
   const modelRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
   const autoSwingRef = useRef(false);
@@ -119,12 +130,23 @@ export default function DragonModel(props: DragonModelProps) {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isMobile = useIsMobile();
 
+  const materialConfig = useMemo(
+    () => ({
+      resolution: 256,
+      background: backgroundRef.current,
+      ...transmissionConfigRef.current,
+    }),
+    [],
+  );
+
   // Update material properties helper
   const updateMaterialProperties = useCallback((config: typeof DEFAULT_TRANSMISSION_CONFIG) => {
     if (!meshRef.current) return;
     const mesh = meshRef.current.material as any;
     Object.entries(config).forEach(([key, value]) => {
-      mesh[key] = value;
+      if (mesh[key] !== value) {
+        mesh[key] = value;
+      }
     });
   }, []);
 
@@ -164,17 +186,22 @@ export default function DragonModel(props: DragonModelProps) {
   useFrame(({ clock }) => {
     if (!modelRef.current || !smootherRef.current) return;
 
+    const time = clock.elapsedTime;
+
     // Auto swing animation
     if (autoSwingRef.current) {
       modelRef.current.rotation.y = rotationRef.current.y + Math.sin(clock.elapsedTime) * AUTO_SWING_AMPLITUDE;
     }
 
     // Background color based on scroll
-    const scrollTop = smootherRef.current.scrollTop();
-    const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 193 / 255);
-    const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
-    const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
-    backgroundRef.current.setRGB(r, g, b);
+    // Improve performance by updating every 0.2 seconds
+    if (Math.floor(time * 10) % 2 === 0) {
+      const scrollTop = smootherRef.current.scrollTop();
+      const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 193 / 255);
+      const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
+      const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
+      backgroundRef.current.setRGB(r, g, b);
+    }
   });
 
   // Gesture handling
@@ -268,8 +295,26 @@ export default function DragonModel(props: DragonModelProps) {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
     };
   }, [handleScroll]);
+
+  // Clean up geometry and material
+  useEffect(() => {
+    return () => {
+      if (geometry) {
+        geometry.dispose();
+      }
+      const material = meshRef.current?.material as any;
+      if (material) {
+        if (material.dispose) {
+          material.dispose();
+        }
+      }
+    };
+  }, [geometry]);
 
   return (
     <group
@@ -280,8 +325,8 @@ export default function DragonModel(props: DragonModelProps) {
       position={[0, 0, 0]}
       rotation={[0, INIT_ROTATION, 0]}
     >
-      <mesh ref={meshRef} geometry={(nodes.logo as any).geometry}>
-        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...transmissionConfigRef.current} />
+      <mesh ref={meshRef} geometry={geometry}>
+        <MeshTransmissionMaterial {...materialConfig} />
       </mesh>
     </group>
   );
