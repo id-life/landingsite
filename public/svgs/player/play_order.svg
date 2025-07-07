@@ -1,6 +1,1 @@
-<svg viewBox="0 0 16 16" stroke="#222222" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M11.018 13.518L13.0359 11.5L11.018 9.48204" stroke-width="1.5"/>
-    <path d="M12.5 11.5L2 11.5" stroke-width="1.5"/>
-    <path d="M11.018 2.48497L13.0359 4.50293L11.018 6.52089" stroke-width="1.5"/>
-    <path d="M12.5 4.50293L2 4.50293" stroke-width="1.5"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#222" viewBox="0 0 16 16"><path stroke-width="1.5" d="m11.018 13.518 2.018-2.018-2.018-2.018M12.5 11.5H2M11.018 2.485l2.018 2.018-2.018 2.018M12.5 4.503H2"/></svg>

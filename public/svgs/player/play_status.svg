@@ -1,16 +1,1 @@
-<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect id="bar1" x="3" y="3" width="2" height="10" fill="#C11111">
-        <animate attributeName="height" values="10;7;4;7;10" dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="y" values="3;6;9;6;3" dur="3s" repeatCount="indefinite"/>
-    </rect>
-
-    <rect id="bar2" x="7" y="6" width="2" height="7" fill="#C11111">
-        <animate attributeName="height" values="7;10;7;4;7" dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="y" values="6;3;6;9;6" dur="3s" repeatCount="indefinite"/>
-    </rect>
-
-    <rect id="bar3" x="11" y="9" width="2" height="4" fill="#C11111">
-        <animate attributeName="height" values="4;7;10;7;4" dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="y" values="9;6;3;6;9" dur="3s" repeatCount="indefinite"/>
-    </rect>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16"><path fill="#c11111" d="M3 3h2v10H3z"><animate attributeName="height" dur="3s" repeatCount="indefinite" values="10;7;4;7;10"/><animate attributeName="y" dur="3s" repeatCount="indefinite" values="3;6;9;6;3"/></path><path fill="#c11111" d="M7 6h2v7H7z"><animate attributeName="height" dur="3s" repeatCount="indefinite" values="7;10;7;4;7"/><animate attributeName="y" dur="3s" repeatCount="indefinite" values="6;3;6;9;6"/></path><path fill="#c11111" d="M11 9h2v4h-2z"><animate attributeName="height" dur="3s" repeatCount="indefinite" values="4;7;10;7;4"/><animate attributeName="y" dur="3s" repeatCount="indefinite" values="9;6;3;6;9"/></path></svg>
