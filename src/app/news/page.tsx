@@ -22,9 +22,7 @@ export default async function NewsPage() {
               <img className="w-full" src="/imgs/news/insights-bg.webp" alt="" />
               <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/30 backdrop-blur-sm">
                 <p className="truncate p-4 text-2xl/7 font-semibold">{insight.title}</p>
-                <p className="mb-4 line-clamp-2 px-4 text-sm/5 font-medium">
-                  {insight.brief.replace(/\*/g, '').replace('<br>', ' ').trim()}
-                </p>
+                <p className="mb-4 line-clamp-2 px-4 text-sm/5 font-medium">{insight.brief.replace(/[#*]/g, '').trim()}</p>
               </div>
             </div>
           </>
