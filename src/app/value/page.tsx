@@ -1,27 +1,16 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useSetAtom } from 'jotai';
-import Value from '@/app/value/Value';
-import { currentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
-import ThreeWrapper from '@/components/gl/ThreeWrapper';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { isNull } from 'lodash-es';
+import { useIsMobile } from '@/hooks/useIsMobile';
+
+const Home = dynamic(() => import('../(home)/_components/Home'), { ssr: false });
+const MobileHome = dynamic(() => import('../(home)/_components/MobileHome'), { ssr: false });
 
 export default function ValuePage() {
-  const setCurrentPage = useSetAtom(currentPageAtom);
+  const isMobile = useIsMobile();
+  if (isNull(isMobile)) return null;
 
-  useEffect(() => {
-    setCurrentPage(NAV_LIST[5]);
-  }, [setCurrentPage]);
-
-  return (
-    <>
-      <ThreeWrapper />
-      <div id="wrapper">
-        <div id="content">
-          <Value />
-        </div>
-      </div>
-    </>
-  );
+  return isMobile ? <MobileHome /> : <Home />;
 }

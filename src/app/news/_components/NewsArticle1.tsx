@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function NewsArticle1() {
   return (
     <article style={{ height: 0, overflow: 'hidden' }}>
@@ -118,7 +120,7 @@ export default function NewsArticle1() {
         Immortal Dragons&apos; podcast (https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8) to explore cutting-edge
         topics in longevity science.
       </p>
-      <a href="https://www.id.life/news">Immortal Dragons news</a>
+      <Link href="/news">ID News</Link>
     </article>
   );
 }

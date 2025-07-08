@@ -1,5 +1,5 @@
-import { useIsMobile } from './useIsMobile';
 import { sendGAEvent } from '@next/third-parties/google';
+import { useCallback } from 'react';
 
 export interface TrackEventOptions {
   /**
@@ -10,6 +10,7 @@ export interface TrackEventOptions {
    * event_label
    */
   label?: string;
+
   /**
    * rest data you'd like to send
    * add the `event_` prefix to the key manually if needed
@@ -18,19 +19,11 @@ export interface TrackEventOptions {
 }
 
 export function useGA() {
-  const isMobile = useIsMobile();
-
-  const trackEvent = (options: TrackEventOptions) => {
+  const trackEvent = useCallback((options: TrackEventOptions) => {
     const { name, label, ...rest } = options;
 
-    sendGAEvent('event', name, {
-      event_category: isMobile ? 'mobile' : 'pc',
-      event_label: label,
-      ...rest,
-    });
-  };
+    sendGAEvent('event', name, { event_label: label, ...rest });
+  }, []);
 
-  return {
-    trackEvent,
-  };
+  return { trackEvent };
 }
