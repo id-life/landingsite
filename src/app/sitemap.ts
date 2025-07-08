@@ -12,25 +12,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'https://www.id.life/news',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: 'https://www.id.life/vision',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.5,
+      priority: 0.8,
     },
     {
       url: 'https://www.id.life/portfolio',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.5,
+      priority: 0.6,
+    },
+    {
+      url: 'https://www.id.life/spectrum',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://www.id.life/digitaltwin',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
     },
     {
       url: 'https://www.id.life/value',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.5,
+      priority: 0.6,
     },
   ];
 }
