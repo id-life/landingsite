@@ -7,10 +7,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-function formatBriefText(brief: string) {
-  return brief.replace(/\*/g, '').replace('<br>', ' ').trim();
-}
-
 export default function NewsCard({ data }: { data: NewsListItem }) {
   return (
     <div className="bg-white p-4 duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg">
@@ -23,7 +19,7 @@ export default function NewsCard({ data }: { data: NewsListItem }) {
         <div className="mt-4 font-medium text-black/50">
           Article <span className="px-1">·</span> {dayjs(data.createdAt).fromNow()}
         </div>
-        <p className="mt-4 line-clamp-3 text-sm font-medium">{formatBriefText(data.brief)}</p>
+        <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief.replace(/[#*]/g, '').trim()}</p>
       </Link>
     </div>
   );
