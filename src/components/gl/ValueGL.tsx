@@ -14,6 +14,7 @@ import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, RefObject, useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, MotionPathPlugin);
 
@@ -38,6 +39,7 @@ function ValueGL() {
   const modelRef = useRef<THREE.Group>(null);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
+  const { sendValueShowEvent } = useValueShowEvent();
 
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const isScrollingRef = useRef(false);
@@ -124,7 +126,10 @@ function ValueGL() {
               scrollTop: tl2.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(0);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(0);
+                  sendValueShowEvent(0, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -150,7 +155,10 @@ function ValueGL() {
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(2);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(2);
+                  sendValueShowEvent(2, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -165,7 +173,10 @@ function ValueGL() {
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(1);
+                if (!isScrollingRef.current) {
+                  sendValueShowEvent(1, 'scroll');
+                  setInnerPageIndex(1);
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -191,7 +202,10 @@ function ValueGL() {
               scrollTop: tl4.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(3);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(3);
+                  sendValueShowEvent(3, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -206,7 +220,10 @@ function ValueGL() {
               scrollTop: tl4.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(2);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(2);
+                  sendValueShowEvent(2, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -232,7 +249,10 @@ function ValueGL() {
               scrollTop: tl5.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(4);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(4);
+                  sendValueShowEvent(4, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });
@@ -247,7 +267,10 @@ function ValueGL() {
               scrollTop: tl5.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
-                if (!isScrollingRef.current) setInnerPageIndex(3);
+                if (!isScrollingRef.current) {
+                  setInnerPageIndex(3);
+                  sendValueShowEvent(3, 'scroll');
+                }
                 setTimeout(() => smoother.paused(false), 300);
               },
             });

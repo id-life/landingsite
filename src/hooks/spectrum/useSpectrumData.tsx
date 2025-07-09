@@ -233,7 +233,7 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
+  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot]);
 
   return spectrumData;
 };

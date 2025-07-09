@@ -58,9 +58,18 @@ function Portfolio() {
     trackEvent({
       name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
       label: item.title,
+      landingsite_action: 'click',
     });
     if (!item.link) return;
     window.open(item.link, '_blank');
+  };
+
+  const handleMouseEnter = (item: PortfolioItemInfo) => {
+    trackEvent({
+      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+      label: item.title,
+      landingsite_action: 'hover',
+    });
   };
 
   useGSAP(() => {
@@ -98,21 +107,6 @@ function Portfolio() {
     });
     tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
     tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
-    // tl.to('.page2-title', {
-    //   delay: 0.5,
-    //   y: (_, target) => -target.offsetHeight,
-    //   rotateX: -45,
-    //   rotateY: 15,
-    //   opacity: 0,
-    // });
-    // tl.to('.page2-fund', {
-    //   y: (_, target) => -target.offsetHeight / 3, rotateX: -45, rotateY: 15, opacity: 0 });
-    // tl.to('.page2-contact',
-    //   { y: (_, target) => -target.offsetHeight / 2, rotateX: -45, rotateY: 15, opacity: 0 });
-    // tl.to('#particle-gl', { opacity: 0 });
-    // tl.to('.fixed-top', { opacity: 0 });
-    // tl.to('.fixed-bottom', { opacity: 0 }, '<');
-    // set the flag after the entire animation is finished
     tl.add(() => {
       setEnableDownJudge(true);
     });
@@ -198,6 +192,7 @@ function Portfolio() {
                 item={item}
                 className="w-76"
                 onClick={() => handleFundClick(item)}
+                onMouseEnter={() => handleMouseEnter(item)}
                 ref={(element) => {
                   if (!element) return;
                   portfolioRefs.current[index] = element;

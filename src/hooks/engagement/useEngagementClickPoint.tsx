@@ -48,17 +48,17 @@ export function useEngagementClickPoint(needTrack = true) {
       setActiveMeetingDot(index);
       setActiveBookDot(null);
       setActiveSponsorDot(null);
-      trackEngagementEvent(type, index, 'mouseenter');
+      trackEngagementEvent(type, index, 'hover');
     } else if (type === 'book') {
       setActiveBookDot(index);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
-      trackEngagementEvent(type, index, 'mouseenter');
+      trackEngagementEvent(type, index, 'hover');
     } else if (type === 'sponsor') {
       setActiveSponsorDot(index);
       setActiveMeetingDot(null);
       setActiveBookDot(null);
-      trackEngagementEvent(type, index, 'mouseenter');
+      trackEngagementEvent(type, index, 'hover');
     }
   }, 400);
 
@@ -90,12 +90,12 @@ export function useEngagementClickPoint(needTrack = true) {
     }
   }, 400);
 
-  function trackEngagementEvent(type: EngagementClickPointType, activeDot: number, action: 'click' | 'mouseenter') {
+  function trackEngagementEvent(type: EngagementClickPointType, activeDot: number, action: 'click' | 'hover') {
     if (!needTrack) return;
 
     const options: TrackEventOptions = {
       name: GA_EVENT_NAMES.PRESENCE_VIEW,
-      action,
+      landingsite_action: action,
     };
 
     switch (type) {

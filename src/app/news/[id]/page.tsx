@@ -7,6 +7,7 @@ import { fetchNewsContent } from '@/apis';
 import rehypeRaw from 'rehype-raw';
 import 'github-markdown-css';
 import '@/styles/markdown.css';
+import Link from 'next/link';
 
 dayjs.extend(relativeTime);
 
@@ -38,7 +39,8 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     <div>
       <div className="mt-5 flex items-center justify-between">
         <div className="text-xl/5 font-medium">
-          Home <span className="text-black/50">&gt; Article</span>
+          <Link href="/news">Home</Link>
+          <span className="text-black/50">&gt; Article</span>
         </div>
         <p className="text-sm font-semibold">{dayjs(data?.createdAt).fromNow()}</p>
       </div>
