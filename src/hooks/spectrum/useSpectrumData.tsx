@@ -1,7 +1,7 @@
 import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useSetAtom } from 'jotai';
-import { HTMLAttributes, useCallback, useMemo } from 'react';
+import { HTMLAttributes, useCallback, useEffect, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -64,25 +64,31 @@ export const useSpectrumData = () => {
     isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
   }, [isMobile, mobileNavChange, handleNavClick]);
 
-  const handleClickDot = useCallback(
-    (type: 'book' | 'sponsor' | 'meeting', index: number) => {
-      isMobile ? mobileNavChange(NAV_LIST[3]) : handleNavClick(NAV_LIST[3]);
-      isMobile && setIsMobileEngagementJump(true);
-      setTimeout(() => {
-        handleClickPoint(type, index, true);
-        if (isMobile) scrollToActivePoint(type, index);
-      }, 300);
-    },
-    [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
-  );
-
   const handleCharacterRelationShow = useCallback(() => {
-    isMobile ? setIsMobileCharacterRelationShow(true) : setIsCharacterRelationShow(true);
+    return isMobile ? ()=> setIsMobileCharacterRelationShow(true) : ()=> setIsCharacterRelationShow(true);
   }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
 
   const handleDiseaseManagementClick = useCallback(() => {
-    setShowDiseaseManagement(true);
+    return () => setShowDiseaseManagement(true);
   }, [setShowDiseaseManagement]);
+
+  const handleClickDot = useCallback(
+    (type: 'book' | 'sponsor' | 'meeting', index: number) => {
+      return () => {
+        if (isMobile) {
+          mobileNavChange(NAV_LIST[3]);
+          setIsMobileEngagementJump(true);
+        } else {
+          handleNavClick(NAV_LIST[3]);
+        }
+        setTimeout(() => {
+          handleClickPoint(type, index, true);
+          if (isMobile) scrollToActivePoint(type, index);
+        }, 300)
+      };
+    },
+    [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
+  );
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -93,23 +99,23 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Timepie Longevity Forum',
-            onClick: () => handleClickDot('meeting', 0),
+            onClick: handleClickDot('meeting', 0),
           },
           {
             label: "Founder's Longevity Forum",
-            onClick: () => handleClickDot('meeting', 2),
+            onClick: handleClickDot('meeting', 2),
           },
           {
             label: 'Vitalist Bay Investor Forum',
-            onClick: () => handleClickDot('meeting', 4),
+            onClick: handleClickDot('meeting', 4),
           },
           {
             label: 'Edge City Lanna',
-            onClick: () => handleClickDot('meeting', 1),
+            onClick: handleClickDot('meeting', 1),
           },
           {
             label: 'Oxford Future Innovation Forum',
-            onClick: () => handleClickDot('sponsor', 1),
+            onClick: handleClickDot('sponsor', 1),
           },
         ],
       },
@@ -121,16 +127,16 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'bio/acc manifesto',
-            onClick: () => handleClickDot('book', 1),
+            onClick: handleClickDot('book', 1),
           },
           {
             label: 'The Network State',
-            onClick: () => handleClickDot('book', 0),
+            onClick: handleClickDot('book', 0),
             labelClassName: 'italic',
           },
           {
             label: 'Better With Age',
-            onClick: () => handleClickDot('book', 2),
+            onClick: handleClickDot('book', 2),
             labelClassName: 'italic',
           },
           {
@@ -147,19 +153,19 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Public Longevity Group',
-            onClick: () => handleClickDot('sponsor', 3),
+            onClick: handleClickDot('sponsor', 3),
           },
           {
             label: 'ETHPanda 青年黑客远航计划',
-            onClick: () => handleClickDot('sponsor', 0),
+            onClick: handleClickDot('sponsor', 0),
           },
           {
             label: 'BiohackerDAO',
-            onClick: () => handleClickDot('sponsor', 2),
+            onClick: handleClickDot('sponsor', 2),
           },
           {
             label: 'Vitalist Bay',
-            onClick: () => handleClickDot('sponsor', 4),
+            onClick: handleClickDot('sponsor', 4),
           },
         ],
       },
@@ -185,11 +191,11 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            onClick: () => handleCharacterRelationShow(),
+            onClick: handleCharacterRelationShow,
           },
           {
             label: 'Disease Management & Cure Status',
-            onClick: () => handleDiseaseManagementClick(),
+            onClick: handleDiseaseManagementClick,
           },
         ],
       },
@@ -233,8 +239,13 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleCharacterRelationShow, handleClickDigitalTwin, handleClickDot, setShowDiseaseManagement]);
-
+  }, [
+    handleClickDot,
+    handleDiseaseManagementClick,
+    handleCharacterRelationShow,
+    handleClickDigitalTwin,
+  ]);
+ 
   return spectrumData;
 };
 
@@ -251,7 +262,7 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
-    },
+    }, 
     {
       url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],
