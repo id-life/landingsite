@@ -1,8 +1,8 @@
 import { GA_EVENT_NAMES } from '@/constants/ga';
-import { SpectrumItemInfo } from '@/hooks/spectrum/useSpectrumData';
+import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import { cloneElement, forwardRef, HTMLAttributes, memo } from 'react';
+import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo } from 'react';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
@@ -11,6 +11,52 @@ interface SpectrumItemProps {
   isHover?: boolean;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 }
+
+const SpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
+  const { trackEvent } = useGA();
+
+  const { label, link, isComingSoon, onClick, labelClassName } = item;
+  const hasLink = Boolean(link || onClick);
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!hasLink) return;
+
+      trackEvent({
+        name: GA_EVENT_NAMES.SPECTRUM_CLICK,
+        label,
+      });
+
+      onClick?.();
+      if (link) window.open(link, '_blank');
+    },
+    [hasLink, trackEvent, label, onClick, link],
+  );
+
+  return (
+    <div className="relative flex items-center gap-1">
+      <a href={link} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+        <p
+          className={cn(
+            'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+            hasLink &&
+              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+            labelClassName,
+          )}
+        >
+          {label}
+        </p>
+      </a>
+      {isComingSoon && (
+        <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+          coming soon
+        </span>
+      )}
+    </div>
+  );
+});
+
+SpectrumLink.displayName = 'SpectrumLink';
 
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, isHover }, ref) => {
@@ -25,6 +71,10 @@ const SpectrumItem = memo(
       });
     };
 
+    const spectrumLinks = useMemo(() => {
+      return links?.map((item) => <SpectrumLink key={item.label} item={item} />);
+    }, [links]);
+
     return (
       <div
         ref={ref}
@@ -36,74 +86,15 @@ const SpectrumItem = memo(
         )}
       >
         <div className={cn('flex items-start gap-1.5', itemClassName)}>
-          {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
+          {/* {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })} */}
+          <icon className="spectrum-icon size-7.5 shrink-0 fill-white" />
           <div className="flex flex-col">
             <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
               {title}
             </h4>
             <h4 className="spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize">{titleCn}</h4>
             <div className="mt-5 flex flex-col">
-              {links?.length
-                ? links.map((item) => {
-                    const { label, link, isComingSoon, onClick, labelClassName } = item;
-                    const hasLink = Boolean(link || onClick);
-                    return (
-                      <div key={label} className="relative flex items-center gap-1">
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            if (!link && !onClick) return;
-                            trackEvent({
-                              name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-                              label,
-                            });
-                            if (onClick) onClick();
-                            if (link) window.open(link, '_blank');
-                          }}
-                        >
-                          <p
-                            className={cn(
-                              'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
-                              {
-                                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100':
-                                  hasLink,
-                              },
-                              labelClassName,
-                            )}
-                          >
-                            {label}
-                            {/* {hasLink && (
-                              <>
-                                <img
-                                  src="/svgs/select.svg"
-                                  className="spectrum-selected-icon absolute -left-10 top-1/2 w-5.5 -translate-y-1/2 rotate-180 opacity-0 group-hover:opacity-100"
-                                  alt=""
-                                />
-                                <img
-                                  src="/svgs/select.svg"
-                                  className={cn(
-                                    'spectrum-selected-icon absolute -right-10 top-1/2 w-5.5 -translate-y-1/2 opacity-0 group-hover:opacity-100',
-                                    {
-                                      '-right-[112px]': isComingSoon,
-                                    },
-                                  )}
-                                  alt=""
-                                />
-                              </>
-                            )} */}
-                          </p>
-                        </a>
-                        {isComingSoon && (
-                          <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
-                            coming soon
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })
-                : null}
+              {spectrumLinks}
             </div>
           </div>
         </div>
