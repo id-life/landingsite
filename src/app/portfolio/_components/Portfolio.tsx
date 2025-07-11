@@ -10,7 +10,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { atom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
@@ -23,12 +23,41 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
 
+const imageIdxAtom = atom(0);
+const activeAnimAtom = atom(false);
+
+const ParticleGLWrapper = () => {
+  const imageIdx = useAtomValue(imageIdxAtom);
+  const activeAnim = useAtomValue(activeAnimAtom);
+  return (
+    <ParticleGL
+      activeAnim={activeAnim}
+      imageIdx={imageIdx}
+      id="particle-container"
+      getSourceImgInfos={portfolioGetSourceImgInfos}
+    />
+  );
+};
+
+const ParticleGLContainer = () => {
+  const activeAnim = useAtomValue(activeAnimAtom);
+  return (
+    <div id="particle-gl">
+      <div id="particle-container" className={cn('particle-container', { active: activeAnim })}>
+        <div className="particle-mask"></div>
+      </div>
+    </div>
+  );
+};
+
 function Portfolio() {
-  const [active, setActive] = useState<boolean>(false);
+  const setActiveAnim = useSetAtom(activeAnimAtom);
+  const setImageIdx = useSetAtom(imageIdxAtom);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const [imageIdx, setImageIdx] = useState(0);
+
   const currentPage = useAtomValue(currentPageAtom);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
@@ -88,14 +117,14 @@ function Portfolio() {
         id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
-          setActive(true);
+          setActiveAnim(true);
         },
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[1]);
-          setActive(true);
+          setActiveAnim(true);
         },
         onLeaveBack: () => {
-          setActive(false);
+          setActiveAnim(false);
         },
       },
     });
@@ -192,18 +221,9 @@ function Portfolio() {
 
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      <ParticleGL
-        activeAnim={active}
-        imageIdx={imageIdx}
-        id="particle-container"
-        getSourceImgInfos={portfolioGetSourceImgInfos}
-      />
+      <ParticleGLWrapper />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <div id="particle-gl">
-          <div id="particle-container" className={cn('particle-container', { active })}>
-            <div className="particle-mask"></div>
-          </div>
-        </div>
+        <ParticleGLContainer />
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
           <div className="grid grid-cols-5">{portfolioItems}</div>
