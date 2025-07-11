@@ -26,3 +26,5 @@ export const currentModelAtom = atom<PredictionModel | null>(PredictionModel.M0)
 export const currentModelTypeAtom = atom<ModelType>(ModelType.Skin);
 
 export const currentAnatomyCameraAtom = atom<AnatomyCamera>(AnatomyCamera.CAMERA0);
+
+export const modelLoadingItemAtom = atom<[string, string] | [null, null]>([null, null]);

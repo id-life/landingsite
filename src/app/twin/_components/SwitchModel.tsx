@@ -1,4 +1,4 @@
-import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, modelLoadingItemAtom, PredictionModel } from '@/atoms/twin';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import SelectSVG from '@/../public/svgs/twin/select.svg?component';
@@ -13,6 +13,7 @@ import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
+  const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
 
   const { trackEvent } = useGA();
 
@@ -22,6 +23,7 @@ export default function SwitchModel() {
         name: GA_EVENT_NAMES.TWIN_SWITCH,
         label: GA_EVENT_LABELS.TWIN_SWITCH[model],
       });
+      setModelLoadingItem([GA_EVENT_NAMES.TWIN_LOAD_DURATION, GA_EVENT_LABELS.TWIN_SWITCH[model]]);
     }
 
     gsap.to('.twin-title', { opacity: 0 });
