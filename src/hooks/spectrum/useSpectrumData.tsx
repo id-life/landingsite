@@ -159,7 +159,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Vitalist Bay',
-            onClick: () => handleClickDot('sponsor', 4),
+            onClick: () => handleClickDot('meeting', 4),
           },
         ],
       },
