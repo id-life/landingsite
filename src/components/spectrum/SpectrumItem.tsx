@@ -86,16 +86,13 @@ const SpectrumItem = memo(
         )}
       >
         <div className={cn('flex items-start gap-1.5', itemClassName)}>
-          {/* {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })} */}
-          <icon className="spectrum-icon size-7.5 shrink-0 fill-white" />
+          {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
           <div className="flex flex-col">
             <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
               {title}
             </h4>
             <h4 className="spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize">{titleCn}</h4>
-            <div className="mt-5 flex flex-col">
-              {spectrumLinks}
-            </div>
+            <div className="mt-5 flex flex-col">{spectrumLinks}</div>
           </div>
         </div>
       </div>

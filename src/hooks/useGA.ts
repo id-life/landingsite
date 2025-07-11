@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useIsMobile } from './useIsMobile';
 import { sendGAEvent } from '@next/third-parties/google';
-import { useCallback } from 'react';
 
 export interface TrackEventOptions {
   /**
