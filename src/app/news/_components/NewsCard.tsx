@@ -19,7 +19,7 @@ export default function NewsCard({ data }: { data: NewsListItem }) {
         <div className="mt-4 font-medium text-black/50">
           Article <span className="px-1">·</span> {dayjs(data.createdAt).fromNow()}
         </div>
-        <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief}</p>
+        <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief.replace(/[#*]/g, '').trim()}</p>
       </Link>
     </div>
   );

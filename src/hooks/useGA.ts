@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useIsMobile } from './useIsMobile';
 import { sendGAEvent } from '@next/third-parties/google';
+import { useCallback } from 'react';
 
 export interface TrackEventOptions {
   /**
@@ -11,6 +12,7 @@ export interface TrackEventOptions {
    * event_label
    */
   label?: string;
+
   /**
    * rest data you'd like to send
    * add the `event_` prefix to the key manually if needed
@@ -34,7 +36,5 @@ export function useGA() {
     [isMobile],
   );
 
-  return {
-    trackEvent,
-  };
+  return { trackEvent };
 }
