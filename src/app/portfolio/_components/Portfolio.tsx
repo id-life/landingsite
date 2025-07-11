@@ -12,7 +12,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
@@ -54,23 +54,28 @@ function Portfolio() {
 
   const { trackEvent } = useGA();
 
-  const handleFundClick = (item: PortfolioItemInfo) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-      label: item.title,
-      landingsite_action: 'click',
-    });
-    if (!item.link) return;
-    window.open(item.link, '_blank');
-  };
+  const handleFundClick = useCallback(
+    (item: PortfolioItemInfo) => () => {
+      trackEvent({
+        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+        label: item.title,
+        landingsite_action: 'click',
+      });
+      if (!item.link) return;
+      window.open(item.link, '_blank');
+    },
+    [trackEvent],
+  );
 
-  const handleMouseEnter = (item: PortfolioItemInfo) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-      label: item.title,
-      landingsite_action: 'hover',
-    });
-  };
+  const handleMouseEnter = useCallback(
+    (item: PortfolioItemInfo) => () =>
+      trackEvent({
+        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+        label: item.title,
+        landingsite_action: 'hover',
+      }),
+    [trackEvent],
+  );
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -169,6 +174,22 @@ function Portfolio() {
     { scope: wrapperRef, dependencies: [] },
   );
 
+  const portfolioItems = useMemo(() => {
+    return portfolio.map((item, index) => (
+      <PortfolioItem
+        key={item.title}
+        item={item}
+        className="w-76"
+        onClick={handleFundClick(item)}
+        onMouseEnter={handleMouseEnter(item)}
+        ref={(element) => {
+          if (!element) return;
+          portfolioRefs.current[index] = element;
+        }}
+      />
+    ));
+  }, [handleFundClick, handleMouseEnter]);
+
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
       <ParticleGL
@@ -185,21 +206,7 @@ function Portfolio() {
         </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-5">
-            {portfolio.map((item, index) => (
-              <PortfolioItem
-                key={item.title}
-                item={item}
-                className="w-76"
-                onClick={() => handleFundClick(item)}
-                onMouseEnter={() => handleMouseEnter(item)}
-                ref={(element) => {
-                  if (!element) return;
-                  portfolioRefs.current[index] = element;
-                }}
-              />
-            ))}
-          </div>
+          <div className="grid grid-cols-5">{portfolioItems}</div>
         </div>
         <div className="page2-contact">
           <Contact />
