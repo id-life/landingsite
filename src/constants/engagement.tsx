@@ -1,4 +1,14 @@
-import { AmericaSVG, ChineseSVG, HondurasSVG, MontenegroSVG, SingaporeSVG, ThailandSVG, UKSVG } from '@/components/svg';
+import {
+  AmericaSVG,
+  ChineseSVG,
+  HondurasSVG,
+  MontenegroSVG,
+  SingaporeSVG,
+  ThailandSVG,
+  UKSVG,
+  DenmarkSVG,
+  FranceSVG,
+} from '@/components/svg';
 import { ReactNode } from 'react';
 
 // pulse animate config
@@ -73,8 +83,18 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   },
   {
     lat: 55,
-    lng: -4,
+    lng: -10,
     icon: <UKSVG className="size-7 mobile:size-5.5" />,
+  },
+  {
+    lat: 62,
+    lng: 8,
+    icon: <DenmarkSVG className="size-7 mobile:size-5.5" />,
+  },
+  {
+    lat: 42,
+    lng: -2,
+    icon: <FranceSVG className="size-7 mobile:size-5.5" />,
   },
 ];
 
@@ -293,8 +313,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
   },
   {
     index: 5,
-    lat: 45,
-    lng: 2,
+    lat: 49,
+    lng: -4,
     label: 'London',
     country: 'UK',
     link: 'https://founderslongevity.co/',
@@ -426,8 +446,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
   },
   {
-    lat: 51,
-    lng: -1,
+    lat: 54,
+    lng: -5,
     title: 'Oxford, UK',
     alt: 'Oxford Future Innovation Forum 2024',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
@@ -455,6 +475,28 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
     link: 'https://biohackerdao.org/',
     sponsorText: 'Sponsorship',
+    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+  },
+  {
+    lat: 58,
+    lng: 12,
+    title: 'Copenhagen, Denmark',
+    alt: 'ARDD 2025',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06-1.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06.webm',
+    link: 'https://agingpharma.org/',
+    sponsorText: 'Conference',
+    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+  },
+  {
+    lat: 44,
+    lng: 3,
+    title: 'Aix-en-Provence, France',
+    alt: '2060 Longevity\nForum',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07-1.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07.webm',
+    link: 'https://forum.2060.life/',
+    sponsorText: 'Conference',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
 ];

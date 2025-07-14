@@ -161,6 +161,14 @@ export const useSpectrumData = () => {
             label: 'Vitalist Bay',
             onClick: () => handleClickDot('meeting', 4),
           },
+          {
+            label: 'ARDD 2025',
+            onClick: () => handleClickDot('sponsor', 4),
+          },
+          {
+            label: '2060 Longevity Forum',
+            onClick: () => handleClickDot('sponsor', 5),
+          },
         ],
       },
       {

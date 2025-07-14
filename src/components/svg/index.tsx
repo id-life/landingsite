@@ -14,6 +14,8 @@ import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
+import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
+import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
 
 import PodcastSVG from '@/../public/svgs/spectrum/podcast.svg?component';
 import RelationSVG from '@/../public/svgs/spectrum/relation.svg?component';
@@ -44,4 +46,6 @@ export {
   DigitalTwinSVG,
   InternSVG,
   MuseumSVG,
+  DenmarkSVG,
+  FranceSVG,
 };
