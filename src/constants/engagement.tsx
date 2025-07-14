@@ -331,6 +331,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       'world-map-dot-sponsor-3',
       'world-map-dot-book-2',
       'world-map-dot-3',
+      'world-map-dot-sponsor-4',
+      'world-map-dot-sponsor-5',
     ],
     secondImgs: [
       {
@@ -388,7 +390,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
+    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5', 'world-map-dot-sponsor-5'],
     containerClass: 'scale-[0.9]',
   },
   {
@@ -452,7 +454,13 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'Oxford Future Innovation Forum 2024',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-0', 'world-map-dot-book-1', 'world-map-dot-5'],
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-book-0',
+      'world-map-dot-book-1',
+      'world-map-dot-5',
+      'world-map-dot-sponsor-4',
+      'world-map-dot-sponsor-5',
+    ],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Forum',
   },
@@ -486,7 +494,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06.webm',
     link: 'https://agingpharma.org/',
     sponsorText: 'Conference',
-    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-5', 'world-map-dot-book-0'],
   },
   {
     lat: 44,
@@ -497,7 +505,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07.webm',
     link: 'https://forum.2060.life/',
     sponsorText: 'Conference',
-    activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-4', 'world-map-dot-book-0'],
   },
 ];
 
@@ -509,6 +517,8 @@ export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; inde
   { type: 'sponsor', index: 2, offset: 80 },
   { type: 'sponsor', index: 1, offset: 80 },
   { type: 'meeting', index: 5, offset: 220 },
+  { type: 'sponsor', index: 5, offset: 80 },
+  { type: 'sponsor', index: 4, offset: 80 },
   { type: 'book', index: 0, offset: 40 },
   { type: 'book', index: 1, offset: 40 },
   { type: 'sponsor', index: 0, offset: 50 },
