@@ -1,15 +1,5 @@
-import {
-  AmericaSVG,
-  ChineseSVG,
-  HondurasSVG,
-  MontenegroSVG,
-  SingaporeSVG,
-  ThailandSVG,
-  UKSVG,
-  DenmarkSVG,
-  FranceSVG,
-} from '@/components/svg';
 import { ReactNode } from 'react';
+import { AmericaSVG, ChineseSVG, HondurasSVG, SingaporeSVG, ThailandSVG, DenmarkSVG, FranceSVG } from '@/components/svg';
 
 // pulse animate config
 export type PulseConfig = {
@@ -57,9 +47,9 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
   },
   {
-    lat: 40,
-    lng: 18,
-    icon: <MontenegroSVG className="size-7 mobile:size-5.5" />,
+    lat: 33,
+    lng: 21,
+    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-5.5" />,
   },
   {
     lat: -14,
@@ -84,16 +74,16 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 55,
     lng: -10,
-    icon: <UKSVG className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-5.5" />,
   },
   {
-    lat: 62,
+    lat: 64,
     lng: 8,
     icon: <DenmarkSVG className="size-7 mobile:size-5.5" />,
   },
   {
     lat: 42,
-    lng: -2,
+    lng: 0,
     icon: <FranceSVG className="size-7 mobile:size-5.5" />,
   },
 ];
@@ -381,8 +371,8 @@ export type MapBookDotData = {
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
-    lat: 36,
-    lng: 22,
+    lat: 33,
+    lng: 26,
     key: 'publications-01',
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
@@ -486,7 +476,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
   {
-    lat: 58,
+    lat: 60,
     lng: 12,
     title: 'Copenhagen, Denmark',
     alt: 'ARDD 2025',
@@ -497,8 +487,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-5', 'world-map-dot-book-0'],
   },
   {
-    lat: 44,
-    lng: 3,
+    lat: 38,
+    lng: 5,
     title: 'Aix-en-Provence, France',
     alt: '2060 Longevity\nForum',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07-1.webp',
