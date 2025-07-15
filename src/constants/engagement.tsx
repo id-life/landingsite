@@ -467,7 +467,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
     lat: 24,
     lng: -123.5,
-    title: 'San Francisco, uSA',
+    title: 'San Francisco, USA',
     alt: 'Public Longevity\nGroup',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
