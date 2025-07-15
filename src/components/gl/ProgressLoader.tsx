@@ -1,26 +1,53 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { useProgress } from '@react-three/drei';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Background from '@/components/common/Background';
 import { globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export function OuterLoader() {
-  const { progress, active } = useProgress();
+  const { progress, active, errors, item } = useProgress();
   const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
   const [show, setShow] = useState(true);
+  const timestampRef = useRef(Date.now());
+  const loadedItemsRef = useRef<string[]>([]);
+  const { trackEvent } = useGA();
 
   const isLoaded = useMemo(() => progress === 100 && !active, [active, progress]);
   const isLoading = useMemo(() => progress > 0 && progress < 100 && active, [active, progress]);
 
   useEffect(() => {
+    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_START });
+  }, [trackEvent]);
+
+  useEffect(() => {
+    if (item.indexOf('glb') > -1 || item.indexOf('png') > -1) {
+      const itemName = item.split('/').pop();
+      if (itemName && !loadedItemsRef.current.includes(itemName)) {
+        loadedItemsRef.current.push(itemName);
+        trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: itemName, load_result: 'Succeed' });
+      }
+    }
+  }, [item, trackEvent]);
+
+  useEffect(() => {
+    errors.forEach((error) => {
+      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: error, load_result: 'Fail' });
+    });
+  }, [errors, trackEvent]);
+
+  useEffect(() => {
     if (!isLoaded || !show) return;
+    const diff = Date.now() - timestampRef.current;
+    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: diff.toString() });
     setIsLoadingUI(true);
     setGlobalLoaded(true);
     setShow(false);
-  }, [isLoaded, setGlobalLoaded, setIsLoadingUI, show]);
+  }, [isLoaded, setGlobalLoaded, setIsLoadingUI, show, trackEvent]);
 
   useEffect(() => {
     const smoother = ScrollSmoother.get();

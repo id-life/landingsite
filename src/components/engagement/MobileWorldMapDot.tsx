@@ -26,7 +26,11 @@ export function MobileWorldMapDotPoint({
 }) {
   const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
-  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
+  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
+    id: `world-map-dot-${index}`,
+    index,
+    type: 'meeting',
+  });
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -62,7 +66,7 @@ export function MobileWorldMapDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className="relative size-6 overflow-visible">
+        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
             width={svgSize}
             height={svgSize}

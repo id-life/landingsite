@@ -21,12 +21,12 @@ export function useEngagementClickPoint(needTrack = true) {
   const { trackEvent } = useGA();
 
   const trackEngagementEvent = useCallback(
-    (type: EngagementClickPointType, activeDot: number, action: 'click' | 'mouseenter') => {
+    (type: EngagementClickPointType, activeDot: number, action: 'click' | 'hover') => {
       if (!needTrack) return;
 
       const options: TrackEventOptions = {
         name: GA_EVENT_NAMES.PRESENCE_VIEW,
-        action,
+        landingsite_action: action,
       };
 
       switch (type) {
@@ -89,17 +89,17 @@ export function useEngagementClickPoint(needTrack = true) {
         setActiveMeetingDot(index);
         setActiveBookDot(null);
         setActiveSponsorDot(null);
-        trackEngagementEvent(type, index, 'mouseenter');
+        trackEngagementEvent(type, index, 'hover');
       } else if (type === 'book') {
         setActiveBookDot(index);
         setActiveMeetingDot(null);
         setActiveSponsorDot(null);
-        trackEngagementEvent(type, index, 'mouseenter');
+        trackEngagementEvent(type, index, 'hover');
       } else if (type === 'sponsor') {
         setActiveSponsorDot(index);
         setActiveMeetingDot(null);
         setActiveBookDot(null);
-        trackEngagementEvent(type, index, 'mouseenter');
+        trackEngagementEvent(type, index, 'hover');
       }
     },
     [setActiveMeetingDot, setActiveBookDot, setActiveSponsorDot, trackEngagementEvent],

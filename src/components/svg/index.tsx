@@ -2,9 +2,7 @@ import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import ClockSVG from '@/../public/svgs/clock.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 
-import UKSVG from '@/../public/svgs/engagement/uk.svg?component';
 import AmericaSVG from '@/../public/svgs/engagement/america.svg?component';
-import MontenegroSVG from '@/../public/svgs/engagement/montenegro.svg?component';
 import ChineseSVG from '@/../public/svgs/engagement/chinese.svg?component';
 import HondurasSVG from '@/../public/svgs/engagement/honduras.svg?component';
 import SingaporeSVG from '@/../public/svgs/engagement/singapore.svg?component';
@@ -14,6 +12,8 @@ import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
+import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
+import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
 
 import PodcastSVG from '@/../public/svgs/spectrum/podcast.svg?component';
 import RelationSVG from '@/../public/svgs/spectrum/relation.svg?component';
@@ -26,9 +26,7 @@ export {
   ClockSVG,
   SubscribeBorderSVG,
   // engagement
-  UKSVG,
   AmericaSVG,
-  MontenegroSVG,
   BookSVG,
   ChineseSVG,
   HondurasSVG,
@@ -44,4 +42,6 @@ export {
   DigitalTwinSVG,
   InternSVG,
   MuseumSVG,
+  DenmarkSVG,
+  FranceSVG,
 };

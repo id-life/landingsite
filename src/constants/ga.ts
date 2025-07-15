@@ -9,6 +9,9 @@ export const GA_EVENT_NAMES = {
   SUBSCRIBE_LETTER: 'subscribe_letter',
   MEDIUM_CLICK: 'medium_click',
   ID_PAGE_VIEW: 'id_page_view',
+  PAGE_LOAD_START: 'page_load_start',
+  PAGE_LOAD_END: 'page_load_end',
+  PAGE_LOAD_ITEM: 'page_load_item',
 
   // portfolio
   PORTFOLIO_VIEW: 'portfolio_view',
@@ -28,6 +31,9 @@ export const GA_EVENT_NAMES = {
   MODEL_SWITCH: 'model_switch',
   TWIN_DESCRIPTION: 'twin_description',
   ANATOMY_SWITCH: 'anatomy_switch',
+  TWIN_LOAD_DURATION: 'twin_load_duration',
+  MODEL_LOAD_DURATION: 'model_load_duration',
+  ANATOMY_LOAD_DURATION: 'anatomy_load_duration',
 
   // value
   VALUE_VIEW: 'value_view',
@@ -127,6 +133,12 @@ export const GA_EVENT_LABELS = {
   | 'PODCAST_LINK_XYZ'
   | 'PODCAST_LINK_APPLE'
   | 'MUSIC_DOWNLOAD'
+  | 'PAGE_LOAD_START'
+  | 'PAGE_LOAD_END'
+  | 'PAGE_LOAD_ITEM'
+  | 'TWIN_LOAD_DURATION'
+  | 'MODEL_LOAD_DURATION'
+  | 'ANATOMY_LOAD_DURATION'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
