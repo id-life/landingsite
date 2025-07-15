@@ -41,7 +41,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
       <img className="size-[50px]" src={data.album} alt="" />
       <div className="flex flex-1 items-start gap-[2px] overflow-hidden mobile:w-[calc(100%_-_60px)]">
         {isCurrent ? <img className="w-[16px]" src="/svgs/player/play_status.svg" alt="" /> : null}
-        <div className="overflow-hidden">
+        <div className="w-full overflow-hidden">
           <div
             onClick={onClick}
             className={clsx(

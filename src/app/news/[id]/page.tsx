@@ -49,7 +49,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
           <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
           Immortal Dragons
         </div>
-        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold capitalize">{data?.title}</h1>
+        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold">{data?.title}</h1>
         <div className="mx-auto mb-15 mt-10 w-80 border-b border-dashed border-black" />
         <div className="markdown-body">
           <Markdown rehypePlugins={[rehypeRaw]}>{data?.content}</Markdown>

@@ -91,7 +91,7 @@ export function WorldMapBookDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className="relative size-6 overflow-visible">
+        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
             width={svgSize}
             height={svgSize}
