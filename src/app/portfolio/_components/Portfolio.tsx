@@ -10,25 +10,52 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { atom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
 
+const ParticleGLWrapper = () => {
+  const imageIdx = useAtomValue(imageIdxAtom);
+  const activeAnim = useAtomValue(activeAnimAtom);
+  return (
+    <ParticleGL
+      activeAnim={activeAnim}
+      imageIdx={imageIdx}
+      id="particle-container"
+      getSourceImgInfos={portfolioGetSourceImgInfos}
+    />
+  );
+};
+
+const ParticleGLContainer = () => {
+  const activeAnim = useAtomValue(activeAnimAtom);
+  return (
+    <div id="particle-gl">
+      <div id="particle-container" className={cn('particle-container', { active: activeAnim })}>
+        <div className="particle-mask"></div>
+      </div>
+    </div>
+  );
+};
+
 function Portfolio() {
-  const [active, setActive] = useState<boolean>(false);
+  const setActiveAnim = useSetAtom(activeAnimAtom);
+  const setImageIdx = useSetAtom(imageIdxAtom);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
-  const [imageIdx, setImageIdx] = useState(0);
+
   const currentPage = useAtomValue(currentPageAtom);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
@@ -54,23 +81,28 @@ function Portfolio() {
 
   const { trackEvent } = useGA();
 
-  const handleFundClick = (item: PortfolioItemInfo) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-      label: item.title,
-      landingsite_action: 'click',
-    });
-    if (!item.link) return;
-    window.open(item.link, '_blank');
-  };
+  const handleFundClick = useCallback(
+    (item: PortfolioItemInfo) => () => {
+      trackEvent({
+        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+        label: item.title,
+        landingsite_action: 'click',
+      });
+      if (!item.link) return;
+      window.open(item.link, '_blank');
+    },
+    [trackEvent],
+  );
 
-  const handleMouseEnter = (item: PortfolioItemInfo) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-      label: item.title,
-      landingsite_action: 'hover',
-    });
-  };
+  const handleMouseEnter = useCallback(
+    (item: PortfolioItemInfo) => () =>
+      trackEvent({
+        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+        label: item.title,
+        landingsite_action: 'hover',
+      }),
+    [trackEvent],
+  );
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -83,14 +115,14 @@ function Portfolio() {
         id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
           setCurrentPage(NAV_LIST[1]);
-          setActive(true);
+          setActiveAnim(true);
         },
         onEnterBack: () => {
           setCurrentPage(NAV_LIST[1]);
-          setActive(true);
+          setActiveAnim(true);
         },
         onLeaveBack: () => {
-          setActive(false);
+          setActiveAnim(false);
         },
       },
     });
@@ -169,37 +201,30 @@ function Portfolio() {
     { scope: wrapperRef, dependencies: [] },
   );
 
+  const portfolioItems = useMemo(() => {
+    return portfolio.map((item, index) => (
+      <PortfolioItem
+        key={item.title}
+        item={item}
+        className="w-76"
+        onClick={handleFundClick(item)}
+        onMouseEnter={handleMouseEnter(item)}
+        ref={(element) => {
+          if (!element) return;
+          portfolioRefs.current[index] = element;
+        }}
+      />
+    ));
+  }, [handleFundClick, handleMouseEnter]);
+
   return (
     <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
-      <ParticleGL
-        activeAnim={active}
-        imageIdx={imageIdx}
-        id="particle-container"
-        getSourceImgInfos={portfolioGetSourceImgInfos}
-      />
+      <ParticleGLWrapper />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <div id="particle-gl">
-          <div id="particle-container" className={cn('particle-container', { active })}>
-            <div className="particle-mask"></div>
-          </div>
-        </div>
+        <ParticleGLContainer />
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-5">
-            {portfolio.map((item, index) => (
-              <PortfolioItem
-                key={item.title}
-                item={item}
-                className="w-76"
-                onClick={() => handleFundClick(item)}
-                onMouseEnter={() => handleMouseEnter(item)}
-                ref={(element) => {
-                  if (!element) return;
-                  portfolioRefs.current[index] = element;
-                }}
-              />
-            ))}
-          </div>
+          <div className="grid grid-cols-5">{portfolioItems}</div>
         </div>
         <div className="page2-contact">
           <Contact />
