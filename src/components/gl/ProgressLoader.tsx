@@ -29,14 +29,14 @@ export function OuterLoader() {
       const itemName = item.split('/').pop();
       if (itemName && !loadedItemsRef.current.includes(itemName)) {
         loadedItemsRef.current.push(itemName);
-        trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: itemName, load_result: 'Succeed' });
+        trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: 'Succeed', resource_name: itemName });
       }
     }
   }, [item, trackEvent]);
 
   useEffect(() => {
     errors.forEach((error) => {
-      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: error, load_result: 'Fail' });
+      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: 'Fail', resource_name: error });
     });
   }, [errors, trackEvent]);
 
