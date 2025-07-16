@@ -17,14 +17,12 @@ import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
+import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
-
-const imageIdxAtom = atom(0);
-const activeAnimAtom = atom(false);
 
 const ParticleGLWrapper = () => {
   const imageIdx = useAtomValue(imageIdxAtom);
