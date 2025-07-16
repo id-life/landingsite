@@ -10,8 +10,8 @@ import { useSetAtom } from 'jotai';
 import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Perf } from 'r3f-perf';
 import { useIsMounted } from '@/hooks/useIsMounted';
+import PrefHook from '@/components/gl/PrefHook';
 
 export default function ThreeWrapper() {
   const setIsCN = useSetAtom(isCNAtom);
@@ -47,11 +47,10 @@ export default function ThreeWrapper() {
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* Performance monitoring - enable in development */}
-        {process.env.NODE_ENV === 'development' && <Perf position="bottom-left" />}
+        {process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
         <Suspense fallback={null}>
           <VisionGL />
           <ValueGL />
-          {/* Preload all textures for better performance */}
           <Preload all />
         </Suspense>
         <EffectComposer>
