@@ -3,8 +3,8 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { ModelType } from '@/components/twin/model/type';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
-import { useAtomValue } from 'jotai';
-import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, modelLoadingItemAtom, PredictionModel } from '@/atoms/twin';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
 import { useGA } from '@/hooks/useGA';
@@ -13,15 +13,18 @@ import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 export default function SwitchSkin() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
+  const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
 
   const { trackEvent } = useGA();
 
   const handleModelTypeChange = (type: ModelType) => {
+    const label = type === ModelType.Skin ? GA_EVENT_LABELS.MODEL_SWITCH.SKIN : GA_EVENT_LABELS.MODEL_SWITCH.ANATOMY;
     trackEvent({
       name: GA_EVENT_NAMES.MODEL_SWITCH,
-      label: type === ModelType.Skin ? GA_EVENT_LABELS.MODEL_SWITCH.SKIN : GA_EVENT_LABELS.MODEL_SWITCH.ANATOMY,
+      label,
       twin_type: currentModel ? GA_EVENT_LABELS.TWIN_SWITCH[currentModel] : '',
     });
+    setModelLoadingItem([GA_EVENT_NAMES.MODEL_LOAD_DURATION, label]);
 
     if (currentModel === PredictionModel.M0) {
       gsap.to('.twin-title', { opacity: 0 });

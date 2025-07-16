@@ -15,7 +15,6 @@ import AnatomyM13 from '@/../public/svgs/twin/anatomy-m1-3.svg?component';
 import AnatomyM21 from '@/../public/svgs/twin/anatomy-m2-1.svg?component';
 import AnatomyM22 from '@/../public/svgs/twin/anatomy-m2-2.svg?component';
 import AnatomyM23 from '@/../public/svgs/twin/anatomy-m2-3.svg?component';
-import AnatomyM31 from '@/../public/svgs/twin/anatomy-m3-1.svg?component';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 

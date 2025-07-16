@@ -112,24 +112,25 @@ export default function FooterContact() {
               <div className="mt-18 flex gap-10">
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-                  className="flex-center group relative h-10 w-10 cursor-pointer"
+                  className="flex-center group relative h-10 cursor-pointer gap-1.5 p-2"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
                   <YoutubeSVG className="size-6 fill-black group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold group-hover:text-red-600">YOUTUBE</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-                  className="flex-center group relative h-10 w-10 cursor-pointer"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <LinkedinSVG className="size-6 fill-black group-hover:fill-red-600" />
+                  <LinkedinSVG className="size-6 fill-black group-hover:fill-red-600" /> LINKEDIN
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Media)}
-                  className="flex-center group relative h-10 w-10 cursor-pointer"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
                 >
                   <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <MediaSVG className="size-6 fill-black group-hover:fill-red-600" />
+                  <MediaSVG className="size-6 fill-black group-hover:fill-red-600" /> MEDIAKIT
                 </div>
               </div>
             </div>

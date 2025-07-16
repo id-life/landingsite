@@ -36,7 +36,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
       audioContext.resume();
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
-    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label });
+    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
     dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
   };
 

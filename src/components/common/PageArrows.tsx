@@ -12,6 +12,9 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -21,18 +24,11 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const currentPage = useAtomValue(currentPageAtom);
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
-  // const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
     return 5; // 目前就一个 Value 页有
   }, [currentPage]);
-
-  const pageIndexList = useMemo(() => {
-    const total = getTotal();
-    if (!total) return [];
-    return new Array(total).fill(0);
-  }, [getTotal]);
 
   // 更新 innerPageTotal
   useEffect(() => {
@@ -53,28 +49,6 @@ export default function PageArrows({ className }: PageArrowsProps) {
         <ArrowItem isUp />
         {!isLastPageAndInnerPage && <ArrowItem />}
       </div>
-      {/* 细长方块进度条 */}
-      {/* {pageIndexList?.length ? (
-        <div className="flex-center order-2 gap-3 mobile:order-1">
-          {pageIndexList.map((_, index) => (
-            <div
-              key={`inner-page-index-${index}`}
-              className={cn(
-                'relative h-1 w-15 rounded-full mobile:h-0.5 mobile:w-6',
-                BLACK_ARROW_LIST.includes(currentPage.id)
-                  ? innerPageIndex !== index
-                    ? 'bg-white/20'
-                    : 'bg-white/40'
-                  : innerPageIndex === index
-                    ? 'bg-gray-800'
-                    : 'bg-[#B8B8B8]',
-              )}
-            >
-              <div className="pointer-events-auto absolute inset-x-0 -bottom-2 z-20 h-4 w-full" />
-            </div>
-          ))}
-        </div>
-      ) : null} */}
     </div>
   );
 }
@@ -86,6 +60,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
+  const { sendValueShowEvent } = useValueShowEvent();
 
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
@@ -102,6 +77,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
         return;
       }
       setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
+      sendValueShowEvent(innerPageIndex + (isUp ? -1 : 1), 'click');
       return;
     }
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);

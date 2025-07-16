@@ -1,4 +1,5 @@
 'use client';
+
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
@@ -8,8 +9,8 @@ import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useAtom } from 'jotai';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
@@ -27,21 +28,52 @@ function Spectrum() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
   const animTimeline = useRef<gsap.core.Timeline | null>(null);
+  const mouseAnimations = useRef<Map<number, gsap.core.Timeline>>(new Map());
+  const cleanupFunctions = useRef<(() => void)[]>([]);
 
   const handleBackToSpectrum = useCallback(() => {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
   const spectrumData = useSpectrumData();
+  const spectrumItems = useMemo(() => {
+    return spectrumData.map((item, index) => (
+      <SpectrumItem
+        key={item.title}
+        item={item}
+        onClick={(e) => {
+          item.onClick?.(e);
+        }}
+        ref={(element) => {
+          if (element) {
+            spectrumRefs.current[index] = element;
+          }
+        }}
+      />
+    ));
+  }, [spectrumData]);
+
+  const windowDimensions = useMemo(() => {
+    if (typeof window === 'undefined') return { width: 0, height: 0 };
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+  }, []);
+
+  const circleCenter = useMemo(() => {
+    const centerX = windowDimensions.width / 2;
+    const centerY = windowDimensions.height / 2;
+    const maxRadius = Math.hypot(
+      Math.max(centerX, windowDimensions.width - centerX),
+      Math.max(centerY, windowDimensions.height - centerY),
+    );
+    return { centerX, centerY, maxRadius };
+  }, [windowDimensions]);
 
   useGSAP(() => {
     if (isShowingDiseaseManagement) {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      const maxRadius = Math.hypot(
-        Math.max(centerX, window.innerWidth - centerX),
-        Math.max(centerY, window.innerHeight - centerY),
-      );
+      const { centerX, centerY, maxRadius } = circleCenter;
 
       if (animTimeline.current) animTimeline.current.kill();
       animTimeline.current = gsap.timeline();
@@ -150,75 +182,82 @@ function Spectrum() {
       const wrapper = wrapperRef.current;
       if (!wrapper) return;
 
+      const cleanup: (() => void)[] = [];
+
       spectrumRefs.current.forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         const title = div.querySelector('.spectrum-title');
         const titleCn = div.querySelector('.spectrum-title-cn');
         // const selected = div?.querySelectorAll('.spectrum-selected-icon');
         const icon = div?.querySelectorAll('.spectrum-icon');
+
         if (title) tl.to(title, { fontSize: '1.875rem', lineHeight: '2.25rem' });
         if (titleCn) tl.to(titleCn, { fontSize: '1.5rem', lineHeight: '1.75rem' }, '<');
         if (icon) tl.to(icon, { width: '2.25rem', height: '2.25rem' }, '<');
         // if (selected) tl.to(selected, { opacity: 1 });
 
-        div.addEventListener('mouseenter', () => {
+        mouseAnimations.current.set(idx, tl);
+
+        const handleMouseEnter = () => {
           throttledSetImageIdx(idx + 1);
           tl.play();
-        });
-        div.addEventListener('mouseleave', () => {
+        };
+
+        const handleMouseLeave = () => {
           tl.reverse();
+        };
+
+        div.addEventListener('mouseenter', handleMouseEnter);
+        div.addEventListener('mouseleave', handleMouseLeave);
+
+        cleanup.push(() => {
+          div.removeEventListener('mouseenter', handleMouseEnter);
+          div.removeEventListener('mouseleave', handleMouseLeave);
+          tl.kill();
         });
       });
+
+      cleanupFunctions.current = cleanup;
+
+      return () => {
+        cleanup.forEach((fn) => fn());
+        mouseAnimations.current.clear();
+      };
     },
     { scope: wrapperRef, dependencies: [] },
   );
 
   return (
-    <>
-      <div id={NAV_LIST[2].id} className="page-container spectrum">
-        <ParticleGL
-          isStatic
-          activeAnim={active}
-          imageIdx={imageIdx}
-          id="spectrum-particle-container"
-          getSourceImgInfos={spectrumGetSourceImgInfos}
-        />
-        <div className="relative flex h-[100svh] flex-col items-center justify-center">
-          <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
-          <div id="spectrum-particle-gl">
-            <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
-              {/* <div className="particle-mask"></div> */}
-            </div>
-          </div>
-          <div className="spectrum-fund mt-12 overflow-hidden px-18">
-            <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
-              {spectrumData.map((item, index) => (
-                <SpectrumItem
-                  key={item.title}
-                  item={item}
-                  onClick={(e) => {
-                    console.log(item.title);
-                    item.onClick?.(e);
-                  }}
-                  ref={(element) => {
-                    if (!element) return;
-                    spectrumRefs.current[index] = element;
-                  }}
-                />
-              ))}
-            </div>
+    <div id={NAV_LIST[2].id} className="page-container spectrum">
+      <ParticleGL
+        isStatic
+        activeAnim={active}
+        imageIdx={imageIdx}
+        id="spectrum-particle-container"
+        getSourceImgInfos={spectrumGetSourceImgInfos}
+      />
+      <div className="relative flex h-[100svh] flex-col items-center justify-center">
+        <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
+        <div id="spectrum-particle-gl">
+          <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
+            {/* <div className="particle-mask"></div> */}
           </div>
         </div>
-        <FloatingPortal>
-          <div
-            className="disease-management-wrapper pointer-events-none fixed inset-0 z-20 bg-black"
-            style={{ clipPath: 'circle(0px at 50% 50%)' }}
-          >
-            <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+        <div className="spectrum-fund mt-12 overflow-hidden px-18">
+          <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
+            {spectrumItems}
           </div>
-        </FloatingPortal>
+        </div>
       </div>
-    </>
+      <FloatingPortal>
+        <div
+          className="disease-management-wrapper pointer-events-none fixed inset-0 z-20 bg-black"
+          style={{ clipPath: 'circle(0px at 50% 50%)' }}
+        >
+          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
+        </div>
+      </FloatingPortal>
+    </div>
   );
 }
 

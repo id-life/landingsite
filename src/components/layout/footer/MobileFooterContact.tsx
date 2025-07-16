@@ -5,6 +5,7 @@ import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
+import BorderSVG from '@/../public/svgs/border.svg?component';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
@@ -132,28 +133,31 @@ export default function MobileFooterContact() {
             <img className="h-4" src="/svgs/info-2.svg" alt="" />
             Join our longevity circle for priority access to pioneer research
           </div>
-          <div className="mb-1.5 mt-4 h-px w-full bg-black/10" />
-          <div className="flex-center">
+          <div className="mb-3 mt-4 h-px w-full bg-black/10" />
+          <div className="flex-center gap-5">
             <div
               onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-              className="flex-center group relative size-9 cursor-pointer"
+              className="flex-center relative cursor-pointer gap-1 p-2"
             >
-              <YoutubeSVG className="size-4 fill-black group-hover:fill-red-600" />
+              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
+              <YoutubeSVG className="size-4 fill-black" />
+              <span className="font-oxanium text-xs font-bold">YOUTUBE</span>
             </div>
             <div
               onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-              className="flex-center group relative size-9 cursor-pointer"
+              className="flex-center relative cursor-pointer gap-1 p-2"
             >
-              <LinkedinSVG className="size-4 fill-black group-hover:fill-red-600" />
+              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
+              <LinkedinSVG className="size-4 fill-black" />
+              <span className="font-oxanium text-xs font-bold">LINKEDIN</span>
             </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Media)}
-              className="flex-center group relative size-9 cursor-pointer"
-            >
-              <MediaSVG className="size-4 fill-black group-hover:fill-red-600" />
+            <div onClick={() => handleLinkClick(MediaLinkType.Media)} className="flex-center relative cursor-pointer gap-1 p-2">
+              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
+              <MediaSVG className="size-4 fill-black" />
+              <span className="font-oxanium text-xs font-bold">MEDIAKIT</span>
             </div>
           </div>
-          <p className="mt-1.5 text-center font-oxanium text-[.625rem]/3 font-semibold uppercase opacity-60">
+          <p className="mt-6 text-center font-oxanium text-[.625rem]/3 font-semibold uppercase opacity-60">
             e- mail: contact@id.life
             <br />
             t- Biopolis Dr, #01-15, Singapore 138623
