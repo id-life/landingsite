@@ -10,7 +10,6 @@ import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
-import { globalLoadedAtom } from '@/atoms/geo';
 import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
 import { useMobileValueSVGAnimations } from '@/hooks/valueGL/useMobileValueSVGAnimations';
@@ -52,6 +51,7 @@ const VALUE_PROGRESS_CONFIG = {
     2: 1, // 出邮箱
   },
 } as const;
+
 function MobileValueGL() {
   const { camera } = useThree();
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
@@ -62,7 +62,6 @@ function MobileValueGL() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.mobile, []);
   const startAnimTLRef = useRef<gsap.core.Timeline | null>(null);
-  const globalLoaded = useAtomValue(globalLoadedAtom);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);
   const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
@@ -74,7 +73,7 @@ function MobileValueGL() {
   });
 
   useEffect(() => {
-    if (!globalLoaded || startAnimTLRef.current || !modelRef.current) return;
+    if (startAnimTLRef.current || !modelRef.current) return;
     const tl = gsap.timeline({
       onStart: () => {
         console.log('start anim start');
@@ -118,17 +117,16 @@ function MobileValueGL() {
     return () => {
       if (startAnimTLRef.current) startAnimTLRef.current.kill();
     };
-  }, [camera, globalLoaded, page1Config, setCurrentPage]);
+  }, [camera, page1Config, setCurrentPage]);
 
   useEffect(() => {
-    if (globalLoaded) {
-      if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) startAnimTLRef.current?.play();
-      else {
-        gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
-        startAnimTLRef.current?.reverse();
-      }
+    if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) {
+      startAnimTLRef.current?.play();
+    } else {
+      gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
+      startAnimTLRef.current?.reverse();
     }
-  }, [currentPage, globalLoaded]);
+  }, [currentPage]);
 
   // Value 页动画
   useGSAP(() => {
