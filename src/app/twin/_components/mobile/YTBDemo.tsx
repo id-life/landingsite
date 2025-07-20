@@ -2,6 +2,7 @@ import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import React from 'react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { DigitalTwinYoutubeLink } from '@/constants/links';
 
 export default function YTBDemo() {
   const { trackEvent } = useGA();
@@ -15,7 +16,7 @@ export default function YTBDemo() {
   return (
     <div id="ytb-demo" className="absolute left-5 top-[22rem] z-20 grid cursor-pointer gap-5">
       <a
-        href="https://www.youtube.com/watch?v=DkC4e9wZJbw"
+        href={DigitalTwinYoutubeLink}
         target="_blank"
         rel="noopener noreferrer"
         className="group relative flex h-[28px] items-center"
