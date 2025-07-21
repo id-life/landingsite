@@ -65,7 +65,7 @@ export const useSpectrumData = () => {
   }, [isMobile, mobileNavChange, handleNavClick]);
 
   const handleCharacterRelationShow = useCallback(() => {
-    return isMobile ? ()=> setIsMobileCharacterRelationShow(true) : ()=> setIsCharacterRelationShow(true);
+    return isMobile ? () => setIsMobileCharacterRelationShow(true) : () => setIsCharacterRelationShow(true);
   }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
 
   const handleDiseaseManagementClick = useCallback(() => {
@@ -84,7 +84,7 @@ export const useSpectrumData = () => {
         setTimeout(() => {
           handleClickPoint(type, index, true);
           if (isMobile) scrollToActivePoint(type, index);
-        }, 300)
+        }, 300);
       };
     },
     [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
@@ -106,7 +106,7 @@ export const useSpectrumData = () => {
             onClick: handleClickDot('meeting', 2),
           },
           {
-            label: 'Vitalist Bay Investor Forum',
+            label: 'Vitalist Bay Summit',
             onClick: handleClickDot('meeting', 4),
           },
           {
@@ -247,13 +247,8 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [
-    handleClickDot,
-    handleDiseaseManagementClick,
-    handleCharacterRelationShow,
-    handleClickDigitalTwin,
-  ]);
- 
+  }, [handleClickDot, handleDiseaseManagementClick, handleCharacterRelationShow, handleClickDigitalTwin]);
+
   return spectrumData;
 };
 
@@ -270,7 +265,7 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
       resize: [700, 700],
       scaleNum: isMobile ? 0.4 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
-    }, 
+    },
     {
       url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],

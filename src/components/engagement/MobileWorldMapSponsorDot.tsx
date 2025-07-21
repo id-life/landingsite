@@ -25,7 +25,7 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText } = dot;
+  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText, extraText } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -135,27 +135,40 @@ export function MobileWorldMapSponsorDotPoint({
           {title}
           <AnimatePresence>
             {isActive ? (
-              sponsorText === 'Conference' ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
-                >
-                  <MeetingSVG className="size-4 fill-purple" />
-                  Conference
-                </motion.div>
-              ) : (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
-                >
-                  <SponsorSVG className="size-4 fill-orange" />
-                  {sponsorText ?? 'Sponsorship'}
-                </motion.span>
-              )
+              <>
+                {sponsorText === 'Conference' ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
+                  >
+                    <MeetingSVG className="size-4 fill-purple" />
+                    Conference
+                  </motion.div>
+                ) : (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-4 fill-orange" />
+                    {sponsorText ?? 'Sponsorship'}
+                  </motion.span>
+                )}
+                {extraText && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-4 fill-orange" />
+                    {extraText}
+                  </motion.span>
+                )}
+              </>
             ) : null}
           </AnimatePresence>
         </motion.p>

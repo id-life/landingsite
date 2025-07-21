@@ -138,7 +138,7 @@ export function MobileWorldMapDotPoint({
               {isSponsor && (
                 <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
                   <SponsorSVG className="size-5 fill-orange" />
-                  Sponsor
+                  Sponsorship
                 </div>
               )}
               {videoUrl && (
