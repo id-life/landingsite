@@ -98,11 +98,15 @@ export const useSpectrumData = () => {
         icon: <MeetingSVG />,
         links: [
           {
-            label: 'Timepie Longevity Forum',
-            onClick: handleClickDot('meeting', 0),
+            label: 'Founders Forum Global',
+            onClick: handleClickDot('meeting', 5),
           },
           {
-            label: "Founder's Longevity Forum",
+            label: 'Founders Longevity Forum London',
+            onClick: handleClickDot('meeting', 5),
+          },
+          {
+            label: 'Founders Longevity Forum Singapore',
             onClick: handleClickDot('meeting', 2),
           },
           {
@@ -110,12 +114,16 @@ export const useSpectrumData = () => {
             onClick: handleClickDot('meeting', 4),
           },
           {
+            label: 'Timepie Longevity Forum',
+            onClick: handleClickDot('meeting', 0),
+          },
+          {
             label: 'Edge City Lanna',
             onClick: handleClickDot('meeting', 1),
           },
           {
             label: 'Oxford Future Innovation Forum',
-            onClick: handleClickDot('sponsor', 1),
+            onClick: handleClickDot('sponsor', 3),
           },
         ],
       },
@@ -152,19 +160,7 @@ export const useSpectrumData = () => {
         icon: <SponsorSVG />,
         links: [
           {
-            label: 'Public Longevity Group',
-            onClick: handleClickDot('sponsor', 3),
-          },
-          {
-            label: 'ETHPanda 青年黑客远航计划',
-            onClick: handleClickDot('sponsor', 0),
-          },
-          {
-            label: 'BiohackerDAO',
-            onClick: handleClickDot('sponsor', 2),
-          },
-          {
-            label: 'Vitalist Bay',
+            label: 'Vitalist Bay Summit',
             onClick: handleClickDot('meeting', 4),
           },
           {
@@ -174,6 +170,26 @@ export const useSpectrumData = () => {
           {
             label: '2060 Longevity Forum',
             onClick: handleClickDot('sponsor', 5),
+          },
+          // {
+          //   label: 'Lifespan Research Institute',
+          //   onClick: handleClickDot('sponsor', 7),
+          // },
+          {
+            label: 'Public Longevity Group',
+            onClick: handleClickDot('sponsor', 3),
+          },
+          {
+            label: 'Beyond Tomorrow Podcast',
+            onClick: handleClickDot('sponsor', 6),
+          },
+          {
+            label: 'BiohackerDAO',
+            onClick: handleClickDot('sponsor', 2),
+          },
+          {
+            label: 'ETHPanda 青年黑客远航计划',
+            onClick: handleClickDot('sponsor', 0),
           },
         ],
       },

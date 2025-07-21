@@ -2,7 +2,9 @@ import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
+import { ArrowSVG } from '../svg';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
@@ -58,9 +60,11 @@ const SpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
 
 SpectrumLink.displayName = 'SpectrumLink';
 
+const linksPerPage = 5;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, isHover }, ref) => {
     const { title, titleCn, icon, links, className: itemClassName } = item;
+    const [isMore, setIsMore] = useState(false);
 
     const { trackEvent } = useGA();
 
@@ -71,9 +75,52 @@ const SpectrumItem = memo(
       });
     };
 
+    const handleMoreClick = useCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsMore((prev) => !prev);
+    }, []);
+
+    const { visibleLinks, showMoreButton, buttonText } = useMemo(() => {
+      if (!links) return { visibleLinks: [], showMoreButton: false, isLastPage: false, buttonText: 'More' };
+
+      const totalLinks = links.length;
+      if (totalLinks <= linksPerPage) {
+        return {
+          visibleLinks: links,
+          showMoreButton: false,
+          isLastPage: false,
+        };
+      }
+
+      const startIndex = isMore ? Math.max(0, totalLinks - 5) : 0;
+      const endIndex = Math.min(totalLinks, startIndex + linksPerPage);
+
+      const visibleLinks = links.slice(startIndex, endIndex);
+      const buttonText = isMore ? 'Back' : 'More';
+      return {
+        visibleLinks,
+        showMoreButton: true,
+        buttonText,
+      };
+    }, [links, isMore]);
+
     const spectrumLinks = useMemo(() => {
-      return links?.map((item) => <SpectrumLink key={item.label} item={item} />);
-    }, [links]);
+      return visibleLinks.map((item, index) => (
+        <motion.div
+          key={`${item.label}-${isMore}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.3,
+            delay: index * 0.05,
+            ease: 'easeOut',
+          }}
+        >
+          <SpectrumLink item={item} />
+        </motion.div>
+      ));
+    }, [visibleLinks, isMore]);
 
     return (
       <div
@@ -92,7 +139,29 @@ const SpectrumItem = memo(
               {title}
             </h4>
             <h4 className="spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize">{titleCn}</h4>
-            <div className="mt-5 flex flex-col">{spectrumLinks}</div>
+            <div className="spectrum-links-container mt-5 flex flex-col">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="spectrum-links"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col"
+                >
+                  {spectrumLinks}
+                </motion.div>
+              </AnimatePresence>
+              {showMoreButton && (
+                <motion.button
+                  onClick={handleMoreClick}
+                  className="mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-cyan opacity-90 transition-colors hover:text-cyan/80 hover:opacity-100"
+                >
+                  {buttonText}
+                  <ArrowSVG className={cn('size-3 fill-current transition duration-300', { 'rotate-180': isMore })} />
+                </motion.button>
+              )}
+            </div>
           </div>
         </div>
       </div>
