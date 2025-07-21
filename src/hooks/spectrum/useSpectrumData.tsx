@@ -171,10 +171,10 @@ export const useSpectrumData = () => {
             label: '2060 Longevity Forum',
             onClick: handleClickDot('sponsor', 5),
           },
-          // {
-          //   label: 'Lifespan Research Institute',
-          //   onClick: handleClickDot('sponsor', 7),
-          // },
+          {
+            label: 'Lifespan Research Institute',
+            onClick: handleClickDot('sponsor', 3),
+          },
           {
             label: 'Public Longevity Group',
             onClick: handleClickDot('sponsor', 3),

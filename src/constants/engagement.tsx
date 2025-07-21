@@ -424,6 +424,12 @@ export type MapSponsorDotData = {
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   sponsorText?: string;
   extraText?: string;
+  extraSponsor?: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -473,6 +479,12 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
     link: 'https://biohackerdao.org/',
+    extraSponsor: {
+      alt: 'Lifespan Research\nInstitute',
+      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.png',
+      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.webm',
+      link: 'https://www.lifespan.io/',
+    },
     sponsorText: 'Grant',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
