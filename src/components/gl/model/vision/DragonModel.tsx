@@ -6,6 +6,7 @@ import { useGesture } from '@use-gesture/react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 
 // Constants
 const INIT_ROTATION = Math.PI / 2;
@@ -15,89 +16,6 @@ const RECOVERY_DURATION = 1.5;
 const ANIMATION_DURATION = 1.5;
 const ANIMATION_DELAY = 0.3;
 const AUTO_SWING_AMPLITUDE = 0.1;
-
-const TRANSMISSION_KEYFRAMES = [
-  {
-    transmission: 1,
-    roughness: 0.1,
-    thickness: 10,
-    ior: 1.5,
-    chromaticAberration: 1,
-    anisotropy: 0,
-    distortion: 1,
-    distortionScale: 0.15,
-    temporalDistortion: 0.1,
-    clearcoat: 1,
-    metalness: 0.1,
-  },
-  {
-    transmission: 1,
-    roughness: 0.0,
-    thickness: 10,
-    ior: 1,
-    chromaticAberration: 1,
-    anisotropy: 1,
-    distortion: 1,
-    distortionScale: 1,
-    temporalDistortion: 0.1,
-    clearcoat: 1,
-    metalness: 0,
-  },
-  {
-    transmission: 1,
-    roughness: 0.0,
-    thickness: 10,
-    ior: 3.16,
-    chromaticAberration: 1,
-    anisotropy: 1,
-    distortion: 1,
-    distortionScale: 0.1,
-    temporalDistortion: 0.1,
-    clearcoat: 1,
-    metalness: 0,
-  },
-  {
-    transmission: 1,
-    roughness: 0.0,
-    thickness: 10,
-    ior: 2.28,
-    chromaticAberration: 1,
-    anisotropy: 0,
-    distortion: 1,
-    distortionScale: 0.3,
-    temporalDistortion: 0.1,
-    clearcoat: 1,
-    metalness: 0,
-  },
-  {
-    transmission: 1,
-    roughness: 0.0,
-    thickness: 10,
-    ior: 1,
-    chromaticAberration: 1,
-    anisotropy: 1,
-    distortion: 1,
-    distortionScale: 0.5,
-    temporalDistortion: 0.1,
-    clearcoat: 1,
-    metalness: 0,
-  },
-  {
-    transmission: 1,
-    roughness: 0,
-    thickness: 10,
-    ior: 1.5,
-    chromaticAberration: 0.5,
-    anisotropy: 0.1,
-    distortion: 0,
-    distortionScale: 0.5,
-    temporalDistortion: 0.1,
-    clearcoat: 0,
-    metalness: 0.1,
-  },
-] as const;
-const CONFIG_INDEX = Math.floor(Math.random() * TRANSMISSION_KEYFRAMES.length);
-const RANDOM_CONFIG = TRANSMISSION_KEYFRAMES[CONFIG_INDEX];
 
 function useOptimizedGLTF() {
   const { nodes } = useGLTF('/models/logo_v1.glb');
@@ -213,7 +131,6 @@ export default function DragonModel() {
         duration: ANIMATION_DURATION,
         delay: ANIMATION_DELAY,
         onComplete: () => {
-          clock.start();
           autoSwingRef.current = true;
         },
       });

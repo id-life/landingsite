@@ -5,8 +5,10 @@ import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
 import * as THREE from 'three';
+import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 
 const InitRotation = Math.PI / 2;
+
 export default function MobileDragonModel(props: {}) {
   const { events, clock } = useThree();
   const { nodes } = useGLTF('/models/logo.glb');
@@ -16,20 +18,6 @@ export default function MobileDragonModel(props: {}) {
   const rotationRef = useRef({ y: InitRotation, x: 0 });
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const meshRef = useRef<THREE.Mesh>(null);
-  const transmissionConfigRef = useRef({
-    transmission: 1,
-    roughness: 0,
-    thickness: 10,
-    ior: 1.5,
-    chromaticAberration: 0.5,
-    anisotropy: 0.1,
-    distortion: 0,
-    distortionScale: 0.5,
-    temporalDistortion: 0.1,
-    clearcoat: 0,
-    metalness: 0.1,
-  });
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useFrame(({ clock }) => {
     if (!modelRef.current) return;
@@ -100,114 +88,10 @@ export default function MobileDragonModel(props: {}) {
     { scope: modelRef },
   );
 
-  useGSAP(() => {
-    if (!meshRef.current) return;
-    const mesh = meshRef.current.material as any;
-    const timeline = gsap.timeline({ repeat: -1, delay: 1, repeatDelay: 2, defaults: { ease: 'none', duration: 8 } });
-    timelineRef.current = timeline;
-    timeline
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.1,
-        thickness: 10,
-        ior: 1.5,
-        chromaticAberration: 1,
-        anisotropy: 0,
-        distortion: 1,
-        distortionScale: 0.15,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0.1,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.0,
-        thickness: 10,
-        ior: 1,
-        chromaticAberration: 1,
-        anisotropy: 1,
-        distortion: 1,
-        distortionScale: 1,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.0,
-        thickness: 10,
-        ior: 3.16,
-        chromaticAberration: 1,
-        anisotropy: 1,
-        distortion: 1,
-        distortionScale: 0.1,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.0,
-        thickness: 10,
-        ior: 2.28,
-        chromaticAberration: 1,
-        anisotropy: 0,
-        distortion: 1,
-        distortionScale: 0.3,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0.0,
-        thickness: 10,
-        ior: 1,
-        chromaticAberration: 1,
-        anisotropy: 1,
-        distortion: 1,
-        distortionScale: 1,
-        temporalDistortion: 0.1,
-        clearcoat: 1,
-        metalness: 0,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      })
-      .to(transmissionConfigRef.current, {
-        transmission: 1,
-        roughness: 0,
-        thickness: 10,
-        ior: 1.5,
-        chromaticAberration: 0.5,
-        anisotropy: 0.1,
-        distortion: 0,
-        distortionScale: 0.5,
-        temporalDistortion: 0.1,
-        clearcoat: 0,
-        metalness: 0.1,
-        onUpdate: () => {
-          Object.entries(transmissionConfigRef.current).map(([key, value]) => (mesh[key] = value));
-        },
-      });
-  });
-
   return (
     <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh ref={meshRef} geometry={(nodes.logo as any).geometry}>
-        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...transmissionConfigRef.current} />
+        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...RANDOM_CONFIG} />
       </mesh>
     </group>
   );

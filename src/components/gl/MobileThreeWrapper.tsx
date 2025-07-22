@@ -10,12 +10,15 @@ import { mobileCurrentPageAtom } from '@/atoms';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { ErrorBoundary } from 'react-error-boundary';
 import { EffectComposer } from '@react-three/postprocessing';
+import { useGLTF } from '@react-three/drei';
 
 export default function MobileThreeWrapper() {
+  useGLTF.setDecoderPath('/assets/draco/');
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const showCanvas = useMemo(() => [NAV_LIST[0].id, NAV_LIST[NAV_LIST.length - 1].id].includes(currentPage.id), [currentPage]);
   const isMounted = useIsMounted();
   if (!isMounted) return null;
+
   return (
     <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
       <Canvas
