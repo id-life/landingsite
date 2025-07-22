@@ -1,11 +1,10 @@
 import React, { cache } from 'react';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
-import { notFound } from 'next/navigation';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent } from '@/apis';
 import rehypeRaw from 'rehype-raw';
-import 'github-markdown-css';
+import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 import Link from 'next/link';
 
