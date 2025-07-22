@@ -80,7 +80,6 @@ export default function MobileDragonModel(props: {}) {
         ease: 'power3.out',
         duration: 1.5,
         onComplete: () => {
-          clock.start();
           autoSwingRef.current = true;
         },
       });
