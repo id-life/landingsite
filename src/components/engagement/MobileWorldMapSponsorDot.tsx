@@ -5,7 +5,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { useGA } from '@/hooks/useGA';
@@ -25,7 +25,7 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText } = dot;
+  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText, extraText } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -135,27 +135,40 @@ export function MobileWorldMapSponsorDotPoint({
           {title}
           <AnimatePresence>
             {isActive ? (
-              sponsorText === 'Conference' ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
-                >
-                  <MeetingSVG className="size-4 fill-purple" />
-                  Conference
-                </motion.div>
-              ) : (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
-                >
-                  <SponsorSVG className="size-4 fill-orange" />
-                  {sponsorText ?? 'Sponsorship'}
-                </motion.span>
-              )
+              <>
+                {sponsorText === 'Conference' ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
+                  >
+                    <MeetingSVG className="size-4 fill-purple" />
+                    Conference
+                  </motion.div>
+                ) : (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-4 fill-orange" />
+                    {sponsorText ?? 'Sponsorship'}
+                  </motion.span>
+                )}
+                {extraText && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.83 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                  >
+                    <SponsorSVG className="size-4 fill-orange" />
+                    {extraText}
+                  </motion.span>
+                )}
+              </>
             ) : null}
           </AnimatePresence>
         </motion.p>
@@ -173,7 +186,7 @@ export function MobileWorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng, title } = dot;
+  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng, title, extraSponsor } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
@@ -216,46 +229,94 @@ export function MobileWorldMapSponsorDotContent({
             top: `${top}px`,
           }}
         >
-          <a href={link} target="_blank" rel="noreferrer" className="pointer-events-auto -mt-4" onClick={handleLinkClick}>
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              className={cn(
-                'clip-sponsor-content absolute left-0 top-2 flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
-              )}
+          <div className="flex items-center">
+            <MobileSponsorItem
+              key="sponsor-item-1"
+              alt={alt}
+              link={link}
+              coverUrl={coverUrl}
+              videoUrl={videoUrl}
               onMouseLeave={handleContentMouseLeave}
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -10,
-                  transformOrigin: 'top left',
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transformOrigin: 'top left',
-                },
-              }}
-              transition={{
-                staggerChildren: 0.05,
-                duration: 0.3,
-                type: 'easeInOut',
-              }}
-            >
-              <VideoWithPoster
-                coverUrl={coverUrl}
-                videoUrl={videoUrl}
-                title={alt}
-                containerClass="-mt-4"
-                videoClass="size-[13.75rem]"
-                coverClass="size-[13.75rem]"
+              onClick={handleLinkClick}
+            />
+            {extraSponsor ? (
+              <MobileSponsorItem
+                key="sponsor-item-2"
+                alt={extraSponsor.alt}
+                link={extraSponsor.link}
+                coverUrl={extraSponsor.coverUrl}
+                videoUrl={extraSponsor.videoUrl}
+                onMouseLeave={handleContentMouseLeave}
+                onClick={handleLinkClick}
+                className="-ml-6"
               />
-              <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
-            </motion.div>
-          </a>
+            ) : null}
+          </div>
         </div>
       )}
     </AnimatePresence>
   );
 }
+
+const MobileSponsorItem = memo(
+  ({
+    alt,
+    link,
+    coverUrl,
+    videoUrl,
+    onMouseLeave,
+    onClick,
+    className,
+  }: {
+    alt?: string;
+    link?: string;
+    coverUrl?: string;
+    videoUrl?: string;
+    onMouseLeave: (e: React.MouseEvent) => void;
+    onClick: (e: React.MouseEvent) => void;
+    className?: string;
+  }) => {
+    return (
+      <a href={link} target="_blank" rel="noreferrer" className={cn('pointer-events-auto', className)} onClick={onClick}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          className={cn(
+            'clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+          )}
+          onMouseLeave={onMouseLeave}
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: -10,
+              transformOrigin: 'top left',
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transformOrigin: 'top left',
+            },
+          }}
+          transition={{
+            staggerChildren: 0.05,
+            duration: 0.3,
+            type: 'easeInOut',
+          }}
+        >
+          <VideoWithPoster
+            coverUrl={coverUrl}
+            videoUrl={videoUrl}
+            title={alt}
+            containerClass="-mt-4"
+            videoClass="size-[13.75rem]"
+            coverClass="size-[13.75rem]"
+          />
+          <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
+        </motion.div>
+      </a>
+    );
+  },
+);
+
+MobileSponsorItem.displayName = 'MobileSponsorItem';

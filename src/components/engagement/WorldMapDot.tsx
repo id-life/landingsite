@@ -164,7 +164,7 @@ export function WorldMapDotPoint({
                     className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
                   >
                     <SponsorSVG className="size-5 fill-orange" />
-                    Sponsor
+                    Sponsorship
                   </motion.div>
                 )}
               </motion.div>

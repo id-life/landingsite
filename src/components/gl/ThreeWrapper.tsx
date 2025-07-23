@@ -3,7 +3,7 @@ import ValueGL from '@/components/gl/ValueGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
-import { PerspectiveCamera, Preload } from '@react-three/drei';
+import { PerspectiveCamera, Preload, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useSetAtom } from 'jotai';
@@ -14,6 +14,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import PrefHook from '@/components/gl/PrefHook';
 
 export default function ThreeWrapper() {
+  useGLTF.setDecoderPath('/assets/draco/');
   const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();

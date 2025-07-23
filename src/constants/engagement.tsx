@@ -423,6 +423,13 @@ export type MapSponsorDotData = {
   pulseConfig?: PulseConfig; // custom pulse config
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   sponsorText?: string;
+  extraText?: string;
+  extraSponsor?: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -452,7 +459,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
       'world-map-dot-sponsor-5',
     ],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
-    sponsorText: 'Forum',
+    sponsorText: 'Conference',
   },
   {
     lat: -20,
@@ -472,7 +479,13 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
     link: 'https://biohackerdao.org/',
-    sponsorText: 'Sponsorship',
+    extraSponsor: {
+      alt: 'Lifespan Research\nInstitute',
+      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.png',
+      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.webm',
+      link: 'https://www.lifespan.io/',
+    },
+    sponsorText: 'Grant',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
   {
@@ -484,6 +497,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06.webm',
     link: 'https://agingpharma.org/',
     sponsorText: 'Conference',
+    extraText: 'Sponsorship',
     activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-5', 'world-map-dot-book-0'],
   },
   {
@@ -495,6 +509,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07.webm',
     link: 'https://forum.2060.life/',
     sponsorText: 'Conference',
+    extraText: 'Sponsorship',
     activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-4', 'world-map-dot-book-0'],
   },
 ];

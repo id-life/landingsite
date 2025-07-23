@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
+import Head from 'next/head';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -61,6 +63,8 @@ const jsonLd = [
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {children}
     </>
