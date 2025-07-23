@@ -65,8 +65,7 @@ export const useSpectrumData = () => {
   }, [isMobile, mobileNavChange, handleNavClick]);
 
   const handleCharacterRelationShow = useCallback(() => {
-    if (isMobile) setIsMobileCharacterRelationShow(true);
-    else setIsCharacterRelationShow(true);
+    isMobile ? setIsMobileCharacterRelationShow(true) : setIsCharacterRelationShow(true);
   }, [isMobile, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
 
   const handleDiseaseManagementClick = useCallback(() => {
