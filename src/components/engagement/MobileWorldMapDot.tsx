@@ -6,7 +6,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
 
@@ -24,7 +24,8 @@ export function MobileWorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl } = dot;
+  const { trackEvent } = useGA();
+  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl, title } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-${index}`,
@@ -46,6 +47,11 @@ export function MobileWorldMapDotPoint({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 防止冒泡
     handleClickPoint('meeting', index);
+  };
+
+  const handleVideoClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    trackEvent({ name: GA_EVENT_NAMES.PRESENCE_TALK_VIDEO, label: title });
   };
 
   return (
@@ -145,6 +151,7 @@ export function MobileWorldMapDotPoint({
                 <motion.a
                   href={videoUrl}
                   target="_blank"
+                  onClick={handleVideoClick}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 0.85 }}
                   exit={{ opacity: 0, scale: 0.5 }}

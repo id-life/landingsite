@@ -1,10 +1,12 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import FileSVG from '@/../public/svgs/file.svg?component';
 import LogoSVG from '@/../public/svgs/logo-monochrome.svg?component';
 import DotCount from './DotCount';
 import BackButton from './BackButton';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 interface DiseaseManagementStatusProps {
   onBack: () => void;
@@ -12,6 +14,13 @@ interface DiseaseManagementStatusProps {
 
 const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img, title, counts, data, columns, pdf }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const { trackEvent } = useGA();
+
+  const handleDownloadClick = () => {
+    const splitList = pdf.split('/');
+    const fileName = splitList[splitList.length - 1];
+    trackEvent({ name: GA_EVENT_NAMES.DMCS_DOWNLOAD, label: fileName });
+  };
 
   return (
     <div className="flex w-full flex-col items-center font-semibold text-white">
@@ -32,6 +41,7 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
       </div>
       <a
         href={pdf}
+        onClick={handleDownloadClick}
         download
         target="_blank"
         rel="noopener noreferrer"
@@ -56,19 +66,34 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 };
 
 const DiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
+  const isFirstScrollRef = useRef<boolean>(true);
+  const { trackEvent } = useGA();
+
   return (
     <>
       <div className="flex h-screen flex-col space-y-[3.25rem] px-32 pb-[2.75rem] pt-[9.5625rem]">
         <div
           className="hide-scrollbar flex flex-1 space-x-15 overflow-y-auto overscroll-none"
-          onWheel={(e) => e.stopPropagation()}
+          onWheel={(e) => {
+            e.stopPropagation();
+            if (isFirstScrollRef.current) {
+              isFirstScrollRef.current = false;
+              trackEvent({ name: GA_EVENT_NAMES.DMCS_SCROLL });
+            }
+          }}
           onTouchStart={(e) => e.stopPropagation()}
         >
           {diseaseManagementStatusItems.map((item) => (
             <DiseaseManagementStatusItem key={item.title} {...item} />
           ))}
         </div>
-        <BackButton onClick={onBack} className="mx-auto" />
+        <BackButton
+          onClick={() => {
+            isFirstScrollRef.current = true;
+            onBack();
+          }}
+          className="mx-auto"
+        />
       </div>
     </>
   );

@@ -18,8 +18,13 @@ import {
   isMobileBePartOfItShowAtom,
   isMobileBePartOfItSubmittedAtom,
 } from '@/atoms/character-relation';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
-const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = { character: '', impression: CHARACTER_RELATION_IMPRESSION.GOOD };
+const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = {
+  character: '',
+  impression: CHARACTER_RELATION_IMPRESSION.GOOD,
+};
 
 interface BePartOfItProps {
   onCountdownEnd?: () => void;
@@ -29,6 +34,7 @@ interface BePartOfItProps {
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const { onCountdownEnd, onClose } = props;
 
+  const { trackEvent } = useGA();
   const isMobile = useIsMobile();
   const isBePartOfItShow = useAtomValue(isBePartOfItShowAtom);
   const setIsBePartOfItSubmitted = useSetAtom(isBePartOfItSubmittedAtom);
@@ -91,10 +97,16 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       relation: relation.filter((rel) => !!rel.character),
     };
 
+    trackEvent({ name: GA_EVENT_NAMES.IN_SUBMIT });
+
     addCharacterRelationData(relationData, {
       onSuccess: () => onMutationSuccess(),
       onSettled: () => (isSubmittingRef.current = false),
     });
+  };
+
+  const handleLinkClick = () => {
+    trackEvent({ name: GA_EVENT_NAMES.IN_LINK });
   };
 
   const handleClose = () => {
@@ -219,6 +231,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             <a
               href="https://agingbiotech.info/people/"
               target="_blank"
+              onClick={handleLinkClick}
               className={cn(
                 'relative text-red-600',
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-red-600 after:transition after:duration-300 hover:after:scale-x-100',

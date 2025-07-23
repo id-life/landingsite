@@ -21,9 +21,19 @@ export const GA_EVENT_NAMES = {
   SPECTRUM_HOVER: 'spectrum_hover',
   SPECTRUM_CLICK: 'spectrum_click',
 
+  IN_INPUT: 'in_input',
+  IN_SUBMIT: 'in_submit',
+  IN_LINK: 'in_link',
+  IN_DRAG: 'in_drag',
+  IN_POPUP: 'in_popup',
+
+  DMCS_SCROLL: 'dmcs_scroll',
+  DMCS_DOWNLOAD: 'dmcs_download',
+
   // engagement
   PRESENCE_VIEW: 'presence_view',
   PRESENCE_DETAIL: 'presence_detail',
+  PRESENCE_TALK_VIDEO: 'presence_talk_video',
 
   // digital twin
   DT_DEMO: 'dt_demo',
@@ -139,6 +149,14 @@ export const GA_EVENT_LABELS = {
   | 'TWIN_LOAD_DURATION'
   | 'MODEL_LOAD_DURATION'
   | 'ANATOMY_LOAD_DURATION'
+  | 'PRESENCE_TALK_VIDEO'
+  | 'IN_INPUT'
+  | 'IN_SUBMIT'
+  | 'IN_LINK'
+  | 'IN_DRAG'
+  | 'IN_POPUP'
+  | 'DMCS_SCROLL'
+  | 'DMCS_DOWNLOAD'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;

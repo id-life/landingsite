@@ -17,12 +17,20 @@ import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/chara
 import RippleButton from './RippleButton';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import FixedParticles from './FixedParticles';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function PCFixedUI() {
+  const { trackEvent } = useGA();
   const currentPage = useAtomValue(currentPageAtom);
   const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [isCharacterRelationShow, setIsCharacterRelationShow] = useAtom(isCharacterRelationShowAtom);
   const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
+
+  const handleBePartOfIt = () => {
+    setIsBePartOfItShow(true);
+    trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
+  };
 
   useEffect(() => {
     setIsShowingDiseaseManagement(false);
@@ -48,7 +56,7 @@ export default function PCFixedUI() {
         <div className="fixed bottom-11 left-1/2 z-[51] flex -translate-x-1/2 items-center gap-x-7.5">
           <button
             className="w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
-            onClick={() => setIsBePartOfItShow(true)}
+            onClick={handleBePartOfIt}
           >
             BE PART OF IT +
           </button>
