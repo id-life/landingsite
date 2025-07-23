@@ -20,6 +20,7 @@ import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 
 export type SpectrumLinkItem = {
+  key?: string;
   label: string;
   link?: string; // jumpTo link
   onClick?: () => void; // jumpTo some where
@@ -160,6 +161,7 @@ export const useSpectrumData = () => {
         icon: <SponsorSVG />,
         links: [
           {
+            key: 'Vitalist Bay Summit Grant',
             label: 'Vitalist Bay Summit',
             onClick: handleClickDot('meeting', 4),
           },

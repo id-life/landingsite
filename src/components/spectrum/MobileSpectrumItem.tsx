@@ -17,7 +17,7 @@ interface SpectrumItemProps {
 const MobileSpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
   const { trackEvent } = useGA();
 
-  const { label, link, isComingSoon, onClick, labelClassName } = item;
+  const { key, label, link, isComingSoon, onClick, labelClassName } = item;
   const hasLink = Boolean(link || onClick);
 
   const handleClick = useCallback(() => {
@@ -25,12 +25,12 @@ const MobileSpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
 
     trackEvent({
       name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-      label,
+      label: key ?? label,
     });
 
     onClick?.();
     if (link) window.open(link, '_blank');
-  }, [hasLink, trackEvent, label, onClick, link]);
+  }, [hasLink, trackEvent, key, label, onClick, link]);
 
   return (
     <div className="relative flex items-center gap-1">
