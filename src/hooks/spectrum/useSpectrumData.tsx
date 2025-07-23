@@ -181,7 +181,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Beyond Tomorrow Podcast',
-            onClick: handleClickDot('sponsor', 6),
+            link: 'https://beyondtomorrowpodcast.com/',
           },
           {
             label: 'BiohackerDAO',
