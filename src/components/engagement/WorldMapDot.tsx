@@ -30,7 +30,11 @@ export function WorldMapDotPoint({
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
-  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({ id: `world-map-dot-${index}`, index, type: 'meeting' });
+  const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
+    id: `world-map-dot-${index}`,
+    index,
+    type: 'meeting',
+  });
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
@@ -263,6 +267,11 @@ export function WorldMapDotContent({
     }
   };
 
+  const handleVideoClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    trackEvent({ name: GA_EVENT_NAMES.PRESENCE_TALK_VIDEO, label: title });
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isActive && (
@@ -300,6 +309,7 @@ export function WorldMapDotContent({
               <motion.a
                 href={videoUrl}
                 target="_blank"
+                onClick={handleVideoClick}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.85 }}
                 exit={{ opacity: 0, scale: 0.5 }}

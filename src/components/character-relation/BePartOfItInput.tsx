@@ -6,6 +6,8 @@ import { IndividualType } from './CharacterRelation';
 import BePartOfItTag from './BePartOfItTag';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 import { CharacterRelationImpression } from '@/apis/types';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 interface BePartOfItInputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
@@ -31,12 +33,14 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
     ...rest
   } = props;
   const [isFocused, setIsFocused] = useState(false);
+  const { trackEvent } = useGA();
 
   const isIntroducer = mode === 'introducer';
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
     onFocus?.(e);
+    trackEvent({ name: GA_EVENT_NAMES.IN_INPUT });
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {

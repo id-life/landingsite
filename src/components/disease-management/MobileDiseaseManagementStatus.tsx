@@ -1,10 +1,12 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useRef, useState } from 'react';
 import { DataTable } from '../common/Table/data-table';
 import { diseaseManagementStatusItems, DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import FileSVG from '@/../public/svgs/file.svg?component';
 import LogoSVG from '@/../public/svgs/logo-monochrome.svg?component';
 import DotCount from './DotCount';
 import BackButton from './BackButton';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 interface DiseaseManagementStatusProps {
   onBack: () => void;
@@ -66,18 +68,33 @@ const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({ img,
 };
 
 const MobileDiseaseManagementStatus: FC<DiseaseManagementStatusProps> = ({ onBack }) => {
+  const isFirstScrollRef = useRef<boolean>(true);
+  const { trackEvent } = useGA();
+
   return (
     <div className="flex h-screen flex-col space-y-6 px-5 pb-[12rem] pt-[5.1875rem]">
       <div
         className="hide-scrollbar flex flex-1 flex-col space-y-7.5 overflow-y-auto"
-        onWheel={(e) => e.stopPropagation()}
+        onWheel={(e) => {
+          e.stopPropagation();
+          if (isFirstScrollRef.current) {
+            isFirstScrollRef.current = false;
+            trackEvent({ name: GA_EVENT_NAMES.DMCS_SCROLL });
+          }
+        }}
         onTouchStart={(e) => e.stopPropagation()}
       >
         {diseaseManagementStatusItems.map((item) => (
           <DiseaseManagementStatusItem key={item.title} {...item} />
         ))}
       </div>
-      <BackButton onClick={onBack} className="fixed bottom-8.5 left-1/2 z-10 -translate-x-1/2" />
+      <BackButton
+        onClick={() => {
+          isFirstScrollRef.current = true;
+          onBack();
+        }}
+        className="fixed bottom-8.5 left-1/2 z-10 -translate-x-1/2"
+      />
     </div>
   );
 };
