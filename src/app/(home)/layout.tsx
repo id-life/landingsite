@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
-import Head from 'next/head';
+import ClientNav from '@/components/nav/CilentNav';
+import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -66,7 +67,10 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <ClientNav />
+      <BodyScrollManager />
       {children}
+      <NewsArticle1 />
     </>
   );
 }
