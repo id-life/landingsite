@@ -12,7 +12,7 @@ export default function PodcastHeader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const search = useMemo(
-    () => (pathname === '/podcast' ? (searchParams.get('tab') ?? PODCAST_NAV_LIST[0].id) : null),
+    () => (pathname === '/podcast' ? (searchParams.get('c') ?? PODCAST_NAV_LIST[0].id) : null),
     [pathname, searchParams],
   );
 
@@ -21,7 +21,7 @@ export default function PodcastHeader() {
   };
 
   const handleTabClick = (tab: string) => {
-    router.push('/podcast?tab=' + tab);
+    router.push('/podcast?c=' + tab);
   };
 
   return (
