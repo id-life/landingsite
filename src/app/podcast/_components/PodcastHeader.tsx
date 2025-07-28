@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { clsx } from 'clsx';
+import Link from 'next/link';
 import LogoSVGen from '@/components/svg/LogoSVGen';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
@@ -30,16 +31,16 @@ export default function PodcastHeader() {
         <LogoSVGen className="h-10 w-50" />
         <div className="flex gap-8 text-sm font-semibold">
           {PODCAST_NAV_LIST.map((item) => (
-            <div
-              className={clsx(
-                'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',
-                search === item.id && 'nav-active',
-              )}
-              key={item.id}
-              onClick={() => handleTabClick(item.id)}
-            >
-              {item.title}
-            </div>
+            <Link href={`/podcast?c=` + item.id} key={item.id}>
+              <div
+                className={clsx(
+                  'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',
+                  search === item.id && 'nav-active',
+                )}
+              >
+                {item.title}
+              </div>
+            </Link>
           ))}
         </div>
       </div>
