@@ -4,11 +4,15 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
+import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function Twin() {
   const isResetDemo = useRef(false);
@@ -18,6 +22,19 @@ function Twin() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const setCurrentModel = useSetAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+    // profile auto scroll to engagement
+    triggerId: 'twin-scroll-trigger',
+    scrollFn: () => {
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[4].id) return;
+      // console.log('Twin scrollFn up');
+      const st = ScrollTrigger.getById('engagement-scroll-trigger');
+      if (!st) return;
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+    },
+    isUp: true,
+  });
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -43,6 +60,9 @@ function Twin() {
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
       },
+    });
+    tl.add(() => {
+      setEnableUpJudge(true);
     });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
