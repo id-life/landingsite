@@ -17,10 +17,20 @@ function Engagement() {
     triggerId: 'engagement-scroll-trigger',
     scrollFn: () => {
       if (!enableUpJudge || currentPage.id !== NAV_LIST[3].id) return;
-      console.log('Engagement scrollFn Up');
+      // console.log('Engagement scrollFn Up');
       gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[2].id}` } });
     },
     isUp: true,
+  });
+  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollTriggerAction({
+    // engagement auto scroll to profile
+    triggerId: 'engagement-scroll-trigger',
+    scrollFn: () => {
+      if (!enableDownJudge || currentPage.id !== NAV_LIST[3].id) return;
+      // console.log('Engagement scrollFn Down');
+      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[4].id}` } });
+    },
+    isUp: false,
   });
 
   useGSAP(() => {
@@ -73,7 +83,9 @@ function Engagement() {
 
     // 停留一阵子
     tl.to(() => {}, { duration: 2 * factor });
-
+    tl.add(() => {
+      setEnableDownJudge(true);
+    });
     // 出场动画序列
     const exitDuration = 2 * factor;
     tl.to(
