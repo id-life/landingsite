@@ -29,7 +29,7 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
         <h1 className="text-xl font-semibold">{data.title}</h1>
         <PodcastLinks data={data} />
       </div>
-      <img className="w-full" alt="" src={data.detailMedia} />
+      <img className="w-full" alt="" src="/imgs/podcast/podcast-cover.webp" />
       <div className="my-9 mt-7.5 text-sm font-medium">{data.description}</div>
       <PodcastContentTab data={data} />
       <PodcastPlayer data={data} />
