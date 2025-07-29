@@ -173,9 +173,10 @@
     content: '';
     display: block;
     border-color: var(--corner-border-color, #979797);
-    height: var(--corner-border-height, 0.75rem);
-    width: var(--corner-border-width, 0.75rem);
-    @apply absolute border-2 transition duration-300;
+    height: var(--corner-border-size, 0.75rem);
+    width: var(--corner-border-size, 0.75rem);
+    border-width: var(--corner-border-width, 0.125rem);
+    @apply absolute transition duration-300;
   }
 
   .corner-button::before {

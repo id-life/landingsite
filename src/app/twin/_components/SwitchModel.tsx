@@ -10,15 +10,99 @@ import { gsap } from 'gsap';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { cn } from '@/utils';
+import { motion, useAnimation } from 'motion/react';
+import { useCallback } from 'react';
+import { currentPageAtom } from '@/atoms';
+import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
+
+// Animation configuration - can be customized
+const ANIMATION_CONFIG = {
+  interval: 5000, // 5 seconds
+  staggerDelay: 400, // delay between each avatar animation (ms) - staggerChildren effect
+  scaleDuration: 0.4, // duration of scale animation
+  scaleValue: 1.1, // scale multiplier
+};
 
 export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
+  const currentPage = useAtomValue(currentPageAtom);
 
   const { trackEvent } = useGA();
 
-  const handleSwitchModel = (model: PredictionModel | null) => {
+  // Animation controls for each avatar
+  const avatar1Controls = useAnimation();
+  const avatar2Controls = useAnimation();
+  const avatar3Controls = useAnimation();
+  const containerControls = useAnimation();
+
+  const runStaggeredAnimation = useCallback(() => {
+    const avatarControls = [avatar1Controls, avatar2Controls, avatar3Controls];
+
+    // Animate container expansion at the start
+    containerControls.start({
+      scale: 1.03,
+      transition: {
+        duration: ANIMATION_CONFIG.scaleDuration * 0.8,
+        ease: 'easeOut',
+      },
+    });
+
+    // Start all avatar animations with staggered delays
+    for (let i = 0; i < avatarControls.length; i++) {
+      const control = avatarControls[i];
+      setTimeout(async () => {
+        try {
+          // Scale up avatar
+          await control.start({
+            scale: ANIMATION_CONFIG.scaleValue,
+            marginBottom: 4,
+            marginTop: 4,
+            transition: {
+              duration: ANIMATION_CONFIG.scaleDuration,
+              ease: 'easeOut',
+            },
+          });
+
+          // Scale down avatar
+          await control.start({
+            scale: 1,
+            marginBottom: 0,
+            marginTop: 0,
+            transition: {
+              duration: ANIMATION_CONFIG.scaleDuration,
+              ease: 'easeOut',
+            },
+          });
+        } catch (error) {
+          console.warn('Avatar animation error:', error);
+        }
+      }, i * ANIMATION_CONFIG.staggerDelay);
+    }
+
+    // Return container to normal size after all animations complete
+    const totalAnimationTime =
+      (avatarControls.length - 1) * ANIMATION_CONFIG.staggerDelay + ANIMATION_CONFIG.scaleDuration * 2 * 1000;
+    setTimeout(() => {
+      containerControls.start({
+        scale: 1,
+        transition: {
+          duration: ANIMATION_CONFIG.scaleDuration,
+          ease: 'easeOut',
+        },
+      });
+    }, totalAnimationTime);
+  }, [avatar1Controls, avatar2Controls, avatar3Controls, containerControls]);
+
+  // Use custom hook for animation management
+  useStaggerAnimation({
+    enabled: currentPage.id === 'twin_page',
+    interval: ANIMATION_CONFIG.interval,
+    onAnimate: runStaggeredAnimation,
+  });
+
+  const handleSwitchModel = (model: PredictionModel | null): void => {
     if (model) {
       trackEvent({
         name: GA_EVENT_NAMES.TWIN_SWITCH,
@@ -66,10 +150,10 @@ export default function SwitchModel() {
         </div>
       </div>
       <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
-      <div className="group relative grid gap-2 p-2">
+      <motion.div className="group relative flex flex-col gap-2 p-2" initial={{ scale: 1 }} animate={containerControls} layout>
         <div
           className={cn(
-            'corner-button absolute inset-0 -z-10 animate-scale [--corner-border-color:#000] [--corner-border-height:.875rem] [--corner-border-width:.875rem]',
+            'corner-button absolute inset-0 -z-10 animate-scale [--corner-border-color:#000] [--corner-border-size:6px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
@@ -81,9 +165,14 @@ export default function SwitchModel() {
             })}
           ></span>
         </div>
-        <div
-          className={clsx('relative cursor-pointer', currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
+        <motion.div
+          className={clsx(
+            'relative origin-center cursor-pointer',
+            currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+          )}
           onClick={() => handleSwitchModel(PredictionModel.M1)}
+          initial={{ scale: 1 }}
+          animate={avatar1Controls}
         >
           <img src="/imgs/twin/avatar-model1.png" alt="" />
           {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
@@ -93,10 +182,15 @@ export default function SwitchModel() {
           {currentModel === PredictionModel.M1 && (
             <SelectSVG className="absolute -right-12 bottom-0 top-0 my-auto animate-move-right" />
           )}
-        </div>
-        <div
-          className={clsx('relative cursor-pointer', currentModel === PredictionModel.M2 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
+        </motion.div>
+        <motion.div
+          className={clsx(
+            'relative origin-center cursor-pointer',
+            currentModel === PredictionModel.M2 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+          )}
           onClick={() => handleSwitchModel(PredictionModel.M2)}
+          initial={{ scale: 1 }}
+          animate={avatar2Controls}
         >
           <img src="/imgs/twin/avatar-model2.png" alt="" />
           {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
@@ -106,10 +200,15 @@ export default function SwitchModel() {
           {currentModel === PredictionModel.M2 && (
             <SelectSVG className="absolute -right-12 bottom-0 top-0 my-auto animate-move-right" />
           )}
-        </div>
-        <div
-          className={clsx('relative cursor-pointer', currentModel === PredictionModel.M3 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]')}
+        </motion.div>
+        <motion.div
+          className={clsx(
+            'relative origin-center cursor-pointer',
+            currentModel === PredictionModel.M3 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+          )}
           onClick={() => handleSwitchModel(PredictionModel.M3)}
+          initial={{ scale: 1 }}
+          animate={avatar3Controls}
         >
           <img src="/imgs/twin/avatar-model3.png" alt="" />
           {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
@@ -119,8 +218,8 @@ export default function SwitchModel() {
           {currentModel === PredictionModel.M3 && (
             <SelectSVG className="absolute -right-12 bottom-0 top-0 my-auto animate-move-right" />
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

@@ -125,13 +125,13 @@ const config: Config = {
           },
         },
         'move-right': {
-          '50%': { transform: 'translateX(10px)' },
+          '50%': { transform: 'translateX(15px)' },
         },
       },
       animation: {
         scale: 'scale 4s linear infinite',
         'pulse-10': 'pulse-10 4s linear infinite',
-        'move-right': 'move-right 4s linear infinite',
+        'move-right': 'move-right 3s linear infinite',
       },
       fontSize: {
         ss: '0.625rem',
