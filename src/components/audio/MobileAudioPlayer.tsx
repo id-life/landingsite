@@ -37,7 +37,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
+    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
   };
 
   return (

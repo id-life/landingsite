@@ -14,7 +14,6 @@ import {
   currentAudioAtom,
   currentPlayListAtom,
   currentPlayPodcastAtom,
-  lastPlayStatusAtom,
   musicListAtom,
   playModeAtom,
   playlistAtom,
@@ -41,7 +40,6 @@ export default function DesktopMusicContent({ isPlaying, audioContext }: { isPla
   const [playlist, setPlaylist] = useAtom(playlistAtom);
   const [currentMusic, setCurrentMusic] = useAtom(currentAudioAtom);
   const dispatch = useSetAtom(audioControlsAtom);
-  const setLastPlayStatus = useSetAtom(lastPlayStatusAtom);
   const { trackEvent } = useGA();
 
   const handleChangeList = (list: PlayListKey) => {
@@ -60,7 +58,6 @@ export default function DesktopMusicContent({ isPlaying, audioContext }: { isPla
 
   const handleChangeAudio = (audio: AudioDataItem) => {
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_SWITCH, label: audio.title });
-    setLastPlayStatus(true);
     setCurrentMusic(audio);
     if (audio.category === playlist[0].category) return;
     if (audio.category === PlayList.MUSIC) {
@@ -81,10 +78,9 @@ export default function DesktopMusicContent({ isPlaying, audioContext }: { isPla
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY });
+    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
   };
   const handleSeekTo = (value: number) => {
-    setLastPlayStatus(true);
     dispatch({ type: AUDIO_DISPATCH.SEEK_TO, value });
   };
 
