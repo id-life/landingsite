@@ -1,15 +1,16 @@
-import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
-import clsx from 'clsx';
-import { gsap } from 'gsap';
-import { useGA } from '@/hooks/useGA';
+import SelectSVG from '@/../public/svgs/twin/select.svg?component';
+import { mobileCurrentPageAtom } from '@/atoms';
+import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, PredictionModel } from '@/atoms/twin';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { motion, useAnimation } from 'motion/react';
-import { useCallback } from 'react';
-import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
+import { useGA } from '@/hooks/useGA';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { cn } from '@/utils';
+import clsx from 'clsx';
+import { gsap } from 'gsap';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { motion, useAnimation } from 'motion/react';
+import { useCallback } from 'react';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -142,13 +143,16 @@ export default function SwitchModel() {
             currentModel === PredictionModel.M0 ? 'stroke-red-600' : 'stroke-black',
           )}
         />
+        {currentModel === PredictionModel.M0 && (
+          <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
+        )}
         <img src="/imgs/twin/avatar-model0.png" alt="" />
       </div>
       <img src="/svgs/twin/avatar-divider.svg" alt="" />
-      <motion.div className="relative grid w-10 gap-2 p-1" initial={{ scale: 1 }} animate={containerControls} layout>
+      <motion.div className="relative grid w-10 gap-2.5 p-1" initial={{ scale: 1 }} animate={containerControls} layout>
         <div
           className={cn(
-            'corner-button absolute inset-0 -z-10 animate-scale [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
@@ -171,6 +175,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model1.png" alt="" />
           {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M1 && (
+            <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
+          )}
         </motion.div>
         <motion.div
           className={clsx(
@@ -183,6 +190,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model2.png" alt="" />
           {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M2 && (
+            <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
+          )}
         </motion.div>
         <motion.div
           className={clsx(
@@ -195,6 +205,9 @@ export default function SwitchModel() {
         >
           <img src="/imgs/twin/avatar-model3.png" alt="" />
           {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M3 && (
+            <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
+          )}
         </motion.div>
       </motion.div>
     </div>

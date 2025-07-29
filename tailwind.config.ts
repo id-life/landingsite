@@ -34,6 +34,7 @@ const config: Config = {
         10.5: '2.625rem',
         12.5: '3.125rem',
         14: '3.5rem',
+        14.5: '3.625rem',
         15: '3.75rem',
         15.5: '3.875rem',
         16.5: '4.125rem',
@@ -125,7 +126,7 @@ const config: Config = {
           },
         },
         'move-right': {
-          '50%': { transform: 'translateX(15px)' },
+          '50%': { transform: 'translateX(10px)' },
         },
       },
       animation: {
