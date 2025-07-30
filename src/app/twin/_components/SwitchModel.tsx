@@ -195,7 +195,7 @@ export default function SwitchModel() {
           initial={{ scale: 1 }}
           animate={borderControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:1rem] [--corner-border-width:2.5px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:.625rem] [--corner-border-width:2.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
             },
@@ -226,7 +226,7 @@ export default function SwitchModel() {
           initial={{ scaleX: 1, scaleY: 1 }}
           animate={cornerBorderControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:1rem] [--corner-border-width:2.5px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:.625rem] [--corner-border-width:2.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
