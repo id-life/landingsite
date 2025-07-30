@@ -17,9 +17,16 @@ import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
-  interval: 5000, // 5 seconds
+  interval: 4000, // 5 seconds
   staggerDelay: 400, // delay between each avatar animation (ms) - staggerChildren effect
   scaleDuration: 0.4, // duration of scale animation
+  scaleValue: 1.1, // scale multiplier
+};
+
+// Border animation configuration - independent 2s cycle
+const BORDER_ANIMATION_CONFIG = {
+  interval: 4000, // 2 seconds
+  scaleDuration: 1.5, // duration of scale animation
   scaleValue: 1.1, // scale multiplier
 };
 
@@ -36,6 +43,10 @@ export default function SwitchModel() {
   const avatar2Controls = useAnimation();
   const avatar3Controls = useAnimation();
   const containerControls = useAnimation();
+
+  // Border animation controls
+  const borderControls = useAnimation();
+  const cornerBorderControls = useAnimation();
 
   const runStaggeredAnimation = useCallback(() => {
     const avatarControls = [avatar1Controls, avatar2Controls, avatar3Controls];
@@ -95,11 +106,56 @@ export default function SwitchModel() {
     }, totalAnimationTime);
   }, [avatar1Controls, avatar2Controls, avatar3Controls, containerControls]);
 
+  // Independent border animation cycle (2s interval)
+  const runBorderAnimation = useCallback(async () => {
+    try {
+      await Promise.all([
+        borderControls.start({
+          scale: BORDER_ANIMATION_CONFIG.scaleValue,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        cornerBorderControls.start({
+          scaleX: 1.1,
+          scaleY: 1.05,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+      await Promise.all([
+        borderControls.start({
+          scale: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        cornerBorderControls.start({
+          scaleX: 1,
+          scaleY: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+    } catch (error) {
+      console.warn('Border animation error:', error);
+    }
+  }, [borderControls, cornerBorderControls]);
+
   // Use custom hook for animation management
   useStaggerAnimation({
     enabled: currentPage.id === 'twin_page',
     interval: ANIMATION_CONFIG.interval,
     onAnimate: runStaggeredAnimation,
+  });
+
+  // Use stagger animation for border animation cycle
+  useStaggerAnimation({
+    enabled: currentPage.id === 'twin_page',
+    interval: BORDER_ANIMATION_CONFIG.interval,
+    onAnimate: runBorderAnimation,
   });
 
   const handleSwitchModel = (model: PredictionModel | null): void => {
@@ -134,13 +190,23 @@ export default function SwitchModel() {
 
   return (
     <div id="switch-model" className="absolute right-32 top-50 z-20 grid gap-5">
-      <div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
-        <SelectBorderSVG
-          className={clsx(
-            'absolute left-0 top-0 h-auto w-full animate-scale',
-            currentModel === PredictionModel.M0 ? 'stroke-red-600' : 'stroke-black',
+      <motion.div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={borderControls}
+          className={cn(
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:1rem] [--corner-border-width:2.5px]',
+            {
+              'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
+            },
           )}
-        />
+        >
+          <span
+            className={cn('absolute inset-0 -z-10', {
+              'before:!border-red-600 after:!border-red-600': currentModel === PredictionModel.M0,
+            })}
+          ></span>
+        </motion.div>
         {currentModel === PredictionModel.M0 && (
           <SelectSVG className="absolute -right-14.5 bottom-0 top-0 my-auto animate-move-right" />
         )}
@@ -148,7 +214,7 @@ export default function SwitchModel() {
         <div className="flex-center absolute inset-2 left-2 top-2 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
           ORG
         </div>
-      </div>
+      </motion.div>
       <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
       <motion.div
         className="group relative flex flex-col gap-2 p-2.5"
@@ -156,9 +222,11 @@ export default function SwitchModel() {
         animate={containerControls}
         layout
       >
-        <div
+        <motion.div
+          initial={{ scaleX: 1, scaleY: 1 }}
+          animate={cornerBorderControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:1rem] [--corner-border-width:2px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:1rem] [--corner-border-width:2.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
@@ -169,7 +237,7 @@ export default function SwitchModel() {
               'before:!border-red-600 after:!border-red-600': currentModel !== PredictionModel.M0,
             })}
           ></span>
-        </div>
+        </motion.div>
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',

@@ -1,17 +1,68 @@
-import { ModelType } from '@/components/twin/model/type';
-import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
-import { useAtom, useAtomValue } from 'jotai';
-import { currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
-import clsx from 'clsx';
+import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
+import { mobileBorderAnimationStateAtom, currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
+import { ModelType } from '@/components/twin/model/type';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES, GA_EVENT_LABELS } from '@/constants/ga';
+import clsx from 'clsx';
+import { useAtom, useAtomValue } from 'jotai';
+import { motion, useAnimation } from 'motion/react';
+import { useEffect } from 'react';
+
+// Border animation configuration - matches SwitchModel
+const BORDER_ANIMATION_CONFIG = {
+  interval: 4000, // 2 seconds
+  scaleDuration: 1.5, // duration of scale animation
+  scaleValue: 1.1, // scale multiplier
+};
 
 export default function SwitchSkin() {
   const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
+  const borderAnimationState = useAtomValue(mobileBorderAnimationStateAtom);
 
   const { trackEvent } = useGA();
+
+  // Border animation controls
+  const borderControls = useAnimation();
+  const selectBorderControls = useAnimation();
+
+  // Border animation effect synchronized with SwitchModel
+  useEffect(() => {
+    if (borderAnimationState === 'scale-up') {
+      // Scale up borders simultaneously with SwitchModel
+      Promise.all([
+        borderControls.start({
+          scale: BORDER_ANIMATION_CONFIG.scaleValue,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        selectBorderControls.start({
+          scale: BORDER_ANIMATION_CONFIG.scaleValue,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+    } else if (borderAnimationState === 'scale-down') {
+      // Scale down borders simultaneously with SwitchModel
+      Promise.all([
+        borderControls.start({
+          scale: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        selectBorderControls.start({
+          scale: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+    }
+  }, [borderAnimationState, borderControls, selectBorderControls]);
 
   const handleModelTypeChange = (type: ModelType) => {
     trackEvent({
@@ -24,7 +75,7 @@ export default function SwitchSkin() {
 
   return (
     <div id="switch-skin" className="absolute right-5 top-1/2 z-20 grid -translate-y-1/2 gap-5">
-      <div className="grid grid-rows-2 gap-3">
+      <motion.div className="grid grid-rows-2 gap-3" initial={{ scale: 1 }} animate={borderControls}>
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG
             className={clsx(
@@ -41,7 +92,7 @@ export default function SwitchSkin() {
             )}
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -28,3 +28,6 @@ export const currentModelTypeAtom = atom<ModelType>(ModelType.Skin);
 export const currentAnatomyCameraAtom = atom<AnatomyCamera>(AnatomyCamera.CAMERA0);
 
 export const modelLoadingItemAtom = atom<[string, string] | [null, null]>([null, null]);
+
+// Shared border animation controls atom
+export const mobileBorderAnimationStateAtom = atom<'idle' | 'scale-up' | 'scale-down'>('idle');

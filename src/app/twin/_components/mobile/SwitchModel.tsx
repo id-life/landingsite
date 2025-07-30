@@ -1,7 +1,12 @@
-import SelectBorderSVG from '@/../public/svgs/twin/select-border.svg?component';
 import SelectSVG from '@/../public/svgs/twin/select.svg?component';
 import { mobileCurrentPageAtom } from '@/atoms';
-import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, PredictionModel } from '@/atoms/twin';
+import {
+  AnatomyCamera,
+  mobileBorderAnimationStateAtom,
+  currentAnatomyCameraAtom,
+  currentModelAtom,
+  PredictionModel,
+} from '@/atoms/twin';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
@@ -14,10 +19,16 @@ import { useCallback } from 'react';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
-  interval: 5000, // 5 seconds
+  interval: 4000, // 5 seconds
   staggerDelay: 400, // delay between each avatar animation (ms) - staggerChildren effect
   scaleDuration: 0.4, // duration of scale animation
   scaleValue: 1.1, // scale multiplier
+};
+
+// Border animation configuration - independent 2s cycle
+const BORDER_ANIMATION_CONFIG = {
+  interval: 4000, // 2 seconds
+  scaleDuration: 1.5, // duration of scale animation
 };
 
 export default function SwitchModel() {
@@ -32,6 +43,11 @@ export default function SwitchModel() {
   const avatar2Controls = useAnimation();
   const avatar3Controls = useAnimation();
   const containerControls = useAnimation();
+
+  // Border animation controls
+  const borderControls = useAnimation();
+  const cornerButtonControls = useAnimation();
+  const setBorderAnimationState = useSetAtom(mobileBorderAnimationStateAtom);
 
   const runStaggeredAnimation = useCallback(() => {
     const avatarControls = [avatar1Controls, avatar2Controls, avatar3Controls];
@@ -87,7 +103,62 @@ export default function SwitchModel() {
     }, totalAnimationTime);
   }, [avatar1Controls, avatar2Controls, avatar3Controls, containerControls]);
 
-  // Use custom hook for animation management
+  // Independent border animation cycle (2s interval)
+  const runBorderAnimation = useCallback(async () => {
+    try {
+      // Set state to scale-up and start animations simultaneously
+      setBorderAnimationState('scale-up');
+
+      await Promise.all([
+        borderControls.start({
+          scale: 1.1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        cornerButtonControls.start({
+          scaleX: 1.1,
+          scaleY: 1.05,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+
+      // Set state to scale-down and start animations simultaneously
+      setBorderAnimationState('scale-down');
+
+      await Promise.all([
+        borderControls.start({
+          scale: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+        cornerButtonControls.start({
+          scaleX: 1,
+          scaleY: 1,
+          transition: {
+            duration: BORDER_ANIMATION_CONFIG.scaleDuration,
+          },
+        }),
+      ]);
+
+      // Reset to idle
+      setBorderAnimationState('idle');
+    } catch (error) {
+      console.warn('Border animation error:', error);
+    }
+  }, [borderControls, cornerButtonControls, setBorderAnimationState]);
+
+  // Use stagger animation for border animation cycle
+  useStaggerAnimation({
+    enabled: currentPage.id === 'twin_page',
+    interval: BORDER_ANIMATION_CONFIG.interval,
+    onAnimate: runBorderAnimation,
+  });
+
+  // Use custom hook for avatar animation management
   useStaggerAnimation({
     enabled: currentPage.id === 'twin_page',
     interval: ANIMATION_CONFIG.interval,
@@ -137,12 +208,22 @@ export default function SwitchModel() {
   return (
     <div id="switch-model" className="absolute left-5 top-[25rem] z-20 grid w-20 gap-3">
       <div className="relative w-10 cursor-pointer p-1" onClick={() => handleSwitchModel(PredictionModel.M0)}>
-        <SelectBorderSVG
-          className={clsx(
-            'absolute left-0 top-0 h-auto w-full',
-            currentModel === PredictionModel.M0 ? 'stroke-red-600' : 'stroke-black',
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={borderControls}
+          className={cn(
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1.5px]',
+            {
+              'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
+            },
           )}
-        />
+        >
+          <span
+            className={cn('absolute inset-0 -z-10', {
+              'before:!border-red-600 after:!border-red-600': currentModel === PredictionModel.M0,
+            })}
+          ></span>
+        </motion.div>
         {currentModel === PredictionModel.M0 && (
           <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
         )}
@@ -150,9 +231,11 @@ export default function SwitchModel() {
       </div>
       <img src="/svgs/twin/avatar-divider.svg" alt="" />
       <motion.div className="relative grid w-10 gap-2.5 p-1" initial={{ scale: 1 }} animate={containerControls} layout>
-        <div
+        <motion.div
+          initial={{ scaleX: 1, scaleY: 1 }}
+          animate={cornerButtonControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
@@ -163,7 +246,7 @@ export default function SwitchModel() {
               'before:!border-red-600 after:!border-red-600': currentModel !== PredictionModel.M0,
             })}
           ></span>
-        </div>
+        </motion.div>
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
