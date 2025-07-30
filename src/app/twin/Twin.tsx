@@ -96,7 +96,7 @@ function Twin() {
         <div className="twin-title absolute left-10 top-40 w-screen">
           <img className="w-[964px] xl:w-[1084px] 2xl:w-[1205px]" src="/svgs/twin/title-page.svg" alt="" />
         </div>
-        <div className="twin-title absolute bottom-20 right-[7.5rem] text-right text-base font-medium">
+        <div className="twin-title absolute bottom-20 right-[64px] text-right text-base font-medium">
           <p>- High-Precision Digital Twin Model Creation</p>
           <p>- Predictive Models</p>
           <p>- Long-Term Health Tracking & Personalized Guidance</p>

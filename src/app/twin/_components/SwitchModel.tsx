@@ -189,7 +189,7 @@ export default function SwitchModel() {
   };
 
   return (
-    <div id="switch-model" className="absolute right-16 top-50 z-20 grid gap-5">
+    <div id="switch-model" className="absolute right-[64px] top-50 z-20 grid gap-5">
       <motion.div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <motion.div
           initial={{ scale: 1 }}
@@ -208,10 +208,10 @@ export default function SwitchModel() {
           ></span>
         </motion.div>
         {currentModel === PredictionModel.M0 && (
-          <SelectSVG className="absolute -right-14.5 bottom-0 top-0 my-auto animate-move-right" />
+          <SelectSVG className="absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right" />
         )}
-        <img src="/imgs/twin/avatar-model0.png" alt="" />
-        <div className="flex-center absolute inset-2 left-2 top-2 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+        <img src="/imgs/twin/avatar-model0.png" className="size-full object-cover" alt="" />
+        <div className="flex-center absolute inset-2 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
           ORG
         </div>
       </motion.div>
@@ -253,7 +253,7 @@ export default function SwitchModel() {
             C01
           </div>
           {currentModel === PredictionModel.M1 && (
-            <SelectSVG className="absolute -right-14.5 bottom-0 top-0 my-auto animate-move-right" />
+            <SelectSVG className="absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right" />
           )}
         </motion.div>
         <motion.div
@@ -271,7 +271,7 @@ export default function SwitchModel() {
             C02
           </div>
           {currentModel === PredictionModel.M2 && (
-            <SelectSVG className="absolute -right-14.5 bottom-0 top-0 my-auto animate-move-right" />
+            <SelectSVG className="absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right" />
           )}
         </motion.div>
         <motion.div
@@ -289,7 +289,7 @@ export default function SwitchModel() {
             C03
           </div>
           {currentModel === PredictionModel.M3 && (
-            <SelectSVG className="absolute -right-14.5 bottom-0 top-0 my-auto animate-move-right" />
+            <SelectSVG className="absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right" />
           )}
         </motion.div>
       </motion.div>
