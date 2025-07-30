@@ -1,7 +1,9 @@
 import { useRef, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
+import { useAtomValue } from 'jotai';
 import { useGSAP } from '@gsap/react';
+import { globalLoadedAtom } from '@/atoms/geo';
 import { useGesture } from '@use-gesture/react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -38,6 +40,7 @@ export default function DragonModel() {
   const rotationRef = useRef({ y: INIT_ROTATION, x: 0 });
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
+  const globalLoaded = useAtomValue(globalLoadedAtom);
 
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
 
@@ -113,6 +116,7 @@ export default function DragonModel() {
   useGSAP(
     () => {
       if (!modelRef.current) return;
+      if (!globalLoaded) return;
 
       gsap.from(modelRef.current.position, {
         x: 0,
@@ -135,7 +139,7 @@ export default function DragonModel() {
         },
       });
     },
-    { scope: modelRef },
+    { scope: modelRef, dependencies: [globalLoaded] },
   );
 
   // Clean up geometry and material

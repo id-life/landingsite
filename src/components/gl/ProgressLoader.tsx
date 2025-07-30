@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
+import { useGSAP } from '@gsap/react';
+import { useGA } from '@/hooks/useGA';
 import { useProgress } from '@react-three/drei';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Background from '@/components/common/Background';
 import { globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export function OuterLoader() {
   const { progress, active, errors, item } = useProgress();
@@ -16,9 +18,38 @@ export function OuterLoader() {
   const timestampRef = useRef(Date.now());
   const loadedItemsRef = useRef<string[]>([]);
   const { trackEvent } = useGA();
+  const maxProgressRef = useRef(0);
+  const animatedProgressRef = useRef(0);
+  const progressTween = useRef<gsap.core.Tween | null>(null);
+  const [, forceUpdate] = useState({});
 
   const isLoaded = useMemo(() => progress === 100 && !active, [active, progress]);
   const isLoading = useMemo(() => progress > 0 && progress < 100 && active, [active, progress]);
+
+  useGSAP(
+    () => {
+      if (progress <= maxProgressRef.current) return;
+      maxProgressRef.current = progress;
+      if (progressTween.current) {
+        progressTween.current.kill();
+      }
+      progressTween.current = gsap.to(
+        { value: animatedProgressRef.current },
+        {
+          value: maxProgressRef.current,
+          duration: 0.5,
+          ease: 'power1.out',
+          onUpdate: () => {
+            if (!progressTween.current) return;
+            const { value } = progressTween.current.targets<{ value: number }>()[0];
+            animatedProgressRef.current = value;
+            forceUpdate({});
+          },
+        },
+      );
+    },
+    { dependencies: [progress] },
+  );
 
   useEffect(() => {
     trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_START });
@@ -40,14 +71,40 @@ export function OuterLoader() {
     });
   }, [errors, trackEvent]);
 
-  useEffect(() => {
-    if (!isLoaded || !show) return;
-    const diff = Date.now() - timestampRef.current;
-    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: diff.toString() });
-    setIsLoadingUI(true);
-    setGlobalLoaded(true);
-    setShow(false);
-  }, [isLoaded, setGlobalLoaded, setIsLoadingUI, show, trackEvent]);
+  useGSAP(
+    () => {
+      if (!isLoaded || !show) return;
+      const diff = Date.now() - timestampRef.current;
+      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: diff.toString() });
+
+      if (progressTween.current) {
+        progressTween.current.kill();
+      }
+
+      progressTween.current = gsap.to(
+        {
+          value: animatedProgressRef.current,
+        },
+        {
+          value: 100,
+          duration: 0.5,
+          ease: 'power1.out',
+          onUpdate: function () {
+            if (!progressTween.current) return;
+            const { value } = progressTween.current.targets<{ value: number }>()[0];
+            animatedProgressRef.current = value;
+            forceUpdate({});
+          },
+          onComplete: () => {
+            setIsLoadingUI(true);
+            setGlobalLoaded(true);
+            setShow(false);
+          },
+        },
+      );
+    },
+    { dependencies: [isLoaded, setGlobalLoaded, setIsLoadingUI, show, trackEvent] },
+  );
 
   useEffect(() => {
     const smoother = ScrollSmoother.get();
@@ -56,8 +113,17 @@ export function OuterLoader() {
     if (isLoading) setIsLoadingUI(true);
   }, [isLoading, setIsLoadingUI]);
 
+  useEffect(() => {
+    return () => {
+      if (progressTween.current) {
+        progressTween.current.kill();
+      }
+    };
+  }, []);
+
   if (!show) return null;
-  return <ProgressLoader progress={progress.toFixed(2)} />;
+
+  return <ProgressLoader progress={animatedProgressRef.current.toFixed(2)} />;
 }
 
 export default function ProgressLoader({ progress }: { progress: string }) {
