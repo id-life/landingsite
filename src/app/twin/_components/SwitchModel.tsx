@@ -189,13 +189,13 @@ export default function SwitchModel() {
   };
 
   return (
-    <div id="switch-model" className="absolute right-32 top-50 z-20 grid gap-5">
+    <div id="switch-model" className="absolute right-16 top-50 z-20 grid gap-5">
       <motion.div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <motion.div
           initial={{ scale: 1 }}
           animate={borderControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:.625rem] [--corner-border-width:2.5px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:8px] [--corner-border-width:2.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
             },
@@ -226,7 +226,7 @@ export default function SwitchModel() {
           initial={{ scaleX: 1, scaleY: 1 }}
           animate={cornerBorderControls}
           className={cn(
-            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:.625rem] [--corner-border-width:2.5px]',
+            'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:8px] [--corner-border-width:2.5px]',
             {
               'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
             },
