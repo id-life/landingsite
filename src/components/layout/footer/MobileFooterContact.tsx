@@ -1,5 +1,7 @@
 'use client';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
@@ -11,7 +13,6 @@ import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
@@ -112,7 +113,7 @@ export default function MobileFooterContact() {
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="flex-center h-11 flex-1 border-2 border-black p-3">
+            <div className={clsx('flex-center h-11 flex-1 border-2 p-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
               <input
                 className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
                 placeholder="Please enter email"

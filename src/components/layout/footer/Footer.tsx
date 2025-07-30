@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import jsonp from '@/utils/jsonp';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';

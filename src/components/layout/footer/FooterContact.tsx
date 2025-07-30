@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { clsx } from 'clsx';
 import gsap from 'gsap';
 import jsonp from '@/utils/jsonp';
 import { useSetAtom } from 'jotai';
@@ -168,7 +169,7 @@ export default function FooterContact() {
                 <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
                 <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
                 <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-                <div className="flex-1 border-2 border-black p-2 mobile:border">
+                <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-red-600' : 'border-black')}>
                   <input
                     className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
                     placeholder="Please enter email"

@@ -7,7 +7,7 @@ import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { SubmitHandler, useForm } from 'react-hook-form';
