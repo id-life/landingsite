@@ -190,7 +190,7 @@ export default function SwitchModel() {
 
   return (
     <div id="switch-model" className="absolute right-[64px] top-50 z-20 grid gap-5">
-      <motion.div className="relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
+      <motion.div className="flex-center relative cursor-pointer p-2" onClick={() => handleSwitchModel(PredictionModel.M0)}>
         <motion.div
           initial={{ scale: 1 }}
           animate={borderControls}
@@ -210,9 +210,11 @@ export default function SwitchModel() {
         {currentModel === PredictionModel.M0 && (
           <SelectSVG className="absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right" />
         )}
-        <img src="/imgs/twin/avatar-model0.png" className="size-full object-cover" alt="" />
-        <div className="flex-center absolute inset-2 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
-          ORG
+        <div className="relative size-[56px]">
+          <img src="/imgs/twin/avatar-model0.png" className="size-full object-contain" alt="" />
+          <div className="flex-center absolute inset-0 size-[56px] bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+            ORG
+          </div>
         </div>
       </motion.div>
       <img className="mx-auto" src="/svgs/twin/avatar-divider.svg" alt="" />
@@ -247,7 +249,7 @@ export default function SwitchModel() {
           initial={{ scale: 1 }}
           animate={avatar1Controls}
         >
-          <img src="/imgs/twin/avatar-model1.png" alt="" />
+          <img src="/imgs/twin/avatar-model1.png" alt="" className="size-[56px] object-contain" />
           {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
           <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C01
@@ -265,7 +267,7 @@ export default function SwitchModel() {
           initial={{ scale: 1 }}
           animate={avatar2Controls}
         >
-          <img src="/imgs/twin/avatar-model2.png" alt="" />
+          <img src="/imgs/twin/avatar-model2.png" alt="" className="size-[56px] object-contain" />
           {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
           <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C02
@@ -283,7 +285,7 @@ export default function SwitchModel() {
           initial={{ scale: 1 }}
           animate={avatar3Controls}
         >
-          <img src="/imgs/twin/avatar-model3.png" alt="" />
+          <img src="/imgs/twin/avatar-model3.png" alt="" className="size-[56px] object-contain" />
           {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
           <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C03
