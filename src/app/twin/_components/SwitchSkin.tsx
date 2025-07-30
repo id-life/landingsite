@@ -36,7 +36,7 @@ export default function SwitchSkin() {
   };
 
   return (
-    <div id="switch-skin" className="absolute bottom-60 right-32 z-20 grid gap-5">
+    <div id="switch-skin" className="absolute bottom-60 right-[64px] z-20 grid gap-5">
       <div className="grid grid-cols-2 gap-10">
         <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG

@@ -172,8 +172,11 @@
   .corner-button span::after {
     content: '';
     display: block;
-    border-color: #979797;
-    @apply absolute size-3 border-2;
+    border-color: var(--corner-border-color, #979797);
+    height: var(--corner-border-size, 0.75rem);
+    width: var(--corner-border-size, 0.75rem);
+    border-width: var(--corner-border-width, 0.125rem);
+    @apply absolute transition duration-300;
   }
 
   .corner-button::before {
@@ -196,7 +199,7 @@
   .corner-button:hover::after,
   .corner-button:hover span::before,
   .corner-button:hover span::after {
-    @apply border-white;
+    border-color: var(--corner-border-hover-color, #ffffff);
   }
 
   .corner-button-top {
