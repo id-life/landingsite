@@ -7,24 +7,34 @@ import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import { FloatingPortal } from '@floating-ui/react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+type Inputs = {
+  EMAIL: string;
+  u: string;
+  'amp;id': string;
+  'amp;f_id': string;
+};
 
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
 
   const { trackEvent } = useGA();
 
-  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isSubmitting) return;
-    const formData = new FormData(event.currentTarget);
+  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     const params = new URLSearchParams();
-    formData.forEach((value: any, key) => params.append(key, value));
+    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });
@@ -44,23 +54,30 @@ export default function Footer() {
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
           <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
-            <h3 className="font-oxanium text-3xl font-bold uppercase mobile:text-2xl/7.5">SUBSCRIBE</h3>
+            <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
+              SUBSCRIBE
+              {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
+            </h3>
             <form
               id="subscribe-form"
               className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
-              onSubmit={onFormSubmit}
+              onSubmit={handleSubmit(onFormSubmit)}
             >
-              <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
-              <input type="hidden" name="amp;id" value="af9154d6b5" />
-              <input type="hidden" name="amp;f_id" value="00e418e1f0" />
+              <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
+              <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
+              <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
               <div className="flex-1 border-2 border-white p-2 mobile:border">
                 <input
                   className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
                   placeholder="Please enter email"
-                  type="email"
-                  name="EMAIL"
-                  required
                   defaultValue=""
+                  {...register('EMAIL', {
+                    required: 'Please fill in this field',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Please enter email address',
+                    },
+                  })}
                 />
               </div>
               <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">

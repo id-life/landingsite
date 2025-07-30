@@ -16,12 +16,25 @@ import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+type Inputs = {
+  EMAIL: string;
+  u: string;
+  'amp;id': string;
+  'amp;f_id': string;
+};
 
 export default function MobileFooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
 
   const { trackEvent } = useGA();
 
@@ -43,24 +56,21 @@ export default function MobileFooterContact() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
-  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isSubmitting) return;
-    const formData = new FormData(event.currentTarget);
+  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     const params = new URLSearchParams();
-    formData.forEach((value: any, key) => params.append(key, value));
+    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });
+
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
     });
   };
-
   const handleLinkClick = (type: MediaLinkTypeKey) => {
     trackEvent({
       name: GA_EVENT_NAMES.MEDIUM_CLICK,
@@ -95,18 +105,25 @@ export default function MobileFooterContact() {
           className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
           <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
-          <form id="subscribe-form" className="mt-5 flex gap-3" onSubmit={onFormSubmit}>
-            <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
-            <input type="hidden" name="amp;id" value="af9154d6b5" />
-            <input type="hidden" name="amp;f_id" value="00e418e1f0" />
+          <form id="subscribe-form" className="relative mt-5 flex gap-3" onSubmit={handleSubmit(onFormSubmit)}>
+            {errors.EMAIL && (
+              <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+            )}
+            <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
+            <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
+            <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
             <div className="flex-center h-11 flex-1 border-2 border-black p-3">
               <input
                 className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
                 placeholder="Please enter email"
-                type="email"
-                name="EMAIL"
-                required
                 defaultValue=""
+                {...register('EMAIL', {
+                  required: 'Please fill in this field',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Please enter email address',
+                  },
+                })}
               />
             </div>
             <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-red-600 text-white">

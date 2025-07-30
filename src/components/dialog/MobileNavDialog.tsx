@@ -26,7 +26,14 @@ function MobileNavDialog() {
       if (!isMobile) return;
       if (isOpen) {
         gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-        gsap.to('.mobile-nav-item', { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power4.out', delay: -0.06 });
+        gsap.to('.mobile-nav-item', {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power4.out',
+          delay: -0.06,
+        });
       } else {
         gsap.set('.mobile-nav-item', { y: 0 });
         gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
@@ -82,7 +89,6 @@ function MobileNavDialog() {
             </div>
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
-          {/* <Dialog open={subsOpen} onOpenChange={setSubOpen} render={() => <SubscribeDialog />} /> */}
           <div className="mt-16 font-tt">
             {NAV_LIST.map((item) => (
               <div
