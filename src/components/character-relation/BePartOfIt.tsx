@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, forwardRef, memo, useEffect, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useRef, useState } from 'react';
 import BePartOfItInput from './BePartOfItInput';
 import { CharacterRelation, CharacterRelationData, CharacterRelationImpression } from '@/apis/types';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
@@ -20,6 +20,7 @@ import {
 } from '@/atoms/character-relation';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { Form, FormSubmitHandler, useForm } from 'react-hook-form';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = {
   character: '',
@@ -30,6 +31,13 @@ interface BePartOfItProps {
   onCountdownEnd?: () => void;
   onClose?: () => void;
 }
+
+interface BePartOfItFormValues {
+  visitor: string;
+  [key: `introducer_${number}`]: string;
+}
+
+const REQUIRED_ERROR_MESSAGE = 'Please fill in this field';
 
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const { onCountdownEnd, onClose } = props;
@@ -49,6 +57,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const submittedMsgTimelineRef = useRef(gsap.timeline({ paused: true }));
   const submittedMsgRef = useRef<HTMLDivElement>(null);
   const [countdown, setCountdown] = useState(5);
+
+  const form = useForm<BePartOfItFormValues>();
 
   const {
     mutateAsync: addCharacterRelationData,
@@ -88,8 +98,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
   };
 
-  const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onFormSubmit: FormSubmitHandler<BePartOfItFormValues> = ({ data, event }) => {
+    event?.preventDefault();
     if (isMutationPending || isMutationSuccess) return;
 
     const relationData: CharacterRelationData = {
@@ -154,10 +164,10 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       setRelation([CHARACTER_RELATION_PLAIN_DATA]);
       setCountdown(5);
       submittedMsgTimelineRef.current.revert();
-
+      form.clearErrors();
       resetMutation();
     }, 500);
-  }, [isBePartOfItShow, isMobileBePartOfItShow, resetMutation]);
+  }, [isBePartOfItShow, isMobileBePartOfItShow, form, resetMutation]);
 
   return (
     <div
@@ -195,16 +205,19 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <CloseSVG />
       </div>
 
-      <form className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
+      <Form control={form.control} className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
         <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col')}>
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
             placeholder="Enter your name"
             value={character}
-            required
             disabled={isMutationPending || isMutationSuccess}
-            onChange={(e) => setCharacter(e.target.value)}
+            error={form.formState.errors.visitor}
+            {...form.register('visitor', {
+              required: REQUIRED_ERROR_MESSAGE,
+              onChange: (e) => setCharacter(e.target.value),
+            })}
           />
           <div className={cn('flex items-center gap-x-6', 'mobile:flex-col')}>
             {relation.map((rel, i) => (
@@ -217,9 +230,13 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
                 value={rel.character}
                 impression={rel.impression}
                 tagPlaceholderHeight={isMobile ? 'h-4' : 'h-7.5'}
-                onBlur={() => handleAddRelation(i)}
-                onChange={(e) => handleRelationCharacterChange(e.target.value, i)}
+                error={form.formState.errors[`introducer_${i}`]}
                 onImpressionChange={(impression) => handleRelationImpressionChange(impression, i)}
+                {...form.register(`introducer_${i}`, {
+                  required: i === 0 ? REQUIRED_ERROR_MESSAGE : false,
+                  onChange: (e) => handleRelationCharacterChange(e.target.value, i),
+                  onBlur: () => handleAddRelation(i),
+                })}
               />
             ))}
           </div>
@@ -266,7 +283,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             />
           </div>
         </div>
-      </form>
+      </Form>
     </div>
   );
 });
