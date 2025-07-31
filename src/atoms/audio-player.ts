@@ -88,7 +88,7 @@ export const audioControlsAtom = atom(
         break;
       case AUDIO_DISPATCH.TOGGLE_PLAY:
         if (!isPlaying) {
-          trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, mu_play_type: value });
+          trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
         }
         set(togglePlayAtom);
         break;
@@ -97,7 +97,7 @@ export const audioControlsAtom = atom(
           audioRef
             .play()
             .then(() => {
-              trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, mu_play_type: value });
+              trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
               set(currentPlayStatusAtom, true);
             })
             .catch((error) => {
