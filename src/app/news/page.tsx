@@ -16,7 +16,7 @@ export default async function NewsPage() {
       <div>
         {insight && (
           <>
-            <h1 className="text-5xl/[4.5rem] font-semibold">Insights</h1>
+            <h1 className="text-5xl/[4.5rem] font-semibold mobile:text-2xl">Insights</h1>
             <div className="relative mt-4">
               <img className="w-full" src="/imgs/news/insights-bg.webp" alt="" />
               <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/30 backdrop-blur-sm">
@@ -26,8 +26,8 @@ export default async function NewsPage() {
             </div>
           </>
         )}
-        <h2 className="mt-16 text-4xl/[3.375rem] font-semibold">Latest News</h2>
-        <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1">
+        <h2 className="mt-16 text-4xl/[3.375rem] font-semibold mobile:mt-8 mobile:text-2xl">Latest News</h2>
+        <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1 mobile:gap-5">
           {news.map((item) => (
             <NewsCard data={item} key={item.id} />
           ))}

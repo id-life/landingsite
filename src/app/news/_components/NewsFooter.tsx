@@ -63,7 +63,7 @@ export default function NewsFooter() {
   };
 
   return (
-    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10">
+    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10 mobile:px-5 mobile:pb-7.5 mobile:pt-15">
       <div className="flex flex-col items-start justify-between">
         <img className="w-[14.2rem]" src="/svgs/logo-en.svg" alt="" />
         <div className="flex items-center gap-7 mobile:mt-6">

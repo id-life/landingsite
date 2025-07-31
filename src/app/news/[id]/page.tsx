@@ -43,13 +43,13 @@ export default async function ArticlePage({ params }: { params: { id: string } }
         </div>
         <p className="text-sm font-semibold">{dayjs(data?.createdAt).fromNow()}</p>
       </div>
-      <div className="mt-10 rounded-3xl bg-white p-20">
+      <div className="mt-10 rounded-3xl bg-white p-20 mobile:rounded mobile:p-5">
         <div className="mb-5 flex items-center justify-center gap-2 text-sm/5 font-semibold">
           <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
           Immortal Dragons
         </div>
-        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold">{data?.title}</h1>
-        <div className="mx-auto mb-15 mt-10 w-80 border-b border-dashed border-black" />
+        <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:text-2xl">{data?.title}</h1>
+        <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-7.5 mobile:mt-5" />
         <div className="markdown-body">
           <Markdown rehypePlugins={[rehypeRaw]}>{data?.content}</Markdown>
         </div>
