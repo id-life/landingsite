@@ -14,9 +14,9 @@ export default async function PodcastList(props: PodcastListProps) {
   list.sort((a, b) => a.sequence - b.sequence);
 
   return (
-    <div className="grid gap-12">
+    <div className="grid gap-12 mobile:gap-9">
       {list.map((item) => (
-        <Link key={item.id} href={`/podcast/${item.id}`}>
+        <Link className="overflow-hidden" key={item.id} href={`/podcast/${item.id}`}>
           <PodcastListItem key={item.id} data={item} />
         </Link>
       ))}

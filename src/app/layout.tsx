@@ -10,7 +10,6 @@ import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 
 import '@/styles/globals.css';
-import 'swiper/css';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';

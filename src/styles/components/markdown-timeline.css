@@ -1134,8 +1134,6 @@
 .markdown-body .custom-timeline {
   color: #c11111;
   text-decoration: underline;
-  font-size: 14px;
-  line-height: 20px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -1146,4 +1144,11 @@
 
 .markdown-body ul {
   list-style-type: disc;
+}
+
+@media (max-width: 768px) {
+  .markdown-body {
+    font-size: 12px;
+    line-height: 18px;
+  }
 }

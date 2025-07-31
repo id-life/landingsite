@@ -1,7 +1,6 @@
 import { fetchNewsList } from '@/apis';
 import NewsCard from './_components/NewsCard';
 import type { Metadata } from 'next';
-import '@/styles/geo.css';
 
 export const revalidate = 300; // 5min
 

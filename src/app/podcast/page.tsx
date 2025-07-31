@@ -4,8 +4,6 @@ import PodcastCover from '@/app/podcast/_components/PodcastCover';
 import { PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
 import type { Metadata } from 'next';
 
-import '@/styles/geo.css';
-
 export const revalidate = 300; // 5min
 
 export const metadata: Metadata = { title: 'Podcast-Immortal Dragons' };
@@ -19,8 +17,8 @@ export default async function PodcastPage({ searchParams }: { searchParams: Sear
   return (
     <div className="mt-2">
       <PodcastCover category={category} />
-      <div className="mt-8.5 h-px w-full bg-gray-950/20" />
-      <div className="my-15">
+      <div className="mt-8.5 h-px bg-gray-950/20 mobile:mt-7.5" />
+      <div className="my-15 mobile:my-9">
         <PodcastList category={category} />
       </div>
     </div>

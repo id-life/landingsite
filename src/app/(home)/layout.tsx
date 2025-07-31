@@ -4,6 +4,9 @@ import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 
+import '@/styles/home-layout.css';
+import 'swiper/css';
+
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
   description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
