@@ -159,7 +159,7 @@ function MobileSpectrum() {
           ></div>
         </div>
         <div className="spectrum-title mb-5 font-xirod text-xl/7.5 font-bold uppercase">spectrum</div>
-        <div className="spectrum-fund overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
+        <div className="spectrum-fund w-full overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
           <Swiper
             direction="vertical"
             slidesPerView={2}
