@@ -37,6 +37,11 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://www.frontierbio.com/',
   },
   {
+    title: 'Kangaroo Biomedical',
+    description: 'Artificial Womb Technology',
+    image: <img className="h-11" src="/imgs/investments/kangaroo-biomedical.webp" alt="kangaroo-biomedical" />,
+  },
+  {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
@@ -111,30 +116,36 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
     },
     {
       url: '/imgs/particle/6.png',
+      resize: [338, 340],
+      loadPercentage: 0.004,
+      scaleNum: isMobile ? 0.7 : 1.4,
+    },
+    {
+      url: '/imgs/particle/7.png',
       resize: [860, 82],
       loadPercentage: 0.004,
       scaleNum: isMobile ? 0.5 : 1.2,
     },
     {
-      url: '/imgs/particle/7.png',
+      url: '/imgs/particle/8.png',
       resize: [594, 264],
       scaleNum: isMobile ? 0.7 : 1.4,
       loadPercentage: 0.002,
     },
     {
-      url: '/imgs/particle/8.png',
+      url: '/imgs/particle/9.png',
       resize: [600, 600],
       loadPercentage: 0.0012,
       scaleNum: isMobile ? 0.5 : 1,
     },
     {
-      url: '/imgs/particle/9.png',
+      url: '/imgs/particle/10.png',
       resize: [512, 272],
       scaleNum: isMobile ? 0.5 : 1.2,
       loadPercentage: 0.0012,
     },
     {
-      url: '/imgs/particle/10.png',
+      url: '/imgs/particle/11.png',
       resize: [512, 262],
       scaleNum: isMobile ? 0.5 : 1.2,
       loadPercentage: 0.0012,

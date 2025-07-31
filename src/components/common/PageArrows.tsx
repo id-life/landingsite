@@ -79,7 +79,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       return;
     }
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-  }, 1000);
+  }, 500);
 
   return (
     <div
