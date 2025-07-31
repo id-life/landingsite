@@ -34,6 +34,7 @@ const config: Config = {
         10.5: '2.625rem',
         12.5: '3.125rem',
         14: '3.5rem',
+        14.5: '3.625rem',
         15: '3.75rem',
         15.5: '3.875rem',
         16.5: '4.125rem',
@@ -134,7 +135,7 @@ const config: Config = {
       animation: {
         scale: 'scale 4s linear infinite',
         'pulse-10': 'pulse-10 4s linear infinite',
-        'move-right': 'move-right 4s linear infinite',
+        'move-right': 'move-right 3s linear infinite',
       },
       fontSize: {
         ss: '0.625rem',
