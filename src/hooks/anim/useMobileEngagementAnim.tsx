@@ -1,8 +1,8 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { useCallback, useRef } from 'react';
 
 export function useMobileEngagementAnim() {
   const enterTLRef = useRef<gsap.core.Timeline | null>(null);
@@ -12,8 +12,7 @@ export function useMobileEngagementAnim() {
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
-  const isMobileEngagementJump = useAtomValue(isMobileEngagementJumpAtom);
-  const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
+  const [isMobileEngagementJump, setIsMobileEngagementJump] = useAtom(isMobileEngagementJumpAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');

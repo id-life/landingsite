@@ -18,6 +18,7 @@ import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
 import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import { getMobileDotShowInfo } from '@/constants/engagement';
 
 export type SpectrumLinkItem = {
   key?: string;
@@ -48,7 +49,7 @@ export const useSpectrumData = () => {
   const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
   const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
-  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
+  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
     const activeEle =
       type === 'meeting'
@@ -57,7 +58,10 @@ export const useSpectrumData = () => {
           ? document.querySelector(`.world-map-dot-book-${index}`)
           : document.querySelector(`.world-map-dot-sponsor-${index}`);
     if (scrollContainer && activeEle) {
-      activeEle.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const containerEl = scrollContainer as HTMLDivElement;
+      const eleEl = activeEle as HTMLDivElement;
+      const targetScrollLeft = eleEl.offsetLeft - offset;
+      containerEl.scrollTo({ behavior: 'smooth', left: targetScrollLeft });
     }
   }, []);
 
@@ -84,7 +88,10 @@ export const useSpectrumData = () => {
         }
         setTimeout(() => {
           handleClickPoint(type, index, true);
-          if (isMobile) scrollToActivePoint(type, index);
+          if (isMobile) {
+            const offset = getMobileDotShowInfo(type, index)?.offset ?? 0;
+            scrollToActivePoint(type, index, offset);
+          }
         }, 300);
       };
     },
@@ -124,7 +131,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Oxford Future Innovation Forum',
-            onClick: handleClickDot('sponsor', 3),
+            onClick: handleClickDot('sponsor', 1),
           },
         ],
       },

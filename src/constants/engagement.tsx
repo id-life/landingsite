@@ -527,7 +527,12 @@ export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; inde
   { type: 'book', index: 0, offset: 40 },
   { type: 'book', index: 1, offset: 40 },
   { type: 'sponsor', index: 0, offset: 50 },
-  { type: 'meeting', index: 2, offset: 180 },
-  { type: 'meeting', index: 1, offset: 180 },
-  { type: 'meeting', index: 0, offset: 180 },
+  { type: 'meeting', index: 2, offset: 300 },
+  { type: 'meeting', index: 1, offset: 280 },
+  { type: 'meeting', index: 0, offset: 310 },
 ];
+
+export const getMobileDotShowInfo = (type: 'sponsor' | 'book' | 'meeting', index: number) => {
+  const info = MOBILE_DOT_SHOW_ORDER.find((item) => item.type === type && item.index === index);
+  return info;
+};
