@@ -1,4 +1,5 @@
 import { currentPageAtom } from '@/atoms';
+import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -10,14 +11,13 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { atom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 
 // register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -174,7 +174,7 @@ function Portfolio() {
         const desc = div.querySelector('.fund-desc');
         const subtitle = div.querySelector('.fund-subtitle');
         if (title) {
-          tl.to(title, { fontSize: '26px', fontWeight: 600, lineHeight: '30px' });
+          tl.to(title, { fontSize: '1.5rem', fontWeight: 600, lineHeight: '1.75rem' });
         }
         if (selected) {
           tl.to(selected, { opacity: 1 });
@@ -202,7 +202,7 @@ function Portfolio() {
   );
 
   const portfolioItems = useMemo(() => {
-    return portfolio.map((item, index) => (
+    const items = portfolio.map((item, index) => (
       <PortfolioItem
         key={item.title}
         item={item}
@@ -215,6 +215,12 @@ function Portfolio() {
         }}
       />
     ));
+
+    // Split items into two rows: first 6, then remaining
+    const firstRow = items.slice(0, 6);
+    const secondRow = items.slice(6);
+
+    return { firstRow, secondRow };
   }, [handleFundClick, handleMouseEnter]);
 
   return (
@@ -223,8 +229,11 @@ function Portfolio() {
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <ParticleGLContainer />
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
-        <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-18">
-          <div className="grid grid-cols-5">{portfolioItems}</div>
+        <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-12">
+          <div className="flex flex-col items-center gap-8">
+            <div className="grid grid-cols-6 justify-items-center gap-6">{portfolioItems.firstRow}</div>
+            <div className="grid grid-cols-5 justify-items-center gap-6">{portfolioItems.secondRow}</div>
+          </div>
         </div>
         <div className="page2-contact">
           <Contact />

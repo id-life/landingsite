@@ -1,23 +1,25 @@
 'use client';
 
 import { cn } from '@/utils';
-import { InputHTMLAttributes, memo, useState } from 'react';
+import { forwardRef, InputHTMLAttributes, memo, useImperativeHandle, useRef, useState } from 'react';
 import { IndividualType } from './CharacterRelation';
 import BePartOfItTag from './BePartOfItTag';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 import { CharacterRelationImpression } from '@/apis/types';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { FieldError } from 'react-hook-form';
 
 interface BePartOfItInputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   mode?: Exclude<IndividualType, 'all'>;
   tagPlaceholderHeight?: string;
   impression?: CharacterRelationImpression;
+  error?: FieldError;
   onImpressionChange?: (impression: CharacterRelationImpression) => void;
 }
 
-const BePartOfItInput = (props: BePartOfItInputProps) => {
+const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((props, ref) => {
   const {
     type = 'text',
     className,
@@ -27,11 +29,17 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
     mode = 'visitor',
     tagPlaceholderHeight = 'h-7.5',
     impression,
+    error,
     onBlur,
     onFocus,
     onImpressionChange,
     ...rest
   } = props;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => inputRef.current!, [inputRef]);
+
   const [isFocused, setIsFocused] = useState(false);
   const { trackEvent } = useGA();
 
@@ -55,8 +63,10 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
       <label className="relative block">
         <input
           type={type}
+          ref={inputRef}
           className={cn(
-            'h-11 w-[25.5625rem] border-[1.5px] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal disabled:cursor-not-allowed',
+            'h-11 w-[25.5625rem] border-[1.5px] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
+            'disabled:cursor-not-allowed data-[error=true]:border-red-600',
             'mobile:w-full',
             className,
           )}
@@ -65,6 +75,7 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
           value={value}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          data-error={!!error}
           {...rest}
         />
         {isIntroducer && impression && !isFocused && !!value && (
@@ -79,9 +90,27 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
         </span>
       </label>
       {!isIntroducer || (isIntroducer && !isFocused) ? (
-        <div className={cn('w-full', tagPlaceholderHeight)}></div>
+        <div className={cn('relative w-full text-right', 'mobile:text-left', tagPlaceholderHeight, !!error && 'mobile:h-10')}>
+          {error && (
+            <span
+              className={cn(
+                'font-poppins text-xs/3 font-semibold tracking-normal text-red-600',
+                'absolute bottom-1 right-0',
+                'mobile:bottom-4 mobile:left-0 mobile:pl-3',
+              )}
+            >
+              {error.message}
+            </span>
+          )}
+        </div>
       ) : (
-        <div onPointerDown={(e) => e.preventDefault()} className="pl-3 pt-2.5 mobile:mb-4">
+        <div
+          onPointerDown={(e) => e.preventDefault()}
+          className={cn(
+            'flex items-center justify-between pl-3 pt-2.5',
+            'mobile:mb-4 mobile:flex-col mobile:items-start mobile:justify-start',
+          )}
+        >
           <div className="flex items-center gap-2">
             <span className="font-poppins text-xs/5 font-semibold tracking-normal">First Impression?</span>
             <BePartOfItTag
@@ -95,10 +124,17 @@ const BePartOfItInput = (props: BePartOfItInputProps) => {
               onClick={() => onImpressionChange?.(CHARACTER_RELATION_IMPRESSION.MIXED)}
             />
           </div>
+          {error && (
+            <span className={cn('font-poppins text-xs/3 font-semibold tracking-normal text-red-600', 'mobile:mt-2')}>
+              {error.message}
+            </span>
+          )}
         </div>
       )}
     </div>
   );
-};
+});
+
+BePartOfItInput.displayName = 'BePartOfItInput';
 
 export default memo(BePartOfItInput);

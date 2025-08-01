@@ -1,17 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   AUDIO_DISPATCH,
   audioControlsAtom,
   audioRefAtom,
-  canPlayAtom,
   currentAudioAtom,
+  currentPlayStatusAtom,
   currentTimeAtom,
   durationAtom,
-  lastPlayStatusAtom,
   playNextTrackAtom,
   progressAtom,
 } from '@/atoms/audio-player';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { eventBus } from '@/components/event-bus/eventBus';
@@ -30,8 +29,9 @@ const uint8TodB = (byteLevel: number) =>
   (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
 
 export default function useCurrentAudio() {
+  const hasInteractedRef = useRef(false);
   const currentAudio = useAtomValue(currentAudioAtom);
-  const [lastPlayStatus, setLastPlayStatus] = useAtom(lastPlayStatusAtom);
+  const playStatus = useAtomValue(currentPlayStatusAtom);
   const waveFormRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
   const spectrumRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
   const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
@@ -39,7 +39,6 @@ export default function useCurrentAudio() {
   const weightingsRef = useRef<number[]>([-100]);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
-  const setCanPlay = useSetAtom(canPlayAtom);
   const setProgress = useSetAtom(progressAtom);
   const setCurrentTime = useSetAtom(currentTimeAtom);
   const setDuration = useSetAtom(durationAtom);
@@ -61,7 +60,6 @@ export default function useCurrentAudio() {
 
     if (!currentAudio) return;
 
-    setCanPlay(false);
     setProgress(0);
     setCurrentTime(0);
     setDuration(0);
@@ -89,12 +87,7 @@ export default function useCurrentAudio() {
 
       source.connect(analyser);
       analyser.connect(audioContext.destination);
-    };
-
-    audio.oncanplay = () => {
-      setCanPlay(true);
-      if (!lastPlayStatus) return;
-      dispatch({ type: AUDIO_DISPATCH.PLAY });
+      dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
     };
 
     audio.ontimeupdate = () => {
@@ -145,6 +138,25 @@ export default function useCurrentAudio() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAudio]);
+
+  useEffect(() => {
+    const enableAutoplay = () => {
+      if (hasInteractedRef.current) return;
+      hasInteractedRef.current = true;
+      trackEvent({ name: GA_EVENT_NAMES.USER_INTERACT });
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      if (!playStatus) {
+        dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.INTERACT });
+      }
+    };
+    document.addEventListener('click', enableAutoplay, { once: true });
+
+    return () => {
+      document.removeEventListener('click', enableAutoplay);
+    };
+  }, [dispatch, playStatus, trackEvent]);
 
   return useMemo(
     () => ({

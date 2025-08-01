@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
 import { ValueOf } from '@/constants/config';
 import { AudioDataItem } from '@/apis/types';
-import { atomWithStorage } from 'jotai/utils';
-import { STORAGE_KEY } from '@/constants/storage';
+import { trackEvent } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export const PlayList = {
   MUSIC: 'music',
@@ -26,7 +26,6 @@ export const currentPlayListAtom = atom<PlayListKey>(PlayList.MUSIC);
 export const currentPlayPodcastAtom = atom<PlayPodcastKey>(PlayList.PODCAST_ID);
 
 export const currentPlayStatusAtom = atom<boolean>(false);
-export const lastPlayStatusAtom = atomWithStorage<boolean>(STORAGE_KEY.LAST_AUDIO_PLAY, true);
 
 export const currentAudioAtom = atom<AudioDataItem | null>(null);
 
@@ -42,7 +41,6 @@ export const playModeAtom = atom<PlayModeKey>(PlayMode.REPEAT_ALL);
 // audio
 
 export const audioRefAtom = atom<HTMLAudioElement | null>(null);
-export const canPlayAtom = atom(false);
 export const progressAtom = atom(0);
 export const currentTimeAtom = atom(0);
 export const durationAtom = atom(0);
@@ -60,7 +58,6 @@ export type AudioDispatchKey = ValueOf<typeof AUDIO_DISPATCH>;
 export const audioControlsAtom = atom(
   (get) => ({
     audioRef: get(audioRefAtom),
-    canPlay: get(canPlayAtom),
     progress: get(progressAtom),
     currentTime: get(currentTimeAtom),
     duration: get(durationAtom),
@@ -68,6 +65,8 @@ export const audioControlsAtom = atom(
   }),
   (get, set, { type, value }: { type: AudioDispatchKey; value?: any }) => {
     const audioRef = get(audioRefAtom);
+    const currentMusic = get(currentAudioAtom);
+    const isPlaying = get(currentPlayStatusAtom);
 
     switch (type) {
       case AUDIO_DISPATCH.SEEK_TO:
@@ -88,13 +87,19 @@ export const audioControlsAtom = atom(
         set(playModeAtom, value);
         break;
       case AUDIO_DISPATCH.TOGGLE_PLAY:
+        if (!isPlaying) {
+          trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
+        }
         set(togglePlayAtom);
         break;
       case AUDIO_DISPATCH.PLAY:
         if (audioRef) {
           audioRef
             .play()
-            .then(() => set(currentPlayStatusAtom, true))
+            .then(() => {
+              trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
+              set(currentPlayStatusAtom, true);
+            })
             .catch((error) => {
               console.log('error: ', error);
               set(currentPlayStatusAtom, false);
@@ -154,7 +159,7 @@ export const playNextTrackAtom = atom(null, (get, set) => {
     set(currentAudioAtom, playlist[nextIndex]);
     set(currentPlayStatusAtom, true);
     if (nextIndex === currentIndex) {
-      audioRef?.play();
+      audioRef?.play().then();
     }
   } else {
     set(currentPlayStatusAtom, false);
@@ -171,18 +176,15 @@ export const togglePlayAtom = atom(null, (get, set) => {
   if (isPlaying) {
     audioRef.pause();
     set(currentPlayStatusAtom, false);
-    set(lastPlayStatusAtom, false);
   } else {
     audioRef
       .play()
       .then(() => {
         set(currentPlayStatusAtom, true);
-        set(lastPlayStatusAtom, true);
       })
       .catch((error) => {
         console.log('error: ', error);
         set(currentPlayStatusAtom, false);
-        set(lastPlayStatusAtom, false);
       });
   }
 });

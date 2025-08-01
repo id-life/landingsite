@@ -18,6 +18,10 @@ export interface TrackEventOptions {
   [key: string]: string | undefined;
 }
 
+export function trackEvent(options: TrackEventOptions) {
+  sendGAEvent('event', options.name, { event_label: options.label, ...options });
+}
+
 export function useGA() {
   const trackEvent = useCallback((options: TrackEventOptions) => {
     const { name, label, ...rest } = options;

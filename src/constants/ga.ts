@@ -58,12 +58,19 @@ export const GA_EVENT_NAMES = {
   PODCAST_LINK_XYZ: 'podcast_link_xyz',
   PODCAST_LINK_APPLE: 'podcast_link_apple',
   MUSIC_DOWNLOAD: 'music_download',
+  MUSIC_AUTO_PLAY: 'music_auto_play',
+  USER_INTERACT: 'user_interact',
 } as const;
 
 export const GA_EVENT_LABELS = {
   MUSIC_TOGGLE: {
     ON: 'on',
     OFF: 'off',
+  },
+  MUSIC_AUTO_PLAY: {
+    AUTO: 'auto',
+    INTERACT: 'interact',
+    TOGGLE: 'toggle',
   },
   SUBSCRIBE_LETTER: {
     NAV: 'nav',
@@ -157,6 +164,7 @@ export const GA_EVENT_LABELS = {
   | 'IN_POPUP'
   | 'DMCS_SCROLL'
   | 'DMCS_DOWNLOAD'
+  | 'USER_INTERACT'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;

@@ -6,4 +6,5 @@ export enum MessageType {
   SWITCH_CAMERA = 'SWITCH_CAMERA', // 切换相机视角
   RESET_ANIMATION = 'RESET_ANIMATION', // 重置动画
   SIRI_WAVE_CONFIG = 'SIRI_WAVE_CONFIG', // siri wave 设置
+  PODCAST_DURATION = 'PODCAST_DURATION', // 播放时间
 }

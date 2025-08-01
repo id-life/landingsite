@@ -51,3 +51,32 @@ export type NewsContent = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type PodcastItem = {
+  id: number;
+  album: string;
+  artist?: string;
+  category: string;
+  description: string;
+  duration: number;
+  podcastLink: string;
+  sequence: number;
+  title: string;
+  detailMedia: string;
+  url: string;
+  xyzLink: string;
+  createdAt: string;
+  spotifyLink: string;
+  appleLink: string;
+};
+
+export type PodcastCommentItemType = {
+  audioDataId: number;
+  avatar: string;
+  content: string;
+  createdAt: string;
+  id: number;
+  nickName: string;
+  source: string;
+  xyzCommentId: string;
+};
