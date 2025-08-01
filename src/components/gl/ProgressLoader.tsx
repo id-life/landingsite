@@ -38,7 +38,7 @@ export function OuterLoader() {
         {
           value: maxProgressRef.current,
           duration: 0.5,
-          ease: 'power1.out',
+          ease: 'none',
           onUpdate: () => {
             if (!progressTween.current) return;
             const { value } = progressTween.current.targets<{ value: number }>()[0];
@@ -88,7 +88,7 @@ export function OuterLoader() {
         {
           value: 100,
           duration: 0.5,
-          ease: 'power1.out',
+          ease: 'none',
           onUpdate: function () {
             if (!progressTween.current) return;
             const { value } = progressTween.current.targets<{ value: number }>()[0];
@@ -96,9 +96,11 @@ export function OuterLoader() {
             forceUpdate({});
           },
           onComplete: () => {
-            setIsLoadingUI(true);
-            setGlobalLoaded(true);
-            setShow(false);
+            setTimeout(() => {
+              setIsLoadingUI(true);
+              setGlobalLoaded(true);
+              setShow(false);
+            }, 500);
           },
         },
       );
