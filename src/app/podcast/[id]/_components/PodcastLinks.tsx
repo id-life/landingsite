@@ -17,7 +17,7 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
       {data.xyzLink ? (
         <img
           onClick={() => handleLinkClick(data.xyzLink)}
-          className="w-7.5 cursor-pointer"
+          className="w-7.5 cursor-pointer mobile:w-6"
           src="/imgs/podcast/fm_xyz.png"
           alt=""
         />
@@ -25,7 +25,7 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
       {data.spotifyLink ? (
         <img
           onClick={() => handleLinkClick(data.spotifyLink)}
-          className="w-7.5 cursor-pointer"
+          className="w-7.5 cursor-pointer mobile:w-6"
           src="/imgs/podcast/fm_spotify.png"
           alt=""
         />
@@ -33,7 +33,7 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
       {data.appleLink ? (
         <img
           onClick={() => handleLinkClick(data.appleLink)}
-          className="w-7.5 cursor-pointer"
+          className="w-7.5 cursor-pointer mobile:w-6"
           src="/imgs/podcast/fm_podcast.png"
           alt=""
         />

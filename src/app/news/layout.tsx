@@ -6,7 +6,7 @@ import NewsFooter from './_components/NewsFooter';
 
 export default function NewsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="container mx-auto max-w-screen-xl mobile:px-2">
+    <div className="container mx-auto max-w-screen-xl">
       <NewsHeader />
       {children}
       <NewsFooter />

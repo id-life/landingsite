@@ -24,6 +24,7 @@ const config: Config = {
         'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
       },
       spacing: {
+        0.75: '0.1875rem',
         3.5: '0.875rem',
         4.5: '1.125rem',
         5.5: '1.375rem',
@@ -41,6 +42,7 @@ const config: Config = {
         17: '4.25rem',
         18: '4.5rem',
         19.5: '4.875rem',
+        21: '5.25rem',
         22.5: '5.625rem',
         25: '6.25rem',
         26.5: '6.625rem',
@@ -64,6 +66,8 @@ const config: Config = {
         100: '25rem',
         105: '26.25rem',
         112: '28rem',
+        130: '32.5rem',
+        136: '34rem',
         205: '51.25rem',
       },
       colors: {

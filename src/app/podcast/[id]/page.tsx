@@ -23,14 +23,14 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   const data = await getCachePodcastDetail(id);
 
   return (
-    <div className="py-10">
-      <img className="mx-auto w-24 rounded-lg" src={data.album} alt="" />
-      <div className="flex-center my-7.5 mt-6 gap-2.5">
-        <h1 className="text-xl font-semibold">{data.title}</h1>
+    <div className="pb-24 mobile:pb-16">
+      <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
+      <div className="flex-center mb-7.5 mt-6 gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
+        <h1 className="text-center text-xl font-semibold mobile:text-base">{data.title}</h1>
         <PodcastLinks data={data} />
       </div>
       <img className="w-full" alt="" src="/imgs/podcast/podcast-cover.webp" />
-      <div className="my-9 mt-7.5 text-sm font-medium">{data.description}</div>
+      <div className="my-9 mt-7.5 text-sm font-medium mobile:mb-7.5 mobile:mt-6 mobile:text-xs/4.5">{data.description}</div>
       <PodcastContentTab data={data} />
       <PodcastPlayer data={data} />
     </div>
