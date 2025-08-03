@@ -44,9 +44,9 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
                 alt=""
               />
             ) : null}
-            {data.appleLink ? (
+            {data.podcastLink ? (
               <img
-                onClick={() => handleLinkClick(data.appleLink)}
+                onClick={() => handleLinkClick(data.podcastLink)}
                 className="w-7.5 cursor-pointer mobile:w-6"
                 src="/imgs/podcast/fm_podcast.png"
                 alt=""

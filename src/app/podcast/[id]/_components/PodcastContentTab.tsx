@@ -288,7 +288,7 @@ type PodcastContentTabProps = {
 export default function PodcastContentTab({ data }: PodcastContentTabProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const processedContent = content.replace(/@\[(\w+)]\(([^)]+)\)/g, (match, type, param) => {
+  const processedContent = data.transcript?.replace(/@\[(\w+)]\(([^)]+)\)/g, (match, type, param) => {
     return `<span data-custom-type="${type}" data-custom-param="${param}" class="custom-timeline">${param}</span>`;
   });
 
