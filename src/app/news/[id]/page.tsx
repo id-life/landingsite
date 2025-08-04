@@ -7,6 +7,7 @@ import rehypeRaw from 'rehype-raw';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 dayjs.extend(relativeTime);
 
@@ -34,6 +35,9 @@ export default async function ArticlePage({ params }: { params: { id: string } }
 
   const data = await getCacheNewsContent(id);
 
+  if (!data) {
+    return notFound();
+  }
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
