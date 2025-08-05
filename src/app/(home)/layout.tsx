@@ -3,6 +3,7 @@ import ClientNav from '@/components/nav/CilentNav';
 import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
+import { Organization, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons',
@@ -30,36 +31,22 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Immortal Dragons',
-    url: 'https://www.id.life',
+const jsonLd: WithContext<Organization> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  url: 'https://www.id.life',
+  logo: 'https://cdn.id.life/logo.png',
+  name: 'IMMORTAL DRAGONS',
+  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  email: 'dragons@id.life',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '3 Biopolis Dr, #01-15',
+    addressLocality: 'Singapore',
+    addressCountry: 'SG',
+    postalCode: '537846',
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'IMMORTAL DRAGONS',
-    url: 'https://www.id.life',
-    logo: 'https://cdn.id.life/logo.png',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: '3 Biopolis Dr, #01-15',
-      addressLocality: 'Singapore',
-      addressCountry: 'SG',
-      postalCode: '537846',
-    },
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Boyang',
-    jobTitle: 'Founder, Investor',
-    worksFor: 'IMMORTAL DRAGONS',
-    image: 'https://cdn.id.life/images/boyang.jpg',
-  },
-];
+};
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
