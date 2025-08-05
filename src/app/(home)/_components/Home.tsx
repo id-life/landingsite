@@ -16,9 +16,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom } from 'jotai';
-import { throttle } from 'lodash-es';
-import { useCallback, useEffect } from 'react';
-import { useEvent } from 'react-use';
+import { useEffect } from 'react';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
@@ -42,19 +40,6 @@ export default function Home() {
       });
     }
   }, [currentPage, isMobile, isMounted, trackEvent]);
-
-  const initFontSize = useCallback(() => {
-    if (!isMounted || isMobile) {
-      document.documentElement.style.fontSize = '16px';
-      return;
-    }
-    const width = window.innerWidth;
-    const fontSize = 16 * (width / 1920);
-    document.documentElement.style.fontSize = fontSize + 'px';
-  }, [isMobile, isMounted]);
-
-  useEffect(() => initFontSize(), [initFontSize]);
-  useEvent('resize', throttle(initFontSize, 1000));
 
   useGSAP(() => {
     ScrollSmoother.create({ wrapper: '#wrapper', content: '#content', smooth: 1, effects: false, smoothTouch: 0.1 });

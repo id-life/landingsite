@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
+
 export const PODCAST_NAV_LIST = [
-  { id: 'id', title: 'immortal dragon 不朽真龙' },
+  { id: 'id', title: 'immortal dragons 不朽真龙' },
   { id: 'lt', title: 'long talk 龙门阵' },
 ] as const;
 
@@ -17,9 +19,9 @@ export type PodcastHeaderItem = {
 
 export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
   [PODCAST_NAV_LIST[0].id]: {
-    cover: 'https://cdn.id.life/audio/idfm_logo.webp',
+    cover: 'https://cdn.id.life/audio/idfm_logo@small.webp',
     title: '不朽真龙',
-    enTitle: 'Immortal Dragon',
+    enTitle: 'Immortal Dragons',
     description:
       'Immrtal Dragons是一家投资长生不老领域的使命驱动基金。投资之外，我们出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道延寿理念信仰。在这个播客中，我们将带你从行业专家的第一视角出发，深入探访延长健康寿命的前沿技术、伦理争议与产业脉动——让我们一起破解永生密码。',
     xyzLink: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',
@@ -27,7 +29,7 @@ export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
     spotifyLink: 'https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu',
   },
   [PODCAST_NAV_LIST[1].id]: {
-    cover: 'https://cdn.id.life/audio/longtalk_logo.webp',
+    cover: 'https://cdn.id.life/audio/longtalk_logo@small.webp',
     title: '龙门阵',
     enTitle: 'Long Talk',
     description:
@@ -41,3 +43,51 @@ export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
 export const COMMENTS_TYPE = {
   XYZ: 'xyz',
 } as const;
+
+export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
+  [PODCAST_NAV_LIST[0].id]: {
+    title: '不朽真龙 Immortal Dragons Podcast | Immortal Dragons',
+    description:
+      '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
+    keywords: ['Longevity', 'Health', 'Science', 'Tech', 'Investment', 'Biotech', '长寿', '健康', '科技', '投资', '生物科技'],
+    openGraph: {
+      title: '不朽真龙 Immortal Dragons Podcast | Immortal Dragons',
+      siteName: 'Immortal Dragons',
+      description:
+        '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
+      images: [
+        {
+          url: 'https://cdn.id.life/audio/idfm_logo@small.webp',
+        },
+      ],
+    },
+  },
+  [PODCAST_NAV_LIST[1].id]: {
+    title: '龙门阵 Long Talk Podcast | Immortal Dragons',
+    description:
+      '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
+    keywords: [
+      'Behind the Scenes',
+      'Rabbit Hole',
+      'Random Thoughts',
+      'General Knowledge',
+      'Team Chat',
+      '幕后故事',
+      '兔子洞',
+      '奇思妙想',
+      '知识分享',
+      '团队闲聊',
+    ],
+    openGraph: {
+      title: '龙门阵 Long Talk Podcast | Immortal Dragons',
+      siteName: 'Immortal Dragons',
+      description:
+        '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
+      images: [
+        {
+          url: 'https://cdn.id.life/audio/longtalk_logo@small.webp',
+        },
+      ],
+    },
+  },
+};

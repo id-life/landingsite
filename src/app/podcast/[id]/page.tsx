@@ -22,8 +22,6 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   const { id } = params;
   const data = await getCachePodcastDetail(id);
 
-  console.log('data: ', JSON.stringify(data));
-
   return (
     <div className="pb-24 mobile:pb-16">
       <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />

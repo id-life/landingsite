@@ -1,12 +1,16 @@
 import { useMemo } from 'react';
 import PodcastList from '@/app/podcast/_components/PodcastList';
 import PodcastCover from '@/app/podcast/_components/PodcastCover';
-import { PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
+import { PODCAST_METADATA, PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
 import type { Metadata } from 'next';
 
 export const revalidate = 300; // 5min
 
-export const metadata: Metadata = { title: 'Podcast-Immortal Dragons' };
+export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+  const { c } = searchParams;
+  const id = c ?? PODCAST_NAV_LIST[0].id;
+  return { ...PODCAST_METADATA[id] };
+}
 
 type SearchParams = { [key: string]: PodcastCategory | undefined };
 

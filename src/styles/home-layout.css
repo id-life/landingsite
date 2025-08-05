@@ -5,9 +5,25 @@
 @tailwind base;
 
 @layer base {
+  :root {
+    font-size: 16px;
+  }
+
   body {
     background: var(--background);
     overscroll-behavior: none;
     @apply mobile:h-full mobile:overflow-hidden;
+  }
+
+  @media screen and (min-width: 1px) {
+    :root {
+      font-size: 0.8333vw;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    :root {
+      font-size: 16px;
+    }
   }
 }
