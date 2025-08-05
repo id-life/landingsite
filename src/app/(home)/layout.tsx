@@ -54,7 +54,7 @@ const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Jane Doe',
+    name: 'Boyang',
     jobTitle: 'Founder, Investor',
     worksFor: 'IMMORTAL DRAGONS',
     image: 'https://cdn.id.life/images/boyang.jpg',
