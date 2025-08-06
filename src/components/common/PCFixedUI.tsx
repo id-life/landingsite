@@ -1,24 +1,24 @@
 'use client';
 
-import { memo, ReactNode, useEffect, useMemo } from 'react';
 import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
+import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
+import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { CAROUSEL_ITEMS } from '@/constants/config';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { memo, ReactNode, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
+import FixedParticles from './FixedParticles';
 import PageArrows from './PageArrows';
+import RippleButton from './RippleButton';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
-import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
-import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import RippleButton from './RippleButton';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import FixedParticles from './FixedParticles';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function PCFixedUI() {
   const { trackEvent } = useGA();
@@ -37,7 +37,7 @@ export default function PCFixedUI() {
   }, [currentPage, setIsShowingDiseaseManagement]);
 
   return (
-    <>
+    <div id="pc-fixed-ui" className="opacity-0">
       {isShowingDiseaseManagement ? (
         <></>
       ) : currentPage.id === NAV_LIST[0].id ? (
@@ -67,7 +67,7 @@ export default function PCFixedUI() {
           </RippleButton>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { gsap } from 'gsap';
 import * as THREE from 'three';
 import { Center } from '@react-three/drei';
@@ -7,14 +7,18 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useLogoTextures } from '@/hooks/useLogoTextures';
+import { useAtomValue } from 'jotai';
+import { globalLoadedAtom } from '@/atoms/geo';
+import { useGSAP } from '@gsap/react';
 
-export default function CenterLogo() {
+const CenterLogo = () => {
   const { pointer, size } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const smootherRef = useRef(ScrollSmoother.get());
   const logoMeshRef = useRef<THREE.Mesh>(null);
   const descMeshRef = useRef<THREE.Mesh>(null);
   const [currentLogo, setCurrentLogo] = useState<LogoType>(LogoType.EN);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
 
   // Use custom hook for texture management
   const {
@@ -40,6 +44,53 @@ export default function CenterLogo() {
   const logoHeight = logoScale;
   const descWidth = descScale * currentDescAspectRatio;
   const descHeight = descScale;
+  const { contextSafe } = useGSAP();
+
+  const triggerFadeIn = contextSafe(() => {
+    if (!logoMeshRef.current || !descMeshRef.current) return;
+
+    const logoMaterial = logoMeshRef.current.material as THREE.MeshBasicMaterial;
+    const descMaterial = descMeshRef.current.material as THREE.MeshBasicMaterial;
+
+    if (!logoMaterial || !descMaterial) return;
+
+    // Fade in
+    gsap.to([logoMaterial, descMaterial], {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+    });
+  });
+
+  // Initialize with opacity 0
+  useGSAP(
+    () => {
+      if (!globalLoaded) return;
+
+      if (!logoMeshRef.current || !descMeshRef.current) return;
+
+      // Get materials
+      const logoMaterial = logoMeshRef.current.material as THREE.MeshBasicMaterial;
+      const descMaterial = descMeshRef.current.material as THREE.MeshBasicMaterial;
+
+      if (!logoMaterial || !descMaterial) {
+        console.log('🎭 CenterLogo: Materials not ready, skipping initial setup');
+        return;
+      }
+
+      // Start with opacity 0
+      gsap.set(logoMaterial, { opacity: 0 });
+      gsap.set(descMaterial, { opacity: 0 });
+
+      console.log('🎭 CenterLogo: Set initial opacity to 0');
+    },
+    { scope: groupRef, dependencies: [globalLoaded] },
+  );
+
+  useEffect(() => {
+    if (!globalLoaded) return;
+    triggerFadeIn();
+  }, [globalLoaded, triggerFadeIn]);
 
   useFrame(() => {
     if (!groupRef.current || !smootherRef.current) return;
@@ -155,4 +206,8 @@ export default function CenterLogo() {
       </Center>
     </group>
   );
-}
+};
+
+CenterLogo.displayName = 'CenterLogo';
+
+export default CenterLogo;

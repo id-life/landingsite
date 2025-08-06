@@ -35,7 +35,7 @@ export default function MobileNav() {
     <div
       id="nav"
       className={cn(
-        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5',
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
         isMobileCharacterRelationShow && 'character-relation-css-vars-inject z-[51] mobile:pb-0',
       )}
     >

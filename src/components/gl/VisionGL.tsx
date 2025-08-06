@@ -18,7 +18,7 @@ export default function VisionGL() {
   }, [viewport?.width]);
 
   useGSAP(() => {
-    const tl = gsap.timeline({
+    gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[5].id}`,
         scrub: true,

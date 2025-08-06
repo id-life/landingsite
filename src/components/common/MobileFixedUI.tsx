@@ -26,7 +26,7 @@ export default function MobileFixedUI() {
   }, [currentPage.id, setIsShowingDiseaseManagement]);
 
   return (
-    <>
+    <div id="mobile-fixed-ui" className="opacity-0">
       {isShowingDiseaseManagement ? (
         <></>
       ) : currentPage.id === NAV_LIST[0].id ? (
@@ -57,6 +57,6 @@ export default function MobileFixedUI() {
           </RippleButton>
         </>
       )}
-    </>
+    </div>
   );
 }

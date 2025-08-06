@@ -101,7 +101,7 @@ export function OuterLoader() {
 
             gsap.to(progressRef.current, {
               opacity: 0,
-              duration: 0.5,
+              duration: 0.3,
               onComplete: () => {
                 setIsLoadingUI(true);
                 setGlobalLoaded(true);

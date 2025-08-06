@@ -1,15 +1,22 @@
 'use client';
 
-import Engagement from '@/components/engagement/Engagement';
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
+import CharacterRelation from '@/components/character-relation/CharacterRelation';
+import PCFixedUI from '@/components/common/PCFixedUI';
+import Engagement from '@/components/engagement/Engagement';
+import { OuterLoader } from '@/components/gl/ProgressLoader';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
 import Footer from '@/components/layout/footer/Footer';
+import FooterContact from '@/components/layout/footer/FooterContact';
 import { NAV_LIST } from '@/components/nav/nav';
+import Spectrum from '@/components/spectrum/Spectrum';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { useGSAP } from '@gsap/react';
@@ -17,13 +24,6 @@ import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-import FooterContact from '@/components/layout/footer/FooterContact';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import Spectrum from '@/components/spectrum/Spectrum';
-import CharacterRelation from '@/components/character-relation/CharacterRelation';
-import { OuterLoader } from '@/components/gl/ProgressLoader';
-import PCFixedUI from '@/components/common/PCFixedUI';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
