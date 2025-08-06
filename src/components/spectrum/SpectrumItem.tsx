@@ -37,18 +37,17 @@ const SpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
 
   return (
     <div className="relative flex items-center gap-1">
-      <a href={link} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
-        <p
-          className={cn(
-            'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
-            hasLink &&
-              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
-            labelClassName,
-          )}
-        >
-          {label}
-        </p>
-      </a>
+      <p
+        onClick={handleClick}
+        className={cn(
+          'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+          hasLink &&
+            'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+          labelClassName,
+        )}
+      >
+        {label}
+      </p>
       {isComingSoon && (
         <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
           coming soon

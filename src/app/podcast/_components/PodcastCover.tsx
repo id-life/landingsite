@@ -28,30 +28,24 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
             <p className="mt-4 text-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
-            {data.xyzLink ? (
-              <img
-                onClick={() => handleLinkClick(data.xyzLink)}
-                className="w-7.5 cursor-pointer mobile:w-6"
-                src="/imgs/podcast/fm_xyz.png"
-                alt=""
-              />
-            ) : null}
-            {data.spotifyLink ? (
-              <img
-                onClick={() => handleLinkClick(data.spotifyLink)}
-                className="w-7.5 cursor-pointer mobile:w-6"
-                src="/imgs/podcast/fm_spotify.png"
-                alt=""
-              />
-            ) : null}
-            {data.podcastLink ? (
-              <img
-                onClick={() => handleLinkClick(data.podcastLink)}
-                className="w-7.5 cursor-pointer mobile:w-6"
-                src="/imgs/podcast/fm_podcast.png"
-                alt=""
-              />
-            ) : null}
+            <img
+              onClick={() => handleLinkClick(data.xyzLink)}
+              className="w-7.5 cursor-pointer mobile:w-6"
+              src="/imgs/podcast/fm_xyz.png"
+              alt=""
+            />
+            <img
+              onClick={() => handleLinkClick(data.spotifyLink)}
+              className="w-7.5 cursor-pointer mobile:w-6"
+              src="/imgs/podcast/fm_spotify.png"
+              alt=""
+            />
+            <img
+              onClick={() => handleLinkClick(data.podcastLink)}
+              className="w-7.5 cursor-pointer mobile:w-6"
+              src="/imgs/podcast/fm_podcast.png"
+              alt=""
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { PodcastItem } from '@/apis/types';
+import { clsx } from 'clsx';
 
 type PodcastLinkProps = {
   data: PodcastItem;
@@ -14,30 +15,24 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
 
   return (
     <div className="flex-center gap-2">
-      {data.xyzLink ? (
-        <img
-          onClick={() => handleLinkClick(data.xyzLink)}
-          className="w-7.5 cursor-pointer mobile:w-6"
-          src="/imgs/podcast/fm_xyz.png"
-          alt=""
-        />
-      ) : null}
-      {data.spotifyLink ? (
-        <img
-          onClick={() => handleLinkClick(data.spotifyLink)}
-          className="w-7.5 cursor-pointer mobile:w-6"
-          src="/imgs/podcast/fm_spotify.png"
-          alt=""
-        />
-      ) : null}
-      {data.podcastLink ? (
-        <img
-          onClick={() => handleLinkClick(data.podcastLink)}
-          className="w-7.5 cursor-pointer mobile:w-6"
-          src="/imgs/podcast/fm_podcast.png"
-          alt=""
-        />
-      ) : null}
+      <img
+        onClick={() => handleLinkClick(data.xyzLink)}
+        className={clsx('w-7.5 mobile:w-6', data.xyzLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+        src="/imgs/podcast/fm_xyz.png"
+        alt=""
+      />
+      <img
+        onClick={() => handleLinkClick(data.spotifyLink)}
+        className={clsx('w-7.5 mobile:w-6', data.spotifyLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+        src="/imgs/podcast/fm_spotify.png"
+        alt=""
+      />
+      <img
+        onClick={() => handleLinkClick(data.podcastLink)}
+        className={clsx('w-7.5 mobile:w-6', data.podcastLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+        src="/imgs/podcast/fm_podcast.png"
+        alt=""
+      />
     </div>
   );
 }
