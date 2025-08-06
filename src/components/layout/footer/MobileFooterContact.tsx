@@ -13,11 +13,12 @@ import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
+import { MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { Links } from '@/constants/links';
 
 type Inputs = {
   EMAIL: string;
@@ -79,13 +80,13 @@ export default function MobileFooterContact() {
     });
 
     if (type === MediaLinkType.Youtube) {
-      window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
+      window.open(Links.youtube, '__blank');
     }
     if (type === MediaLinkType.Linkedin) {
-      window.open('https://www.linkedin.com/company/immortaldragons/', '__blank');
+      window.open(Links.linkedin, '__blank');
     }
     if (type === MediaLinkType.Media) {
-      window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
+      window.open(Links.media, '__blank');
     }
   };
 

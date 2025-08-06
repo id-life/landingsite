@@ -1,6 +1,6 @@
 import { PlayMode } from '@/atoms/audio-player';
 import { AnatomyCamera, PredictionModel } from '@/atoms/twin';
-import { MediaLinkType } from '@/components/layout/footer/FooterContact';
+import { MediaLinkType } from '@/constants/links';
 import { ModelType } from '@/components/twin/model/type';
 
 export const GA_EVENT_NAMES = {
