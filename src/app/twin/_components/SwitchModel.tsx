@@ -19,14 +19,14 @@ import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 const ANIMATION_CONFIG = {
   interval: 4000, // 5 seconds
   staggerDelay: 400, // delay between each avatar animation (ms) - staggerChildren effect
-  scaleDuration: 0.4, // duration of scale animation
+  scaleDuration: 0.5, // duration of scale animation
   scaleValue: 1.1, // scale multiplier
 };
 
 // Border animation configuration - independent 2s cycle
 const BORDER_ANIMATION_CONFIG = {
   interval: 4000, // 2 seconds
-  scaleDuration: 1.5, // duration of scale animation
+  scaleDuration: 2.2, // duration of scale animation
   scaleValue: 1.1, // scale multiplier
 };
 
