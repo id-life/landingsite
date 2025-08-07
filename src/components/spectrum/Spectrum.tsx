@@ -164,7 +164,7 @@ function Spectrum() {
     });
     tl.from('.spectrum-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
 
-    tl.to(() => {}, { duration: 5 });
+    // tl.to(() => {}, { duration: 5 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
     tl.add(() => {
