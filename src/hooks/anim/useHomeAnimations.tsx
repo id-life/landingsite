@@ -4,10 +4,7 @@ import { SCROLL_SMOOTHER_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
-
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 /**
  * Home 页面动画管理 Hook

@@ -7,12 +7,10 @@ import { ModelType } from '@/components/twin/model/type';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom, useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 function Twin() {
   const isResetDemo = useRef(false);

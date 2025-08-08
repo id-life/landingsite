@@ -4,23 +4,19 @@ import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { throttle } from 'lodash-es';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-
-// register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 SwiperType.use([FreeMode]);
 
@@ -80,6 +76,9 @@ function Portfolio() {
   });
 
   const { trackEvent } = useGA();
+
+  // 使用新的 Portfolio 动画 Hook
+  usePortfolioItemAnimation(wrapperRef, portfolioRefs, setImageIdx);
 
   const handleFundClick = useCallback(
     (item: PortfolioItemInfo) => () => {
@@ -143,63 +142,6 @@ function Portfolio() {
       setEnableDownJudge(true);
     });
   }, []);
-
-  useGSAP(
-    () => {
-      if (!portfolioRefs.current.length) return;
-
-      let isMouseInFundArea = false;
-      const wrapper = wrapperRef.current?.querySelector('.page2-fund');
-
-      // create a throttled setImageIdx function
-      const throttledSetImageIdx = throttle((index: number) => {
-        setImageIdx(index);
-      }, 200);
-
-      // add mouse event listeners for the entire fund area
-      wrapper?.addEventListener('mouseenter', () => {
-        isMouseInFundArea = true;
-      });
-
-      wrapper?.addEventListener('mouseleave', () => {
-        isMouseInFundArea = false;
-        throttledSetImageIdx(0);
-      });
-
-      portfolioRefs.current.forEach((div, idx) => {
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
-        tl.to(div, { scale: 1.1 });
-        const title = div.querySelector('.fund-title');
-        const selected = title?.querySelectorAll('img');
-        const desc = div.querySelector('.fund-desc');
-        const subtitle = div.querySelector('.fund-subtitle');
-        if (title) {
-          tl.to(title, { fontSize: '1.5rem', fontWeight: 600, lineHeight: '1.75rem' });
-        }
-        if (selected) {
-          tl.to(selected, { opacity: 1 });
-        }
-        if (desc) {
-          tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
-        }
-        if (subtitle) {
-          tl.from(subtitle, { opacity: 0, translateY: '50%' }, '<50%');
-        }
-        div.addEventListener('mouseenter', () => {
-          throttledSetImageIdx(idx + 1);
-          tl.play();
-        });
-        div.addEventListener('mouseleave', () => {
-          tl.reverse();
-          // reset the image index only when the mouse actually leaves the entire fund area
-          if (!isMouseInFundArea) {
-            throttledSetImageIdx(0);
-          }
-        });
-      });
-    },
-    { scope: wrapperRef, dependencies: [] },
-  );
 
   const portfolioItems = useMemo(() => {
     const items = portfolio.map((item, index) => (

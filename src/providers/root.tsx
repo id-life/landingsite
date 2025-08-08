@@ -1,17 +1,20 @@
 'use client';
 
-import React, { PropsWithChildren, JSX } from 'react';
-import gsap from 'gsap';
+import { ProviderComposer } from '@/components/common/ProviderComposer';
+import { JotaiStoreProvider } from '@/providers/jotai-provider';
+import { ReactQueryProvider } from '@/providers/react-query-provider';
 import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from 'gsap';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { JotaiStoreProvider } from '@/providers/jotai-provider';
-import { ProviderComposer } from '@/components/common/ProviderComposer';
-import { ReactQueryProvider } from '@/providers/react-query-provider';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { JSX, PropsWithChildren } from 'react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, ScrollToPlugin, DrawSVGPlugin);
+gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, ScrollToPlugin, DrawSVGPlugin, SplitText, MotionPathPlugin);
+
 const contexts: JSX.Element[] = [
   <JotaiStoreProvider key="jotaiStoreProvider" />,
   <ReactQueryProvider key="reactQueryProvider" />,

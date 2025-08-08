@@ -1,19 +1,16 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
+import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
-
-gsap.registerPlugin(useGSAP);
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
