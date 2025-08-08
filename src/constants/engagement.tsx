@@ -478,7 +478,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     alt: 'Public Longevity\nGroup',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
-    link: 'https://biohackerdao.org/',
+    link: 'https://publiclongevitygroup.framer.website/',
     extraSponsor: {
       alt: 'Lifespan Research\nInstitute',
       coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.png',
