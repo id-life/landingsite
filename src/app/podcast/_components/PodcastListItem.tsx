@@ -4,6 +4,8 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { PodcastItem } from '@/apis/types';
 import dayjsDuration from 'dayjs/plugin/duration';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 dayjs.extend(dayjsDuration);
 
@@ -12,8 +14,9 @@ type PodcastListItemProps = {
 };
 
 export default function PodcastListItem({ data }: PodcastListItemProps) {
+  const { trackEvent } = useGA();
   const handleItemClick = () => {
-    console.log('Link clicked');
+    trackEvent({ name: GA_EVENT_NAMES.EPISODE_ITEM_CLICK, label: `${data.category.split('_')[1]}_${data.title}` });
   };
 
   return (

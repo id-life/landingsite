@@ -7,15 +7,17 @@ import { useAtom } from 'jotai';
 import LogoSVGen from '@/components/svg/LogoSVGen';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
 import { isPodcastNavOpenAtom } from '@/atoms/podcast';
+import { useSearchParams, usePathname } from 'next/navigation';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import PodcastNavDialog from '@/app/podcast/_components/PodcastNavDialog';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border-2.svg?component';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 export default function PodcastHeader() {
-  const router = useRouter();
   const pathname = usePathname();
+  const { trackEvent } = useGA();
   const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useAtom(isPodcastNavOpenAtom);
 
@@ -25,7 +27,8 @@ export default function PodcastHeader() {
   );
 
   const handleHomeClick = () => {
-    router.push('/');
+    trackEvent({ name: GA_EVENT_NAMES.ID_HOME_REDIRECT });
+    window.open('/', '_blank');
   };
 
   return (

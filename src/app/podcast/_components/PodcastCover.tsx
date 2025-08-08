@@ -1,19 +1,27 @@
 'use client';
 
 import { PODCAST_COVER, PodcastCategory } from '@/app/podcast/_components/constant';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 
 type PodcastCoverProps = {
   category: PodcastCategory;
 };
 
 export default function PodcastCover({ category }: PodcastCoverProps) {
+  const { trackEvent } = useGA();
   const data = useMemo(() => PODCAST_COVER[category], [category]);
 
-  const handleLinkClick = (url?: string) => {
+  const handleLinkClick = (type: string, url?: string) => {
     if (!url) return;
+    trackEvent({ name: GA_EVENT_NAMES.SUBSCRIBE_VIEW, label: type, podcast_episode: `${category}_home` });
     window.open(url, '_blank');
   };
+
+  useEffect(() => {
+    trackEvent({ name: GA_EVENT_NAMES.PODCAST_PAGE_VIEW, label: `${category}_page` });
+  }, [category, trackEvent]);
 
   return (
     <div>
@@ -29,19 +37,19 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
           </div>
           <div className="flex items-center justify-start gap-2">
             <img
-              onClick={() => handleLinkClick(data.xyzLink)}
+              onClick={() => handleLinkClick('xyz', data.xyzLink)}
               className="w-7.5 cursor-pointer mobile:w-6"
               src="/imgs/podcast/fm_xyz.png"
               alt=""
             />
             <img
-              onClick={() => handleLinkClick(data.spotifyLink)}
+              onClick={() => handleLinkClick('spotify', data.spotifyLink)}
               className="w-7.5 cursor-pointer mobile:w-6"
               src="/imgs/podcast/fm_spotify.png"
               alt=""
             />
             <img
-              onClick={() => handleLinkClick(data.podcastLink)}
+              onClick={() => handleLinkClick('podcast', data.podcastLink)}
               className="w-7.5 cursor-pointer mobile:w-6"
               src="/imgs/podcast/fm_podcast.png"
               alt=""

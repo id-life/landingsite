@@ -60,6 +60,17 @@ export const GA_EVENT_NAMES = {
   MUSIC_DOWNLOAD: 'music_download',
   MUSIC_AUTO_PLAY: 'music_auto_play',
   USER_INTERACT: 'user_interact',
+
+  // podcast page
+  PODCAST_PAGE_VIEW: 'podcast_page_view',
+  ID_HOME_REDIRECT: 'id_home_redirect',
+  EPISODE_ITEM_CLICK: 'episode_item_click',
+  EPISODE_PAGE_VIEW: 'episode_page_view',
+  SUBSCRIBE_VIEW: 'subscribe_view',
+  SECTION_VIEW: 'section_view',
+  EPISODE_PLAY: 'episode_play',
+  EPISODE_END: 'episode_end',
+  TIMELINE_JUMP: 'timeline_jump',
 } as const;
 
 export const GA_EVENT_LABELS = {
@@ -130,6 +141,14 @@ export const GA_EVENT_LABELS = {
     REPEAT_ALL: 'repeat_all',
     SHUFFLE: 'shuffle',
   },
+  SECTION_VIEW: {
+    DETAIL: 'detail_page',
+    COMMENT: 'comment_page',
+  },
+  EPISODE_PLAY: {
+    START: 'start',
+    PAUSE: 'pause',
+  },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,
   | 'PORTFOLIO_VIEW'
@@ -165,6 +184,13 @@ export const GA_EVENT_LABELS = {
   | 'DMCS_SCROLL'
   | 'DMCS_DOWNLOAD'
   | 'USER_INTERACT'
+  | 'PODCAST_PAGE_VIEW'
+  | 'ID_HOME_REDIRECT'
+  | 'EPISODE_ITEM_CLICK'
+  | 'EPISODE_PAGE_VIEW'
+  | 'SUBSCRIBE_VIEW'
+  | 'EPISODE_END'
+  | 'TIMELINE_JUMP'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
