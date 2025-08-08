@@ -1,25 +1,25 @@
-import { useRef, useEffect, useMemo } from 'react';
-import gsap from 'gsap';
-import * as THREE from 'three';
-import { useAtomValue } from 'jotai';
-import { useGSAP } from '@gsap/react';
 import { globalLoadedAtom } from '@/atoms/geo';
-import { useGesture } from '@use-gesture/react';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useFrame, useThree } from '@react-three/fiber';
-import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { useGSAP } from '@gsap/react';
+import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useGesture } from '@use-gesture/react';
+import gsap from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useAtomValue } from 'jotai';
+import { useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
 
 // Constants
 const INIT_ROTATION = Math.PI / 2;
 const DESKTOP_SCALE = 0.13;
 const DRAG_SENSITIVITY = 150;
 const RECOVERY_DURATION = 1.5;
-const ANIMATION_DURATION = 1.5;
+const ANIMATION_DURATION = 3.0;
 const ANIMATION_DELAY = 0.3;
 const AUTO_SWING_AMPLITUDE = 0.1;
 
-function useOptimizedGLTF() {
+export function useOptimizedGLTF() {
   const { nodes } = useGLTF('/models/logo_v1.glb');
 
   const logoGeometry = useMemo(() => {
@@ -41,8 +41,18 @@ export default function DragonModel() {
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const globalLoaded = useAtomValue(globalLoadedAtom);
-
+  const fixedUIHasTriggered = useRef(false);
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
+  // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
+  const { contextSafe } = useGSAP();
+
+  // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
+  const triggerFadeInAnimation = contextSafe(() => {
+    const element = document.querySelector('#pc-fixed-ui');
+    const nav = document.querySelector('#nav');
+    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    if (element) gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+  });
 
   // Frame update loop
   useFrame(({ clock }) => {
@@ -125,6 +135,14 @@ export default function DragonModel() {
         ease: 'power3.out',
         duration: ANIMATION_DURATION,
         delay: ANIMATION_DELAY,
+        onUpdate: function () {
+          const progress = this.progress();
+          if (progress >= 0.5 && !fixedUIHasTriggered.current) {
+            fixedUIHasTriggered.current = true;
+            // Trigger FixedUI fade-in
+            triggerFadeInAnimation();
+          }
+        },
       });
 
       gsap.from(modelRef.current.rotation, {

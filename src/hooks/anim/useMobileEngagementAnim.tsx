@@ -1,11 +1,11 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
 
 export function useMobileEngagementAnim() {
-  const enterTLRef = useRef<gsap.core.Timeline | null>(null);
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const userInteractedRef = useRef(false);
@@ -13,6 +13,8 @@ export function useMobileEngagementAnim() {
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const [isMobileEngagementJump, setIsMobileEngagementJump] = useAtom(isMobileEngagementJumpAtom);
+
+  const { contextSafe } = useGSAP();
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -124,13 +126,13 @@ export function useMobileEngagementAnim() {
 
   const enterAnimate = useCallback(() => {
     console.log('enterAnimate');
-    if (enterTLRef.current) enterTLRef.current.kill();
     userInteractedRef.current = false;
+
     const enterTL = gsap.timeline({
       duration: 0.3,
     });
-    enterTLRef.current = enterTL;
 
+    // 设置初始状态
     enterTL.set(
       ['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-container'],
       {
@@ -166,39 +168,46 @@ export function useMobileEngagementAnim() {
       stagger: 0.02,
     });
 
-    if (!isMobileEngagementJump) enterTLRef.current?.play();
+    if (!isMobileEngagementJump) enterTL.play();
 
-    // 添加事件监听器以便在用户交互时停止自动滚动
-    const mapContainer = document.querySelector('.world-map-container');
-    if (mapContainer) {
-      mapContainer.addEventListener('click', handleUserInteraction);
-      mapContainer.addEventListener('touchstart', handleUserInteraction, { passive: true });
-      mapContainer.addEventListener('wheel', handleUserInteraction, { passive: true });
-      mapContainer.addEventListener('mousedown', handleUserInteraction);
-    }
-
+    // 动画完成回调
     enterTL.eventCallback('onComplete', () => {
       if (isMobileEngagementJump) {
         setIsMobileEngagementJump(false);
         return;
       }
-      // startAutoScroll();
       startAutoDotShow();
     });
 
-    return () => {
-      enterTLRef.current?.kill();
-      if (autoScrollRef.current) autoScrollRef.current.kill();
-      if (dotShowIntervalRef.current) clearInterval(dotShowIntervalRef.current);
-      // 移除事件监听器
+    // 使用 useGSAP 管理事件监听器
+    const setupEventListeners = contextSafe(() => {
+      const mapContainer = document.querySelector('.world-map-container');
       if (mapContainer) {
-        mapContainer.removeEventListener('click', handleUserInteraction);
-        mapContainer.removeEventListener('touchstart', handleUserInteraction);
-        mapContainer.removeEventListener('wheel', handleUserInteraction);
-        mapContainer.removeEventListener('mousedown', handleUserInteraction);
+        const events = ['click', 'touchstart', 'wheel', 'mousedown'] as const;
+        const options = { passive: true };
+
+        events.forEach((event) => {
+          mapContainer.addEventListener(
+            event,
+            handleUserInteraction,
+            event === 'touchstart' || event === 'wheel' ? options : undefined,
+          );
+        });
+
+        // 返回清理函数
+        return () => {
+          events.forEach((event) => {
+            mapContainer.removeEventListener(event, handleUserInteraction);
+          });
+        };
       }
-    };
-  }, [isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoDotShow]);
+      return () => {};
+    });
+
+    const cleanup = setupEventListeners();
+
+    return cleanup || (() => {});
+  }, [contextSafe, isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoDotShow]);
 
   return {
     enterAnimate,

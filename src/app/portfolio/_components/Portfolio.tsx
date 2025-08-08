@@ -74,7 +74,7 @@ function Portfolio() {
       if (!enableJudge || currentPage.id !== NAV_LIST[1].id || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.965 } });
     },
     isUp: false,
   });

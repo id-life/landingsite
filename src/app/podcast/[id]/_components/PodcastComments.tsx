@@ -10,7 +10,7 @@ export default function PodcastComments({ id }: PodcastCommentsProps) {
   const { data } = useFetchPodcastComment(id);
 
   return (
-    <div className="grid gap-7">
+    <div className="grid gap-7 mobile:gap-5">
       {data && data.length > 0 ? data.map((item) => <PodcastCommentItem key={item.id} data={item} />) : <NoComment />}
     </div>
   );

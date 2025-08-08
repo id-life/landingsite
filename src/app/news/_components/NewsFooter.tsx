@@ -7,12 +7,13 @@ import { GA_EVENT_NAMES } from '@/constants/ga';
 import { GA_EVENT_LABELS } from '@/constants/ga';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { MediaLinkType, MediaLinkTypeKey } from '@/components/layout/footer/FooterContact';
+import { MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import PodcastSVG from '@/../public/svgs/podcast.svg?component';
 import XyzSVG from '@/../public/svgs/xyz.svg?component';
+import { Links } from '@/constants/links';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -45,25 +46,25 @@ export default function NewsFooter() {
     });
 
     if (type === MediaLinkType.Youtube) {
-      window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
+      window.open(Links.youtube, '__blank');
     }
     if (type === MediaLinkType.Linkedin) {
-      window.open('https://www.linkedin.com/company/immortaldragons/', '__blank');
+      window.open(Links.linkedin, '__blank');
     }
     if (type === MediaLinkType.Media) {
-      window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
+      window.open(Links.media, '__blank');
     }
 
     if (type === MediaLinkType.Podcast) {
-      window.open('https://podcasts.apple.com/cn/podcast/不朽真龙-immortaldragons/id1815210084', '__blank');
+      window.open(Links.podcast, '__blank');
     }
     if (type === MediaLinkType.Xyz) {
-      window.open('https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8', '__blank');
+      window.open(Links.xyz, '__blank');
     }
   };
 
   return (
-    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10">
+    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10 mobile:px-5 mobile:pb-7.5 mobile:pt-15">
       <div className="flex flex-col items-start justify-between">
         <img className="w-[14.2rem]" src="/svgs/logo-en.svg" alt="" />
         <div className="flex items-center gap-7 mobile:mt-6">

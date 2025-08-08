@@ -15,20 +15,12 @@ import BorderSVG from '@/../public/svgs/border.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
+import ArrowRightSVG from '@/../public/svgs/arrow-right.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { ValueOf } from '@/constants/config';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
-export const MediaLinkType = {
-  Youtube: 'youtube',
-  Linkedin: 'linkedin',
-  Media: 'media',
-  Podcast: 'podcast',
-  Xyz: 'xyz',
-} as const;
-
-export type MediaLinkTypeKey = ValueOf<typeof MediaLinkType>;
+import { Links, MediaLinkTypeKey, MediaLinkType } from '@/constants/links';
+import Link from 'next/link';
 
 type Inputs = {
   EMAIL: string;
@@ -75,13 +67,13 @@ export default function FooterContact() {
     });
 
     if (type === MediaLinkType.Youtube) {
-      window.open('https://www.youtube.com/@Immortal-Dragons', '__blank');
+      window.open(Links.youtube, '__blank');
     }
     if (type === MediaLinkType.Linkedin) {
-      window.open('https://www.linkedin.com/company/immortaldragons/', '__blank');
+      window.open(Links.linkedin, '__blank');
     }
     if (type === MediaLinkType.Media) {
-      window.open('https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG', '__blank');
+      window.open(Links.media, '__blank');
     }
   };
 
@@ -153,7 +145,17 @@ export default function FooterContact() {
               </div>
               <div className="mt-3 flex items-center justify-start gap-1.5">
                 <img src="/svgs/contact-email.svg" alt="" />
-                contact@id.life
+                contact@id.life123
+              </div>
+              <div className="flex">
+                <Link
+                  href="/about"
+                  target="_blank"
+                  className="mt-12 flex cursor-pointer gap-1.5 font-oxanium text-xl/6 font-bold hover:fill-red-600 hover:text-red-600"
+                >
+                  ABOUT US
+                  <ArrowRightSVG className="size-6" />
+                </Link>
               </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold">

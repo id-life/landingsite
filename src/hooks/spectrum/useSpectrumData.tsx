@@ -209,11 +209,11 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Immortal Dragons  不朽真龙',
-            link: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',
+            link: '/podcast',
           },
           {
             label: 'Long Talk  龙门阵',
-            link: 'https://www.xiaoyuzhoufm.com/podcast/67cff760566d55be46eb7ead ',
+            link: '/podcast?c=lt',
           },
         ],
       },

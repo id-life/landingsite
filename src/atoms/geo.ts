@@ -1,5 +1,4 @@
 import { atom } from 'jotai';
-import { GeoData } from '@/components/gl/model/geo/config';
 
 export const globalLoadedAtom = atom<boolean>(false);
 export const isLoadingUIAtom = atom<boolean>(false);

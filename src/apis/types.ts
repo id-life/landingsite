@@ -67,7 +67,8 @@ export type PodcastItem = {
   xyzLink: string;
   createdAt: string;
   spotifyLink: string;
-  appleLink: string;
+  transcript: string;
+  keywords: string[];
 };
 
 export type PodcastCommentItemType = {

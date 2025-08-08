@@ -68,7 +68,7 @@ export function useNavigation() {
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('spectrum-trigger');
           if (!st) return;
-          smoother?.scrollTo(st.start + (st.end - st.start) * 0.4, false);
+          smoother?.scrollTo(st.start + (st.end - st.start) * 0.965, false);
         });
         setTimeout(() => {
           window.isNavScrolling = false;
