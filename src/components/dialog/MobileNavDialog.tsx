@@ -13,8 +13,6 @@ import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
-gsap.registerPlugin(useGSAP);
-
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);

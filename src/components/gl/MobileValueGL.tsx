@@ -17,16 +17,12 @@ import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, DrawSVGPlugin);
 
 type TitleProps = {
   titleRef: React.RefObject<THREE.Group>;

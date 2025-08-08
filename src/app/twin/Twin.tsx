@@ -12,8 +12,6 @@ import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
-
 function Twin() {
   const isResetDemo = useRef(false);
   const { ref, inView } = useInView({ threshold: 0 });
