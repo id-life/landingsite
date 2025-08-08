@@ -1,12 +1,12 @@
-import { useCallback } from 'react';
 import { useGSAP } from '@gsap/react';
-import { ScrollTrigger, SCROLL_TRIGGER_DEFAULTS, ANIMATION_PRESETS } from '@/utils/gsap-config';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SCROLL_TRIGGER_DEFAULTS, ANIMATION_PRESETS } from '@/utils/gsap-config';
 
 interface ScrollAnimationConfig {
   /** 触发器选择器 */
   trigger: string;
   /** ScrollTrigger 配置 */
-  scrollTrigger?: gsap.ScrollTriggerVars;
+  scrollTrigger?: ScrollTrigger.Vars;
   /** 动画元素选择器 */
   target?: string;
   /** 动画配置 */
@@ -66,7 +66,7 @@ export function useScrollAnimation({
 /**
  * 页面切换动画的 Hook
  */
-export function usePageTransition(pageId: string, onPageChange?: (pageId: string) => void, config?: gsap.ScrollTriggerVars) {
+export function usePageTransition(pageId: string, onPageChange?: (pageId: string) => void, config?: ScrollTrigger.Vars) {
   const { contextSafe } = useGSAP();
 
   const createPageTrigger = contextSafe(() => {
