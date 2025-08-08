@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
 import PodcastComments from '@/app/podcast/[id]/_components/PodcastComments';
 import Markdown, { Components } from 'react-markdown';
@@ -10,6 +10,8 @@ import '@/styles/components/markdown-timeline.css';
 import { PodcastItem } from '@/apis/types';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 const TABS = ['时间轴', '评论'] as const;
 
@@ -18,7 +20,9 @@ type PodcastContentTabProps = {
 };
 
 export default function PodcastContentTab({ data }: PodcastContentTabProps) {
+  const { trackEvent } = useGA();
   const [activeTab, setActiveTab] = useState<number>(0);
+  const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
 
   const processedContent = data.transcript?.replace(/@\[(\w+)]\(([^)]+)\)/g, (match, type, param) => {
     return `<span data-custom-type="${type}" data-custom-param="${param}" class="custom-timeline">${param}</span>`;
@@ -26,6 +30,7 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
 
   const handleCustomElementClick = (type: string, param: string) => {
     if (type === 'timeline') {
+      trackEvent({ name: GA_EVENT_NAMES.TIMELINE_JUMP, label: param, podcast_episode: episode });
       eventBus.next({ type: MessageType.PODCAST_DURATION, payload: param });
     }
   };
@@ -45,6 +50,11 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
       return <span {...props} />;
     },
   };
+
+  useEffect(() => {
+    const label = activeTab === 0 ? GA_EVENT_LABELS.SECTION_VIEW.DETAIL : GA_EVENT_LABELS.SECTION_VIEW.COMMENT;
+    trackEvent({ name: GA_EVENT_NAMES.SECTION_VIEW, label, podcast_episode: episode });
+  }, [activeTab, episode, trackEvent]);
 
   return (
     <div>
