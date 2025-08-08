@@ -38,12 +38,6 @@
 #spectrum-particle-container-mobile-2.particle-container-mobile-2 {
   top: calc(50% + 9rem);
 }
-/* .particle-container .particle-mask,
-.particle-container-mobile-1 .particle-mask,
-.particle-container-mobile-2 .particle-mask {
-  position: absolute;
-  inset: 0;
-} */
 
 .particle-container.active {
   opacity: 0.8;
