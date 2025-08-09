@@ -101,7 +101,7 @@ export const useSpectrumData = () => {
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
       {
-        title: 'Insights Sharing',
+        title: 'Insights & Advocacy',
         titleCn: '演讲与洞见',
         icon: <MeetingSVG />,
         links: [
