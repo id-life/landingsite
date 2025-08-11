@@ -10,18 +10,18 @@ interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
   className?: string;
-  isHover?: boolean;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
+  openSpectrumInNewTab?: (key: string) => void;
 }
 
-const SpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
-  const { trackEvent } = useGA();
+const SpectrumLink = memo(
+  ({ item, openSpectrumInNewTab }: { item: SpectrumLinkItem; openSpectrumInNewTab?: (key: string) => void }) => {
+    const { trackEvent } = useGA();
 
-  const { key, label, link, isComingSoon, onClick, labelClassName } = item;
-  const hasLink = Boolean(link || onClick);
+    const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
+    const hasLink = Boolean(link || onClick);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
+    const handleClick = useCallback(() => {
       if (!hasLink) return;
 
       trackEvent({
@@ -29,39 +29,42 @@ const SpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
         label: key ?? label,
       });
 
-      onClick?.();
-      if (link) window.open(link, '_blank');
-    },
-    [hasLink, trackEvent, key, label, onClick, link],
-  );
+      if (routeKey && onClick && openSpectrumInNewTab) {
+        openSpectrumInNewTab(routeKey);
+      } else {
+        onClick?.();
+        if (link) window.open(link, '_blank');
+      }
+    }, [hasLink, trackEvent, key, label, onClick, link, routeKey, openSpectrumInNewTab]);
 
-  return (
-    <div className="relative flex items-center gap-1">
-      <p
-        onClick={handleClick}
-        className={cn(
-          'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
-          hasLink &&
-            'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
-          labelClassName,
+    return (
+      <div className="relative flex items-center gap-1">
+        <p
+          onClick={handleClick}
+          className={cn(
+            'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+            hasLink &&
+              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+            labelClassName,
+          )}
+        >
+          {label}
+        </p>
+        {isComingSoon && (
+          <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+            coming soon
+          </span>
         )}
-      >
-        {label}
-      </p>
-      {isComingSoon && (
-        <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
-          coming soon
-        </span>
-      )}
-    </div>
-  );
-});
+      </div>
+    );
+  },
+);
 
 SpectrumLink.displayName = 'SpectrumLink';
 
 const linksPerPage = 5;
 const SpectrumItem = memo(
-  forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, isHover }, ref) => {
+  forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, openSpectrumInNewTab }, ref) => {
     const { title, titleCn, icon, links, className: itemClassName } = item;
     const [isMore, setIsMore] = useState(false);
 
@@ -116,10 +119,10 @@ const SpectrumItem = memo(
             ease: 'easeOut',
           }}
         >
-          <SpectrumLink item={item} />
+          <SpectrumLink item={item} openSpectrumInNewTab={openSpectrumInNewTab} />
         </motion.div>
       ));
-    }, [visibleLinks, isMore]);
+    }, [visibleLinks, isMore, openSpectrumInNewTab]);
 
     return (
       <div

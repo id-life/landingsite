@@ -48,6 +48,10 @@ export default function DragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
+    // If opened via spectrum deep link, skip fade-in as user isn't landing on home intro
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#spectrum-')) {
+      return;
+    }
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
@@ -162,11 +166,12 @@ export default function DragonModel() {
 
   // Clean up geometry and material
   useEffect(() => {
+    const mesh = meshRef.current;
     return () => {
       if (geometry) {
         geometry.dispose();
       }
-      const material = meshRef.current?.material as any;
+      const material = (mesh?.material as any) ?? null;
       if (material && material.dispose) {
         material.dispose();
       }

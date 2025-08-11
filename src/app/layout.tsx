@@ -6,6 +6,7 @@ import Background from '@/components/common/Background';
 import { WebVitals } from '@/app/_components/web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ScrollBehavior from '@/components/common/ScrollBehavior';
+import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <Providers>
           <ScrollBehavior />
+          <HashRouter />
           {children}
           <Background />
         </Providers>

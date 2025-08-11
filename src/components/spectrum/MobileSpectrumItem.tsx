@@ -12,30 +12,36 @@ interface SpectrumItemProps {
   className?: string;
   isHover?: boolean;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
+  openSpectrumInNewTab?: (key: string) => void;
 }
 
-const MobileSpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
-  const { trackEvent } = useGA();
+const MobileSpectrumLink = memo(
+  ({ item, openSpectrumInNewTab }: { item: SpectrumLinkItem; openSpectrumInNewTab?: (key: string) => void }) => {
+    const { trackEvent } = useGA();
 
-  const { key, label, link, isComingSoon, onClick, labelClassName } = item;
-  const hasLink = Boolean(link || onClick);
+    const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
+    const hasLink = Boolean(link || onClick);
 
-  const handleClick = useCallback(() => {
-    if (!hasLink) return;
+    const handleClick = useCallback(() => {
+      if (!hasLink) return;
 
-    trackEvent({
-      name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-      label: key ?? label,
-    });
+      trackEvent({
+        name: GA_EVENT_NAMES.SPECTRUM_CLICK,
+        label: key ?? label,
+      });
 
-    onClick?.();
-    if (link) window.open(link, '_blank');
-  }, [hasLink, trackEvent, key, label, onClick, link]);
+      if (routeKey && onClick && openSpectrumInNewTab) {
+        openSpectrumInNewTab(routeKey);
+      } else {
+        onClick?.();
+        if (link) window.open(link, '_blank');
+      }
+    }, [hasLink, trackEvent, key, label, onClick, link, routeKey, openSpectrumInNewTab]);
 
-  return (
-    <div className="relative flex items-center gap-1">
-      <a href={link} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+    return (
+      <div className="relative flex items-center gap-1">
         <p
+          onClick={handleClick}
           className={cn(
             'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
             hasLink &&
@@ -45,21 +51,21 @@ const MobileSpectrumLink = memo(({ item }: { item: SpectrumLinkItem }) => {
         >
           {label}
         </p>
-      </a>
-      {isComingSoon && (
-        <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
-          coming soon
-        </span>
-      )}
-    </div>
-  );
-});
+        {isComingSoon && (
+          <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+            coming soon
+          </span>
+        )}
+      </div>
+    );
+  },
+);
 
 MobileSpectrumLink.displayName = 'MobileSpectrumLink';
 
 const linksPerPage = 5;
 const MobileSpectrumItem = memo(
-  forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className }, ref) => {
+  forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, openSpectrumInNewTab }, ref) => {
     const { title, titleCn, icon, links, className: itemClassName } = item;
     const [isMore, setIsMore] = useState(false);
 
@@ -114,10 +120,10 @@ const MobileSpectrumItem = memo(
             ease: 'easeOut',
           }}
         >
-          <MobileSpectrumLink item={item} />
+          <MobileSpectrumLink item={item} openSpectrumInNewTab={openSpectrumInNewTab} />
         </motion.div>
       ));
-    }, [visibleLinks, isMore]);
+    }, [visibleLinks, isMore, openSpectrumInNewTab]);
 
     return (
       <div
