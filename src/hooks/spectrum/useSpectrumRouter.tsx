@@ -93,9 +93,20 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     }
   }, [globalLoaded, handleHashNavigation, navigateByHash]);
 
+  const executeSpectrumRoute = useCallback(
+    (key: string) => {
+      const config = routeConfigs.find((c) => c.key === key);
+      if (config) {
+        config.action();
+      }
+    },
+    [routeConfigs],
+  );
+
   return {
     generateSpectrumUrl,
     openSpectrumInNewTab,
     handleHashNavigation,
+    executeSpectrumRoute,
   };
 };

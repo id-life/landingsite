@@ -144,7 +144,7 @@ export const useSpectrumData = () => {
     [handleClickDot, handleCharacterRelationShow, handleDiseaseManagementClick, handleClickDigitalTwin],
   );
 
-  const { openSpectrumInNewTab } = useSpectrumRouter(routeConfigs);
+  const { openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumRouter(routeConfigs);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -155,37 +155,30 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Founders Forum Global',
-            onClick: handleClickDot('meeting', 5),
             routeKey: 'founders-forum-global',
           },
           {
             label: 'Founders Longevity Forum London',
-            onClick: handleClickDot('meeting', 5),
             routeKey: 'founders-longevity-forum-london',
           },
           {
             label: 'Founders Longevity Forum Singapore',
-            onClick: handleClickDot('meeting', 2),
             routeKey: 'founders-longevity-forum-singapore',
           },
           {
             label: 'Vitalist Bay Summit',
-            onClick: handleClickDot('meeting', 4),
             routeKey: 'vitalist-bay-summit',
           },
           {
             label: 'Timepie Longevity Forum',
-            onClick: handleClickDot('meeting', 0),
             routeKey: 'timepie-longevity-forum',
           },
           {
             label: 'Edge City Lanna',
-            onClick: handleClickDot('meeting', 1),
             routeKey: 'edge-city-lanna',
           },
           {
             label: 'Oxford Future Innovation Forum',
-            onClick: handleClickDot('sponsor', 1),
             routeKey: 'oxford-future-innovation-forum',
           },
         ],
@@ -198,18 +191,15 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'bio/acc manifesto',
-            onClick: handleClickDot('book', 1),
             routeKey: 'bioacc-manifesto',
           },
           {
             label: 'The Network State',
-            onClick: handleClickDot('book', 0),
             labelClassName: 'italic',
             routeKey: 'the-network-state',
           },
           {
             label: 'Better With Age',
-            onClick: handleClickDot('book', 2),
             labelClassName: 'italic',
             routeKey: 'better-with-age',
           },
@@ -228,27 +218,22 @@ export const useSpectrumData = () => {
           {
             key: 'Vitalist Bay Summit Grant',
             label: 'Vitalist Bay Summit',
-            onClick: handleClickDot('meeting', 4),
             routeKey: 'vitalist-bay-summit-grant',
           },
           {
             label: 'ARDD 2025',
-            onClick: handleClickDot('sponsor', 4),
             routeKey: 'ardd-2025',
           },
           {
             label: '2060 Longevity Forum',
-            onClick: handleClickDot('sponsor', 5),
             routeKey: '2060-longevity-forum',
           },
           {
             label: 'Lifespan Research Institute',
-            onClick: handleClickDot('sponsor', 3),
             routeKey: 'lifespan-research-institute',
           },
           {
             label: 'Public Longevity Group',
-            onClick: handleClickDot('sponsor', 3),
             routeKey: 'public-longevity-group',
           },
           {
@@ -257,12 +242,10 @@ export const useSpectrumData = () => {
           },
           {
             label: 'BiohackerDAO',
-            onClick: handleClickDot('sponsor', 2),
             routeKey: 'biohacker-dao',
           },
           {
             label: 'ETHPanda 青年黑客远航计划',
-            onClick: handleClickDot('sponsor', 0),
             routeKey: 'eth-panda',
           },
         ],
@@ -289,12 +272,10 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            onClick: handleCharacterRelationShow,
             routeKey: 'influence-network',
           },
           {
             label: 'Disease Management & Cure Status',
-            onClick: handleDiseaseManagementClick,
             routeKey: 'disease-management',
           },
         ],
@@ -307,7 +288,6 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Access Digital Twin',
-            onClick: handleClickDigitalTwin,
             routeKey: 'digital-twin',
           },
         ],
@@ -340,9 +320,9 @@ export const useSpectrumData = () => {
       },
     ];
     return data;
-  }, [handleClickDot, handleDiseaseManagementClick, handleCharacterRelationShow, handleClickDigitalTwin]);
+  }, []);
 
-  return { spectrumData, openSpectrumInNewTab };
+  return { spectrumData, openSpectrumInNewTab, executeSpectrumRoute };
 };
 
 export const spectrumGetSourceImgInfos = (isMobile: boolean) => {

@@ -13,14 +13,23 @@ interface SpectrumItemProps {
   isHover?: boolean;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
   openSpectrumInNewTab?: (key: string) => void;
+  executeSpectrumRoute?: (key: string) => void;
 }
 
 const MobileSpectrumLink = memo(
-  ({ item, openSpectrumInNewTab }: { item: SpectrumLinkItem; openSpectrumInNewTab?: (key: string) => void }) => {
+  ({
+    item,
+    openSpectrumInNewTab,
+    executeSpectrumRoute,
+  }: {
+    item: SpectrumLinkItem;
+    openSpectrumInNewTab?: (key: string) => void;
+    executeSpectrumRoute?: (key: string) => void;
+  }) => {
     const { trackEvent } = useGA();
 
     const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
-    const hasLink = Boolean(link || onClick);
+    const hasLink = Boolean(link || onClick || routeKey);
 
     const handleClick = useCallback(() => {
       if (!hasLink) return;
@@ -30,13 +39,20 @@ const MobileSpectrumLink = memo(
         label: key ?? label,
       });
 
-      if (routeKey && onClick && openSpectrumInNewTab) {
-        openSpectrumInNewTab(routeKey);
-      } else {
-        onClick?.();
-        if (link) window.open(link, '_blank');
+      // 优先支持带路由键的行为：新标签打开或在当前页执行
+      if (routeKey) {
+        if (openSpectrumInNewTab) {
+          openSpectrumInNewTab(routeKey);
+        } else if (executeSpectrumRoute) {
+          executeSpectrumRoute(routeKey);
+        }
+        return;
       }
-    }, [hasLink, trackEvent, key, label, onClick, link, routeKey, openSpectrumInNewTab]);
+
+      // 其次是直接 onClick 或外链
+      onClick?.();
+      if (link) window.open(link, '_blank');
+    }, [hasLink, trackEvent, key, label, onClick, link, routeKey, openSpectrumInNewTab, executeSpectrumRoute]);
 
     return (
       <div className="relative flex items-center gap-1">
@@ -65,111 +81,117 @@ MobileSpectrumLink.displayName = 'MobileSpectrumLink';
 
 const linksPerPage = 5;
 const MobileSpectrumItem = memo(
-  forwardRef<HTMLDivElement, SpectrumItemProps>(({ item, onClick, className, openSpectrumInNewTab }, ref) => {
-    const { title, titleCn, icon, links, className: itemClassName } = item;
-    const [isMore, setIsMore] = useState(false);
+  forwardRef<HTMLDivElement, SpectrumItemProps>(
+    ({ item, onClick, className, openSpectrumInNewTab, executeSpectrumRoute }, ref) => {
+      const { title, titleCn, icon, links, className: itemClassName } = item;
+      const [isMore, setIsMore] = useState(false);
 
-    const { trackEvent } = useGA();
+      const { trackEvent } = useGA();
 
-    const onMouseEnter = () => {
-      trackEvent({
-        name: GA_EVENT_NAMES.SPECTRUM_HOVER,
-        label: title,
-      });
-    };
-
-    const handleMoreClick = useCallback((e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsMore((prev) => !prev);
-    }, []);
-
-    const { visibleLinks, showMoreButton, buttonText } = useMemo(() => {
-      if (!links) return { visibleLinks: [], showMoreButton: false, isLastPage: false, buttonText: 'More' };
-
-      const totalLinks = links.length;
-      if (totalLinks <= linksPerPage) {
-        return {
-          visibleLinks: links,
-          showMoreButton: false,
-          isLastPage: false,
-        };
-      }
-
-      const startIndex = isMore ? Math.max(0, totalLinks - 5) : 0;
-      const endIndex = Math.min(totalLinks, startIndex + linksPerPage);
-
-      const visibleLinks = links.slice(startIndex, endIndex);
-      const buttonText = isMore ? 'Back' : 'More';
-      return {
-        visibleLinks,
-        showMoreButton: true,
-        buttonText,
+      const onMouseEnter = () => {
+        trackEvent({
+          name: GA_EVENT_NAMES.SPECTRUM_HOVER,
+          label: title,
+        });
       };
-    }, [links, isMore]);
 
-    const spectrumLinks = useMemo(() => {
-      return visibleLinks.map((item, index) => (
-        <motion.div
-          key={`${item.label}-${isMore}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.3,
-            delay: index * 0.05,
-            ease: 'easeOut',
-          }}
+      const handleMoreClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsMore((prev) => !prev);
+      }, []);
+
+      const { visibleLinks, showMoreButton, buttonText } = useMemo(() => {
+        if (!links) return { visibleLinks: [], showMoreButton: false, isLastPage: false, buttonText: 'More' };
+
+        const totalLinks = links.length;
+        if (totalLinks <= linksPerPage) {
+          return {
+            visibleLinks: links,
+            showMoreButton: false,
+            isLastPage: false,
+          };
+        }
+
+        const startIndex = isMore ? Math.max(0, totalLinks - 5) : 0;
+        const endIndex = Math.min(totalLinks, startIndex + linksPerPage);
+
+        const visibleLinks = links.slice(startIndex, endIndex);
+        const buttonText = isMore ? 'Back' : 'More';
+        return {
+          visibleLinks,
+          showMoreButton: true,
+          buttonText,
+        };
+      }, [links, isMore]);
+
+      const spectrumLinks = useMemo(() => {
+        return visibleLinks.map((item, index) => (
+          <motion.div
+            key={`${item.label}-${isMore}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.3,
+              delay: index * 0.05,
+              ease: 'easeOut',
+            }}
+          >
+            <MobileSpectrumLink
+              item={item}
+              openSpectrumInNewTab={openSpectrumInNewTab}
+              executeSpectrumRoute={executeSpectrumRoute}
+            />
+          </motion.div>
+        ));
+      }, [visibleLinks, isMore, openSpectrumInNewTab, executeSpectrumRoute]);
+
+      return (
+        <div
+          ref={ref}
+          onClick={onClick}
+          onMouseEnter={onMouseEnter}
+          className={cn(
+            'spectrum-item flex-center relative h-full w-full cursor-pointer flex-col overflow-visible p-4 text-foreground',
+            className,
+          )}
         >
-          <MobileSpectrumLink item={item} openSpectrumInNewTab={openSpectrumInNewTab} />
-        </motion.div>
-      ));
-    }, [visibleLinks, isMore, openSpectrumInNewTab]);
-
-    return (
-      <div
-        ref={ref}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        className={cn(
-          'spectrum-item flex-center relative h-full w-full cursor-pointer flex-col overflow-visible p-4 text-foreground',
-          className,
-        )}
-      >
-        <div className={cn('flex flex-col items-center text-center', itemClassName)}>
-          <div className="flex items-center gap-1.5">
-            {cloneElement(icon, { className: 'spectrum-icon size-6 shrink-0 fill-white sm:size-7.5' })}
-            <h4 className="spectrum-title bilingual-font text-lg font-semibold capitalize sm:text-[1.625rem]/7.5">{title}</h4>
-          </div>
-          <h4 className="spectrum-title-cn bilingual-font mt-1 text-base font-bold capitalize sm:mt-2 sm:text-xl/6">
-            {titleCn}
-          </h4>
-          <div className="spectrum-links-container mt-3 flex flex-col sm:mt-5">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key="spectrum-links"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center sm:items-start"
-              >
-                {spectrumLinks}
-              </motion.div>
-            </AnimatePresence>
-            {showMoreButton && (
-              <motion.button
-                onClick={handleMoreClick}
-                className="mt-1 flex items-center justify-center gap-1 font-poppins text-xs/5 font-medium text-cyan opacity-90 transition-colors hover:text-cyan/80 hover:opacity-100 sm:justify-start"
-              >
-                {buttonText}
-                <ArrowSVG className={cn('size-3 fill-current transition duration-300', { 'rotate-180': isMore })} />
-              </motion.button>
-            )}
+          <div className={cn('flex flex-col items-center text-center', itemClassName)}>
+            <div className="flex items-center gap-1.5">
+              {cloneElement(icon, { className: 'spectrum-icon size-6 shrink-0 fill-white sm:size-7.5' })}
+              <h4 className="spectrum-title bilingual-font text-lg font-semibold capitalize sm:text-[1.625rem]/7.5">{title}</h4>
+            </div>
+            <h4 className="spectrum-title-cn bilingual-font mt-1 text-base font-bold capitalize sm:mt-2 sm:text-xl/6">
+              {titleCn}
+            </h4>
+            <div className="spectrum-links-container mt-3 flex flex-col sm:mt-5">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="spectrum-links"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center sm:items-start"
+                >
+                  {spectrumLinks}
+                </motion.div>
+              </AnimatePresence>
+              {showMoreButton && (
+                <motion.button
+                  onClick={handleMoreClick}
+                  className="mt-1 flex items-center justify-center gap-1 font-poppins text-xs/5 font-medium text-cyan opacity-90 transition-colors hover:text-cyan/80 hover:opacity-100 sm:justify-start"
+                >
+                  {buttonText}
+                  <ArrowSVG className={cn('size-3 fill-current transition duration-300', { 'rotate-180': isMore })} />
+                </motion.button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }),
+      );
+    },
+  ),
 );
 
 MobileSpectrumItem.displayName = 'MobileSpectrumItem';

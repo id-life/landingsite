@@ -35,7 +35,7 @@ function MobileSpectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const { spectrumData, openSpectrumInNewTab } = useSpectrumData();
+  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -184,6 +184,7 @@ function MobileSpectrum() {
                   className="px-7.5"
                   item={item}
                   openSpectrumInNewTab={openSpectrumInNewTab}
+                  executeSpectrumRoute={executeSpectrumRoute}
                   ref={(element) => {
                     if (!element) return;
                     spectrumRefs.current[index] = element;
