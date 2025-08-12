@@ -8,6 +8,11 @@ export default function NewsArticle1() {
       <img src="https://cdn.id.life/id-life-cover-2.webp" alt="" />
       <NewsContent />
       <Link href="/news" />
+      <Link href="/podcast" />
+      <Link href="/portfolio" />
+      <Link href="/spectrum" />
+      <Link href="/digitaltwin" />
+      <Link href="/value" />
       <Link href="/about" />
     </article>
   );
