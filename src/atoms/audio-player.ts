@@ -38,7 +38,7 @@ export const playlistAtom = atom<AudioDataItem[]>([]);
 
 export const playModeAtom = atom<PlayModeKey>(PlayMode.REPEAT_ALL);
 
-// audio
+export const nextTrackAtom = atom<AudioDataItem | null>(null);
 
 export const audioRefAtom = atom<HTMLAudioElement | null>(null);
 export const progressAtom = atom(0);
@@ -121,8 +121,19 @@ export const playNextTrackAtom = atom(null, (get, set) => {
   const playlist = get(playlistAtom);
   const playMode = get(playModeAtom);
   const audioRef = get(audioRefAtom);
+  const presetNextTrack = get(nextTrackAtom);
 
   if (!currentMusic || playlist.length === 0) return;
+
+  if (presetNextTrack) {
+    set(currentAudioAtom, presetNextTrack);
+    set(currentPlayStatusAtom, true);
+    set(nextTrackAtom, null);
+    if (currentMusic === presetNextTrack) {
+      audioRef?.play().then();
+    }
+    return;
+  }
 
   const currentIndex = playlist.findIndex((track) => track.id === currentMusic.id);
   if (currentIndex === -1) return;
@@ -164,6 +175,52 @@ export const playNextTrackAtom = atom(null, (get, set) => {
   } else {
     set(currentPlayStatusAtom, false);
   }
+});
+
+export const determineNextTrackAtom = atom(null, (get, set) => {
+  const currentMusic = get(currentAudioAtom);
+  const playlist = get(playlistAtom);
+  const playMode = get(playModeAtom);
+
+  if (!currentMusic || playlist.length === 0) return null;
+
+  const currentIndex = playlist.findIndex((track) => track.id === currentMusic.id);
+  if (currentIndex === -1) return null;
+
+  let nextIndex = -1;
+
+  switch (playMode) {
+    case PlayMode.ORDER:
+      nextIndex = currentIndex + 1 < playlist.length ? currentIndex + 1 : -1;
+      break;
+
+    case PlayMode.REPEAT_ONE:
+      nextIndex = currentIndex;
+      break;
+
+    case PlayMode.REPEAT_ALL:
+      nextIndex = (currentIndex + 1) % playlist.length;
+      break;
+
+    case PlayMode.SHUFFLE:
+      if (playlist.length > 1) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * playlist.length);
+        } while (randomIndex === currentIndex);
+        nextIndex = randomIndex;
+      } else {
+        nextIndex = 0;
+      }
+      break;
+  }
+
+  if (nextIndex !== -1) {
+    set(nextTrackAtom, playlist[nextIndex]);
+    return playlist[nextIndex];
+  }
+
+  return null;
 });
 
 export const togglePlayAtom = atom(null, (get, set) => {
