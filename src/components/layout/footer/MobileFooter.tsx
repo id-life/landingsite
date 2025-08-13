@@ -1,7 +1,9 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { InfoSVG } from '@/components/svg';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -16,7 +18,7 @@ type Inputs = {
 };
 
 export default function MobileFooter() {
-  const { isSubscribeShow, subscribeRef, handleClickOutside, onFormSubmit, isSubmitting, isSubmitted } =
+  const { isSubscribeShow, subscribeRef, handleClickOutside, onFormSubmit, isSubmitting, isSubmitted, handleClose } =
     useMobileSubscribeAction();
 
   const {
@@ -42,8 +44,13 @@ export default function MobileFooter() {
           }}
           ref={subscribeRef}
           // 比导航遮罩层级高
-          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center bg-red-600 px-4 py-7.5 text-white"
+          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-white bg-white/20 px-4 py-7.5 text-black backdrop-blur-xl"
         >
+          <span className="absolute -left-px -top-px block rotate-90 border-[17.5px] border-white border-r-transparent border-t-transparent" />
+          <span className="absolute -bottom-px -right-px block rotate-90 border-[17.5px] border-white border-b-transparent border-l-transparent" />
+          <button onClick={handleClose} className="absolute right-4 top-4 z-10 transition-opacity hover:opacity-70">
+            <CloseSVG className="size-5 fill-black stroke-2" />
+          </button>
           <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
             SUBSCRIBE
             {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
@@ -56,9 +63,9 @@ export default function MobileFooter() {
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="flex-1 border-2 border-white p-2 mobile:border">
+            <div className="flex-1 border-2 border-black p-2 mobile:border">
               <input
-                className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
+                className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                 placeholder="Please enter email"
                 defaultValue=""
                 {...register('EMAIL', {
@@ -70,15 +77,15 @@ export default function MobileFooter() {
                 })}
               />
             </div>
-            <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">
+            <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
               {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white">
-                  <LoadingSVG className="w-6 animate-spin stroke-red-600 stroke-[3]" />
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                 </div>
               ) : null}
               {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white font-bold">
-                  <CheckedSVG className="w-6 stroke-red-600 stroke-[3]" />
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
                 </div>
               ) : null}
               <input
@@ -88,10 +95,6 @@ export default function MobileFooter() {
               />
             </div>
           </form>
-          <div className="mt-2 flex items-center gap-1 text-xs font-semibold">
-            <img className="h-4" src="/svgs/info.svg" alt="" />
-            Join our Longevity Circle and receive the latest insights & research
-          </div>
         </motion.div>
       </AnimatePresence>
     </FloatingPortal>

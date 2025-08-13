@@ -121,10 +121,15 @@ export function useMobileSubscribeAction() {
   const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
   const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
 
+  const handleClose = () => {
+    setIsSubscribeShow(false);
+    setHasShownAuto(true);
+  };
+
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
       if (subscribeRef.current && !subscribeRef.current.contains(e.target as Node)) {
-        setIsSubscribeShow(false);
+        handleClose();
       }
     },
     [setIsSubscribeShow],
@@ -150,7 +155,6 @@ export function useMobileSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     setIsSubscribeShow(true);
-    setHasShownAuto(true);
   }, [fadeInAnimCompleted, hasShownAuto]);
 
   return {
@@ -160,5 +164,6 @@ export function useMobileSubscribeAction() {
     onFormSubmit,
     isSubmitting,
     isSubmitted,
+    handleClose,
   };
 }

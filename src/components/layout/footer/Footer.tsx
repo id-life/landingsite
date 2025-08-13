@@ -60,8 +60,8 @@ export default function Footer() {
           <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-white bg-white/20 px-7.5 py-9 text-black backdrop-blur-md mobile:px-4 mobile:py-7.5">
             <span className="absolute -left-[2px] -top-[2px] block rotate-90 border-[12px] border-white border-r-transparent border-t-transparent" />
             <span className="absolute -bottom-[2px] -right-[2px] block rotate-90 border-[12px] border-white border-b-transparent border-l-transparent" />
-            <button onClick={handleClose} className="absolute right-4 top-4 z-10 p-1 transition-opacity hover:opacity-70">
-              <CloseSVG className="h-6 w-6 stroke-white stroke-2" />
+            <button onClick={handleClose} className="absolute right-6 top-6 z-10 transition-opacity hover:opacity-70">
+              <CloseSVG className="size-5 stroke-white stroke-2" />
             </button>
             <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
               SUBSCRIBE
@@ -89,15 +89,15 @@ export default function Footer() {
                   })}
                 />
               </div>
-              <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">
+              <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
                 {isSubmitting ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white">
-                    <LoadingSVG className="w-6 animate-spin stroke-red-600 stroke-[3]" />
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                    <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                   </div>
                 ) : null}
                 {isSubmitted ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white font-bold">
-                    <CheckedSVG className="w-6 stroke-red-600 stroke-[3]" /> Success
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                    <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                   </div>
                 ) : null}
                 <input
@@ -107,7 +107,7 @@ export default function Footer() {
                 />
               </div>
             </form>
-            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
+            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-black/50">
               <InfoSVG className="h-4" />
               Join our Longevity Circle and receive the latest insights & research
             </div>
