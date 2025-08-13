@@ -2,32 +2,34 @@
 
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { globalLoadedAtom } from '@/atoms/geo';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
-import { useThrottle } from '@/hooks/useThrottle';
+import { useSubscribeAction } from '@/hooks/useSubscribeAction';
+import { cn } from '@/utils';
+import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
-import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useRef } from 'react';
-import { NAV_LIST } from './nav';
+import { useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 import { useEvent } from 'react-use';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { cn } from '@/utils';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import { useGSAP } from '@gsap/react';
-import { useSubscribeAction } from '@/hooks/useSubscribeAction';
+import { NAV_LIST } from './nav';
+import { MessageType } from '../event-bus/messageType';
+import { useEventBus } from '../event-bus/useEventBus';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   const { handleNavClick } = useNavigation();
-  const { onSubscribeClick, handleScroll, handleClickOutside } = useSubscribeAction();
+  const { onSubscribeClick, handleScroll, handleClickOutside, handleClose } = useSubscribeAction();
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
+
+  useEventBus(MessageType.CLOSE_SUBSCRIBE, () => {
+    handleClose();
+  });
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
@@ -43,7 +45,7 @@ export default function PCNav() {
     });
   }, [isShowingDiseaseManagement]);
 
-  useEvent('mousedown', handleClickOutside);
+  useEvent('click', handleClickOutside);
 
   if (!globalLoaded) return null;
   return (

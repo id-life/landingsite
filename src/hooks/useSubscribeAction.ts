@@ -31,7 +31,7 @@ export function useSubscribeAction() {
     () => {
       if (!fadeInAnimCompleted) return;
       const tl = gsap.timeline({ paused: true });
-      tl.to('.page-footer', { bottom: '2.25rem', duration: 0.3, delay: 0.3 });
+      tl.to('.page-footer', { bottom: '2.25rem', duration: 0.3 });
       tl.to('.footer-box-clip', { width: '40rem', height: '13rem', duration: 0.3 }, '<');
       timelineRef.current = tl;
     },
@@ -58,6 +58,7 @@ export function useSubscribeAction() {
   };
 
   const handleClose = () => {
+    console.log('handleClose', isSubscribeShow, playingRef.current, timelineRef.current);
     timelineRef.current?.reverse();
     setIsSubscribeShow(false);
     setHasShownAuto(true);

@@ -44,12 +44,12 @@ export default function MobileFooter() {
           }}
           ref={subscribeRef}
           // 比导航遮罩层级高
-          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-white bg-white/20 px-4 py-7.5 text-black backdrop-blur-xl"
+          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-4 py-7.5 text-[var(--foreground)] backdrop-blur-xl"
         >
-          <span className="absolute -left-px -top-px block rotate-90 border-[17.5px] border-white border-r-transparent border-t-transparent" />
-          <span className="absolute -bottom-px -right-px block rotate-90 border-[17.5px] border-white border-b-transparent border-l-transparent" />
+          <span className="absolute left-0 top-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+          <span className="absolute bottom-0 right-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
           <button onClick={handleClose} className="absolute right-4 top-4 z-10 transition-opacity hover:opacity-70">
-            <CloseSVG className="size-5 fill-black stroke-2" />
+            <CloseSVG className="size-5 fill-[var(--foreground)] stroke-2" />
           </button>
           <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
             SUBSCRIBE
@@ -63,7 +63,7 @@ export default function MobileFooter() {
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="flex-1 border-2 border-black p-2 mobile:border">
+            <div className="flex-1 border-2 border-[var(--foreground)] p-2 mobile:border">
               <input
                 className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                 placeholder="Please enter email"

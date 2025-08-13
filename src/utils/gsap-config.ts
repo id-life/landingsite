@@ -52,12 +52,16 @@ export const THEME_TRANSITIONS = {
     '--audio-border': '#1C1C1C',
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
+    '--subscribe-border': '#ffffff',
+    '--subscribe-bg': '#ffffff33',
   },
   spectrum: {
     '--gradient-via': '#C1111111',
     '--gradient-to': '#C111114C',
     '--gradient-via-percent': '80%',
     '--gradient-rotate': '300deg',
+    '--subscribe-border': '#57595C80',
+    '--subscribe-bg': '#000000CC',
   },
   engagement: {
     '--gradient-from': '#000000',
@@ -66,6 +70,8 @@ export const THEME_TRANSITIONS = {
     '--gradient-to': '#000000',
     '--background': '#000000',
     '--foreground': '#FFFFFF',
+    '--subscribe-border': '#57595C80',
+    '--subscribe-bg': '#000000CC',
   },
   twin: {
     '--gradient-from': '#FFFFFF',
@@ -79,6 +85,8 @@ export const THEME_TRANSITIONS = {
     '--audio-border': '#EEF4FF',
     '--audio-order': '#ffffff',
     '--audio-desc': '#222222',
+    '--subscribe-border': '#ffffff',
+    '--subscribe-bg': '#ffffff33',
   },
 } as const;
 

@@ -1,1 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="#222" stroke-width="1.4" d="m2.051 2.05 9.9 9.9M11.95 2.05l-9.899 9.9"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#222" viewBox="0 0 14 14">
+    <path stroke="currentColor" stroke-width="1.4" d="m2.051 2.05 9.9 9.9M11.95 2.05l-9.899 9.9" />
+</svg>

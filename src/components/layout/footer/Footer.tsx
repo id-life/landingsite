@@ -3,10 +3,11 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
-import { useSubscribeAction } from '@/hooks/useSubscribeAction';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useRef, useState } from 'react';
@@ -24,7 +25,6 @@ export default function Footer() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
-  const { handleClose } = useSubscribeAction();
   const {
     register,
     handleSubmit,
@@ -57,11 +57,17 @@ export default function Footer() {
           ref={subscribeRef}
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-white bg-white/20 px-7.5 py-9 text-black backdrop-blur-md mobile:px-4 mobile:py-7.5">
-            <span className="absolute -left-[2px] -top-[2px] block rotate-90 border-[12px] border-white border-r-transparent border-t-transparent" />
-            <span className="absolute -bottom-[2px] -right-[2px] block rotate-90 border-[12px] border-white border-b-transparent border-l-transparent" />
-            <button onClick={handleClose} className="absolute right-6 top-6 z-10 transition-opacity hover:opacity-70">
-              <CloseSVG className="size-5 stroke-white stroke-2" />
+          <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">
+            <span className="absolute left-0 top-0 block rotate-90 border-[10px] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+            <span className="absolute bottom-0 right-0 block rotate-90 border-[10px] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
+            <button
+              onClick={(e) => {
+                e?.stopPropagation();
+                eventBus.next({ type: MessageType.CLOSE_SUBSCRIBE });
+              }}
+              className="absolute right-6 top-6 z-10 transition-opacity hover:opacity-70"
+            >
+              <CloseSVG className="size-5 stroke-[var(--foreground)] stroke-2" />
             </button>
             <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
               SUBSCRIBE
@@ -75,7 +81,7 @@ export default function Footer() {
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-              <div className="flex-1 border-2 border-black p-2 mobile:border">
+              <div className="flex-1 border-2 border-[var(--foreground)] p-2 mobile:border">
                 <input
                   className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                   placeholder="Please enter email"
@@ -107,7 +113,7 @@ export default function Footer() {
                 />
               </div>
             </form>
-            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-black/50">
+            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
               <InfoSVG className="h-4" />
               Join our Longevity Circle and receive the latest insights & research
             </div>
