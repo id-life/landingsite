@@ -7,6 +7,8 @@ import gsap from 'gsap';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
+import { useSetAtom } from 'jotai';
 
 const InitRotation = Math.PI / 2;
 const ANIMATION_DURATION = 3.0;
@@ -23,13 +25,15 @@ export default function MobileDragonModel(props: {}) {
   const meshRef = useRef<THREE.Mesh>(null);
   const fixedUIHasTriggered = useRef(false);
   const { contextSafe } = useGSAP();
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
     const element = document.querySelector('#mobile-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-    if (element) gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    if (element)
+      gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3, onComplete: () => setFadeInAnimCompleted(true) });
   });
 
   useFrame(({ clock }) => {

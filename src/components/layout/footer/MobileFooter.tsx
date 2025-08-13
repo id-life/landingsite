@@ -2,15 +2,11 @@
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import jsonp from '@/utils/jsonp';
+import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { FloatingPortal } from '@floating-ui/react';
-import { useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { useEvent } from 'react-use';
 
 type Inputs = {
   EMAIL: string;
@@ -20,52 +16,16 @@ type Inputs = {
 };
 
 export default function MobileFooter() {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const subscribeRef = useRef<HTMLDivElement>(null);
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const { isSubscribeShow, subscribeRef, handleClickOutside, onFormSubmit, isSubmitting, isSubmitted } =
+    useMobileSubscribeAction();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { trackEvent } = useGA();
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (subscribeRef.current && !subscribeRef.current.contains(event.target as Node)) {
-        setIsSubscribeShow(false);
-      }
-    },
-    [setIsSubscribeShow],
-  );
-
-  useEffect(() => {
-    if (isSubscribeShow) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [handleClickOutside, isSubscribeShow]);
-
-  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
-
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
-    });
-  };
+  useEvent('mousedown', handleClickOutside);
 
   return (
     <FloatingPortal>

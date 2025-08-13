@@ -1,4 +1,4 @@
-import { globalLoadedAtom } from '@/atoms/geo';
+import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -41,6 +41,7 @@ export default function DragonModel() {
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const fixedUIHasTriggered = useRef(false);
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
@@ -55,7 +56,18 @@ export default function DragonModel() {
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-    if (element) gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    if (element)
+      gsap.fromTo(
+        element,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.3,
+          onComplete: () => {
+            setFadeInAnimCompleted(true);
+          },
+        },
+      );
   });
 
   // Frame update loop

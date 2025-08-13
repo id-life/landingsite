@@ -19,75 +19,21 @@ import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { cn } from '@/utils';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { useGSAP } from '@gsap/react';
+import { useSubscribeAction } from '@/hooks/useSubscribeAction';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   const { handleNavClick } = useNavigation();
-  const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
-  const playingRef = useRef<boolean>(false);
-  const timelineRef = useRef(gsap.timeline({ paused: true }));
+  const { onSubscribeClick, handleScroll, handleClickOutside } = useSubscribeAction();
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
 
-  const { trackEvent } = useGA();
-
-  const onSubscribeClick = () => {
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
-    });
-
-    if (isSubscribeShow) {
-      if (playingRef.current) return;
-      playingRef.current = true;
-      gsap.to('.footer-box-clip', {
-        x: 10,
-        repeat: 5,
-        yoyo: true,
-        duration: 0.1,
-        onComplete: () => {
-          playingRef.current = false;
-        },
-      });
-    } else {
-      timelineRef.current.play();
-      setIsSubscribeShow(true);
-    }
-  };
-
   useEffect(() => {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
-    setTimeout(() => {
-      timelineRef.current.to('.page-footer', { bottom: '2.25rem' });
-      timelineRef.current.to('.footer-box-clip', { width: '40rem', height: '13rem' }, '<');
-    }, 300);
   }, []);
 
-  const handleScroll = useThrottle(() => {
-    if (isSubscribeShow && !timelineRef.current.reversed()) {
-      timelineRef.current.reverse();
-      setIsSubscribeShow(false);
-    }
-  }, 300);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
-
-  const handleClickOutside = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (isSubscribeShow && !playingRef.current) {
-      const target = e.target as Element;
-      const isClickFooter = target.closest('.footer-box-clip');
-      const isClickSubscribeBtn = target.closest('#subscribe-btn');
-      if (!isClickFooter && !isClickSubscribeBtn) {
-        timelineRef.current.reverse();
-        setIsSubscribeShow(false);
-      }
-    }
-  };
+  useEvent('scroll', handleScroll);
 
   useGSAP(() => {
     gsap.to('.main-nav-links', {

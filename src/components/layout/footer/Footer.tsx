@@ -1,13 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import jsonp from '@/utils/jsonp';
-import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { FloatingPortal } from '@floating-ui/react';
-import { useGA } from '@/hooks/useGA';
+import CloseSVG from '@/../public/svgs/close.svg?component';
+import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useGA } from '@/hooks/useGA';
+import { useSubscribeAction } from '@/hooks/useSubscribeAction';
+import jsonp from '@/utils/jsonp';
+import { FloatingPortal } from '@floating-ui/react';
+import { useRef, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
   EMAIL: string;
@@ -21,6 +23,7 @@ export default function Footer() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
+  const { handleClose } = useSubscribeAction();
   const {
     register,
     handleSubmit,
@@ -53,8 +56,11 @@ export default function Footer() {
           ref={subscribeRef}
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
-            <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
+          <div className="footer-box-clip relative h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
+            <button onClick={handleClose} className="absolute right-4 top-4 z-10 p-1 transition-opacity hover:opacity-70">
+              <CloseSVG className="h-6 w-6 stroke-white stroke-2" />
+            </button>
+            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
               SUBSCRIBE
               {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
             </h3>

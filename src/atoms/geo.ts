@@ -1,6 +1,7 @@
 import { atom } from 'jotai';
 
 export const globalLoadedAtom = atom<boolean>(false);
+export const fadeInAnimCompletedAtom = atom<boolean>(false);
 export const isLoadingUIAtom = atom<boolean>(false);
 
 export const isCNAtom = atom<boolean>(false);
