@@ -102,7 +102,7 @@ export default function useCurrentAudio() {
       audio.load();
     }
 
-    audio.volume = 0.5;
+    audio.volume = 0.3;
     setAudioRef(audio);
 
     const setupAudio = () => {
