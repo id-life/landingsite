@@ -9,6 +9,8 @@ export default function NewsArticle1() {
       <NewsContent />
       <Link href="/news" />
       <Link href="/podcast" />
+      <Link href="/podcast?c=id" />
+      <Link href="/podcast?c=lt" />
       <Link href="/portfolio" />
       <Link href="/spectrum" />
       <Link href="/digitaltwin" />

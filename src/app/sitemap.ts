@@ -11,6 +11,8 @@ const newsId = [
   10127, 10128, 10129,
 ];
 
+const podcastId = [6, 7, 8, 9, 10, 11, 31, 32, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 27, 28, 29, 30];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const sitemap: MetadataRoute.Sitemap = [
     {
@@ -30,6 +32,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
+    },
+    {
+      url: 'https://www.id.life/podcast?c=id',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://www.id.life/podcast?c=lt',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
     },
     {
       url: 'https://www.id.life/portfolio',
@@ -62,11 +76,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
   ];
+  podcastId.forEach((id) => {
+    sitemap.push({
+      url: `https://www.id.life/podcast/${id}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    });
+  });
   newsId.forEach((id) => {
     sitemap.push({
       url: `https://www.id.life/news/${id}`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
       priority: 0.5,
     });
   });
