@@ -1,26 +1,27 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import ArrowRightSVG from '@/../public/svgs/arrow-right.svg?component';
+import BorderSVG from '@/../public/svgs/border.svg?component';
+import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
+import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import MediaSVG from '@/../public/svgs/media.svg?component';
+import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
+import { isSubscribeShowAtom } from '@/atoms/footer';
+import { InfoSVG } from '@/components/svg';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
+import { useGA } from '@/hooks/useGA';
+import jsonp from '@/utils/jsonp';
+import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
+import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
-import jsonp from '@/utils/jsonp';
 import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
-import { useGA } from '@/hooks/useGA';
-import { isMobile } from 'react-device-detect';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import BorderSVG from '@/../public/svgs/border.svg?component';
-import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
-import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
-import MediaSVG from '@/../public/svgs/media.svg?component';
-import ArrowRightSVG from '@/../public/svgs/arrow-right.svg?component';
-import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Links, MediaLinkTypeKey, MediaLinkType } from '@/constants/links';
 import Link from 'next/link';
+import { useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
   EMAIL: string;
@@ -204,7 +205,7 @@ export default function FooterContact() {
                 </div>
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
-                <img className="ml-2 h-4" src="/svgs/info-2.svg" alt="" />
+                <InfoSVG className="ml-2 size-4" />
                 Join our longevity circle for priority access to pioneer research
               </div>
             </div>

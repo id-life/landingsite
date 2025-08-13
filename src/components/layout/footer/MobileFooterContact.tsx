@@ -1,24 +1,24 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
+import BorderSVG from '@/../public/svgs/border.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
-import BorderSVG from '@/../public/svgs/border.svg?component';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
+import { InfoSVG } from '@/components/svg';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
+import { useGA } from '@/hooks/useGA';
+import { cn } from '@/utils';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
+import clsx from 'clsx';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
-import { cn } from '@/utils';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Links } from '@/constants/links';
 
 type Inputs = {
   EMAIL: string;
@@ -149,7 +149,7 @@ export default function MobileFooterContact() {
             </div>
           </form>
           <div className="mt-2 flex gap-1 font-poppins text-xs font-semibold">
-            <img className="h-4" src="/svgs/info-2.svg" alt="" />
+            <InfoSVG className="h-4" />
             Join our longevity circle for priority access to pioneer research
           </div>
           <div className="mb-3 mt-4 h-px w-full bg-black/10" />

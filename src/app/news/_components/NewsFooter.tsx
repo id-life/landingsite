@@ -1,19 +1,18 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import jsonp from '@/utils/jsonp';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { GA_EVENT_LABELS } from '@/constants/ga';
-import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
-import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
+import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import PodcastSVG from '@/../public/svgs/podcast.svg?component';
 import XyzSVG from '@/../public/svgs/xyz.svg?component';
-import { Links } from '@/constants/links';
+import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
+import { InfoSVG } from '@/components/svg';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
+import { useGA } from '@/hooks/useGA';
+import jsonp from '@/utils/jsonp';
+import { FormEvent, useState } from 'react';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -119,7 +118,7 @@ export default function NewsFooter() {
             />
           </div>
           <div className="mt-4 flex gap-1.5 font-poppins text-xs font-semibold opacity-50">
-            <img className="ml-2 h-4" src="/svgs/info-2.svg" alt="" />
+            <InfoSVG className="ml-2 h-4" />
             Join our longevity circle for priority access to pioneer research
           </div>
           <div className="footer-submit-clip mt-3 w-[10.5rem] self-end bg-red-600 text-white">

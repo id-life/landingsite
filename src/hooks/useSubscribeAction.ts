@@ -17,6 +17,7 @@ type Inputs = {
   'amp;id': string;
   'amp;f_id': string;
 };
+
 export function useSubscribeAction() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const playingRef = useRef<boolean>(false);

@@ -3,6 +3,7 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
@@ -56,7 +57,9 @@ export default function Footer() {
           ref={subscribeRef}
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <div className="footer-box-clip relative h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
+          <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-white bg-white/20 px-7.5 py-9 text-black backdrop-blur-md mobile:px-4 mobile:py-7.5">
+            <span className="absolute -left-[2px] -top-[2px] block rotate-90 border-[12px] border-white border-r-transparent border-t-transparent" />
+            <span className="absolute -bottom-[2px] -right-[2px] block rotate-90 border-[12px] border-white border-b-transparent border-l-transparent" />
             <button onClick={handleClose} className="absolute right-4 top-4 z-10 p-1 transition-opacity hover:opacity-70">
               <CloseSVG className="h-6 w-6 stroke-white stroke-2" />
             </button>
@@ -72,9 +75,9 @@ export default function Footer() {
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-              <div className="flex-1 border-2 border-white p-2 mobile:border">
+              <div className="flex-1 border-2 border-black p-2 mobile:border">
                 <input
-                  className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
+                  className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                   placeholder="Please enter email"
                   defaultValue=""
                   {...register('EMAIL', {
@@ -105,7 +108,7 @@ export default function Footer() {
               </div>
             </form>
             <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
-              <img className="h-4" src="/svgs/info.svg" alt="" />
+              <InfoSVG className="h-4" />
               Join our Longevity Circle and receive the latest insights & research
             </div>
           </div>
