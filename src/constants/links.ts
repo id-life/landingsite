@@ -10,7 +10,7 @@ export const MediaLinkType = {
 
 export type MediaLinkTypeKey = ValueOf<typeof MediaLinkType>;
 
-export const DigitalTwinYoutubeLink = 'https://www.youtube.com/watch?v=zzji7IoqBbM';
+export const DigitalTwinYoutubeLink = 'https://www.youtube.com/watch?v=NHaU1GLd2kA';
 
 export const Links = {
   [MediaLinkType.Youtube]: 'https://www.youtube.com/@Immortal-Dragons',
