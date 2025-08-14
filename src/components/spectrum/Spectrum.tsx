@@ -1,24 +1,21 @@
 'use client';
 
 import { currentPageAtom } from '@/atoms';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
+import { FloatingPortal } from '@floating-ui/react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
-import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import { FloatingPortal } from '@floating-ui/react';
-
-// register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -35,12 +32,14 @@ function Spectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const spectrumData = useSpectrumData();
+  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
   const spectrumItems = useMemo(() => {
     return spectrumData.map((item, index) => (
       <SpectrumItem
         key={item.title}
         item={item}
+        openSpectrumInNewTab={openSpectrumInNewTab}
+        executeSpectrumRoute={executeSpectrumRoute}
         onClick={(e) => {
           item.onClick?.(e);
         }}
@@ -51,7 +50,7 @@ function Spectrum() {
         }}
       />
     ));
-  }, [spectrumData]);
+  }, [spectrumData, openSpectrumInNewTab, executeSpectrumRoute]);
 
   const windowDimensions = useMemo(() => {
     if (typeof window === 'undefined') return { width: 0, height: 0 };

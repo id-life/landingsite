@@ -1,13 +1,17 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import jsonp from '@/utils/jsonp';
-import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import { FloatingPortal } from '@floating-ui/react';
-import { useGA } from '@/hooks/useGA';
+import CloseSVG from '@/../public/svgs/close.svg?component';
+import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
+import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useGA } from '@/hooks/useGA';
+import jsonp from '@/utils/jsonp';
+import { FloatingPortal } from '@floating-ui/react';
+import { useRef, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
   EMAIL: string;
@@ -53,8 +57,19 @@ export default function Footer() {
           ref={subscribeRef}
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <div className="footer-box-clip h-0 w-0 bg-red-600 px-7.5 py-9 text-white mobile:px-4 mobile:py-7.5">
-            <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
+          <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">
+            <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+            <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
+            <button
+              onClick={(e) => {
+                e?.stopPropagation();
+                eventBus.next({ type: MessageType.CLOSE_SUBSCRIBE });
+              }}
+              className="absolute right-6 top-6 z-10 transition-opacity hover:opacity-70"
+            >
+              <CloseSVG className="size-5 stroke-[var(--foreground)] stroke-2" />
+            </button>
+            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">
               SUBSCRIBE
               {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
             </h3>
@@ -66,9 +81,10 @@ export default function Footer() {
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-              <div className="flex-1 border-2 border-white p-2 mobile:border">
+              <div className="relative flex-1 p-2">
+                <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
                 <input
-                  className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
+                  className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                   placeholder="Please enter email"
                   defaultValue=""
                   {...register('EMAIL', {
@@ -80,26 +96,26 @@ export default function Footer() {
                   })}
                 />
               </div>
-              <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">
+              <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
                 {isSubmitting ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white">
-                    <LoadingSVG className="w-6 animate-spin stroke-red-600 stroke-[3]" />
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                    <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                   </div>
                 ) : null}
                 {isSubmitted ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white font-bold">
-                    <CheckedSVG className="w-6 stroke-red-600 stroke-[3]" /> Success
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                    <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                   </div>
                 ) : null}
                 <input
                   className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
                   type="submit"
-                  value="Subscribe"
+                  value="Submit"
                 />
               </div>
             </form>
-            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs font-semibold">
-              <img className="h-4" src="/svgs/info.svg" alt="" />
+            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
+              <InfoSVG className="h-4" />
               Join our Longevity Circle and receive the latest insights & research
             </div>
           </div>

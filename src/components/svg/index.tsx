@@ -1,6 +1,7 @@
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import ClockSVG from '@/../public/svgs/clock.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 
 import AmericaSVG from '@/../public/svgs/engagement/america.svg?component';
 import ChineseSVG from '@/../public/svgs/engagement/chinese.svg?component';
@@ -24,6 +25,7 @@ import MuseumSVG from '@/../public/svgs/spectrum/museum.svg?component';
 export {
   ArrowSVG,
   ClockSVG,
+  InfoSVG,
   SubscribeBorderSVG,
   // engagement
   AmericaSVG,

@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useGSAP } from '@gsap/react';
@@ -21,6 +21,9 @@ export function OuterLoader() {
   const maxProgressRef = useRef(0);
   const animatedProgressRef = useRef(0);
   const progressTween = useRef<gsap.core.Tween | null>(null);
+  const autoIncrementTween = useRef<gsap.core.Tween | null>(null);
+  const lastProgressUpdateTime = useRef(Date.now());
+  const lastProgressValue = useRef(0);
   const [, forceUpdate] = useState({});
   const progressRef = useRef();
 
@@ -30,15 +33,34 @@ export function OuterLoader() {
   useGSAP(
     () => {
       if (progress <= maxProgressRef.current) return;
+
+      const now = Date.now();
+      const timeDiff = now - lastProgressUpdateTime.current;
+      const progressDiff = progress - lastProgressValue.current;
+
+      lastProgressUpdateTime.current = now;
+      lastProgressValue.current = progress;
+
+      let duration = 0.5;
+      if (timeDiff > 0 && progressDiff > 0) {
+        const changeRate = progressDiff / timeDiff;
+        duration = Math.max(0.3, Math.min(1.5, 0.8 / (changeRate * 150)));
+      }
+
       maxProgressRef.current = progress;
+
       if (progressTween.current) {
         progressTween.current.kill();
       }
+      if (autoIncrementTween.current) {
+        autoIncrementTween.current.kill();
+      }
+
       progressTween.current = gsap.to(
         { value: animatedProgressRef.current },
         {
           value: maxProgressRef.current,
-          duration: 0.5,
+          duration: duration,
           ease: 'none',
           onUpdate: () => {
             if (!progressTween.current) return;
@@ -46,11 +68,38 @@ export function OuterLoader() {
             animatedProgressRef.current = value;
             forceUpdate({});
           },
+          onComplete: () => {
+            startAutoIncrement();
+          },
         },
       );
     },
     { dependencies: [progress] },
   );
+
+  const startAutoIncrement = useCallback(() => {
+    if (maxProgressRef.current < 100 && Math.round(animatedProgressRef.current) >= Math.round(maxProgressRef.current)) {
+      const incrementAmount = Math.min(5, 95 - maxProgressRef.current);
+      const targetValue = maxProgressRef.current + incrementAmount;
+
+      if (targetValue > maxProgressRef.current) {
+        autoIncrementTween.current = gsap.to(
+          { value: animatedProgressRef.current },
+          {
+            value: targetValue,
+            duration: 5,
+            ease: 'none',
+            onUpdate: () => {
+              if (!autoIncrementTween.current) return;
+              const { value } = autoIncrementTween.current.targets<{ value: number }>()[0];
+              animatedProgressRef.current = value;
+              forceUpdate({});
+            },
+          },
+        );
+      }
+    }
+  }, []);
 
   useEffect(() => {
     trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_START });
@@ -81,6 +130,9 @@ export function OuterLoader() {
       if (progressTween.current) {
         progressTween.current.kill();
       }
+      if (autoIncrementTween.current) {
+        autoIncrementTween.current.kill();
+      }
 
       progressTween.current = gsap.to(
         {
@@ -88,7 +140,7 @@ export function OuterLoader() {
         },
         {
           value: 100,
-          duration: 0.5,
+          duration: 0.5, // 放慢最终完成动画
           ease: 'none',
           onUpdate: function () {
             if (!progressTween.current) return;
@@ -101,7 +153,7 @@ export function OuterLoader() {
 
             gsap.to(progressRef.current, {
               opacity: 0,
-              duration: 0.3,
+              duration: 0.3, // 放慢淡出动画
               onComplete: () => {
                 setIsLoadingUI(true);
                 setGlobalLoaded(true);
@@ -126,6 +178,9 @@ export function OuterLoader() {
     return () => {
       if (progressTween.current) {
         progressTween.current.kill();
+      }
+      if (autoIncrementTween.current) {
+        autoIncrementTween.current.kill();
       }
     };
   }, []);

@@ -1,11 +1,8 @@
-import React, { useRef } from 'react';
+import Animal2Model from '@/components/gl/model/value/Animal2Model';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { useRef } from 'react';
 import * as THREE from 'three';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
-import Animal2Model from '@/components/gl/model/value/Animal2Model';
-
-gsap.registerPlugin(MotionPathPlugin);
 
 export default function AnimalModel() {
   const modelRef = useRef<THREE.Group>(null);

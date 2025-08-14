@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import gsap from 'gsap';
-import { cn } from '@/utils';
-import { useAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
+import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
+import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { isPodcastNavOpenAtom } from '@/atoms/podcast';
 import Dialog from '@/components/dialog';
 import { NavItem } from '@/components/nav/nav';
 import { useThrottle } from '@/hooks/useThrottle';
-import { isPodcastNavOpenAtom } from '@/atoms/podcast';
-import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
-import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { cn } from '@/utils';
+import gsap from 'gsap';
+import { useAtom } from 'jotai';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-gsap.registerPlugin(useGSAP);
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 function PodcastNavDialog() {
   const router = useRouter();

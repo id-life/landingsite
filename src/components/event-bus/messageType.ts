@@ -7,4 +7,5 @@ export enum MessageType {
   RESET_ANIMATION = 'RESET_ANIMATION', // 重置动画
   SIRI_WAVE_CONFIG = 'SIRI_WAVE_CONFIG', // siri wave 设置
   PODCAST_DURATION = 'PODCAST_DURATION', // 播放时间
+  CLOSE_SUBSCRIBE = 'CLOSE_SUBSCRIBE', // 关闭订阅弹窗
 }

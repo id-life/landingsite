@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   AUDIO_DISPATCH,
   audioControlsAtom,
@@ -6,6 +6,7 @@ import {
   currentAudioAtom,
   currentPlayStatusAtom,
   currentTimeAtom,
+  determineNextTrackAtom,
   durationAtom,
   playNextTrackAtom,
   progressAtom,
@@ -37,6 +38,8 @@ export default function useCurrentAudio() {
   const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
   const lastExecutionTimeRef = useRef<number>(0);
   const weightingsRef = useRef<number[]>([-100]);
+  const nextAudioRef = useRef<HTMLAudioElement | null>(null);
+  const isPreloadingRef = useRef<boolean>(false);
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setProgress = useSetAtom(progressAtom);
@@ -45,11 +48,32 @@ export default function useCurrentAudio() {
 
   const [controls, dispatch] = useAtom(audioControlsAtom);
   const playNextTrack = useSetAtom(playNextTrackAtom);
+  const determineNextTrack = useSetAtom(determineNextTrackAtom);
 
   const { trackEvent } = useGA();
 
+  const preloadNextTrack = useCallback(() => {
+    if (isPreloadingRef.current) return;
+
+    const nextTrackToPlay = determineNextTrack();
+    if (!nextTrackToPlay) return;
+
+    isPreloadingRef.current = true;
+
+    if (nextAudioRef.current) {
+      nextAudioRef.current.src = '';
+      nextAudioRef.current = null;
+    }
+
+    const nextAudio = new Audio(nextTrackToPlay.url);
+    nextAudio.crossOrigin = 'anonymous';
+    nextAudio.preload = 'auto';
+    nextAudio.load();
+
+    nextAudioRef.current = nextAudio;
+  }, [determineNextTrack]);
+
   useEffect(() => {
-    // 清除上一个音频实例
     if (audioRef) {
       audioRef.pause();
       audioRef.src = '';
@@ -60,17 +84,28 @@ export default function useCurrentAudio() {
 
     if (!currentAudio) return;
 
+    isPreloadingRef.current = false;
+
     setProgress(0);
     setCurrentTime(0);
     setDuration(0);
 
-    const audio = new Audio(currentAudio.url);
-    audio.crossOrigin = 'anonymous';
-    audio.load();
-    audio.volume = 0.5;
+    let audio;
+    let isPreloaded = false;
+    if (nextAudioRef.current && nextAudioRef.current.src === currentAudio.url) {
+      audio = nextAudioRef.current;
+      nextAudioRef.current = null;
+      isPreloaded = true;
+    } else {
+      audio = new Audio(currentAudio.url);
+      audio.crossOrigin = 'anonymous';
+      audio.load();
+    }
+
+    audio.volume = 0.3;
     setAudioRef(audio);
 
-    audio.onloadedmetadata = () => {
+    const setupAudio = () => {
       const source = audioContext.createMediaElementSource(audio);
       const sampleRate = audioContext.sampleRate;
       const totalNumberOfSamples = sampleRate / approxVisualisationUpdateFrequency;
@@ -90,9 +125,23 @@ export default function useCurrentAudio() {
       dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
     };
 
+    if (isPreloaded && audio.readyState >= 1) {
+      setupAudio();
+      setDuration(audio.duration);
+    } else {
+      audio.onloadedmetadata = () => {
+        setupAudio();
+      };
+    }
+
     audio.ontimeupdate = () => {
       setCurrentTime(audio.currentTime);
       setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+
+      if (audio.duration && audio.currentTime >= audio.duration - 20 && !isPreloadingRef.current) {
+        preloadNextTrack();
+      }
+
       const now = Date.now();
       if (now - lastExecutionTimeRef.current < 1000 / approxVisualisationUpdateFrequency) return;
       lastExecutionTimeRef.current = now;
@@ -157,6 +206,17 @@ export default function useCurrentAudio() {
       document.removeEventListener('click', enableAutoplay);
     };
   }, [dispatch, playStatus, trackEvent]);
+
+  // 清理预加载的资源
+  useEffect(() => {
+    return () => {
+      if (nextAudioRef.current) {
+        nextAudioRef.current.src = '';
+        nextAudioRef.current = null;
+      }
+      isPreloadingRef.current = false;
+    };
+  }, []);
 
   return useMemo(
     () => ({

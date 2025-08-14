@@ -1,16 +1,14 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { isSubscribeShowAtom } from '@/atoms/footer';
-import jsonp from '@/utils/jsonp';
+import { InfoSVG } from '@/components/svg';
+import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { FloatingPortal } from '@floating-ui/react';
-import { useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { useEvent } from 'react-use';
 
 type Inputs = {
   EMAIL: string;
@@ -20,52 +18,16 @@ type Inputs = {
 };
 
 export default function MobileFooter() {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const subscribeRef = useRef<HTMLDivElement>(null);
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const { isSubscribeShow, subscribeRef, handleClickOutside, onFormSubmit, isSubmitting, isSubmitted, handleClose } =
+    useMobileSubscribeAction();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { trackEvent } = useGA();
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (subscribeRef.current && !subscribeRef.current.contains(event.target as Node)) {
-        setIsSubscribeShow(false);
-      }
-    },
-    [setIsSubscribeShow],
-  );
-
-  useEffect(() => {
-    if (isSubscribeShow) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [handleClickOutside, isSubscribeShow]);
-
-  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
-
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
-    });
-  };
+  useEvent('mousedown', handleClickOutside);
 
   return (
     <FloatingPortal>
@@ -82,9 +44,14 @@ export default function MobileFooter() {
           }}
           ref={subscribeRef}
           // 比导航遮罩层级高
-          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center bg-red-600 px-4 py-7.5 text-white"
+          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-4 py-7.5 text-[var(--foreground)] backdrop-blur-md"
         >
-          <h3 className="flex items-center justify-between font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
+          <span className="absolute left-0 top-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+          <span className="absolute bottom-0 right-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
+          <button onClick={handleClose} className="absolute right-4 top-4 z-10 transition-opacity hover:opacity-70">
+            <CloseSVG className="size-5 fill-[var(--foreground)] stroke-2" />
+          </button>
+          <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">
             SUBSCRIBE
             {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
           </h3>
@@ -96,9 +63,10 @@ export default function MobileFooter() {
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="flex-1 border-2 border-white p-2 mobile:border">
+            <div className="relative flex-1 p-2">
+              <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
               <input
-                className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
+                className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                 placeholder="Please enter email"
                 defaultValue=""
                 {...register('EMAIL', {
@@ -110,26 +78,26 @@ export default function MobileFooter() {
                 })}
               />
             </div>
-            <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">
+            <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
               {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white">
-                  <LoadingSVG className="w-6 animate-spin stroke-red-600 stroke-[3]" />
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                 </div>
               ) : null}
               {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-white font-bold">
-                  <CheckedSVG className="w-6 stroke-red-600 stroke-[3]" />
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
                 </div>
               ) : null}
               <input
                 className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
                 type="submit"
-                value="Subscribe"
+                value="Submit"
               />
             </div>
           </form>
-          <div className="mt-2 flex items-center gap-1 text-xs font-semibold">
-            <img className="h-4" src="/svgs/info.svg" alt="" />
+          <div className="mt-5 flex gap-1.5 text-left text-xs/5 font-semibold text-foreground opacity-50">
+            <InfoSVG className="mt-0.5 size-4 shrink-0" />
             Join our Longevity Circle and receive the latest insights & research
           </div>
         </motion.div>

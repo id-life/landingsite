@@ -1,20 +1,20 @@
 'use client';
 import { mobileCurrentPageAtom } from '@/atoms';
+import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
+import { FloatingPortal } from '@floating-ui/react';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import MobileDiseaseManagementStatus from '../disease-management/MobileDiseaseManagementStatus';
 import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
-import MobileDiseaseManagementStatus from '../disease-management/MobileDiseaseManagementStatus';
-import { useGSAP } from '@gsap/react';
-import { FloatingPortal } from '@floating-ui/react';
 
 SwiperType.use([FreeMode]);
 
@@ -35,7 +35,7 @@ function MobileSpectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const spectrumData = useSpectrumData();
+  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -183,6 +183,8 @@ function MobileSpectrum() {
                 <MobileSpectrumItem
                   className="px-7.5"
                   item={item}
+                  openSpectrumInNewTab={openSpectrumInNewTab}
+                  executeSpectrumRoute={executeSpectrumRoute}
                   ref={(element) => {
                     if (!element) return;
                     spectrumRefs.current[index] = element;

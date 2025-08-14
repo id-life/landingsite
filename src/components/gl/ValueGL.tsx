@@ -3,20 +3,15 @@ import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { VALUE_PAGE_INDEX } from '@/constants/config';
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
+import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, RefObject, useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText, MotionPathPlugin);
 
 type TitleProps = {
   titleRef: RefObject<THREE.Group>;

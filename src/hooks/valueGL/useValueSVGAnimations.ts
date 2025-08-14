@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { Object3D } from 'three';
 import { useIsMobile } from '../useIsMobile';
-gsap.registerPlugin(SplitText);
 
 export const useValueSVGAnimations = () => {
   const isMobile = useIsMobile();

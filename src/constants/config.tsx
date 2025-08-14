@@ -89,6 +89,8 @@ export const BACKGROUND_COLORS = {
     '--audio-border': '#EEF4FF',
     '--audio-order': '#ffffff',
     '--audio-desc': '#222222',
+    '--subscribe-border': '#ffffff',
+    '--subscribe-bg': '#ffffff33',
   },
   [BACKGROUND_THEME.BLACK]: {
     '--gradient-from': '#000000',
@@ -102,6 +104,8 @@ export const BACKGROUND_COLORS = {
     '--audio-border': '#1C1C1C',
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
+    '--subscribe-border': '#57595C80',
+    '--subscribe-bg': '#00000033',
   },
   [BACKGROUND_THEME.BLACK_RED]: {
     '--gradient-from': '#000000',
@@ -115,6 +119,8 @@ export const BACKGROUND_COLORS = {
     '--audio-border': '#1C1C1C',
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
+    '--subscribe-border': '#57595C80',
+    '--subscribe-bg': '#00000033',
   },
   [BACKGROUND_THEME.BLACK_RED_2]: {
     '--gradient-from': '#000000',
@@ -129,5 +135,7 @@ export const BACKGROUND_COLORS = {
     '--audio-border': '#1C1C1C',
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
+    '--subscribe-border': '#57595C80',
+    '--subscribe-bg': '#00000033',
   },
 } as const;

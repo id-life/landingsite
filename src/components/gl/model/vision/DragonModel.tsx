@@ -1,4 +1,4 @@
-import { globalLoadedAtom } from '@/atoms/geo';
+import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -41,6 +41,7 @@ export default function DragonModel() {
   const smootherRef = useRef(ScrollSmoother.get());
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const fixedUIHasTriggered = useRef(false);
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
@@ -48,10 +49,25 @@ export default function DragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
+    // If opened via spectrum deep link, skip fade-in as user isn't landing on home intro
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#spectrum-')) {
+      return;
+    }
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-    if (element) gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    if (element)
+      gsap.fromTo(
+        element,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.3,
+          onComplete: () => {
+            setFadeInAnimCompleted(true);
+          },
+        },
+      );
   });
 
   // Frame update loop
@@ -162,11 +178,12 @@ export default function DragonModel() {
 
   // Clean up geometry and material
   useEffect(() => {
+    const mesh = meshRef.current;
     return () => {
       if (geometry) {
         geometry.dispose();
       }
-      const material = meshRef.current?.material as any;
+      const material = (mesh?.material as any) ?? null;
       if (material && material.dispose) {
         material.dispose();
       }

@@ -1,12 +1,12 @@
+import { mobileCurrentPageAtom } from '@/atoms';
 import { useThree } from '@react-three/fiber';
-import { useEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
+import { useAtomValue } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
+import { Group } from 'three';
+import { NAV_LIST } from '../nav/nav';
 import MobileCenterLogo from './model/vision/MobileCenterLogo';
 import MobileDragonModel from './model/vision/MobileDragonModel';
-import { useAtomValue } from 'jotai';
-import { mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '../nav/nav';
-import gsap from 'gsap';
-import { Group } from 'three';
 
 export default function MobileVisionGL() {
   const { viewport } = useThree();

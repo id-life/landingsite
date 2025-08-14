@@ -1,69 +1,25 @@
 import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom, mobileIsScrollingAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
-import { BACKGROUND_COLORS, BACKGROUND_THEME, BackgroundTheme } from '@/constants/config';
+import { BACKGROUND_THEME, BackgroundTheme } from '@/constants/config';
+import { useMobileThemeTransition } from '@/hooks/useMobileThemeTransition';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileNavigation() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isAnimatingRef = useRef(false);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
+  const { transitionToTheme, isTransitioning } = useMobileThemeTransition();
 
-  const changeBackground = useCallback((theme: BackgroundTheme) => {
-    const root = document.documentElement;
-    if (!root) return;
-
-    // 如果有正在进行的动画，先清除它
-    if (timelineRef.current) {
-      timelineRef.current.kill();
-    }
-
-    // 创建新的timeline
-    const tl = gsap.timeline({
-      onStart: () => {
-        isAnimatingRef.current = true;
-      },
-      onComplete: () => {
-        isAnimatingRef.current = false;
-        timelineRef.current = null;
-      },
-    });
-    timelineRef.current = tl;
-    switch (theme) {
-      case BACKGROUND_THEME.BLACK_RED:
-        tl.set('.base-background2', { opacity: 0 }).to(root, {
-          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK_RED],
-          duration: 0.5,
-        });
-        break;
-      case BACKGROUND_THEME.BLACK:
-        tl.set('.base-background2', { opacity: 0 }).to(root, {
-          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK],
-          duration: 0.5,
-        });
-        break;
-      case BACKGROUND_THEME.BLACK_RED_2:
-        tl.set('.base-background2', { opacity: 0 }).to(root, {
-          ...BACKGROUND_COLORS[BACKGROUND_THEME.BLACK_RED_2],
-          duration: 0.5,
-        });
-        break;
-      default:
-        tl.to(
-          root,
-          {
-            ...BACKGROUND_COLORS[BACKGROUND_THEME.LIGHT],
-            duration: 0.5,
-          },
-          '<',
-        );
-        break;
-    }
-  }, []);
+  const changeBackground = useCallback(
+    (theme: BackgroundTheme) => {
+      transitionToTheme(theme);
+    },
+    [transitionToTheme],
+  );
 
   useEffect(() => {
     if (NAV_LIST[1].id === currentPage.id) {
@@ -107,7 +63,7 @@ export function useMobileNavigation() {
   const mobileNavChange = useCallback(
     (item: NavItem) => {
       // 如果动画正在进行中，不响应新的切换请求
-      if (isAnimatingRef.current || mobileIsScrolling) return;
+      if (isAnimatingRef.current || isTransitioning || mobileIsScrolling) return;
 
       setCurrentPage(item);
       if (item?.id === NAV_LIST[5].id) {
@@ -117,7 +73,7 @@ export function useMobileNavigation() {
         setInnerPageTotal(0);
       }
     },
-    [mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
+    [isTransitioning, mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
 
   return { mobileNavChange };

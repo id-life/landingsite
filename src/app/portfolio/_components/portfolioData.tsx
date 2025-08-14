@@ -8,24 +8,6 @@ export type PortfolioItemInfo = {
 
 export const portfolio: PortfolioItemInfo[] = [
   {
-    title: 'Healthspan Capital',
-    description: 'Active early stage LongBio fund.',
-    image: <img className="w-19.5 mobile:w-15" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
-    link: 'https://www.healthspancapital.vc/',
-  },
-  {
-    title: 'Longevity.Technology',
-    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/longevity.webp" alt="longevity" />,
-    link: 'https://longevity.technology/',
-  },
-  {
-    title: 'Mito Health',
-    description: 'AI powered concierge doctor',
-    image: <img className="w-36 mobile:w-[6.75rem]" src="/imgs/investments/mito.webp" alt="mito" />,
-    link: 'https://mitohealth.com/',
-  },
-  {
     title: 'R3 Bio',
     description: 'Stealth mode biotech',
     image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
@@ -42,10 +24,39 @@ export const portfolio: PortfolioItemInfo[] = [
     image: <img className="h-11" src="/imgs/investments/kangaroo-biomedical.webp" alt="kangaroo-biomedical" />,
   },
   {
+    title: 'Healthspan Capital',
+    description: 'Active early stage LongBio fund',
+    image: <img className="w-19.5 mobile:w-15" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    link: 'https://www.healthspancapital.vc/',
+  },
+  {
+    title: 'Longevity.Technology',
+    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/longevity.webp" alt="longevity" />,
+    link: 'https://longevity.technology/',
+  },
+  {
+    title: 'VIBE SCIENCE',
+    description: 'Builds consumer brain wellness technology',
+    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
+  },
+  {
+    title: 'Mito Health',
+    description: 'AI powered concierge doctor',
+    image: <img className="w-36 mobile:w-[6.75rem]" src="/imgs/investments/mito.webp" alt="mito" />,
+    link: 'https://mitohealth.com/',
+  },
+  {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
     // link: 'https://vitalia.city/',
+  },
+  {
+    title: 'Unlimited Bio',
+    description: 'Accelerate clinical trials',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
+    link: 'https://www.unlimited.bio/',
   },
   {
     title: 'VitaDAO & Bio.Xyz',
@@ -60,21 +71,10 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://www.vitadao.com/',
   },
   {
-    title: 'Unlimited Bio',
-    description: 'Accelerate clinical trials',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
-    link: 'https://www.unlimited.bio/',
-  },
-  {
     title: 'ALIS',
     description: 'Gold standard longevity services scaled globally',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
     link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
-  },
-  {
-    title: 'VIBE SCIENCE',
-    description: 'Builds consumer brain wellness technology',
-    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
   },
 ];
 
@@ -84,23 +84,6 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       url: '/imgs/particle/0.png',
       scaleNum: isMobile ? 0.8 : 2.2,
       resize: [512, 300],
-    },
-    {
-      url: '/imgs/particle/1.png',
-      resize: [600, 600],
-      scaleNum: isMobile ? 0.4 : 0.8,
-      loadPercentage: 0.005,
-    },
-    {
-      url: '/imgs/particle/2.png',
-      resize: [600, 536],
-      scaleNum: isMobile ? 0.35 : 0.7,
-      loadPercentage: 0.0012,
-    },
-    {
-      url: '/imgs/particle/3.png',
-      resize: [600, 576],
-      scaleNum: isMobile ? 0.5 : 1,
     },
     {
       url: '/imgs/particle/4.png',
@@ -121,16 +104,33 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       scaleNum: isMobile ? 0.7 : 1.4,
     },
     {
+      url: '/imgs/particle/1.png',
+      resize: [600, 600],
+      scaleNum: isMobile ? 0.4 : 0.8,
+      loadPercentage: 0.005,
+    },
+    {
+      url: '/imgs/particle/2.png',
+      resize: [600, 536],
+      scaleNum: isMobile ? 0.35 : 0.7,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/11.png',
+      resize: [512, 262],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/3.png',
+      resize: [600, 576],
+      scaleNum: isMobile ? 0.5 : 1,
+    },
+    {
       url: '/imgs/particle/7.png',
       resize: [860, 82],
       loadPercentage: 0.004,
       scaleNum: isMobile ? 0.5 : 1.2,
-    },
-    {
-      url: '/imgs/particle/8.png',
-      resize: [594, 264],
-      scaleNum: isMobile ? 0.7 : 1.4,
-      loadPercentage: 0.002,
     },
     {
       url: '/imgs/particle/9.png',
@@ -139,14 +139,14 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       scaleNum: isMobile ? 0.5 : 1,
     },
     {
-      url: '/imgs/particle/10.png',
-      resize: [512, 272],
-      scaleNum: isMobile ? 0.5 : 1.2,
-      loadPercentage: 0.0012,
+      url: '/imgs/particle/8.png',
+      resize: [594, 264],
+      scaleNum: isMobile ? 0.7 : 1.4,
+      loadPercentage: 0.002,
     },
     {
-      url: '/imgs/particle/11.png',
-      resize: [512, 262],
+      url: '/imgs/particle/10.png',
+      resize: [512, 272],
       scaleNum: isMobile ? 0.5 : 1.2,
       loadPercentage: 0.0012,
     },
