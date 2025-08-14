@@ -200,7 +200,7 @@ export default function FooterContact() {
                   <input
                     className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
                     type="submit"
-                    value="Subscribe"
+                    value="Submit"
                   />
                 </div>
               </form>
