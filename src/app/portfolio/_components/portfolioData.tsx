@@ -20,12 +20,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Kangaroo Biomedical',
-    description: 'Artificial Womb Technology',
+    description: 'Artificial Womb (AW) technology',
     image: <img className="h-11" src="/imgs/investments/kangaroo-biomedical.webp" alt="kangaroo-biomedical" />,
   },
   {
     title: 'Healthspan Capital',
-    description: 'The most active longevity fund in space.',
+    description: 'Active early stage LongBio fund',
     image: <img className="w-19.5 mobile:w-15" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
     link: 'https://www.healthspancapital.vc/',
   },
