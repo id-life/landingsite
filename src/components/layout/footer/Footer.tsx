@@ -69,7 +69,7 @@ export default function Footer() {
             >
               <CloseSVG className="size-5 stroke-[var(--foreground)] stroke-2" />
             </button>
-            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold mobile:text-2xl/7.5">
+            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">
               SUBSCRIBE
               {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
             </h3>
@@ -81,7 +81,8 @@ export default function Footer() {
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-              <div className="flex-1 border-2 border-[var(--foreground)] p-2 mobile:border">
+              <div className="relative flex-1 p-2">
+                <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
                 <input
                   className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                   placeholder="Please enter email"
@@ -109,7 +110,7 @@ export default function Footer() {
                 <input
                   className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
                   type="submit"
-                  value="Subscribe"
+                  value="Submit"
                 />
               </div>
             </form>
