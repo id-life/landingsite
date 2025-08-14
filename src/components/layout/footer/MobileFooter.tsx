@@ -44,7 +44,7 @@ export default function MobileFooter() {
           }}
           ref={subscribeRef}
           // 比导航遮罩层级高
-          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-4 py-7.5 text-[var(--foreground)] backdrop-blur-xl"
+          className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-4 py-7.5 text-[var(--foreground)] backdrop-blur-md"
         >
           <span className="absolute left-0 top-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
           <span className="absolute bottom-0 right-0 block rotate-90 border-[17px] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />

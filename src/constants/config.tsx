@@ -105,7 +105,7 @@ export const BACKGROUND_COLORS = {
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
     '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#000000CC',
+    '--subscribe-bg': '#00000033',
   },
   [BACKGROUND_THEME.BLACK_RED]: {
     '--gradient-from': '#000000',
@@ -120,7 +120,7 @@ export const BACKGROUND_COLORS = {
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
     '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#000000CC',
+    '--subscribe-bg': '#00000033',
   },
   [BACKGROUND_THEME.BLACK_RED_2]: {
     '--gradient-from': '#000000',
@@ -136,6 +136,6 @@ export const BACKGROUND_COLORS = {
     '--audio-order': '#222222',
     '--audio-desc': '#999999',
     '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#000000CC',
+    '--subscribe-bg': '#00000033',
   },
 } as const;

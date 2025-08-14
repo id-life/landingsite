@@ -58,8 +58,8 @@ export default function Footer() {
           className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
           <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">
-            <span className="absolute left-0 top-0 block rotate-90 border-[10px] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
-            <span className="absolute bottom-0 right-0 block rotate-90 border-[10px] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
+            <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+            <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
             <button
               onClick={(e) => {
                 e?.stopPropagation();
