@@ -8,9 +8,10 @@ export type PortfolioItemInfo = {
 
 export const portfolio: PortfolioItemInfo[] = [
   {
-    title: 'R3 Bio',
-    description: 'Stealth mode biotech',
-    image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
+    title: 'Healthspan Capital',
+    description: 'Active early stage LongBio fund',
+    image: <img className="w-19.5 mobile:w-15" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    link: 'https://www.healthspancapital.vc/',
   },
   {
     title: 'Frontier Bio',
@@ -19,26 +20,15 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://www.frontierbio.com/',
   },
   {
-    title: 'Kangaroo Biomedical',
-    description: 'Artificial Womb (AW) technology',
-    image: <img className="h-11" src="/imgs/investments/kangaroo-biomedical.webp" alt="kangaroo-biomedical" />,
+    title: 'Unlimited Bio',
+    description: 'Accelerate clinical trials',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
+    link: 'https://www.unlimited.bio/',
   },
   {
-    title: 'Healthspan Capital',
-    description: 'Active early stage LongBio fund',
-    image: <img className="w-19.5 mobile:w-15" src="/imgs/investments/healthspan.webp" alt="healthspan" />,
-    link: 'https://www.healthspancapital.vc/',
-  },
-  {
-    title: 'Longevity.Technology',
-    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/longevity.webp" alt="longevity" />,
-    link: 'https://longevity.technology/',
-  },
-  {
-    title: 'VIBE SCIENCE',
-    description: 'Builds consumer brain wellness technology',
-    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
+    title: 'R3 Bio',
+    description: 'Stealth mode biotech',
+    image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
   },
   {
     title: 'Mito Health',
@@ -47,19 +37,35 @@ export const portfolio: PortfolioItemInfo[] = [
     link: 'https://mitohealth.com/',
   },
   {
+    title: 'ALIS',
+    description: 'Gold standard longevity services scaled globally',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
+    link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
+  },
+  {
+    title: 'Kangaroo Biomedical',
+    description: 'Artificial Womb (AW) technology',
+    image: <img className="h-12" src="/imgs/investments/kangaroo-biomedical.webp" alt="kangaroo-biomedical" />,
+  },
+  {
+    title: 'VIBE SCIENCE',
+    description: 'Builds consumer brain wellness technology',
+    image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
+  },
+  {
+    title: 'Longevity.Technology',
+    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
+    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/longevity.webp" alt="longevity" />,
+    link: 'https://longevity.technology/',
+  },
+  {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
     // link: 'https://vitalia.city/',
   },
   {
-    title: 'Unlimited Bio',
-    description: 'Accelerate clinical trials',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/unlimited.webp" alt="unlimited" />,
-    link: 'https://www.unlimited.bio/',
-  },
-  {
-    title: 'VitaDAO & Bio.Xyz',
+    title: 'VitaDAO & Bio.xyz',
     subTitle: 'via secondary market & convert',
     description: 'New funding paradigm for unlikely bio projects',
     image: (
@@ -69,12 +75,6 @@ export const portfolio: PortfolioItemInfo[] = [
       </div>
     ),
     link: 'https://www.vitadao.com/',
-  },
-  {
-    title: 'ALIS',
-    description: 'Gold standard longevity services scaled globally',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
-    link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
   },
 ];
 
@@ -86,49 +86,14 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       resize: [512, 300],
     },
     {
-      url: '/imgs/particle/4.png',
-      resize: [300, 300],
-      scaleNum: isMobile ? 0.7 : 1.4,
-      loadPercentage: 0.002,
-    },
-    {
-      url: '/imgs/particle/5.png',
-      resize: [950, 140],
-      loadPercentage: 0.004,
-      scaleNum: isMobile ? 0.5 : 1.2,
-    },
-    {
-      url: '/imgs/particle/6.png',
-      resize: [338, 340],
-      loadPercentage: 0.004,
-      scaleNum: isMobile ? 0.7 : 1.4,
-    },
-    {
       url: '/imgs/particle/1.png',
       resize: [600, 600],
       scaleNum: isMobile ? 0.4 : 0.8,
       loadPercentage: 0.005,
     },
     {
-      url: '/imgs/particle/2.png',
-      resize: [600, 536],
-      scaleNum: isMobile ? 0.35 : 0.7,
-      loadPercentage: 0.0012,
-    },
-    {
-      url: '/imgs/particle/11.png',
-      resize: [512, 262],
-      scaleNum: isMobile ? 0.5 : 1.2,
-      loadPercentage: 0.0012,
-    },
-    {
-      url: '/imgs/particle/3.png',
-      resize: [600, 576],
-      scaleNum: isMobile ? 0.5 : 1,
-    },
-    {
-      url: '/imgs/particle/7.png',
-      resize: [860, 82],
+      url: '/imgs/particle/5.png',
+      resize: [950, 140],
       loadPercentage: 0.004,
       scaleNum: isMobile ? 0.5 : 1.2,
     },
@@ -139,16 +104,51 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       scaleNum: isMobile ? 0.5 : 1,
     },
     {
-      url: '/imgs/particle/8.png',
-      resize: [594, 264],
+      url: '/imgs/particle/4.png',
+      resize: [300, 300],
       scaleNum: isMobile ? 0.7 : 1.4,
       loadPercentage: 0.002,
+    },
+    {
+      url: '/imgs/particle/3.png',
+      resize: [600, 576],
+      scaleNum: isMobile ? 0.5 : 1,
     },
     {
       url: '/imgs/particle/10.png',
       resize: [512, 272],
       scaleNum: isMobile ? 0.5 : 1.2,
       loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/6.png',
+      resize: [338, 340],
+      loadPercentage: 0.004,
+      scaleNum: isMobile ? 0.7 : 1.4,
+    },
+    {
+      url: '/imgs/particle/11.png',
+      resize: [512, 262],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/2.png',
+      resize: [600, 536],
+      scaleNum: isMobile ? 0.35 : 0.7,
+      loadPercentage: 0.0012,
+    },
+    {
+      url: '/imgs/particle/7.png',
+      resize: [860, 82],
+      loadPercentage: 0.004,
+      scaleNum: isMobile ? 0.5 : 1.2,
+    },
+    {
+      url: '/imgs/particle/8.png',
+      resize: [594, 264],
+      scaleNum: isMobile ? 0.7 : 1.4,
+      loadPercentage: 0.002,
     },
   ];
 };

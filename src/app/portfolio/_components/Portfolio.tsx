@@ -159,8 +159,8 @@ function Portfolio() {
     ));
 
     // Split items into two rows: first 6, then remaining
-    const firstRow = items.slice(0, 5);
-    const secondRow = items.slice(5);
+    const firstRow = items.slice(0, 6);
+    const secondRow = items.slice(6);
 
     return { firstRow, secondRow };
   }, [handleFundClick, handleMouseEnter]);
@@ -172,9 +172,9 @@ function Portfolio() {
         <ParticleGLContainer />
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-12">
-          <div className="flex flex-col items-center gap-8">
-            <div className="grid grid-cols-5 justify-items-center gap-14">{portfolioItems.firstRow}</div>
-            <div className="grid grid-cols-6 justify-items-center gap-6">{portfolioItems.secondRow}</div>
+          <div className="flex flex-col gap-8">
+            <div className="grid grid-cols-6 justify-items-center">{portfolioItems.firstRow}</div>
+            <div className="grid grid-cols-5 justify-items-center">{portfolioItems.secondRow}</div>
           </div>
         </div>
         <div className="page2-contact">
