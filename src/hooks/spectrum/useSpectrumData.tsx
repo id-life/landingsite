@@ -150,7 +150,7 @@ export const useSpectrumData = () => {
     const data: SpectrumItemInfo[] = [
       {
         title: 'Insights & Advocacy',
-        titleCn: '洞察与倡导',
+        titleCn: '演讲与洞见',
         icon: <MeetingSVG />,
         links: [
           {
