@@ -14,6 +14,8 @@ import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, pla
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { motion } from 'motion/react';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 export const motionVariants = {
   visible: {
@@ -59,6 +61,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
     dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 
   const title = useMemo(
