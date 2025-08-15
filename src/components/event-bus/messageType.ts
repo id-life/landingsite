@@ -8,4 +8,5 @@ export enum MessageType {
   SIRI_WAVE_CONFIG = 'SIRI_WAVE_CONFIG', // siri wave 设置
   PODCAST_DURATION = 'PODCAST_DURATION', // 播放时间
   CLOSE_SUBSCRIBE = 'CLOSE_SUBSCRIBE', // 关闭订阅弹窗
+  CHANGE_PLAY_STATUS = 'CHANGE_PLAY_STATUS', // 修改播放状态
 }

@@ -16,6 +16,7 @@ import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { useEventBus } from '@/components/event-bus/useEventBus';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = audioContext.createAnalyser();
@@ -217,6 +218,8 @@ export default function useCurrentAudio() {
       isPreloadingRef.current = false;
     };
   }, []);
+
+  useEventBus(MessageType.CHANGE_PLAY_STATUS, () => (hasInteractedRef.current = true));
 
   return useMemo(
     () => ({

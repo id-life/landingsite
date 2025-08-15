@@ -55,11 +55,11 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <NewsArticle1 />
       <Style />
       <ClientNav />
       <BodyScrollManager />
       {children}
-      <NewsArticle1 />
     </>
   );
 }

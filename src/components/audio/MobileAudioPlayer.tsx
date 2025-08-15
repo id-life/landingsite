@@ -12,6 +12,8 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
@@ -38,6 +40,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
     dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 
   return (
