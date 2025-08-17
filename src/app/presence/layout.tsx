@@ -6,7 +6,7 @@ import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Spectrum 谱系',
+  title: 'Presence 印记',
   description:
     'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
   keywords: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     'Immortal Dragons',
   ],
   openGraph: {
-    title: 'Spectrum 谱系',
+    title: 'Presence 印记',
     siteName: 'Immortal Dragons',
     description:
       'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CreativeWorkSeries',
-  name: 'Spectrum',
+  name: 'Presence',
   applicationCategory: 'ProductivityApplication + NewsMedia',
   operatingSystem: 'Web',
   creator: 'IMMORTAL DRAGONS',
 };
 
-export default function SpectrumLayout({ children }: { children: ReactNode }) {
+export default function PresenceLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />

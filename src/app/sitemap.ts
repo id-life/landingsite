@@ -49,31 +49,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'https://www.id.life/portfolio',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.8,
     },
     {
       url: 'https://www.id.life/spectrum',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.8,
     },
     {
       url: 'https://www.id.life/digitaltwin',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.8,
     },
     {
       url: 'https://www.id.life/value',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.8,
     },
     {
       url: 'https://www.id.life/about',
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.6,
+      priority: 0.8,
     },
   ];
   podcastId.forEach((id) => {
@@ -81,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `https://www.id.life/podcast/${id}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.6,
     });
   });
   newsId.forEach((id) => {
@@ -89,7 +89,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `https://www.id.life/news/${id}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.6,
     });
   });
   return sitemap;

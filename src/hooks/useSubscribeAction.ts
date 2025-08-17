@@ -85,9 +85,7 @@ export function useSubscribeAction() {
 
   const handleClickOutside = (e: MouseEvent) => {
     e.stopPropagation();
-    console.log('handleClick', isSubscribeShow, playingRef.current);
     if (isSubscribeShow && !playingRef.current) {
-      console.log('handleClickOutside', isSubscribeShow, playingRef.current);
       const target = e.target as Element;
       const isClickFooter = target.closest('.footer-box-clip');
       const isClickSubscribeBtn = target.closest('#subscribe-btn');

@@ -12,10 +12,6 @@ export default function NewsArticle1() {
       <Link href="/podcast?c=lt">Long talk</Link>
       <Link href="/about">About</Link>
       <Link href="/news">News</Link>
-      <Link href="/portfolio" />
-      <Link href="/spectrum" />
-      <Link href="/digitaltwin" />
-      <Link href="/value" />
     </div>
   );
 }

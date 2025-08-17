@@ -3,7 +3,6 @@
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
 import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { globalLoadedAtom } from '@/atoms/geo';
 import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
@@ -18,12 +17,12 @@ import { useEvent } from 'react-use';
 import { NAV_LIST } from './nav';
 import { MessageType } from '../event-bus/messageType';
 import { useEventBus } from '../event-bus/useEventBus';
+import Link from 'next/link';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   const { handleNavClick } = useNavigation();
   const { onSubscribeClick, handleScroll, handleClickOutside, handleClose } = useSubscribeAction();
-  const globalLoaded = useAtomValue(globalLoadedAtom);
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
   const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
 
@@ -47,25 +46,28 @@ export default function PCNav() {
 
   useEvent('click', handleClickOutside);
 
-  if (!globalLoaded) return null;
   return (
     <div
       id="nav"
       className={cn(
-        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:hidden',
         isCharacterRelationShow && 'character-relation-css-vars-inject z-[51] pb-4',
       )}
     >
       <Logo />
       <div
         className={cn(
-          'main-nav-links flex gap-8 text-sm font-semibold mobile:hidden',
+          'main-nav-links flex gap-8 text-sm font-semibold',
           (isCharacterRelationShow || isShowingDiseaseManagement) && 'hidden',
         )}
       >
         {NAV_LIST.map((item) => (
-          <div
-            onClick={() => handleNavClick(item)}
+          <Link
+            href={item.href}
+            onClick={(event) => {
+              event.preventDefault();
+              handleNavClick(item);
+            }}
             className={clsx(
               'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',
               currentPage.id === item.id && 'nav-active',
@@ -73,7 +75,7 @@ export default function PCNav() {
             key={item.id}
           >
             {item.title}
-          </div>
+          </Link>
         ))}
       </div>
       <div id="subscribe-btn" className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
