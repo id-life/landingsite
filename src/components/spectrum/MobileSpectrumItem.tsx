@@ -62,10 +62,10 @@ const MobileSpectrumLink = memo(
     );
 
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
-    const pathname = routeConfig?.pathname || '/presence';
+    const { pathname, useHash } = routeConfig ?? {};
 
     return (
-      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname)} target="_blank">
+      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)} target="_blank">
         <div className="relative flex items-center gap-1">
           <p
             onClick={handleClick}

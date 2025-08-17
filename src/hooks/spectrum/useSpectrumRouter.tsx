@@ -9,15 +9,21 @@ export interface SpectrumRouteConfig {
   key: string;
   action: () => void;
   pathname?: string; // Custom pathname for the route, defaults to '/presence'
+  useHash?: boolean; // Whether to include hash fragment, defaults to true
 }
 
-export const generateSpectrumUrl = (key: string, pathname: string = '/presence') => {
+export const generateSpectrumUrl = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  return `${baseUrl}${pathname}#${key}`;
+
+  if (useHash) {
+    return `${baseUrl}${pathname}#${key}`;
+  } else {
+    return `${baseUrl}${pathname}`;
+  }
 };
 
-export const openSpectrumInNewTab = (key: string, pathname: string = '/presence') => {
-  const url = generateSpectrumUrl(key, pathname);
+export const openSpectrumInNewTab = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
+  const url = generateSpectrumUrl(key, pathname, useHash);
   window.open(url, '_blank');
 };
 
@@ -28,7 +34,7 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
 
   const navigateByHash = useCallback(
     (hash: string) => {
-      if (!hash || !hash.startsWith('#spectrum-')) return;
+      if (!hash || !hash.startsWith('#')) return;
       // fixed ui opacity
       const element = document.querySelector('#pc-fixed-ui');
       const mobileElement = document.querySelector('#mobile-fixed-ui');
@@ -37,7 +43,7 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       if (element) gsap.set(element, { opacity: 1 });
       if (mobileElement) gsap.set(mobileElement, { opacity: 1 });
 
-      const key = hash.replace('#spectrum-', '');
+      const key = hash.replace('#', '');
       if (consumedKeysRef.current.has(key)) return;
       const config = routeConfigs.find((c) => c.key === key);
       if (config) {
@@ -100,10 +106,12 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     (key: string) => {
       const config = routeConfigs.find((c) => c.key === key);
       if (!config) return;
-
       // Update URL without page reload
       if (typeof window !== 'undefined') {
-        const newUrl = generateSpectrumUrl(key, config.pathname);
+        // Use default values when config properties are undefined
+        const pathname = config.pathname ?? '/presence';
+        const useHash = config.useHash ?? true;
+        const newUrl = generateSpectrumUrl(key, pathname, useHash);
         window.history.pushState(null, '', newUrl);
       }
 

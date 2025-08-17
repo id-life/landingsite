@@ -1,7 +1,7 @@
 import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useSetAtom } from 'jotai';
-import { HTMLAttributes, useCallback, useEffect, useMemo } from 'react';
+import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -139,7 +139,7 @@ export const useSpectrumData = () => {
       { key: 'influence-network', action: handleCharacterRelationShow },
       { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
-      { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digital-twin' },
+      { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
     [handleClickDot, handleCharacterRelationShow, handleDiseaseManagementClick, handleClickDigitalTwin],
   );

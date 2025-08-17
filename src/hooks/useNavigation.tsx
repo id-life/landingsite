@@ -75,7 +75,10 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/spectrum');
+        // Preserve hash if it exists (for spectrum routing)
+        const currentHash = window.location.hash;
+        const newUrl = currentHash ? `/spectrum${currentHash}` : '/spectrum';
+        window.history.pushState({}, '', newUrl);
       } else if (id === NAV_LIST[3].id) {
         // engagement 页
         window.isNavScrolling = true;
@@ -88,7 +91,10 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/presence');
+        // Preserve hash if it exists (for spectrum routing)
+        const currentHash = window.location.hash;
+        const newUrl = currentHash ? `/presence${currentHash}` : '/presence';
+        window.history.pushState({}, '', newUrl);
       } else if (item.id === NAV_LIST[4].id) {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
