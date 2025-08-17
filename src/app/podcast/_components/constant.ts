@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 
-export const PODCAST_NAV_LIST = [
+export type PodcastNavItem = {
+  id: string;
+  title: string;
+};
+export const PODCAST_NAV_LIST: PodcastNavItem[] = [
   { id: 'id', title: 'immortal dragons 不朽真龙' },
   { id: 'lt', title: 'long talk 龙门阵' },
 ] as const;

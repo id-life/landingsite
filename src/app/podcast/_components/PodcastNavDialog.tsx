@@ -1,14 +1,13 @@
-import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
-import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
-import { isPodcastNavOpenAtom } from '@/atoms/podcast';
-import Dialog from '@/components/dialog';
-import { NavItem } from '@/components/nav/nav';
-import { useThrottle } from '@/hooks/useThrottle';
-import { cn } from '@/utils';
-import gsap from 'gsap';
-import { useAtom } from 'jotai';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo } from 'react';
+import gsap from 'gsap';
+import { cn } from '@/utils';
+import { useAtom } from 'jotai';
+import Dialog from '@/components/dialog';
+import { useThrottle } from '@/hooks/useThrottle';
+import { isPodcastNavOpenAtom } from '@/atoms/podcast';
+import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { PODCAST_NAV_LIST, PodcastNavItem } from '@/app/podcast/_components/constant';
 
 function PodcastNavDialog() {
   const router = useRouter();
@@ -38,7 +37,7 @@ function PodcastNavDialog() {
     }
   }, []);
 
-  const handleNavClick = useThrottle((item: NavItem) => {
+  const handleNavClick = useThrottle((item: PodcastNavItem) => {
     startAnim(false);
     setTimeout(() => {
       setOpen(false);
