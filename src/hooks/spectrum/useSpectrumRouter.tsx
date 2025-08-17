@@ -2,29 +2,29 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useEventBus } from '@/components/event-bus/useEventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 export interface SpectrumRouteConfig {
   key: string;
   action: () => void;
+  pathname?: string; // Custom pathname for the route, defaults to '/presence'
 }
+
+export const generateSpectrumUrl = (key: string, pathname: string = '/presence') => {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  return `${baseUrl}${pathname}#${key}`;
+};
+
+export const openSpectrumInNewTab = (key: string, pathname: string = '/presence') => {
+  const url = generateSpectrumUrl(key, pathname);
+  window.open(url, '_blank');
+};
 
 export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pendingHashRef = useRef<string | null>(null);
   const consumedKeysRef = useRef<Set<string>>(new Set());
-
-  const generateSpectrumUrl = useCallback((key: string) => {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/#spectrum-${key}`;
-  }, []);
-
-  const openSpectrumInNewTab = useCallback(
-    (key: string) => {
-      const url = generateSpectrumUrl(key);
-      window.open(url, '_blank');
-    },
-    [generateSpectrumUrl],
-  );
 
   const navigateByHash = useCallback(
     (hash: string) => {
@@ -54,7 +54,21 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     navigateByHash(window.location.hash);
   }, [navigateByHash]);
 
-  // Register event listeners; queue actions until globalLoaded becomes true
+  // Handle spectrum hash navigation from eventBus
+  const handleSpectrumHashNavigation = useCallback(
+    (hash: string) => {
+      if (!globalLoaded) {
+        pendingHashRef.current = hash;
+        return;
+      }
+      navigateByHash(hash);
+    },
+    [globalLoaded, navigateByHash],
+  );
+
+  useEventBus(MessageType.SPECTRUM_HASH_NAVIGATION, handleSpectrumHashNavigation);
+
+  // Register hashchange listener
   useEffect(() => {
     const handleHashChange = () => {
       if (!globalLoaded && typeof window !== 'undefined') {
@@ -64,23 +78,12 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       handleHashNavigation();
     };
 
-    const handleSpectrumHashNavigation = (event: CustomEvent) => {
-      const hash = event.detail as string;
-      if (!globalLoaded) {
-        pendingHashRef.current = hash;
-        return;
-      }
-      navigateByHash(hash);
-    };
-
     window.addEventListener('hashchange', handleHashChange);
-    window.addEventListener('spectrumHashNavigation', handleSpectrumHashNavigation as EventListener);
 
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
-      window.removeEventListener('spectrumHashNavigation', handleSpectrumHashNavigation as EventListener);
     };
-  }, [globalLoaded, handleHashNavigation, navigateByHash]);
+  }, [globalLoaded, handleHashNavigation]);
 
   // When global is loaded, process pending hash or current URL hash once
   useEffect(() => {
@@ -92,6 +95,24 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       handleHashNavigation();
     }
   }, [globalLoaded, handleHashNavigation, navigateByHash]);
+
+  const updateUrlAndExecute = useCallback(
+    (key: string) => {
+      const config = routeConfigs.find((c) => c.key === key);
+      if (!config) return;
+
+      // Update URL without page reload
+      if (typeof window !== 'undefined') {
+        const newUrl = generateSpectrumUrl(key, config.pathname);
+        window.history.pushState(null, '', newUrl);
+      }
+
+      config.action();
+      // Mark as consumed to prevent re-triggering
+      consumedKeysRef.current.add(key);
+    },
+    [routeConfigs],
+  );
 
   const executeSpectrumRoute = useCallback(
     (key: string) => {
@@ -108,5 +129,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     openSpectrumInNewTab,
     handleHashNavigation,
     executeSpectrumRoute,
+    updateUrlAndExecute,
   };
 };

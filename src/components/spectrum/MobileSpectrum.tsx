@@ -35,7 +35,7 @@ function MobileSpectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
+  const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
 
   const handleSlideChange = (swiper: SwiperType) => {
     const index = swiper.activeIndex;
@@ -183,8 +183,9 @@ function MobileSpectrum() {
                 <MobileSpectrumItem
                   className="px-7.5"
                   item={item}
-                  openSpectrumInNewTab={openSpectrumInNewTab}
                   executeSpectrumRoute={executeSpectrumRoute}
+                  updateUrlAndExecute={updateUrlAndExecute}
+                  routeConfigs={routeConfigs}
                   ref={(element) => {
                     if (!element) return;
                     spectrumRefs.current[index] = element;

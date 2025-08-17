@@ -32,14 +32,15 @@ function Spectrum() {
     setIsShowingDiseaseManagement(false);
   }, [setIsShowingDiseaseManagement]);
 
-  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
+  const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const spectrumItems = useMemo(() => {
     return spectrumData.map((item, index) => (
       <SpectrumItem
         key={item.title}
         item={item}
-        openSpectrumInNewTab={openSpectrumInNewTab}
         executeSpectrumRoute={executeSpectrumRoute}
+        updateUrlAndExecute={updateUrlAndExecute}
+        routeConfigs={routeConfigs}
         onClick={(e) => {
           item.onClick?.(e);
         }}
@@ -50,7 +51,7 @@ function Spectrum() {
         }}
       />
     ));
-  }, [spectrumData, openSpectrumInNewTab, executeSpectrumRoute]);
+  }, [spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
   const windowDimensions = useMemo(() => {
     if (typeof window === 'undefined') return { width: 0, height: 0 };

@@ -5,71 +5,86 @@ import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
 import { ArrowSVG } from '../svg';
+import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
   className?: string;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
-  openSpectrumInNewTab?: (key: string) => void;
   executeSpectrumRoute?: (key: string) => void;
+  updateUrlAndExecute?: (key: string) => void;
+  routeConfigs?: SpectrumRouteConfig[];
 }
 
 const SpectrumLink = memo(
   ({
     item,
-    openSpectrumInNewTab,
     executeSpectrumRoute,
+    updateUrlAndExecute,
+    routeConfigs,
   }: {
     item: SpectrumLinkItem;
-    openSpectrumInNewTab?: (key: string) => void;
     executeSpectrumRoute?: (key: string) => void;
+    updateUrlAndExecute?: (key: string) => void;
+    routeConfigs?: SpectrumRouteConfig[];
   }) => {
     const { trackEvent } = useGA();
 
     const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
     const hasLink = Boolean(link || onClick || routeKey);
 
-    const handleClick = useCallback(() => {
-      if (!hasLink) return;
+    const handleClick = useCallback(
+      (event?: React.MouseEvent) => {
+        if (!hasLink) return;
+        event?.preventDefault();
+        event?.stopPropagation();
 
-      trackEvent({
-        name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-        label: key ?? label,
-      });
+        trackEvent({
+          name: GA_EVENT_NAMES.SPECTRUM_CLICK,
+          label: key ?? label,
+        });
 
-      if (routeKey) {
-        if (openSpectrumInNewTab) {
-          openSpectrumInNewTab(routeKey);
-        } else if (executeSpectrumRoute) {
-          executeSpectrumRoute(routeKey);
+        if (routeKey) {
+          // Normal click - update URL and execute action in current page
+          if (updateUrlAndExecute) {
+            updateUrlAndExecute(routeKey);
+          } else if (executeSpectrumRoute) {
+            executeSpectrumRoute(routeKey);
+          }
+          return;
         }
-        return;
-      }
 
-      onClick?.();
-      if (link) window.open(link, '_blank');
-    }, [hasLink, trackEvent, key, label, onClick, link, routeKey, openSpectrumInNewTab, executeSpectrumRoute]);
+        onClick?.();
+        if (link) window.open(link, '_blank');
+      },
+      [hasLink, trackEvent, key, label, onClick, link, routeKey, executeSpectrumRoute, updateUrlAndExecute],
+    );
+
+    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
+    const pathname = routeConfig?.pathname || '/spectrum';
 
     return (
-      <div className="relative flex items-center gap-1">
-        <p
-          onClick={handleClick}
-          className={cn(
-            'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
-            hasLink &&
-              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
-            labelClassName,
+      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname)} target="_blank">
+        <div className="relative flex items-center gap-1">
+          <p
+            onClick={handleClick}
+            className={cn(
+              'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+              hasLink &&
+                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+              labelClassName,
+            )}
+          >
+            {label}
+          </p>
+          {isComingSoon && (
+            <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+              coming soon
+            </span>
           )}
-        >
-          {label}
-        </p>
-        {isComingSoon && (
-          <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
-            coming soon
-          </span>
-        )}
-      </div>
+        </div>
+      </a>
     );
   },
 );
@@ -79,7 +94,7 @@ SpectrumLink.displayName = 'SpectrumLink';
 const linksPerPage = 5;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, className, openSpectrumInNewTab, executeSpectrumRoute }, ref) => {
+    ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs }, ref) => {
       const { title, titleCn, icon, links, className: itemClassName } = item;
       const [isMore, setIsMore] = useState(false);
 
@@ -134,10 +149,15 @@ const SpectrumItem = memo(
               ease: 'easeOut',
             }}
           >
-            <SpectrumLink item={item} openSpectrumInNewTab={openSpectrumInNewTab} executeSpectrumRoute={executeSpectrumRoute} />
+            <SpectrumLink
+              item={item}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
           </motion.div>
         ));
-      }, [visibleLinks, isMore, openSpectrumInNewTab, executeSpectrumRoute]);
+      }, [visibleLinks, isMore, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
       return (
         <div

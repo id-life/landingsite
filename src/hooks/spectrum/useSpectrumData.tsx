@@ -139,12 +139,12 @@ export const useSpectrumData = () => {
       { key: 'influence-network', action: handleCharacterRelationShow },
       { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
-      { key: 'digital-twin', action: handleClickDigitalTwin },
+      { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digital-twin' },
     ],
     [handleClickDot, handleCharacterRelationShow, handleDiseaseManagementClick, handleClickDigitalTwin],
   );
 
-  const { openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumRouter(routeConfigs);
+  const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -322,7 +322,7 @@ export const useSpectrumData = () => {
     return data;
   }, []);
 
-  return { spectrumData, openSpectrumInNewTab, executeSpectrumRoute };
+  return { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs };
 };
 
 export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
