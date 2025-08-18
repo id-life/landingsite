@@ -24,7 +24,8 @@ export default function MobileNav() {
 
   const { trackEvent } = useGA();
 
-  const onSubscribeClick = () => {
+  const onSubscribeClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     setIsSubscribeShow((pre) => !pre);
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
@@ -36,7 +37,7 @@ export default function MobileNav() {
 
   return (
     <div
-      id="nav"
+      id="mobile-nav"
       className={cn(
         'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
         isMobileCharacterRelationShow && 'character-relation-css-vars-inject z-[51] mobile:pb-0',

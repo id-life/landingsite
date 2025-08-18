@@ -34,7 +34,7 @@ export default function MobileDragonModel(props: {}) {
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
     const element = document.querySelector('#mobile-fixed-ui');
-    const nav = document.querySelector('#nav');
+    const nav = document.querySelector('#mobile-nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
     if (element)
       gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3, onComplete: () => setFadeInAnimCompleted(true) });
