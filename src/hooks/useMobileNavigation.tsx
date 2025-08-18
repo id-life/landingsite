@@ -72,6 +72,8 @@ export function useMobileNavigation() {
         gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
         setInnerPageTotal(0);
       }
+
+      window.history.pushState({}, '', item.href);
     },
     [isTransitioning, mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );

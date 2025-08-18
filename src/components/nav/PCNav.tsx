@@ -7,16 +7,14 @@ import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
 import { cn } from '@/utils';
-import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
-import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { useEvent } from 'react-use';
-import { NAV_LIST } from './nav';
 import { MessageType } from '../event-bus/messageType';
 import { useEventBus } from '../event-bus/useEventBus';
-import Link from 'next/link';
+import { NAV_LIST } from './nav';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
