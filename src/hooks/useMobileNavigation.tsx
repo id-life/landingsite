@@ -73,7 +73,10 @@ export function useMobileNavigation() {
         setInnerPageTotal(0);
       }
 
-      window.history.pushState({}, '', item.href);
+      if (item.href !== window.location.pathname) {
+        // if has hash, don't pushState
+        window.history.pushState({}, '', item.href);
+      }
     },
     [isTransitioning, mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
