@@ -6,6 +6,9 @@ export default function ClientNav() {
     <>
       <MobileNav />
       <PCNav />
+      <div className="absolute -z-10">
+        Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.
+      </div>
     </>
   );
 }
