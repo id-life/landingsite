@@ -11,6 +11,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
+import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
@@ -38,13 +39,13 @@ function MobileNavDialog() {
     },
     [isMobile],
   );
-
+  const { mobileNavChange } = useMobileNavigation();
   const handleNavClick = useThrottle((item: NavItem) => {
     startAnim(false);
     setMobileCharacterRelationShow(false);
     setTimeout(() => {
       setOpen(false);
-      setCurrentPage(item);
+      mobileNavChange(item);
     }, 600);
   }, 1000);
 
