@@ -1,18 +1,15 @@
 'use client';
+
 import { mobileCurrentPageAtom } from '@/atoms';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
-import { FloatingPortal } from '@floating-ui/react';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import MobileDiseaseManagementStatus from '../disease-management/MobileDiseaseManagementStatus';
 import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
 
@@ -20,20 +17,13 @@ SwiperType.use([FreeMode]);
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
-  const setIsShowingDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const animTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const pageTransitionTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
   const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
   const swiperRef = useRef<SwiperType>();
   const [particleActive, setParticleActive] = useState(false);
-
-  const handleBackToSpectrum = useCallback(() => {
-    setIsShowingDiseaseManagement(false);
-  }, [setIsShowingDiseaseManagement]);
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
 
@@ -56,10 +46,30 @@ function MobileSpectrum() {
     tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
 
     // 标题动画
-    tl.fromTo('.spectrum-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+    tl.fromTo(
+      '.spectrum-title',
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+      },
+      '-=0.6',
+    );
 
     // Portfolio items 动画
-    tl.fromTo('.spectrum-fund', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+    tl.fromTo(
+      '.spectrum-fund',
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+      },
+      '-=0.6',
+    );
 
     return tl;
   }, []);
@@ -96,34 +106,6 @@ function MobileSpectrum() {
     setMobileImageIdx1(1);
     setMobileImageIdx2(2);
   }, [createEnterAnimation, createExitAnimation, currentPage]);
-
-  useGSAP(() => {
-    if (isShowingDiseaseManagement) {
-      if (animTimelineRef.current) animTimelineRef.current.kill();
-      animTimelineRef.current = gsap.timeline();
-      animTimelineRef.current
-        .to(['.spectrum-content-wrapper-mobile', '#spectrum-particle-gl-mobile'], {
-          opacity: 0,
-          duration: 0.4,
-          pointerEvents: 'none',
-        })
-        .fromTo(
-          '.disease-management-wrapper-mobile',
-          { clipPath: 'circle(0px at 50% 50%)', pointerEvents: 'none' },
-          {
-            clipPath: `circle(${Math.hypot(window.innerWidth, window.innerHeight)}px at 50% 50%)`,
-            duration: 0.8,
-            ease: 'easeInOut',
-            pointerEvents: 'auto',
-          },
-          '-=0.2',
-        );
-    } else {
-      if (animTimelineRef.current && animTimelineRef.current?.progress() > 0) {
-        animTimelineRef.current.reverse();
-      }
-    }
-  }, [isShowingDiseaseManagement]);
 
   return (
     <div
@@ -199,14 +181,6 @@ function MobileSpectrum() {
           </Swiper>
         </div>
       </div>
-      <FloatingPortal>
-        <div
-          className="disease-management-wrapper-mobile pointer-events-none absolute inset-0 z-[41] bg-black"
-          style={{ clipPath: 'circle(0px at 50% 50%)' }}
-        >
-          <MobileDiseaseManagementStatus onBack={handleBackToSpectrum} />
-        </div>
-      </FloatingPortal>
     </div>
   );
 }

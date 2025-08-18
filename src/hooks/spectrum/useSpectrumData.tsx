@@ -17,7 +17,6 @@ import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
 import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { getMobileDotShowInfo } from '@/constants/engagement';
 import { useSpectrumRouter, SpectrumRouteConfig } from './useSpectrumRouter';
 
@@ -49,7 +48,6 @@ export const useSpectrumData = () => {
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
   const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
   const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
-  const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -84,13 +82,6 @@ export const useSpectrumData = () => {
       }, 400);
     }
   }, [handleNavClick, isMobile, mobileNavChange, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
-
-  const handleDiseaseManagementClick = useCallback(() => {
-    isMobile ? mobileNavChange(NAV_LIST[2]) : handleNavClick(NAV_LIST[2]);
-    setTimeout(() => {
-      setShowDiseaseManagement(true);
-    }, 400);
-  }, [handleNavClick, isMobile, mobileNavChange, setShowDiseaseManagement]);
 
   const handleClickDot = useCallback(
     (type: 'book' | 'sponsor' | 'meeting', index: number) => {
@@ -136,12 +127,13 @@ export const useSpectrumData = () => {
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
       // evanglism
+      // TODO: del hash key
       { key: 'influence-network', action: handleCharacterRelationShow },
-      { key: 'disease-management', action: handleDiseaseManagementClick },
+      // { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
-    [handleClickDot, handleCharacterRelationShow, handleDiseaseManagementClick, handleClickDigitalTwin],
+    [handleClickDot, handleCharacterRelationShow, handleClickDigitalTwin],
   );
 
   const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);
@@ -272,11 +264,11 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            routeKey: 'influence-network',
+            link: '/spectrum/influence-network',
           },
           {
             label: 'Disease Management & Cure Status',
-            routeKey: 'disease-management',
+            link: '/spectrum/disease-management',
           },
         ],
       },

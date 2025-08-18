@@ -3,7 +3,6 @@ import ClientNav from '@/components/nav/CilentNav';
 import Style from '@/app/(home)/_components/Style';
 import { Organization, WithContext } from 'schema-dts';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
-import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -57,7 +56,6 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />
-      <BodyScrollManager />
       {children}
       <NewsArticle1 />
     </>

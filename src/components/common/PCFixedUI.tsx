@@ -4,7 +4,6 @@ import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
 import { isBePartOfItShowAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { GA_EVENT_NAMES } from '@/constants/ga';
@@ -23,7 +22,6 @@ import VerticalCarousel from './VerticalCarousel';
 export default function PCFixedUI() {
   const { trackEvent } = useGA();
   const currentPage = useAtomValue(currentPageAtom);
-  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [isCharacterRelationShow, setIsCharacterRelationShow] = useAtom(isCharacterRelationShowAtom);
   const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
 
@@ -32,20 +30,13 @@ export default function PCFixedUI() {
     trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
   };
 
-  useEffect(() => {
-    setIsShowingDiseaseManagement(false);
-  }, [currentPage, setIsShowingDiseaseManagement]);
-
   return (
     <div id="pc-fixed-ui" className="opacity-0">
-      {isShowingDiseaseManagement ? (
-        <></>
-      ) : currentPage.id === NAV_LIST[0].id ? (
+      {currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
         <PageArrows className={cn('fixed left-1/2 -translate-x-1/2', 'bottom-11 mobile:bottom-6')} />
       )}
-      <FixedParticles isOverlay={isShowingDiseaseManagement} />
 
       <CarouselWrapper />
       <ClientOnly>

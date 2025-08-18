@@ -3,7 +3,6 @@
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
 import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
@@ -24,7 +23,6 @@ export default function PCNav() {
   const { handleNavClick } = useNavigation();
   const { onSubscribeClick, handleScroll, handleClickOutside, handleClose } = useSubscribeAction();
   const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
-  const isShowingDiseaseManagement = useAtomValue(showDiseaseManagementContentAtom);
 
   useEventBus(MessageType.CLOSE_SUBSCRIBE, () => {
     handleClose();
@@ -35,14 +33,6 @@ export default function PCNav() {
   }, []);
 
   useEvent('scroll', handleScroll);
-
-  useGSAP(() => {
-    gsap.to('.main-nav-links', {
-      opacity: isShowingDiseaseManagement ? 0 : 1,
-      pointerEvents: isShowingDiseaseManagement ? 'none' : 'auto',
-      duration: 0.5,
-    });
-  }, [isShowingDiseaseManagement]);
 
   useEvent('click', handleClickOutside);
 
@@ -55,12 +45,7 @@ export default function PCNav() {
       )}
     >
       <Logo />
-      <div
-        className={cn(
-          'main-nav-links flex gap-8 text-sm font-semibold',
-          (isCharacterRelationShow || isShowingDiseaseManagement) && 'hidden',
-        )}
-      >
+      <div className={cn('main-nav-links flex gap-8 text-sm font-semibold', isCharacterRelationShow && 'hidden')}>
         {NAV_LIST.map((item) => (
           <Link
             href={item.href}

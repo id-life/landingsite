@@ -1,0 +1,11 @@
+.disease-management-page {
+  --background: #000000;
+  --foreground: #f0f0f0;
+  --gradient-from: #000000;
+  --gradient-via: #c1111111;
+  --gradient-to: #c111114c;
+  --gradient-via-percent: 80%;
+  --gradient-rotate: 300deg;
+  --subscribe-border: #57595c80;
+  --subscribe-bg: #00000033;
+}
