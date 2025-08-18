@@ -34,13 +34,15 @@ export default function HashRouter() {
     if (!globalLoaded || isMobile === null) return;
     const { pathname } = window.location;
 
-    // Handle special pathname navigation
-    if (pathname === '/digitaltwin') {
-      // Auto-navigate to twin section
+    // Find matching nav item by href
+    const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
+
+    if (matchingNavItem) {
+      // Auto-navigate to corresponding section
       if (isMobile) {
-        mobileNavChange(NAV_LIST[4]);
+        mobileNavChange(matchingNavItem);
       } else {
-        handleNavClick(NAV_LIST[4]);
+        handleNavClick(matchingNavItem);
       }
     }
   }, [globalLoaded, isMobile, handleNavClick, mobileNavChange]);
