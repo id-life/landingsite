@@ -1,14 +1,15 @@
+import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
-import { useEffect, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
-import { fadeInAnimCompletedAtom } from '@/atoms/geo';
-import { useSetAtom } from 'jotai';
 
 const InitRotation = Math.PI / 2;
 const ANIMATION_DURATION = 3.0;
@@ -26,6 +27,9 @@ export default function MobileDragonModel(props: {}) {
   const fixedUIHasTriggered = useRef(false);
   const { contextSafe } = useGSAP();
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  const globalLoaded = useAtomValue(globalLoadedAtom);
+  const pathname = usePathname();
+  const shouldFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
@@ -83,6 +87,16 @@ export default function MobileDragonModel(props: {}) {
   useGSAP(
     () => {
       if (!modelRef.current) return;
+      if (!globalLoaded) return;
+      if (shouldFadeInAhead) {
+        setTimeout(() => {
+          if (!fixedUIHasTriggered.current) {
+            fixedUIHasTriggered.current = true;
+            triggerFadeInAnimation();
+          }
+        }, 50);
+      }
+
       gsap.from(modelRef.current.position, {
         x: 0,
         y: 0,
@@ -99,6 +113,7 @@ export default function MobileDragonModel(props: {}) {
           }
         },
       });
+
       gsap.from(modelRef.current.rotation, {
         x: Math.PI,
         y: (Math.PI * 3) / 2,
@@ -111,7 +126,7 @@ export default function MobileDragonModel(props: {}) {
         },
       });
     },
-    { scope: modelRef },
+    { scope: modelRef, dependencies: [globalLoaded] },
   );
 
   // Clean up geometry and material
