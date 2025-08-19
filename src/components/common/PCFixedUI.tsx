@@ -1,6 +1,5 @@
 'use client';
 
-import BackSVG from '@/../public/svgs/back.svg?component';
 import NewFixedValue from '@/app/value/NewFixedValue';
 import { currentPageAtom } from '@/atoms';
 import { isBePartOfItShowAtom } from '@/atoms/character-relation';
@@ -9,13 +8,12 @@ import { CAROUSEL_ITEMS } from '@/constants/config';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, ReactNode, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
 import FixedParticles from './FixedParticles';
 import PageArrows from './PageArrows';
-import RippleButton from './RippleButton';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
 
