@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
@@ -52,7 +51,6 @@ export default function ValueLayout({ children }: { children: ReactNode }) {
       <Style />
       <ClientNav />
       {children}
-      <NewsArticle1 />
     </>
   );
 }

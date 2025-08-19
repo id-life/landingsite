@@ -132,7 +132,7 @@ export function MobileWorldMapDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.div className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
           {label ? `${label}, ` : ''}
           {country}
           {isActive && (
@@ -168,7 +168,7 @@ export function MobileWorldMapDotPoint({
               )}
             </div>
           )}
-        </motion.p>
+        </motion.div>
       </div>
     </motion.div>
   );

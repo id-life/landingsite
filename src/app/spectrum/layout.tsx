@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -46,7 +45,6 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {children}
-      <NewsArticle1 />
     </>
   );
 }

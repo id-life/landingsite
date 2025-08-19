@@ -5,7 +5,6 @@ import React from 'react';
 import 'swiper/css';
 import '@/styles/webgl.css';
 import '@/styles/loading.css';
-import '@/styles/components/character-relation.css';
 
 export default function Style() {
   return (

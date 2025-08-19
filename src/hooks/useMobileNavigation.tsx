@@ -5,6 +5,7 @@ import { useMobileThemeTransition } from '@/hooks/useMobileThemeTransition';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export function useMobileNavigation() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);

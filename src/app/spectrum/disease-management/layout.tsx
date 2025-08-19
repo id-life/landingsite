@@ -1,7 +1,33 @@
 import React, { ReactNode } from 'react';
 import DMStyle from '@/app/spectrum/_components/DMStyle';
-import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import '@/styles/components/disease-management-page.css';
+import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Disease Management & Cure Status | Immortal Dragons',
+  description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+  keywords: [
+    'curable diseases',
+    'manageable diseases',
+    'disease management status',
+    'disease cure status',
+    'disease wikipedia',
+    '疾病百科',
+    '可治愈疾病列表',
+    '可控制疾病列表',
+  ],
+  openGraph: {
+    title: 'Disease Management & Cure Status | Immortal Dragons',
+    siteName: 'Immortal Dragons',
+    description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+    images: [
+      {
+        url: 'https://cdn.id.life/id-life-cover-2.webp',
+      },
+    ],
+  },
+};
 
 export default function DiseaseManagementLayout({ children }: { children: ReactNode }) {
   return (
