@@ -148,16 +148,6 @@ export default function FooterContact() {
                 <img src="/svgs/contact-email.svg" alt="" />
                 contact@id.life123
               </div>
-              <div className="flex">
-                <Link
-                  href="/about"
-                  target="_blank"
-                  className="mt-12 flex cursor-pointer gap-1.5 font-oxanium text-xl/6 font-bold hover:fill-red-600 hover:text-red-600"
-                >
-                  ABOUT US
-                  <ArrowRightSVG className="size-6" />
-                </Link>
-              </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>

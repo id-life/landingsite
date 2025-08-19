@@ -109,10 +109,6 @@ export const useSpectrumData = () => {
       { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
-      // evanglism
-      // TODO: del hash key
-      // { key: 'influence-network', action: handleCharacterRelationShow },
-      // { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],

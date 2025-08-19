@@ -10,10 +10,6 @@ export default function INStyle() {
         height: 100%;
       }
 
-      .base-background2 {
-        opacity: 1 !important;
-      }
-
       :root {
         font-size: 16px;
       }
