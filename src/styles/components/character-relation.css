@@ -13,7 +13,6 @@
 /* origin is footer-contact-clip */
 .be-part-of-it-clip {
   clip-path: polygon(2.125rem 0, 100% 0, 100% calc(100% - 2.125rem), 100% 100%, 0 100%, 0 2.125rem);
-  position: relative;
 }
 
 /* pseudo-element to mimic the border */
@@ -37,7 +36,6 @@
 
 .be-part-of-it-tag-active-clip {
   clip-path: polygon(0.40625rem 0, 100% 0, 100% calc(100% - 0.40625rem), 100% 100%, 0 100%, 0 0.40625rem);
-  position: relative;
 }
 
 .be-part-of-it-tag-active-clip::before {
@@ -60,7 +58,6 @@
 
 .be-part-of-it-tag-inactive-clip {
   clip-path: polygon(0.40625rem 0, 100% 0, 100% calc(100% - 0.40625rem), 100% 100%, 0 100%, 0 0.40625rem);
-  position: relative;
 }
 
 .be-part-of-it-tag-inactive-clip::before {

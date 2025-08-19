@@ -2,7 +2,6 @@
 
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
-import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
@@ -20,7 +19,6 @@ export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   const { handleNavClick } = useNavigation();
   const { onSubscribeClick, handleScroll, handleClickOutside, handleClose } = useSubscribeAction();
-  const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
 
   useEventBus(MessageType.CLOSE_SUBSCRIBE, () => {
     handleClose();
@@ -37,13 +35,10 @@ export default function PCNav() {
   return (
     <div
       id="nav"
-      className={cn(
-        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:hidden',
-        isCharacterRelationShow && 'character-relation-css-vars-inject z-[51] pb-4',
-      )}
+      className={cn('fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:hidden')}
     >
       <Logo />
-      <div className={cn('main-nav-links flex gap-8 text-sm font-semibold', isCharacterRelationShow && 'hidden')}>
+      <div className={cn('main-nav-links flex gap-8 text-sm font-semibold')}>
         {NAV_LIST.map((item) => (
           <Link
             href={item.href}

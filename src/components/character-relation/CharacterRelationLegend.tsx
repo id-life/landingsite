@@ -27,7 +27,7 @@ const CharacterRelationLegend = () => {
   return (
     <div
       className={cn(
-        'legend-button fixed bottom-32 left-[3.125rem] z-[102] bg-white p-4 shadow-[0rem_0.175rem_0.3494rem_0rem_#00000040]',
+        'legend-button fixed bottom-10 left-9 z-[10] bg-white p-4 shadow-[0rem_0.175rem_0.3494rem_0rem_#00000040]',
         'mobile:bottom-[6.125rem] mobile:left-5 mobile:p-3',
       )}
     >

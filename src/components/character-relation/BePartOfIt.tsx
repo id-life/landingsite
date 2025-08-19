@@ -90,14 +90,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
   };
 
-  const onMutationSuccess = () => {
-    if (isMobile) {
-      setIsMobileBePartOfItSubmitted(true);
-    } else {
-      setIsBePartOfItSubmitted(true);
-    }
-  };
-
   const onFormSubmit: FormSubmitHandler<BePartOfItFormValues> = ({ data, event }) => {
     event?.preventDefault();
     if (isMutationPending || isMutationSuccess) return;
@@ -110,7 +102,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     trackEvent({ name: GA_EVENT_NAMES.IN_SUBMIT });
 
     addCharacterRelationData(relationData, {
-      onSuccess: () => onMutationSuccess(),
       onSettled: () => (isSubmittingRef.current = false),
     });
   };
@@ -133,9 +124,14 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
 
     if (isMutationSuccess && countdown === 0) {
+      if (isMobile) {
+        setIsMobileBePartOfItSubmitted(true);
+      } else {
+        setIsBePartOfItSubmitted(true);
+      }
       onCountdownEnd?.();
     }
-  }, [countdown, isMutationSuccess, onCountdownEnd]);
+  }, [countdown, isMobile, isMutationSuccess, onCountdownEnd, setIsBePartOfItSubmitted, setIsMobileBePartOfItSubmitted]);
 
   useEffect(() => {
     if (isMutationSuccess) {
@@ -150,6 +146,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       } else {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
           top: '2.5rem',
+          opacity: 1,
         });
       }
       submittedMsgTimelineRef.current.play(0);
@@ -174,9 +171,9 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       ref={ref}
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
-        'fixed -bottom-[16.5rem] left-1/2 z-[51] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
+        'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
         '-bottom-full mobile:w-full mobile:p-8 mobile:py-5',
-        isMobile && isMutationSuccess && 'mobile:z-[102]',
+        isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
       <div className="font-oxanium text-3xl font-bold tracking-normal">BE PART OF IT</div>
@@ -185,7 +182,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 left-1/2 z-[102] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white',
+          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white opacity-0',
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2 mobile:opacity-0',
         )}
       >
@@ -202,7 +199,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         onClick={handleClose}
         onPointerDown={() => (isSubmittingRef.current = true)}
       >
-        <CloseSVG />
+        <CloseSVG className="size-5" />
       </div>
 
       <Form control={form.control} className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>

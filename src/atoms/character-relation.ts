@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 
-export const isCharacterRelationShowAtom = atom<boolean>(false);
 export const isBePartOfItShowAtom = atom<boolean>(false);
 export const isBePartOfItSubmittedAtom = atom<boolean>(false);
 

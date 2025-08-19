@@ -65,7 +65,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           type={type}
           ref={inputRef}
           className={cn(
-            'h-11 w-[25.5625rem] border-[1.5px] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
+            'h-11 w-[25.5625rem] border border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
             'disabled:cursor-not-allowed data-[error=true]:border-red-600',
             'mobile:w-full',
             className,
