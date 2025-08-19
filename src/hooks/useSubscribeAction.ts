@@ -52,10 +52,10 @@ export function useSubscribeAction() {
     });
   });
 
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     timelineRef.current?.play();
     setIsSubscribeShow(true);
-  };
+  }, [setIsSubscribeShow]);
 
   const handleClose = () => {
     console.log('handleClose', isSubscribeShow, playingRef.current, timelineRef.current);
@@ -99,7 +99,7 @@ export function useSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     handleStart();
-  }, [fadeInAnimCompleted, hasShownAuto]);
+  }, [fadeInAnimCompleted, handleStart, hasShownAuto]);
 
   return {
     hasShownAuto,
@@ -120,10 +120,10 @@ export function useMobileSubscribeAction() {
   const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
   const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubscribeShow(false);
     setHasShownAuto(true);
-  };
+  }, [setIsSubscribeShow, setHasShownAuto]);
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
@@ -131,7 +131,7 @@ export function useMobileSubscribeAction() {
         handleClose();
       }
     },
-    [setIsSubscribeShow],
+    [handleClose],
   );
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
@@ -154,7 +154,7 @@ export function useMobileSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     setIsSubscribeShow(true);
-  }, [fadeInAnimCompleted, hasShownAuto]);
+  }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow]);
 
   return {
     isSubscribeShow,

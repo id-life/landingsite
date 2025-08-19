@@ -72,7 +72,7 @@ export default function HashRouter() {
     return () => {
       window.removeEventListener('hashchange', handleHashNavigation);
     };
-  }, [globalLoaded, handleHashNavigation, handlePathnameNavigation]);
+  }, [globalLoaded, handleHashNavigation, handlePathnameNavigation, isMobile]);
 
   return null;
 }

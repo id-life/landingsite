@@ -39,5 +39,5 @@ export function useMobileHomeAnimateInit() {
         y: 0,
       });
     }
-  }, [currentPage]);
+  }, [currentPage, transitionToTheme]);
 }
