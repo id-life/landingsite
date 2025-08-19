@@ -84,6 +84,11 @@ const jsonLd = {
       name: 'VIBE SCIENCE',
       description: 'Builds consumer brain wellness technology.',
     },
+    {
+      '@type': 'Organization',
+      name: 'Kangaroo Biomedical',
+      description: 'Artificial Womb (AW) technology.',
+    },
   ],
 };
 
