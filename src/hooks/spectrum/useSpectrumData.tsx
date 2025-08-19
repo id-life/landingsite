@@ -16,7 +16,6 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
-import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { getMobileDotShowInfo } from '@/constants/engagement';
 import { useSpectrumRouter, SpectrumRouteConfig } from './useSpectrumRouter';
 
@@ -46,8 +45,6 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
-  const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
-  const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -68,20 +65,6 @@ export const useSpectrumData = () => {
   const handleClickDigitalTwin = useCallback(() => {
     isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
   }, [isMobile, mobileNavChange, handleNavClick]);
-
-  const handleCharacterRelationShow = useCallback(() => {
-    if (isMobile) {
-      mobileNavChange(NAV_LIST[2]);
-      setTimeout(() => {
-        setIsMobileCharacterRelationShow(true);
-      }, 400);
-    } else {
-      handleNavClick(NAV_LIST[2]);
-      setTimeout(() => {
-        setIsCharacterRelationShow(true);
-      }, 400);
-    }
-  }, [handleNavClick, isMobile, mobileNavChange, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
 
   const handleClickDot = useCallback(
     (type: 'book' | 'sponsor' | 'meeting', index: number) => {
@@ -128,12 +111,12 @@ export const useSpectrumData = () => {
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
       // evanglism
       // TODO: del hash key
-      { key: 'influence-network', action: handleCharacterRelationShow },
+      // { key: 'influence-network', action: handleCharacterRelationShow },
       // { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
-    [handleClickDot, handleCharacterRelationShow, handleClickDigitalTwin],
+    [handleClickDot, handleClickDigitalTwin],
   );
 
   const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);

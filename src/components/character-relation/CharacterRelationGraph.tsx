@@ -8,8 +8,6 @@ import { cn } from '@/utils';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
-// import { useAtomValue } from 'jotai';
-// import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 const BASE_NODE_SIZE = 8;
 const BASE_NODE_SIZE_DELTA = 0;
@@ -25,9 +23,6 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   const { data } = props;
   const { trackEvent } = useGA();
   const graphRef = useRef<RelationGraphExpose | null>(null);
-
-  // const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
-  // const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const jsonData = useMemo<RGJsonData>(() => {
     let maxCountNode: JsonNode | null = null;

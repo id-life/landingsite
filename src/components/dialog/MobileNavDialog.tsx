@@ -1,7 +1,6 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
@@ -17,7 +16,6 @@ function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
-  const setMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
   const isMobile = useIsMobile();
   const startAnim = useCallback(
     (isOpen: boolean) => {
@@ -42,7 +40,6 @@ function MobileNavDialog() {
   const { mobileNavChange } = useMobileNavigation();
   const handleNavClick = useThrottle((item: NavItem) => {
     startAnim(false);
-    setMobileCharacterRelationShow(false);
     setTimeout(() => {
       setOpen(false);
       mobileNavChange(item);

@@ -12,12 +12,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMutationCharacterRelation } from '@/hooks/useMutationCharacterRelation';
 import CloseSVG from '@/../public/svgs/close-3.svg?component';
 import { useAtomValue, useSetAtom } from 'jotai';
-import {
-  isBePartOfItShowAtom,
-  isBePartOfItSubmittedAtom,
-  isMobileBePartOfItShowAtom,
-  isMobileBePartOfItSubmittedAtom,
-} from '@/atoms/character-relation';
+import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom } from '@/atoms/character-relation';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { Form, FormSubmitHandler, useForm } from 'react-hook-form';
@@ -37,7 +32,7 @@ interface BePartOfItFormValues {
   [key: `introducer_${number}`]: string;
 }
 
-const REQUIRED_ERROR_MESSAGE = 'Please fill in this field';
+const REQUIRED_ERROR_MESSAGE = 'Please enter name';
 
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const { onCountdownEnd, onClose } = props;
@@ -46,8 +41,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const isMobile = useIsMobile();
   const isBePartOfItShow = useAtomValue(isBePartOfItShowAtom);
   const setIsBePartOfItSubmitted = useSetAtom(isBePartOfItSubmittedAtom);
-  const isMobileBePartOfItShow = useAtomValue(isMobileBePartOfItShowAtom);
-  const setIsMobileBePartOfItSubmitted = useSetAtom(isMobileBePartOfItSubmittedAtom);
 
   const [character, setCharacter] = useState<CharacterRelationData['character']>('');
   const [relation, setRelation] = useState<CharacterRelationData['relation']>([CHARACTER_RELATION_PLAIN_DATA]);
@@ -90,14 +83,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
   };
 
-  const onMutationSuccess = () => {
-    if (isMobile) {
-      setIsMobileBePartOfItSubmitted(true);
-    } else {
-      setIsBePartOfItSubmitted(true);
-    }
-  };
-
   const onFormSubmit: FormSubmitHandler<BePartOfItFormValues> = ({ data, event }) => {
     event?.preventDefault();
     if (isMutationPending || isMutationSuccess) return;
@@ -110,7 +95,6 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     trackEvent({ name: GA_EVENT_NAMES.IN_SUBMIT });
 
     addCharacterRelationData(relationData, {
-      onSuccess: () => onMutationSuccess(),
       onSettled: () => (isSubmittingRef.current = false),
     });
   };
@@ -133,23 +117,25 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
     }
 
     if (isMutationSuccess && countdown === 0) {
+      setIsBePartOfItSubmitted(true);
       onCountdownEnd?.();
     }
-  }, [countdown, isMutationSuccess, onCountdownEnd]);
+  }, [countdown, isMobile, isMutationSuccess, onCountdownEnd, setIsBePartOfItSubmitted]);
 
   useEffect(() => {
     if (isMutationSuccess) {
       submittedMsgTimelineRef.current.clear();
       if (isMobile) {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
-          bottom: '-1.25rem',
+          bottom: '4.875rem',
           translateY: '100%',
           opacity: 1,
-          zIndex: 102,
+          zIndex: 30,
         });
       } else {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
           top: '2.5rem',
+          opacity: 1,
         });
       }
       submittedMsgTimelineRef.current.play(0);
@@ -157,26 +143,27 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   }, [isMutationSuccess, isMobile]);
 
   useEffect(() => {
-    if (isBePartOfItShow || isMobileBePartOfItShow) return;
+    if (isBePartOfItShow) return;
 
     setTimeout(() => {
+      form.reset();
+      form.clearErrors();
       setCharacter('');
       setRelation([CHARACTER_RELATION_PLAIN_DATA]);
       setCountdown(5);
       submittedMsgTimelineRef.current.revert();
-      form.clearErrors();
       resetMutation();
     }, 500);
-  }, [isBePartOfItShow, isMobileBePartOfItShow, form, resetMutation]);
+  }, [isBePartOfItShow, form, resetMutation]);
 
   return (
     <div
       ref={ref}
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
-        'fixed -bottom-[16.5rem] left-1/2 z-[51] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
+        'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
         '-bottom-full mobile:w-full mobile:p-8 mobile:py-5',
-        isMobile && isMutationSuccess && 'mobile:z-[102]',
+        isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
       <div className="font-oxanium text-3xl font-bold tracking-normal">BE PART OF IT</div>
@@ -185,8 +172,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 left-1/2 z-[102] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white',
-          'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2 mobile:opacity-0',
+          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white opacity-0',
+          'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2',
         )}
       >
         <span className="align-middle">
@@ -202,7 +189,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         onClick={handleClose}
         onPointerDown={() => (isSubmittingRef.current = true)}
       >
-        <CloseSVG />
+        <CloseSVG className="size-5" />
       </div>
 
       <Form control={form.control} className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
@@ -213,6 +200,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             placeholder="Enter your name"
             value={character}
             disabled={isMutationPending || isMutationSuccess}
+            wrapperClassName={form.formState.errors.visitor && 'mobile:mt-5'}
             error={form.formState.errors.visitor}
             {...form.register('visitor', {
               required: REQUIRED_ERROR_MESSAGE,

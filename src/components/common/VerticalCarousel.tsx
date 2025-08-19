@@ -7,7 +7,6 @@ import { useAtomValue } from 'jotai';
 import { shuffle } from 'lodash-es';
 import { ReactNode, useEffect, useMemo, useRef } from 'react';
 import { NAV_LIST } from '../nav/nav';
-import { isCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 interface VerticalCarouselProps {
   children: ReactNode[];
@@ -35,7 +34,6 @@ export default function VerticalCarousel({
   }, [itemClassName]);
   const isMobile = useIsMobile();
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
-  const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
 
   const items = useMemo(() => {
     if (!isMounted) return children;
@@ -200,7 +198,7 @@ export default function VerticalCarousel({
   }, [mobileCurrentPage, isMobile]);
 
   return (
-    <div className={cn('overflow-hidden', className, isCharacterRelationShow && 'z-[51]')} style={{ height: itemHeight }}>
+    <div className={cn('overflow-hidden', className)} style={{ height: itemHeight }}>
       <div ref={containerRef} className="flex flex-col">
         {items.map((child, index) => (
           <div key={index} className={itemClass} style={{ height: itemHeight }}>
