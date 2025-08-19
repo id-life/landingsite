@@ -35,16 +35,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
   const navigateByHash = useCallback(
     (hash: string) => {
       if (!hash || !hash.startsWith('#')) return;
-      // fixed ui opacity
-      const element = document.querySelector('#pc-fixed-ui');
-      const mobileElement = document.querySelector('#mobile-fixed-ui');
-      const nav = document.querySelector('#nav');
-      const mobileNav = document.querySelector('#mobile-nav');
-      if (nav) gsap.set(nav, { opacity: 1 });
-      if (element) gsap.set(element, { opacity: 1 });
-      if (mobileElement) gsap.set(mobileElement, { opacity: 1 });
-      if (mobileNav) gsap.set(mobileNav, { opacity: 1 });
-
       const key = hash.replace('#', '');
       if (consumedKeysRef.current.has(key)) return;
       const config = routeConfigs.find((c) => c.key === key);

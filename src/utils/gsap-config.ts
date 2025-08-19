@@ -1,46 +1,8 @@
-// 动画默认配置
-export const ANIMATION_DEFAULTS = {
-  duration: 0.3,
-  ease: 'power2.out',
-  stagger: 0.1,
-} as const;
-
-// ScrollTrigger 通用配置
-export const SCROLL_TRIGGER_DEFAULTS = {
-  start: 'top top',
-  end: '+=300%',
-  scrub: true,
-  pin: true,
-} as const;
-
-// 常用动画预设
-export const ANIMATION_PRESETS = {
-  entrance: {
-    from: { opacity: 0, y: 50, rotateX: 45, rotateY: 15 },
-    to: { opacity: 1, y: 0, rotateX: 0, rotateY: 0 },
-    duration: 0.6,
-    ease: 'power2.out',
-  },
-  fadeIn: {
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    duration: 0.4,
-  },
-  scaleHover: {
-    in: { scale: 1.1, duration: 0.3, ease: 'power2.out' },
-    out: { scale: 1, duration: 0.3, ease: 'power2.out' },
-  },
-  slideUp: {
-    from: { y: '100%', opacity: 0 },
-    to: { y: '0%', opacity: 1 },
-    duration: 0.5,
-    ease: 'power2.out',
-  },
-} as const;
+import { PAGE_IDS } from '@/constants/pages';
 
 // 主题色彩变换配置
 export const THEME_TRANSITIONS = {
-  vision: {
+  [PAGE_IDS.VISION]: {
     '--gradient-from': '#000000',
     '--gradient-via': '#1E0000',
     '--gradient-via-percent': '50%',
@@ -55,7 +17,7 @@ export const THEME_TRANSITIONS = {
     '--subscribe-border': '#57595C80',
     '--subscribe-bg': '#00000033',
   },
-  spectrum: {
+  [PAGE_IDS.SPECTRUM]: {
     '--gradient-via': '#C1111111',
     '--gradient-to': '#C111114C',
     '--gradient-via-percent': '80%',
@@ -63,7 +25,7 @@ export const THEME_TRANSITIONS = {
     '--subscribe-border': '#57595C80',
     '--subscribe-bg': '#00000033',
   },
-  engagement: {
+  [PAGE_IDS.ENGAGEMENT]: {
     '--gradient-from': '#000000',
     '--gradient-via': '#000000',
     '--gradient-via-percent': '50%',
@@ -73,7 +35,7 @@ export const THEME_TRANSITIONS = {
     '--subscribe-border': '#57595C80',
     '--subscribe-bg': '#00000033',
   },
-  twin: {
+  [PAGE_IDS.TWIN]: {
     '--gradient-from': '#FFFFFF',
     '--gradient-via': '#e5ebf5',
     '--gradient-via-percent': '50%',

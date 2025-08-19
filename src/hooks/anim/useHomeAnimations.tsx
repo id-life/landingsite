@@ -1,116 +1,103 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
+import { PAGE_CONFIGS, PAGE_IDS, type PageConfig } from '@/constants/pages';
 import { SCROLL_SMOOTHER_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
+import { useCallback } from 'react';
+
+// 主题处理映射表 - 将特殊逻辑抽象为配置
+const THEME_HANDLERS = {
+  [PAGE_IDS.VISION]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Vision 页面：先隐藏背景再切换主题
+    timeline.to('.base-background2', { opacity: 0 });
+    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.VISION]);
+  },
+  [PAGE_IDS.SPECTRUM]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Spectrum 页面：使用较长的切换时间
+    timeline.to(root, {
+      ...THEME_TRANSITIONS[PAGE_IDS.SPECTRUM],
+      duration: 3,
+    });
+  },
+  [PAGE_IDS.ENGAGEMENT]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Engagement 页面：快速预设后正常切换
+    timeline.to(root, {
+      ...THEME_TRANSITIONS[PAGE_IDS.ENGAGEMENT],
+      duration: 0.01,
+    });
+    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.ENGAGEMENT]);
+  },
+  [PAGE_IDS.TWIN]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Twin 页面：切换主题后显示背景
+    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.TWIN]);
+    timeline.to('.base-background2', { opacity: 1 });
+  },
+} as const;
 
 /**
- * Home 页面动画管理 Hook
+ * Home 页面动画管理
  */
 export function useHomeAnimations() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const { contextSafe } = useGSAP();
+  // 处理页面状态更新的统一逻辑
+  const handlePageChange = useCallback(
+    (pageId: string, callback?: () => void) => {
+      const navItem = NAV_LIST.find((item) => item.id === pageId);
+      if (navItem) {
+        setCurrentPage(navItem);
+      }
+      callback?.();
+    },
+    [setCurrentPage],
+  );
 
-  // 创建视觉动画序列
-  const createVisionAnimation = contextSafe(() => {
+  // 处理主题动画
+  const applyThemeAnimation = useCallback((timeline: gsap.core.Timeline, config: PageConfig) => {
     const root = document.documentElement;
-    const visionTL = gsap.timeline({
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[0].id}`,
-        start: 'center top',
-        end: 'bottom top',
-        scrub: true,
-        onEnter: () => {
-          setCurrentPage(NAV_LIST[0]);
+    const themeHandler = THEME_HANDLERS[config.id as keyof typeof THEME_HANDLERS];
+    themeHandler?.(timeline, root);
+  }, []);
+
+  // 创建基于配置的动画函数
+  const createConfigBasedAnimation = contextSafe((config: PageConfig) => {
+    try {
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          ...config.scrollTrigger,
+          onEnter: () => handlePageChange(config.id, config.onEnter),
+          onEnterBack: () => handlePageChange(config.id, config.onEnterBack),
+          onLeave: config.onLeave,
         },
-        onEnterBack: () => {
-          setCurrentPage(NAV_LIST[0]);
-        },
-      },
-    });
-    visionTL.to('.base-background2', { opacity: 0 });
+      });
 
-    // 主题颜色转换
-    visionTL.to(root, THEME_TRANSITIONS.vision);
-
-    return visionTL;
-  });
-
-  // 创建 Spectrum 动画序列
-  const createSpectrumAnimation = contextSafe(() => {
-    const root = document.documentElement;
-    const spectrumTL = gsap.timeline({
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[2].id}`,
-        start: 'top bottom',
-        end: 'top center',
-        scrub: true,
-      },
-    });
-
-    spectrumTL.to(root, {
-      ...THEME_TRANSITIONS.spectrum,
-      duration: 3,
-    });
-
-    return spectrumTL;
-  });
-
-  // 创建 Engagement 动画序列
-  const createEngagementAnimation = contextSafe(() => {
-    const root = document.documentElement;
-    const engagementTL = gsap.timeline({
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[3].id}`,
-        start: 'top bottom',
-        end: 'top center',
-        scrub: true,
-      },
-    });
-
-    engagementTL.to(root, {
-      ...THEME_TRANSITIONS.engagement,
-      duration: 0.01,
-    });
-
-    engagementTL.to(root, THEME_TRANSITIONS.engagement);
-
-    return engagementTL;
-  });
-
-  // 创建 Twin 动画序列
-  const createTwinAnimation = contextSafe(() => {
-    const root = document.documentElement;
-
-    const twinTL = gsap.timeline({
-      scrollTrigger: {
-        trigger: `#${NAV_LIST[4].id}`,
-        start: 'top bottom',
-        end: 'top center',
-        scrub: true,
-      },
-    });
-    // 主题转换到白色
-    twinTL.to(root, THEME_TRANSITIONS.twin);
-
-    // 背景透明度恢复
-    twinTL.to('.base-background2', { opacity: 1 });
-
-    return twinTL;
+      // 应用主题动画
+      applyThemeAnimation(timeline, config);
+      return timeline;
+    } catch (error) {
+      console.error(`Failed to create animation for page ${config.id}:`, error);
+      return null;
+    }
   });
 
   // 初始化所有动画
   const initializeAnimations = contextSafe(() => {
-    // 初始化 ScrollSmoother
-    ScrollSmoother.create(SCROLL_SMOOTHER_DEFAULTS);
+    try {
+      // 初始化 ScrollSmoother
+      ScrollSmoother.create(SCROLL_SMOOTHER_DEFAULTS);
 
-    // 创建各页面动画
-    createVisionAnimation();
-    createSpectrumAnimation();
-    createEngagementAnimation();
-    createTwinAnimation();
+      // 基于配置创建所有页面动画
+      const animations = PAGE_CONFIGS.map((config) => {
+        return createConfigBasedAnimation(config);
+      }).filter(Boolean);
+
+      console.log(`Successfully initialized ${animations.length} page animations`);
+    } catch (error) {
+      console.error('Failed to initialize animations:', error);
+    }
   });
 
   return {
