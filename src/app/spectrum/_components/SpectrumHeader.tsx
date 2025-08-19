@@ -2,14 +2,21 @@
 
 import Logo from '@/components/nav/Logo';
 import { SubscribeBorderSVG } from '@/components/svg';
+import { cn } from '@/utils';
 
-export default function SpectrumHeader() {
+export interface SpectrumHeaderProps {
+  className?: string;
+}
+
+export default function SpectrumHeader(props: SpectrumHeaderProps) {
+  const { className } = props;
+
   const handleHomeClick = () => {
     window.open('/', '_blank');
   };
 
   return (
-    <div className="flex items-center justify-between p-10 mobile:p-5">
+    <div className={cn('flex items-center justify-between p-10 mobile:p-5', className)}>
       <Logo />
       <div
         onClick={handleHomeClick}

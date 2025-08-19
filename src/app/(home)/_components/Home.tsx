@@ -5,7 +5,6 @@ import Twin from '@/app/twin/Twin';
 import Value from '@/app/value/Value';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
-import CharacterRelation from '@/components/character-relation/CharacterRelation';
 import PCFixedUI from '@/components/common/PCFixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
@@ -60,7 +59,6 @@ export default function Home() {
           <Value />
           <Footer />
           <FooterContact />
-          <CharacterRelation />
         </div>
       </div>
       <PCFixedUI />

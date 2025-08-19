@@ -13,14 +13,12 @@ import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 export default function MobileNav() {
   const isMobile = useIsMobile();
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const { trackEvent } = useGA();
 
@@ -40,7 +38,6 @@ export default function MobileNav() {
       id="mobile-nav"
       className={cn(
         'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
-        isMobileCharacterRelationShow && 'character-relation-css-vars-inject z-[51] mobile:pb-0',
       )}
     >
       <Logo />
