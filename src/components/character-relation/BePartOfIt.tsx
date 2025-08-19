@@ -32,7 +32,7 @@ interface BePartOfItFormValues {
   [key: `introducer_${number}`]: string;
 }
 
-const REQUIRED_ERROR_MESSAGE = 'Please fill in this field';
+const REQUIRED_ERROR_MESSAGE = 'Please enter name';
 
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const { onCountdownEnd, onClose } = props;
@@ -200,6 +200,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
             placeholder="Enter your name"
             value={character}
             disabled={isMutationPending || isMutationSuccess}
+            wrapperClassName={form.formState.errors.visitor && 'mobile:mt-5'}
             error={form.formState.errors.visitor}
             {...form.register('visitor', {
               required: REQUIRED_ERROR_MESSAGE,

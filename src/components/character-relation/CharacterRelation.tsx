@@ -47,7 +47,7 @@ const CharacterRelation = () => {
       if (isBePartOfItShow) {
         bePartOfItTimelineRef.current.clear();
         gsap.set(bePartOfItRef.current, { bottom: '-100%' });
-        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.5rem' });
+        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.375rem' });
         bePartOfItTimelineRef.current.play(0);
       } else {
         bePartOfItTimelineRef.current.reverse();
