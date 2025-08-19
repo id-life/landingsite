@@ -7,6 +7,8 @@ import gsap from 'gsap';
 import CharacterRelationGraph from './CharacterRelationGraph';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
 import CharacterRelationLegend from './CharacterRelationLegend';
+import { cn } from '@/utils';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -29,6 +31,8 @@ export interface CharacterRelationTransformedData {
 }
 
 const CharacterRelation = () => {
+  const isMobile = useIsMobile();
+
   const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
   const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
 
@@ -36,20 +40,20 @@ const CharacterRelation = () => {
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
-  const { data, refetch } = useFetchCharacterRelation();
+  const { data } = useFetchCharacterRelation();
 
   useEffect(() => {
     if (bePartOfItRef.current) {
       if (isBePartOfItShow) {
         bePartOfItTimelineRef.current.clear();
-        gsap.set(bePartOfItRef.current, { bottom: '-16.5rem' });
-        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: '2.4rem' });
+        gsap.set(bePartOfItRef.current, { bottom: '-100%' });
+        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.5rem' });
         bePartOfItTimelineRef.current.play(0);
       } else {
         bePartOfItTimelineRef.current.reverse();
       }
     }
-  }, [isBePartOfItShow, bePartOfItRef]);
+  }, [isBePartOfItShow, bePartOfItRef, isMobile]);
 
   const resetBePartOfItTimer = useCallback(() => {
     if (bePartOfItTimerRef.current) {
@@ -72,7 +76,9 @@ const CharacterRelation = () => {
       resetBePartOfItTimer();
       setIsBePartOfItShow(false);
     };
-  }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer, refetch]);
+  }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer]);
+
+  const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
 
   const handleBePartOfItClose = () => {
     setIsBePartOfItShow(false);
@@ -84,21 +90,23 @@ const CharacterRelation = () => {
 
   return (
     <>
-      <div className="character-relation-css-vars-inject h-full w-full">
-        <div className="character-relation-graph-wrapper h-full w-full px-10 py-[6.5rem]">
+      <div className="h-full w-full">
+        <div className={cn('h-full w-full px-10 py-[6.5rem]', 'mobile:px-0 mobile:pb-6 mobile:pt-20')}>
           {data && <CharacterRelationGraph data={data} />}
         </div>
         <CharacterRelationLegend />
       </div>
 
-      <div className="fixed bottom-10 left-1/2 z-[10] flex -translate-x-1/2 items-center gap-x-7.5">
-        <button
-          className="w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
-          onClick={handleBePartOfItOpen}
-        >
-          BE PART OF IT +
-        </button>
-      </div>
+      <button
+        className={cn(
+          'fixed bottom-10 left-1/2 z-[10] -translate-x-1/2',
+          'w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white',
+          'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
+        )}
+        onClick={handleBePartOfItOpen}
+      >
+        {showBePartOfItBtnText}
+      </button>
 
       <BePartOfIt
         key="be-part-of-it-comp"

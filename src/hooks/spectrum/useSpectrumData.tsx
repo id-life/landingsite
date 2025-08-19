@@ -16,7 +16,6 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { getMobileDotShowInfo } from '@/constants/engagement';
 import { useSpectrumRouter, SpectrumRouteConfig } from './useSpectrumRouter';
 
@@ -46,7 +45,6 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
-  const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');

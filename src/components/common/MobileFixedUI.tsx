@@ -8,14 +8,11 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
-import { isMobileBePartOfItShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import RippleButton from './RippleButton';
 import BackSVG from '@/../public/svgs/back.svg?component';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const [isMobileCharacterRelationShow, setIsMobileCharacterRelationShow] = useAtom(isMobileCharacterRelationShowAtom);
-  const setIsMobileBePartOfItShow = useSetAtom(isMobileBePartOfItShowAtom);
 
   return (
     <div id="mobile-fixed-ui" className="opacity-0">
@@ -29,23 +26,6 @@ export default function MobileFixedUI() {
       <ClientOnly>
         <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
       </ClientOnly>
-      {isMobileCharacterRelationShow && (
-        <>
-          <button
-            className="fixed bottom-6 left-5 z-[51] w-[5.25rem] cursor-pointer rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white"
-            onClick={() => setIsMobileBePartOfItShow(true)}
-          >
-            JOIN +
-          </button>
-          <RippleButton
-            className="fixed bottom-7 left-1/2 z-[51] -translate-x-1/2"
-            onClick={() => setIsMobileCharacterRelationShow(false)}
-          >
-            <BackSVG className="fill-white" />
-            <p className="font-migrena text-base/4 font-bold uppercase text-white">Back</p>
-          </RippleButton>
-        </>
-      )}
     </div>
   );
 }

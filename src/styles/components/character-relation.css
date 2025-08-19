@@ -78,27 +78,6 @@
   @apply bg-gray-800;
 }
 
-/* line will over the node tag */
-/* .character-relation-graph-wrapper .relation-graph .rel-linediv {
-  z-index: 51;
-} */
-
-.character-relation-css-vars-inject {
-  --background: #f0f0f0;
-  --foreground: #000000;
-  --nav: #f0f0f0;
-  --gradient-from: #ffffff;
-  --gradient-via: #e5ebf5;
-  --gradient-via-percent: 50%;
-  --gradient-to: #cbd6ea;
-  --gradient-rotate: 90deg;
-  --audio-player: #2e2f31;
-  --audio-content: #e2e8f4;
-  --audio-border: #eef4ff;
-  --audio-order: #ffffff;
-  --audio-desc: #222222;
-}
-
 .legend-button {
   --border-width: 2px;
 
