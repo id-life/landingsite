@@ -5,8 +5,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Presence 印记',
-  description:
-    'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
+  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -21,8 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Presence 印记',
     siteName: 'Immortal Dragons',
-    description:
-      'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
+    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',
@@ -31,21 +29,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CreativeWorkSeries',
-  name: 'Presence',
-  applicationCategory: 'ProductivityApplication + NewsMedia',
-  operatingSystem: 'Web',
-  creator: 'IMMORTAL DRAGONS',
-};
-
 export default function PresenceLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />
       {children}
