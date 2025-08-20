@@ -1,6 +1,5 @@
 'use client';
 
-import ArrowRightSVG from '@/../public/svgs/arrow-right.svg?component';
 import BorderSVG from '@/../public/svgs/border.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
@@ -18,7 +17,6 @@ import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { SubmitHandler, useForm } from 'react-hook-form';
