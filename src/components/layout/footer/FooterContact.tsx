@@ -1,12 +1,12 @@
 'use client';
 
-import BorderSVG from '@/../public/svgs/border.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import { isSubscribeShowAtom } from '@/atoms/footer';
+import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
@@ -112,28 +112,30 @@ export default function FooterContact() {
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
             <div>
               <img className="w-[8.125rem]" src="/svgs/logo.svg" alt="" />
-              <div className="mt-18 flex gap-10">
+              <div className="mt-18 flex gap-5">
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-                  className="flex-center group relative h-10 cursor-pointer gap-1.5 p-2"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 p-2 transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <YoutubeSVG className="size-6 fill-black group-hover:fill-red-600" />
-                  <span className="font-oxanium text-base/5 font-bold group-hover:text-red-600">YOUTUBE</span>
+                  <CornerBorder />
+                  <YoutubeSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase">YOUTUBE</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 p-2 transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <LinkedinSVG className="size-6 fill-black group-hover:fill-red-600" /> LINKEDIN
+                  <CornerBorder />
+                  <LinkedinSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase transition duration-300">LINKEDIN</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Media)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 p-2 font-oxanium text-base/4 font-bold transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <MediaSVG className="size-6 fill-black group-hover:fill-red-600" /> MEDIAKIT
+                  <CornerBorder />
+                  <MediaSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase">MEDIAKIT</span>
                 </div>
               </div>
             </div>
