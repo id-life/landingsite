@@ -39,5 +39,6 @@ export function useMobileHomeAnimateInit() {
         y: 0,
       });
     }
-  }, [currentPage, transitionToTheme]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 }
