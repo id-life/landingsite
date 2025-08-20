@@ -63,10 +63,9 @@ const SpectrumLink = memo(
 
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
     const { pathname, useHash } = routeConfig ?? {};
-
-    return (
-      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)} target="_blank">
-        <div className="relative flex items-center gap-1">
+    const renderContent = useCallback(() => {
+      return (
+        <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
           <p
             onClick={handleClick}
             className={cn(
@@ -84,7 +83,15 @@ const SpectrumLink = memo(
             </span>
           )}
         </div>
+      );
+    }, [isComingSoon, handleClick, labelClassName, hasLink, label]);
+
+    return hasLink ? (
+      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)} target="_blank">
+        {renderContent()}
       </a>
+    ) : (
+      renderContent()
     );
   },
 );
