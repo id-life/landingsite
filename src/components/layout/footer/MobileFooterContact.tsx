@@ -16,10 +16,13 @@ import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { getEmailError } from '@/utils/validation';
 
 export default function MobileFooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
   const subscribeRef = useRef<HTMLDivElement>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
 
@@ -43,9 +46,32 @@ export default function MobileFooterContact() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    // 清除之前的错误
+    if (emailError) {
+      const error = getEmailError(value);
+      setEmailError(error);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    const error = getEmailError(email);
+    setEmailError(error);
+  };
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
+
+    // 验证邮箱
+    const error = getEmailError(email);
+    if (error) {
+      setEmailError(error);
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const params = new URLSearchParams();
     formData.forEach((value: any, key) => params.append(key, value));
@@ -54,6 +80,8 @@ export default function MobileFooterContact() {
     jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      setEmail(''); // 清空输入
+      setEmailError(''); // 清空错误
     });
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
@@ -95,38 +123,44 @@ export default function MobileFooterContact() {
           className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
           <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
-          <form id="subscribe-form" className="mt-5 flex gap-3" onSubmit={onFormSubmit}>
+          <form id="subscribe-form" className="mt-5 flex-1" onSubmit={onFormSubmit}>
             <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
             <input type="hidden" name="amp;id" value="af9154d6b5" />
             <input type="hidden" name="amp;f_id" value="00e418e1f0" />
-            <div className="flex-center h-11 flex-1 border-2 border-black p-3">
-              <input
-                className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
-                placeholder="Please enter email"
-                type="email"
-                name="EMAIL"
-                required
-                defaultValue=""
-              />
-            </div>
-            <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-red-600 text-white">
-              {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
-                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+            <div className="flex-1">
+              <div className="relative flex gap-3">
+                {emailError && <p className="absolute -top-5 left-0 text-xs text-red-600">{emailError}</p>}
+                <div className={`flex-center h-11 flex-1 border-2 p-3 ${emailError ? 'border-red-600' : 'border-black'}`}>
+                  <input
+                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
+                    placeholder="Please enter email"
+                    type="text"
+                    name="EMAIL"
+                    value={email}
+                    onChange={handleEmailChange}
+                    onBlur={handleEmailBlur}
+                  />
                 </div>
-              ) : null}
-              {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
-                  <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-red-600 text-white">
+                  {isSubmitting ? (
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
+                      <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+                    </div>
+                  ) : null}
+                  {isSubmitted ? (
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
+                      <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                    </div>
+                  ) : null}
+                  <input
+                    className={cn('w-full cursor-pointer py-3 text-base/5 font-semibold', {
+                      'text-red-600': isSubmitting || isSubmitted,
+                    })}
+                    type="submit"
+                    value="Submit"
+                  />
                 </div>
-              ) : null}
-              <input
-                className={cn('w-full cursor-pointer py-3 text-base/5 font-semibold', {
-                  'text-red-600': isSubmitting || isSubmitted,
-                })}
-                type="submit"
-                value="Submit"
-              />
+              </div>
             </div>
           </form>
           <div className="mt-2 flex gap-1 font-poppins text-xs font-semibold">

@@ -17,6 +17,7 @@ import MediaSVG from '@/../public/svgs/media.svg?component';
 import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { ValueOf } from '@/constants/config';
+import { getEmailError } from '@/utils/validation';
 
 export const MediaLinkType = {
   Youtube: 'youtube',
@@ -31,6 +32,8 @@ export type MediaLinkTypeKey = ValueOf<typeof MediaLinkType>;
 export default function FooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
@@ -38,9 +41,32 @@ export default function FooterContact() {
 
   const { trackEvent } = useGA();
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    // 清除之前的错误
+    if (emailError) {
+      const error = getEmailError(value);
+      setEmailError(error);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    const error = getEmailError(email);
+    setEmailError(error);
+  };
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
+
+    // 验证邮箱
+    const error = getEmailError(email);
+    if (error) {
+      setEmailError(error);
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const params = new URLSearchParams();
     formData.forEach((value: any, key) => params.append(key, value));
@@ -49,6 +75,8 @@ export default function FooterContact() {
     jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      setEmail(''); // 清空输入
+      setEmailError(''); // 清空错误
     });
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
@@ -146,40 +174,44 @@ export default function FooterContact() {
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>
-              <form
-                id="subscribe-form"
-                className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
-                onSubmit={onFormSubmit}
-              >
+
+              <form id="subscribe-form" className="mt-8 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0" onSubmit={onFormSubmit}>
                 <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
                 <input type="hidden" name="amp;id" value="af9154d6b5" />
                 <input type="hidden" name="amp;f_id" value="00e418e1f0" />
-                <div className="flex-1 border-2 border-black p-2 mobile:border">
-                  <input
-                    className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
-                    placeholder="Please enter email"
-                    type="email"
-                    name="EMAIL"
-                    required
-                    defaultValue=""
-                  />
-                </div>
-                <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
-                  {isSubmitting ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
-                      <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+
+                <div className="flex-1">
+                  <div className="relative flex gap-4">
+                    {emailError && <p className="absolute -top-5 left-0 text-xs text-red-600">{emailError}</p>}
+                    <div className={`border-2 p-2 mobile:border ${emailError ? 'border-red-600' : 'border-black'}`}>
+                      <input
+                        className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
+                        placeholder="Please enter email"
+                        type="text"
+                        name="EMAIL"
+                        value={email}
+                        onChange={handleEmailChange}
+                        onBlur={handleEmailBlur}
+                      />
                     </div>
-                  ) : null}
-                  {isSubmitted ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
-                      <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                    <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
+                      {isSubmitting ? (
+                        <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                          <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+                        </div>
+                      ) : null}
+                      {isSubmitted ? (
+                        <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                          <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                        </div>
+                      ) : null}
+                      <input
+                        className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
+                        type="submit"
+                        value="Subscribe"
+                      />
                     </div>
-                  ) : null}
-                  <input
-                    className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
-                    type="submit"
-                    value="Subscribe"
-                  />
+                  </div>
                 </div>
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">

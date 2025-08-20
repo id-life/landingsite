@@ -11,10 +11,13 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { MediaLinkType, MediaLinkTypeKey } from './FooterContact';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { getEmailError } from '@/utils/validation';
 
 export default function MobileFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
   const subscribeRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
@@ -39,9 +42,32 @@ export default function MobileFooter() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    // 清除之前的错误
+    if (emailError) {
+      const error = getEmailError(value);
+      setEmailError(error);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    const error = getEmailError(email);
+    setEmailError(error);
+  };
+
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
+
+    // 验证邮箱
+    const error = getEmailError(email);
+    if (error) {
+      setEmailError(error);
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     const params = new URLSearchParams();
     formData.forEach((value: any, key) => params.append(key, value));
@@ -50,6 +76,8 @@ export default function MobileFooter() {
     jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      setEmail(''); // 清空输入
+      setEmailError(''); // 清空错误
     });
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
@@ -83,15 +111,19 @@ export default function MobileFooter() {
             <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
             <input type="hidden" name="amp;id" value="af9154d6b5" />
             <input type="hidden" name="amp;f_id" value="00e418e1f0" />
-            <div className="flex-1 border-2 border-white p-2 mobile:border">
-              <input
-                className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
-                placeholder="Please enter email"
-                type="email"
-                name="EMAIL"
-                required
-                defaultValue=""
-              />
+            <div className="relative flex-1">
+              {emailError && <p className="absolute -top-5 left-0 text-xs text-white">{emailError}</p>}
+              <div className={`border-2 p-2 mobile:border ${emailError ? 'border-red-300' : 'border-white'}`}>
+                <input
+                  className="w-full bg-transparent text-sm font-semibold placeholder:text-white/80 mobile:text-xs/5"
+                  placeholder="Please enter email"
+                  type="text"
+                  name="EMAIL"
+                  value={email}
+                  onChange={handleEmailChange}
+                  onBlur={handleEmailBlur}
+                />
+              </div>
             </div>
             <div className="footer-submit-clip relative w-[10.5rem] bg-white text-red-600 mobile:w-[5.625rem]">
               {isSubmitting ? (
