@@ -9,18 +9,18 @@ import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useNavigation } from '@/hooks/useNavigation';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export default function HashRouter() {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const { handleNavClick } = useNavigation();
   const { mobileNavChange } = useMobileNavigation();
   const isMobile = useIsMobile();
+  const hashLoadedRef = useRef(false);
 
   const handleHashNavigation = useCallback(() => {
     if (!globalLoaded) return;
     const { hash } = window.location;
-
     // Handle hash navigation for any pathname with hash
     if (hash) {
       const routeKey = hash.replace('#', '');
@@ -34,10 +34,8 @@ export default function HashRouter() {
   const handlePathnameNavigation = useCallback(() => {
     if (!globalLoaded || isMobile === null) return;
     const { pathname } = window.location;
-
     // Find matching nav item by href
     const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
-
     if (matchingNavItem) {
       // Auto-navigate to corresponding section
       if (isMobile) {
@@ -49,8 +47,8 @@ export default function HashRouter() {
   }, [globalLoaded, isMobile, handleNavClick, mobileNavChange]);
 
   useEffect(() => {
-    if (!globalLoaded) return;
-    // Handle initial page load
+    if (!globalLoaded || hashLoadedRef.current) return;
+    hashLoadedRef.current = true; // 处理初始页面加载
     handleHashNavigation();
     handlePathnameNavigation();
     const { pathname } = window.location;
@@ -68,9 +66,8 @@ export default function HashRouter() {
         if (element) gsap.set(element, { opacity: 1 });
       }
     }
-
+    // 监听 hashchange 事件，处理 hash 导航
     window.addEventListener('hashchange', handleHashNavigation);
-
     return () => {
       window.removeEventListener('hashchange', handleHashNavigation);
     };
