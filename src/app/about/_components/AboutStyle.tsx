@@ -12,6 +12,11 @@ export default function AboutStyle() {
         font-size: 16px;
       }
 
+      .about-header,
+      .about-page {
+        opacity: 1;
+      }
+
       @media screen and (min-width: 1px) {
         :root {
           font-size: 0.8333vw;

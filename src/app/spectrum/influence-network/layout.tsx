@@ -36,7 +36,7 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
     <>
       <INStyle />
       <div className="relative h-full w-full">
-        <SpectrumHeader className="fixed left-0 top-0 w-full" />
+        <SpectrumHeader className="fixed left-0 top-0 w-full animate-fade-in" />
         {children}
       </div>
     </>

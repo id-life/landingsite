@@ -6,7 +6,7 @@ import AboutFixedUI from '@/app/about/_components/AboutFixedUI';
 
 export default function AboutPage() {
   return (
-    <div className="relative left-0 top-0 h-screen w-screen overflow-hidden">
+    <div className="about-page relative left-0 top-0 h-screen w-screen overflow-hidden opacity-0">
       <AboutHeader />
       <AboutFixedUI />
       <div className="absolute left-20 top-48 flex w-full justify-between gap-4 pr-32 mobile:hidden">
