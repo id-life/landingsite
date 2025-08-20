@@ -33,6 +33,15 @@ const SpectrumLink = memo(
 
     const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
     const hasLink = Boolean(link || onClick || routeKey);
+    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
+    const { pathname, useHash } = routeConfig ?? {};
+
+    const url = useMemo(() => {
+      if (!hasLink) return undefined;
+      if (link) return link;
+      // routeKey
+      return generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash);
+    }, [item?.routeKey, pathname, useHash, link]);
 
     const handleClick = useCallback(
       (event?: React.MouseEvent) => {
@@ -45,24 +54,28 @@ const SpectrumLink = memo(
           label: key ?? label,
         });
 
-        if (routeKey) {
-          // Normal click - update URL and execute action in current page
-          if (updateUrlAndExecute) {
-            updateUrlAndExecute(routeKey);
-          } else if (executeSpectrumRoute) {
-            executeSpectrumRoute(routeKey);
+        if (event?.metaKey || event?.ctrlKey) {
+          // cmd + click
+          if (url) window.open(url, '_blank');
+        } else {
+          // normal click
+          if (routeKey) {
+            // Normal click - update URL and execute action in current page
+            if (updateUrlAndExecute) {
+              updateUrlAndExecute(routeKey);
+            } else if (executeSpectrumRoute) {
+              executeSpectrumRoute(routeKey);
+            }
+            return;
           }
-          return;
+          onClick?.();
         }
 
-        onClick?.();
         if (link) window.open(link, '_blank');
       },
       [hasLink, trackEvent, key, label, onClick, link, routeKey, executeSpectrumRoute, updateUrlAndExecute],
     );
 
-    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
-    const { pathname, useHash } = routeConfig ?? {};
     const renderContent = useCallback(() => {
       return (
         <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
@@ -87,7 +100,7 @@ const SpectrumLink = memo(
     }, [isComingSoon, handleClick, labelClassName, hasLink, label]);
 
     return hasLink ? (
-      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)} target="_blank">
+      <a href={url} target="_blank">
         {renderContent()}
       </a>
     ) : (
