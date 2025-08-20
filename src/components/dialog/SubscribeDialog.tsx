@@ -1,6 +1,7 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useMemo } from 'react';
 import jsonp from '@/utils/jsonp';
 import { getEmailError } from '@/utils/validation';
+import { debounce } from '@/utils/debounce';
 
 type SubscribeDialogProps = {
   handleSubmit?: () => void;
@@ -11,14 +12,22 @@ export default function SubscribeDialog({ handleSubmit }: SubscribeDialogProps) 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
+
+  // 防抖验证函数
+  const debouncedValidate = useMemo(
+    () =>
+      debounce((value: string) => {
+        const error = getEmailError(value);
+        setEmailError(error);
+      }, 800),
+    [],
+  );
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    // 清除之前的错误
-    if (emailError) {
-      const error = getEmailError(value);
-      setEmailError(error);
-    }
+    // 使用防抖验证
+    debouncedValidate(value);
   };
 
   const handleEmailBlur = () => {

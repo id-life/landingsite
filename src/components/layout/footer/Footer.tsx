@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useRef, useState, useCallback, useMemo } from 'react';
 import jsonp from '@/utils/jsonp';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
@@ -8,6 +8,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { getEmailError } from '@/utils/validation';
+import { debounce } from '@/utils/debounce';
 
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -19,14 +20,21 @@ export default function Footer() {
 
   const { trackEvent } = useGA();
 
+  // 防抖验证函数
+  const debouncedValidate = useMemo(
+    () =>
+      debounce((value: string) => {
+        const error = getEmailError(value);
+        setEmailError(error);
+      }, 800),
+    [],
+  );
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    // 清除之前的错误
-    if (emailError) {
-      const error = getEmailError(value);
-      setEmailError(error);
-    }
+    // 使用防抖验证
+    debouncedValidate(value);
   };
 
   const handleEmailBlur = () => {
