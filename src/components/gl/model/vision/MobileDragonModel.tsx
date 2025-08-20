@@ -29,7 +29,7 @@ export default function MobileDragonModel(props: {}) {
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pathname = usePathname();
-  const shouldFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
+  const hasFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
@@ -88,14 +88,7 @@ export default function MobileDragonModel(props: {}) {
     () => {
       if (!modelRef.current) return;
       if (!globalLoaded) return;
-      if (shouldFadeInAhead) {
-        setTimeout(() => {
-          if (!fixedUIHasTriggered.current) {
-            fixedUIHasTriggered.current = true;
-            triggerFadeInAnimation();
-          }
-        }, 50);
-      }
+      if (hasFadeInAhead) fixedUIHasTriggered.current = true;
 
       gsap.from(modelRef.current.position, {
         x: 0,

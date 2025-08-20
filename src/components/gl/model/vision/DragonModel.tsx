@@ -7,6 +7,7 @@ import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -46,6 +47,8 @@ export default function DragonModel() {
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
   const { contextSafe } = useGSAP();
+  const pathname = usePathname();
+  const hasFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
@@ -73,7 +76,6 @@ export default function DragonModel() {
   // Frame update loop
   useFrame(({ clock }) => {
     if (!modelRef.current || !smootherRef.current) return;
-
     const time = clock.elapsedTime;
 
     // Auto swing animation
@@ -143,7 +145,7 @@ export default function DragonModel() {
     () => {
       if (!modelRef.current) return;
       if (!globalLoaded) return;
-
+      if (hasFadeInAhead) fixedUIHasTriggered.current = true;
       gsap.from(modelRef.current.position, {
         x: 0,
         y: 0,
