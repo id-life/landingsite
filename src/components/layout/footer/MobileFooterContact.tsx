@@ -136,7 +136,7 @@ export default function MobileFooterContact() {
               ) : null}
               {isSubmitted ? (
                 <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
-                  <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
                 </div>
               ) : null}
               <input
