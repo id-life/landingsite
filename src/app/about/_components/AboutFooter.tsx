@@ -106,7 +106,7 @@ export default function AboutFooter() {
             </div>
             <div className="mt-3 flex items-center justify-start gap-1.5">
               <img src="/svgs/contact-email.svg" alt="" />
-              contact@id.life123
+              contact@id.life
             </div>
           </div>
           <div className="font-oxanium text-base/5 font-bold">
