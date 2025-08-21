@@ -9,6 +9,9 @@ import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
 import CharacterRelationLegend from './CharacterRelationLegend';
 import { cn } from '@/utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { motion } from 'motion/react';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -32,6 +35,7 @@ export interface CharacterRelationTransformedData {
 
 const CharacterRelation = () => {
   const isMobile = useIsMobile();
+  const { trackEvent } = useGA();
 
   const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
   const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
@@ -47,7 +51,7 @@ const CharacterRelation = () => {
       if (isBePartOfItShow) {
         bePartOfItTimelineRef.current.clear();
         gsap.set(bePartOfItRef.current, { bottom: '-100%' });
-        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.375rem' });
+        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.5rem' });
         bePartOfItTimelineRef.current.play(0);
       } else {
         bePartOfItTimelineRef.current.reverse();
@@ -86,6 +90,7 @@ const CharacterRelation = () => {
 
   const handleBePartOfItOpen = () => {
     setIsBePartOfItShow(true);
+    trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
   };
 
   return (
@@ -97,16 +102,21 @@ const CharacterRelation = () => {
         <CharacterRelationLegend />
       </div>
 
-      <button
+      <motion.button
         className={cn(
           'fixed bottom-10 left-1/2 z-[10] -translate-x-1/2',
           'w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white',
           'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
         )}
         onClick={handleBePartOfItOpen}
+        animate={{
+          opacity: isBePartOfItShow ? 0 : 1,
+          pointerEvents: isBePartOfItShow ? 'none' : 'auto',
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         {showBePartOfItBtnText}
-      </button>
+      </motion.button>
 
       <BePartOfIt
         key="be-part-of-it-comp"
