@@ -33,8 +33,10 @@ export default function DiseaseManagementLayout({ children }: { children: ReactN
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
       <DMStyle />
-      <SpectrumHeader />
-      <div className="hide-scrollbar flex-1 overflow-y-auto px-10 pb-10 mobile:px-5 mobile:pb-5">{children}</div>
+      <SpectrumHeader className="animate-fade-in" />
+      <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">
+        {children}
+      </div>
       <div className="base-background base-background1 fixed left-0 top-0 -z-10 h-screen w-screen" />
     </div>
   );
