@@ -60,6 +60,11 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
   const { sendValueShowEvent } = useValueShowEvent();
 
+  const throttleTime = useMemo(() => {
+    if (currentPage.id === 'value_page') return 2000;
+    return 500;
+  }, [currentPage]);
+
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
@@ -79,7 +84,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
       return;
     }
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-  }, 500);
+  }, throttleTime);
 
   return (
     <div
