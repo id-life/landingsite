@@ -72,7 +72,7 @@ export default function Footer() {
             <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">SUBSCRIBE</h3>
             <form
               id="subscribe-form"
-              className="relative mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+              className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
               onSubmit={handleSubmit(onFormSubmit)}
             >
               {errors.EMAIL && (

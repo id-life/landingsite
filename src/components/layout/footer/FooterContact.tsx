@@ -153,7 +153,7 @@ export default function FooterContact() {
               <p className="uppercase opacity-50">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
-                className="relative mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+                className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
                 onSubmit={handleSubmit(onFormSubmit)}
               >
                 {errors.EMAIL && (
@@ -184,7 +184,7 @@ export default function FooterContact() {
                   ) : null}
                   {isSubmitted ? (
                     <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
-                      <CheckedSVG className="w-6 stroke-white stroke-[3]" />
+                      <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                     </div>
                   ) : null}
                   <input
