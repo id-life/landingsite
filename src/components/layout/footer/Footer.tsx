@@ -69,15 +69,15 @@ export default function Footer() {
             >
               <CloseSVG className="size-5 stroke-[var(--foreground)] stroke-2" />
             </button>
-            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">
-              SUBSCRIBE
-              {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
-            </h3>
+            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">SUBSCRIBE</h3>
             <form
               id="subscribe-form"
-              className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+              className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
               onSubmit={handleSubmit(onFormSubmit)}
             >
+              {errors.EMAIL && (
+                <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>
+              )}
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />

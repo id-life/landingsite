@@ -51,15 +51,13 @@ export default function MobileFooter() {
           <button onClick={handleClose} className="absolute right-4 top-4 z-10 transition-opacity hover:opacity-70">
             <CloseSVG className="size-5 fill-[var(--foreground)] stroke-2" />
           </button>
-          <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">
-            SUBSCRIBE
-            {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
-          </h3>
+          <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">SUBSCRIBE</h3>
           <form
             id="subscribe-form"
-            className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+            className="relative mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
+            {errors.EMAIL && <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
