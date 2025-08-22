@@ -12,7 +12,7 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useEffect, useCallback } from 'react';
-import { HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
+import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
 import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 
 interface PageArrowsProps {
@@ -87,7 +87,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        [NAV_LIST[1].id, NAV_LIST[3].id].includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        BLACK_ARROW_LIST.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

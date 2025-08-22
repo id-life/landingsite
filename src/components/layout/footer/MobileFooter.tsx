@@ -60,7 +60,7 @@ export default function MobileFooter() {
           <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">SUBSCRIBE</h3>
           <form
             id="subscribe-form"
-            className="relative mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+            className="relative mt-7.5 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
             {errors.EMAIL && <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>}
@@ -101,7 +101,7 @@ export default function MobileFooter() {
             </div>
           </form>
           <div className="mt-5 flex gap-1.5 text-left text-xs/5 font-semibold text-foreground opacity-50">
-            <InfoSVG className="mt-0.5 size-4 shrink-0" />
+            <InfoSVG className="size-4 shrink-0 mobile:mt-0.5" />
             Join our Longevity Circle and receive the latest insights & research
           </div>
         </motion.div>

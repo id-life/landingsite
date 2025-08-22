@@ -83,7 +83,7 @@ export default function Footer() {
             <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">SUBSCRIBE</h3>
             <form
               id="subscribe-form"
-              className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
+              className="relative mt-7.5 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
               onSubmit={handleSubmit(onFormSubmit)}
             >
               {errors.EMAIL && (
@@ -132,8 +132,8 @@ export default function Footer() {
                 />
               </div>
             </form>
-            <div className="ml-2 mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
-              <InfoSVG className="h-4" />
+            <div className="mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
+              <InfoSVG className="size-4 shrink-0" />
               Join our Longevity Circle and receive the latest insights & research
             </div>
           </div>
