@@ -8,6 +8,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
+import { cn } from '@/utils';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useRef, useState } from 'react';
@@ -76,13 +77,20 @@ export default function Footer() {
               onSubmit={handleSubmit(onFormSubmit)}
             >
               {errors.EMAIL && (
-                <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>
+                <span className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600">
+                  {errors.EMAIL.message}
+                </span>
               )}
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
               <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
               <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
               <div className="relative flex-1 p-2">
-                <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
+                <div
+                  className={cn(
+                    'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
+                    errors.EMAIL && 'border-red-600 opacity-100',
+                  )}
+                />
                 <input
                   className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                   placeholder="Please enter email"

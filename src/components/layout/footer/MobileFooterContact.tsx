@@ -167,7 +167,7 @@ export default function MobileFooterContact() {
               className="flex-center relative cursor-pointer gap-0.5 p-2"
             >
               <CornerBorder hoverColor="#000" />
-              <LinkedinSVG className="size-4 fill-black" />
+              <LinkedinSVG className="-mt-0.5 size-4 fill-black" />
               <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">LINKEDIN</span>
             </div>
             <div

@@ -117,7 +117,7 @@ export default function FooterContact() {
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
                   className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
                 >
-                  <CornerBorder width="1.5px" />
+                  <CornerBorder />
                   <YoutubeSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
                   <span className="font-oxanium text-base/5 font-bold uppercase">YOUTUBE</span>
                 </div>
@@ -125,15 +125,15 @@ export default function FooterContact() {
                   onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
                   className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
                 >
-                  <CornerBorder width="1.5px" />
-                  <LinkedinSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <CornerBorder />
+                  <LinkedinSVG className="-mt-0.5 size-6 fill-black transition duration-300 group-hover:fill-red-600" />
                   <span className="font-oxanium text-base/5 font-bold uppercase transition duration-300">LINKEDIN</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Media)}
                   className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 font-oxanium text-base/4 font-bold transition duration-300 hover:text-red-600"
                 >
-                  <CornerBorder width="1.5px" />
+                  <CornerBorder />
                   <MediaSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
                   <span className="font-oxanium text-base/5 font-bold uppercase">MEDIAKIT</span>
                 </div>
