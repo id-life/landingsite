@@ -138,7 +138,7 @@ export function MobileWorldMapBookDotPoint({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="flex items-center gap-1 rounded-lg bg-cyan/20 p-1 text-sm/4 font-semibold text-cyan backdrop-blur-2xl"
+                className="flex items-center gap-1 rounded-lg bg-blue/20 p-1 text-sm/4 font-semibold text-blue backdrop-blur-2xl"
               >
                 <BookSVG className="size-4 fill-cyan" />
                 Translation

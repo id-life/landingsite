@@ -14,8 +14,9 @@ interface BePartOfItInputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   mode?: Exclude<IndividualType, 'all'>;
   tagPlaceholderHeight?: string;
-  impression?: CharacterRelationImpression;
   error?: FieldError;
+  wrapperClassName?: string;
+  impression?: CharacterRelationImpression;
   onImpressionChange?: (impression: CharacterRelationImpression) => void;
 }
 
@@ -30,6 +31,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
     tagPlaceholderHeight = 'h-7.5',
     impression,
     error,
+    wrapperClassName,
     onBlur,
     onFocus,
     onImpressionChange,
@@ -59,13 +61,13 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
   const isTagActive = impression !== CHARACTER_RELATION_IMPRESSION.MIXED;
 
   return (
-    <div className="w-full">
+    <div className={cn('relative w-full', wrapperClassName)}>
       <label className="relative block">
         <input
           type={type}
           ref={inputRef}
           className={cn(
-            'h-11 w-[25.5625rem] border-[1.5px] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
+            'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
             'disabled:cursor-not-allowed data-[error=true]:border-red-600',
             'mobile:w-full',
             className,
@@ -80,7 +82,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
         />
         {isIntroducer && impression && !isFocused && !!value && (
           <BePartOfItTag
-            className="absolute right-[3.25rem] top-1/2 -translate-y-1/2 cursor-default"
+            className="!absolute right-[3.25rem] top-1/2 -translate-y-1/2 cursor-default"
             impression={impression}
             isActive
           />
@@ -89,9 +91,30 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           {value.length}/{maxLength}
         </span>
       </label>
+      {/* error msg v2 */}
+      {error && (
+        <div
+          className={cn(
+            'font-poppins text-xs/5 font-semibold tracking-normal text-red-600',
+            'absolute -top-6 left-0',
+            'mobile:left-2',
+          )}
+        >
+          {error.message}
+        </div>
+      )}
+
       {!isIntroducer || (isIntroducer && !isFocused) ? (
-        <div className={cn('relative w-full text-right', 'mobile:text-left', tagPlaceholderHeight, !!error && 'mobile:h-10')}>
-          {error && (
+        <div
+          className={cn(
+            'relative w-full text-right',
+            'mobile:text-left',
+            tagPlaceholderHeight,
+            // !!error && 'mobile:h-10'
+          )}
+        >
+          {/* error msg v1 */}
+          {/* {error && (
             <span
               className={cn(
                 'font-poppins text-xs/3 font-semibold tracking-normal text-red-600',
@@ -101,7 +124,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             >
               {error.message}
             </span>
-          )}
+          )} */}
         </div>
       ) : (
         <div
@@ -111,7 +134,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             'mobile:mb-4 mobile:flex-col mobile:items-start mobile:justify-start',
           )}
         >
-          <div className="flex items-center gap-2">
+          <div className="relative flex items-center gap-2">
             <span className="font-poppins text-xs/5 font-semibold tracking-normal">First Impression?</span>
             <BePartOfItTag
               impression={CHARACTER_RELATION_IMPRESSION.GOOD}
@@ -124,11 +147,12 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
               onClick={() => onImpressionChange?.(CHARACTER_RELATION_IMPRESSION.MIXED)}
             />
           </div>
-          {error && (
+          {/* error msg v1 */}
+          {/* {error && (
             <span className={cn('font-poppins text-xs/3 font-semibold tracking-normal text-red-600', 'mobile:mt-2')}>
               {error.message}
             </span>
-          )}
+          )} */}
         </div>
       )}
     </div>

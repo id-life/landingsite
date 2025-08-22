@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 
-export const PODCAST_NAV_LIST = [
+export type PodcastNavItem = {
+  id: string;
+  title: string;
+};
+export const PODCAST_NAV_LIST: PodcastNavItem[] = [
   { id: 'id', title: 'immortal dragons 不朽真龙' },
   { id: 'lt', title: 'long talk 龙门阵' },
 ] as const;
@@ -23,7 +27,7 @@ export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
     title: '不朽真龙',
     enTitle: 'Immortal Dragons',
     description:
-      'Immrtal Dragons是一家投资长生不老领域的使命驱动基金。投资之外，我们出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道延寿理念信仰。在这个播客中，我们将带你从行业专家的第一视角出发，深入探访延长健康寿命的前沿技术、伦理争议与产业脉动——让我们一起破解永生密码。',
+      'Immortal Dragons是一家投资长生不老领域的使命驱动基金。投资之外，我们出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道延寿理念信仰。在这个播客中，我们将带你从行业专家的第一视角出发，深入探访延长健康寿命的前沿技术、伦理争议与产业脉动——让我们一起破解永生密码。',
     xyzLink: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',
     podcastLink: 'https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084',
     spotifyLink: 'https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu',

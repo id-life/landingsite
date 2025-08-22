@@ -22,7 +22,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: 'https://www.id.life/news',
+      url: 'https://www.id.life/mission',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.id.life/portfolio',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.id.life/spectrum',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.id.life/spectrum/disease-management',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://www.id.life/spectrum/influence-network',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://www.id.life/digitaltwin',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://www.id.life/value',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -46,25 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: 'https://www.id.life/portfolio',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: 'https://www.id.life/spectrum',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: 'https://www.id.life/digitaltwin',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: 'https://www.id.life/value',
+      url: 'https://www.id.life/news',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.6,
@@ -81,7 +99,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `https://www.id.life/podcast/${id}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.4,
     });
   });
   newsId.forEach((id) => {
@@ -89,7 +107,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `https://www.id.life/news/${id}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.4,
     });
   });
   return sitemap;

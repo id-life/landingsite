@@ -31,9 +31,9 @@ export default function Contact() {
       <div className="flex-center h-full w-full gap-4 mobile:gap-2">
         <span className="w-36 mobile:w-[7.9375rem] mobile:uppercase">contact@id.life</span>
         {state.value ? (
-          <CheckmarkSVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+          <CheckmarkSVG className="aspect-square size-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
         ) : (
-          <CopySVG className="aspect-square h-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+          <CopySVG className="aspect-square size-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
         )}
       </div>
     </div>

@@ -2,42 +2,40 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useEventBus } from '@/components/event-bus/useEventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 
 export interface SpectrumRouteConfig {
   key: string;
   action: () => void;
+  pathname?: string; // Custom pathname for the route, defaults to '/presence'
+  useHash?: boolean; // Whether to include hash fragment, defaults to true
 }
+
+export const generateSpectrumUrl = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+  if (useHash) {
+    return `${baseUrl}${pathname}#${key}`;
+  } else {
+    return `${baseUrl}${pathname}`;
+  }
+};
+
+export const openSpectrumInNewTab = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
+  const url = generateSpectrumUrl(key, pathname, useHash);
+  window.open(url, '_blank');
+};
 
 export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pendingHashRef = useRef<string | null>(null);
   const consumedKeysRef = useRef<Set<string>>(new Set());
 
-  const generateSpectrumUrl = useCallback((key: string) => {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}/#spectrum-${key}`;
-  }, []);
-
-  const openSpectrumInNewTab = useCallback(
-    (key: string) => {
-      const url = generateSpectrumUrl(key);
-      window.open(url, '_blank');
-    },
-    [generateSpectrumUrl],
-  );
-
   const navigateByHash = useCallback(
     (hash: string) => {
-      if (!hash || !hash.startsWith('#spectrum-')) return;
-      // fixed ui opacity
-      const element = document.querySelector('#pc-fixed-ui');
-      const mobileElement = document.querySelector('#mobile-fixed-ui');
-      const nav = document.querySelector('#nav');
-      if (nav) gsap.set(nav, { opacity: 1 });
-      if (element) gsap.set(element, { opacity: 1 });
-      if (mobileElement) gsap.set(mobileElement, { opacity: 1 });
-
-      const key = hash.replace('#spectrum-', '');
+      if (!hash || !hash.startsWith('#')) return;
+      const key = hash.replace('#', '');
       if (consumedKeysRef.current.has(key)) return;
       const config = routeConfigs.find((c) => c.key === key);
       if (config) {
@@ -54,7 +52,21 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     navigateByHash(window.location.hash);
   }, [navigateByHash]);
 
-  // Register event listeners; queue actions until globalLoaded becomes true
+  // Handle spectrum hash navigation from eventBus
+  const handleSpectrumHashNavigation = useCallback(
+    (hash: string) => {
+      if (!globalLoaded) {
+        pendingHashRef.current = hash;
+        return;
+      }
+      navigateByHash(hash);
+    },
+    [globalLoaded, navigateByHash],
+  );
+
+  useEventBus(MessageType.SPECTRUM_HASH_NAVIGATION, handleSpectrumHashNavigation);
+
+  // Register hashchange listener
   useEffect(() => {
     const handleHashChange = () => {
       if (!globalLoaded && typeof window !== 'undefined') {
@@ -64,23 +76,12 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       handleHashNavigation();
     };
 
-    const handleSpectrumHashNavigation = (event: CustomEvent) => {
-      const hash = event.detail as string;
-      if (!globalLoaded) {
-        pendingHashRef.current = hash;
-        return;
-      }
-      navigateByHash(hash);
-    };
-
     window.addEventListener('hashchange', handleHashChange);
-    window.addEventListener('spectrumHashNavigation', handleSpectrumHashNavigation as EventListener);
 
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
-      window.removeEventListener('spectrumHashNavigation', handleSpectrumHashNavigation as EventListener);
     };
-  }, [globalLoaded, handleHashNavigation, navigateByHash]);
+  }, [globalLoaded, handleHashNavigation]);
 
   // When global is loaded, process pending hash or current URL hash once
   useEffect(() => {
@@ -92,6 +93,26 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       handleHashNavigation();
     }
   }, [globalLoaded, handleHashNavigation, navigateByHash]);
+
+  const updateUrlAndExecute = useCallback(
+    (key: string) => {
+      const config = routeConfigs.find((c) => c.key === key);
+      if (!config) return;
+      // Update URL without page reload
+      if (typeof window !== 'undefined') {
+        // Use default values when config properties are undefined
+        const pathname = config.pathname ?? '/presence';
+        const useHash = config.useHash ?? true;
+        const newUrl = generateSpectrumUrl(key, pathname, useHash);
+        window.history.pushState(null, '', newUrl);
+      }
+
+      config.action();
+      // Mark as consumed to prevent re-triggering
+      consumedKeysRef.current.add(key);
+    },
+    [routeConfigs],
+  );
 
   const executeSpectrumRoute = useCallback(
     (key: string) => {
@@ -108,5 +129,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
     openSpectrumInNewTab,
     handleHashNavigation,
     executeSpectrumRoute,
+    updateUrlAndExecute,
   };
 };

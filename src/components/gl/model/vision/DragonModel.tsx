@@ -7,8 +7,11 @@ import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { NAV_LIST } from '@/components/nav/nav';
+import { getElementOffsetTop } from '@/utils';
 
 // Constants
 const INIT_ROTATION = Math.PI / 2;
@@ -43,9 +46,12 @@ export default function DragonModel() {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const fixedUIHasTriggered = useRef(false);
+  const offsetYRef = useRef<number>(0);
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
   const { contextSafe } = useGSAP();
+  const pathname = usePathname();
+  const hasFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
@@ -73,7 +79,6 @@ export default function DragonModel() {
   // Frame update loop
   useFrame(({ clock }) => {
     if (!modelRef.current || !smootherRef.current) return;
-
     const time = clock.elapsedTime;
 
     // Auto swing animation
@@ -85,6 +90,10 @@ export default function DragonModel() {
     // Improve performance by updating every 0.2 seconds
     if (Math.floor(time * 10) % 2 === 0) {
       const scrollTop = smootherRef.current.scrollTop();
+      if (scrollTop >= offsetYRef.current * 2) {
+        backgroundRef.current.setRGB(1, 1, 1);
+        return;
+      }
       const r = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 193 / 255);
       const g = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
       const b = THREE.MathUtils.mapLinear(scrollTop, 0, size.height * 1.5, 1, 17 / 255);
@@ -143,6 +152,10 @@ export default function DragonModel() {
     () => {
       if (!modelRef.current) return;
       if (!globalLoaded) return;
+      if (hasFadeInAhead) fixedUIHasTriggered.current = true;
+      if (!smootherRef.current) return;
+
+      offsetYRef.current = getElementOffsetTop(document.querySelector(`#${NAV_LIST[1].id}`));
 
       gsap.from(modelRef.current.position, {
         x: 0,

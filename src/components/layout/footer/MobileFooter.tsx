@@ -5,8 +5,10 @@ import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { InfoSVG } from '@/components/svg';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
+import { cn } from '@/utils';
 import { FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useEvent } from 'react-use';
 
@@ -25,9 +27,14 @@ export default function MobileFooter() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
 
   useEvent('mousedown', handleClickOutside);
+
+  useEffect(() => {
+    if (isSubscribeShow) reset();
+  }, [isSubscribeShow, reset]);
 
   return (
     <FloatingPortal>
@@ -35,7 +42,7 @@ export default function MobileFooter() {
         <motion.div
           animate={isSubscribeShow ? 'open' : 'close'}
           variants={{
-            open: { scale: 1, bottom: '.75rem' },
+            open: { scale: 1, bottom: '.75rem', width: 'auto' },
             close: { scale: 0, bottom: '-10rem' },
           }}
           transition={{
@@ -51,22 +58,27 @@ export default function MobileFooter() {
           <button onClick={handleClose} className="absolute right-4 top-4 z-10 transition-opacity hover:opacity-70">
             <CloseSVG className="size-5 fill-[var(--foreground)] stroke-2" />
           </button>
-          <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">
-            SUBSCRIBE
-            {errors.EMAIL && <span className="font-poppins text-xs">{errors.EMAIL.message}</span>}
-          </h3>
+          <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">SUBSCRIBE</h3>
           <form
             id="subscribe-form"
-            className="mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+            className="relative mt-7.5 flex gap-4 px-2 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
+            {errors.EMAIL && (
+              <span className="absolute -top-5 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+            )}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="relative flex-1 p-2">
-              <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
+            <div className="relative flex h-11 flex-1 items-center justify-center p-2">
+              <div
+                className={cn(
+                  'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
+                  errors.EMAIL && 'border-red-600 opacity-100',
+                )}
+              />
               <input
-                className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
+                className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                 placeholder="Please enter email"
                 defaultValue=""
                 {...register('EMAIL', {
@@ -97,7 +109,7 @@ export default function MobileFooter() {
             </div>
           </form>
           <div className="mt-5 flex gap-1.5 text-left text-xs/5 font-semibold text-foreground opacity-50">
-            <InfoSVG className="mt-0.5 size-4 shrink-0" />
+            <InfoSVG className="size-4 shrink-0 mobile:mt-0.5" />
             Join our Longevity Circle and receive the latest insights & research
           </div>
         </motion.div>

@@ -3,7 +3,6 @@ import ClientNav from '@/components/nav/CilentNav';
 import Style from '@/app/(home)/_components/Style';
 import { Organization, WithContext } from 'schema-dts';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
-import BodyScrollManager from '@/components/common/BodyScrollManager';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -55,11 +54,10 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <NewsArticle1 />
       <Style />
       <ClientNav />
-      <BodyScrollManager />
       {children}
+      <NewsArticle1 />
     </>
   );
 }

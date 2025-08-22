@@ -1,0 +1,61 @@
+import React, { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { Organization, WithContext } from 'schema-dts';
+import Style from '@/app/(home)/_components/Style';
+import ClientNav from '@/components/nav/CilentNav';
+
+export const metadata: Metadata = {
+  title: 'Immortal Dragons',
+  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  keywords: [
+    'Longevity',
+    'anti-aging',
+    'life extension',
+    'investment fund',
+    'innovation',
+    'biotech',
+    'pharmaceutical',
+    'healthcare',
+    'Immortal Dragons',
+  ],
+  openGraph: {
+    title: 'Immortal Dragons',
+    siteName: 'Immortal Dragons',
+    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+    images: [
+      {
+        url: 'https://cdn.id.life/id-life-cover-2.webp',
+      },
+    ],
+  },
+};
+
+const jsonLd: WithContext<Organization> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  url: 'https://www.id.life',
+  logo: 'https://cdn.id.life/logo.png',
+  name: 'IMMORTAL DRAGONS',
+  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  email: 'dragons@id.life',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '3 Biopolis Dr, #01-15',
+    addressLocality: 'Singapore',
+    addressCountry: 'SG',
+    postalCode: '537846',
+  },
+};
+
+export default function MissionLayout({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Style />
+      <ClientNav />
+      {children}
+    </>
+  );
+}

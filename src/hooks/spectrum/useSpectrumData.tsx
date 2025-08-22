@@ -1,7 +1,7 @@
 import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useSetAtom } from 'jotai';
-import { HTMLAttributes, useCallback, useEffect, useMemo } from 'react';
+import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
   DigitalTwinSVG,
@@ -16,8 +16,6 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
-import { isCharacterRelationShowAtom, isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { getMobileDotShowInfo } from '@/constants/engagement';
 import { useSpectrumRouter, SpectrumRouteConfig } from './useSpectrumRouter';
 
@@ -47,9 +45,6 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
   const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
-  const setIsCharacterRelationShow = useSetAtom(isCharacterRelationShowAtom);
-  const setIsMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
-  const setShowDiseaseManagement = useSetAtom(showDiseaseManagementContentAtom);
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -70,27 +65,6 @@ export const useSpectrumData = () => {
   const handleClickDigitalTwin = useCallback(() => {
     isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
   }, [isMobile, mobileNavChange, handleNavClick]);
-
-  const handleCharacterRelationShow = useCallback(() => {
-    if (isMobile) {
-      mobileNavChange(NAV_LIST[2]);
-      setTimeout(() => {
-        setIsMobileCharacterRelationShow(true);
-      }, 400);
-    } else {
-      handleNavClick(NAV_LIST[2]);
-      setTimeout(() => {
-        setIsCharacterRelationShow(true);
-      }, 400);
-    }
-  }, [handleNavClick, isMobile, mobileNavChange, setIsCharacterRelationShow, setIsMobileCharacterRelationShow]);
-
-  const handleDiseaseManagementClick = useCallback(() => {
-    isMobile ? mobileNavChange(NAV_LIST[2]) : handleNavClick(NAV_LIST[2]);
-    setTimeout(() => {
-      setShowDiseaseManagement(true);
-    }, 400);
-  }, [handleNavClick, isMobile, mobileNavChange, setShowDiseaseManagement]);
 
   const handleClickDot = useCallback(
     (type: 'book' | 'sponsor' | 'meeting', index: number) => {
@@ -135,16 +109,13 @@ export const useSpectrumData = () => {
       { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
-      // evanglism
-      { key: 'influence-network', action: handleCharacterRelationShow },
-      { key: 'disease-management', action: handleDiseaseManagementClick },
       // digital twin
-      { key: 'digital-twin', action: handleClickDigitalTwin },
+      { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
-    [handleClickDot, handleCharacterRelationShow, handleDiseaseManagementClick, handleClickDigitalTwin],
+    [handleClickDot, handleClickDigitalTwin],
   );
 
-  const { openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumRouter(routeConfigs);
+  const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);
 
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
@@ -187,7 +158,7 @@ export const useSpectrumData = () => {
         title: 'Translation & Publishing',
         titleCn: '翻译与出版',
         icon: <BookSVG />,
-        className: '-ml-8',
+        className: '-ml-8 mobile:ml-0',
         links: [
           {
             label: 'bio/acc manifesto',
@@ -272,11 +243,11 @@ export const useSpectrumData = () => {
         links: [
           {
             label: 'Influence Network',
-            routeKey: 'influence-network',
+            link: '/spectrum/influence-network',
           },
           {
             label: 'Disease Management & Cure Status',
-            routeKey: 'disease-management',
+            link: '/spectrum/disease-management',
           },
         ],
       },
@@ -284,7 +255,7 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
-        className: '-ml-8',
+        className: '-ml-8 mobile:ml-0',
         links: [
           {
             label: 'Access Digital Twin',
@@ -322,7 +293,7 @@ export const useSpectrumData = () => {
     return data;
   }, []);
 
-  return { spectrumData, openSpectrumInNewTab, executeSpectrumRoute };
+  return { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs };
 };
 
 export const spectrumGetSourceImgInfos = (isMobile: boolean) => {

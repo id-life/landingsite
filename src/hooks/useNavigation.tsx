@@ -50,6 +50,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        window.history.pushState({}, '', '/');
       } else if (id === NAV_LIST[1].id) {
         // portfolio 页 偏移 & contact 需要处理
         window.isNavScrolling = true;
@@ -62,6 +63,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        window.history.pushState({}, '', '/portfolio');
       } else if (id === NAV_LIST[2].id) {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -73,6 +75,10 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        // Preserve hash if it exists (for spectrum routing)
+        const currentHash = window.location.hash;
+        const newUrl = currentHash ? `/spectrum${currentHash}` : '/spectrum';
+        window.history.pushState({}, '', newUrl);
       } else if (id === NAV_LIST[3].id) {
         // engagement 页
         window.isNavScrolling = true;
@@ -85,6 +91,10 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        // Preserve hash if it exists (for spectrum routing)
+        const currentHash = window.location.hash;
+        const newUrl = currentHash ? `/presence${currentHash}` : '/presence';
+        window.history.pushState({}, '', newUrl);
       } else if (item.id === NAV_LIST[4].id) {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
@@ -97,6 +107,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        window.history.pushState({}, '', '/digitaltwin');
       } else if (item.id === NAV_LIST[5].id) {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -108,6 +119,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
+        window.history.pushState({}, '', '/value');
       } else {
         // 其他 正常滚
         window.isNavScrolling = true;

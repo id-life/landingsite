@@ -1,17 +1,17 @@
 import { CharacterRelationImpression } from '@/apis/types';
-import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom, isCharacterRelationShowAtom } from '@/atoms/character-relation';
-import Background from '@/components/common/Background';
-import { useFloating, FloatingPortal } from '@floating-ui/react';
+import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom } from '@/atoms/character-relation';
 import { useAtom, useAtomValue } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import BePartOfIt from './BePartOfIt';
 import gsap from 'gsap';
 import CharacterRelationGraph from './CharacterRelationGraph';
-import { currentPageIndexAtom } from '@/atoms';
-import { SPECTRUM_PAGE_INDEX } from '@/constants/config';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
-import { AnimatePresence, motion } from 'motion/react';
 import CharacterRelationLegend from './CharacterRelationLegend';
+import { cn } from '@/utils';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useGA } from '@/hooks/useGA';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { motion } from 'motion/react';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -34,8 +34,9 @@ export interface CharacterRelationTransformedData {
 }
 
 const CharacterRelation = () => {
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
-  const isCharacterRelationShow = useAtomValue(isCharacterRelationShowAtom);
+  const isMobile = useIsMobile();
+  const { trackEvent } = useGA();
+
   const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
   const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
 
@@ -43,34 +44,20 @@ const CharacterRelation = () => {
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
-  const { refs, floatingStyles } = useFloating();
-  const { data, refetch } = useFetchCharacterRelation();
-
-  const [clipPathValue, setClipPathValue] = useState<string>('circle(0px at 50% 50%)');
-  const createClipPath = useCallback((isOpening: boolean) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
-    const maxRadius = Math.hypot(
-      Math.max(centerX, window.innerWidth - centerX),
-      Math.max(centerY, window.innerHeight - centerY),
-    );
-
-    return isOpening ? `circle(${maxRadius}px at ${centerX}px ${centerY}px)` : `circle(0px at ${centerX}px ${centerY}px)`;
-  }, []);
+  const { data } = useFetchCharacterRelation();
 
   useEffect(() => {
     if (bePartOfItRef.current) {
       if (isBePartOfItShow) {
         bePartOfItTimelineRef.current.clear();
-        gsap.set(bePartOfItRef.current, { bottom: '-16.5rem' });
-        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: '8rem' });
+        gsap.set(bePartOfItRef.current, { bottom: '-100%' });
+        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.5rem' });
         bePartOfItTimelineRef.current.play(0);
       } else {
         bePartOfItTimelineRef.current.reverse();
       }
     }
-  }, [isBePartOfItShow, bePartOfItRef]);
+  }, [isBePartOfItShow, bePartOfItRef, isMobile]);
 
   const resetBePartOfItTimer = useCallback(() => {
     if (bePartOfItTimerRef.current) {
@@ -80,91 +67,64 @@ const CharacterRelation = () => {
   }, []);
 
   useEffect(() => {
-    if (currentPageIndex !== SPECTRUM_PAGE_INDEX) return;
-
-    if (isCharacterRelationShow) {
-      refetch();
-      setClipPathValue(createClipPath(true));
-
-      if (!isBePartOfItSubmitted) {
-        // show BePartOfIt after 3 seconds when character relation is shown
-        bePartOfItTimerRef.current = setTimeout(() => {
-          setIsBePartOfItShow(true);
-        }, 3000);
-      } else {
-        resetBePartOfItTimer();
-      }
+    if (!isBePartOfItSubmitted) {
+      // show BePartOfIt after 3 seconds when character relation is shown
+      bePartOfItTimerRef.current = setTimeout(() => {
+        setIsBePartOfItShow(true);
+      }, 3000);
     } else {
-      setClipPathValue(createClipPath(false));
       resetBePartOfItTimer();
-      setIsBePartOfItShow(false);
     }
 
     return () => {
       resetBePartOfItTimer();
-    };
-  }, [
-    isCharacterRelationShow,
-    currentPageIndex,
-    isBePartOfItSubmitted,
-    createClipPath,
-    setIsBePartOfItShow,
-    resetBePartOfItTimer,
-    refetch,
-  ]);
-
-  const handleBePartOfItClose = useCallback(() => {
-    if (isBePartOfItShow) {
       setIsBePartOfItShow(false);
-    }
-  }, [isBePartOfItShow, setIsBePartOfItShow]);
+    };
+  }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer]);
+
+  const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
+
+  const handleBePartOfItClose = () => {
+    setIsBePartOfItShow(false);
+  };
+
+  const handleBePartOfItOpen = () => {
+    setIsBePartOfItShow(true);
+    trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
+  };
 
   return (
-    <FloatingPortal key="character-relation-portal">
-      <AnimatePresence>
-        <motion.div
-          key="character-relation-motion-wrapper"
-          animate={isCharacterRelationShow ? 'open' : 'close'}
-          variants={{
-            open: {
-              zIndex: 50,
-              opacity: 1,
-              clipPath: clipPathValue,
-              top: 0,
-            },
-            close: {
-              zIndex: 50,
-              opacity: 1,
-              clipPath: clipPathValue,
-              top: 0,
-            },
-          }}
-          transition={{
-            duration: 0.5,
-            ease: 'easeInOut',
-          }}
-          className="character-relation-css-vars-inject fixed -top-full left-0 h-full w-full"
-        >
-          <Background />
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="character-relation-graph-wrapper h-full w-full px-10 pb-[6.875rem] pt-[6.5rem]"
-          >
-            {isCharacterRelationShow && data && <CharacterRelationGraph data={data} />}
-          </div>
-          <CharacterRelationLegend />
-        </motion.div>
-        {isCharacterRelationShow && (
-          <BePartOfIt
-            key="be-part-of-it-comp"
-            ref={bePartOfItRef}
-            onCountdownEnd={handleBePartOfItClose}
-            onClose={handleBePartOfItClose}
-          />
+    <>
+      <div className="h-full w-full">
+        <div className={cn('h-full w-full px-10 py-[6.5rem]', 'mobile:px-0 mobile:pb-6 mobile:pt-20')}>
+          {data && <CharacterRelationGraph data={data} />}
+        </div>
+        <CharacterRelationLegend />
+      </div>
+
+      <motion.button
+        className={cn(
+          'fixed bottom-10 left-1/2 z-[10] -translate-x-1/2',
+          'w-[11.625rem] rounded-full bg-red-600 py-3 text-center font-poppins text-base/5 font-bold tracking-normal text-white',
+          'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
         )}
-      </AnimatePresence>
-    </FloatingPortal>
+        onClick={handleBePartOfItOpen}
+        animate={{
+          opacity: isBePartOfItShow ? 0 : 1,
+          pointerEvents: isBePartOfItShow ? 'none' : 'auto',
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        {showBePartOfItBtnText}
+      </motion.button>
+
+      <BePartOfIt
+        key="be-part-of-it-comp"
+        ref={bePartOfItRef}
+        onCountdownEnd={handleBePartOfItClose}
+        onClose={handleBePartOfItClose}
+      />
+    </>
   );
 };
 

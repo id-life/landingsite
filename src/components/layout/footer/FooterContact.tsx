@@ -1,13 +1,12 @@
 'use client';
 
-import ArrowRightSVG from '@/../public/svgs/arrow-right.svg?component';
-import BorderSVG from '@/../public/svgs/border.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import { isSubscribeShowAtom } from '@/atoms/footer';
+import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
@@ -18,7 +17,6 @@ import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -114,28 +112,30 @@ export default function FooterContact() {
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
             <div>
               <img className="w-[8.125rem]" src="/svgs/logo.svg" alt="" />
-              <div className="mt-18 flex gap-10">
+              <div className="mt-18 flex gap-5">
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-                  className="flex-center group relative h-10 cursor-pointer gap-1.5 p-2"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <YoutubeSVG className="size-6 fill-black group-hover:fill-red-600" />
-                  <span className="font-oxanium text-base/5 font-bold group-hover:text-red-600">YOUTUBE</span>
+                  <CornerBorder />
+                  <YoutubeSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase">YOUTUBE</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <LinkedinSVG className="size-6 fill-black group-hover:fill-red-600" /> LINKEDIN
+                  <CornerBorder />
+                  <LinkedinSVG className="-mt-0.5 size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase transition duration-300">LINKEDIN</span>
                 </div>
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Media)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1.5 p-2 font-oxanium text-base/4 font-bold hover:text-red-600"
+                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 font-oxanium text-base/4 font-bold transition duration-300 hover:text-red-600"
                 >
-                  <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black group-hover:stroke-red-600" />
-                  <MediaSVG className="size-6 fill-black group-hover:fill-red-600" /> MEDIAKIT
+                  <CornerBorder />
+                  <MediaSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
+                  <span className="font-oxanium text-base/5 font-bold uppercase">MEDIAKIT</span>
                 </div>
               </div>
             </div>
@@ -146,28 +146,20 @@ export default function FooterContact() {
               </div>
               <div className="mt-3 flex items-center justify-start gap-1.5">
                 <img src="/svgs/contact-email.svg" alt="" />
-                contact@id.life123
-              </div>
-              <div className="flex">
-                <Link
-                  href="/about"
-                  target="_blank"
-                  className="mt-12 flex cursor-pointer gap-1.5 font-oxanium text-xl/6 font-bold hover:fill-red-600 hover:text-red-600"
-                >
-                  ABOUT US
-                  <ArrowRightSVG className="size-6" />
-                </Link>
+                contact@id.life
               </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
-                className="relative mt-8 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+                className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
                 onSubmit={handleSubmit(onFormSubmit)}
               >
                 {errors.EMAIL && (
-                  <span className="absolute -top-6 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>
+                  <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">
+                    {errors.EMAIL.message}
+                  </span>
                 )}
                 <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
                 <input type="hidden" {...register('amp;id')} value="af9154d6b5" />

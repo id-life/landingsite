@@ -9,7 +9,7 @@ import AnimalModel from '@/app/about/_components/AnimalModel';
 export default function AboutCanvas() {
   return (
     <Canvas
-      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }}
+      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', zIndex: -1 }}
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
       <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />

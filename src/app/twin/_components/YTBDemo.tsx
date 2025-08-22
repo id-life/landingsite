@@ -1,10 +1,10 @@
-import DemoBorderSVG from '@/../public/svgs/twin/demo-border.svg?component';
-import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import RightSVG from '@/../public/svgs/twin/right.svg?component';
+import { useCallback } from 'react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useCallback } from 'react';
 import { DigitalTwinYoutubeLink } from '@/constants/links';
+import RightSVG from '@/../public/svgs/twin/right.svg?component';
+import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
+import DemoBorderSVG from '@/../public/svgs/twin/demo-border.svg?component';
 
 export default function YTBDemo() {
   const { trackEvent } = useGA();

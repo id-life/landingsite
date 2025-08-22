@@ -1,7 +1,6 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 import { isSubscribeShowAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
@@ -11,12 +10,12 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
+import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
   const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
-  const setMobileCharacterRelationShow = useSetAtom(isMobileCharacterRelationShowAtom);
   const isMobile = useIsMobile();
   const startAnim = useCallback(
     (isOpen: boolean) => {
@@ -38,13 +37,12 @@ function MobileNavDialog() {
     },
     [isMobile],
   );
-
+  const { mobileNavChange } = useMobileNavigation();
   const handleNavClick = useThrottle((item: NavItem) => {
     startAnim(false);
-    setMobileCharacterRelationShow(false);
     setTimeout(() => {
       setOpen(false);
-      setCurrentPage(item);
+      mobileNavChange(item);
     }, 600);
   }, 1000);
 
@@ -71,7 +69,7 @@ function MobileNavDialog() {
                 setSubsOpen(!subsOpen);
               }}
               className={cn(
-                'group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+                'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
                 {
                   'text-red-600': subsOpen,
                 },

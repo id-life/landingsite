@@ -1,26 +1,22 @@
 'use client';
 
 import { currentPageAtom } from '@/atoms';
-import { showDiseaseManagementContentAtom } from '@/atoms/spectrum';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
-import { FloatingPortal } from '@floating-ui/react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
-import DiseaseManagementStatus from '../disease-management/DiseaseManagementStatus';
+import { memo, useMemo, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
-  const [isShowingDiseaseManagement, setIsShowingDiseaseManagement] = useAtom(showDiseaseManagementContentAtom);
   const [imageIdx, setImageIdx] = useState(1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -28,18 +24,15 @@ function Spectrum() {
   const mouseAnimations = useRef<Map<number, gsap.core.Timeline>>(new Map());
   const cleanupFunctions = useRef<(() => void)[]>([]);
 
-  const handleBackToSpectrum = useCallback(() => {
-    setIsShowingDiseaseManagement(false);
-  }, [setIsShowingDiseaseManagement]);
-
-  const { spectrumData, openSpectrumInNewTab, executeSpectrumRoute } = useSpectrumData();
+  const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const spectrumItems = useMemo(() => {
     return spectrumData.map((item, index) => (
       <SpectrumItem
         key={item.title}
         item={item}
-        openSpectrumInNewTab={openSpectrumInNewTab}
         executeSpectrumRoute={executeSpectrumRoute}
+        updateUrlAndExecute={updateUrlAndExecute}
+        routeConfigs={routeConfigs}
         onClick={(e) => {
           item.onClick?.(e);
         }}
@@ -50,7 +43,7 @@ function Spectrum() {
         }}
       />
     ));
-  }, [spectrumData, openSpectrumInNewTab, executeSpectrumRoute]);
+  }, [spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
   const windowDimensions = useMemo(() => {
     if (typeof window === 'undefined') return { width: 0, height: 0 };
@@ -70,44 +63,11 @@ function Spectrum() {
     return { centerX, centerY, maxRadius };
   }, [windowDimensions]);
 
-  useGSAP(() => {
-    if (isShowingDiseaseManagement) {
-      const { centerX, centerY, maxRadius } = circleCenter;
-
-      if (animTimeline.current) animTimeline.current.kill();
-      animTimeline.current = gsap.timeline();
-      animTimeline.current
-        .to(['.spectrum-content-wrapper', '#spectrum-particle-gl'], {
-          opacity: 0,
-          duration: 0.4,
-          pointerEvents: 'none',
-        })
-        .fromTo(
-          '.disease-management-wrapper',
-          {
-            clipPath: `circle(0px at ${centerX}px ${centerY}px)`,
-            pointerEvents: 'none',
-          },
-          {
-            clipPath: `circle(${maxRadius}px at ${centerX}px ${centerY}px)`,
-            duration: 0.8,
-            ease: 'easeInOut',
-            pointerEvents: 'auto',
-          },
-          '-=0.2',
-        );
-    } else {
-      if (animTimeline?.current && animTimeline.current?.progress() > 0) {
-        animTimeline.current.reverse();
-      }
-    }
-  }, [isShowingDiseaseManagement]);
-
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
     // engagement auto scroll to profile
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
       gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
@@ -119,7 +79,7 @@ function Spectrum() {
     // profile auto scroll to engagement
     triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || isShowingDiseaseManagement) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
       // console.log('Spectrum scrollFn down');
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) return;
@@ -238,9 +198,7 @@ function Spectrum() {
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
         <div id="spectrum-particle-gl">
-          <div id="spectrum-particle-container" className={cn('particle-container', { active })}>
-            {/* <div className="particle-mask"></div> */}
-          </div>
+          <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
         <div className="spectrum-fund mt-12 overflow-hidden px-18">
           <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
@@ -248,14 +206,6 @@ function Spectrum() {
           </div>
         </div>
       </div>
-      <FloatingPortal>
-        <div
-          className="disease-management-wrapper pointer-events-none fixed inset-0 z-20 bg-black"
-          style={{ clipPath: 'circle(0px at 50% 50%)' }}
-        >
-          <DiseaseManagementStatus onBack={handleBackToSpectrum} />
-        </div>
-      </FloatingPortal>
     </div>
   );
 }

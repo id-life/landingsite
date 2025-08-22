@@ -9,7 +9,7 @@ import ScrollBehavior from '@/components/common/ScrollBehavior';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
 
@@ -40,6 +40,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

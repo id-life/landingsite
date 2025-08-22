@@ -1,12 +1,12 @@
 'use client';
 
-import BorderSVG from '@/../public/svgs/border.svg?component';
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
+import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
@@ -107,7 +107,7 @@ export default function MobileFooterContact() {
           className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
           <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
-          <form id="subscribe-form" className="relative mt-5 flex gap-3" onSubmit={handleSubmit(onFormSubmit)}>
+          <form id="subscribe-form" className="relative mt-7.5 flex gap-3" onSubmit={handleSubmit(onFormSubmit)}>
             {errors.EMAIL && (
               <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
             )}
@@ -136,7 +136,7 @@ export default function MobileFooterContact() {
               ) : null}
               {isSubmitted ? (
                 <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
-                  <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
                 </div>
               ) : null}
               <input
@@ -158,22 +158,25 @@ export default function MobileFooterContact() {
               onClick={() => handleLinkClick(MediaLinkType.Youtube)}
               className="flex-center relative cursor-pointer gap-1 p-2"
             >
-              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
+              <CornerBorder hoverColor="#000" />
               <YoutubeSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-xs font-bold">YOUTUBE</span>
+              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">YOUTUBE</span>
             </div>
             <div
               onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-              className="flex-center relative cursor-pointer gap-1 p-2"
+              className="flex-center relative cursor-pointer gap-0.5 p-2"
             >
-              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
-              <LinkedinSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-xs font-bold">LINKEDIN</span>
+              <CornerBorder hoverColor="#000" />
+              <LinkedinSVG className="-mt-0.5 size-4 fill-black" />
+              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">LINKEDIN</span>
             </div>
-            <div onClick={() => handleLinkClick(MediaLinkType.Media)} className="flex-center relative cursor-pointer gap-1 p-2">
-              <BorderSVG className="absolute left-0 top-0 h-full w-full stroke-black" />
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Media)}
+              className="flex-center relative cursor-pointer gap-0.5 p-2"
+            >
+              <CornerBorder hoverColor="#000" />
               <MediaSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-xs font-bold">MEDIAKIT</span>
+              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">MEDIAKIT</span>
             </div>
           </div>
           <p className="mt-6 text-center font-oxanium text-[.625rem]/3 font-semibold uppercase opacity-60">

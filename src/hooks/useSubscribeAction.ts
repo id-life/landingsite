@@ -29,7 +29,6 @@ export function useSubscribeAction() {
   // Initialize timeline
   useGSAP(
     () => {
-      if (!fadeInAnimCompleted) return;
       const tl = gsap.timeline({ paused: true });
       tl.to('.page-footer', { bottom: '2.25rem', duration: 0.3 });
       tl.to('.footer-box-clip', { width: '40rem', height: '13rem', duration: 0.3 }, '<');
@@ -52,19 +51,20 @@ export function useSubscribeAction() {
     });
   });
 
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     timelineRef.current?.play();
     setIsSubscribeShow(true);
-  };
+  }, [setIsSubscribeShow]);
 
   const handleClose = () => {
-    console.log('handleClose', isSubscribeShow, playingRef.current, timelineRef.current);
     timelineRef.current?.reverse();
     setIsSubscribeShow(false);
     setHasShownAuto(true);
   };
 
   const onSubscribeClick = () => {
+    if (!fadeInAnimCompleted) return;
+
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
@@ -85,9 +85,7 @@ export function useSubscribeAction() {
 
   const handleClickOutside = (e: MouseEvent) => {
     e.stopPropagation();
-    console.log('handleClick', isSubscribeShow, playingRef.current);
     if (isSubscribeShow && !playingRef.current) {
-      console.log('handleClickOutside', isSubscribeShow, playingRef.current);
       const target = e.target as Element;
       const isClickFooter = target.closest('.footer-box-clip');
       const isClickSubscribeBtn = target.closest('#subscribe-btn');
@@ -101,7 +99,7 @@ export function useSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     handleStart();
-  }, [fadeInAnimCompleted, hasShownAuto]);
+  }, [fadeInAnimCompleted, handleStart, hasShownAuto]);
 
   return {
     hasShownAuto,
@@ -122,10 +120,10 @@ export function useMobileSubscribeAction() {
   const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
   const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubscribeShow(false);
     setHasShownAuto(true);
-  };
+  }, [setIsSubscribeShow, setHasShownAuto]);
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
@@ -133,7 +131,7 @@ export function useMobileSubscribeAction() {
         handleClose();
       }
     },
-    [setIsSubscribeShow],
+    [handleClose],
   );
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
@@ -156,7 +154,14 @@ export function useMobileSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     setIsSubscribeShow(true);
-  }, [fadeInAnimCompleted, hasShownAuto]);
+  }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow]);
+
+  useEffect(() => {
+    if (isSubscribeShow) {
+      setIsSubmitted(false);
+      setIsSubmitting(false);
+    }
+  }, [isSubscribeShow]);
 
   return {
     isSubscribeShow,

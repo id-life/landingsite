@@ -135,11 +135,16 @@ const config: Config = {
         'move-right': {
           '50%': { transform: 'translateX(10px)' },
         },
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
       },
       animation: {
         scale: 'scale 4s linear infinite',
         'pulse-10': 'pulse-10 4s linear infinite',
         'move-right': 'move-right 3s linear infinite',
+        'fade-in': 'fade-in 1s ease-in-out forwards',
       },
       fontSize: {
         ss: '0.625rem',

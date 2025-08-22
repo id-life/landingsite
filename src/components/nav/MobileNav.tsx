@@ -11,18 +11,19 @@ import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
 import { cn } from '@/utils';
 import { useGA } from '@/hooks/useGA';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { isMobileCharacterRelationShowAtom } from '@/atoms/character-relation';
 
 export default function MobileNav() {
+  const isMobile = useIsMobile();
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
-  const isMobileCharacterRelationShow = useAtomValue(isMobileCharacterRelationShowAtom);
 
   const { trackEvent } = useGA();
 
-  const onSubscribeClick = () => {
+  const onSubscribeClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     setIsSubscribeShow((pre) => !pre);
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
@@ -30,13 +31,13 @@ export default function MobileNav() {
     });
   };
 
-  if (!globalLoaded) return null;
+  if (!globalLoaded || !isMobile) return null;
+
   return (
     <div
-      id="nav"
+      id="mobile-nav"
       className={cn(
-        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
-        isMobileCharacterRelationShow && 'character-relation-css-vars-inject z-[51] mobile:pb-0',
+        'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
       )}
     >
       <Logo />
@@ -44,7 +45,7 @@ export default function MobileNav() {
         <div
           onClick={onSubscribeClick}
           className={cn(
-            'group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+            'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
             { 'stroke-red-600 text-red-600': isSubscribeShow },
           )}
         >

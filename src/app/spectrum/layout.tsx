@@ -41,6 +41,8 @@ const jsonLd = {
 export default function SpectrumLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
+      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {children}
     </>

@@ -17,6 +17,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = audioContext.createAnalyser();
@@ -41,6 +42,7 @@ export default function useCurrentAudio() {
   const weightingsRef = useRef<number[]>([-100]);
   const nextAudioRef = useRef<HTMLAudioElement | null>(null);
   const isPreloadingRef = useRef<boolean>(false);
+  const isMobile = useIsMobile();
 
   const [audioRef, setAudioRef] = useAtom(audioRefAtom);
   const setProgress = useSetAtom(progressAtom);
@@ -107,22 +109,24 @@ export default function useCurrentAudio() {
     setAudioRef(audio);
 
     const setupAudio = () => {
-      const source = audioContext.createMediaElementSource(audio);
-      const sampleRate = audioContext.sampleRate;
-      const totalNumberOfSamples = sampleRate / approxVisualisationUpdateFrequency;
+      if (!isMobile) {
+        const source = audioContext.createMediaElementSource(audio);
+        const sampleRate = audioContext.sampleRate;
+        const totalNumberOfSamples = sampleRate / approxVisualisationUpdateFrequency;
 
-      analyser.fftSize = 2 ** Math.floor(Math.log2(totalNumberOfSamples));
+        analyser.fftSize = 2 ** Math.floor(Math.log2(totalNumberOfSamples));
 
-      for (let i = 1; i < analyser.frequencyBinCount; i++) {
-        weightingsRef.current[i] = A((i * sampleRate) / 2 / analyser.frequencyBinCount);
+        for (let i = 1; i < analyser.frequencyBinCount; i++) {
+          weightingsRef.current[i] = A((i * sampleRate) / 2 / analyser.frequencyBinCount);
+        }
+
+        waveFormRef.current = new Uint8Array(analyser.frequencyBinCount);
+        spectrumRef.current = new Uint8Array(analyser.frequencyBinCount);
+        dBASpectrumRef.current = new Float32Array(analyser.frequencyBinCount);
+
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
       }
-
-      waveFormRef.current = new Uint8Array(analyser.frequencyBinCount);
-      spectrumRef.current = new Uint8Array(analyser.frequencyBinCount);
-      dBASpectrumRef.current = new Float32Array(analyser.frequencyBinCount);
-
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
       dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
     };
 
@@ -141,6 +145,11 @@ export default function useCurrentAudio() {
 
       if (audio.duration && audio.currentTime >= audio.duration - 20 && !isPreloadingRef.current) {
         preloadNextTrack();
+      }
+
+      if (isMobile) {
+        eventBus.next({ type: MessageType.SIRI_WAVE_CONFIG, payload: { amplitude: 1.5, speed: 0.2 } });
+        return;
       }
 
       const now = Date.now();
@@ -176,6 +185,10 @@ export default function useCurrentAudio() {
       playNextTrack();
     };
 
+    audio.onpause = () => {
+      dispatch({ type: AUDIO_DISPATCH.PAUSE });
+    };
+
     return () => {
       if (audio) {
         audio.pause();
@@ -187,7 +200,7 @@ export default function useCurrentAudio() {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAudio]);
+  }, [currentAudio, isMobile]);
 
   useEffect(() => {
     const enableAutoplay = () => {
