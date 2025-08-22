@@ -45,3 +45,10 @@ export function judgeIsWebView(): boolean {
   const webviewRegExp = new RegExp('(' + webviewPatterns.join('|') + ')', 'ig');
   return !!userAgent.match(webviewRegExp);
 }
+
+export function getElementOffsetTop(element: HTMLElement | null): number {
+  if (!element) return 0;
+  const rect = element.getBoundingClientRect();
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  return rect.top + scrollTop;
+}
