@@ -64,7 +64,9 @@ export default function MobileFooter() {
             className="relative mt-7.5 flex gap-4 px-2 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
-            {errors.EMAIL && <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>}
+            {errors.EMAIL && (
+              <span className="absolute -top-5 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+            )}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />

@@ -157,7 +157,9 @@ export default function FooterContact() {
                 onSubmit={handleSubmit(onFormSubmit)}
               >
                 {errors.EMAIL && (
-                  <span className="absolute -top-6 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>
+                  <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">
+                    {errors.EMAIL.message}
+                  </span>
                 )}
                 <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
                 <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
