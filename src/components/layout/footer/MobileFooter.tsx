@@ -7,6 +7,7 @@ import { InfoSVG } from '@/components/svg';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useEvent } from 'react-use';
 
@@ -25,9 +26,14 @@ export default function MobileFooter() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
 
   useEvent('mousedown', handleClickOutside);
+
+  useEffect(() => {
+    if (isSubscribeShow) reset();
+  }, [isSubscribeShow, reset]);
 
   return (
     <FloatingPortal>

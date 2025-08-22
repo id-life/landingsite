@@ -156,6 +156,13 @@ export function useMobileSubscribeAction() {
     setIsSubscribeShow(true);
   }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow]);
 
+  useEffect(() => {
+    if (isSubscribeShow) {
+      setIsSubmitted(false);
+      setIsSubmitting(false);
+    }
+  }, [isSubscribeShow]);
+
   return {
     isSubscribeShow,
     subscribeRef,

@@ -3,6 +3,7 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
+import { isSubscribeShowAtom } from '@/atoms/footer';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { InfoSVG } from '@/components/svg';
@@ -11,7 +12,8 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
-import { useRef, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -25,14 +27,25 @@ export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const subscribeRef = useRef<HTMLDivElement>(null);
+  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
+    reset,
   } = useForm<Inputs>();
 
   const { trackEvent } = useGA();
+
+  useEffect(() => {
+    if (isSubscribeShow) {
+      setIsSubmitted(false);
+      reset();
+      clearErrors();
+    }
+  }, [isSubscribeShow, reset, clearErrors]);
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     const params = new URLSearchParams();
@@ -54,10 +67,7 @@ export default function Footer() {
     <>
       <div ref={wrapperRef} className="h-52" />
       <FloatingPortal>
-        <div
-          ref={subscribeRef}
-          className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
-        >
+        <div className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
           <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">
             <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
             <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
@@ -78,7 +88,7 @@ export default function Footer() {
             >
               {errors.EMAIL && (
                 <span className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600">
-                  {errors.EMAIL.message}
+                  {errors.EMAIL?.message}
                 </span>
               )}
               <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
