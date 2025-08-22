@@ -5,6 +5,7 @@ import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { InfoSVG } from '@/components/svg';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
+import { cn } from '@/utils';
 import { FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
@@ -60,7 +61,7 @@ export default function MobileFooter() {
           <h3 className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">SUBSCRIBE</h3>
           <form
             id="subscribe-form"
-            className="relative mt-7.5 flex gap-4 px-2 mobile:mt-5 mobile:gap-3 mobile:px-0"
+            className="relative mt-7.5 flex gap-4 px-2 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
             {errors.EMAIL && <span className="absolute -top-5 font-poppins text-xs text-red-600">{errors.EMAIL.message}</span>}
@@ -68,9 +69,14 @@ export default function MobileFooter() {
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
             <div className="relative flex-1 p-2">
-              <div className="absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50" />
+              <div
+                className={cn(
+                  'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
+                  errors.EMAIL && 'border-red-600 opacity-100',
+                )}
+              />
               <input
-                className="w-full bg-transparent text-sm font-semibold placeholder:text-[#747374] mobile:text-xs/5"
+                className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-xs/5"
                 placeholder="Please enter email"
                 defaultValue=""
                 {...register('EMAIL', {
