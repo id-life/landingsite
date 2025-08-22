@@ -1,18 +1,13 @@
 import React from 'react';
-import { useSetAtom } from 'jotai';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { DigitalTwinYoutubeLink } from '@/constants/links';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import { AUDIO_DISPATCH, audioControlsAtom } from '@/atoms/audio-player';
 
 export default function YTBDemo() {
   const { trackEvent } = useGA();
-  const dispatch = useSetAtom(audioControlsAtom);
-
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    dispatch({ type: AUDIO_DISPATCH.PAUSE });
     trackEvent({ name: GA_EVENT_NAMES.DT_DEMO });
   };
   return (
