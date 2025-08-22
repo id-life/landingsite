@@ -68,7 +68,7 @@ export default function MobileFooter() {
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className="relative flex-1 p-2">
+            <div className="relative flex h-11 flex-1 items-center justify-center p-2">
               <div
                 className={cn(
                   'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
