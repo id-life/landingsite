@@ -1,6 +1,6 @@
 'use client';
 
-import { globalLoadedAtom } from '@/atoms/geo';
+import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -8,7 +8,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useNavigation } from '@/hooks/useNavigation';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 
 export default function HashRouter() {
@@ -17,6 +17,7 @@ export default function HashRouter() {
   const { mobileNavChange } = useMobileNavigation();
   const isMobile = useIsMobile();
   const hashLoadedRef = useRef(false);
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
 
   const handleHashNavigation = useCallback(() => {
     if (!globalLoaded) return;
@@ -65,12 +66,14 @@ export default function HashRouter() {
         if (nav) gsap.set(nav, { opacity: 1 });
         if (element) gsap.set(element, { opacity: 1 });
       }
+      setFadeInAnimCompleted(true);
     }
     // 监听 hashchange 事件，处理 hash 导航
     window.addEventListener('hashchange', handleHashNavigation);
     return () => {
       window.removeEventListener('hashchange', handleHashNavigation);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalLoaded, handleHashNavigation, handlePathnameNavigation, isMobile]);
 
   return null;
