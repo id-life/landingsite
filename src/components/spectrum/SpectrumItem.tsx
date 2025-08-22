@@ -212,7 +212,7 @@ const SpectrumItem = memo(
                 {showMoreButton && (
                   <motion.button
                     onClick={handleMoreClick}
-                    className="mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-cyan opacity-90 transition-colors hover:text-cyan/80 hover:opacity-100"
+                    className="mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100"
                   >
                     {buttonText}
                     <ArrowSVG className={cn('size-3 fill-current transition duration-300', { 'rotate-180': isMore })} />
