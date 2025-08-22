@@ -45,7 +45,7 @@ export default function MobileNav() {
         <div
           onClick={onSubscribeClick}
           className={cn(
-            'group relative flex h-12 w-51.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+            'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
             { 'stroke-red-600 text-red-600': isSubscribeShow },
           )}
         >
