@@ -42,7 +42,7 @@ export default function MobileFooter() {
         <motion.div
           animate={isSubscribeShow ? 'open' : 'close'}
           variants={{
-            open: { scale: 1, bottom: '.75rem' },
+            open: { scale: 1, bottom: '.75rem', width: 'auto' },
             close: { scale: 0, bottom: '-10rem' },
           }}
           transition={{
