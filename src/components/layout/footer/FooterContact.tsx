@@ -111,7 +111,7 @@ export default function FooterContact() {
         >
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
             <div>
-              <img className="w-[8.125rem]" src="/svgs/logo.svg" alt="" />
+              <img className="w-[8.125rem]" src="/svgs/logo_without_gradient.svg" alt="" />
               <div className="mt-18 flex gap-5">
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
