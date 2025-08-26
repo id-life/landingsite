@@ -5,6 +5,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -44,7 +45,7 @@ function Twin() {
       // console.log('[Twin] Starting auto-scroll to Engagement');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 3,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
         onComplete: () => {
           window.isNavScrolling = false;
@@ -64,7 +65,7 @@ function Twin() {
       // console.log('[Twin] Starting auto-scroll to Value');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 3,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: `#${NAV_LIST[5].id}` },
         onComplete: () => {
           window.isNavScrolling = false;

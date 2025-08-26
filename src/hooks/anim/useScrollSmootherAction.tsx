@@ -2,6 +2,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { throttle } from 'lodash-es';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 
 export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => void; isUp?: boolean }) => {
   const [enableJudge, setEnableJudge] = useState(false);
@@ -16,13 +17,13 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
         setTimeout(() => {
           isScrollingRef.current = false;
           // console.log(`[useScrollSmootherAction] Scroll animation completed, isUp: ${isUp}`);
-        }, 2500); // Match the animation duration
-      }, 500), // Increase throttle time to prevent rapid triggers
+        }, SCROLL_ANIMATION_CONFIG.RESET_DELAY);
+      }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME),
     [scrollFn],
   );
 
   useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
+    const handleWheel = () => {
       if (!enableJudge) {
         // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
         return;
@@ -40,9 +41,9 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
       const dir = smootherST.direction;
       const velocity = smootherST.getVelocity();
 
-      // console.log(`[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity}, isUp: ${isUp}, deltaY: ${e.deltaY}`);
+      // console.log(`[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity}, isUp: ${isUp}`);
 
-      if (Math.abs(velocity) < 1) {
+      if (Math.abs(velocity) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
         // console.log(`[useScrollSmootherAction] Velocity too low, ignoring`);
         return;
       }

@@ -6,6 +6,7 @@ import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
@@ -62,9 +63,9 @@ function Portfolio() {
       // console.log('[Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: 0 },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
           // console.log('[Portfolio] Auto-scroll completed');
@@ -83,13 +84,13 @@ function Portfolio() {
       // console.log('[Portfolio] Starting auto-scroll to Engagement');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
           // console.log('[Portfolio] Auto-scroll to Engagement completed');
         },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });
     },
     isUp: false,

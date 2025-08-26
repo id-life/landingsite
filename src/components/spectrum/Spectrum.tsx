@@ -3,6 +3,7 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
@@ -96,9 +97,9 @@ function Spectrum() {
       if (!st) return;
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
         },
@@ -116,9 +117,9 @@ function Spectrum() {
       if (!st) return;
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
         },

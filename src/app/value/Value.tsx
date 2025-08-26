@@ -3,6 +3,7 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue } from 'jotai';
@@ -21,7 +22,7 @@ export default function Value() {
       // console.log('[Value] Starting auto-scroll to Twin');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 3,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
           window.isNavScrolling = false;

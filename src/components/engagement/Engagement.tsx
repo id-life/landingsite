@@ -3,6 +3,7 @@ import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
@@ -21,12 +22,12 @@ function Engagement() {
       if (!st) return;
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
         },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });
     },
     isUp: true,
@@ -39,7 +40,7 @@ function Engagement() {
       if (!st) return;
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 3,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
           window.isNavScrolling = false;

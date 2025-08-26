@@ -2,6 +2,7 @@ import { currentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -23,13 +24,13 @@ export default function Vision() {
       // console.log('[Vision] Starting auto-scroll to Portfolio');
       window.isNavScrolling = true;
       gsap.to(window, {
-        duration: 2,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
         onComplete: () => {
           window.isNavScrolling = false;
           // console.log('[Vision] Auto-scroll completed');
         },
-        ease: 'power4.inOut',
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });
     },
     isUp: false,
