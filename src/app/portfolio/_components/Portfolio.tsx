@@ -5,6 +5,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
@@ -12,7 +13,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
@@ -54,12 +55,20 @@ function Portfolio() {
 
   const currentPage = useAtomValue(currentPageAtom);
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-    // profile auto scroll to engagement
-    triggerId: 'portfolio-trigger',
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
+    // profile auto scroll to vision
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[1].id) return;
-      gsap.to(window, { duration: 2, scrollTo: { y: `#${NAV_LIST[0].id}` } });
+      if (!enableUpJudge || window.isNavScrolling) return;
+      // console.log('portfolio scrollUp', enableUpJudge, window.isNavScrolling);
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 2,
+        scrollTo: { y: 0 },
+        ease: 'power4.inOut',
+        onComplete: () => {
+          window.isNavScrolling = false;
+        },
+      });
     },
     isUp: true,
   });
@@ -126,9 +135,6 @@ function Portfolio() {
       },
     });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
-    tl.add(() => {
-      setEnableUpJudge(true);
-    });
     tl.from('.page2-title', {
       delay: 0.5,
       y: (_, target) => target.offsetHeight,
@@ -142,6 +148,15 @@ function Portfolio() {
       setEnableDownJudge(true);
     });
   }, []);
+
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[1].id) {
+      console.log('portfolio setEnableUpJudge true');
+      setEnableUpJudge(true);
+    } else {
+      setEnableUpJudge(false);
+    }
+  }, [currentPage, setEnableUpJudge]);
 
   const portfolioItems = useMemo(() => {
     const items = portfolio.map((item, index) => (

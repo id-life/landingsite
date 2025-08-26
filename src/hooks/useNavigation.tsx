@@ -15,29 +15,6 @@ export function useNavigation() {
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
 
-  useGSAP(() => {
-    ScrollTrigger.create({
-      trigger: `#${NAV_LIST[1].id}`,
-      start: 'top bottom',
-      endTrigger: `#${NAV_LIST[1].id}`,
-      end: 'top top',
-      onEnter: () => {
-        if (window.isNavScrolling) return;
-        window.isNavScrolling = true;
-        const st = ScrollTrigger.getById('portfolio-trigger');
-        if (!st) return;
-        gsap.to(window, {
-          duration: 3,
-          scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
-          onComplete: () => {
-            window.isNavScrolling = false;
-          },
-          ease: 'power4.inOut',
-        });
-      },
-    });
-  });
-
   const handleNavClickImpl = useCallback(
     (item: NavItem) => {
       const smoother = ScrollSmoother.get();
