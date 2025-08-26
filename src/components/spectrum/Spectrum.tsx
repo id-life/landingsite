@@ -2,7 +2,7 @@
 
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
@@ -10,7 +10,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
-import { memo, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
 
@@ -63,30 +63,80 @@ function Spectrum() {
     return { centerX, centerY, maxRadius };
   }, [windowDimensions]);
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+  // const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+  //   // engagement auto scroll to profile
+  //   triggerId: 'spectrum-trigger',
+  //   scrollFn: () => {
+  //     if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+  //     const st = ScrollTrigger.getById('portfolio-trigger');
+  //     if (!st) return;
+  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
+  //   },
+  //   isUp: true,
+  // });
+
+  // const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
+  //   // profile auto scroll to engagement
+  //   triggerId: 'spectrum-trigger',
+  //   scrollFn: () => {
+  //     if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
+  //     // console.log('Spectrum scrollFn down');
+  //     const st = ScrollTrigger.getById('engagement-scroll-trigger');
+  //     if (!st) return;
+  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+  //   },
+  //   isUp: false,
+  // });
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to profile
-    triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 2,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
+        ease: 'power4.inOut',
+        onComplete: () => {
+          window.isNavScrolling = false;
+        },
+      });
     },
     isUp: true,
   });
 
-  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
+  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollSmootherAction({
     // profile auto scroll to engagement
-    triggerId: 'spectrum-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
       // console.log('Spectrum scrollFn down');
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 2,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
+        ease: 'power4.inOut',
+        onComplete: () => {
+          window.isNavScrolling = false;
+        },
+      });
     },
     isUp: false,
   });
+
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[2].id) {
+      console.log('spectrum setEnableUpJudge & setEnableDownJudge true');
+      setEnableUpJudge(true);
+      setEnableDownJudge(true);
+    } else {
+      setEnableUpJudge(false);
+      setEnableDownJudge(false);
+    }
+  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -111,9 +161,9 @@ function Spectrum() {
         },
       },
     });
-    tl.add(() => {
-      setEnableUpJudge(true);
-    });
+    // tl.add(() => {
+    //   setEnableUpJudge(true);
+    // });
     tl.from('.spectrum-title', {
       delay: 1,
       y: (_, target) => target.offsetHeight,
@@ -126,9 +176,9 @@ function Spectrum() {
     // tl.to(() => {}, { duration: 5 });
     tl.to('.fixed-top', { opacity: 0 });
     tl.to('.fixed-bottom', { opacity: 0 }, '<');
-    tl.add(() => {
-      setEnableDownJudge(true);
-    });
+    // tl.add(() => {
+    //   setEnableDownJudge(true);
+    // });
   }, []);
 
   const throttledSetImageIdx = useThrottle((index: number) => {

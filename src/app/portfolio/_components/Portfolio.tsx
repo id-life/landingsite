@@ -6,7 +6,6 @@ import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
@@ -74,14 +73,24 @@ function Portfolio() {
     },
     isUp: true,
   });
-  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
+  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     // profile auto scroll to engagement
-    triggerId: 'portfolio-trigger',
     scrollFn: () => {
-      if (!enableJudge || currentPage.id !== NAV_LIST[1].id || window.isNavScrolling) return;
+      // console.log('[Portfolio] scrollFn DOWN called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
+      if (!enableDownJudge || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.965 } });
+      // console.log('[Portfolio] Starting auto-scroll to Engagement');
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 2,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
+        onComplete: () => {
+          window.isNavScrolling = false;
+          // console.log('[Portfolio] Auto-scroll to Engagement completed');
+        },
+        ease: 'power4.inOut',
+      });
     },
     isUp: false,
   });
@@ -146,19 +155,18 @@ function Portfolio() {
     });
     tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
     tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
-    tl.add(() => {
-      setEnableDownJudge(true);
-    });
   }, []);
 
   useEffect(() => {
     if (currentPage.id === NAV_LIST[1].id) {
       console.log('portfolio setEnableUpJudge true');
       setEnableUpJudge(true);
+      setEnableDownJudge(true);
     } else {
       setEnableUpJudge(false);
+      setEnableDownJudge(false);
     }
-  }, [currentPage, setEnableUpJudge]);
+  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   const portfolioItems = useMemo(() => {
     const items = portfolio.map((item, index) => (

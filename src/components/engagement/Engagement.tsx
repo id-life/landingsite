@@ -1,34 +1,50 @@
 import { currentPageAtom } from '@/atoms';
-import { globalLoadedAtom } from '@/atoms/geo';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useAtomValue } from 'jotai';
-import { memo } from 'react';
+import { useAtom } from 'jotai';
+import { memo, useEffect } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 function Engagement() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-    // engagement auto scroll to profile
-    triggerId: 'engagement-scroll-trigger',
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
+    // engagement auto scroll to portfolio
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[3].id) return;
-      // console.log('Engagement scrollFn Up');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[2].id}` } });
+      // console.log('[Engagement] scrollFn UP called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
+      if (!enableUpJudge || window.isNavScrolling) return;
+      const st = ScrollTrigger.getById('spectrum-trigger');
+      if (!st) return;
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 2,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
+        onComplete: () => {
+          window.isNavScrolling = false;
+        },
+        ease: 'power4.inOut',
+      });
     },
     isUp: true,
   });
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollTriggerAction({
-    // engagement auto scroll to profile
-    triggerId: 'engagement-scroll-trigger',
+  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
+    // engagement auto scroll to twin
     scrollFn: () => {
-      if (!enableDownJudge || currentPage.id !== NAV_LIST[3].id) return;
-      // console.log('Engagement scrollFn Down');
-      gsap.to(window, { duration: 1.5, scrollTo: { y: `#${NAV_LIST[4].id}` } });
+      if (!enableDownJudge || window.isNavScrolling) return;
+      const st = ScrollTrigger.getById('twin-scroll-trigger');
+      if (!st) return;
+      window.isNavScrolling = true;
+      gsap.to(window, {
+        duration: 3,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
+        onComplete: () => {
+          window.isNavScrolling = false;
+        },
+      });
     },
     isUp: false,
   });
@@ -62,9 +78,9 @@ function Engagement() {
     // 使用进度位置控制动画时机
     const factor = 10; // 动画因子
 
-    tl.add(() => {
-      setEnableUpJudge(true);
-    });
+    // tl.add(() => {
+    //   setEnableUpJudge(true);
+    // });
     // 入场动画序列
     const entranceDuration = 2 * factor;
     tl.to('.world-map-img', {
@@ -83,9 +99,9 @@ function Engagement() {
 
     // 停留一阵子
     tl.to(() => {}, { duration: 2 * factor });
-    tl.add(() => {
-      setEnableDownJudge(true);
-    });
+    // tl.add(() => {
+    //   setEnableDownJudge(true);
+    // });
     // 出场动画序列
     const exitDuration = 2 * factor;
     tl.to(
@@ -111,6 +127,17 @@ function Engagement() {
     //   '<',
     // );
   }, []);
+
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[3].id) {
+      console.log('engagement setEnableUpJudge & setEnableDownJudge true');
+      setEnableUpJudge(true);
+      setEnableDownJudge(true);
+    } else {
+      setEnableUpJudge(false);
+      setEnableDownJudge(false);
+    }
+  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   return (
     <div id={NAV_LIST[3].id} className="page-container engagement">
