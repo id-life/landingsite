@@ -1,24 +1,38 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { throttle } from 'lodash-es';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => void; isUp?: boolean }) => {
   const [enableJudge, setEnableJudge] = useState(false);
+  const isScrollingRef = useRef(false);
   const throttleScrollFn = useMemo(
     () =>
       throttle(() => {
+        // console.log(`[useScrollSmootherAction] Executing scrollFn, isUp: ${isUp}`);
+        isScrollingRef.current = true;
         scrollFn?.();
-        setEnableJudge(false);
-      }, 100),
+        // Don't disable immediately, let the scroll animation complete
+        setTimeout(() => {
+          isScrollingRef.current = false;
+          // console.log(`[useScrollSmootherAction] Scroll animation completed, isUp: ${isUp}`);
+        }, 2500); // Match the animation duration
+      }, 500), // Increase throttle time to prevent rapid triggers
     [scrollFn],
   );
 
   useEffect(() => {
-    if (!enableJudge) return;
-
     const handleWheel = (e: WheelEvent) => {
-      if (!enableJudge) return;
+      if (!enableJudge) {
+        // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
+        return;
+      }
+
+      if (isScrollingRef.current || window.isNavScrolling) {
+        // console.log(`[useScrollSmootherAction] Wheel ignored - already scrolling, isUp: ${isUp}`);
+        return;
+      }
+
       const smoother = ScrollSmoother.get();
       const smootherST = smoother?.scrollTrigger as ScrollTrigger | undefined;
       if (!smootherST) return;
@@ -26,13 +40,21 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
       const dir = smootherST.direction;
       const velocity = smootherST.getVelocity();
 
-      if (Math.abs(velocity) < 1) return; // 速度小于1时，不执行滚动 防止一些 bug
+      // console.log(`[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity}, isUp: ${isUp}, deltaY: ${e.deltaY}`);
+
+      if (Math.abs(velocity) < 1) {
+        // console.log(`[useScrollSmootherAction] Velocity too low, ignoring`);
+        return;
+      }
+
       if (isUp && dir === -1) {
         // 向上滚动
+        // console.log(`[useScrollSmootherAction] Triggering UP scroll`);
         throttleScrollFn();
       }
       if (!isUp && dir === 1) {
         // 向下滚动
+        // console.log(`[useScrollSmootherAction] Triggering DOWN scroll`);
         throttleScrollFn();
       }
     };
@@ -40,6 +62,8 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      // Cancel any pending throttled calls on unmount
+      throttleScrollFn.cancel?.();
     };
   }, [enableJudge, isUp, throttleScrollFn]);
 

@@ -58,8 +58,9 @@ function Portfolio() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // profile auto scroll to vision
     scrollFn: () => {
+      // console.log('[Portfolio] scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
       if (!enableUpJudge || window.isNavScrolling) return;
-      // console.log('portfolio scrollUp', enableUpJudge, window.isNavScrolling);
+      // console.log('[Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: 2,
@@ -67,6 +68,7 @@ function Portfolio() {
         ease: 'power4.inOut',
         onComplete: () => {
           window.isNavScrolling = false;
+          // console.log('[Portfolio] Auto-scroll completed');
         },
       });
     },

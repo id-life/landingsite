@@ -16,16 +16,18 @@ export default function Vision() {
   const currentPage = useAtomValue(currentPageAtom);
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     scrollFn: () => {
+      // console.log('[Vision] scrollFn called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
       if (!enableDownJudge || window.isNavScrolling) return;
-      // console.log('vision scrollFn Down');
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
+      // console.log('[Vision] Starting auto-scroll to Portfolio');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: 2,
         scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
         onComplete: () => {
           window.isNavScrolling = false;
+          // console.log('[Vision] Auto-scroll completed');
         },
         ease: 'power4.inOut',
       });
