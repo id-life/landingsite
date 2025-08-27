@@ -38,20 +38,22 @@ function Twin() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // twin auto scroll to engagement
     scrollFn: () => {
-      // console.log('[Twin] scrollFn UP called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
+      // console.log('[DEBUG] [Twin] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
       if (!enableUpJudge || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) return;
-      // console.log('[Twin] Starting auto-scroll to Engagement');
+      if (!st) {
+        // console.log('[DEBUG] [Twin] engagement-scroll-trigger not found');
+        return;
+      }
+      // console.log('[DEBUG] [Twin] Starting UP auto-scroll to Engagement');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[Twin] Auto-scroll UP completed');
+          // console.log('[DEBUG] [Twin] UP Auto-scroll completed');
         },
-        // ease: 'power4.inOut',
       });
     },
     isUp: true,
@@ -60,18 +62,22 @@ function Twin() {
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     // twin auto scroll to value
     scrollFn: () => {
-      // console.log('[Twin] scrollFn DOWN called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
+      // console.log(
+      //   '[DEBUG] [Twin] DOWN scrollFn called - enableDownJudge:',
+      //   enableDownJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
       if (!enableDownJudge || window.isNavScrolling) return;
-      // console.log('[Twin] Starting auto-scroll to Value');
+      // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Value');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: `#${NAV_LIST[5].id}` },
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[Twin] Auto-scroll DOWN completed');
+          // console.log('[DEBUG] [Twin] DOWN Auto-scroll completed');
         },
-        // ease: 'power4.inOut',
       });
     },
     isUp: false,

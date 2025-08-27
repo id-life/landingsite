@@ -58,9 +58,14 @@ function Portfolio() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // profile auto scroll to vision
     scrollFn: () => {
-      // console.log('[Portfolio] scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
+      // console.log(
+      //   '[DEBUG] [Portfolio] UP scrollFn called - enableUpJudge:',
+      //   enableUpJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
       if (!enableUpJudge || window.isNavScrolling) return;
-      // console.log('[Portfolio] Starting auto-scroll to Vision');
+      // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
@@ -68,7 +73,7 @@ function Portfolio() {
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[Portfolio] Auto-scroll completed');
+          // console.log('[DEBUG] [Portfolio] UP Auto-scroll completed');
         },
       });
     },
@@ -77,18 +82,26 @@ function Portfolio() {
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     // profile auto scroll to engagement
     scrollFn: () => {
-      // console.log('[Portfolio] scrollFn DOWN called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
+      // console.log(
+      //   '[DEBUG] [Portfolio] DOWN scrollFn called - enableDownJudge:',
+      //   enableDownJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
       if (!enableDownJudge || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
-      if (!st) return;
-      // console.log('[Portfolio] Starting auto-scroll to Engagement');
+      if (!st) {
+        // console.log('[DEBUG] [Portfolio] spectrum-trigger not found');
+        return;
+      }
+      // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Spectrum');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[Portfolio] Auto-scroll to Engagement completed');
+          // console.log('[DEBUG] [Portfolio] DOWN Auto-scroll completed');
         },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });

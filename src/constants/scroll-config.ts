@@ -13,7 +13,7 @@ export const SCROLL_ANIMATION_CONFIG = {
   RESET_DELAY: 2500,
 
   // 最小速度阈值
-  MIN_VELOCITY: 1,
+  MIN_VELOCITY: 5,
 
   // 动画缓动函数
   EASING: {
@@ -28,6 +28,3 @@ export enum ScrollState {
   SCROLLING = 'scrolling',
   LOCKED = 'locked',
 }
-
-// 最小滚动间隔时间
-export const MIN_SCROLL_INTERVAL = 1000;

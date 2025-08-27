@@ -7,6 +7,7 @@ import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => void; isUp?: boolean }) => {
   const [enableJudge, setEnableJudge] = useState(false);
   const isScrollingRef = useRef(false);
+
   const throttleScrollFn = useMemo(
     () =>
       throttle(() => {
@@ -14,16 +15,13 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
         isScrollingRef.current = true;
         scrollFn?.();
         // Don't disable immediately, let the scroll animation complete
-        setTimeout(() => {
-          isScrollingRef.current = false;
-          // console.log(`[useScrollSmootherAction] Scroll animation completed, isUp: ${isUp}`);
-        }, SCROLL_ANIMATION_CONFIG.RESET_DELAY);
+        isScrollingRef.current = false;
       }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME),
     [scrollFn],
   );
 
   useEffect(() => {
-    const handleWheel = () => {
+    const handleWheel = throttle(() => {
       if (!enableJudge) {
         // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
         return;
@@ -49,16 +47,14 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
       }
 
       if (isUp && dir === -1) {
-        // 向上滚动
         // console.log(`[useScrollSmootherAction] Triggering UP scroll`);
         throttleScrollFn();
       }
       if (!isUp && dir === 1) {
-        // 向下滚动
         // console.log(`[useScrollSmootherAction] Triggering DOWN scroll`);
         throttleScrollFn();
       }
-    };
+    }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME);
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {

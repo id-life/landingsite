@@ -92,9 +92,21 @@ function Spectrum() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to profile
     scrollFn: () => {
+      // console.log(
+      //   '[DEBUG] [Spectrum] UP scrollFn called - enableUpJudge:',
+      //   enableUpJudge,
+      //   'currentPage:',
+      //   currentPage.id,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
       if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
-      if (!st) return;
+      if (!st) {
+        // console.log('[DEBUG] [Spectrum] portfolio-trigger not found');
+        return;
+      }
+      // console.log('[DEBUG] [Spectrum] Starting UP auto-scroll to Portfolio');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
@@ -102,6 +114,7 @@ function Spectrum() {
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
+          // console.log('[DEBUG] [Spectrum] UP Auto-scroll completed');
         },
       });
     },
@@ -111,10 +124,14 @@ function Spectrum() {
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollSmootherAction({
     // profile auto scroll to engagement
     scrollFn: () => {
+      // console.log('[DEBUG] [Spectrum] DOWN scrollFn called - enableJudge:', enableJudge, 'currentPage:', currentPage.id, 'isNavScrolling:', window.isNavScrolling);
       if (!enableJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
-      // console.log('Spectrum scrollFn down');
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) return;
+      if (!st) {
+        // console.log('[DEBUG] [Spectrum] engagement-scroll-trigger not found');
+        return;
+      }
+      // console.log('[DEBUG] [Spectrum] Starting DOWN auto-scroll to Engagement');
       window.isNavScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
@@ -122,6 +139,7 @@ function Spectrum() {
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
+          // console.log('[DEBUG] [Spectrum] DOWN Auto-scroll completed');
         },
       });
     },
