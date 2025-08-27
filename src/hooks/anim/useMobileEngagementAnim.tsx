@@ -1,10 +1,10 @@
-import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, isMobileEngagementJumpAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
 
 export function useMobileEngagementAnim() {
@@ -14,7 +14,6 @@ export function useMobileEngagementAnim() {
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
-  const [isMobileEngagementJump, setIsMobileEngagementJump] = useAtom(isMobileEngagementJumpAtom);
 
   const { contextSafe } = useGSAP();
 
@@ -43,22 +42,23 @@ export function useMobileEngagementAnim() {
     }
   }, []);
 
-  // 用户交互处理函数
-  const handleUserInteraction = useCallback(() => {
-    userInteractedRef.current = true;
-
-    // 停止自动滚动
+  const stopAutoShowDot = useCallback(() => {
     if (autoScrollRef.current) {
       autoScrollRef.current.kill();
       autoScrollRef.current = null;
     }
-
     // 停止自动展示点
     if (dotShowIntervalRef.current) {
       clearInterval(dotShowIntervalRef.current);
       dotShowIntervalRef.current = null;
     }
   }, []);
+
+  // 用户交互处理函数
+  const handleUserInteraction = useCallback(() => {
+    userInteractedRef.current = true;
+    stopAutoShowDot();
+  }, [stopAutoShowDot]);
 
   const showPoint = useCallback(
     (currentIndex: number) => {
@@ -89,6 +89,31 @@ export function useMobileEngagementAnim() {
     },
     [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
   );
+
+  const setupEventListeners = contextSafe(() => {
+    const mapContainer = document.querySelector('.world-map-container');
+    if (mapContainer) {
+      const events = ['click', 'touchstart', 'wheel', 'mousedown'] as const;
+      const options = { passive: true };
+
+      events.forEach((event) => {
+        mapContainer.addEventListener(
+          event,
+          handleUserInteraction,
+          event === 'touchstart' || event === 'wheel' ? options : undefined,
+        );
+      });
+
+      // 返回清理函数
+      return () => {
+        events.forEach((event) => {
+          mapContainer.removeEventListener(event, handleUserInteraction);
+        });
+      };
+    }
+    return () => {};
+  });
+
   // 自动展示点
   const startAutoDotShow = useCallback(() => {
     if (userInteractedRef.current) return;
@@ -108,8 +133,13 @@ export function useMobileEngagementAnim() {
   }, [showPoint]);
 
   const enterAnimate = useCallback(() => {
-    console.log('enterAnimate');
     userInteractedRef.current = false;
+
+    setActiveBookDot(null);
+    setActiveMeetingDot(null);
+    setActiveSponsorDot(null);
+
+    stopAutoShowDot();
 
     const enterTL = gsap.timeline({
       duration: 0.3,
@@ -120,6 +150,7 @@ export function useMobileEngagementAnim() {
       ['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-container'],
       {
         opacity: 0,
+        duration: 0,
       },
     );
 
@@ -151,46 +182,16 @@ export function useMobileEngagementAnim() {
       stagger: 0.02,
     });
 
-    if (!isMobileEngagementJump) enterTL.play();
-
-    // 动画完成回调
-    enterTL.eventCallback('onComplete', () => {
-      if (isMobileEngagementJump) {
-        setIsMobileEngagementJump(false);
-        return;
-      }
+    enterTL.add(() => {
       startAutoDotShow();
-    });
+    }, '+=0.3');
 
-    // 使用 useGSAP 管理事件监听器
-    const setupEventListeners = contextSafe(() => {
-      const mapContainer = document.querySelector('.world-map-container');
-      if (mapContainer) {
-        const events = ['click', 'touchstart', 'wheel', 'mousedown'] as const;
-        const options = { passive: true };
-
-        events.forEach((event) => {
-          mapContainer.addEventListener(
-            event,
-            handleUserInteraction,
-            event === 'touchstart' || event === 'wheel' ? options : undefined,
-          );
-        });
-
-        // 返回清理函数
-        return () => {
-          events.forEach((event) => {
-            mapContainer.removeEventListener(event, handleUserInteraction);
-          });
-        };
-      }
-      return () => {};
-    });
+    enterTL.play();
 
     const cleanup = setupEventListeners();
 
     return cleanup || (() => {});
-  }, [contextSafe, isMobileEngagementJump, setIsMobileEngagementJump, handleUserInteraction, startAutoDotShow]);
+  }, [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setupEventListeners, startAutoDotShow, stopAutoShowDot]);
 
   return {
     enterAnimate,

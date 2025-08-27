@@ -21,7 +21,7 @@ function MobileEngagement() {
   return (
     <div
       id={NAV_LIST[3].id}
-      className={cn('relative h-[100svh] w-full overflow-auto text-white transition-all duration-300', {
+      className={cn('relative h-[100svh] w-full animate-fade-in overflow-auto text-white transition-all duration-100', {
         hidden: currentPage?.id !== NAV_LIST[3].id,
       })}
     >

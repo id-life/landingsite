@@ -1,8 +1,6 @@
-import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useSetAtom } from 'jotai';
 import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
@@ -45,7 +43,6 @@ export const useSpectrumData = () => {
   const { handleNavClick } = useNavigation();
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
-  const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
 
   const handleClickDigitalTwin = useCallback(() => {
     isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
@@ -56,7 +53,6 @@ export const useSpectrumData = () => {
       return () => {
         if (isMobile) {
           mobileNavChange(NAV_LIST[3]);
-          setIsMobileEngagementJump(true);
         } else {
           handleNavClick(NAV_LIST[3]);
         }
@@ -71,7 +67,7 @@ export const useSpectrumData = () => {
         }, 300);
       };
     },
-    [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint],
+    [isMobile, mobileNavChange, handleNavClick, handleClickPoint],
   );
 
   const routeConfigs: SpectrumRouteConfig[] = useMemo(
