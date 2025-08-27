@@ -197,7 +197,7 @@ export default function FooterContact() {
                 </div>
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
-                <InfoSVG className="ml-2 size-4" />
+                <InfoSVG className="size-4" />
                 Join our longevity circle for priority access to pioneer research
               </div>
             </div>
