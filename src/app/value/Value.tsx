@@ -11,10 +11,6 @@ export default function Value() {
       <div className="value-gap h-25" />
       <div id="value-page3" className="-z-10 h-screen w-screen" />
       <div className="value-gap h-25" />
-      <div id="value-page4" className="-z-10 h-screen w-screen" />
-      <div className="value-gap h-25" />
-      <div id="value-page5" className="-z-10 h-screen w-screen" />
-      <div className="value-gap h-25" />
     </div>
   );
 }

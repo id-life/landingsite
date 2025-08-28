@@ -83,8 +83,8 @@ export default function FooterContact() {
         scrollTrigger: {
           id: 'footerTimeline',
           trigger: wrapperRef.current,
-          start: 'top bottom+=100%',
-          end: 'bottom bottom+=80%',
+          start: 'top bottom+=50%',
+          end: 'bottom bottom+=50%',
           scrub: true,
           onEnter: () => {
             setIsSubscribeShow(true);

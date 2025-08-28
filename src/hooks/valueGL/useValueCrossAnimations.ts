@@ -93,9 +93,8 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       if (!item) return;
       tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 1 });
     });
-  };
-  const createPage3CrossAnim = (tl: GSAPTimeline) => {
-    if (!modelRef.current) return;
+
+    // Page3
     tl.to(camera.position, {
       ...page2Config.to.camera.position,
       duration: 20,
@@ -157,9 +156,9 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       );
     });
   };
-
-  const createPage4CrossAnim = (tl: GSAPTimeline) => {
+  const createPage3CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
+    // page 4
     const title3 = gsap.utils.toArray('.value-title3 *');
     const title3cn = gsap.utils.toArray('.value-title3cn path');
     const title4 = gsap.utils.toArray('.value-title4 *');
@@ -190,9 +189,8 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       if (!item) return;
       tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5 });
     });
-  };
-  const createPage5CrossAnim = (tl: GSAPTimeline) => {
-    if (!modelRef.current) return;
+
+    // page 5
     tl.to(camera.position, {
       ...page3Config.to.camera.position,
       duration: 20,
@@ -239,7 +237,5 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
     createPage1CrossAnim,
     createPage2CrossAnim,
     createPage3CrossAnim,
-    createPage4CrossAnim,
-    createPage5CrossAnim,
   };
 };
