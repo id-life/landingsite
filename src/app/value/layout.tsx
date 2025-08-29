@@ -5,7 +5,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Value 信念',
-  description: 'Evangelism of Global Longevity Awareness/East & West Access/Moonshot Ventures/Live Longer & Happier',
+  description:
+    "Immortal Dragons' value and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Value 信念',
     siteName: 'Immortal Dragons',
-    description: 'Evangelism of Global Longevity Awareness/East & West Access/Moonshot Ventures/Live Longer & Happier',
+    description:
+      "Immortal Dragons' value and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

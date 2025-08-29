@@ -5,7 +5,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'DigitalTwin 孪生',
-  description: 'In-house projects, including biomarker analysis, 3D modeling, and clinical intelligence.',
+  description:
+    'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'DigitalTwin 孪生',
     siteName: 'Immortal Dragons',
-    description: 'In-house projects, including biomarker analysis, 3D modeling, and clinical intelligence.',
+    description:
+      'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

@@ -8,7 +8,6 @@ export default function NewsArticle1() {
       <img src="https://cdn.id.life/id-life-cover-2.webp" alt="" />
       <NewsContent />
       <Link href="/podcast">Podcast</Link>
-      <Link href="/podcast?c=id">Immortal Dragons</Link>
       <Link href="/podcast?c=lt">Long talk</Link>
       <Link href="/about">About</Link>
       <Link href="/news">News</Link>
