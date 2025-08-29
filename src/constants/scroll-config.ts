@@ -7,14 +7,10 @@ export const SCROLL_ANIMATION_CONFIG = {
   },
 
   // 节流时间（毫秒）
-  THROTTLE_TIME: 500,
-
-  // 滚动状态重置延迟（毫秒）
-  RESET_DELAY: 2500,
+  THROTTLE_TIME: 300,
 
   // 最小速度阈值
-  MIN_VELOCITY: 5,
-
+  MIN_VELOCITY: 0.01,
   // 动画缓动函数
   EASING: {
     DEFAULT: 'power4.inOut',

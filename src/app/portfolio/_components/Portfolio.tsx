@@ -64,16 +64,17 @@ function Portfolio() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableUpJudge || window.isNavScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: 0 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[DEBUG] [Portfolio] UP Auto-scroll completed');
+          window.isSmootherScrolling = false;
         },
       });
     },
@@ -88,7 +89,7 @@ function Portfolio() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) {
         // console.log('[DEBUG] [Portfolio] spectrum-trigger not found');
@@ -96,12 +97,13 @@ function Portfolio() {
       }
       // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Spectrum');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
-          // console.log('[DEBUG] [Portfolio] DOWN Auto-scroll completed');
+          window.isSmootherScrolling = false;
         },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });

@@ -16,8 +16,13 @@ function Engagement() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to portfolio
     scrollFn: () => {
-      // console.log('[DEBUG] [Engagement] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableUpJudge || window.isNavScrolling) return;
+      // console.log(
+      //   '[DEBUG] [Engagement] UP scrollFn called - enableUpJudge:',
+      //   enableUpJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) {
         // console.log('[DEBUG] [Engagement] spectrum-trigger not found');
@@ -25,11 +30,13 @@ function Engagement() {
       }
       // console.log('[DEBUG] [Engagement] Starting UP auto-scroll to Spectrum');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Engagement] UP Auto-scroll completed');
         },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
@@ -46,7 +53,7 @@ function Engagement() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('twin-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Engagement] twin-scroll-trigger not found');
@@ -54,11 +61,13 @@ function Engagement() {
       }
       // console.log('[DEBUG] [Engagement] Starting DOWN auto-scroll to Twin');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Engagement] DOWN Auto-scroll completed');
         },
       });

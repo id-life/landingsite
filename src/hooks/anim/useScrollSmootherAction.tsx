@@ -21,7 +21,7 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
   );
 
   useEffect(() => {
-    const handleWheel = throttle(() => {
+    const handleWheel = throttle((e) => {
       if (!enableJudge) {
         // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
         return;
@@ -38,19 +38,21 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
 
       const dir = smootherST.direction;
       const velocity = smootherST.getVelocity();
+      const deltaY = e?.deltaY ?? 0;
+      console.log(
+        `[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity},e?.deltaY:${deltaY} isUp: ${isUp}`,
+      );
 
-      // console.log(`[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity}, isUp: ${isUp}`);
-
-      if (Math.abs(velocity) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
+      if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
         // console.log(`[useScrollSmootherAction] Velocity too low, ignoring`);
         return;
       }
 
-      if (isUp && dir === -1) {
+      if (isUp && deltaY < 0) {
         // console.log(`[useScrollSmootherAction] Triggering UP scroll`);
         throttleScrollFn();
       }
-      if (!isUp && dir === 1) {
+      if (!isUp && deltaY > 0) {
         // console.log(`[useScrollSmootherAction] Triggering DOWN scroll`);
         throttleScrollFn();
       }

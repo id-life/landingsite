@@ -100,7 +100,7 @@ function Spectrum() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
+      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) {
         // console.log('[DEBUG] [Spectrum] portfolio-trigger not found');
@@ -108,12 +108,14 @@ function Spectrum() {
       }
       // console.log('[DEBUG] [Spectrum] Starting UP auto-scroll to Portfolio');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Spectrum] UP Auto-scroll completed');
         },
       });
@@ -125,7 +127,7 @@ function Spectrum() {
     // profile auto scroll to engagement
     scrollFn: () => {
       // console.log('[DEBUG] [Spectrum] DOWN scrollFn called - enableJudge:', enableJudge, 'currentPage:', currentPage.id, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling) return;
+      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Spectrum] engagement-scroll-trigger not found');
@@ -133,12 +135,14 @@ function Spectrum() {
       }
       // console.log('[DEBUG] [Spectrum] Starting DOWN auto-scroll to Engagement');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false; // TODO: Trick to prevent the scroll animation from being triggered again, Please fix while you have time.
           // console.log('[DEBUG] [Spectrum] DOWN Auto-scroll completed');
         },
       });

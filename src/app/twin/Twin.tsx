@@ -39,7 +39,7 @@ function Twin() {
     // twin auto scroll to engagement
     scrollFn: () => {
       // console.log('[DEBUG] [Twin] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableUpJudge || window.isNavScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Twin] engagement-scroll-trigger not found');
@@ -47,11 +47,13 @@ function Twin() {
       }
       // console.log('[DEBUG] [Twin] Starting UP auto-scroll to Engagement');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Twin] UP Auto-scroll completed');
         },
       });
@@ -68,14 +70,16 @@ function Twin() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Value');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         scrollTo: { y: `#${NAV_LIST[5].id}` },
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Twin] DOWN Auto-scroll completed');
         },
       });

@@ -53,10 +53,13 @@ export const THEME_TRANSITIONS = {
 } as const;
 
 // ScrollSmoother 默认配置
-export const SCROLL_SMOOTHER_DEFAULTS = {
+export const SCROLL_SMOOTHER_DEFAULTS: ScrollSmoother.Vars = {
   wrapper: '#wrapper',
   content: '#content',
-  smooth: 1,
+  smooth: true,
   effects: false,
   smoothTouch: 0.1,
-} as const;
+  // onUpdate: (self) => {
+  //   console.log('scroll smoother update', self.progress);
+  // },
+};

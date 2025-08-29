@@ -18,7 +18,7 @@ export default function Vision() {
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     scrollFn: () => {
       // console.log('[DEBUG] [Vision] DOWN scrollFn called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableDownJudge || window.isNavScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) {
         // console.log('[DEBUG] [Vision] portfolio-trigger not found');
@@ -26,11 +26,13 @@ export default function Vision() {
       }
       // console.log('[DEBUG] [Vision] Starting auto-scroll to Portfolio');
       window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
         onComplete: () => {
           window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
           // console.log('[DEBUG] [Vision] Auto-scroll completed');
         },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
@@ -47,22 +49,6 @@ export default function Vision() {
         endTrigger: `#${NAV_LIST[1].id}`,
         end: 'top top',
         id: 'vision-trigger',
-        onEnter: () => {
-          console.log('vision onEnter');
-          setEnableDownJudge(true);
-        },
-        onLeave: () => {
-          console.log('vision onLeave');
-          setEnableDownJudge(false);
-        },
-        onEnterBack: () => {
-          console.log('vision onEnterBack');
-          setEnableDownJudge(false);
-        },
-        onLeaveBack: () => {
-          console.log('vision onLeaveBack');
-          setEnableDownJudge(false);
-        },
       });
     },
 
