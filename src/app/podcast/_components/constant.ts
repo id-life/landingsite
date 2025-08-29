@@ -3,10 +3,11 @@ import type { Metadata } from 'next';
 export type PodcastNavItem = {
   id: string;
   title: string;
+  link: string;
 };
 export const PODCAST_NAV_LIST: PodcastNavItem[] = [
-  { id: 'id', title: 'immortal dragons 不朽真龙' },
-  { id: 'lt', title: 'long talk 龙门阵' },
+  { id: 'id', title: 'immortal dragons 不朽真龙', link: '/podcast' },
+  { id: 'lt', title: 'long talk 龙门阵', link: '/podcast?c=lt' },
 ] as const;
 
 export type PodcastCategory = (typeof PODCAST_NAV_LIST)[number]['id'];

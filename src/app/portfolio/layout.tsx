@@ -5,7 +5,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Portfolio 投资',
-  description: 'A showcase of longevity and biotech investments.',
+  description:
+    "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Portfolio 投资',
     siteName: 'Immortal Dragons',
-    description: 'A showcase of longevity and biotech investments.',
+    description:
+      "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

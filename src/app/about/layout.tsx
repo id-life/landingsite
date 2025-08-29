@@ -4,8 +4,9 @@ import type { Metadata } from 'next';
 import { Organization, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
-  title: 'About | Immortal Dragons',
-  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  title: 'About 关于 | Immortal Dragons',
+  description:
+    'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore, supporting radical life extension technologies with focus on impact over financial return.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -18,9 +19,10 @@ export const metadata: Metadata = {
     'Immortal Dragons',
   ],
   openGraph: {
-    title: 'About | Immortal Dragons',
+    title: 'About 关于 | Immortal Dragons',
     siteName: 'Immortal Dragons',
-    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+    description:
+      'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore, supporting radical life extension technologies with focus on impact over financial return.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

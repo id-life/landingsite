@@ -25,7 +25,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 5; // 目前就一个 Value 页有
+    return 3; // 目前就一个 Value 页有
   }, [currentPage]);
 
   // 更新 innerPageTotal
