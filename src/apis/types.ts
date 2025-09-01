@@ -48,6 +48,8 @@ export type NewsContent = {
   title: string;
   content: string;
   category: string;
+  description: string;
+  keyWords: string;
   createdAt: string;
   updatedAt: string;
 };
