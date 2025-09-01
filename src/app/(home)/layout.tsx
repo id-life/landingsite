@@ -6,7 +6,7 @@ import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Immortal Dragons',
+  title: 'Immortal Dragons 不朽真龙',
   description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
   keywords: [
     'Longevity',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     'Immortal Dragons',
   ],
   openGraph: {
-    title: 'Immortal Dragons',
+    title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
     description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
     images: [

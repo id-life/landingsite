@@ -52,6 +52,18 @@ export default function PodcastHeader() {
           ))}
         </div>
       </div>
+      <div className="flex-center gap-5">
+        <div
+          onClick={handleHomeClick}
+          className="group relative flex h-8 w-26.5 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-21 mobile:text-xs/5"
+        >
+          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
+          ID.LIFE
+        </div>
+        <div className="hidden mobile:block" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
+        </div>
+      </div>
       <PodcastNavDialog />
     </div>
   );
