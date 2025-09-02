@@ -13,8 +13,7 @@ export const SCROLL_ANIMATION_CONFIG = {
   MIN_VELOCITY: 0.01,
   // 动画缓动函数
   EASING: {
-    DEFAULT: 'power4.inOut',
-    SMOOTH: 'power3.out',
+    DEFAULT: 'power2.inOut',
   },
 } as const;
 

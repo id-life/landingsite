@@ -2,6 +2,8 @@ import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNav
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { VALUE_PAGE_INDEX } from '@/constants/config';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
 import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 import { useGSAP } from '@gsap/react';
@@ -44,6 +46,33 @@ function ValueGL() {
 
   const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim } = useValueCrossAnimations({ modelRef });
 
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
+    // twin auto scroll to value
+    scrollFn: () => {
+      // console.log(
+      //   '[DEBUG] [Value] UP scrollFn called - enableUpJudge:',
+      //   enableUpJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      const st = ScrollTrigger.getById('twin-scroll-trigger');
+      if (!st) return;
+      window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
+      gsap.to(window, {
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
+        onComplete: () => {
+          window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
+        },
+      });
+    },
+    isUp: true,
+  });
+
   useGSAP(
     () => {
       const tl1 = gsap.timeline({
@@ -55,34 +84,33 @@ function ValueGL() {
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[5]);
-            if (window.isNavScrolling) return;
+            setEnableUpJudge(true);
+            if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
+            // console.log('value page1 onEnter');
+            window.isNavScrolling = true;
+            window.isSmootherScrolling = true;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl1.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
-                setTimeout(() => smoother.paused(false), 300);
+                smoother.paused(false);
+                window.isNavScrolling = false;
+                window.isSmootherScrolling = false;
               },
             });
           },
           onEnterBack: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother) return;
-            const twinST = ScrollTrigger.getById('twin-scroll-trigger');
-            smoother.paused(true);
-            const twinShow = twinST?.labelToScroll('twin-show');
-            gsap.to(smoother, {
-              scrollTop: twinShow,
-              duration: 2.5,
-              ease: 'none',
-              onComplete: () => {
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
+            setEnableUpJudge(true);
+          },
+          onLeave: () => {
+            setEnableUpJudge(false);
+          },
+          onLeaveBack: () => {
+            setEnableUpJudge(false);
           },
         },
       });
