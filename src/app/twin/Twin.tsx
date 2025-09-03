@@ -4,7 +4,8 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
-import { useScrollTriggerAction } from '@/hooks/anim/useScrollTriggerAction';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -21,18 +22,83 @@ function Twin() {
   const setCurrentModel = useSetAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-    // profile auto scroll to engagement
-    triggerId: 'twin-scroll-trigger',
+  // const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
+  //   // profile auto scroll to engagement
+  //   triggerId: 'twin-scroll-trigger',
+  //   scrollFn: () => {
+  //     if (!enableUpJudge || currentPage.id !== NAV_LIST[4].id) return;
+  //     // console.log('Twin scrollFn up');
+  //     const st = ScrollTrigger.getById('engagement-scroll-trigger');
+  //     if (!st) return;
+  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+  //   },
+  //   isUp: true,
+  // });
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
+    // twin auto scroll to engagement
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[4].id) return;
-      // console.log('Twin scrollFn up');
+      // console.log('[DEBUG] [Twin] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) return;
-      gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
+      if (!st) {
+        // console.log('[DEBUG] [Twin] engagement-scroll-trigger not found');
+        return;
+      }
+      // console.log('[DEBUG] [Twin] Starting UP auto-scroll to Engagement');
+      window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
+      gsap.to(window, {
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
+        onComplete: () => {
+          window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
+          // console.log('[DEBUG] [Twin] UP Auto-scroll completed');
+        },
+      });
     },
     isUp: true,
   });
+
+  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
+    // twin auto scroll to value
+    scrollFn: () => {
+      // console.log(
+      //   '[DEBUG] [Twin] DOWN scrollFn called - enableDownJudge:',
+      //   enableDownJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Value');
+      window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
+      gsap.to(window, {
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
+        scrollTo: { y: `#${NAV_LIST[5].id}` },
+        onComplete: () => {
+          window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
+          // console.log('[DEBUG] [Twin] DOWN Auto-scroll completed');
+        },
+      });
+    },
+    isUp: false,
+  });
+
+  useEffect(() => {
+    if (currentPage.id === NAV_LIST[4].id) {
+      console.log('twin setEnableUpJudge & setEnableDownJudge true');
+      setEnableUpJudge(true);
+      setEnableDownJudge(true);
+    } else {
+      setEnableUpJudge(false);
+      setEnableDownJudge(false);
+    }
+  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -57,11 +123,14 @@ function Twin() {
         onLeave: () => {
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
+        // onUpdate: (self) => {
+        //   console.log('twin onUpdate ', self?.progress);
+        // },
       },
     });
-    tl.add(() => {
-      setEnableUpJudge(true);
-    });
+    // tl.add(() => {
+    //   setEnableUpJudge(true);
+    // });
     tl.to(imageContainerRef.current, { height: '100svh' });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
     tl.to('#twin-three-wrapper', { opacity: 0, duration: 1 }, 'twin-show');

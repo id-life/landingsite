@@ -19,8 +19,18 @@ export default function HashRouter() {
   const hashLoadedRef = useRef(false);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
 
+  const handlePathnameNavigation = useCallback(() => {
+    if (!globalLoaded || isMobile === null) return;
+    const { pathname } = window.location;
+    const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
+    if (matchingNavItem) {
+      isMobile ? mobileNavChange(matchingNavItem) : handleNavClick(matchingNavItem);
+    }
+  }, [globalLoaded, handleNavClick, isMobile, mobileNavChange]);
+
   const handleHashNavigation = useCallback(() => {
     if (!globalLoaded) return;
+    handlePathnameNavigation();
     const { hash } = window.location;
     // Handle hash navigation for any pathname with hash
     if (hash) {
@@ -30,31 +40,15 @@ export default function HashRouter() {
         payload: `#${routeKey}`,
       });
     }
-  }, [globalLoaded]);
-
-  const handlePathnameNavigation = useCallback(() => {
-    if (!globalLoaded || isMobile === null) return;
-    const { pathname } = window.location;
-    // Find matching nav item by href
-    const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
-    if (matchingNavItem) {
-      // Auto-navigate to corresponding section
-      if (isMobile) {
-        mobileNavChange(matchingNavItem);
-      } else {
-        handleNavClick(matchingNavItem);
-      }
-    }
-  }, [globalLoaded, isMobile, handleNavClick, mobileNavChange]);
+  }, [globalLoaded, handlePathnameNavigation]);
 
   useEffect(() => {
     if (!globalLoaded || hashLoadedRef.current) return;
     hashLoadedRef.current = true; // 处理初始页面加载
     handleHashNavigation();
-    handlePathnameNavigation();
     const { pathname } = window.location;
     if (pathname !== '/') {
-      // fixed ui opacity, see DragonModel triggerFadeInAnimation
+      // fixed initial ui opacity, see DragonModel triggerFadeInAnimation
       if (isMobile) {
         const mobileNav = document.querySelector('#mobile-nav');
         const mobileElement = document.querySelector('#mobile-fixed-ui');
@@ -66,6 +60,7 @@ export default function HashRouter() {
         if (nav) gsap.set(nav, { opacity: 1 });
         if (element) gsap.set(element, { opacity: 1 });
       }
+
       setFadeInAnimCompleted(true);
     }
     // 监听 hashchange 事件，处理 hash 导航
@@ -74,7 +69,7 @@ export default function HashRouter() {
       window.removeEventListener('hashchange', handleHashNavigation);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalLoaded, handleHashNavigation, handlePathnameNavigation, isMobile]);
+  }, [globalLoaded, handleHashNavigation, isMobile]);
 
   return null;
 }

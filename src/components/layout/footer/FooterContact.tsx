@@ -83,8 +83,8 @@ export default function FooterContact() {
         scrollTrigger: {
           id: 'footerTimeline',
           trigger: wrapperRef.current,
-          start: 'top bottom+=100%',
-          end: 'bottom bottom+=80%',
+          start: 'top bottom+=50%',
+          end: 'bottom bottom+=50%',
           scrub: true,
           onEnter: () => {
             setIsSubscribeShow(true);
@@ -111,7 +111,7 @@ export default function FooterContact() {
         >
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
             <div>
-              <img className="w-[8.125rem]" src="/svgs/logo.svg" alt="" />
+              <img className="w-[8.125rem]" src="/svgs/logo_without_gradient.svg" alt="" />
               <div className="mt-18 flex gap-5">
                 <div
                   onClick={() => handleLinkClick(MediaLinkType.Youtube)}
@@ -197,7 +197,7 @@ export default function FooterContact() {
                 </div>
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
-                <InfoSVG className="ml-2 size-4" />
+                <InfoSVG className="size-4" />
                 Join our longevity circle for priority access to pioneer research
               </div>
             </div>

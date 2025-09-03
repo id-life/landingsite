@@ -18,6 +18,7 @@ export default function VisionGL() {
   }, [viewport?.width]);
 
   useGSAP(() => {
+    // in value page, hide dragon model
     gsap.timeline({
       scrollTrigger: {
         trigger: `#${NAV_LIST[5].id}`,

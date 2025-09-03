@@ -34,10 +34,12 @@ export default function PodcastHeader() {
   return (
     <div className="flex items-center justify-between py-10 mobile:py-6.5">
       <div className="flex items-center justify-start gap-6">
-        <LogoSVGen className="w-50 mobile:w-30" />
+        <div onClick={handleHomeClick}>
+          <LogoSVGen className="w-50 mobile:w-30" />
+        </div>
         <div className="flex gap-8 text-sm font-semibold mobile:hidden">
           {PODCAST_NAV_LIST.map((item) => (
-            <Link href={`/podcast?c=` + item.id} key={item.id}>
+            <Link href={item.link} key={item.id}>
               <div
                 className={clsx(
                   'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',

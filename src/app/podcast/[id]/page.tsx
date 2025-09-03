@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: 'Immortal Dragons',
+      title: 'Immortal Dragons 不朽真龙',
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
       keywords: [
         'Longevity',

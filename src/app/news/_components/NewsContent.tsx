@@ -113,7 +113,7 @@ const content = `
         also profound thinking and positive action regarding humanity&apos;s future. Through Immortal Dragons&apos; efforts, the
         ancient dream of immortality is gradually becoming scientific reality, and this mission-driven longevity revolution will
         surely leave a significant mark in human development history. If you are interested in Immortal Dragons&apos; mission
-        and investment philosophy, please visit the official website (http://id.life/) for more information, or listen to
+        and investment philosophy, please visit the official website (https://www.id.life/) for more information, or listen to
         Immortal Dragons&apos; podcast (https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8) to explore cutting-edge
         topics in longevity science.
       </p>

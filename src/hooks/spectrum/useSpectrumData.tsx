@@ -1,6 +1,6 @@
-import { isMobileEngagementJumpAtom } from '@/atoms/engagement';
+import { eventBus } from '@/components/event-bus/eventBus';
+import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useSetAtom } from 'jotai';
 import { HTMLAttributes, useCallback, useMemo } from 'react';
 import {
   BookSVG,
@@ -16,8 +16,7 @@ import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
-import { getMobileDotShowInfo } from '@/constants/engagement';
-import { useSpectrumRouter, SpectrumRouteConfig } from './useSpectrumRouter';
+import { SpectrumRouteConfig, useSpectrumRouter } from './useSpectrumRouter';
 
 export type SpectrumLinkItem = {
   key?: string;
@@ -44,23 +43,6 @@ export const useSpectrumData = () => {
   const { handleNavClick } = useNavigation();
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
-  const setIsMobileEngagementJump = useSetAtom(isMobileEngagementJumpAtom);
-
-  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
-    const scrollContainer = document.querySelector('.world-map-container');
-    const activeEle =
-      type === 'meeting'
-        ? document.querySelector(`.world-map-dot-${index}`)
-        : type === 'book'
-          ? document.querySelector(`.world-map-dot-book-${index}`)
-          : document.querySelector(`.world-map-dot-sponsor-${index}`);
-    if (scrollContainer && activeEle) {
-      const containerEl = scrollContainer as HTMLDivElement;
-      const eleEl = activeEle as HTMLDivElement;
-      const targetScrollLeft = eleEl.offsetLeft - offset;
-      containerEl.scrollTo({ behavior: 'smooth', left: targetScrollLeft });
-    }
-  }, []);
 
   const handleClickDigitalTwin = useCallback(() => {
     isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
@@ -71,20 +53,21 @@ export const useSpectrumData = () => {
       return () => {
         if (isMobile) {
           mobileNavChange(NAV_LIST[3]);
-          setIsMobileEngagementJump(true);
         } else {
           handleNavClick(NAV_LIST[3]);
         }
         setTimeout(() => {
           handleClickPoint(type, index, true);
           if (isMobile) {
-            const offset = getMobileDotShowInfo(type, index)?.offset ?? 0;
-            scrollToActivePoint(type, index, offset);
+            eventBus.next({
+              type: MessageType.MOBILE_SCROLL_TO_ACTIVE_POINT,
+              payload: { type, index },
+            });
           }
         }, 300);
       };
     },
-    [isMobile, mobileNavChange, handleNavClick, setIsMobileEngagementJump, handleClickPoint, scrollToActivePoint],
+    [isMobile, mobileNavChange, handleNavClick, handleClickPoint],
   );
 
   const routeConfigs: SpectrumRouteConfig[] = useMemo(

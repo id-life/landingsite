@@ -28,6 +28,30 @@ export default function PCNav() {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
   }, []);
 
+  useEffect(() => {
+    const navElement = document.getElementById('nav');
+    if (!navElement) return;
+
+    let _isSmootherScrolling = window.isSmootherScrolling || false;
+
+    Object.defineProperty(window, 'isSmootherScrolling', {
+      get() {
+        return _isSmootherScrolling;
+      },
+      set(newValue) {
+        _isSmootherScrolling = newValue;
+        if (newValue) {
+          navElement.style.opacity = '0.5';
+          navElement.style.pointerEvents = 'none';
+        } else {
+          navElement.style.opacity = '1';
+          navElement.style.pointerEvents = 'auto';
+        }
+      },
+      configurable: true,
+    });
+  }, []);
+
   useEvent('scroll', handleScroll);
 
   useEvent('click', handleClickOutside);
@@ -35,7 +59,9 @@ export default function PCNav() {
   return (
     <div
       id="nav"
-      className={cn('fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:hidden')}
+      className={cn(
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 transition-opacity duration-300 mobile:hidden',
+      )}
     >
       <Logo />
       <div className={cn('main-nav-links flex gap-8 text-sm font-semibold')}>

@@ -7,8 +7,9 @@ import React from 'react';
 export const revalidate = 300; // 5min
 
 export const metadata: Metadata = {
-  title: 'News | Immortal Dragons',
-  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  title: 'News 新闻 | Immortal Dragons',
+  description:
+    "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -21,9 +22,10 @@ export const metadata: Metadata = {
     'Immortal Dragons',
   ],
   openGraph: {
-    title: 'Immortal Dragons',
+    title: 'News 新闻 | Immortal Dragons',
     siteName: 'Immortal Dragons',
-    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+    description:
+      "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

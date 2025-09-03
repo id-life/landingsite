@@ -1,5 +1,7 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { NAV_LIST } from '@/components/nav/nav';
+import { getElementOffsetTop } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -10,8 +12,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { NAV_LIST } from '@/components/nav/nav';
-import { getElementOffsetTop } from '@/utils';
 
 // Constants
 const INIT_ROTATION = Math.PI / 2;
@@ -55,25 +55,17 @@ export default function DragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
-    // If opened via spectrum deep link, skip fade-in as user isn't landing on home intro
-    if (typeof window !== 'undefined' && window.location.hash.startsWith('#spectrum-')) {
-      return;
-    }
+    const tl = gsap.timeline({
+      duration: 0.3,
+      onComplete: () => {
+        setFadeInAnimCompleted(true);
+      },
+    });
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
-    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-    if (element)
-      gsap.fromTo(
-        element,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.3,
-          onComplete: () => {
-            setFadeInAnimCompleted(true);
-          },
-        },
-      );
+    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 });
+    if (element) tl.fromTo(element, { opacity: 0 }, { opacity: 1 });
+    tl.play();
   });
 
   // Frame update loop

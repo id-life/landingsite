@@ -1,7 +1,6 @@
 import { globalLoadedAtom } from '@/atoms/geo';
 import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 
@@ -66,23 +65,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
 
   useEventBus(MessageType.SPECTRUM_HASH_NAVIGATION, handleSpectrumHashNavigation);
 
-  // Register hashchange listener
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (!globalLoaded && typeof window !== 'undefined') {
-        pendingHashRef.current = window.location.hash;
-        return;
-      }
-      handleHashNavigation();
-    };
-
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [globalLoaded, handleHashNavigation]);
-
   // When global is loaded, process pending hash or current URL hash once
   useEffect(() => {
     if (!globalLoaded) return;
@@ -90,6 +72,7 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       navigateByHash(pendingHashRef.current);
       pendingHashRef.current = null;
     } else {
+      // Process current URL hash on initial load
       handleHashNavigation();
     }
   }, [globalLoaded, handleHashNavigation, navigateByHash]);

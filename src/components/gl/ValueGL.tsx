@@ -2,6 +2,8 @@ import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNav
 import AnimalModel from '@/components/gl/model/value/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { VALUE_PAGE_INDEX } from '@/constants/config';
+import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useValueCrossAnimations } from '@/hooks/valueGL/useValueCrossAnimations';
 import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
 import { useGSAP } from '@gsap/react';
@@ -42,8 +44,34 @@ function ValueGL() {
     document.body.style.overflow = '';
   }, []);
 
-  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim, createPage4CrossAnim, createPage5CrossAnim } =
-    useValueCrossAnimations({ modelRef });
+  const { createPage1CrossAnim, createPage2CrossAnim, createPage3CrossAnim } = useValueCrossAnimations({ modelRef });
+
+  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
+    // twin auto scroll to value
+    scrollFn: () => {
+      // console.log(
+      //   '[DEBUG] [Value] UP scrollFn called - enableUpJudge:',
+      //   enableUpJudge,
+      //   'isNavScrolling:',
+      //   window.isNavScrolling,
+      // );
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      const st = ScrollTrigger.getById('twin-scroll-trigger');
+      if (!st) return;
+      window.isNavScrolling = true;
+      window.isSmootherScrolling = true;
+      gsap.to(window, {
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
+        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
+        onComplete: () => {
+          window.isNavScrolling = false;
+          window.isSmootherScrolling = false;
+        },
+      });
+    },
+    isUp: true,
+  });
 
   useGSAP(
     () => {
@@ -56,34 +84,33 @@ function ValueGL() {
           scrub: true,
           onEnter: () => {
             setCurrentPage(NAV_LIST[5]);
-            if (window.isNavScrolling) return;
+            setEnableUpJudge(true);
+            if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
+            // console.log('value page1 onEnter');
+            window.isNavScrolling = true;
+            window.isSmootherScrolling = true;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl1.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
-                setTimeout(() => smoother.paused(false), 300);
+                smoother.paused(false);
+                window.isNavScrolling = false;
+                window.isSmootherScrolling = false;
               },
             });
           },
           onEnterBack: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother) return;
-            const twinST = ScrollTrigger.getById('twin-scroll-trigger');
-            smoother.paused(true);
-            const twinShow = twinST?.labelToScroll('twin-show');
-            gsap.to(smoother, {
-              scrollTop: twinShow,
-              duration: 3,
-              ease: 'none',
-              onComplete: () => {
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
+            setEnableUpJudge(true);
+          },
+          onLeave: () => {
+            setEnableUpJudge(false);
+          },
+          onLeaveBack: () => {
+            setEnableUpJudge(false);
           },
         },
       });
@@ -102,7 +129,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 3,
               scrollTop: tl2.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -117,7 +144,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 3,
               scrollTop: tl2.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -146,7 +173,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 3,
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -164,7 +191,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 1.5,
+              duration: 3,
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -179,100 +206,6 @@ function ValueGL() {
         },
       });
       createPage3CrossAnim(tl3);
-
-      const tl4 = gsap.timeline({
-        scrollTrigger: {
-          id: 'value-page4-scroll-trigger',
-          trigger: `#value-page4`,
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          onEnter: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother || !tl4.scrollTrigger) return;
-            smoother.paused(true);
-            gsap.to(smoother, {
-              duration: 2,
-              scrollTop: tl4.scrollTrigger.end + 50,
-              ease: 'none',
-              onComplete: () => {
-                if (!isScrollingRef.current) {
-                  setInnerPageIndex(3);
-                  sendValueShowEvent(3, 'scroll');
-                }
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
-          },
-          onEnterBack: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother || !tl4.scrollTrigger) return;
-            smoother.paused(true);
-            gsap.to(smoother, {
-              duration: 2,
-              scrollTop: tl4.scrollTrigger.start - 50,
-              ease: 'none',
-              onComplete: () => {
-                if (!isScrollingRef.current) {
-                  setInnerPageIndex(2);
-                  sendValueShowEvent(2, 'scroll');
-                }
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
-          },
-        },
-      });
-      createPage4CrossAnim(tl4);
-
-      const tl5 = gsap.timeline({
-        scrollTrigger: {
-          id: 'value-page5-scroll-trigger',
-          trigger: `#value-page5`,
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          onEnter: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother || !tl5.scrollTrigger) return;
-            smoother.paused(true);
-            gsap.to(smoother, {
-              duration: 2,
-              scrollTop: tl5.scrollTrigger.end + 50,
-              ease: 'none',
-              onComplete: () => {
-                if (!isScrollingRef.current) {
-                  setInnerPageIndex(4);
-                  sendValueShowEvent(4, 'scroll');
-                }
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
-          },
-          onEnterBack: () => {
-            if (window.isNavScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother || !tl5.scrollTrigger) return;
-            smoother.paused(true);
-            gsap.to(smoother, {
-              duration: 2,
-              scrollTop: tl5.scrollTrigger.start - 50,
-              ease: 'none',
-              onComplete: () => {
-                if (!isScrollingRef.current) {
-                  setInnerPageIndex(3);
-                  sendValueShowEvent(3, 'scroll');
-                }
-                setTimeout(() => smoother.paused(false), 300);
-              },
-            });
-          },
-        },
-      });
-      createPage5CrossAnim(tl5);
     },
     { dependencies: [] },
   );

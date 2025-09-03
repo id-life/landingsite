@@ -139,7 +139,7 @@
     }
 
     &.value {
-      min-height: 500svh;
+      min-height: 300svh;
     }
   }
 

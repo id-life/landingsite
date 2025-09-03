@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Spectrum 谱系',
   description:
-    'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
+    "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'Spectrum 谱系',
     siteName: 'Immortal Dragons',
     description:
-      'Features insights sharing, translation/publishing, software products, and longevity initiatives like sponsorships.',
+      "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',

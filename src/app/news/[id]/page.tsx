@@ -28,7 +28,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
   const data = await getCacheNewsContent(id);
-  return { title: data ? `${data.title} - Immortal Dragons` : 'Immortal Dragons' };
+  return {
+    title: `${data?.title} - Immortal Dragons`,
+    description: data?.description,
+    keywords: data?.keyWords,
+    openGraph: {
+      title: `${data?.title} - Immortal Dragons`,
+      siteName: 'Immortal Dragons',
+      description: data?.description,
+      images: [
+        {
+          url: 'https://cdn.id.life/id-life-cover-2.webp',
+        },
+      ],
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {

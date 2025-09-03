@@ -41,7 +41,7 @@ function PodcastNavDialog() {
     startAnim(false);
     setTimeout(() => {
       setOpen(false);
-      router.push('/podcast?c=' + item.id);
+      router.push(item.link);
     }, 600);
   }, 1000);
 
