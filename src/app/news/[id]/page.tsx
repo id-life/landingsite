@@ -9,6 +9,7 @@ import '@/styles/markdown.css';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
+import { formatKeywords } from '@/utils';
 
 dayjs.extend(relativeTime);
 
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return {
     title: `${data?.title} - Immortal Dragons`,
     description: data?.description,
-    keywords: data?.keyWords,
+    keywords: formatKeywords(data?.keyWords),
     openGraph: {
       title: `${data?.title} - Immortal Dragons`,
       siteName: 'Immortal Dragons',

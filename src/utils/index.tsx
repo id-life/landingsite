@@ -52,3 +52,8 @@ export function getElementOffsetTop(element: HTMLElement | null): number {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   return rect.top + scrollTop;
 }
+
+export function formatKeywords(str?: string) {
+  if (!str) return '';
+  return str.split(',').map((item) => item.trim().replace(/^'|'$/g, ''));
+}
