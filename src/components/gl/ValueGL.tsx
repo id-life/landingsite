@@ -129,7 +129,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl2.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -144,7 +144,7 @@ function ValueGL() {
             if (!smoother || !tl2.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl2.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
@@ -173,7 +173,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl3.scrollTrigger.end + 50,
               ease: 'none',
               onComplete: () => {
@@ -191,7 +191,7 @@ function ValueGL() {
             if (!smoother || !tl3.scrollTrigger) return;
             smoother.paused(true);
             gsap.to(smoother, {
-              duration: 2.5,
+              duration: 3,
               scrollTop: tl3.scrollTrigger.start - 50,
               ease: 'none',
               onComplete: () => {
