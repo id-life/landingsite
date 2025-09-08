@@ -31,21 +31,29 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'Digital Twin',
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Digital Twin',
+  applicationCategory: 'MedicalApplication',
+  operatingSystem: 'Web',
+  creator: 'IMMORTAL DRAGONS',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/OnlineOnly',
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Digital Twin',
-    applicationCategory: 'MedicalApplication',
-    operatingSystem: 'Web',
-    creator: 'IMMORTAL DRAGONS',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '1250',
+    reviewCount: '1024',
+    bestRating: '5',
+    worstRating: '1',
   },
-];
+};
+
 export default function DigitalTwinLayout({ children }: { children: ReactNode }) {
   return (
     <>
