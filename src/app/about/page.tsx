@@ -109,6 +109,9 @@ export default function AboutPage() {
           Radical Lifespan Extension and Fulfilling Healthspan Extension <br />
           Longevity as a Moral Imperative
         </p>
+        <a className="hidden" href="/">
+          Home
+        </a>
       </div>
       <AboutCanvas />
       <AboutFooter />
