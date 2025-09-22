@@ -401,6 +401,16 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
     mobileContentTransformClass: '-translate-x-full -translate-y-[20%]',
     pcDotHotAreaClass: 'top-[12vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-book-0',
+      'world-map-dot-4',
+      'world-map-dot-sponsor-3',
+      'world-map-dot-book-2',
+      'world-map-dot-3',
+      'world-map-dot-5',
+      'world-map-dot-6',
+    ],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/2060lf-2025-1.webp',
@@ -565,7 +575,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: 'https://revivemeexpo.com/',
     sponsorText: 'Conference',
     extraText: 'Sponsorship',
-    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-book-0'],
   },
 ];
 
