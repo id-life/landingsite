@@ -234,7 +234,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
     mobileContentTransformClass: 'translate-x-1/2 -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
-    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5'],
+    activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5', 'world-map-dot-7'],
     imgs: [
       {
         src: 'https://cdn.id.life/engagement/Honduras-5.webp',
@@ -321,8 +321,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       'world-map-dot-sponsor-3',
       'world-map-dot-book-2',
       'world-map-dot-3',
-      'world-map-dot-sponsor-4',
-      'world-map-dot-sponsor-5',
+      'world-map-dot-6',
+      'world-map-dot-7',
     ],
     secondImgs: [
       {
@@ -353,6 +353,73 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       },
     ],
   },
+  {
+    index: 6,
+    lat: 60,
+    lng: 12,
+    label: 'Copenhagen',
+    country: 'Denmark',
+    link: 'https://agingpharma.org/',
+    key: 'ardd_2025', // Unique identifier for the dot
+    title: 'ARDD 2025/08',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[20%]',
+    pcDotHotAreaClass: 'top-[12vh]',
+    activeOtherDarkerDotIDs: [
+      'world-map-dot-sponsor-1',
+      'world-map-dot-book-0',
+      'world-map-dot-4',
+      'world-map-dot-sponsor-3',
+      'world-map-dot-book-2',
+      'world-map-dot-3',
+      'world-map-dot-5',
+      'world-map-dot-7',
+    ],
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/ardd-2025-1.webp',
+        alt: 'ardd-2025-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/ardd-2025-2.webp',
+        alt: 'ardd-2025-2.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/ardd-2025-3.webp',
+        alt: 'ardd-2025-3.webp',
+      },
+    ],
+  },
+  {
+    lat: 38,
+    lng: 5,
+    label: 'Aix-En-Provence',
+    country: 'France',
+    link: 'https://forum.2060.life',
+    key: '2060_longevity_forum_2025', // Unique identifier for the dot
+    title: '2060 Longevity Forum 2025/08',
+    contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[20%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[20%]',
+    pcDotHotAreaClass: 'top-[12vh]',
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/2060lf-2025-1.webp',
+        alt: '2060lf-2025-1.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/2060lf-2025-2.webp',
+        alt: '2060lf-2025-2.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/2060lf-2025-3.webp',
+        alt: '2060lf-2025-3.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/2060lf-2025-4.webp',
+        alt: '2060lf-2025-4.webp',
+      },
+    ],
+  },
 ];
 
 export type MapBookDotData = {
@@ -380,7 +447,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/',
-    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5', 'world-map-dot-sponsor-5'],
+    activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
   },
   {
@@ -455,8 +522,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
       'world-map-dot-book-0',
       'world-map-dot-book-1',
       'world-map-dot-5',
-      'world-map-dot-sponsor-4',
-      'world-map-dot-sponsor-5',
+      'world-map-dot-6',
+      'world-map-dot-7',
     ],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Conference',
@@ -489,28 +556,16 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
   },
   {
-    lat: 60,
-    lng: 12,
-    title: 'Copenhagen, Denmark',
-    alt: 'ARDD 2025',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06-1.webp',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-06.webm',
-    link: 'https://agingpharma.org/',
+    lat: 10,
+    lng: 54,
+    title: 'Abu Dhabi, UAE',
+    alt: 'REVIVE ME 2025',
+    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webp',
+    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webm',
+    link: 'https://revivemeexpo.com/',
     sponsorText: 'Conference',
     extraText: 'Sponsorship',
-    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-5', 'world-map-dot-book-0'],
-  },
-  {
-    lat: 38,
-    lng: 5,
-    title: 'Aix-en-Provence, France',
-    alt: '2060 Longevity\nForum',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07-1.webp',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-07.webm',
-    link: 'https://forum.2060.life/',
-    sponsorText: 'Conference',
-    extraText: 'Sponsorship',
-    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-sponsor-4', 'world-map-dot-book-0'],
+    activeOtherDarkerDotIDs: ['world-map-dot-5', 'world-map-dot-sponsor-1', 'world-map-dot-book-0'],
   },
 ];
 
@@ -521,11 +576,12 @@ export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; inde
   { type: 'meeting', index: 3 },
   { type: 'sponsor', index: 2, offset: 80 },
   { type: 'sponsor', index: 1, offset: 80 },
-  { type: 'meeting', index: 5, offset: 220 },
-  { type: 'sponsor', index: 5, offset: 80 },
-  { type: 'sponsor', index: 4, offset: 80 },
+  { type: 'meeting', index: 5, offset: 80 },
+  { type: 'meeting', index: 7, offset: 80 },
+  { type: 'meeting', index: 6, offset: 80 },
   { type: 'book', index: 0, offset: 40 },
   { type: 'book', index: 1, offset: 40 },
+  { type: 'sponsor', index: 4, offset: 80 },
   { type: 'sponsor', index: 0, offset: 50 },
   { type: 'meeting', index: 2, offset: 300 },
   { type: 'meeting', index: 1, offset: 280 },
