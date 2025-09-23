@@ -86,12 +86,13 @@ export const useSpectrumData = () => {
       { key: 'better-with-age', action: handleClickDot('book', 2) },
       // sponsor
       { key: 'vitalist-bay-summit-grant', action: handleClickDot('meeting', 4) },
-      { key: 'ardd-2025', action: handleClickDot('sponsor', 4) },
-      { key: '2060-longevity-forum', action: handleClickDot('sponsor', 5) },
+      { key: 'ardd-2025', action: handleClickDot('meeting', 6) },
+      { key: '2060-longevity-forum', action: handleClickDot('meeting', 7) },
       { key: 'lifespan-research-institute', action: handleClickDot('sponsor', 3) },
       { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
+      { key: 'revive-me-2025', action: handleClickDot('sponsor', 4) },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
@@ -118,6 +119,14 @@ export const useSpectrumData = () => {
           {
             label: 'Founders Longevity Forum Singapore',
             routeKey: 'founders-longevity-forum-singapore',
+          },
+          {
+            label: 'ARDD 2025',
+            routeKey: 'ardd-2025',
+          },
+          {
+            label: '2060 Longevity Forum',
+            routeKey: '2060-longevity-forum',
           },
           {
             label: 'Vitalist Bay Summit',
@@ -175,12 +184,8 @@ export const useSpectrumData = () => {
             routeKey: 'vitalist-bay-summit-grant',
           },
           {
-            label: 'ARDD 2025',
-            routeKey: 'ardd-2025',
-          },
-          {
-            label: '2060 Longevity Forum',
-            routeKey: '2060-longevity-forum',
+            label: 'REVIVE ME 2025',
+            routeKey: 'revive-me-2025',
           },
           {
             label: 'Lifespan Research Institute',
