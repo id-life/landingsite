@@ -121,6 +121,14 @@ export const useSpectrumData = () => {
             routeKey: 'founders-longevity-forum-singapore',
           },
           {
+            label: 'ARDD 2025',
+            routeKey: 'ardd-2025',
+          },
+          {
+            label: '2060 Longevity Forum',
+            routeKey: '2060-longevity-forum',
+          },
+          {
             label: 'Vitalist Bay Summit',
             routeKey: 'vitalist-bay-summit',
           },
@@ -174,14 +182,6 @@ export const useSpectrumData = () => {
             key: 'Vitalist Bay Summit Grant',
             label: 'Vitalist Bay Summit',
             routeKey: 'vitalist-bay-summit-grant',
-          },
-          {
-            label: 'ARDD 2025',
-            routeKey: 'ardd-2025',
-          },
-          {
-            label: '2060 Longevity Forum',
-            routeKey: '2060-longevity-forum',
           },
           {
             label: 'REVIVE ME 2025',

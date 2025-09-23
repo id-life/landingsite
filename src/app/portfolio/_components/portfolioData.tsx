@@ -31,16 +31,16 @@ export const portfolio: PortfolioItemInfo[] = [
     image: <img className="w-[8.75rem] mobile:w-[6.5625rem]" src="/imgs/investments/r3.webp" alt="r3" />,
   },
   {
+    title: 'Immune Bridge',
+    description: 'A new generation of allogeneic cell therapies to make cancer cures accessible to everyone',
+    image: <img className="w-[12.5rem] mobile:w-[6.5625rem]" src="/imgs/investments/immune-bridge.webp" alt="immune-bridge" />,
+    link: 'https://www.immunebridge.com/',
+  },
+  {
     title: 'Mito Health',
     description: 'AI powered concierge doctor',
     image: <img className="w-36 mobile:w-[6.75rem]" src="/imgs/investments/mito.webp" alt="mito" />,
     link: 'https://mitohealth.com/',
-  },
-  {
-    title: 'ALIS',
-    description: 'Gold standard longevity services scaled globally',
-    image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/alis.webp" alt="bio" />,
-    link: 'https://www.linkedin.com/company/applied-longevity-intelligence-services/',
   },
   {
     title: 'Kangaroo Biomedical',
@@ -53,6 +53,18 @@ export const portfolio: PortfolioItemInfo[] = [
     image: <img className="w-24 mobile:w-[3.625rem]" src="/imgs/investments/vibe.webp" alt="vitalia" />,
   },
   {
+    title: 'Oisin Biotechnologies',
+    description: 'Genetic Medicines for Health and Longevity',
+    image: <img className="w-[11.25rem] mobile:w-[6.5625rem]" src="/imgs/investments/oisin.webp" alt="oisin" />,
+    link: 'https://www.oisinbio.com/',
+  },
+  {
+    title: 'Etheros Pharmaceuticals',
+    description: 'Small molecule enzyme mimetics for neuroprotection and healthspan',
+    image: <img className="w-[8.375rem] mobile:w-[6.5625rem]" src="/imgs/investments/etheros.webp" alt="etheros" />,
+    link: 'https://etherospharma.com/',
+  },
+  {
     title: 'Longevity.Technology',
     description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/longevity.webp" alt="longevity" />,
@@ -63,18 +75,6 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'Accelerated longevity startups Special economic zone',
     image: <img className="w-19.5 mobile:w-[3.625rem]" src="/imgs/investments/vitalia.webp" alt="vitalia" />,
     // link: 'https://vitalia.city/',
-  },
-  {
-    title: 'VitaDAO & Bio.xyz',
-    subTitle: 'via secondary market & convert',
-    description: 'New funding paradigm for unlikely bio projects',
-    image: (
-      <div className="flex-center gap-4">
-        <img className="w-[9.25rem] mobile:w-[7.875rem]" src="/imgs/investments/vita.webp" alt="vita" />
-        <img className="w-[7.25rem] mobile:w-[5.25rem]" src="/imgs/investments/bio.webp" alt="bio" />
-      </div>
-    ),
-    link: 'https://www.vitadao.com/',
   },
 ];
 
@@ -110,15 +110,15 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.002,
     },
     {
+      url: '/imgs/particle/immune-bridge.png',
+      resize: [584, 680],
+      scaleNum: isMobile ? 0.5 : 1,
+      loadPercentage: 0.002,
+    },
+    {
       url: '/imgs/particle/3.png',
       resize: [600, 576],
       scaleNum: isMobile ? 0.5 : 1,
-    },
-    {
-      url: '/imgs/particle/10.png',
-      resize: [512, 272],
-      scaleNum: isMobile ? 0.5 : 1.2,
-      loadPercentage: 0.0012,
     },
     {
       url: '/imgs/particle/6.png',
@@ -133,6 +133,18 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.0012,
     },
     {
+      url: '/imgs/particle/oisin.png',
+      resize: [600, 163],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.004,
+    },
+    {
+      url: '/imgs/particle/etheros.png',
+      resize: [600, 146],
+      scaleNum: isMobile ? 0.5 : 1.2,
+      loadPercentage: 0.003,
+    },
+    {
       url: '/imgs/particle/2.png',
       resize: [600, 536],
       scaleNum: isMobile ? 0.35 : 0.7,
@@ -143,12 +155,6 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       resize: [860, 82],
       loadPercentage: 0.004,
       scaleNum: isMobile ? 0.5 : 1.2,
-    },
-    {
-      url: '/imgs/particle/8.png',
-      resize: [594, 264],
-      scaleNum: isMobile ? 0.7 : 1.4,
-      loadPercentage: 0.002,
     },
   ];
 };

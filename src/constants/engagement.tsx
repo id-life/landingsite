@@ -86,6 +86,11 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
     lng: 0,
     icon: <FranceSVG className="size-7 mobile:size-5.5" />,
   },
+  {
+    lat: 13,
+    lng: 51,
+    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-5.5" />,
+  },
 ];
 
 export type MapDotData = {
