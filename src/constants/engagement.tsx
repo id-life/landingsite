@@ -393,6 +393,10 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         src: 'https://cdn.id.life/engagement/ardd-2025-3.webp',
         alt: 'ardd-2025-3.webp',
       },
+      {
+        src: 'https://cdn.id.life/engagement/ardd-2025-4.webp',
+        alt: 'ardd-2025-4.webp',
+      },
     ],
   },
   {
@@ -428,10 +432,6 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       {
         src: 'https://cdn.id.life/engagement/2060lf-2025-3.webp',
         alt: '2060lf-2025-3.webp',
-      },
-      {
-        src: 'https://cdn.id.life/engagement/2060lf-2025-4.webp',
-        alt: '2060lf-2025-4.webp',
       },
     ],
   },
