@@ -23,7 +23,7 @@ const ANIMATION_DELAY = 0.3;
 const AUTO_SWING_AMPLITUDE = 0.1;
 
 export function useOptimizedGLTF() {
-  const { nodes } = useGLTF('/models/logo_v1.glb');
+  const { nodes } = useGLTF('/models/logo_v3.glb');
 
   const logoGeometry = useMemo(() => {
     const logoNode = nodes.logo as THREE.Mesh;
