@@ -166,6 +166,10 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         src: 'https://cdn.id.life/engagement/timepie-2025-03.webp',
         alt: 'timepie-2025-03.webp',
       },
+      {
+        src: 'https://cdn.id.life/engagement/timepie-2025-04.webp',
+        alt: 'timepie-2025-04.webp',
+      },
     ],
   },
   {
