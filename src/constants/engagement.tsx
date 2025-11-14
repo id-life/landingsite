@@ -127,15 +127,15 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     lng: 120,
     country: 'China',
     label: 'Shanghai',
-    period: '2024/11',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    title: 'The 5th Timepie Longevity Forum',
+    secondTitle: 'The 5th TIMEPIE LONGEVITY\nFORUM 2024 / 11',
+    title: 'The 6th TIMEPIE LONGEVITY\nFORUM 2025 / 09',
     link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-full -translate-y-[35%]',
     pcDotHotAreaClass: 'top-[25vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-1', 'world-map-dot-2'],
-    imgs: [
+    secondImgs: [
       {
         src: 'https://cdn.id.life/engagement/Shanghai-01.webp',
         alt: 'Shanghai-01.webp',
@@ -151,6 +151,20 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       {
         src: 'https://cdn.id.life/engagement/Shanghai-04.webp',
         alt: 'Shanghai-04.webp',
+      },
+    ],
+    imgs: [
+      {
+        src: 'https://cdn.id.life/engagement/timepie-2025-01.webp',
+        alt: 'timepie-2025-01.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/timepie-2025-02.webp',
+        alt: 'timepie-2025-02.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/timepie-2025-03.webp',
+        alt: 'timepie-2025-03.webp',
       },
     ],
   },
@@ -432,6 +446,10 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       {
         src: 'https://cdn.id.life/engagement/2060lf-2025-3.webp',
         alt: '2060lf-2025-3.webp',
+      },
+      {
+        src: 'https://cdn.id.life/engagement/2060lf-2025-4.webp',
+        alt: '2060lf-2025-4.webp',
       },
     ],
   },
