@@ -128,8 +128,8 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     country: 'China',
     label: 'Shanghai',
     key: 'sh_timepie_2024', // Unique identifier for the dot
-    secondTitle: 'The 5th Timepie Longevity Forum 2024 / 11',
-    title: 'The 6th TIMEPIE LONGEVITY FORUM 2025 / 09',
+    secondTitle: 'The 5th TIMEPIE LONGEVITY\nFORUM 2024 / 11',
+    title: 'The 6th TIMEPIE LONGEVITY\nFORUM 2025 / 09',
     link: 'https://www.timepielongevityforum.com/',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
     mobileContentTransformClass: '-translate-x-full -translate-y-[35%]',
