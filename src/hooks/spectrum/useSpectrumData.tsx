@@ -109,40 +109,36 @@ export const useSpectrumData = () => {
         icon: <MeetingSVG />,
         links: [
           {
-            label: 'Founders Forum Global',
-            routeKey: 'founders-forum-global',
+            label: 'Immortal Dragons Launching Announcement',
+            link: 'https://vcwire.tech/2025/08/12/immortal-dragons-launches-40m-longevity-fund/',
           },
           {
-            label: 'Founders Longevity Forum London',
-            routeKey: 'founders-longevity-forum-london',
+            label: 'Immortal Dragons and 3D Biofabrication',
+            link: 'https://www.drugdiscoverynews.com/vascular-engineering-opens-the-door-to-organ-scale-tissue-replacement-16709',
           },
           {
-            label: 'Founders Longevity Forum Singapore',
-            routeKey: 'founders-longevity-forum-singapore',
+            label: 'Immortal Dragons and Longevity Asia',
+            link: 'https://www.biospectrumasia.com/analysis/26/26702/how-asia-is-pioneering-longevity-biotech.html',
           },
           {
-            label: 'ARDD 2025',
-            routeKey: 'ardd-2025',
+            label: 'Guest Article Piece with Drug Discovery Online',
+            link: 'https://www.drugdiscoveryonline.com/doc/notes-from-a-vc-what-it-takes-to-be-impactful-in-longevity-science-0001',
           },
           {
-            label: '2060 Longevity Forum',
-            routeKey: '2060-longevity-forum',
+            label: 'Vitalist Bay Fireside Chat',
+            link: 'https://www.youtube.com/watch?v=2FJi1k7xNuo',
           },
           {
-            label: 'Vitalist Bay Summit',
-            routeKey: 'vitalist-bay-summit',
+            label: 'Founder Interview with Beyond Tomorrow',
+            link: 'https://www.youtube.com/watch?v=Cwhcqi-xNM8',
           },
           {
-            label: 'Timepie Longevity Forum',
-            routeKey: 'timepie-longevity-forum',
+            label: 'Gene Therapies Roundtable with Liz Parrish',
+            link: 'https://www.youtube.com/watch?v=W3pBINeJUSg&t=3538s',
           },
           {
-            label: 'Edge City Lanna',
-            routeKey: 'edge-city-lanna',
-          },
-          {
-            label: 'Oxford Future Innovation Forum',
-            routeKey: 'oxford-future-innovation-forum',
+            label: '2060 Longevity Forum Panel',
+            link: 'https://www.youtube.com/watch?v=JW7KbX7vcUM',
           },
         ],
       },
