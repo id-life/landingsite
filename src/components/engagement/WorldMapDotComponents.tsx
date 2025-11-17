@@ -7,6 +7,91 @@ import { VideoWithPoster } from './VideoWithPoster';
 import FeatherImg from './FeatherImg';
 
 // ============================================================================
+// Shared Components (Desktop & Mobile)
+// ============================================================================
+
+// Pulsing dot SVG animation with center point and ripple effects
+export function PulseDot({
+  svgSize,
+  centerPoint,
+  centerRadius,
+  color,
+  pulse1,
+  pulse2,
+  isActive,
+}: {
+  svgSize: number;
+  centerPoint: number;
+  centerRadius: number;
+  color: string;
+  pulse1: { fromRadius: number; toRadius: number; duration: number };
+  pulse2: { fromRadius: number; toRadius: number; duration: number };
+  isActive?: boolean;
+}) {
+  return (
+    <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
+      <svg
+        width={svgSize}
+        height={svgSize}
+        viewBox={`0 0 ${svgSize} ${svgSize}`}
+        className="absolute -left-full -top-full size-18"
+      >
+        <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
+        {isActive && (
+          <>
+            {/* 使用SVG animate元素来创建平滑的波纹效果 */}
+            <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
+              <animate
+                attributeName="r"
+                from={pulse1.fromRadius}
+                to={pulse1.toRadius}
+                dur={`${pulse1.duration}s`}
+                begin="0s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                from="0.5"
+                to="0"
+                dur={`${pulse1.duration}s`}
+                begin="0s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle
+              cx={centerPoint}
+              cy={centerPoint}
+              r={pulse2.fromRadius}
+              stroke={color}
+              strokeWidth="2"
+              fill="none"
+              opacity="0.5"
+            >
+              <animate
+                attributeName="r"
+                from={pulse2.fromRadius}
+                to={pulse2.toRadius}
+                dur={`${pulse2.duration}s`}
+                begin="0s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                from="0.5"
+                to="0"
+                dur={`${pulse2.duration}s`}
+                begin="0s"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
 // Desktop Components
 // ============================================================================
 
@@ -225,5 +310,121 @@ export function ContentHotAreas({
         ></a>
       )}
     </>
+  );
+}
+
+// ============================================================================
+// Mobile Components
+// ============================================================================
+
+// Mobile conference badges and video button (inline version for mobile)
+export function MobileConferenceBadgesWithVideo({
+  isSponsor,
+  extraSponsor,
+  videoUrl,
+  onVideoClick,
+}: {
+  isSponsor?: boolean;
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  videoUrl?: string;
+  onVideoClick?: (e: MouseEvent) => void;
+}) {
+  return (
+    <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
+      <div className="relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
+        <MeetingSVG className="size-4 fill-purple" />
+        Conference
+      </div>
+      {(isSponsor || extraSponsor) && (
+        <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
+          <SponsorSVG className="size-5 fill-orange" />
+          Sponsorship
+        </div>
+      )}
+      {videoUrl && onVideoClick && (
+        <motion.a
+          href={videoUrl}
+          target="_blank"
+          onClick={onVideoClick}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 0.85 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="pointer-events-auto flex cursor-pointer flex-col"
+        >
+          <div className="clip-talk-content -ml-1 bg-white p-0.5">
+            <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
+              <YoutubeSVG className="size-5 fill-white" />
+              <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
+              <ArrowSVG className="size-4 -rotate-90 fill-white" />
+            </div>
+          </div>
+        </motion.a>
+      )}
+    </div>
+  );
+}
+
+// Mobile content section with images
+export function MobileContentSection({
+  title,
+  period,
+  imgs,
+  link,
+  scrollContainerRef,
+  onClick,
+}: {
+  title?: string;
+  period?: string;
+  imgs?: { src: string; alt: string }[];
+  link?: string;
+  scrollContainerRef?: React.RefObject<HTMLDivElement>;
+  onClick: (e: MouseEvent) => void;
+}) {
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      variants={{
+        hidden: {
+          opacity: 0,
+          height: 0,
+        },
+        visible: {
+          opacity: 1,
+          height: '70dvh',
+        },
+      }}
+      transition={{
+        staggerChildren: 0.1,
+        duration: 0.3,
+        type: 'easeInOut',
+      }}
+      className={cn('flex h-full max-w-[20rem] flex-col items-center gap-4 font-oxanium')}
+    >
+      {title && (
+        <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+          <span className="mr-2 whitespace-pre-wrap">{title}</span>
+          {period}
+        </h3>
+      )}
+      <a
+        href={link}
+        target="_blank"
+        className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]"
+        onClick={onClick}
+      >
+        {imgs?.length ? (
+          <div
+            ref={scrollContainerRef}
+            className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+          >
+            {imgs.map((img) => (
+              <FeatherImg className="h-[6.875rem] w-[12.5rem]" key={img.src} src={img.src} alt={img.alt} />
+            ))}
+          </div>
+        ) : null}
+      </a>
+    </motion.div>
   );
 }
