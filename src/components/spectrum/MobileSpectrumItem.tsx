@@ -96,7 +96,7 @@ const MobileSpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
     ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs }, ref) => {
       const { title, titleCn, icon, links, className: itemClassName } = item;
-      const [isMore, setIsMore] = useState(false);
+      const [currentPage, setCurrentPage] = useState(0);
 
       const { trackEvent } = useGA();
 
@@ -107,16 +107,25 @@ const MobileSpectrumItem = memo(
         });
       };
 
-      const handleMoreClick = useCallback((e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsMore((prev) => !prev);
-      }, []);
+      const totalLinks = links?.length ?? 0;
+      const totalPages = totalLinks > 0 ? Math.ceil(totalLinks / linksPerPage) : 0;
+      const safePage = totalPages > 0 ? currentPage % totalPages : 0;
+
+      const handleMoreClick = useCallback(
+        (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (totalPages === 0) return;
+          setCurrentPage((prev) => (prev + 1) % totalPages);
+        },
+        [totalPages],
+      );
 
       const { visibleLinks, showMoreButton, buttonText } = useMemo(() => {
-        if (!links) return { visibleLinks: [], showMoreButton: false, isLastPage: false, buttonText: 'More' };
+        if (!links || totalLinks === 0) {
+          return { visibleLinks: [], showMoreButton: false, isLastPage: false, buttonText: 'More' };
+        }
 
-        const totalLinks = links.length;
         if (totalLinks <= linksPerPage) {
           return {
             visibleLinks: links,
@@ -125,22 +134,22 @@ const MobileSpectrumItem = memo(
           };
         }
 
-        const startIndex = isMore ? Math.max(0, totalLinks - 5) : 0;
+        const startIndex = safePage * linksPerPage;
         const endIndex = Math.min(totalLinks, startIndex + linksPerPage);
 
         const visibleLinks = links.slice(startIndex, endIndex);
-        const buttonText = isMore ? 'Back' : 'More';
+        const buttonText = 'More';
         return {
           visibleLinks,
           showMoreButton: true,
           buttonText,
         };
-      }, [links, isMore]);
+      }, [links, totalLinks, safePage]);
 
       const spectrumLinks = useMemo(() => {
         return visibleLinks.map((item, index) => (
           <motion.div
-            key={`${item.label}-${isMore}`}
+            key={`${item.label}-${safePage}-${index}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -157,7 +166,7 @@ const MobileSpectrumItem = memo(
             />
           </motion.div>
         ));
-      }, [visibleLinks, isMore, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
       return (
         <div
@@ -196,7 +205,7 @@ const MobileSpectrumItem = memo(
                   className="mt-1 flex items-center justify-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100 sm:justify-start"
                 >
                   {buttonText}
-                  <ArrowSVG className={cn('size-3 fill-current transition duration-300', { 'rotate-180': isMore })} />
+                  <ArrowSVG className="size-3 fill-current transition duration-300" />
                 </motion.button>
               )}
             </div>
