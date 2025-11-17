@@ -119,6 +119,13 @@ export type MapDotData = {
   link?: string; // jump link
   isSponsor?: boolean; // is also a sponsor dot
   videoUrl?: string;
+  // if has sponsor
+  extraSponsor?: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -205,7 +212,6 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     index: 2,
     lat: -19,
     lng: 101,
-    label: 'Singapore',
     country: 'Singapore',
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
@@ -243,6 +249,12 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'Singapore-5.webp',
       },
     ],
+    extraSponsor: {
+      alt: 'Healthy Longevity Medicine\nConference',
+      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.png',
+      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.webm',
+      link: 'https://www.hlmconference.com/',
+    },
   },
   {
     index: 3,

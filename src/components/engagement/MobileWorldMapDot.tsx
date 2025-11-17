@@ -9,6 +9,7 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { ExtraSponsorSection } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -25,7 +26,7 @@ export function MobileWorldMapDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { trackEvent } = useGA();
-  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl, title } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl, title, extraSponsor } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-${index}`,
@@ -141,7 +142,7 @@ export function MobileWorldMapDotPoint({
                 <MeetingSVG className="size-4 fill-purple" />
                 Conference
               </div>
-              {isSponsor && (
+              {(isSponsor || extraSponsor) && (
                 <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
                   <SponsorSVG className="size-5 fill-orange" />
                   Sponsorship
@@ -183,7 +184,20 @@ export function MobileWorldMapDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { title, imgs, mobileContentTransformClass, period, lat, lng, link, label, country, secondImgs, secondTitle } = dot;
+  const {
+    title,
+    imgs,
+    mobileContentTransformClass,
+    period,
+    lat,
+    lng,
+    link,
+    label,
+    country,
+    secondImgs,
+    secondTitle,
+    extraSponsor,
+  } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -332,6 +346,9 @@ export function MobileWorldMapDotContent({
                   ) : null}
                 </a>
               </motion.div>
+            )}
+            {extraSponsor && (
+              <ExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
             )}
           </div>
         </div>

@@ -6,11 +6,15 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
-import FeatherImg from './FeatherImg';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
-import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
+import {
+  ConferenceBadges,
+  VideoTalkButton,
+  ContentSection,
+  ExtraSponsorSection,
+  ContentHotAreas,
+} from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -26,7 +30,7 @@ export function WorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, extraSponsor } = dot;
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
@@ -149,30 +153,7 @@ export function WorldMapDotPoint({
           {label ? `${label}, ` : ''}
           {country}
           <AnimatePresence>
-            {isActive && (
-              <motion.div className="absolute -left-0.5 top-[calc(100%_+_0.25rem)] flex items-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 0.83 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
-                >
-                  <MeetingSVG className="size-5 fill-purple" />
-                  Conference
-                </motion.div>
-                {isSponsor && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.83 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
-                  >
-                    <SponsorSVG className="size-5 fill-orange" />
-                    Sponsorship
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
+            {isActive && <ConferenceBadges isSponsor={isSponsor} extraSponsor={extraSponsor} />}
           </AnimatePresence>
         </motion.p>
       </div>
@@ -203,6 +184,7 @@ export function WorldMapDotContent({
     videoUrl,
     secondImgs,
     secondTitle,
+    extraSponsor,
   } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
@@ -293,116 +275,28 @@ export function WorldMapDotContent({
             )}
             onMouseLeave={handleContentMouseLeave}
           >
-            <a
-              href={link}
-              target="_blank"
-              className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38dvh] cursor-pointer"
-            ></a>
-            <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
-            <div
-              className={cn('pointer-events-auto absolute -right-72 left-[90%] h-20', pcDotHotAreaClass, {
-                'top-[22dvh] h-36': videoUrl,
-              })}
+            <ContentHotAreas
+              link={link}
+              pcDotHotAreaClass={pcDotHotAreaClass}
+              videoUrl={videoUrl}
+              extraSponsor={extraSponsor}
               onClick={handleClick}
-            ></div>
-            {videoUrl && (
-              <motion.a
-                href={videoUrl}
-                target="_blank"
-                onClick={handleVideoClick}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 0.85 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
-              >
-                <div className="clip-talk-content bg-white p-0.5">
-                  <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
-                    <YoutubeSVG className="size-5 fill-white" />
-                    <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
-                    <ArrowSVG className="size-4 -rotate-90 fill-white" />
-                  </div>
-                </div>
-              </motion.a>
-            )}
+            />
+            {videoUrl && <VideoTalkButton videoUrl={videoUrl} onClick={handleVideoClick} />}
           </div>
           <div className={cn('absolute inset-0 top-4 flex size-max origin-top-left items-center gap-4', contentTransformClass)}>
-            <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={{
-                  hidden: {
-                    opacity: 0,
-                    height: 0,
-                  },
-                  visible: {
-                    opacity: 1,
-                    height: '70dvh',
-                  },
-                }}
-                transition={{
-                  staggerChildren: 0.1,
-                  duration: 0.3,
-                  type: 'easeInOut',
-                }}
-                className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
-              >
-                {title && (
-                  <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                    <span className="mr-2 whitespace-pre-wrap">{title}</span>
-                    {period}
-                  </h3>
-                )}
-                {imgs?.length ? (
-                  <div
-                    ref={scrollContainerRef}
-                    className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-                  >
-                    {imgs.map((img) => (
-                      <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                    ))}
-                  </div>
-                ) : null}
-              </motion.div>
-            </a>
+            <ContentSection
+              title={title}
+              period={period}
+              imgs={imgs}
+              link={link}
+              scrollContainerRef={scrollContainerRef}
+              onClick={handleLinkClick}
+            />
             {secondTitle && (
-              <a href={link} target="_blank" className="pointer-events-auto" onClick={handleLinkClick}>
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      height: 0,
-                    },
-                    visible: {
-                      opacity: 1,
-                      height: '70dvh',
-                    },
-                  }}
-                  transition={{
-                    staggerChildren: 0.1,
-                    duration: 0.3,
-                    type: 'easeInOut',
-                  }}
-                  className={cn('flex h-full w-[20.25rem] flex-col items-center gap-4 font-oxanium')}
-                >
-                  <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-                    <span className="mr-2 whitespace-pre-wrap">{secondTitle}</span>
-                    {period}
-                  </h3>
-                  {secondImgs?.length ? (
-                    <div className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]">
-                      {secondImgs.map((img) => (
-                        <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-                      ))}
-                    </div>
-                  ) : null}
-                </motion.div>
-              </a>
+              <ContentSection title={secondTitle} period={period} imgs={secondImgs} link={link} onClick={handleLinkClick} />
             )}
+            {extraSponsor && <ExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} />}
           </div>
         </div>
       )}
