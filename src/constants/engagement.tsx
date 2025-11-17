@@ -119,6 +119,13 @@ export type MapDotData = {
   link?: string; // jump link
   isSponsor?: boolean; // is also a sponsor dot
   videoUrl?: string;
+  // if has sponsor
+  extraSponsor?: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -205,7 +212,6 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     index: 2,
     lat: -19,
     lng: 101,
-    label: 'Singapore',
     country: 'Singapore',
     period: '2025/02',
     key: 'sg_flf_2025', // Unique identifier for the dot
@@ -243,6 +249,12 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'Singapore-5.webp',
       },
     ],
+    extraSponsor: {
+      alt: 'Healthy Longevity Medicine\nConference',
+      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.png',
+      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.webm',
+      link: 'https://www.hlmconference.com/',
+    },
   },
   {
     index: 3,
@@ -505,9 +517,10 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     key: 'publications-03',
     title: 'Los Angeles, USA',
     bookTitle: 'Better With Age 乐龄',
-    desc: 'Coming Soon',
+    desc: 'Chinese Version',
     coverUrl: 'https://cdn.id.life/engagement/book-03.webp',
     videoUrl: 'https://cdn.id.life/engagement/book-03.webm',
+    link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
     containerClass: 'scale-[0.9]',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-sponsor-3'],
   },

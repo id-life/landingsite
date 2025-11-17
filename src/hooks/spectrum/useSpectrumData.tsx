@@ -93,6 +93,7 @@ export const useSpectrumData = () => {
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
       { key: 'revive-me-2025', action: handleClickDot('sponsor', 4) },
+      { key: 'healthy-longevity-medicine-conference', action: handleClickDot('meeting', 2) },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
     ],
@@ -175,13 +176,12 @@ export const useSpectrumData = () => {
         icon: <SponsorSVG />,
         links: [
           {
-            key: 'Vitalist Bay Summit Grant',
-            label: 'Vitalist Bay Summit',
-            routeKey: 'vitalist-bay-summit-grant',
+            label: 'ARDD 2025',
+            routeKey: 'ardd-2025',
           },
           {
-            label: 'REVIVE ME 2025',
-            routeKey: 'revive-me-2025',
+            label: 'TimePie Longevity Forum 2025/9',
+            routeKey: 'timepie-longevity-forum',
           },
           {
             label: 'Lifespan Research Institute',
@@ -192,8 +192,32 @@ export const useSpectrumData = () => {
             routeKey: 'public-longevity-group',
           },
           {
+            label: 'Vitalist Bay Summit',
+            routeKey: 'vitalist-bay-summit-grant',
+          },
+          {
+            label: '2060 Longevity Forum',
+            routeKey: '2060-longevity-forum',
+          },
+          {
+            label: 'REVIVE ME 2025',
+            routeKey: 'revive-me-2025',
+          },
+          {
+            label: 'Health Longevity and Medicine Conference 2025',
+            routeKey: 'healthy-longevity-medicine-conference',
+          },
+          {
+            label: 'Cornerstone Non-profit Foundation',
+            link: 'https://www.cornerstoneondemand.org',
+          },
+          {
             label: 'Beyond Tomorrow Podcast',
             link: 'https://beyondtomorrowpodcast.com/',
+          },
+          {
+            label: 'HackAging.ai Hackathon', // 11
+            link: 'https://www.hackaging.ai/',
           },
           {
             label: 'BiohackerDAO',
