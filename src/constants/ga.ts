@@ -12,6 +12,9 @@ export const GA_EVENT_NAMES = {
   PAGE_LOAD_START: 'page_load_start',
   PAGE_LOAD_END: 'page_load_end',
   PAGE_LOAD_ITEM: 'page_load_item',
+  SUBSCRIBE_SUBMIT: 'subscribe_submit',
+  SUBSCRIBE_SHOW: 'subscribe_show',
+  SUBSCRIBE_CLOSE: 'subscribe_close',
 
   // portfolio
   PORTFOLIO_VIEW: 'portfolio_view',
@@ -84,6 +87,19 @@ export const GA_EVENT_LABELS = {
     TOGGLE: 'toggle',
   },
   SUBSCRIBE_LETTER: {
+    FIRST: 'first',
+    NAV: 'nav',
+    FOOTER: 'footer',
+    FOOTER_CONTACT: 'footer_contact',
+  },
+  SUBSCRIBE_SHOW: {
+    FIRST: 'first',
+    NAV: 'nav',
+    FOOTER: 'footer',
+    FOOTER_CONTACT: 'footer_contact',
+  },
+  SUBSCRIBE_CLOSE: {
+    FIRST: 'first',
     NAV: 'nav',
     FOOTER: 'footer',
     FOOTER_CONTACT: 'footer_contact',
@@ -191,6 +207,7 @@ export const GA_EVENT_LABELS = {
   | 'SUBSCRIBE_VIEW'
   | 'EPISODE_END'
   | 'TIMELINE_JUMP'
+  | 'SUBSCRIBE_SUBMIT'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;

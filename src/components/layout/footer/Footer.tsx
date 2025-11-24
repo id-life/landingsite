@@ -3,7 +3,7 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { InfoSVG } from '@/components/svg';
@@ -28,6 +28,7 @@ export default function Footer() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const subscribeType = useAtomValue(subscribeTypeAtom);
 
   const {
     register,
@@ -59,7 +60,7 @@ export default function Footer() {
 
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
+      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
     });
   };
 

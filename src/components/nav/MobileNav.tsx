@@ -26,8 +26,8 @@ export default function MobileNav() {
     e.stopPropagation();
     setIsSubscribeShow((pre) => !pre);
     trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
+      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FOOTER,
     });
   };
 

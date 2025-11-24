@@ -1,11 +1,11 @@
 import { hasShownAutoSubscribeAtom } from '@/atoms';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import jsonp from '@/utils/jsonp';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { trackEvent } from './useGA';
@@ -25,6 +25,7 @@ export function useSubscribeAction() {
   const { contextSafe } = useGSAP();
   const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
   const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
+  const [subscribeType, setSubscribeType] = useAtom(subscribeTypeAtom);
 
   // Initialize timeline
   useGSAP(
@@ -51,24 +52,42 @@ export function useSubscribeAction() {
     });
   });
 
-  const handleStart = useCallback(() => {
-    timelineRef.current?.play();
-    setIsSubscribeShow(true);
-  }, [setIsSubscribeShow]);
+  const handleStart = useCallback(
+    (isFirst?: boolean) => {
+      timelineRef.current?.play();
+      setIsSubscribeShow(true);
+      if (isFirst) {
+        trackEvent({
+          name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+          label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
+        });
+        setSubscribeType('first');
+      } else {
+        trackEvent({
+          name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+          label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FOOTER,
+        });
+        setSubscribeType('footer');
+      }
+    },
+    [setIsSubscribeShow, setSubscribeType],
+  );
 
-  const handleClose = () => {
+  const handleClose = (isFirst?: boolean) => {
     timelineRef.current?.reverse();
     setIsSubscribeShow(false);
     setHasShownAuto(true);
+
+    if (isFirst) {
+      trackEvent({
+        name: GA_EVENT_NAMES.SUBSCRIBE_CLOSE,
+        label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_CLOSE.FOOTER,
+      });
+    }
   };
 
   const onSubscribeClick = () => {
     if (!fadeInAnimCompleted) return;
-
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.NAV,
-    });
 
     if (isSubscribeShow) {
       yoyoAnim();
@@ -98,7 +117,7 @@ export function useSubscribeAction() {
   // Auto-popup logic, only play when first time load
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
-    handleStart();
+    handleStart(true);
   }, [fadeInAnimCompleted, handleStart, hasShownAuto]);
 
   return {
@@ -119,20 +138,22 @@ export function useMobileSubscribeAction() {
 
   const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
   const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
+  const [subscribeType, setSubscribeType] = useAtom(subscribeTypeAtom);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setIsSubscribeShow(false);
     setHasShownAuto(true);
-  }, [setIsSubscribeShow, setHasShownAuto]);
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_CLOSE,
+      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_CLOSE.FOOTER,
+    });
+  };
 
-  const handleClickOutside = useCallback(
-    (e: MouseEvent) => {
-      if (subscribeRef.current && !subscribeRef.current.contains(e.target as Node)) {
-        handleClose();
-      }
-    },
-    [handleClose],
-  );
+  const handleClickOutside = (e: MouseEvent) => {
+    if (subscribeRef.current && !subscribeRef.current.contains(e.target as Node)) {
+      handleClose();
+    }
+  };
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     const params = new URLSearchParams();
@@ -146,7 +167,7 @@ export function useMobileSubscribeAction() {
 
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
+      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
     });
   };
 
@@ -154,7 +175,12 @@ export function useMobileSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     setIsSubscribeShow(true);
-  }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow]);
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
+    });
+    setSubscribeType('first');
+  }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow, setSubscribeType]);
 
   useEffect(() => {
     if (isSubscribeShow) {
