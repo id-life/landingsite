@@ -12,6 +12,7 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
+import { WebClarity } from '@/app/_components/web-clarity';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <GoogleTagManager gtmId="GTM-NZKZJ38H" />
       {gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
       <WebVitals />
+      <WebClarity />
       <body
         className={clsx(
           xirod.variable,
