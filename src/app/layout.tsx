@@ -8,11 +8,11 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import ScrollBehavior from '@/components/common/ScrollBehavior';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
+import { WebClarity } from '@/app/_components/web-clarity';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
-import { WebClarity } from '@/app/_components/web-clarity';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
