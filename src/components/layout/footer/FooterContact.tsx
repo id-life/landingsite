@@ -16,8 +16,10 @@ import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
 import { useGSAP } from '@gsap/react';
 import { clsx } from 'clsx';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useRef, useState } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { currentPageAtom } from '@/atoms';
+import { useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -31,10 +33,16 @@ type Inputs = {
 export default function FooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const currentPage = useAtomValue(currentPageAtom);
+  const currentPageRef = useRef(currentPage);
   const portalNode = useFloatingPortalNode();
+
+  // 保持 currentPage 的最新值
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
   const {
     register,
     handleSubmit,
@@ -79,31 +87,73 @@ export default function FooterContact() {
   useGSAP(
     () => {
       if (!portalNode) return;
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: 'footerTimeline',
-          trigger: wrapperRef.current,
-          start: 'top bottom+=50%',
-          end: 'bottom bottom+=50%',
-          scrub: true,
-          onEnter: () => {
-            setIsSubscribeShow(true);
-          },
-          onLeaveBack: () => {
-            setIsSubscribeShow(false);
-          },
+      // 创建一个新的 ScrollTrigger 绑定到 connect-page1，在其动画结束时触发
+      ScrollTrigger.create({
+        id: 'footerTimeline',
+        trigger: '#connect-page1',
+        start: 'bottom bottom',
+        end: 'bottom bottom',
+        onEnter: () => {
+          // 只在 connect 页面时显示
+          if (currentPageRef.current.id !== 'connect_page') return;
+          setIsSubscribeShow(true);
+          gsap.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '0rem', duration: 0.5, ease: 'power2.out' });
+          gsap.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem', duration: 0.5, ease: 'power2.out' });
+          gsap.to('.scroll-title', { opacity: 0, duration: 0.5 });
+          // 英文标题一个一个消失，然后中文标题一个一个出现
+          const title1 = gsap.utils.toArray('.connect-title1 *');
+          const title1cn = gsap.utils.toArray('.connect-title1cn path');
+          const title2 = gsap.utils.toArray('.connect-title2 *');
+          const title2cn = gsap.utils.toArray('.connect-title2cn path');
+          const title3 = gsap.utils.toArray('.connect-title3 *');
+          const title3cn = gsap.utils.toArray('.connect-title3cn path');
+          const allEnTitles = [...title1, ...title2, ...title3];
+          const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+          // 英文消失的总时长
+          const enDuration = allEnTitles.length * 0.02;
+          allEnTitles.forEach((item, index) => {
+            if (!item) return;
+            gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+          });
+          // 等英文消失后再出现中文
+          allCnTitles.forEach((item, index) => {
+            if (!item) return;
+            gsap.to(item, { opacity: 1, duration: 0.05, delay: enDuration + index * 0.02 });
+          });
+        },
+        onLeaveBack: () => {
+          setIsSubscribeShow(false);
+          gsap.to(subscribeRef.current, { bottom: '-20rem', duration: 0.5, ease: 'power2.out' });
+          gsap.to('.sound-button', { bottom: '2.5rem', duration: 0.5, ease: 'power2.out' });
+          gsap.to('.scroll-title', { opacity: 1, duration: 0.5 });
+          // 中文标题一个一个消失，然后英文标题一个一个出现
+          const title1 = gsap.utils.toArray('.connect-title1 *');
+          const title1cn = gsap.utils.toArray('.connect-title1cn path');
+          const title2 = gsap.utils.toArray('.connect-title2 *');
+          const title2cn = gsap.utils.toArray('.connect-title2cn path');
+          const title3 = gsap.utils.toArray('.connect-title3 *');
+          const title3cn = gsap.utils.toArray('.connect-title3cn path');
+          const allEnTitles = [...title1, ...title2, ...title3];
+          const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+          // 中文消失的总时长
+          const cnDuration = allCnTitles.length * 0.02;
+          allCnTitles.forEach((item, index) => {
+            if (!item) return;
+            gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+          });
+          // 等中文消失后再出现英文
+          allEnTitles.forEach((item, index) => {
+            if (!item) return;
+            gsap.to(item, { opacity: 1, duration: 0.05, delay: cnDuration + index * 0.02 });
+          });
         },
       });
-      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '0rem' });
-      timeline.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
-      timeline.to('.scroll-title', { opacity: 0 }, '<');
     },
     { dependencies: [portalNode, isMobile] },
   );
 
   return (
     <>
-      <div ref={wrapperRef} className="h-48" />
       <FloatingPortal>
         <div
           ref={subscribeRef}
