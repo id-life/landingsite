@@ -10,7 +10,7 @@ export type Position = {
   z: number;
 };
 
-export const useValueCalcPosition = () => {
+export const useConnectCalcPosition = () => {
   const { size } = useThree();
   const scaleRatio = useMemo(() => Math.min(1, size.width / defaultWidth), [size.width]);
 

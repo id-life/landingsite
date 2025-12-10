@@ -1,6 +1,6 @@
-export default function FixedValuePage3() {
+export default function FixedConnectPage3() {
   return (
-    <div id="fixed-value-page-3" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 h-screen w-screen">
+    <div id="fixed-connect-page-3" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 h-screen w-screen">
       <div className="absolute left-20 top-48 flex w-full justify-between gap-4 pr-32">
         <div>
           <svg className="w-[19.8125rem]" viewBox="0 0 317 39" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -8,7 +8,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 const Home = dynamic(() => import('../(home)/_components/Home'), { ssr: false });
 const MobileHome = dynamic(() => import('../(home)/_components/MobileHome'), { ssr: false });
 
-export default function ValuePage() {
+export default function ConnectPage() {
   const isMobile = useIsMobile();
   if (isNull(isMobile)) return null;
 

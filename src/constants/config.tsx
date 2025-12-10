@@ -62,7 +62,7 @@ export const CAROUSEL_ITEMS: { text?: string; cnText?: string; icon: ReactNode; 
   },
 ];
 
-export const VALUE_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'value_page');
+export const CONNECT_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'connect_page');
 export const SPECTRUM_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'spectrum_page');
 
 export const BACKGROUND_THEME = {

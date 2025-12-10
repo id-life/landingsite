@@ -1,16 +1,16 @@
 import { innerPageIndexAtom } from '@/atoms';
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
+import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
 import { useThree } from '@react-three/fiber';
 import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { Group, Vector3 } from 'three';
 import gsap from 'gsap';
 
-export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group> }) => {
+export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group> }) => {
   const { camera } = useThree();
-  const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
-  const page2Config = useMemo(() => VALUE_GL_CONFIG[1], []);
-  const page3Config = useMemo(() => VALUE_GL_CONFIG[2], []);
+  const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
+  const page2Config = useMemo(() => CONNECT_GL_CONFIG[1], []);
+  const page3Config = useMemo(() => CONNECT_GL_CONFIG[2], []);
 
   const setValuePageIndex = useSetAtom(innerPageIndexAtom);
 
@@ -18,7 +18,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
     tl.to(camera.position, { ...page1Config.from.camera.position, duration: 0.5 });
     tl.to(camera.rotation, { ...page1Config.from.camera.rotation, duration: 0.5 }, '<');
-    tl.to('#fixed-value', { opacity: 1, duration: 0.5 }, '<');
+    tl.to('#fixed-connect', { opacity: 1, duration: 0.5 }, '<');
     tl.to('#vision-canvas', { zIndex: 1, opacity: 1, duration: 0.5 });
     if (!modelRef.current) return;
     tl.to(camera.position, {
@@ -30,7 +30,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
     });
     tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: 30 }, '<');
     tl.fromTo(
-      '#fixed-value-page-1',
+      '#fixed-connect-page-1',
       {
         rotationX: -30,
         rotationY: 0,
@@ -53,8 +53,8 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       },
       '<',
     );
-    const title6 = gsap.utils.toArray('.value-title6 *');
-    const title7 = gsap.utils.toArray('.value-title7 *');
+    const title6 = gsap.utils.toArray('.connect-title6 *');
+    const title7 = gsap.utils.toArray('.connect-title7 *');
     [...title6, ...title7].forEach((item, index) => {
       if (!item) return;
       tl.fromTo(
@@ -71,10 +71,10 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
   };
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
-    const title1 = gsap.utils.toArray('.value-title1 *');
-    const title1cn = gsap.utils.toArray('.value-title1cn path');
-    const title2 = gsap.utils.toArray('.value-title2 *');
-    const title2cn = gsap.utils.toArray('.value-title2cn path');
+    const title1 = gsap.utils.toArray('.connect-title1 *');
+    const title1cn = gsap.utils.toArray('.connect-title1cn path');
+    const title2 = gsap.utils.toArray('.connect-title2 *');
+    const title2cn = gsap.utils.toArray('.connect-title2cn path');
     title1.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.5, delay: 1 });
@@ -109,7 +109,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       '<',
     );
     tl.to(
-      '#fixed-value-page-1',
+      '#fixed-connect-page-1',
       {
         rotationX: 30,
         rotationZ: 30,
@@ -121,7 +121,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       '<',
     );
     tl.fromTo(
-      '#fixed-value-page-2',
+      '#fixed-connect-page-2',
       {
         rotationX: -30,
         rotationY: 0,
@@ -140,7 +140,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       },
       '<',
     );
-    const title8 = gsap.utils.toArray('.value-title8 *');
+    const title8 = gsap.utils.toArray('.connect-title8 *');
     title8.forEach((item, index) => {
       if (!item) return;
       tl.fromTo(
@@ -158,12 +158,12 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
   const createPage3CrossAnim = (tl: GSAPTimeline) => {
     if (!modelRef.current) return;
     // page 4
-    const title3 = gsap.utils.toArray('.value-title3 *');
-    const title3cn = gsap.utils.toArray('.value-title3cn path');
-    const title4 = gsap.utils.toArray('.value-title4 *');
-    const title4cn = gsap.utils.toArray('.value-title4cn path');
-    const title5 = gsap.utils.toArray('.value-title5 *');
-    const title5cn = gsap.utils.toArray('.value-title5cn path');
+    const title3 = gsap.utils.toArray('.connect-title3 *');
+    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const title4 = gsap.utils.toArray('.connect-title4 *');
+    const title4cn = gsap.utils.toArray('.connect-title4cn path');
+    const title5 = gsap.utils.toArray('.connect-title5 *');
+    const title5cn = gsap.utils.toArray('.connect-title5cn path');
     title3.forEach((item) => {
       if (!item) return;
       tl.to(item, { opacity: 0, duration: 0.5, delay: 0.5 });
@@ -199,7 +199,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       },
     });
     tl.to(
-      '#fixed-value-page-2',
+      '#fixed-connect-page-2',
       {
         rotationX: -90,
         rotationY: 0,
@@ -212,7 +212,7 @@ export const useValueCrossAnimations = ({ modelRef }: { modelRef: React.RefObjec
       '<30%',
     );
     tl.fromTo(
-      '#fixed-value-page-3',
+      '#fixed-connect-page-3',
       {
         rotationX: 120,
         rotationY: 0,

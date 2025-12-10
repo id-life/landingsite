@@ -89,14 +89,14 @@ export function useNavigation() {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
-          const st = ScrollTrigger.getById('value-page1-scroll-trigger');
+          const st = ScrollTrigger.getById('connect-page1-scroll-trigger');
           if (!st) return;
           smoother?.scrollTo(st.end, false);
         });
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/value');
+        window.history.pushState({}, '', '/connect');
       } else {
         // 其他 正常滚
         window.isNavScrolling = true;

@@ -6,7 +6,7 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { Fragment, useState, useEffect } from 'react';
 
-type ValueContentItem = {
+type ConnectContentItem = {
   id: string;
   title: string;
   content: string;
@@ -18,22 +18,22 @@ type ValueContentItem = {
   className?: string;
   buttonClass?: string;
 };
-const VALUE_CONTENT: ValueContentItem[] = [
+const CONNECT_CONTENT: ConnectContentItem[] = [
   {
-    id: 'page-value-1',
+    id: 'page-connect-1',
     title: 'A New Dawn 曙光',
     content:
       'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.\n我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     mobileSVGElement: (
-      <div className="relative z-30 opacity-0" id="value-1-svg-mobile">
+      <div className="relative z-30 opacity-0" id="connect-1-svg-mobile">
         <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] flex flex-col gap-1 whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en value-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
+          <span className="connect-text-en connect-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
             Evangelism
           </span>
-          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="connect-text-cn connect-text-cn-1 bilingual-font absolute left-0 top-1 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             布道者
           </span>
-          <span className="value-text-en text-[3rem]/[3rem] uppercase">
+          <span className="connect-text-en text-[3rem]/[3rem] uppercase">
             OF global
             <br />
             Longevity
@@ -42,14 +42,14 @@ const VALUE_CONTENT: ValueContentItem[] = [
           </span>
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-pre-wrap text-right font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East & West</span>
-          <span className="value-text-en value-text-en-2 whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
+          <span className="connect-text-en whitespace-nowrap text-[3.5rem]/[3.5rem] uppercase">East & West</span>
+          <span className="connect-text-en connect-text-en-2 whitespace-pre-wrap text-[3.5rem]/[4.625rem] uppercase text-red-500">
             Access
           </span>
-          <span className="value-text-cn value-text-cn-2 bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="connect-text-cn connect-text-cn-2 bilingual-font absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             桥梁
           </span>
-          <span className="value-text-en mt-4 text-xs/4 font-semibold tracking-normal">
+          <span className="connect-text-en mt-4 text-xs/4 font-semibold tracking-normal">
             Deep Roots in Both East & West, a Conduit that
             <br />
             Bridges Markets, Capital, Institutions and More
@@ -59,41 +59,41 @@ const VALUE_CONTENT: ValueContentItem[] = [
     ),
   },
   {
-    id: 'page-value-2',
+    id: 'page-connect-2',
     title: 'As an Evangelist 传播与共识',
     content:
       'We help the world come to a better understanding of life extension technologies, galvanizing global consciousness, talents & resources in the process.\n我们致力于成为生命延长技术的布道者，在促进全球共识、汇聚全球智慧与资源方面发挥关键作用',
     className: 'text-right mobile:text-left',
     buttonClass: 'ml-auto',
     mobileSVGElement: (
-      <div className="relative z-30 opacity-0" id="value-2-svg-mobile">
+      <div className="relative z-30 opacity-0" id="connect-2-svg-mobile">
         <h2 className="pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col whitespace-pre-wrap text-left font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en value-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
+          <span className="connect-text-en connect-text-en-1 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal text-red-500">
             MOONSHOT
           </span>
-          <span className="value-text-en value-text-en-4 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal">
+          <span className="connect-text-en connect-text-en-4 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal">
             VENTURES
           </span>
-          <span className="value-text-cn value-text-cn-1 bilingual-font absolute left-0 top-10 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="connect-text-cn connect-text-cn-1 bilingual-font absolute left-0 top-10 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             登月计划
           </span>
-          <span className="value-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
+          <span className="connect-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
             We Stand with Bold Unorthodox Ideas
             <br />
             and Brave Contrarian Founders
           </span>
         </h2>
         <h2 className="pointer-events-none fixed inset-x-4 bottom-[6.25rem] z-30 flex flex-col whitespace-nowrap text-right font-oxanium font-semibold tracking-[-4%]">
-          <span className="value-text-en text-[3rem]/[3rem] uppercase">LIVE</span>
-          <span className="value-text-en value-text-en-2 text-[3.5rem]/[4.625rem] uppercase text-red-500">LONGER</span>
-          <span className="value-text-en value-text-en-3 text-[3.5rem]/[4.625rem] uppercase text-red-500">HAPPIER</span>
-          <span className="value-text-cn bilingual-font value-text-cn-2 absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="connect-text-en text-[3rem]/[3rem] uppercase">LIVE</span>
+          <span className="connect-text-en connect-text-en-2 text-[3.5rem]/[4.625rem] uppercase text-red-500">LONGER</span>
+          <span className="connect-text-en connect-text-en-3 text-[3.5rem]/[4.625rem] uppercase text-red-500">HAPPIER</span>
+          <span className="connect-text-cn bilingual-font connect-text-cn-2 absolute right-0 top-14 text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更长久
           </span>
-          <span className="value-text-cn bilingual-font value-text-cn-3 absolute right-0 top-[8.125rem] text-[3.75rem]/[4.625rem] font-bold text-red-500">
+          <span className="connect-text-cn bilingual-font connect-text-cn-3 absolute right-0 top-[8.125rem] text-[3.75rem]/[4.625rem] font-bold text-red-500">
             更健康
           </span>
-          <span className="value-text-en mt-5 text-xs/4 font-semibold tracking-normal">
+          <span className="connect-text-en mt-5 text-xs/4 font-semibold tracking-normal">
             Radical Lifespan Extension and Fulfilling Healthspan Extension
             <br />
             Longevity as a Moral Imperative
@@ -103,13 +103,13 @@ const VALUE_CONTENT: ValueContentItem[] = [
     ),
   },
   {
-    id: 'page-value-3',
+    id: 'page-connect-3',
     title: 'A Moral Endeavor 卓越的道德探索',
     content:
       'We pursue longer, healthier lives and less suffering from age-related ailments, endeavoring all our might to bring this vision to reality.\n我们矢志追求生命的延展与健康的永驻，化解年龄相关疾病带来的苦痛，全力以赴实现这一崇高愿景',
     mobileSVGElement: (
       <div
-        id="value-3-svg-mobile"
+        id="connect-3-svg-mobile"
         className="bilingual-font pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col whitespace-nowrap text-[1.75rem]/[1.75rem] font-semibold uppercase opacity-0"
       >
         <p className="uppercase">
@@ -150,7 +150,7 @@ const VALUE_CONTENT: ValueContentItem[] = [
     ),
   },
   {
-    id: 'page-value-4',
+    id: 'page-connect-4',
     title: 'A Virtuous Cycle 胆量与发展并进',
     content:
       'We stand with bold early investments, where breakthroughs accelerate the cause, bringing further talents, supporters and resources.\n我们坚持前瞻性的大胆投资，每一次突破都将加速推进事业，吸引更多英才、支持者与资源汇聚',
@@ -162,18 +162,18 @@ const VALUE_CONTENT: ValueContentItem[] = [
     buttonClass: 'ml-auto',
     mobileSVGElement: (
       <h2
-        id="value-4-svg-mobile"
+        id="connect-4-svg-mobile"
         className="pointer-events-none fixed inset-x-5 bottom-[14.75rem] z-10 flex flex-col gap-1 whitespace-pre-wrap text-center font-oxanium text-[3.125rem]/[3.125rem] font-semibold uppercase opacity-0"
       >
-        <span className="value-text-en whitespace-nowrap text-[3.625rem]/[3.625rem] text-red-500">
+        <span className="connect-text-en whitespace-nowrap text-[3.625rem]/[3.625rem] text-red-500">
           A Virtuous
           <br />
           Cycle
         </span>
-        <span className="value-text-cn bilingual-font absolute inset-x-0 top-8 text-center text-[5rem]/[5rem] font-bold text-red-500">
+        <span className="connect-text-cn bilingual-font absolute inset-x-0 top-8 text-center text-[5rem]/[5rem] font-bold text-red-500">
           良性飞轮
         </span>
-        <span className="value-text-en">
+        <span className="connect-text-en">
           behind
           <br />
           Audacity
@@ -240,7 +240,7 @@ const END_CONTENT_2: {
   ],
 };
 
-export default function FixedValue() {
+export default function FixedConnect() {
   const isMobile = useIsMobile();
   const [isCN, setIsCN] = useAtom(isCNAtom);
 
@@ -254,13 +254,13 @@ export default function FixedValue() {
 
   return (
     <>
-      {VALUE_CONTENT.map((item) => (
+      {CONNECT_CONTENT.map((item) => (
         <Fragment key={item.id}>
           {isMobile && item.mobileSVGElement}
           <div
             id={item.id}
             className={cn(
-              'page-value-item bilingual-font-poppins pointer-events-none fixed bottom-[6.25rem] right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem]',
+              'page-connect-item bilingual-font-poppins pointer-events-none fixed bottom-[6.25rem] right-20 z-10 opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem]',
               item?.className,
             )}
           >
@@ -280,7 +280,7 @@ export default function FixedValue() {
         </Fragment>
       ))}
       <div
-        id="value-end-1"
+        id="connect-end-1"
         className="bilingual-font invisible fixed left-10 top-1/2 z-10 w-[28.125rem] -translate-y-1/2 opacity-0 mobile:inset-x-5 mobile:top-[6.25rem] mobile:w-full mobile:transform-none"
       >
         <h2 className="text-3xl font-bold uppercase mobile:text-sm/4">
@@ -293,7 +293,7 @@ export default function FixedValue() {
         </ul>
       </div>
       <ul
-        id="value-end-2"
+        id="connect-end-2"
         className={cn(
           'list-mark-red-disc bilingual-font invisible fixed right-10 top-1/2 z-10 flex w-105 -translate-y-1/2 flex-col gap-12 whitespace-pre-wrap font-oxanium text-xl/6 font-bold uppercase opacity-0 mobile:inset-x-5 mobile:bottom-[6.625rem] mobile:top-auto mobile:w-auto mobile:transform-none mobile:gap-3.5 mobile:text-xs/3.5',
           { 'w-auto': isCN },

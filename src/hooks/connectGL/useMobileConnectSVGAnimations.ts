@@ -1,22 +1,22 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 
-export const useMobileValueSVGAnimations = () => {
+export const useMobileConnectSVGAnimations = () => {
   // const createMobileTextAnim = (
   //   tl: GSAPTimeline,
   //   index: number,
   //   opts?: { hasRedEnterAnim?: boolean; hasRedExitAnim?: boolean },
   // ) => {
   //   const { hasRedEnterAnim = true, hasRedExitAnim = true } = opts || {};
-  //   const value1TextRedEn = new SplitText(`#value-${index}-svg-mobile .value-text-en.text-red-500`, {
+  //   const value1TextRedEn = new SplitText(`#connect-${index}-svg-mobile .connect-text-en.text-red-500`, {
   //     type: 'lines,words,chars',
   //   });
-  //   const value1TextNormalEn = new SplitText(`#value-${index}-svg-mobile .value-text-en:not(.text-red-500)`, {
+  //   const value1TextNormalEn = new SplitText(`#connect-${index}-svg-mobile .connect-text-en:not(.text-red-500)`, {
   //     type: 'lines,words,chars',
   //   });
 
   //   // 中文文本
-  //   const value1TextCn = new SplitText(`#value-${index}-svg-mobile .value-text-cn`, {
+  //   const value1TextCn = new SplitText(`#connect-${index}-svg-mobile .connect-text-cn`, {
   //     type: 'lines,words,chars',
   //   });
 
@@ -71,23 +71,23 @@ export const useMobileValueSVGAnimations = () => {
   // };
 
   const createPage1SvgAnim = (tl: GSAPTimeline) => {
-    const value1TextRedEn = new SplitText(`#value-1-svg-mobile .value-text-en.text-red-500`, {
+    const value1TextRedEn = new SplitText(`#connect-1-svg-mobile .connect-text-en.text-red-500`, {
       type: 'lines,words,chars',
     });
-    const value1TextRedEn1 = new SplitText(`#value-1-svg-mobile .value-text-en-1`, {
+    const value1TextRedEn1 = new SplitText(`#connect-1-svg-mobile .connect-text-en-1`, {
       type: 'lines,words,chars',
     });
-    const value1TextRedEn2 = new SplitText(`#value-1-svg-mobile .value-text-en-2`, {
+    const value1TextRedEn2 = new SplitText(`#connect-1-svg-mobile .connect-text-en-2`, {
       type: 'lines,words,chars',
     });
-    const value1TextNormalEn = new SplitText(`#value-1-svg-mobile .value-text-en:not(.text-red-500)`, {
+    const value1TextNormalEn = new SplitText(`#connect-1-svg-mobile .connect-text-en:not(.text-red-500)`, {
       type: 'lines,words,chars',
     });
     // 中文文本
-    const value1TextCn1 = new SplitText(`#value-1-svg-mobile .value-text-cn-1`, {
+    const value1TextCn1 = new SplitText(`#connect-1-svg-mobile .connect-text-cn-1`, {
       type: 'lines,words,chars',
     });
-    const value1TextCn2 = new SplitText(`#value-1-svg-mobile .value-text-cn-2`, {
+    const value1TextCn2 = new SplitText(`#connect-1-svg-mobile .connect-text-cn-2`, {
       type: 'lines,words,chars',
     });
 
@@ -151,32 +151,32 @@ export const useMobileValueSVGAnimations = () => {
   };
 
   const createPage2SvgAnim = (tl: GSAPTimeline) => {
-    const valueTextRedEn = new SplitText(`#value-2-svg-mobile .value-text-en.text-red-500`, {
+    const valueTextRedEn = new SplitText(`#connect-2-svg-mobile .connect-text-en.text-red-500`, {
       type: 'lines,words,chars',
     });
-    const valueTextRedEn1 = new SplitText(`#value-2-svg-mobile .value-text-en-1`, {
+    const valueTextRedEn1 = new SplitText(`#connect-2-svg-mobile .connect-text-en-1`, {
       type: 'lines,words,chars',
     });
-    const valueTextRedEn2 = new SplitText(`#value-2-svg-mobile .value-text-en-2`, {
+    const valueTextRedEn2 = new SplitText(`#connect-2-svg-mobile .connect-text-en-2`, {
       type: 'lines,words,chars',
     });
-    const valueTextRedEn3 = new SplitText(`#value-2-svg-mobile .value-text-en-3`, {
+    const valueTextRedEn3 = new SplitText(`#connect-2-svg-mobile .connect-text-en-3`, {
       type: 'lines,words,chars',
     });
-    const valueTextBlackEn4 = new SplitText(`#value-2-svg-mobile .value-text-en-4`, {
+    const valueTextBlackEn4 = new SplitText(`#connect-2-svg-mobile .connect-text-en-4`, {
       type: 'lines,words,chars',
     });
-    const valueTextNormalEn = new SplitText(`#value-2-svg-mobile .value-text-en:not(.text-red-500)`, {
+    const valueTextNormalEn = new SplitText(`#connect-2-svg-mobile .connect-text-en:not(.text-red-500)`, {
       type: 'lines,words,chars',
     });
     // 中文文本
-    const valueTextCn1 = new SplitText(`#value-2-svg-mobile .value-text-cn-1`, {
+    const valueTextCn1 = new SplitText(`#connect-2-svg-mobile .connect-text-cn-1`, {
       type: 'lines,words,chars',
     });
-    const valueTextCn2 = new SplitText(`#value-2-svg-mobile .value-text-cn-2`, {
+    const valueTextCn2 = new SplitText(`#connect-2-svg-mobile .connect-text-cn-2`, {
       type: 'lines,words,chars',
     });
-    const valueTextCn3 = new SplitText(`#value-2-svg-mobile .value-text-cn-3`, {
+    const valueTextCn3 = new SplitText(`#connect-2-svg-mobile .connect-text-cn-3`, {
       type: 'lines,words,chars',
     });
 
@@ -263,7 +263,7 @@ export const useMobileValueSVGAnimations = () => {
   };
 
   const createPage3SvgAnim = (tl: GSAPTimeline) => {
-    tl.fromTo('#value-3-svg-mobile p', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' });
+    tl.fromTo('#connect-3-svg-mobile p', { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power3.out' });
   };
 
   return {

@@ -325,7 +325,7 @@ $jscomp.polyfill(
             }
             var t = [],
               x = 0;
-            do t.push(void 0), x++, l(v.value).callWhenSettled_(ba(t.length - 1), O), (v = q.next());
+            do (t.push(void 0), x++, l(v.value).callWhenSettled_(ba(t.length - 1), O), (v = q.next()));
             while (!v.done);
           });
     };
@@ -356,7 +356,7 @@ $jscomp.polyfill(
   'es3',
 );
 $jscomp.checkStringArgs = function (k, n, l) {
-  if (null == k) throw new TypeError("The 'this' value for String.prototype." + l + ' must not be null or undefined');
+  if (null == k) throw new TypeError("The 'this' connect for String.prototype." + l + ' must not be null or undefined');
   if (n instanceof RegExp) throw new TypeError('First argument to String.prototype.' + l + ' must not be a regular expression');
   return k + '';
 };
@@ -788,7 +788,7 @@ var DracoDecoderModule = (function () {
         return '[Emscripten Module object]';
       };
     } else if (xa || ha)
-      ha
+      (ha
         ? (U = self.location.href)
         : 'undefined' != typeof document && document.currentScript && (U = document.currentScript.src),
         k && (U = k),
@@ -816,7 +816,7 @@ var DracoDecoderModule = (function () {
           };
           d.onerror = c;
           d.send(null);
-        });
+        }));
     var wd = a.print || console.log.bind(console),
       da = a.printErr || console.warn.bind(console);
     Object.assign(a, Xa);
@@ -936,7 +936,7 @@ var DracoDecoderModule = (function () {
         try {
           return a.instantiateWasm(d, e);
         } catch (g) {
-          da('Module.instantiateWasm callback failed with error: ' + g), ja(g);
+          (da('Module.instantiateWasm callback failed with error: ' + g), ja(g));
         }
       (function () {
         return fa ||

@@ -5,14 +5,14 @@ import {
   mobileCurrentPageIndexAtom,
   mobileIsScrollingAtom,
 } from '@/atoms';
-import { VALUE_GL_CONFIG } from '@/components/gl/config/valueGLConfig';
-import AnimalModel from '@/components/gl/model/value/AnimalModel';
+import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
+import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
-import { VALUE_PAGE_INDEX } from '@/constants/config';
-import { useMobileValueCrossAnimations } from '@/hooks/valueGL/useMobileValueCrossAnimations';
-import { useMobileValueSVGAnimations } from '@/hooks/valueGL/useMobileValueSVGAnimations';
+import { CONNECT_PAGE_INDEX } from '@/constants/config';
+import { useMobileConnectCrossAnimations } from '@/hooks/connectGL/useMobileConnectCrossAnimations';
+import { useMobileConnectSVGAnimations } from '@/hooks/connectGL/useMobileConnectSVGAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
@@ -40,7 +40,7 @@ const TitleSVG = memo(({ titleRef, position, rotation, scale, titleName }: Title
 
 TitleSVG.displayName = 'TitleSVG';
 
-const VALUE_PROGRESS_CONFIG = {
+const CONNECT_PROGRESS_CONFIG = {
   mobile: {
     0: 0,
     1: 0.425,
@@ -48,22 +48,22 @@ const VALUE_PROGRESS_CONFIG = {
   },
 } as const;
 
-function MobileValueGL() {
+function MobileConnectGL() {
   const { camera } = useThree();
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const setMobileIsScrolling = useSetAtom(mobileIsScrollingAtom);
   const modelRef = useRef<THREE.Group>(null);
-  const page1Config = useMemo(() => VALUE_GL_CONFIG[0], []);
+  const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const progressMap = useMemo(() => VALUE_PROGRESS_CONFIG.mobile, []);
+  const progressMap = useMemo(() => CONNECT_PROGRESS_CONFIG.mobile, []);
   const startAnimTLRef = useRef<gsap.core.Timeline | null>(null);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const isScrollingRef = useRef(false);
   const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
 
-  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim } = useMobileValueSVGAnimations();
-  const { createPage1CrossAnim, createPage2CrossAnim } = useMobileValueCrossAnimations({
+  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim } = useMobileConnectSVGAnimations();
+  const { createPage1CrossAnim, createPage2CrossAnim } = useMobileConnectCrossAnimations({
     modelRef,
     isScrollingRef,
   });
@@ -107,7 +107,7 @@ function MobileValueGL() {
       },
       '<',
     );
-    tl.to('#value-1-svg-mobile', { opacity: 1 }, '<');
+    tl.to('#connect-1-svg-mobile', { opacity: 1 }, '<');
 
     startAnimTLRef.current = tl;
     return () => {
@@ -116,15 +116,15 @@ function MobileValueGL() {
   }, [camera, page1Config, setCurrentPage]);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[VALUE_PAGE_INDEX].id) {
+    if (currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id) {
       startAnimTLRef.current?.play();
     } else {
-      gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
+      gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);
 
-  // Value 页动画
+  // Connect 页动画
   useGSAP(() => {
     if (!modelRef.current) return;
     const tl = gsap.timeline({
@@ -154,7 +154,7 @@ function MobileValueGL() {
   }, []);
 
   useEffect(() => {
-    if (currentPageIndex !== VALUE_PAGE_INDEX || innerPageNavigateTo === null || isScrollingRef.current) return;
+    if (currentPageIndex !== CONNECT_PAGE_INDEX || innerPageNavigateTo === null || isScrollingRef.current) return;
     const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
     if (progress !== undefined) {
       if (innerPageNavigateTo === 2) {
@@ -208,4 +208,4 @@ function MobileValueGL() {
   );
 }
 
-export default memo(MobileValueGL);
+export default memo(MobileConnectGL);

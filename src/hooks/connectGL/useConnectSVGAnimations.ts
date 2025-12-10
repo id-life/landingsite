@@ -4,20 +4,20 @@ import { SplitText } from 'gsap/SplitText';
 import { Object3D } from 'three';
 import { useIsMobile } from '../useIsMobile';
 
-export const useValueSVGAnimations = () => {
+export const useConnectSVGAnimations = () => {
   const isMobile = useIsMobile();
   const { scene } = useThree();
 
   const createMobileTextAnim = (tl: GSAPTimeline, index: number) => {
-    const value1TextRedEn = new SplitText(`#value-${index}-svg-mobile .value-text-en.text-red-500`, {
+    const value1TextRedEn = new SplitText(`#connect-${index}-svg-mobile .connect-text-en.text-red-500`, {
       type: 'lines,words,chars',
     });
-    const value1TextNormalEn = new SplitText(`#value-${index}-svg-mobile .value-text-en:not(.text-red-500)`, {
+    const value1TextNormalEn = new SplitText(`#connect-${index}-svg-mobile .connect-text-en:not(.text-red-500)`, {
       type: 'lines,words,chars',
     });
 
     // 中文文本
-    const value1TextCn = new SplitText(`#value-${index}-svg-mobile .value-text-cn`, {
+    const value1TextCn = new SplitText(`#connect-${index}-svg-mobile .connect-text-cn`, {
       type: 'lines,words,chars',
     });
 

@@ -103,7 +103,7 @@ const StaticParticleGL = ({
         // create an array, include existing particle indexes
         const preParticleIndexes = particles.map((_, index) => index);
 
-        // particle spacing, control particle density, the larger the value, the larger the spacing
+        // particle spacing, control particle density, the larger the connect, the larger the spacing
         const spacing = Math.ceil(1 / (loadPercentage * resolution));
 
         const [imgWidth, imgHeight] = [sourceImg.width, sourceImg.height];

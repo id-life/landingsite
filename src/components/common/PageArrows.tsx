@@ -12,7 +12,7 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
+import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -25,7 +25,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Value 页有
+    return 3; // 目前就一个 Connect 页有
   }, [currentPage]);
 
   // 更新 innerPageTotal
@@ -58,10 +58,10 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
-  const { sendValueShowEvent } = useValueShowEvent();
+  const { sendValueShowEvent } = useConnectShowEvent();
 
   const throttleTime = useMemo(() => {
-    if (currentPage.id === 'value_page') return 2000;
+    if (currentPage.id === 'connect_page') return 2000;
     return 500;
   }, [currentPage]);
 

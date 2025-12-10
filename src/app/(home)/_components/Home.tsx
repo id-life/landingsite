@@ -2,7 +2,7 @@
 
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
-import Value from '@/app/value/Value';
+import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
 import PCFixedUI from '@/components/common/PCFixedUI';
@@ -56,7 +56,7 @@ export default function Home() {
           <Spectrum />
           <Engagement />
           <Twin />
-          <Value />
+          <Connect />
           <Footer />
           <FooterContact />
         </div>

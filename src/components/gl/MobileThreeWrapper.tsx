@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 import { Fluid } from './fluid/Fluid';
 import { NAV_LIST } from '../nav/nav';
 import { Canvas } from '@react-three/fiber';
-import MobileValueGL from './MobileValueGL';
+import MobileConnectGL from './MobileConnectGL';
 import MobileVisionGL from './MobileVisionGL';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useIsMounted } from '@/hooks/useIsMounted';
@@ -37,7 +37,7 @@ export default function MobileThreeWrapper() {
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         <Suspense fallback={null}>
           <MobileVisionGL />
-          <MobileValueGL />
+          <MobileConnectGL />
         </Suspense>
         <EffectComposer>
           <Fluid />

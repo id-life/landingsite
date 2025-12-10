@@ -1,6 +1,6 @@
 'use client';
 
-import FixedValue from '@/app/value/FixedValue';
+import FixedConnect from '@/app/connect/FixedConnect';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import MobileAudioPlayer from '../audio/MobileAudioPlayer';
@@ -20,7 +20,7 @@ export default function MobileFixedUI() {
         <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
       )}
 
-      <FixedValue />
+      <FixedConnect />
       <ClientOnly>
         <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
       </ClientOnly>

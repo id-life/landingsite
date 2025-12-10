@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const VALUE_GL_CONFIG = [
+export const CONNECT_GL_CONFIG = [
   // Page 1
   {
     from: {

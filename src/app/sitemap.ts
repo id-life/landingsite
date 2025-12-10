@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: 'https://www.id.life/value',
+      url: 'https://www.id.life/connect',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,

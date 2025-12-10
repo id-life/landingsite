@@ -1,4 +1,4 @@
-import Animal2Model from '@/components/gl/model/value/Animal2Model';
+import Animal2Model from '@/components/gl/model/connect/Animal2Model';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';

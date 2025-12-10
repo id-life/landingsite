@@ -4,9 +4,9 @@ import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Value 信念',
+  title: 'CONNECT 联结',
   description:
-    "Immortal Dragons' value and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
+    "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     'Immortal Dragons',
   ],
   openGraph: {
-    title: 'Value 信念',
+    title: 'CONNECT 联结',
     siteName: 'Immortal Dragons',
     description:
-      "Immortal Dragons' value and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
+      "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',
@@ -34,17 +34,17 @@ export const metadata: Metadata = {
 const jsonLd = [
   {
     '@context': 'https://schema.org',
-    '@type': 'Values',
-    name: 'Values',
-    url: 'https://www.id.life/value',
+    '@type': 'Connects',
+    name: 'Connects',
+    url: 'https://www.id.life/connect',
   },
   {
     '@context': 'https://schema.org',
     '@type': 'DefinedTermSet',
-    name: 'Values',
+    name: 'Connects',
   },
 ];
-export default function ValueLayout({ children }: { children: ReactNode }) {
+export default function ConnectLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />

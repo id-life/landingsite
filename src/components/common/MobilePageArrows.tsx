@@ -13,7 +13,7 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useEffect, useCallback } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
+import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -26,7 +26,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Value 页有
+    return 3; // 目前就一个 Connect 页有
   }, [currentPage]);
 
   // 更新 innerPageTotal
@@ -60,7 +60,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const { mobileNavChange } = useMobileNavigation();
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
-  const { sendValueShowEvent } = useValueShowEvent();
+  const { sendValueShowEvent } = useConnectShowEvent();
 
   const handleClick = useThrottle(() => {
     if (mobileIsScrolling) return;

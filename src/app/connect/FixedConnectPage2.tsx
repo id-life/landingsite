@@ -1,9 +1,9 @@
-export default function FixedValuePage2() {
+export default function FixedConnectPage2() {
   return (
-    <div id="fixed-value-page-2" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 h-screen w-screen">
+    <div id="fixed-connect-page-2" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 h-screen w-screen">
       <div className="absolute left-20 top-1/2 -translate-y-1/2">
         <div className="relative">
-          <svg className="value-title3 w-[39.3125rem]" viewBox="0 0 628 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="connect-title3 w-[39.3125rem]" viewBox="0 0 628 83" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/*M*/}
             <path fill="#BB1212" d="M0,82.8V0h18l24.8,53L67.7,0h18v82.8h-14.8V25l-21.8,46.6h-12.6L14.6,25v57.8H0Z" />
             {/*O*/}
@@ -37,7 +37,7 @@ export default function FixedValuePage2() {
             <path fill="#BB1212" d="M561,0v13.3h66.8V0h-66.8Z" />
             <path fill="#BB1212" d="M602,83V0h-15v83h15Z" />
           </svg>
-          <svg className="value-title3 value-title8 mt-9.5 w-[35.625rem]" viewBox="0 0 570 83">
+          <svg className="connect-title3 connect-title8 mt-9.5 w-[35.625rem]" viewBox="0 0 570 83">
             {/*V*/}
             <path d="M0,2.9L1.9,0h12.7l20.5,69.5h2.3L58,0h12.8l1.8,2.9-24.5,79.9h-23.8L0,2.9Z" />
             {/*E*/}
@@ -63,7 +63,7 @@ export default function FixedValuePage2() {
             <path d="M513,77.3v-7.8h37.1c3.5,0,5.3-1.7,5.3-5.2v-9.1c0-3-1.4-4.8-4.1-5.4l-24.4-4.9c-9.3-1.8-13.9-8.1-13.9-18.7v-6.6C513,6.5,519.5,0,532.6,0h28l7.1,5.5v7.8h-34.7c-3.5,0-5.3,1.7-5.3,5.2v8c0,3,1.4,4.8,4.1,5.4l24.4,4.8c9.3,1.9,13.9,8.2,13.9,18.7v7.8c0,13-6.5,19.6-19.6,19.6h-30.4l-7.1-5.5Z" />
           </svg>
           <svg
-            className="value-title3cn absolute top-1/2 w-[34.1875rem] -translate-y-1/2"
+            className="connect-title3cn absolute top-1/2 w-[34.1875rem] -translate-y-1/2"
             viewBox="0 0 548 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@ export default function FixedValuePage2() {
         </p>
       </div>
       <div className="absolute right-20 top-1/4 flex flex-col items-end">
-        <svg className="value-title8 w-[12.875rem]" viewBox="0 0 206 78" xmlns="http://www.w3.org/2000/svg">
+        <svg className="connect-title8 w-[12.875rem]" viewBox="0 0 206 78" xmlns="http://www.w3.org/2000/svg">
           {/*L*/}
           <path d="M0,77.3V0h13.7v64.8h34.9v12.4H0Z" />
           {/*I*/}
@@ -122,7 +122,7 @@ export default function FixedValuePage2() {
         </svg>
         <div className="relative mt-4 h-[9rem]">
           <svg
-            className="value-title4 absolute right-0 top-1/2 w-[26.8125rem] -translate-y-1/2"
+            className="connect-title4 absolute right-0 top-1/2 w-[26.8125rem] -translate-y-1/2"
             viewBox="0 0 429 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +155,7 @@ export default function FixedValuePage2() {
             />
           </svg>
           <svg
-            className="value-title4cn absolute right-0 top-1/2 w-[25.75rem] -translate-y-1/2"
+            className="connect-title4cn absolute right-0 top-1/2 w-[25.75rem] -translate-y-1/2"
             viewBox="0 0 412 132"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +180,7 @@ export default function FixedValuePage2() {
         </div>
         <div className="relative mb-4 h-[9rem]">
           <svg
-            className="value-title5 absolute right-0 top-1/2 w-[28.5rem] -translate-y-1/2"
+            className="connect-title5 absolute right-0 top-1/2 w-[28.5rem] -translate-y-1/2"
             viewBox="0 0 456 83"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +218,7 @@ export default function FixedValuePage2() {
             />
           </svg>
           <svg
-            className="value-title5cn absolute right-0 top-1/2 w-[25.6875rem] -translate-y-1/2"
+            className="connect-title5cn absolute right-0 top-1/2 w-[25.6875rem] -translate-y-1/2"
             viewBox="0 0 411 133"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 import { isCNAtom } from '@/atoms/geo';
-import ValueGL from '@/components/gl/ValueGL';
+import ConnectGL from '@/components/gl/ConnectGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
@@ -51,7 +51,7 @@ export default function ThreeWrapper() {
         {process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
         <Suspense fallback={null}>
           <VisionGL />
-          <ValueGL />
+          <ConnectGL />
           <Preload all />
         </Suspense>
         <EffectComposer>

@@ -21,7 +21,7 @@ export function useMobileNavigation() {
       if (item?.id === NAV_LIST[5].id) {
         setInnerPageIndex(0);
       } else {
-        gsap.to(window, { scrollTo: 0 }); // 从 value 切换页面时，回到顶部，因为目前就他一个可以滚动的
+        gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
         setInnerPageTotal(0);
       }
 

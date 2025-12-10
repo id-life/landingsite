@@ -30,9 +30,9 @@ export const NAV_LIST: NavItem[] = [
     href: '/digitaltwin',
   },
   {
-    id: 'value_page',
-    title: 'value 信念',
-    href: '/value',
+    id: 'connect_page',
+    title: 'CONNECT 联结',
+    href: '/connect',
   },
 ];
 

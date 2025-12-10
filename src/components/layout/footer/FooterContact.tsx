@@ -94,9 +94,9 @@ export default function FooterContact() {
           },
         },
       });
-      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '2.25rem' });
+      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '0rem' });
       timeline.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
-      timeline.to('.scroll-title', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
+      timeline.to('.scroll-title', { opacity: 0 }, '<');
     },
     { dependencies: [portalNode, isMobile] },
   );

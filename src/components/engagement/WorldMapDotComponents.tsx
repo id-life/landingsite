@@ -194,7 +194,7 @@ export function ContentSection({
         {title && (
           <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
             <span className="mr-2 whitespace-pre-wrap">{title}</span>
-            {period}
+            {/*{period}*/}
           </h3>
         )}
         {imgs?.length ? (
@@ -405,7 +405,7 @@ export function MobileContentSection({
       {title && (
         <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
           <span className="mr-2 whitespace-pre-wrap">{title}</span>
-          {period}
+          {/*{period}*/}
         </h3>
       )}
       <a

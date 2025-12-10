@@ -63,7 +63,7 @@ function Twin() {
   });
 
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // twin auto scroll to value
+    // twin auto scroll to connect
     scrollFn: () => {
       // console.log(
       //   '[DEBUG] [Twin] DOWN scrollFn called - enableDownJudge:',
@@ -72,7 +72,7 @@ function Twin() {
       //   window.isNavScrolling,
       // );
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
-      // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Value');
+      // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Connect');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {

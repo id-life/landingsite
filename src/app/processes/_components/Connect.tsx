@@ -58,7 +58,7 @@ const commonList: { tag: string; desc: string }[] = [
   },
 ];
 
-export default function Value() {
+export default function Connect() {
   const isMounted = useIsMounted();
   const loop1Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
   const loop2Tags = useMemo(() => _.shuffle(tags2.concat(tags2CN)), []);
@@ -213,7 +213,7 @@ function TagItem({ children }: { children?: JSX.Element | string }) {
     <div
       className={cn(
         'group relative inline-block min-w-max overflow-hidden',
-        "after:contents-[''] after:value-tag-border-clip after:absolute after:inset-0 after:-z-10 after:block after:border after:border-gray-800 after:bg-white after:transition after:duration-300 hover:after:border-red-600",
+        "after:contents-[''] after:connect-tag-border-clip after:absolute after:inset-0 after:-z-10 after:block after:border after:border-gray-800 after:bg-white after:transition after:duration-300 hover:after:border-red-600",
       )}
     >
       <div className="absolute -left-6.5 -top-6.5 h-10 w-10 rotate-45 border border-gray-800 transition duration-300 group-hover:border-red-600"></div>
