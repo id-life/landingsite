@@ -1,15 +1,36 @@
-export default function InsightNews() {
+'use client';
+
+export type NewsItem = {
+  id: string;
+  title: string;
+  date: string;
+  tag: 'New' | 'Coverage';
+  url: string;
+};
+
+type InsightNewsProps = {
+  item: NewsItem;
+};
+
+export default function InsightNews({ item }: InsightNewsProps) {
+  const tagStyles = {
+    New: 'bg-blue-600/20 text-blue-600',
+    Coverage: 'bg-purple/20 text-purple',
+  };
+
   return (
-    <div className="w-100">
+    <div className="">
       <a
-        className="text-xl/6 font-semibold hover:underline"
-        href="https://finance.yahoo.com/news/immortal-dragons-launches-40m-longevity-211000083.html?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAD0dRnP3qjey-9M-HRdtZebp4uordIJzxjJ3fV4Et1Gq3yRaw6IMjZtXm2S4ex0TGgh-YGzT9bIJ0U-KtqafY4rwkxe9SDLlAjlqsUUJXRXIvvPo6Ld4ogFiHuZpNdkt9c5mN-flsrOtzvttiX_BTqgCiHPivuByKkJ_gzo8XfTj"
+        className="line-clamp-3 block h-[4.5rem] font-poppins text-xl/6 font-semibold hover:underline"
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        Immortal Dragons Launch Fund I: $40m Purpose-Driven Longevity Fund
+        {item.title}
       </a>
-      <div className="mt-3 flex items-center justify-between">
-        <p className="rounded bg-blue-600/20 px-1.5 py-1 text-base/5 text-blue-600">New</p>
-        <p className="text-gray-450">JUL 17, 2025</p>
+      <div className="mt-4 flex items-center justify-between">
+        <span className={`rounded px-1.5 py-1 font-oxanium text-base/5 font-semibold ${tagStyles[item.tag]}`}>{item.tag}</span>
+        <span className="text-gray-450">{item.date}</span>
       </div>
     </div>
   );

@@ -1,26 +1,24 @@
 'use client';
 
 import { NAV_LIST } from '@/components/nav/nav';
-import InsightNews from '@/app/insights/_components/InsightNews';
+import NewsSection from '@/app/insights/_components/NewsSection';
+import TalksSection from '@/app/insights/_components/TalksSection';
+import PodcastSection from '@/app/insights/_components/PodcastSection';
 
 export default function Insights() {
   return (
-    <div id={NAV_LIST[5].id} className="page-container insights">
-      <div className="grid grid-cols-3 px-32 pt-30">
-        <div>
-          <h2 className="font-oxanium text-2xl font-semibold uppercase">NEWS & Coverage</h2>
-          <div className="mt-9">
-            <InsightNews />
-            <InsightNews />
-            <InsightNews />
-            <InsightNews />
-          </div>
+    <div id={NAV_LIST[5].id} className="page-container insights h-screen">
+      <div className="grid h-[calc(100vh-10rem)] grid-cols-3 gap-16 px-32 pt-30">
+        <div className="relative flex flex-col">
+          <NewsSection />
         </div>
-        <div>
-          <h2 className="font-oxanium text-2xl uppercase">Talks & Essays</h2>
+
+        <div className="relative flex flex-col">
+          <TalksSection />
         </div>
-        <div>
-          <h2 className="font-oxanium text-2xl uppercase">Podcast</h2>
+
+        <div className="relative flex flex-col">
+          <PodcastSection />
         </div>
       </div>
     </div>
