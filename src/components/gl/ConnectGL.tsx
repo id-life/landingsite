@@ -77,7 +77,7 @@ function ConnectGL() {
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
-            setCurrentPage(NAV_LIST[5]);
+            setCurrentPage(NAV_LIST[6]);
             setEnableUpJudge(true);
             if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();

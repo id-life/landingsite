@@ -78,7 +78,7 @@ function Twin() {
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: `#${NAV_LIST[5].id}` },
+        scrollTo: { y: `#${NAV_LIST[5].id}` }, // insights page
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;

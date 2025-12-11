@@ -130,7 +130,7 @@ function MobileConnectGL() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'valueTimeline',
-        trigger: `#${NAV_LIST[5].id}`,
+        trigger: `#${NAV_LIST[6].id}`,
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,

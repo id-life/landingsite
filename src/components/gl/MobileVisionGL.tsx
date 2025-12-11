@@ -96,7 +96,7 @@ export default function MobileVisionGL() {
   }, [currentPage]);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[5].id) {
+    if (currentPage.id === NAV_LIST[6].id) {
       gsap.set(modelRef.current, { visible: false });
     } else {
       gsap.set(modelRef.current, { visible: true });

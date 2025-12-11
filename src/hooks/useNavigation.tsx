@@ -87,6 +87,19 @@ export function useNavigation() {
         window.history.pushState({}, '', '/digitaltwin');
       } else if (item.id === NAV_LIST[5].id) {
         window.isNavScrolling = true;
+        smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
+        // requestAnimationFrame(() => {
+        //   const st = ScrollTrigger.getById('twin-scroll-trigger');
+        //   const twinShow = st?.labelToScroll('twin-show');
+        //   if (!twinShow) return;
+        //   smoother?.scrollTo(twinShow, false);
+        // });
+        setTimeout(() => {
+          window.isNavScrolling = false;
+        }, 500);
+        window.history.pushState({}, '', '/insights');
+      } else if (item.id === NAV_LIST[6].id) {
+        window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById('connect-page1-scroll-trigger');
@@ -107,7 +120,7 @@ export function useNavigation() {
       }
 
       setCurrentPage(item);
-      if (id === NAV_LIST[5].id) {
+      if (id === NAV_LIST[6].id) {
         setInnerPageIndex(0);
       } else {
         setInnerPageTotal(0);

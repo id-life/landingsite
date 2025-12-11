@@ -21,7 +21,7 @@ export default function VisionGL() {
     // in connect page, hide dragon model
     gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[5].id}`,
+        trigger: `#${NAV_LIST[6].id}`,
         scrub: true,
         onEnter: () => {
           if (!modelRef.current) return;

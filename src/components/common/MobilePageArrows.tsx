@@ -39,7 +39,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   const isLastPageAndInnerPage = useMemo(() => {
     // 最后一页 & 最后一小进度,不展示向下箭头
-    return currentPage.id === NAV_LIST[5].id && innerPageIndex === innerPageTotal - 1;
+    return currentPage.id === NAV_LIST[6].id && innerPageIndex === innerPageTotal - 1;
   }, [currentPage.id, innerPageIndex, innerPageTotal]);
 
   return (

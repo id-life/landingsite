@@ -2,6 +2,7 @@
 
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
+import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
@@ -56,6 +57,7 @@ export default function Home() {
           <Spectrum />
           <Engagement />
           <Twin />
+          <Insights />
           <Connect />
           <Footer />
           <FooterContact />

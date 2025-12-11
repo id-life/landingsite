@@ -75,6 +75,7 @@ const config: Config = {
           200: '#D4D4D4',
           350: '#999999',
           400: '#9C979D',
+          450: '#797A7D',
           500: '#7b7b7d',
           550: '#666666',
           700: '#444444',
@@ -104,6 +105,7 @@ const config: Config = {
         },
         blue: {
           DEFAULT: '#43BBFF',
+          600: '#3A51FF',
         },
         purple: {
           DEFAULT: '#CE3AFF',
