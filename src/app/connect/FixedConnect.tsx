@@ -268,14 +268,6 @@ export default function FixedConnect() {
             <p className="bilingual-font-poppins mt-4 w-[31rem] whitespace-pre-wrap text-base font-medium mobile:mt-2.5 mobile:w-full mobile:text-xs/4.5">
               {item.content}
             </p>
-            {/* <div className={cn('pointer-events-auto mt-3 flex items-center uppercase', item?.buttonClass)}>
-              <button onClick={() => setIsCN(false)}>
-                <EnBtnSVG active={!isCN} />
-              </button>
-              <button onClick={() => setIsCN(true)} className="-ml-2.5">
-                <CnBtnSVG active={isCN} />
-              </button>
-            </div> */}
           </div>
         </Fragment>
       ))}

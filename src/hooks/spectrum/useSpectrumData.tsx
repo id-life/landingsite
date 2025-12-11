@@ -105,54 +105,11 @@ export const useSpectrumData = () => {
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
       {
-        title: 'Insights & Advocacy',
-        titleCn: '演讲与洞见',
-        icon: <MeetingSVG />,
-        links: [
-          {
-            label: 'Immortal Dragons Launching Announcement',
-            link: 'https://vcwire.tech/2025/08/12/immortal-dragons-launches-40m-longevity-fund/',
-          },
-          {
-            label: 'Immortal Dragons and 3D Biofabrication',
-            link: 'https://www.drugdiscoverynews.com/vascular-engineering-opens-the-door-to-organ-scale-tissue-replacement-16709',
-          },
-          {
-            label: 'Immortal Dragons and Longevity Asia',
-            link: 'https://www.biospectrumasia.com/analysis/26/26702/how-asia-is-pioneering-longevity-biotech.html',
-          },
-          {
-            label: 'Guest Article Piece with Drug Discovery Online',
-            link: 'https://www.drugdiscoveryonline.com/doc/notes-from-a-vc-what-it-takes-to-be-impactful-in-longevity-science-0001',
-          },
-          {
-            label: 'Vitalist Bay Fireside Chat',
-            link: 'https://www.youtube.com/watch?v=2FJi1k7xNuo',
-          },
-          {
-            label: 'Founder Interview with Beyond Tomorrow',
-            link: 'https://www.youtube.com/watch?v=Cwhcqi-xNM8',
-          },
-          {
-            label: 'Gene Therapies Roundtable with Liz Parrish',
-            link: 'https://www.youtube.com/watch?v=W3pBINeJUSg&t=3538s',
-          },
-          {
-            label: '2060 Longevity Forum Panel',
-            link: 'https://www.youtube.com/watch?v=JW7KbX7vcUM',
-          },
-        ],
-      },
-      {
         title: 'Translation & Publishing',
         titleCn: '翻译与出版',
         icon: <BookSVG />,
         className: '-ml-8 mobile:ml-0',
         links: [
-          {
-            label: 'bio/acc manifesto',
-            routeKey: 'bioacc-manifesto',
-          },
           {
             label: 'The Network State',
             labelClassName: 'italic',
@@ -167,6 +124,48 @@ export const useSpectrumData = () => {
             label: 'The case against death',
             isComingSoon: true,
             labelClassName: 'italic',
+          },
+        ],
+      },
+      {
+        title: 'Evanglism',
+        titleCn: '布道者',
+        icon: <RelationSVG />,
+        links: [
+          {
+            label: 'Influence Network',
+            link: '/spectrum/influence-network',
+          },
+          {
+            label: 'Disease Management & Cure Status',
+            link: '/spectrum/disease-management',
+          },
+        ],
+      },
+      {
+        title: 'Digital Twin',
+        titleCn: '数字孪生',
+        icon: <DigitalTwinSVG />,
+        className: '-ml-8 mobile:ml-0',
+        links: [
+          {
+            label: 'Access Digital Twin',
+            routeKey: 'digital-twin',
+          },
+        ],
+      },
+      {
+        title: 'Global Internship',
+        titleCn: '实习生计划',
+        icon: <InternSVG />,
+        links: [
+          {
+            label: 'Apply (CN)',
+            link: 'https://id.life/career',
+          },
+          {
+            label: 'Apply (EN)',
+            link: 'https://id.life/career-en',
           },
         ],
       },
@@ -218,82 +217,6 @@ export const useSpectrumData = () => {
           {
             label: 'HackAging.ai Hackathon', // 11
             link: 'https://www.hackaging.ai/',
-          },
-          {
-            label: 'BiohackerDAO',
-            routeKey: 'biohacker-dao',
-          },
-          {
-            label: 'ETHPanda 青年黑客远航计划',
-            routeKey: 'eth-panda',
-          },
-        ],
-      },
-      {
-        title: 'Podcast',
-        titleCn: '播客',
-        icon: <PodcastSVG />,
-        links: [
-          {
-            label: 'Immortal Dragons  不朽真龙',
-            link: '/podcast',
-          },
-          {
-            label: 'Long Talk  龙门阵',
-            link: '/podcast?c=lt',
-          },
-        ],
-      },
-      {
-        title: 'Evanglism',
-        titleCn: '布道者',
-        icon: <RelationSVG />,
-        links: [
-          {
-            label: 'Influence Network',
-            link: '/spectrum/influence-network',
-          },
-          {
-            label: 'Disease Management & Cure Status',
-            link: '/spectrum/disease-management',
-          },
-        ],
-      },
-      {
-        title: 'Digital Twin',
-        titleCn: '数字孪生',
-        icon: <DigitalTwinSVG />,
-        className: '-ml-8 mobile:ml-0',
-        links: [
-          {
-            label: 'Access Digital Twin',
-            routeKey: 'digital-twin',
-          },
-        ],
-      },
-      {
-        title: 'ID Gallery Museum',
-        titleCn: '总部办公室',
-        icon: <MuseumSVG />,
-        links: [
-          {
-            label: '3 Biopolis Dr, Singapore 138623',
-            link: 'https://maps.app.goo.gl/sXGuujRuCP8nmjJF9',
-          },
-        ],
-      },
-      {
-        title: 'Global Internship',
-        titleCn: '实习生计划',
-        icon: <InternSVG />,
-        links: [
-          {
-            label: 'Apply (CN)',
-            link: 'https://id.life/career',
-          },
-          {
-            label: 'Apply (EN)',
-            link: 'https://id.life/career-en',
           },
         ],
       },

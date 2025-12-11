@@ -111,7 +111,7 @@ const SpectrumLink = memo(
 
 SpectrumLink.displayName = 'SpectrumLink';
 
-const linksPerPage = 5;
+const linksPerPage = 20;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
     ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs }, ref) => {

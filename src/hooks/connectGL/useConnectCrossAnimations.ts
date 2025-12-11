@@ -1,10 +1,12 @@
 import { innerPageIndexAtom } from '@/atoms';
+import { isSubscribeShowAtom } from '@/atoms/footer';
 import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
 import { useThree } from '@react-three/fiber';
 import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { Group, Vector3 } from 'three';
 import gsap from 'gsap';
+import { isMobile } from 'react-device-detect';
 
 export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group> }) => {
   const { camera } = useThree();
@@ -13,6 +15,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
   const page3Config = useMemo(() => CONNECT_GL_CONFIG[2], []);
 
   const setValuePageIndex = useSetAtom(innerPageIndexAtom);
+  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
 
   // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
@@ -67,6 +70,59 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
         },
         '0',
       );
+    });
+  };
+
+  // Footer 动画 - 在 timeline 结束后独立执行
+  const playFooterEnterAnim = () => {
+    setIsSubscribeShow(true);
+    gsap.to('.page-footer-contact', { bottom: isMobile ? '5rem' : '0rem', duration: 0.5, ease: 'power2.out' });
+    gsap.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem', duration: 0.5, ease: 'power2.out' });
+    gsap.to('.scroll-title', { opacity: 0, duration: 0.5 });
+
+    // 英文标题一个一个消失，然后中文标题一个一个出现
+    const title1 = gsap.utils.toArray('.connect-title1 *');
+    const title1cn = gsap.utils.toArray('.connect-title1cn path');
+    const title2 = gsap.utils.toArray('.connect-title2 *');
+    const title2cn = gsap.utils.toArray('.connect-title2cn path');
+    const title3 = gsap.utils.toArray('.connect-title3 *');
+    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const allEnTitles = [...title1, ...title2, ...title3];
+    const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+    const enDuration = allEnTitles.length * 0.02;
+    allEnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+    });
+    allCnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 1, duration: 0.05, delay: enDuration + index * 0.02 });
+    });
+  };
+
+  const playFooterLeaveAnim = () => {
+    setIsSubscribeShow(false);
+    gsap.to('.page-footer-contact', { bottom: '-20rem', duration: 0.5, ease: 'power2.out' });
+    gsap.to('.sound-button', { bottom: '2.5rem', duration: 0.5, ease: 'power2.out' });
+    gsap.to('.scroll-title', { opacity: 1, duration: 0.5 });
+
+    // 中文标题一个一个消失，然后英文标题一个一个出现
+    const title1 = gsap.utils.toArray('.connect-title1 *');
+    const title1cn = gsap.utils.toArray('.connect-title1cn path');
+    const title2 = gsap.utils.toArray('.connect-title2 *');
+    const title2cn = gsap.utils.toArray('.connect-title2cn path');
+    const title3 = gsap.utils.toArray('.connect-title3 *');
+    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const allEnTitles = [...title1, ...title2, ...title3];
+    const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+    const cnDuration = allCnTitles.length * 0.02;
+    allCnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+    });
+    allEnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 1, duration: 0.05, delay: cnDuration + index * 0.02 });
     });
   };
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
@@ -237,5 +293,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     createPage1CrossAnim,
     createPage2CrossAnim,
     createPage3CrossAnim,
+    playFooterEnterAnim,
+    playFooterLeaveAnim,
   };
 };

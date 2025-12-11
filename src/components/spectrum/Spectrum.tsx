@@ -27,7 +27,7 @@ function Spectrum() {
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const spectrumItems = useMemo(() => {
-    return spectrumData.map((item, index) => (
+    return spectrumData.slice(0, 4).map((item, index) => (
       <SpectrumItem
         key={item.title}
         item={item}
@@ -274,8 +274,25 @@ function Spectrum() {
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
         <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24 grid grid-cols-4 gap-3" ref={wrapperRef}>
-            {spectrumItems}
+          <div className="ml-24 flex">
+            <div className="grid grid-cols-2 gap-3" ref={wrapperRef}>
+              {spectrumItems}
+            </div>
+            <SpectrumItem
+              key={spectrumData[spectrumData.length - 1].title}
+              item={spectrumData[spectrumData.length - 1]}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+              onClick={(e) => {
+                spectrumData[spectrumData.length - 1].onClick?.(e);
+              }}
+              ref={(element) => {
+                if (element) {
+                  spectrumRefs.current[spectrumData.length - 1] = element;
+                }
+              }}
+            />
           </div>
         </div>
       </div>

@@ -44,7 +44,7 @@ function ConnectGL() {
     document.body.style.overflow = '';
   }, []);
 
-  const { createPage1CrossAnim } = useConnectCrossAnimations({ modelRef });
+  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({ modelRef });
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // twin auto scroll to connect
@@ -82,7 +82,6 @@ function ConnectGL() {
             if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
-            // console.log('connect page1 onEnter');
             window.isNavScrolling = true;
             window.isSmootherScrolling = true;
             smoother.paused(true);
@@ -99,9 +98,11 @@ function ConnectGL() {
           },
           onEnterBack: () => {
             setEnableUpJudge(true);
+            playFooterLeaveAnim();
           },
           onLeave: () => {
             setEnableUpJudge(false);
+            playFooterEnterAnim();
           },
           onLeaveBack: () => {
             setEnableUpJudge(false);

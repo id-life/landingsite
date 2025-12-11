@@ -18,9 +18,7 @@ import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
 
 export default function PCFixedUI() {
-  const { trackEvent } = useGA();
   const currentPage = useAtomValue(currentPageAtom);
-  const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
 
   return (
     <div id="pc-fixed-ui" className="opacity-0">

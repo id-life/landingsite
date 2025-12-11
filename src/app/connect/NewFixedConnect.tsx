@@ -1,6 +1,4 @@
 import FixedConnectPage1 from '@/app/connect/FixedConnectPage1';
-import FixedConnectPage2 from '@/app/connect/FixedConnectPage2';
-import FixedConnectPage3 from '@/app/connect/FixedConnectPage3';
 
 export default function NewFixedConnect() {
   return (
