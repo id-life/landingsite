@@ -106,14 +106,11 @@ class SessionInvisibilityTracker {
 
 export function useSessionInvisibilityTracker() {
   const trackerRef = useRef<SessionInvisibilityTracker | null>(null);
-  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    if (isInitializedRef.current) return;
 
     trackerRef.current = new SessionInvisibilityTracker();
-    isInitializedRef.current = true;
 
     return () => {
       trackerRef.current?.dispose();
