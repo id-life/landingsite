@@ -5,6 +5,7 @@ import { ModelType } from '@/components/twin/model/type';
 
 export const GA_EVENT_NAMES = {
   // common
+  SESSION_INVISIBLE_TIME: 'session_invisible_time',
   MUSIC_TOGGLE: 'music_toggle',
   SUBSCRIBE_LETTER: 'subscribe_letter',
   MEDIUM_CLICK: 'medium_click',
@@ -167,6 +168,7 @@ export const GA_EVENT_LABELS = {
   },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,
+  | 'SESSION_INVISIBLE_TIME'
   | 'PORTFOLIO_VIEW'
   | 'CONTACT_EMAIL'
   | 'PRESENCE_VIEW'
