@@ -23,7 +23,7 @@ class SessionInvisibilityTracker {
     this.sessionStartTime = Date.now();
     this.invisibleStartTime = document.visibilityState === 'hidden' ? Date.now() : null;
     this.totalInvisibleTime = 0;
-    this.visibilityChanges = 0;
+    this.visibilityChanges = document.visibilityState === 'hidden' ? 1 : 0;
     this.hasSentEvent = false;
     this.removeUnloadListeners = () => {
       window.removeEventListener('pagehide', this.handleUnload);
@@ -71,18 +71,16 @@ class SessionInvisibilityTracker {
       visibility_changes: data.visibilityChanges,
     };
 
-    console.debug('session_invisible_time eventData', eventData);
-
     sendGAEvent('event', GA_EVENT_NAMES.SESSION_INVISIBLE_TIME, eventData);
   }
 
   private handleVisibilityChange = () => {
     const now = Date.now();
 
+    this.visibilityChanges += 1;
     if (document.visibilityState === 'hidden') {
       // Page became hidden - start tracking invisible time
       this.invisibleStartTime = now;
-      this.visibilityChanges += 1;
     } else if (document.visibilityState === 'visible') {
       // Page became visible - accumulate invisible time
       if (this.invisibleStartTime !== null) {
