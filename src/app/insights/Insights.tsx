@@ -8,7 +8,7 @@ import PodcastSection from '@/app/insights/_components/PodcastSection';
 export default function Insights() {
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="grid h-[calc(100vh-10rem)] grid-cols-3 gap-16 px-32 pt-30">
+      <div className="flex h-[calc(100vh-10rem)] gap-16 px-32 pt-30">
         <div className="relative flex flex-col">
           <NewsSection />
         </div>
