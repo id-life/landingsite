@@ -8,7 +8,7 @@ export type TalkItem = {
   id: string;
   title: string;
   description: string;
-  image: string;
+  videoId: string;
   url: string;
   date: string;
 };
@@ -19,32 +19,40 @@ const mockTalksData: TalkItem[] = [
     id: '1',
     title: 'The Future of Longevity Science',
     description: 'A deep exploration into cutting-edge research transforming our understanding of aging and healthspan.',
-    image: '/images/talks/talk-1.jpg',
-    url: '#',
+    videoId: 'NFSqoVjI54w',
+    url: 'https://www.youtube.com/watch?v=NFSqoVjI54w',
     date: 'JUL 17, 2025',
   },
   {
     id: '2',
     title: 'Investment Strategies in Biotech',
     description: 'Key insights on navigating the complex landscape of biotechnology investments for maximum impact.',
-    image: '/images/talks/talk-2.jpg',
-    url: '#',
+    videoId: 'NFSqoVjI54w',
+    url: 'https://www.youtube.com/watch?v=NFSqoVjI54w',
     date: 'JUL 17, 2025',
   },
   {
     id: '3',
     title: 'Cellular Rejuvenation Breakthroughs',
     description: 'Examining the latest advancements in cellular reprogramming and their implications for human health.',
-    image: '/images/talks/talk-3.jpg',
-    url: '#',
+    videoId: 'NFSqoVjI54w',
+    url: 'https://www.youtube.com/watch?v=NFSqoVjI54w',
     date: 'JUL 17, 2025',
   },
   {
     id: '4',
     title: 'AI in Drug Discovery',
     description: 'How artificial intelligence is revolutionizing the pharmaceutical industry and accelerating innovation.',
-    image: '/images/talks/talk-4.jpg',
-    url: '#',
+    videoId: 'NFSqoVjI54w',
+    url: 'https://www.youtube.com/watch?v=NFSqoVjI54w',
+    date: 'JUL 17, 2025',
+  },
+  {
+    id: '5',
+    title: 'AI in Drug Discovery',
+    description: 'How artificial intelligence is revolutionizing the pharmaceutical industry and accelerating innovation.',
+    videoId: 'NFSqoVjI54w',
+    url: 'https://www.youtube.com/watch?v=NFSqoVjI54w',
     date: 'JUL 17, 2025',
   },
 ];
@@ -64,7 +72,7 @@ export default function TalksSection() {
       <div className="mt-9 flex flex-1 flex-col justify-between">
         {Array.from({ length: 3 }).map((_, index) => {
           const item = currentItems[index];
-          return item ? <TalkCard key={item.id} item={item} /> : <div key={`placeholder-${index}`} className="h-[7.5rem]" />;
+          return item ? <TalkCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
         })}
       </div>
 
