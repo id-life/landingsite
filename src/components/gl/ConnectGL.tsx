@@ -47,16 +47,14 @@ function ConnectGL() {
   const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({ modelRef });
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // twin auto scroll to connect
+    // connect auto scroll to insights
     scrollFn: () => {
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
-      const st = ScrollTrigger.getById('twin-scroll-trigger');
-      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
+        scrollTo: { y: `#${NAV_LIST[5].id}` },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;

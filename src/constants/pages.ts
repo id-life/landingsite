@@ -77,6 +77,17 @@ export const PAGE_CONFIGS: readonly PageConfig[] = [
       scrub: true,
     },
   },
+
+  // Insights 页
+  {
+    id: PAGE_IDS.INSIGHTS,
+    scrollTrigger: {
+      trigger: `#${PAGE_IDS.INSIGHTS}`,
+      start: 'top bottom',
+      end: 'top center',
+      scrub: true,
+    },
+  },
 ] as const;
 
 /**

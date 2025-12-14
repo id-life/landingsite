@@ -50,6 +50,21 @@ export const THEME_TRANSITIONS = {
     '--subscribe-border': '#ffffff',
     '--subscribe-bg': '#ffffff33',
   },
+  [PAGE_IDS.INSIGHTS]: {
+    '--gradient-from': '#FFFFFF',
+    '--gradient-via': '#e5ebf5',
+    '--gradient-via-percent': '50%',
+    '--gradient-to': '#CBD6EA',
+    '--background': '#F0F0F0',
+    '--foreground': '#000000',
+    '--audio-player': '#2E2F31',
+    '--audio-content': '#E2E8F4',
+    '--audio-border': '#EEF4FF',
+    '--audio-order': '#ffffff',
+    '--audio-desc': '#222222',
+    '--subscribe-border': '#ffffff',
+    '--subscribe-bg': '#ffffff33',
+  },
 } as const;
 
 // ScrollSmoother 默认配置

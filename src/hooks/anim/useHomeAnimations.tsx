@@ -35,6 +35,10 @@ const THEME_HANDLERS = {
     timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.TWIN]);
     timeline.to('.base-background2', { opacity: 1 });
   },
+  [PAGE_IDS.INSIGHTS]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Insights 页面：浅色主题，与 Twin 相似
+    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.INSIGHTS]);
+  },
 } as const;
 
 /**
