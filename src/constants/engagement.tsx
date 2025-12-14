@@ -267,7 +267,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalia @ Roatan, Honduras',
     link: 'https://community.prospera.co/c/events/vitalia',
     contentTransformClass: 'translate-x-[85%] -translate-y-[55%]',
-    mobileContentTransformClass: 'translate-x-1/2 -translate-y-[60%]',
+    mobileContentTransformClass: 'translate-x-[70%] -translate-y-[60%]',
     pcDotHotAreaClass: 'right-full -left-full top-[36vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5', 'world-map-dot-7'],
     imgs: [
@@ -305,7 +305,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     link: 'https://www.vitalistbay.com/summit',
     isSponsor: true,
     contentTransformClass: 'translate-x-[85%] -translate-y-[35%]',
-    mobileContentTransformClass: 'translate-x-[60%] -translate-y-[32%]',
+    mobileContentTransformClass: 'translate-x-full -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3', 'world-map-dot-sponsor-3'],
     videoUrl: 'https://www.youtube.com/watch?v=2FJi1k7xNuo&t=1382s',
