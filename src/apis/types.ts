@@ -14,6 +14,7 @@ export type AudioDataItem = {
   createdAt?: string;
   xyzLink?: string;
   podcastLink?: string;
+  spotifyLink?: string;
 };
 
 export interface CharacterRelationData {

@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useAtomValue } from 'jotai';
 import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
-import { PodcastItem as APIPodcastItem } from '@/apis/types';
+import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
 export type PodcastItem = {
   id: number;
   title: string;
   subtitle: string;
   description: string;
-  duration: string;
+  duration: number;
   date: string;
   xyzLink?: string;
   spotifyLink?: string;
@@ -19,36 +20,38 @@ export type PodcastItem = {
 
 const ITEMS_PER_PAGE = 3;
 
-// Helper function to format duration from seconds to HH:MM:SS
-function formatDuration(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-}
-
 type PodcastSectionProps = {
-  data?: APIPodcastItem[];
+  podcasts?: { id: number }[];
   isLoading?: boolean;
 };
 
-export default function PodcastSection({ data = [], isLoading }: PodcastSectionProps) {
+export default function PodcastSection({ podcasts = [], isLoading }: PodcastSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const podcastIDList = useAtomValue(podcastIDAtom);
+  const podcastLTList = useAtomValue(podcastLTAtom);
 
-  // Transform API data to component format
-  const podcastData = useMemo(() => {
-    return data.map((item) => ({
-      id: String(item.id),
-      title: item.title,
-      subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} · ${item.album}`,
-      description: item.description,
-      duration: formatDuration(item.duration),
-      date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      xyzLink: item.xyzLink || undefined,
-      spotifyLink: item.spotifyLink || undefined,
-      podcastLink: item.podcastLink || undefined,
-    }));
-  }, [data]);
+  const allPodcasts = useMemo(() => [...podcastIDList, ...podcastLTList], [podcastIDList, podcastLTList]);
+
+  const podcastData = useMemo<PodcastItem[]>(() => {
+    return podcasts
+      .map((podcast) => {
+        const item = allPodcasts.find((p) => p.id === podcast.id);
+        if (!item) return null;
+        return {
+          id: item.id,
+          title: item.title,
+          subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === PlayList.PODCAST_ID ? '' : '· 龙门阵Long Talk'}`,
+          description: item.description || '',
+          duration: item.duration,
+          date: item.createdAt!,
+          xyzLink: item.xyzLink,
+          podcastLink: item.podcastLink,
+          spotifyLink: item.spotifyLink,
+        } as PodcastItem;
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .slice(0, 12);
+  }, [podcasts, allPodcasts]);
 
   const totalPages = Math.ceil(podcastData.length / ITEMS_PER_PAGE);
   const currentItems = podcastData.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE);

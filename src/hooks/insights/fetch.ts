@@ -17,7 +17,7 @@ function extractYouTubeVideoId(url: string): string | null {
 }
 
 const filterByCategory = (data: InsightsItem[], categories: InsightsCategory[]) =>
-  data.filter((item) => categories.includes(item.category) && item.title).sort((a, b) => a.sequence - b.sequence);
+  data.filter((item) => categories.includes(item.category)).sort((a, b) => a.sequence - b.sequence);
 
 // Hook to get filtered and formatted insights data
 export function useInsightsData() {
@@ -44,14 +44,8 @@ export function useInsightsData() {
       essayPic: item.essayPic,
       category: item.category,
     }));
-
     const podcasts = filterByCategory(data, ['podcast']).map((item, index) => ({
       id: item.id,
-      episodeNumber: index + 1,
-      title: item.title!,
-      description: '',
-      duration: '',
-      url: item.url || '#',
     }));
 
     return { news, talks, podcasts };

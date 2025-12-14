@@ -5,13 +5,9 @@ import NewsSection from '@/app/insights/_components/NewsSection';
 import TalksSection from '@/app/insights/_components/TalksSection';
 import PodcastSection from '@/app/insights/_components/PodcastSection';
 import { useInsightsData } from '@/hooks/insights/fetch';
-import { useFetchPodcastList } from '@/hooks/podcast/fetch';
 
 export default function Insights() {
-  const { news, talks, isLoading: insightsLoading } = useInsightsData();
-  const { data: podcastData, isLoading: podcastLoading } = useFetchPodcastList();
-
-  const isLoading = insightsLoading || podcastLoading;
+  const { news, talks, podcasts, isLoading } = useInsightsData();
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
@@ -25,7 +21,7 @@ export default function Insights() {
         </div>
 
         <div className="relative flex flex-col">
-          <PodcastSection data={podcastData} isLoading={isLoading} />
+          <PodcastSection podcasts={podcasts} isLoading={isLoading} />
         </div>
       </div>
     </div>
