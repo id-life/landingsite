@@ -1,12 +1,32 @@
 import dayjs from 'dayjs';
 import { clsx } from 'clsx';
+import { useSetAtom, useAtomValue } from 'jotai';
 import { formatDuration } from '@/utils/podcast';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
+import { currentAudioAtom, playlistAtom, podcastIDAtom, podcastLTAtom, PlayList } from '@/atoms/audio-player';
 
 export function PodcastCard({ item }: { item: PodcastItem }) {
+  const setCurrentAudio = useSetAtom(currentAudioAtom);
+  const setPlaylist = useSetAtom(playlistAtom);
+  const podcastIDList = useAtomValue(podcastIDAtom);
+  const podcastLTList = useAtomValue(podcastLTAtom);
+
   const handleLinkClick = (type: string, url?: string) => {
     if (!url) return;
     window.open(url, '_blank');
+  };
+
+  const handlePlay = () => {
+    const audioData = podcastIDList.find((p) => p.id === item.id) || podcastLTList.find((p) => p.id === item.id);
+    if (!audioData) return;
+
+    setCurrentAudio(audioData);
+
+    if (audioData.category === PlayList.PODCAST_ID) {
+      setPlaylist(podcastIDList);
+    } else if (audioData.category === PlayList.PODCAST_LT) {
+      setPlaylist(podcastLTList);
+    }
   };
 
   return (
@@ -16,7 +36,7 @@ export function PodcastCard({ item }: { item: PodcastItem }) {
           <h3 className="line-clamp-1 font-poppins text-xl/6 font-semibold">{item.title}</h3>
           <p className="mt-3 line-clamp-1 text-base text-gray-450">{item.subtitle}</p>
         </div>
-        <img src="/imgs/podcast/podcast-play.png" className="w-11 cursor-pointer" alt="" />
+        <img src="/imgs/podcast/podcast-play.png" className="w-11 cursor-pointer" alt="" onClick={handlePlay} />
       </div>
       <p className="mt-2 line-clamp-3 text-base/6">{item.description}</p>
       <div className="mt-3 flex items-center justify-between">
