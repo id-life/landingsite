@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 
 export type PodcastItem = {
@@ -85,7 +84,6 @@ const ITEMS_PER_PAGE = 3;
 export default function PodcastSection() {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const totalPages = Math.ceil(mockPodcastData.length / ITEMS_PER_PAGE);
   const currentItems = mockPodcastData.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE);
 
   return (
@@ -98,8 +96,6 @@ export default function PodcastSection() {
           return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
         })}
       </div>
-
-      <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
     </div>
   );
 }

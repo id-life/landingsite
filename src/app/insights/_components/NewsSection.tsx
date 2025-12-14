@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import InsightNews, { NewsItem } from './InsightNews';
-import Pagination from './Pagination';
 
 const ITEMS_PER_PAGE = 4;
 const MAX_ITEMS = 16;
@@ -84,8 +83,6 @@ export default function NewsSection() {
           <InsightNews key={item.id} item={item} />
         ))}
       </div>
-
-      <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
     </div>
   );
 }

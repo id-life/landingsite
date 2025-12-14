@@ -5,44 +5,70 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
+import { Swiper as SwiperType } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import MobileInsightsNav from './_components/MobileInsightsNav';
 import NewsSection from './_components/NewsSection';
-import TalksSection from './_components/TalksSection';
 import PodcastSection from './_components/PodcastSection';
+import TalksSection from './_components/TalksSection';
 
-export default function MobileInsights() {
+function MobileInsights() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<SwiperType>();
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
 
+  const handleSlideChange = (swiper: SwiperType) => {
+    setActiveIndex(swiper.activeIndex);
+  };
+
+  const handleNavClick = (index: number) => {
+    swiperRef.current?.slideTo(index);
+  };
+
+  // 页面进入/离开动画
   useEffect(() => {
-    if (currentPage?.id !== NAV_LIST[5].id) {
+    if (currentPage?.id === NAV_LIST[5].id) {
+      enterAnimate();
+    } else {
       leaveAnimate();
-      return;
+      swiperRef.current?.slideTo(0, 0);
+      setActiveIndex(0);
     }
-    enterAnimate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   return (
     <div
       id={NAV_LIST[5].id}
-      className={cn('page-container-mobile min-h-screen bg-[#F0F0F0] px-5 pb-24 pt-20', {
+      className={cn('page-container-mobile mt-20 flex h-[calc(100svh-8.75rem)] flex-col', {
         hidden: currentPage?.id !== NAV_LIST[5].id,
       })}
     >
-      <div className="flex flex-col gap-12">
-        <div className="insights-section insights-section-news flex flex-col">
+      <Swiper
+        onBeforeInit={(swiper) => {
+          swiperRef.current = swiper;
+        }}
+        onSlideChange={handleSlideChange}
+        slidesPerView={1}
+        className="mobile-insights-content h-full w-full flex-1"
+      >
+        <SwiperSlide className="overflow-y-auto px-5 pb-4">
           <NewsSection />
-        </div>
-
-        <div className="insights-section insights-section-talks flex flex-col">
+        </SwiperSlide>
+        <SwiperSlide className="overflow-y-auto px-5 pb-4">
           <TalksSection />
-        </div>
-
-        <div className="insights-section insights-section-podcast flex flex-col">
+        </SwiperSlide>
+        <SwiperSlide className="overflow-y-auto px-5 pb-4">
           <PodcastSection />
-        </div>
+        </SwiperSlide>
+      </Swiper>
+      <div className="mobile-insights-nav">
+        <MobileInsightsNav activeIndex={activeIndex} onNavClick={handleNavClick} />
       </div>
     </div>
   );
 }
+
+export default memo(MobileInsights);

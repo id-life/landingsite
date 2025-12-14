@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Pagination from './Pagination';
 import TalkCard from '@/app/insights/_components/TalkCard';
 
 export type TalkItem = {
@@ -69,14 +68,12 @@ export default function TalksSection() {
     <div className="flex h-full flex-col">
       <h2 className="font-oxanium text-2xl font-semibold uppercase">TALKS & ESSAYS</h2>
 
-      <div className="mt-9 flex flex-1 flex-col justify-between">
+      <div className="mt-9 flex flex-1 flex-col justify-between mobile:gap-4">
         {Array.from({ length: 3 }).map((_, index) => {
           const item = currentItems[index];
           return item ? <TalkCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
         })}
       </div>
-
-      <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
     </div>
   );
 }

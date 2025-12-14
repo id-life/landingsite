@@ -6,53 +6,45 @@ export function useMobileInsightsAnim() {
   const { contextSafe } = useGSAP();
 
   const enterAnimate = contextSafe(() => {
-    const enterTL = gsap.timeline({
-      defaults: {
-        ease: 'power2.out',
-      },
+    const tl = gsap.timeline({
+      delay: 0.5, // 等待上一页退出动画
     });
 
-    // 设置初始状态 - 所有 section 隐藏并向下偏移
-    enterTL.set('.insights-section', {
+    // 设置初始状态
+    tl.set('.mobile-insights-content', {
       opacity: 0,
       y: 30,
     });
 
-    // 依次显示三个 section
-    enterTL.to('.insights-section-news', {
+    tl.set('.mobile-insights-nav', {
+      opacity: 0,
+    });
+
+    // 内容淡入上移
+    tl.to('.mobile-insights-content', {
       opacity: 1,
       y: 0,
       duration: 0.5,
+      ease: 'power2.out',
     });
 
-    enterTL.to(
-      '.insights-section-talks',
+    // 底部导航淡入
+    tl.to(
+      '.mobile-insights-nav',
       {
         opacity: 1,
-        y: 0,
-        duration: 0.5,
+        duration: 0.3,
+        ease: 'power2.out',
       },
-      '-=0.3',
+      '-=0.2',
     );
 
-    enterTL.to(
-      '.insights-section-podcast',
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-      },
-      '-=0.3',
-    );
-
-    enterTL.play();
+    return tl;
   });
 
   const leaveAnimate = useCallback(() => {
-    // 重置所有元素状态
-    gsap.set('.insights-section', {
+    gsap.set(['.mobile-insights-content', '.mobile-insights-nav'], {
       opacity: 0,
-      y: 30,
     });
   }, []);
 

@@ -10,11 +10,11 @@ export default function TalkCard({ item }: { item: TalkItem }) {
 
   return (
     <>
-      <div className="group flex gap-5">
-        <div className="relative h-42 w-75 flex-shrink-0">
+      <div className="group flex gap-5 mobile:flex-col mobile:gap-3">
+        <div className="relative h-42 w-75 flex-shrink-0 mobile:h-[9.8125rem] mobile:w-full">
           <YouTubeThumbnail videoId={item.videoId} title={item.title} onClick={() => setIsModalOpen(true)} />
         </div>
-        <div className="flex w-80 flex-1 flex-col justify-between py-1">
+        <div className="flex w-80 flex-1 flex-col justify-between py-1 mobile:w-full">
           <h3
             onClick={() => setIsModalOpen(true)}
             className="cursor-pointer font-poppins text-xl/6 font-semibold hover:underline"

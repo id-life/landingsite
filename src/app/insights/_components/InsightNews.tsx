@@ -19,7 +19,7 @@ export default function InsightNews({ item }: InsightNewsProps) {
   };
 
   return (
-    <div className="w-100">
+    <div className="w-100 mobile:w-auto">
       <a
         className="line-clamp-3 block h-[4.5rem] font-poppins text-xl/6 font-semibold hover:underline"
         href={item.url}
