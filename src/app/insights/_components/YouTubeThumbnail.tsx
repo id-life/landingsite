@@ -5,11 +5,11 @@ import { useState, useRef, useCallback } from 'react';
 type YouTubeThumbnailProps = {
   videoId: string;
   title: string;
+  pic: string;
   onClick: () => void;
 };
 
-export default function YouTubeThumbnail({ videoId, title, onClick }: YouTubeThumbnailProps) {
-  const [isHovering, setIsHovering] = useState(false);
+export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTubeThumbnailProps) {
   const [showPreview, setShowPreview] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -19,7 +19,6 @@ export default function YouTubeThumbnail({ videoId, title, onClick }: YouTubeThu
     hoverTimeoutRef.current = setTimeout(() => {
       setShowPreview(true);
     }, 500);
-    setIsHovering(true);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
@@ -27,7 +26,6 @@ export default function YouTubeThumbnail({ videoId, title, onClick }: YouTubeThu
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
     }
-    setIsHovering(false);
     setShowPreview(false);
   }, []);
 
@@ -39,11 +37,11 @@ export default function YouTubeThumbnail({ videoId, title, onClick }: YouTubeThu
       onClick={onClick}
     >
       <img
-        src={thumbnailUrl}
+        src={videoId ? thumbnailUrl : pic}
         alt={title}
-        className={`h-full w-full object-cover transition-all duration-300 ${isHovering ? 'scale-105' : ''}`}
+        className={`h-full w-full object-cover transition-all duration-300 hover:scale-105`}
       />
-      {showPreview && (
+      {videoId && showPreview && (
         <div className="absolute inset-0 overflow-hidden">
           <iframe
             className="absolute inset-0 h-full w-full"
