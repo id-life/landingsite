@@ -39,7 +39,7 @@ class SessionInvisibilityTracker {
 
     // Set up heartbeat to send events every minute when page is visible
     this.heartbeatIntervalId = setInterval(() => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'hidden') {
         this.sendEventThrottled('heartbeat');
       }
     }, this.HEARTBEAT_INTERVAL_MS);
