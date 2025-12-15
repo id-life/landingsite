@@ -3,6 +3,7 @@
 import React, { ReactNode } from 'react';
 import NewsHeader from './_components/NewsHeader';
 import NewsFooter from './_components/NewsFooter';
+import NewsSubscribeFooter from './_components/NewsSubscribeFooter';
 
 export default function NewsLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
       <NewsHeader />
       {children}
       <NewsFooter />
+      <NewsSubscribeFooter />
     </div>
   );
 }
