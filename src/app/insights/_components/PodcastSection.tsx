@@ -6,7 +6,7 @@ import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
-import RightSVG from '@/../public/svgs/twin/right.svg?component';
+import RightSVG from '@/../public/svgs/podcast/right.svg?component';
 
 export type PodcastItem = {
   id: number;
@@ -71,11 +71,11 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
         <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
         <div
           onClick={handleViewAllClick}
-          className="relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold text-red-600"
+          className="group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold"
         >
-          <ViewAllBorderSVG className="absolute left-0 top-0 h-full w-full fill-red-600" />
-          <p>VIEW ALL</p>
-          <RightSVG key="view-all" className="w-5 fill-red-600" />
+          <ViewAllBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600" />
+          <p className="group-hover:text-red-600">VIEW ALL</p>
+          <RightSVG key="view-all" className="w-5 fill-black group-hover:fill-red-600" />
         </div>
       </div>
 

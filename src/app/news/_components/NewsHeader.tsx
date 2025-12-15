@@ -1,8 +1,11 @@
 import gsap from 'gsap';
 import Logo from '@/components/nav/Logo';
+import { useRouter } from 'next/navigation';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 
 export default function NewsHeader() {
+  const router = useRouter();
+
   const handleSubscribeClick = () => {
     gsap.to(window, { scrollTo: { y: document.body.scrollHeight } });
     const input = document.querySelector<HTMLInputElement>('#news-subscribe-email');
@@ -11,7 +14,9 @@ export default function NewsHeader() {
 
   return (
     <div className="flex items-center justify-between py-10">
-      <Logo />
+      <div onClick={() => router.replace('/')} className="cursor-pointer">
+        <Logo />
+      </div>
       <div
         onClick={handleSubscribeClick}
         className="group relative flex h-10 w-34 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"

@@ -3,6 +3,7 @@ import NewsCard from './_components/NewsCard';
 import { ItemList, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
 import React from 'react';
+import SubTitle from '@/app/news/_components/SubTitle';
 
 export const revalidate = 300; // 5min
 
@@ -112,24 +113,15 @@ const jsonLd: WithContext<ItemList> = {
 export default async function NewsPage() {
   const data = await fetchNewsList();
   const news = data.code == 200 ? data.data : [];
-  const insight = news[0];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {insight && (
-        <>
-          <h1 className="text-5xl/[4.5rem] font-semibold mobile:text-2xl">Insights</h1>
-          <div className="relative mt-4">
-            <img className="w-full" src="/imgs/news/insights-bg.webp" alt="" />
-            <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/30 backdrop-blur-sm">
-              <p className="truncate p-4 text-2xl/7 font-semibold">{insight.title}</p>
-              <p className="mb-4 line-clamp-2 px-4 text-sm/5 font-medium">{insight.brief.replace(/[#*]/g, '').trim()}</p>
-            </div>
-          </div>
-        </>
-      )}
-      <h2 className="mt-16 text-4xl/[3.375rem] font-semibold mobile:mt-8 mobile:text-2xl">Latest News</h2>
+      <img className="mx-auto max-w-[62.5rem]" src="/imgs/news/insights-bg.webp" alt="" />
+      <div className="mt-10">
+        <SubTitle />
+      </div>
+      <h2 className="mt-16 text-4xl/[3.375rem] font-semibold mobile:mt-8 mobile:text-2xl">Insights & Resources</h2>
       <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1 mobile:gap-5">
         {news.map((item) => (
           <NewsCard data={item} key={item.id} />
