@@ -3,6 +3,7 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
+import { useInsightsData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { memo, useEffect, useRef, useState } from 'react';
@@ -18,6 +19,7 @@ function MobileInsights() {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperType>();
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
+  const { news, talks, podcasts, isLoading } = useInsightsData();
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.activeIndex);
@@ -55,13 +57,13 @@ function MobileInsights() {
         className="mobile-insights-content h-full w-full flex-1"
       >
         <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <NewsSection />
+          <NewsSection data={news} isLoading={isLoading} showPagination={false} />
         </SwiperSlide>
         <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <TalksSection />
+          <TalksSection data={talks} isLoading={isLoading} showPagination={false} />
         </SwiperSlide>
         <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <PodcastSection />
+          <PodcastSection podcasts={podcasts} isLoading={isLoading} showPagination={false} />
         </SwiperSlide>
       </Swiper>
       <div className="mobile-insights-nav">

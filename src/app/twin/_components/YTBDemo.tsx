@@ -27,7 +27,7 @@ export default function YTBDemo() {
       >
         <DemoBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600" />
         <div className="flex-center gap-2 text-base font-semibold group-hover:text-red-600">
-          <YoutubeSVG className="fill-black group-hover:fill-red-600" />
+          <YoutubeSVG key="ytb-demo" className="w-5 fill-black group-hover:fill-red-600" />
           DEMO
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-red-600 group-hover:stroke-red-600" />

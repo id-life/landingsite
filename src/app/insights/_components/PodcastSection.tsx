@@ -5,6 +5,8 @@ import { useAtomValue } from 'jotai';
 import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
+import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
+import RightSVG from '@/../public/svgs/twin/right.svg?component';
 
 export type PodcastItem = {
   id: number;
@@ -23,9 +25,10 @@ const ITEMS_PER_PAGE = 3;
 type PodcastSectionProps = {
   podcasts?: { id: number }[];
   isLoading?: boolean;
+  showPagination?: boolean;
 };
 
-export default function PodcastSection({ podcasts = [], isLoading }: PodcastSectionProps) {
+export default function PodcastSection({ podcasts = [], isLoading, showPagination = true }: PodcastSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
@@ -54,11 +57,27 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
   }, [podcasts, allPodcasts]);
 
   const totalPages = Math.ceil(podcastData.length / ITEMS_PER_PAGE);
-  const currentItems = podcastData.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE);
+  const currentItems = showPagination
+    ? podcastData.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE)
+    : podcastData;
+
+  const handleViewAllClick = () => {
+    window.open('/podcast', '_blank');
+  };
 
   return (
     <div className="flex h-full flex-col">
-      <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
+        <div
+          onClick={handleViewAllClick}
+          className="relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold text-red-600"
+        >
+          <ViewAllBorderSVG className="absolute left-0 top-0 h-full w-full fill-red-600" />
+          <p>VIEW ALL</p>
+          <RightSVG key="view-all" className="w-5 fill-red-600" />
+        </div>
+      </div>
 
       <div className="mt-9 flex flex-1 flex-col justify-between gap-4">
         {isLoading
@@ -74,13 +93,15 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
                 <div className="h-16 animate-pulse rounded bg-gray-800/50" />
               </div>
             ))
-          : Array.from({ length: 3 }).map((_, index) => {
-              const item = currentItems[index];
-              return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
-            })}
+          : showPagination
+            ? Array.from({ length: 3 }).map((_, index) => {
+                const item = currentItems[index];
+                return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
+              })
+            : currentItems.map((item) => <PodcastCard key={item.id} item={item} />)}
       </div>
 
-      <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+      {showPagination && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />}
     </div>
   );
 }

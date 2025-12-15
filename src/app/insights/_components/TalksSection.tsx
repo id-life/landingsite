@@ -21,13 +21,14 @@ const ITEMS_PER_PAGE = 3;
 type TalksSectionProps = {
   data?: TalkItem[];
   isLoading?: boolean;
+  showPagination?: boolean;
 };
 
-export default function TalksSection({ data = [], isLoading }: TalksSectionProps) {
+export default function TalksSection({ data = [], isLoading, showPagination = true }: TalksSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
 
   const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
-  const currentItems = data.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE);
+  const currentItems = showPagination ? data.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE) : data;
 
   return (
     <div className="flex h-full flex-col">
@@ -44,13 +45,15 @@ export default function TalksSection({ data = [], isLoading }: TalksSectionProps
                 </div>
               </div>
             ))
-          : Array.from({ length: 3 }).map((_, index) => {
-              const item = currentItems[index];
-              return item ? <TalkCard key={item.id} item={item} /> : <div key={index} className="h-42" />;
-            })}
+          : showPagination
+            ? Array.from({ length: 3 }).map((_, index) => {
+                const item = currentItems[index];
+                return item ? <TalkCard key={item.id} item={item} /> : <div key={index} className="h-42" />;
+              })
+            : currentItems.map((item) => <TalkCard key={item.id} item={item} />)}
       </div>
 
-      <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+      {showPagination && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />}
     </div>
   );
 }
