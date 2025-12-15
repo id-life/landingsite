@@ -14,6 +14,7 @@ export type AudioDataItem = {
   createdAt?: string;
   xyzLink?: string;
   podcastLink?: string;
+  spotifyLink?: string;
 };
 
 export interface CharacterRelationData {
@@ -82,4 +83,19 @@ export type PodcastCommentItemType = {
   nickName: string;
   source: string;
   xyzCommentId: string;
+};
+
+// Insights API Types
+export type InsightsCategory = 'news' | 'talk' | 'essay' | 'coverage' | 'podcast';
+
+export type InsightsItem = {
+  id: number;
+  title: string;
+  category: InsightsCategory;
+  sequence: number;
+  url: string;
+  publishDate: string;
+  essayPic?: string;
+  createdAt: string;
+  updatedAt: string;
 };

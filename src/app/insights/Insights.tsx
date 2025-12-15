@@ -11,6 +11,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useInsightsData } from '@/hooks/insights/fetch';
 
 export default function Insights() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -68,19 +69,21 @@ export default function Insights() {
     }
   }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
+  const { news, talks, podcasts, isLoading } = useInsightsData();
+
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
       <div className="flex h-[calc(100vh-10rem)] gap-16 px-32 pt-30">
         <div className="relative flex flex-col">
-          <NewsSection />
+          <NewsSection data={news} isLoading={isLoading} />
         </div>
 
         <div className="relative flex flex-col">
-          <TalksSection />
+          <TalksSection data={talks} isLoading={isLoading} />
         </div>
 
         <div className="relative flex flex-col">
-          <PodcastSection />
+          <PodcastSection podcasts={podcasts} isLoading={isLoading} />
         </div>
       </div>
     </div>
