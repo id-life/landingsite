@@ -4,13 +4,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Footer from '@/components/layout/footer/Footer';
 import { useAtom } from 'jotai';
 import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
+import { hasShownAutoSubscribeAtom } from '@/atoms/auto-subscribe';
 import gsap from 'gsap';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { trackEvent } from '@/hooks/useGA';
 
 export default function NewsSubscribeFooter() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
-  const [, setSubscribeType] = useAtom(subscribeTypeAtom);
+  const [subscribeType, setSubscribeType] = useAtom(subscribeTypeAtom);
+  const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
   const timelineRef = useRef<GSAPTimeline | null>(null);
   const [isReady, setIsReady] = useState(false);
 
@@ -39,10 +43,27 @@ export default function NewsSubscribeFooter() {
     };
   }, [isReady]);
 
+  useEffect(() => {
+    if (!isReady || hasShownAuto) return;
+
+    setIsSubscribeShow(true);
+    setSubscribeType('first');
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
+    });
+  }, [isReady, hasShownAuto, setIsSubscribeShow, setSubscribeType]);
+
   const handleClose = useCallback(() => {
     timelineRef.current?.reverse();
     setIsSubscribeShow(false);
-  }, [setIsSubscribeShow]);
+    setHasShownAuto(true);
+
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_CLOSE,
+      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_CLOSE.FOOTER,
+    });
+  }, [setIsSubscribeShow, setHasShownAuto, subscribeType]);
 
   useEventBus(MessageType.CLOSE_SUBSCRIBE, handleClose);
 
@@ -76,9 +97,8 @@ export default function NewsSubscribeFooter() {
   useEffect(() => {
     if (isSubscribeShow && timelineRef.current) {
       timelineRef.current.play();
-      setSubscribeType('news');
     }
-  }, [isSubscribeShow, setSubscribeType]);
+  }, [isSubscribeShow]);
 
   return <Footer />;
 }

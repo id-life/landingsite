@@ -4,11 +4,14 @@ import IdSVG from '@/../public/svgs/news/id.svg?component';
 import RightSVG from '@/../public/svgs/twin/right.svg?component';
 import ClipBorderSVG from '@/../public/svgs/twin/clip-border.svg?component';
 import SubscribeSVG from '@/../public/svgs/news/subscribe.svg?component';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
 import { useSetAtom } from 'jotai';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { trackEvent } from '@/hooks/useGA';
 
 export default function SubTitle() {
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const setSubscribeType = useSetAtom(subscribeTypeAtom);
 
   const handleIdLifeClick = () => {
     window.open('/', '_blank');
@@ -16,6 +19,11 @@ export default function SubTitle() {
 
   const handleSubscribeClick = () => {
     setIsSubscribeShow(true);
+    setSubscribeType('footer');
+    trackEvent({
+      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
+      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FOOTER,
+    });
   };
 
   return (

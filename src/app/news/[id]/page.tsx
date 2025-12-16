@@ -86,7 +86,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
             <Link href="/news">Home</Link>
             <span className="text-black/50">&gt; Article</span>
           </div>
-          <p className="text-sm font-semibold">{dayjs(data.createdAt).fromNow()}</p>
         </div>
         <div className="mt-10 rounded-3xl bg-white p-20 mobile:rounded mobile:p-5">
           <div className="mb-5 flex items-center justify-center gap-2 text-sm/5 font-semibold">
