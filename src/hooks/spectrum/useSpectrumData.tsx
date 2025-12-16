@@ -81,9 +81,8 @@ export const useSpectrumData = () => {
       { key: 'edge-city-lanna', action: handleClickDot('meeting', 1) },
       { key: 'oxford-future-innovation-forum', action: handleClickDot('sponsor', 1) },
       // book
-      { key: 'bioacc-manifesto', action: handleClickDot('book', 1) },
       { key: 'the-network-state', action: handleClickDot('book', 0) },
-      { key: 'better-with-age', action: handleClickDot('book', 2) },
+      { key: 'better-with-age', action: handleClickDot('book', 1) },
       // sponsor
       { key: 'vitalist-bay-summit-grant', action: handleClickDot('meeting', 4) },
       { key: 'ardd-2025', action: handleClickDot('meeting', 6) },
@@ -92,7 +91,7 @@ export const useSpectrumData = () => {
       { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
-      { key: 'revive-me-2025', action: handleClickDot('sponsor', 4) },
+      { key: 'revive-me-2025', action: handleClickDot('sponsor', 2) },
       { key: 'healthy-longevity-medicine-conference', action: handleClickDot('meeting', 2) },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
@@ -175,11 +174,11 @@ export const useSpectrumData = () => {
         icon: <SponsorSVG />,
         links: [
           {
-            label: 'ARDD 2025',
+            label: 'ARDD',
             routeKey: 'ardd-2025',
           },
           {
-            label: 'TimePie Longevity Forum 2025/9',
+            label: 'TimePie Longevity Forum',
             routeKey: 'timepie-longevity-forum',
           },
           {
@@ -199,11 +198,11 @@ export const useSpectrumData = () => {
             routeKey: '2060-longevity-forum',
           },
           {
-            label: 'REVIVE ME 2025',
+            label: 'REVIVE ME',
             routeKey: 'revive-me-2025',
           },
           {
-            label: 'Health Longevity and Medicine Conference 2025',
+            label: 'Health Longevity and Medicine Conference',
             routeKey: 'healthy-longevity-medicine-conference',
           },
           {

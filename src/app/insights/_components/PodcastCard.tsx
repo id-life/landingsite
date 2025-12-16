@@ -34,11 +34,16 @@ export function PodcastCard({ item }: { item: PodcastItem }) {
       <div className="flex items-start justify-between">
         <div>
           <h3 className="line-clamp-1 font-poppins text-xl/6 font-semibold">{item.title}</h3>
-          <p className="mt-3 line-clamp-1 text-base text-gray-450">{item.subtitle}</p>
+          <p className="mt-3 line-clamp-1 text-base font-semibold text-gray-450">{item.subtitle}</p>
         </div>
-        <img src="/imgs/podcast/podcast-play.png" className="w-11 cursor-pointer" alt="" onClick={handlePlay} />
+        <img
+          src="/imgs/podcast/podcast-play.png"
+          className="w-11 cursor-pointer duration-300 hover:scale-110"
+          alt=""
+          onClick={handlePlay}
+        />
       </div>
-      <p className="mt-2 line-clamp-3 text-base/6">{item.description}</p>
+      <p className="mt-2 line-clamp-3 text-base/6 font-semibold">{item.description}</p>
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img

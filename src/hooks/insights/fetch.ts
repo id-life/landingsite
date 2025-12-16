@@ -30,7 +30,7 @@ export function useInsightsData() {
       id: item.id,
       title: item.title,
       date: item.publishDate,
-      tag: item.category === 'coverage' ? ('Coverage' as const) : ('New' as const),
+      tag: item.category === 'coverage' ? ('Coverage' as const) : ('News' as const),
       url: item.url,
     }));
 

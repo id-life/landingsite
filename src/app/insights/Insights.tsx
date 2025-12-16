@@ -77,7 +77,6 @@ export default function Insights() {
         <div className="relative flex flex-col">
           <NewsSection data={news} isLoading={isLoading} />
         </div>
-
         <div className="relative flex flex-col">
           <TalksSection data={talks} isLoading={isLoading} />
         </div>

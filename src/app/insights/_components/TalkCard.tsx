@@ -10,11 +10,7 @@ export default function TalkCard({ item }: { item: TalkItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
-    if (item.category === 'essay') {
-      window.open(item.url, '_blank');
-    } else {
-      setIsModalOpen(true);
-    }
+    window.open(item.url, '_blank');
   };
 
   return (
@@ -26,7 +22,7 @@ export default function TalkCard({ item }: { item: TalkItem }) {
             videoId={item.videoId}
             title={item.title}
             onClick={handleClick}
-          />{' '}
+          />
         </div>
         <div className="flex w-80 flex-1 flex-col justify-between py-1 mobile:w-full">
           <h3 onClick={handleClick} className="cursor-pointer font-poppins text-xl/6 font-semibold hover:underline">

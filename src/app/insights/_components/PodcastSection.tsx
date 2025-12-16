@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useAtomValue } from 'jotai';
+import { Swiper as SwiperType } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
@@ -30,6 +32,7 @@ type PodcastSectionProps = {
 
 export default function PodcastSection({ podcasts = [], isLoading, showPagination = true }: PodcastSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const swiperRef = useRef<SwiperType>();
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
 
@@ -57,18 +60,62 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
   }, [podcasts, allPodcasts]);
 
   const totalPages = Math.ceil(podcastData.length / ITEMS_PER_PAGE);
-  const currentItems = showPagination
-    ? podcastData.slice(currentPage * ITEMS_PER_PAGE, (currentPage + 1) * ITEMS_PER_PAGE)
-    : podcastData;
+
+  const handlePaginationClick = (index: number) => {
+    swiperRef.current?.slideTo(index);
+    setCurrentPage(index);
+  };
 
   const handleViewAllClick = () => {
     window.open('/podcast', '_blank');
   };
 
+  const renderContent = () => {
+    if (isLoading) {
+      return Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="space-y-3">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 space-y-2">
+              <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
+              <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
+            </div>
+            <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
+          </div>
+          <div className="h-16 animate-pulse rounded bg-gray-800/50" />
+        </div>
+      ));
+    }
+
+    if (!showPagination) {
+      return podcastData.map((item) => <PodcastCard key={item.id} item={item} />);
+    }
+
+    return (
+      <Swiper
+        className="h-full w-full"
+        onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
+        onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+        slidesPerView={1}
+        spaceBetween={16}
+      >
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <SwiperSlide key={i}>
+            <div className="flex h-full flex-col justify-between gap-4">
+              {Array.from({ length: 3 }).map((_, index) => {
+                const item = podcastData[i * ITEMS_PER_PAGE + index];
+                return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
+              })}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    );
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between">
-        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
+        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCASTS</h2>
         <div
           onClick={handleViewAllClick}
           className="group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold"
@@ -79,29 +126,8 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
         </div>
       </div>
 
-      <div className="mt-9 flex flex-1 flex-col justify-between gap-4">
-        {isLoading
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="space-y-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 space-y-2">
-                    <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
-                    <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
-                  </div>
-                  <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
-                </div>
-                <div className="h-16 animate-pulse rounded bg-gray-800/50" />
-              </div>
-            ))
-          : showPagination
-            ? Array.from({ length: 3 }).map((_, index) => {
-                const item = currentItems[index];
-                return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
-              })
-            : currentItems.map((item) => <PodcastCard key={item.id} item={item} />)}
-      </div>
-
-      {showPagination && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />}
+      <div className="mt-9 flex max-w-[30.75rem] flex-1 flex-col justify-between gap-4">{renderContent()}</div>
+      {showPagination && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePaginationClick} />}
     </div>
   );
 }

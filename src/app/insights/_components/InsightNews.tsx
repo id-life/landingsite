@@ -6,7 +6,7 @@ export type NewsItem = {
   id: number;
   title: string;
   date: string;
-  tag: 'New' | 'Coverage';
+  tag: 'News' | 'Coverage';
   url: string;
 };
 
@@ -16,7 +16,7 @@ type InsightNewsProps = {
 
 export default function InsightNews({ item }: InsightNewsProps) {
   const tagStyles = {
-    New: 'bg-blue-600/20 text-blue-600',
+    News: 'bg-blue-600/20 text-blue-600',
     Coverage: 'bg-purple/20 text-purple',
   };
 

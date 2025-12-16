@@ -499,18 +499,6 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
   },
-  // {
-  //   lat: -6,
-  //   lng: 27,
-  //   key: 'publications-02',
-  //   title: 'Earth',
-  //   bookTitle: 'bio/acc manifesto',
-  //   desc: 'Chinese Version by Boyang',
-  //   coverUrl: 'https://cdn.id.life/engagement/book-02.webp',
-  //   videoUrl: 'https://cdn.id.life/engagement/book-02.webm',
-  //   link: 'https://bioacc.life/zh/',
-  //   containerClass: 'scale-[1.2]',
-  // },
   {
     lat: 15,
     lng: -112,
@@ -549,23 +537,11 @@ export type MapSponsorDotData = {
   };
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
-  // {
-  //   lat: 19,
-  //   lng: 85,
-  //   mobileLat: 20,
-  //   mobileLng: 80,
-  //   title: 'Chengdu, China',
-  //   alt: 'EthPanda\n青年黑客远航计划',
-  //   coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.png',
-  //   videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-02.webm',
-  //   link: 'https://x.com/ETHPanda_Org/status/1863865657454162277',
-  //   activeOtherDarkerDotIDs: ['world-map-dot-0', 'world-map-dot-1', 'world-map-dot-2'],
-  // },
   {
     lat: 54,
     lng: -5,
     title: 'Oxford, UK',
-    alt: 'Oxford Future Innovation Forum 2024',
+    alt: 'Oxford Future Innovation Forum',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
     activeOtherDarkerDotIDs: [
@@ -578,16 +554,6 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Conference',
   },
-  // {
-  //   lat: -20,
-  //   lng: -18,
-  //   title: 'Desci',
-  //   alt: 'BiohackerDAO',
-  //   coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.png',
-  //   videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-04.webm',
-  //   link: 'https://biohackerdao.org/',
-  //   sponsorText: 'Sponsorship',
-  // },
   {
     lat: 24,
     lng: -123.5,
@@ -609,7 +575,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lat: 10,
     lng: 54,
     title: 'Abu Dhabi, UAE',
-    alt: 'REVIVE ME 2025',
+    alt: 'REVIVE ME',
     coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webp',
     videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webm',
     link: 'https://revivemeexpo.com/',
