@@ -17,6 +17,8 @@ export const GA_EVENT_NAMES = {
   SUBSCRIBE_SHOW: 'subscribe_show',
   SUBSCRIBE_CLOSE: 'subscribe_close',
 
+  PAGE_STORAGE: 'page_storage',
+
   // portfolio
   PORTFOLIO_VIEW: 'portfolio_view',
   CONTACT_EMAIL: 'contact_email',
@@ -210,6 +212,7 @@ export const GA_EVENT_LABELS = {
   | 'EPISODE_END'
   | 'TIMELINE_JUMP'
   | 'SUBSCRIBE_SUBMIT'
+  | 'PAGE_STORAGE'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
