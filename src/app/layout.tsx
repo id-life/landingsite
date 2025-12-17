@@ -14,7 +14,7 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
-import { PageStorageReporter } from './_components/page-storage-reporter';
+import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <WebVitals />
       <WebClarity />
       <SessionInvisibilityTracker />
-      <PageStorageReporter />
+      <SubscribePopupStorageReporter />
       <body
         className={clsx(
           xirod.variable,
