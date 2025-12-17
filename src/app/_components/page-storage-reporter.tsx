@@ -8,12 +8,11 @@ import { useEffect } from 'react';
 export function SubscribePopupStorageReporter() {
   useEffect(() => {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-    const popupDismissed = localStorage.getItem(STORAGE_KEY.SUBSCRIBE_POPUP_DISMISSED_LEGACY);
-    if (popupDismissed === null) {
-      sendGAEvent('event', GA_EVENT_NAMES.SUBSCRIBE_POPUP_STORAGE, { storage_empty: true });
-    } else {
-      sendGAEvent('event', GA_EVENT_NAMES.SUBSCRIBE_POPUP_STORAGE, { storage_empty: false, popup_dismissed: popupDismissed });
-    }
+    const popupDismissed = localStorage.getItem(STORAGE_KEY.SUBSCRIBE_POPUP_DISMISSED);
+
+    sendGAEvent('event', GA_EVENT_NAMES.SUBSCRIBE_POPUP_STORAGE, {
+      event_label: popupDismissed ? 'true' : 'false',
+    });
   }, []);
   return null;
 }
