@@ -4,11 +4,11 @@ import { useState, useMemo, useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Pagination from './Pagination';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
 import RightSVG from '@/../public/svgs/podcast/right.svg?component';
+import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
 
 export type PodcastItem = {
   id: number;
@@ -22,16 +22,14 @@ export type PodcastItem = {
   podcastLink?: string;
 };
 
-const ITEMS_PER_PAGE = 3;
-
 type PodcastSectionProps = {
   podcasts?: { id: number }[];
   isLoading?: boolean;
-  showPagination?: boolean;
 };
 
-export default function PodcastSection({ podcasts = [], isLoading, showPagination = true }: PodcastSectionProps) {
-  const [currentPage, setCurrentPage] = useState(0);
+export default function PodcastSection({ podcasts = [], isLoading }: PodcastSectionProps) {
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
   const swiperRef = useRef<SwiperType>();
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
@@ -55,15 +53,15 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
           spotifyLink: item.spotifyLink,
         } as PodcastItem;
       })
-      .filter((item): item is NonNullable<typeof item> => item !== null)
-      .slice(0, 12);
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   }, [podcasts, allPodcasts]);
 
-  const totalPages = Math.ceil(podcastData.length / ITEMS_PER_PAGE);
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
+  };
 
-  const handlePaginationClick = (index: number) => {
-    swiperRef.current?.slideTo(index);
-    setCurrentPage(index);
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
   };
 
   const handleViewAllClick = () => {
@@ -72,50 +70,69 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
 
   const renderContent = () => {
     if (isLoading) {
-      return Array.from({ length: 3 }).map((_, index) => (
-        <div key={index} className="space-y-3">
-          <div className="flex items-start justify-between">
-            <div className="flex-1 space-y-2">
-              <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
-              <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
+      return (
+        <div className="flex gap-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className={`w-full space-y-3`}>
+              <div className="flex items-start justify-between">
+                <div className="flex-1 space-y-2">
+                  <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
+                  <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
+                </div>
+                <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
+              </div>
+              <div className="h-16 animate-pulse rounded bg-gray-800/50" />
             </div>
-            <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
-          </div>
-          <div className="h-16 animate-pulse rounded bg-gray-800/50" />
+          ))}
         </div>
-      ));
+      );
     }
 
-    if (!showPagination) {
-      return podcastData.map((item) => <PodcastCard key={item.id} item={item} />);
-    }
+    // if (!showPagination) {
+    //   return (
+    //     <div className="flex flex-col gap-4">
+    //       {podcastData.map((item) => (
+    //         <PodcastCard key={item.id} item={item} />
+    //       ))}
+    //     </div>
+    //   );
+    // }
 
     return (
       <Swiper
         className="h-full w-full"
-        onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
-        slidesPerView={1}
-        spaceBetween={16}
+        onSlideChange={(swiper) => {
+          setIsBeginning(swiper.isBeginning);
+          setIsEnd(swiper.isEnd);
+        }}
+        slidesPerView={3}
+        spaceBetween={24}
       >
-        {Array.from({ length: totalPages }).map((_, i) => (
-          <SwiperSlide key={i}>
-            <div className="flex h-full flex-col justify-between gap-4">
-              {Array.from({ length: 3 }).map((_, index) => {
-                const item = podcastData[i * ITEMS_PER_PAGE + index];
-                return item ? <PodcastCard key={item.id} item={item} /> : <div key={index} className="h-[7.5rem]" />;
-              })}
-            </div>
+        {podcastData.map((item) => (
+          <SwiperSlide key={item.id}>
+            <PodcastCard item={item} />
           </SwiperSlide>
         ))}
       </Swiper>
     );
   };
 
-  return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between">
+  /*
+  if (!showPagination) {
+    return (
+      <div className="flex flex-col">
         <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCASTS</h2>
+        <div className="mt-9 flex flex-col gap-4">{renderContent()}</div>
+      </div>
+    );
+  }
+*/
+
+  return (
+    <div className="relative flex flex-col">
+      <div className="flex items-center justify-between">
+        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
         <div
           onClick={handleViewAllClick}
           className="group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold"
@@ -126,8 +143,25 @@ export default function PodcastSection({ podcasts = [], isLoading, showPaginatio
         </div>
       </div>
 
-      <div className="mt-9 flex max-w-[30.75rem] flex-1 flex-col justify-between gap-4">{renderContent()}</div>
-      {showPagination && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePaginationClick} />}
+      <div className="relative mt-6">
+        <button
+          onClick={handlePrev}
+          disabled={isBeginning}
+          className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+        >
+          <ArrowDownSVG className="size-5 rotate-90 fill-black" />
+        </button>
+
+        {renderContent()}
+
+        <button
+          onClick={handleNext}
+          disabled={isEnd}
+          className="absolute -right-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+        >
+          <ArrowDownSVG className="h-5 -rotate-90 fill-black" />
+        </button>
+      </div>
     </div>
   );
 }

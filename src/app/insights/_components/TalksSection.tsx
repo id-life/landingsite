@@ -16,6 +16,7 @@ export type TalkItem = {
   date: string;
   essayPic?: string | null;
   category?: InsightsCategory;
+  sequence: number;
 };
 
 const ITEMS_PER_PAGE = 3;

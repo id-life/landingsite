@@ -30,11 +30,11 @@ export function PodcastCard({ item }: { item: PodcastItem }) {
   };
 
   return (
-    <div className="">
-      <div className="flex items-start justify-between">
+    <div className="footer-contact-clip border-2 border-[var(--subscribe-border)] bg-white/50 p-6 backdrop-blur-md">
+      <span className="absolute left-0 top-0 block rotate-90 border-[1rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="line-clamp-1 font-poppins text-xl/6 font-semibold">{item.title}</h3>
-          <p className="mt-3 line-clamp-1 text-base font-semibold text-gray-450">{item.subtitle}</p>
+          <h3 className="line-clamp-2 font-poppins text-xl/6 font-bold">{item.title}</h3>
         </div>
         <img
           src="/imgs/podcast/podcast-play.png"
@@ -43,8 +43,9 @@ export function PodcastCard({ item }: { item: PodcastItem }) {
           onClick={handlePlay}
         />
       </div>
-      <p className="mt-2 line-clamp-3 text-base/6 font-semibold">{item.description}</p>
-      <div className="mt-3 flex items-center justify-between">
+      <p className="mt-3 truncate text-base font-medium text-gray-450">{item.subtitle}</p>
+      <p className="mt-2 truncate text-base/6 font-medium">{item.description}</p>
+      <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img
             onClick={() => handleLinkClick('xyz', item.xyzLink)}

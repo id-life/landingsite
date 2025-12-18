@@ -63,7 +63,7 @@ function MobileInsights() {
           <TalksSection data={talks} isLoading={isLoading} showPagination={false} />
         </SwiperSlide>
         <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <PodcastSection podcasts={podcasts} isLoading={isLoading} showPagination={false} />
+          <PodcastSection podcasts={podcasts} isLoading={isLoading} />
         </SwiperSlide>
       </Swiper>
       <div className="mobile-insights-nav">

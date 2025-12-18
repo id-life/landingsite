@@ -4,8 +4,7 @@ import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
-import NewsSection from '@/app/insights/_components/NewsSection';
-import TalksSection from '@/app/insights/_components/TalksSection';
+import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import PodcastSection from '@/app/insights/_components/PodcastSection';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
@@ -73,17 +72,9 @@ export default function Insights() {
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="flex h-[calc(100vh-10rem)] gap-16 px-32 pt-30">
-        <div className="relative flex flex-col">
-          <NewsSection data={news} isLoading={isLoading} />
-        </div>
-        <div className="relative flex flex-col">
-          <TalksSection data={talks} isLoading={isLoading} />
-        </div>
-
-        <div className="relative flex flex-col">
-          <PodcastSection podcasts={podcasts} isLoading={isLoading} />
-        </div>
+      <div className="flex h-[calc(100vh-10rem)] flex-col gap-10 px-[20rem] pt-30">
+        <PodcastSection podcasts={podcasts} isLoading={isLoading} />
+        <NewsAndTalksSection news={news} talks={talks} isLoading={isLoading} />
       </div>
     </div>
   );

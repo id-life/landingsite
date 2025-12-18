@@ -32,6 +32,7 @@ export function useInsightsData() {
       date: item.publishDate,
       tag: item.category === 'coverage' ? ('Coverage' as const) : ('News' as const),
       url: item.url,
+      sequence: item.sequence,
     }));
 
     const talks = filterByCategory(data, ['talk', 'essay']).map((item) => ({
@@ -43,6 +44,7 @@ export function useInsightsData() {
       date: item.publishDate,
       essayPic: item.essayPic,
       category: item.category,
+      sequence: item.sequence,
     }));
     const podcasts = filterByCategory(data, ['podcast']).map((item, index) => ({
       id: item.id,

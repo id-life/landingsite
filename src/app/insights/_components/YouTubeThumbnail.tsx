@@ -31,7 +31,7 @@ export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTu
 
   return (
     <div
-      className="relative h-full w-full cursor-pointer overflow-hidden rounded-sm bg-gray-800"
+      className="relative h-full cursor-pointer overflow-hidden rounded-sm bg-gray-800"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}

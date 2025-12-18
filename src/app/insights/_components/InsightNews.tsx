@@ -8,6 +8,7 @@ export type NewsItem = {
   date: string;
   tag: 'News' | 'Coverage';
   url: string;
+  sequence: number;
 };
 
 type InsightNewsProps = {
