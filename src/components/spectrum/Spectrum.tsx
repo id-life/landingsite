@@ -11,9 +11,11 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { cloneElement, memo, useEffect, useMemo, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
+import { AnimatePresence, motion } from 'motion/react';
+import { ArrowSVG } from '@/components/svg';
 
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -46,6 +48,8 @@ function Spectrum() {
     ));
   }, [spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
+  const sponsorItem = spectrumData[spectrumData.length - 1];
+
   const windowDimensions = useMemo(() => {
     if (typeof window === 'undefined') return { width: 0, height: 0 };
     return {
@@ -54,52 +58,9 @@ function Spectrum() {
     };
   }, []);
 
-  const circleCenter = useMemo(() => {
-    const centerX = windowDimensions.width / 2;
-    const centerY = windowDimensions.height / 2;
-    const maxRadius = Math.hypot(
-      Math.max(centerX, windowDimensions.width - centerX),
-      Math.max(centerY, windowDimensions.height - centerY),
-    );
-    return { centerX, centerY, maxRadius };
-  }, [windowDimensions]);
-
-  // const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-  //   // engagement auto scroll to profile
-  //   triggerId: 'spectrum-trigger',
-  //   scrollFn: () => {
-  //     if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id) return;
-  //     const st = ScrollTrigger.getById('portfolio-trigger');
-  //     if (!st) return;
-  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.96 } });
-  //   },
-  //   isUp: true,
-  // });
-
-  // const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollTriggerAction({
-  //   // profile auto scroll to engagement
-  //   triggerId: 'spectrum-trigger',
-  //   scrollFn: () => {
-  //     if (!enableJudge || currentPage.id !== NAV_LIST[2].id) return;
-  //     // console.log('Spectrum scrollFn down');
-  //     const st = ScrollTrigger.getById('engagement-scroll-trigger');
-  //     if (!st) return;
-  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
-  //   },
-  //   isUp: false,
-  // });
-
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to profile
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Spectrum] UP scrollFn called - enableUpJudge:',
-      //   enableUpJudge,
-      //   'currentPage:',
-      //   currentPage.id,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling || window.isSmootherScrolling) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) {
@@ -274,25 +235,28 @@ function Spectrum() {
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
         <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24 flex">
-            <div className="grid grid-cols-2 gap-3" ref={wrapperRef}>
+          <div className="ml-24">
+            <div className="grid grid-cols-4 gap-3" ref={wrapperRef}>
               {spectrumItems}
             </div>
-            <SpectrumItem
-              key={spectrumData[spectrumData.length - 1].title}
-              item={spectrumData[spectrumData.length - 1]}
-              executeSpectrumRoute={executeSpectrumRoute}
-              updateUrlAndExecute={updateUrlAndExecute}
-              routeConfigs={routeConfigs}
-              onClick={(e) => {
-                spectrumData[spectrumData.length - 1].onClick?.(e);
-              }}
-              ref={(element) => {
-                if (element) {
-                  spectrumRefs.current[spectrumData.length - 1] = element;
-                }
-              }}
-            />
+            <div className="flex-center">
+              <SpectrumItem
+                key={sponsorItem.title}
+                item={sponsorItem}
+                isSponsor={true}
+                executeSpectrumRoute={executeSpectrumRoute}
+                updateUrlAndExecute={updateUrlAndExecute}
+                routeConfigs={routeConfigs}
+                onClick={(e) => {
+                  sponsorItem.onClick?.(e);
+                }}
+                ref={(element) => {
+                  if (element) {
+                    spectrumRefs.current[spectrumData.length - 1] = element;
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

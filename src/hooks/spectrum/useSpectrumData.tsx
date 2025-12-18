@@ -27,6 +27,8 @@ export type SpectrumLinkItem = {
   isComingSoon?: boolean;
   labelClassName?: string;
   routeKey?: string; // for URL routing
+  icon?: string;
+  size?: string;
 };
 
 export type SpectrumItemInfo = {
@@ -176,46 +178,68 @@ export const useSpectrumData = () => {
           {
             label: 'ARDD',
             routeKey: 'ardd-2025',
+            icon: '/imgs/investments/sponsors/ardd.png',
+            size: 'h-15',
           },
           {
             label: 'TimePie Longevity Forum',
             routeKey: 'timepie-longevity-forum',
+            icon: '/imgs/investments/sponsors/time-pie.png',
+            size: 'h-15',
           },
           {
             label: 'Lifespan Research Institute',
             routeKey: 'lifespan-research-institute',
+            icon: '/imgs/investments/sponsors/lifespan.png',
+            size: 'h-12',
           },
           {
             label: 'Public Longevity Group',
             routeKey: 'public-longevity-group',
+            icon: '/imgs/investments/sponsors/public-longevity.png',
+            size: 'h-15',
           },
           {
             label: 'Vitalist Bay Summit',
             routeKey: 'vitalist-bay-summit-grant',
+            icon: '/imgs/investments/sponsors/vitalist-bay.png',
+            size: 'h-12',
           },
           {
             label: '2060 Longevity Forum',
             routeKey: '2060-longevity-forum',
+            icon: '/imgs/investments/sponsors/2060-longevity.png',
+            size: 'h-12',
           },
           {
             label: 'REVIVE ME',
             routeKey: 'revive-me-2025',
+            icon: '/imgs/investments/sponsors/revive-me.png',
+            size: 'h-12',
           },
           {
             label: 'Health Longevity and Medicine Conference',
             routeKey: 'healthy-longevity-medicine-conference',
+            icon: '/imgs/investments/sponsors/healthy-longevity.png',
+            size: 'h-15',
           },
           {
             label: 'Cornerstone Non-profit Foundation',
             link: 'https://www.cornerstoneondemand.org',
+            icon: '/imgs/investments/sponsors/cornerstone.png',
+            size: 'h-6.5',
           },
           {
             label: 'Beyond Tomorrow Podcast',
             link: 'https://beyondtomorrowpodcast.com/',
+            icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
+            size: 'h-5',
           },
           {
             label: 'HackAging.ai Hackathon', // 11
             link: 'https://www.hackaging.ai/',
+            icon: '/imgs/investments/sponsors/hackaging.png',
+            size: 'h-5',
           },
         ],
       },

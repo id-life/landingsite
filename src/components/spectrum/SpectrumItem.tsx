@@ -15,6 +15,7 @@ interface SpectrumItemProps {
   executeSpectrumRoute?: (key: string) => void;
   updateUrlAndExecute?: (key: string) => void;
   routeConfigs?: SpectrumRouteConfig[];
+  isSponsor?: boolean;
 }
 
 const SpectrumLink = memo(
@@ -31,7 +32,7 @@ const SpectrumLink = memo(
   }) => {
     const { trackEvent } = useGA();
 
-    const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
+    const { key, label, link, isComingSoon, onClick, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link || onClick || routeKey);
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
     const { pathname, useHash } = routeConfig ?? {};
@@ -77,6 +78,13 @@ const SpectrumLink = memo(
     );
 
     const renderContent = useCallback(() => {
+      if (icon) {
+        return (
+          <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
+            <img src={icon} onClick={handleClick} alt="" className={cn('duration-300 hover:scale-110', size)} />
+          </div>
+        );
+      }
       return (
         <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
           <p
@@ -97,7 +105,7 @@ const SpectrumLink = memo(
           )}
         </div>
       );
-    }, [isComingSoon, handleClick, labelClassName, hasLink, label]);
+    }, [icon, hasLink, handleClick, labelClassName, label, isComingSoon, size]);
 
     return hasLink ? (
       <a href={url} target="_blank">
@@ -114,7 +122,7 @@ SpectrumLink.displayName = 'SpectrumLink';
 const linksPerPage = 20;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs }, ref) => {
+    ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
       const { title, titleCn, icon, links, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
 
@@ -194,18 +202,31 @@ const SpectrumItem = memo(
           onClick={onClick}
           onMouseEnter={onMouseEnter}
           className={cn(
-            'spectrum-item relative h-[13.75rem] w-[25rem] cursor-pointer overflow-visible p-4 text-foreground',
+            'spectrum-item relative cursor-pointer overflow-visible p-4 text-foreground',
+            isSponsor ? '' : 'h-[13.75rem] w-[25rem]',
             className,
           )}
         >
           <div className={cn('flex items-start gap-1.5', itemClassName)}>
-            {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
-            <div className="flex flex-col">
-              <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
-                {title}
+            {isSponsor ? null : cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
+            <div className={cn('flex flex-col', isSponsor && 'items-center')}>
+              {isSponsor ? (
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
+                  <div className="flex gap-3">
+                    {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
+                    <p>{title}</p>
+                    <p>{titleCn}</p>
+                  </div>
+                </h4>
+              ) : (
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
+                  {title}
+                </h4>
+              )}
+              <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize', isSponsor && 'hidden')}>
+                {titleCn}
               </h4>
-              <h4 className="spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize">{titleCn}</h4>
-              <div className="spectrum-links-container mt-5 flex flex-col">
+              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-10' : 'mt-5')}>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key="spectrum-links"
@@ -213,7 +234,7 @@ const SpectrumItem = memo(
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="flex flex-col"
+                    className={cn('flex', isSponsor ? 'max-w-[70rem] flex-wrap justify-center gap-x-7.5 gap-y-10' : 'flex-col')}
                   >
                     {spectrumLinks}
                   </motion.div>
