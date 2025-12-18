@@ -4,6 +4,7 @@ import { ItemList, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
 import React from 'react';
 import SubTitle from '@/app/news/_components/SubTitle';
+import Topic from '@/app/news/_components/Topic';
 
 export const revalidate = 300; // 5min
 
@@ -113,17 +114,17 @@ const jsonLd: WithContext<ItemList> = {
 export default async function NewsPage() {
   const data = await fetchNewsList();
   const news = data.code == 200 ? data.data : [];
+  const [featured, ...restNews] = news;
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <img className="mx-auto max-w-[62.5rem]" src="/imgs/news/insights-bg.webp" alt="" />
-      <div className="mt-10">
+      <Topic data={featured} />
+      <div className="mt-7.5">
         <SubTitle />
       </div>
-      <h2 className="mt-16 text-4xl/[3.375rem] font-semibold mobile:mt-8 mobile:text-2xl">Insights & Resources</h2>
-      <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1 mobile:gap-5">
-        {news.map((item) => (
+      <div className="mt-7.5 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1 mobile:gap-5">
+        {restNews.map((item) => (
           <NewsCard data={item} key={item.id} />
         ))}
       </div>

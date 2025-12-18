@@ -8,17 +8,27 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 export default function NewsCard({ data }: { data: NewsListItem }) {
+  const timeAgo = dayjs(data.createdAt).fromNow();
+
   return (
-    <div className="bg-white p-4 duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg">
-      <Link target="_blank" href={`/news/${data.id}`}>
-        <div className="flex items-center gap-2 text-base font-medium text-black/50">
-          <img src="/imgs/news/article_logo.webp" className="size-6" alt="" />
-          Immortal Dragons
+    <Link
+      target="_blank"
+      href={`/news/${data.id}`}
+      className="group block overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg"
+    >
+      <div className="aspect-[16/10] overflow-hidden">
+        <img
+          src={data.cover || '/imgs/news/insights-bg.webp'}
+          alt={data.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4">
+        <h3 className="line-clamp-2 text-lg font-semibold">{data.title}</h3>
+        <div className="mt-4 flex items-center font-medium text-black/40">
+          <span>Article</span>
         </div>
-        <h3 className="mt-2.5 line-clamp-2 h-14 text-lg font-semibold">{data.title}</h3>
-        <div className="mt-4 font-medium text-black/50">Article</div>
-        <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief.replace(/[#*]/g, '').trim()}</p>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

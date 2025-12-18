@@ -42,6 +42,8 @@ export type NewsListItem = {
   category: string;
   createdAt: string;
   updatedAt: string;
+  cover?: string;
+  source?: string;
 };
 
 export type NewsContent = {
