@@ -26,7 +26,8 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Connect 页有
+    if (currentPage.id === NAV_LIST[5].id) return 2; // Insights 页有 2 个内部页面 (Podcast, News & Talks)
+    return 3; // Connect 页有 3 个内部页面
   }, [currentPage]);
 
   // 更新 innerPageTotal

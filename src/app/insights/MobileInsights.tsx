@@ -1,33 +1,29 @@
 'use client';
 
-import { mobileCurrentPageAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
 import { useInsightsData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
-import { useAtomValue } from 'jotai';
-import { memo, useEffect, useRef, useState } from 'react';
-import { Swiper as SwiperType } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import MobileInsightsNav from './_components/MobileInsightsNav';
-import NewsSection from './_components/NewsSection';
+import { useAtom, useAtomValue } from 'jotai';
+import { memo, useEffect } from 'react';
 import PodcastSection from './_components/PodcastSection';
-import TalksSection from './_components/TalksSection';
+import NewsAndTalksSection from './_components/NewsAndTalksSection';
 
 function MobileInsights() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const swiperRef = useRef<SwiperType>();
+  const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
   const { news, talks, podcasts, isLoading } = useInsightsData();
 
-  const handleSlideChange = (swiper: SwiperType) => {
-    setActiveIndex(swiper.activeIndex);
-  };
-
-  const handleNavClick = (index: number) => {
-    swiperRef.current?.slideTo(index);
-  };
+  // 监听 innerPageNavigateTo 变化来切换页面
+  useEffect(() => {
+    if (innerPageNavigateTo !== null && currentPage?.id === NAV_LIST[5].id) {
+      setInnerPageIndex(innerPageNavigateTo);
+      setInnerPageNavigateTo(null);
+    }
+  }, [innerPageNavigateTo, currentPage, setInnerPageIndex, setInnerPageNavigateTo]);
 
   // 页面进入/离开动画
   useEffect(() => {
@@ -35,8 +31,7 @@ function MobileInsights() {
       enterAnimate();
     } else {
       leaveAnimate();
-      swiperRef.current?.slideTo(0, 0);
-      setActiveIndex(0);
+      setInnerPageIndex(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
@@ -48,26 +43,27 @@ function MobileInsights() {
         hidden: currentPage?.id !== NAV_LIST[5].id,
       })}
     >
-      <Swiper
-        onBeforeInit={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        onSlideChange={handleSlideChange}
-        slidesPerView={1}
-        className="mobile-insights-content h-full w-full flex-1"
-      >
-        <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <NewsSection data={news} isLoading={isLoading} showPagination={false} />
-        </SwiperSlide>
-        <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <TalksSection data={talks} isLoading={isLoading} showPagination={false} />
-        </SwiperSlide>
-        <SwiperSlide className="overflow-y-auto px-5 pb-4">
-          <PodcastSection podcasts={podcasts} isLoading={isLoading} />
-        </SwiperSlide>
-      </Swiper>
-      <div className="mobile-insights-nav">
-        <MobileInsightsNav activeIndex={activeIndex} onNavClick={handleNavClick} />
+      {/* Content Area with Flip Animation */}
+      <div className="mobile-insights-content relative flex-1 overflow-hidden">
+        {/* Podcast Section */}
+        <div
+          className={cn(
+            'absolute inset-0 overflow-y-auto px-5 pb-4 transition-all duration-500 ease-in-out',
+            innerPageIndex === 0 ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0',
+          )}
+        >
+          <PodcastSection podcasts={podcasts} isLoading={isLoading} isMobile />
+        </div>
+
+        {/* News & Talks Section */}
+        <div
+          className={cn(
+            'absolute inset-0 overflow-y-auto px-5 pb-4 transition-all duration-500 ease-in-out',
+            innerPageIndex === 1 ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0',
+          )}
+        >
+          <NewsAndTalksSection news={news} talks={talks} isLoading={isLoading} isMobile />
+        </div>
       </div>
     </div>
   );

@@ -6,9 +6,11 @@ import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
+import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
 import RightSVG from '@/../public/svgs/podcast/right.svg?component';
 import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
+import { cn } from '@/utils';
 
 export type PodcastItem = {
   id: number;
@@ -25,14 +27,18 @@ export type PodcastItem = {
 type PodcastSectionProps = {
   podcasts?: { id: number }[];
   isLoading?: boolean;
+  isMobile?: boolean;
 };
 
-export default function PodcastSection({ podcasts = [], isLoading }: PodcastSectionProps) {
+export default function PodcastSection({ podcasts = [], isLoading, isMobile = false }: PodcastSectionProps) {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
   const swiperRef = useRef<SwiperType>();
+  const containerRef = useRef<HTMLDivElement>(null);
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
+  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile);
 
   const allPodcasts = useMemo(() => [...podcastIDList, ...podcastLTList], [podcastIDList, podcastLTList]);
 
@@ -44,7 +50,7 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
         return {
           id: item.id,
           title: item.title,
-          subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === PlayList.PODCAST_ID ? '' : '· 龙门阵Long Talk'}`,
+          subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === PlayList.PODCAST_ID ? '· 《医药群星》' : '· 龙门阵Long Talk'}`,
           description: item.description || '',
           duration: item.duration,
           date: item.createdAt!,
@@ -56,6 +62,8 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
       .filter((item): item is NonNullable<typeof item> => item !== null);
   }, [podcasts, allPodcasts]);
 
+  const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
+
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
   };
@@ -64,16 +72,22 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
     swiperRef.current?.slideNext();
   };
 
+  const handlePaginationClick = (index: number) => {
+    swiperRef.current?.slideTo(index);
+    setCurrentPage(index);
+  };
+
   const handleViewAllClick = () => {
     window.open('/podcast', '_blank');
   };
 
   const renderContent = () => {
     if (isLoading) {
+      const skeletonCount = isMobile ? 2 : 3;
       return (
-        <div className="flex gap-6">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className={`w-full space-y-3`}>
+        <div className={cn('flex gap-6', isMobile && 'flex-col gap-5')}>
+          {Array.from({ length: skeletonCount }).map((_, index) => (
+            <div key={index} className="w-full space-y-3 bg-white/50 p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1 space-y-2">
                   <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
@@ -88,16 +102,34 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
       );
     }
 
-    // if (!showPagination) {
-    //   return (
-    //     <div className="flex flex-col gap-4">
-    //       {podcastData.map((item) => (
-    //         <PodcastCard key={item.id} item={item} />
-    //       ))}
-    //     </div>
-    //   );
-    // }
+    // Mobile layout: dynamic items per page, vertical
+    if (isMobile) {
+      return (
+        <Swiper
+          className="h-full w-full"
+          onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+          onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
+          slidesPerView={1}
+          spaceBetween={16}
+        >
+          {Array.from({ length: totalPages }).map((_, pageIndex) => {
+            const pageItems = podcastData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
 
+            return (
+              <SwiperSlide key={pageIndex}>
+                <div className="flex flex-col gap-5">
+                  {pageItems.map((item) => (
+                    <PodcastCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      );
+    }
+
+    // Desktop layout: horizontal swiper
     return (
       <Swiper
         className="h-full w-full"
@@ -118,50 +150,76 @@ export default function PodcastSection({ podcasts = [], isLoading }: PodcastSect
     );
   };
 
-  /*
-  if (!showPagination) {
-    return (
-      <div className="flex flex-col">
-        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCASTS</h2>
-        <div className="mt-9 flex flex-col gap-4">{renderContent()}</div>
-      </div>
-    );
-  }
-*/
-
   return (
-    <div className="relative flex flex-col">
-      <div className="flex items-center justify-between">
-        <h2 className="font-oxanium text-2xl font-semibold uppercase">PODCAST</h2>
-        <div
-          onClick={handleViewAllClick}
-          className="group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold"
-        >
-          <ViewAllBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600" />
-          <p className="group-hover:text-red-600">VIEW ALL</p>
-          <RightSVG key="view-all" className="w-5 fill-black group-hover:fill-red-600" />
+    <div ref={containerRef} className={cn('relative flex flex-col', isMobile && 'h-full')}>
+      {/* Mobile: wrap header + content for vertical centering */}
+      <div className={cn(isMobile && 'flex flex-1 flex-col justify-center overflow-hidden')}>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <h2 className={cn('font-oxanium text-2xl font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>PODCAST</h2>
+          <div
+            onClick={handleViewAllClick}
+            className={cn(
+              'group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold',
+              isMobile && 'px-2 py-1.5 text-sm',
+            )}
+          >
+            <ViewAllBorderSVG
+              className={cn(
+                'absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600',
+                isMobile && 'fill-red-600',
+              )}
+            />
+            <p className={cn('group-hover:text-red-600', isMobile && 'text-red-600')}>VIEW ALL</p>
+            <RightSVG
+              key="view-all"
+              className={cn('w-5 fill-black group-hover:fill-red-600', isMobile && 'w-3.5 fill-red-600')}
+            />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className={cn('relative mt-6', !isMobile && 'pr-0')}>
+          {/* Desktop arrows */}
+          {!isMobile && (
+            <button
+              onClick={handlePrev}
+              disabled={isBeginning}
+              className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+            >
+              <ArrowDownSVG className="size-5 rotate-90 fill-black" />
+            </button>
+          )}
+
+          {renderContent()}
+
+          {!isMobile && (
+            <button
+              onClick={handleNext}
+              disabled={isEnd}
+              className="absolute -right-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+            >
+              <ArrowDownSVG className="h-5 -rotate-90 fill-black" />
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="relative mt-6">
-        <button
-          onClick={handlePrev}
-          disabled={isBeginning}
-          className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
-        >
-          <ArrowDownSVG className="size-5 rotate-90 fill-black" />
-        </button>
-
-        {renderContent()}
-
-        <button
-          onClick={handleNext}
-          disabled={isEnd}
-          className="absolute -right-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
-        >
-          <ArrowDownSVG className="h-5 -rotate-90 fill-black" />
-        </button>
-      </div>
+      {/* Mobile Internal Pagination */}
+      {isMobile && totalPages > 1 && (
+        <div className="flex-center gap-2 py-4">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePaginationClick(index)}
+              className={cn('h-0.5 w-6 transition-all duration-300', {
+                'bg-foreground': index === currentPage,
+                'bg-gray-250': index !== currentPage,
+              })}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

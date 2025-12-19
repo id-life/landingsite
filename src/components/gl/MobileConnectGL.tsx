@@ -24,6 +24,10 @@ import * as THREE from 'three';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
+// FixedConnect 中的 fixed 元素选择器
+const CONNECT_FIXED_ELEMENTS =
+  '#connect-1-svg-mobile, #connect-2-svg-mobile, #connect-3-svg-mobile, #connect-4-svg-mobile, .page-connect-item, #connect-end-1, #connect-end-2';
+
 type TitleProps = {
   titleRef: React.RefObject<THREE.Group>;
   position: THREE.Vector3;
@@ -78,36 +82,42 @@ function MobileConnectGL() {
         console.log('reverse complete');
       },
     });
-    tl.to(camera.position, { ...page1Config.to.camera.position });
+    // Canvas 和相机先动，模型稍后进入避免卡顿
+    tl.set('#vision-canvas', { zIndex: 1, opacity: 1 }, 0);
+    tl.to(camera.position, { ...page1Config.to.camera.position, duration: 0.8 }, 0);
     tl.to(
       camera.rotation,
       {
         ...page1Config.to.camera.rotation,
+        duration: 0.8,
         onComplete: () => {
           camera.lookAt(centerPoint);
         },
       },
       '<',
     );
-    tl.to('#vision-canvas', { zIndex: 1, opacity: 1 });
+    // 模型动画延迟 0.3s 开始，避免同时加载造成卡顿
     tl.fromTo(
       modelRef.current.position,
       { ...page1Config.from.model.position },
       {
         ...page1Config.to.model.position,
-        ease: 'power3.inOut',
+        duration: 0.8,
+        ease: 'power3.out',
       },
+      0.5,
     );
     tl.fromTo(
       modelRef.current.rotation,
       { ...page1Config.from.model.rotation },
       {
         ...page1Config.to.model.rotation,
-        ease: 'power3.inOut',
+        duration: 0.8,
+        ease: 'power3.out',
       },
       '<',
     );
-    tl.to('#connect-1-svg-mobile', { opacity: 1 }, '<');
+    tl.to('#connect-1-svg-mobile', { opacity: 1, duration: 0.5 }, 0.2);
 
     startAnimTLRef.current = tl;
     return () => {
@@ -117,9 +127,15 @@ function MobileConnectGL() {
 
   useEffect(() => {
     if (currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id) {
+      // 立即显示 canvas，不等待动画
+      gsap.set('#vision-canvas', { opacity: 1 });
+      // 恢复 FixedConnect 元素的 visibility
+      gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'visible' });
       startAnimTLRef.current?.play();
     } else {
       gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
+      // 立即隐藏 FixedConnect 中的 fixed 元素，用 visibility 避免和 reverse 动画冲突
+      gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'hidden', opacity: 0 });
       startAnimTLRef.current?.reverse();
     }
   }, [currentPage]);

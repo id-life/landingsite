@@ -15,6 +15,7 @@ import { useGLTF } from '@react-three/drei';
 export default function MobileThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  // Vision 和 Connect 页面显示 Canvas
   const showCanvas = useMemo(() => [NAV_LIST[0].id, NAV_LIST[NAV_LIST.length - 1].id].includes(currentPage.id), [currentPage]);
   const isMounted = useIsMounted();
   if (!isMounted) return null;
@@ -23,7 +24,7 @@ export default function MobileThreeWrapper() {
     <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
       <Canvas
         id="vision-canvas"
-        className={cn('pointer-events-none', { 'pointer-events-none hidden': !showCanvas })}
+        className={cn('pointer-events-none', !showCanvas && 'invisible opacity-0')}
         style={{ position: 'fixed', zIndex: 1 }}
         camera={{ position: [0, 0, 10], fov: 40 }}
         gl={{
