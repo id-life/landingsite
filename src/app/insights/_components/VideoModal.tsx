@@ -65,26 +65,28 @@ export default function VideoModal({ isOpen, onClose, videoId, title }: VideoMod
         lockScroll
       >
         <FloatingFocusManager context={context}>
-          {/* Close button - fixed at screen top right */}
-          <button
-            onClick={onClose}
-            className="fixed right-6 top-6 z-[101] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
-            aria-label="Close video"
-          >
-            <CloseIcon />
-          </button>
+          <>
+            {/* Close button - fixed at screen top right */}
+            <button
+              onClick={onClose}
+              className="fixed right-6 top-6 z-[101] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
+              aria-label="Close video"
+            >
+              <CloseIcon />
+            </button>
 
-          <div ref={refs.setFloating} className="relative" onClick={(e) => e.stopPropagation()}>
-            <div className="relative aspect-video w-[80vw] max-w-[960px] overflow-hidden rounded-lg bg-black shadow-2xl">
-              <iframe
-                className="absolute inset-0 h-full w-full"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
-                title={title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            <div ref={refs.setFloating} className="relative" onClick={(e) => e.stopPropagation()}>
+              <div className="relative aspect-video w-[80vw] max-w-[960px] overflow-hidden rounded-lg bg-black shadow-2xl">
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                  title={title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
             </div>
-          </div>
+          </>
         </FloatingFocusManager>
       </FloatingOverlay>
     </FloatingPortal>
