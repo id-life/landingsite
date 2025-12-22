@@ -60,7 +60,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <WebVitals />
       <WebClarity />
       <SessionInvisibilityTracker />
-      <SubscribePopupStorageReporter />
       <body
         className={clsx(
           xirod.variable,
@@ -73,6 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         )}
         suppressHydrationWarning
       >
+        <SubscribePopupStorageReporter />
         <Providers>
           <ScrollBehavior />
           <HashRouter />
