@@ -1,18 +1,15 @@
-'use client';
-
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { STORAGE_KEY } from '@/constants/storage';
-import { sendGAEvent } from '@next/third-parties/google';
-import { useEffect } from 'react';
+import Script from 'next/script';
 
 export function SubscribePopupStorageReporter() {
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-    const popupDismissed = localStorage.getItem(STORAGE_KEY.SUBSCRIBE_POPUP_DISMISSED);
-
-    sendGAEvent('event', GA_EVENT_NAMES.SUBSCRIBE_POPUP_STORAGE, {
-      event_label: popupDismissed ? 'true' : 'false',
-    });
-  }, []);
-  return null;
+  const localStorageKey = JSON.stringify(STORAGE_KEY.SUBSCRIBE_POPUP_DISMISSED);
+  const eventName = JSON.stringify(GA_EVENT_NAMES.SUBSCRIBE_POPUP_STORAGE);
+  const scriptContent = `
+(function() {
+  function sendGAEvent() { (window.dataLayer??=[]).push(arguments) }
+  const popupDismissed = localStorage.getItem(${localStorageKey});
+  sendGAEvent('event', ${eventName}, { event_label: popupDismissed ? 'true' : 'false' });
+})()`;
+  return <Script id="subscribe-popup-storage-reporter">{scriptContent}</Script>;
 }
