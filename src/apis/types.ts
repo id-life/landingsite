@@ -101,3 +101,16 @@ export type InsightsItem = {
   createdAt: string;
   updatedAt: string;
 };
+
+// Insights with Geo API Types (for /insights/with-geo endpoint)
+export type InsightsWithGeoItem = {
+  id?: number;
+  title: string;
+  sequence: number;
+  contentType: 'insights' | 'geo';
+  url: string | null;
+  imageUrl: string | null;
+  publisher: string | null;
+  isTop: boolean;
+  publishDate: string | null;
+};

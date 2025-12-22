@@ -5,28 +5,16 @@ import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Pagination from './Pagination';
-import { TalkItem } from './TalksSection';
-import { NewsItem } from './InsightNews';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
 import RightSVG from '@/../public/svgs/podcast/right.svg?component';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
+import VideoModal from '@/app/insights/_components/VideoModal';
 import { cn } from '@/utils';
-
-type CombinedItem = {
-  id: number;
-  title: string;
-  date: string;
-  url: string;
-  image?: string | null;
-  type: 'news' | 'talk';
-  videoId?: string;
-  sequence: number;
-};
+import { InsightItem } from '@/hooks/insights/fetch';
 
 type NewsAndTalksSectionProps = {
-  news?: NewsItem[];
-  talks?: TalkItem[];
+  items?: InsightItem[];
   isLoading?: boolean;
   isMobile?: boolean;
 };
@@ -38,12 +26,24 @@ function NewsCard({
   variant = 'small',
   isMobile = false,
 }: {
-  item: CombinedItem;
+  item: InsightItem;
   variant?: 'large' | 'small';
   isMobile?: boolean;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isYouTube = !!item.videoId;
+
   const handleClick = () => {
-    window.open(item.url, '_blank');
+    if (isYouTube) {
+      setIsModalOpen(true);
+    } else if (item?.url) {
+      // For internal links (starting with /), use same tab; for external links, open new tab
+      if (item.url.startsWith('/')) {
+        window.location.href = item.url;
+      } else {
+        window.open(item.url, '_blank');
+      }
+    }
   };
 
   const isLarge = variant === 'large' && !isMobile;
@@ -52,78 +52,69 @@ function NewsCard({
   // Desktop: large card fills container, small cards are half height
   const cardHeightClass = isMobile ? 'h-[186px]' : isLarge ? 'h-full' : 'h-[calc(50%-0.5rem)]';
 
+  // Use imageUrl if available, otherwise fallback for YouTube videos
+  const thumbnailPic = item.imageUrl ?? '';
+
   return (
-    <div className={`group relative cursor-pointer overflow-hidden rounded ${cardHeightClass}`}>
-      {/* YouTubeThumbnail fills the container absolutely */}
-      <div className="absolute inset-0">
-        <YouTubeThumbnail
-          pic={'https://cdn1.p12.games/p12-news/NplPQeEGomBkvng0'}
-          videoId={item.videoId ?? ''}
-          title={item.title}
-          onClick={handleClick}
-        />
-      </div>
-      {/* Gradient and text overlay - pointer-events-none to allow hover through */}
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-0',
-          isMobile
-            ? 'bg-gradient-to-b from-transparent to-black'
-            : 'bg-gradient-to-t from-black/80 via-black/20 to-transparent',
-        )}
-      />
-      <div className={cn('pointer-events-none absolute inset-0 flex flex-col justify-end', isMobile ? 'p-4' : 'p-6')}>
-        <span className={cn('font-oxanium uppercase text-white', isMobile ? 'text-base leading-6' : 'mb-2 text-base')}>
-          {dayjs(item.date).format('MMM DD, YYYY')}
-        </span>
-        <h3
+    <>
+      <div className={`group relative cursor-pointer overflow-hidden rounded ${cardHeightClass}`}>
+        {/* YouTubeThumbnail fills the container absolutely */}
+        <div className="absolute inset-0">
+          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
+        </div>
+        {/* Gradient and text overlay - pointer-events-none to allow hover through */}
+        <div
           className={cn(
-            'font-poppins font-semibold text-white',
+            'pointer-events-none absolute inset-0',
             isMobile
-              ? 'mt-1 line-clamp-2 text-base font-medium leading-5'
-              : isLarge
-                ? 'line-clamp-3 text-xl/6'
-                : 'line-clamp-2 text-base/5',
+              ? 'bg-gradient-to-b from-transparent to-black'
+              : 'bg-gradient-to-t from-black/80 via-black/20 to-transparent',
           )}
-        >
-          {item.title}
-        </h3>
+        />
+        <div className={cn('pointer-events-none absolute inset-0 flex flex-col justify-end', isMobile ? 'p-4' : 'p-6')}>
+          {/* Publisher and date row */}
+          <div
+            className={cn('flex items-center gap-2 font-oxanium uppercase text-white', isMobile ? 'text-sm' : 'mb-2 text-base')}
+          >
+            {item.publisher && (
+              <>
+                <span className="text-white/80">{item.publisher}</span>
+                <span className="text-white/50">·</span>
+              </>
+            )}
+            {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
+          </div>
+          <h3
+            className={cn(
+              'font-poppins font-semibold text-white',
+              isMobile
+                ? 'mt-1 line-clamp-2 text-base font-medium leading-5'
+                : isLarge
+                  ? 'line-clamp-3 text-xl/6'
+                  : 'line-clamp-2 text-base/5',
+            )}
+          >
+            {item.title}
+          </h3>
+        </div>
       </div>
-    </div>
+
+      {/* Video Modal for YouTube videos */}
+      {isYouTube && (
+        <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
+      )}
+    </>
   );
 }
 
-export default function NewsAndTalksSection({ news = [], talks = [], isLoading, isMobile = false }: NewsAndTalksSectionProps) {
+export default function NewsAndTalksSection({ items = [], isLoading, isMobile = false }: NewsAndTalksSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const swiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileItemsPerPage = useMobileItemsPerPage(containerRef, isMobile);
   const itemsPerPage = isMobile ? mobileItemsPerPage : ITEMS_PER_PAGE;
 
-  // Combine news and talks into a single array, sorted by sequence
-  const combinedData: CombinedItem[] = [
-    ...talks.map((talk) => ({
-      id: talk.id,
-      title: talk.title,
-      date: talk.date,
-      url: talk.url,
-      image: talk.essayPic,
-      type: 'talk' as const,
-      videoId: talk.videoId,
-      sequence: talk.sequence,
-    })),
-    ...news.map((n) => ({
-      id: n.id + 10000, // Offset to avoid ID collision
-      title: n.title,
-      date: n.date,
-      url: n.url,
-      image: null,
-      type: 'news' as const,
-      sequence: n.sequence,
-    })),
-  ].sort((a, b) => a.sequence - b.sequence);
-
-  const totalPages = Math.ceil(combinedData.length / itemsPerPage);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
   const handlePaginationClick = (index: number) => {
     swiperRef.current?.slideTo(index);
@@ -167,7 +158,7 @@ export default function NewsAndTalksSection({ news = [], talks = [], isLoading, 
           spaceBetween={16}
         >
           {Array.from({ length: totalPages }).map((_, pageIndex) => {
-            const pageItems = combinedData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
+            const pageItems = items.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
 
             return (
               <SwiperSlide key={pageIndex}>
@@ -193,7 +184,7 @@ export default function NewsAndTalksSection({ news = [], talks = [], isLoading, 
         spaceBetween={16}
       >
         {Array.from({ length: totalPages }).map((_, pageIndex) => {
-          const pageItems = combinedData.slice(pageIndex * ITEMS_PER_PAGE, (pageIndex + 1) * ITEMS_PER_PAGE);
+          const pageItems = items.slice(pageIndex * ITEMS_PER_PAGE, (pageIndex + 1) * ITEMS_PER_PAGE);
           const [mainItem, ...sideItems] = pageItems;
 
           return (

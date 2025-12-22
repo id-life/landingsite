@@ -8,6 +8,7 @@ import {
   PodcastItem,
   PodcastCommentItemType,
   InsightsItem,
+  InsightsWithGeoItem,
 } from '@/apis/types';
 
 export const fetchAudioData = () => request.get<any, Response<AudioDataItem[]>>('/music-player/list');
@@ -31,3 +32,6 @@ export const fetchPodcastComment = (id?: string) =>
 
 // Insights API
 export const fetchInsights = () => request.get<any, Response<InsightsItem[]>>('/insights');
+
+// Insights with Geo API (for insights page News & Talks section)
+export const fetchInsightsWithGeo = () => request.get<any, Response<InsightsWithGeoItem[]>>('/insights/with-geo');

@@ -3,7 +3,7 @@
 import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
-import { useInsightsData } from '@/hooks/insights/fetch';
+import { useInsightsData, useInsightsWithGeoData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
@@ -15,7 +15,10 @@ function MobileInsights() {
   const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
-  const { news, talks, podcasts, isLoading } = useInsightsData();
+  // Use the old API for podcasts (will be migrated to /podcast/list separately)
+  const { podcasts, isLoading: isPodcastsLoading } = useInsightsData();
+  // Use the new API for news & talks
+  const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
 
   // 监听 innerPageNavigateTo 变化来切换页面
   useEffect(() => {
@@ -52,7 +55,7 @@ function MobileInsights() {
             innerPageIndex === 0 ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0',
           )}
         >
-          <PodcastSection podcasts={podcasts} isLoading={isLoading} isMobile />
+          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} isMobile />
         </div>
 
         {/* News & Talks Section */}
@@ -62,7 +65,7 @@ function MobileInsights() {
             innerPageIndex === 1 ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0',
           )}
         >
-          <NewsAndTalksSection news={news} talks={talks} isLoading={isLoading} isMobile />
+          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile />
         </div>
       </div>
     </div>

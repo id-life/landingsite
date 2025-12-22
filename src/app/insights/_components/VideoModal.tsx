@@ -65,7 +65,16 @@ export default function VideoModal({ isOpen, onClose, videoId, title }: VideoMod
         lockScroll
       >
         <FloatingFocusManager context={context}>
-          <div ref={refs.setFloating} className="relative flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+          {/* Close button - fixed at screen top right */}
+          <button
+            onClick={onClose}
+            className="fixed right-6 top-6 z-[101] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
+            aria-label="Close video"
+          >
+            <CloseIcon />
+          </button>
+
+          <div ref={refs.setFloating} className="relative" onClick={(e) => e.stopPropagation()}>
             <div className="relative aspect-video w-[80vw] max-w-[960px] overflow-hidden rounded-lg bg-black shadow-2xl">
               <iframe
                 className="absolute inset-0 h-full w-full"
@@ -75,14 +84,6 @@ export default function VideoModal({ isOpen, onClose, videoId, title }: VideoMod
                 allowFullScreen
               />
             </div>
-
-            <button
-              onClick={onClose}
-              className="mt-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-all hover:border-white/50 hover:bg-white/20 hover:text-white"
-              aria-label="Close video"
-            >
-              <CloseIcon />
-            </button>
           </div>
         </FloatingFocusManager>
       </FloatingOverlay>

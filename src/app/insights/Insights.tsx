@@ -10,7 +10,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useInsightsData } from '@/hooks/insights/fetch';
+import { useInsightsData, useInsightsWithGeoData } from '@/hooks/insights/fetch';
 
 export default function Insights() {
   const currentPage = useAtomValue(currentPageAtom);
@@ -68,13 +68,16 @@ export default function Insights() {
     }
   }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
-  const { news, talks, podcasts, isLoading } = useInsightsData();
+  // Use the old API for podcasts (will be migrated to /podcast/list separately)
+  const { podcasts, isLoading: isPodcastsLoading } = useInsightsData();
+  // Use the new API for news & talks
+  const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
       <div className="flex h-[calc(100vh-10rem)] flex-col gap-10 px-[20rem] pt-30">
-        <PodcastSection podcasts={podcasts} isLoading={isLoading} />
-        <NewsAndTalksSection news={news} talks={talks} isLoading={isLoading} />
+        <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} />
+        <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />
       </div>
     </div>
   );
