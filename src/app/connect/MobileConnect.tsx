@@ -10,7 +10,7 @@ export default function MobileConnect() {
   return (
     <div
       id={NAV_LIST[CONNECT_PAGE_INDEX].id}
-      className={cn('relative h-[800svh] overflow-auto', {
+      className={cn('relative h-svh overflow-hidden', {
         hidden: currentPage.id !== NAV_LIST[CONNECT_PAGE_INDEX].id,
       })}
     />

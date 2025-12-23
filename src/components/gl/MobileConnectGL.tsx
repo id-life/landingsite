@@ -1,88 +1,87 @@
-import {
-  innerPageIndexAtom,
-  innerPageNavigateToAtom,
-  mobileCurrentPageAtom,
-  mobileCurrentPageIndexAtom,
-  mobileIsScrollingAtom,
-} from '@/atoms';
+import { mobileCurrentPageAtom } from '@/atoms';
 import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
 import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import { CONNECT_PAGE_INDEX } from '@/constants/config';
-import { useMobileConnectCrossAnimations } from '@/hooks/connectGL/useMobileConnectCrossAnimations';
-import { useMobileConnectSVGAnimations } from '@/hooks/connectGL/useMobileConnectSVGAnimations';
-import { useGSAP } from '@gsap/react';
-import { Center, Svg } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { SplitText } from 'gsap/SplitText';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
-// FixedConnect 中的 fixed 元素选择器
-const CONNECT_FIXED_ELEMENTS =
-  '#connect-1-svg-mobile, #connect-2-svg-mobile, #connect-3-svg-mobile, #connect-4-svg-mobile, .page-connect-item, #connect-end-1, #connect-end-2';
-
-type TitleProps = {
-  titleRef: React.RefObject<THREE.Group>;
-  position: THREE.Vector3;
-  rotation?: THREE.Euler;
-  scale: number;
-  titleName: string;
-};
-const TitleSVG = memo(({ titleRef, position, rotation, scale, titleName }: TitleProps) => (
-  <Center ref={titleRef} position={position} rotation={rotation}>
-    <Svg scale={scale} name={`${titleName}-svg`} src={`/svgs/value/${titleName}.svg`} />
-    <Svg scale={scale} name={`${titleName}-cn-svg`} src={`/svgs/value/${titleName}-cn.svg`} />
-  </Center>
-));
-
-TitleSVG.displayName = 'TitleSVG';
-
-const CONNECT_PROGRESS_CONFIG = {
-  mobile: {
-    0: 0,
-    1: 0.425,
-    2: 1, // 出邮箱
-  },
-} as const;
+// Updated selector for new single-page mobile layout
+const CONNECT_FIXED_ELEMENTS = '#mobile-connect-content, .page-connect-item, #connect-end-1, #connect-end-2';
 
 function MobileConnectGL() {
   const { camera } = useThree();
-  const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
-  const setMobileIsScrolling = useSetAtom(mobileIsScrollingAtom);
+  const [currentPage] = useAtom(mobileCurrentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
   const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
-  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
-  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const progressMap = useMemo(() => CONNECT_PROGRESS_CONFIG.mobile, []);
   const startAnimTLRef = useRef<gsap.core.Timeline | null>(null);
-  const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
-  const isScrollingRef = useRef(false);
   const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
+  const hasPlayedEnToCnRef = useRef(false);
 
-  const { createPage1SvgAnim, createPage2SvgAnim, createPage3SvgAnim } = useMobileConnectSVGAnimations();
-  const { createPage1CrossAnim, createPage2CrossAnim } = useMobileConnectCrossAnimations({
-    modelRef,
-    isScrollingRef,
-  });
+  // Store SplitText instances for cleanup
+  const splitTextRef = useRef<SplitText[]>([]);
 
+  // EN→CN transition animation - character by character like PC version
+  const playMobileEnToCnAnim = useCallback(() => {
+    // Clean up previous SplitText instances
+    splitTextRef.current.forEach((split) => split.revert());
+    splitTextRef.current = [];
+
+    // Get CN parent elements and set them visible (they have opacity-0 class)
+    const cnParents = gsap.utils.toArray<HTMLElement>('#mobile-connect-content .connect-text-cn');
+    gsap.set(cnParents, { opacity: 1 });
+
+    // Split EN red text into characters
+    const enSplit = new SplitText('#mobile-connect-content .connect-text-en.text-red-500', {
+      type: 'chars',
+    });
+    // Split CN text into characters
+    const cnSplit = new SplitText('#mobile-connect-content .connect-text-cn', {
+      type: 'chars',
+    });
+    splitTextRef.current.push(enSplit, cnSplit);
+
+    const enChars = enSplit.chars;
+    const cnChars = cnSplit.chars;
+
+    // Set initial state for CN chars (parent is now visible, but chars start hidden)
+    gsap.set(cnChars, { opacity: 0 });
+
+    const staggerTime = 0.05; // Time between each character
+    const duration = 0.05; // Duration for each character fade
+    const enTotalTime = enChars.length * staggerTime + duration;
+
+    // Fade out EN red text character by character
+    enChars.forEach((char, index) => {
+      gsap.to(char, { opacity: 0, duration, delay: index * staggerTime, ease: 'power2.out' });
+    });
+
+    // Fade in CN text character by character (after EN animation)
+    cnChars.forEach((char, index) => {
+      gsap.to(char, { opacity: 1, duration, delay: enTotalTime + index * staggerTime, ease: 'power2.out' });
+    });
+
+    // After text animation completes, show footer with slide-up
+    const cnTotalTime = cnChars.length * staggerTime + duration;
+    gsap.delayedCall(enTotalTime + cnTotalTime + 0.3, () => {
+      setIsSubscribeShow(true);
+    });
+  }, [setIsSubscribeShow]);
+
+  // Setup entry animation timeline
   useEffect(() => {
     if (startAnimTLRef.current || !modelRef.current) return;
-    const tl = gsap.timeline({
-      onStart: () => {
-        console.log('start anim start');
-      },
-      onReverseComplete: () => {
-        console.log('reverse complete');
-      },
-    });
-    // Canvas 和相机先动，模型稍后进入避免卡顿
+    const tl = gsap.timeline({ paused: true });
+
+    // Canvas and camera animation
     tl.set('#vision-canvas', { zIndex: 1, opacity: 1 }, 0);
     tl.to(camera.position, { ...page1Config.to.camera.position, duration: 0.8 }, 0);
     tl.to(
@@ -96,7 +95,8 @@ function MobileConnectGL() {
       },
       '<',
     );
-    // 模型动画延迟 0.3s 开始，避免同时加载造成卡顿
+
+    // Model animation (delayed to avoid jank)
     tl.fromTo(
       modelRef.current.position,
       { ...page1Config.from.model.position },
@@ -117,105 +117,60 @@ function MobileConnectGL() {
       },
       '<',
     );
-    tl.to('#connect-1-svg-mobile', { opacity: 1, duration: 0.5 }, 0.2);
+
+    // Fade in content
+    tl.to('#mobile-connect-content', { opacity: 1, duration: 0.5 }, 0.2);
 
     startAnimTLRef.current = tl;
     return () => {
       if (startAnimTLRef.current) startAnimTLRef.current.kill();
     };
-  }, [camera, page1Config, setCurrentPage]);
+  }, [camera, page1Config]);
 
+  // Handle page entry/exit
   useEffect(() => {
     if (currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id) {
-      // 立即显示 canvas，不等待动画
+      // Show canvas immediately
       gsap.set('#vision-canvas', { opacity: 1 });
-      // 恢复 FixedConnect 元素的 visibility
+      // Restore FixedConnect elements visibility
       gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'visible' });
-      startAnimTLRef.current?.play();
+
+      // Clean up previous SplitText instances and reset text
+      splitTextRef.current.forEach((split) => split.revert());
+      splitTextRef.current = [];
+
+      // Reset text opacity to initial state (EN visible, CN hidden) for fresh animation
+      gsap.set('#mobile-connect-content .connect-text-en.text-red-500', { opacity: 1 });
+      gsap.set('#mobile-connect-content .connect-text-cn', { opacity: 0 });
+
+      // Reset and play entry animation
+      hasPlayedEnToCnRef.current = false;
+      startAnimTLRef.current?.restart();
+
+      // After entry animation completes, play EN→CN transition
+      startAnimTLRef.current?.eventCallback('onComplete', () => {
+        if (!hasPlayedEnToCnRef.current) {
+          hasPlayedEnToCnRef.current = true;
+          playMobileEnToCnAnim();
+        }
+      });
     } else {
-      gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
-      // 立即隐藏 FixedConnect 中的 fixed 元素，用 visibility 避免和 reverse 动画冲突
+      // Clean up SplitText instances
+      splitTextRef.current.forEach((split) => split.revert());
+      splitTextRef.current = [];
+
+      // Reset scroll position when leaving Connect page
+      gsap.to(window, { scrollTo: 0 });
+      // Hide FixedConnect elements immediately
       gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'hidden', opacity: 0 });
+      // Hide footer
+      setIsSubscribeShow(false);
+      // Reset EN→CN animation flag
+      hasPlayedEnToCnRef.current = false;
+      // Reverse entry animation
       startAnimTLRef.current?.reverse();
     }
-  }, [currentPage]);
-
-  // Connect 页动画
-  useGSAP(() => {
-    if (!modelRef.current) return;
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        id: 'valueTimeline',
-        trigger: `#${NAV_LIST[6].id}`,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true,
-        immediateRender: false,
-        // onUpdate: (self) => {
-        //   console.log(self.progress);
-        // },
-      },
-    });
-    // page1~2之间的 svg切换动画，红字消失变换为中文
-    createPage1SvgAnim(tl);
-    tl.to(() => {}, { duration: 12 });
-    createPage1CrossAnim(tl);
-
-    // page2~3之间的 svg切换动画，红字消失变换为中文
-    createPage2SvgAnim(tl);
-    tl.to(() => {}, { duration: 12 });
-    createPage2CrossAnim(tl);
-
-    createPage3SvgAnim(tl);
-  }, []);
-
-  useEffect(() => {
-    if (currentPageIndex !== CONNECT_PAGE_INDEX || innerPageNavigateTo === null || isScrollingRef.current) return;
-    const progress = progressMap[innerPageNavigateTo as keyof typeof progressMap];
-    if (progress !== undefined) {
-      if (innerPageNavigateTo === 2) {
-        const st = ScrollTrigger.getById('valueTimeline');
-        if (st) {
-          isScrollingRef.current = true;
-          setMobileIsScrolling(true);
-          gsap.to(window, {
-            duration: 3,
-            scrollTo: st.start + (st.end - st.start) * progress,
-            onComplete: () => {
-              isScrollingRef.current = false;
-              setMobileIsScrolling(false);
-              setIsSubscribeShow(true);
-            },
-          });
-        }
-      } else {
-        const st = ScrollTrigger.getById('valueTimeline');
-        if (st) {
-          isScrollingRef.current = true;
-          setMobileIsScrolling(true);
-          setIsSubscribeShow(false);
-          gsap.to(window, {
-            duration: 3,
-            scrollTo: st.start + (st.end - st.start) * progress,
-            onComplete: () => {
-              isScrollingRef.current = false;
-              setMobileIsScrolling(false);
-            },
-          });
-        }
-      }
-      setInnerPageIndex(innerPageNavigateTo);
-      setInnerPageNavigateTo(null);
-    }
-  }, [
-    currentPageIndex,
-    innerPageNavigateTo,
-    progressMap,
-    setInnerPageIndex,
-    setInnerPageNavigateTo,
-    setIsSubscribeShow,
-    setMobileIsScrolling,
-  ]);
+  }, [currentPage, playMobileEnToCnAnim, setIsSubscribeShow]);
 
   return (
     <group>

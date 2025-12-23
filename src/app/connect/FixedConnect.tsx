@@ -1,10 +1,55 @@
 import { isCNAtom } from '@/atoms/geo';
-import CnBtnSVG from '@/components/svg/CnBtnSVG';
-import EnBtnSVG from '@/components/svg/EnBtnSVG';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
+
+// New: Single-page mobile layout component
+const MobileConnectSinglePage = () => (
+  <div
+    id="mobile-connect-content"
+    className="pointer-events-none fixed inset-x-4 top-[4.625rem] z-30 flex flex-col font-oxanium font-semibold uppercase tracking-[-4%] opacity-0"
+  >
+    {/* Section 1: EVANGELISM */}
+    <div className="relative text-left">
+      <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[1.75rem] text-red-500">Evangelism</span>
+      <span className="connect-text-cn bilingual-font absolute left-0 top-1 text-[2.5rem]/[3.75rem] font-bold text-red-500 opacity-0">
+        布道者
+      </span>
+      <div className="connect-text-en pt-8 text-[1.75rem]/[1.75rem]">
+        OF GLOBAL LONGEVITY
+        <br />
+        AWARENESS
+      </div>
+    </div>
+
+    {/* Section 2: EAST & WEST ACCESS */}
+    <div className="relative mt-7.5 text-left">
+      <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem]">East & West</span>
+      <span className="connect-text-en whitespace-pre-wrap text-[1.75rem]/[2.875rem] text-red-500">Access</span>
+      <span className="connect-text-cn bilingual-font absolute -top-3 left-[11.875rem] text-[3.125rem]/[3.75rem] font-bold text-red-500 opacity-0">
+        桥梁
+      </span>
+      <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">
+        Deep Roots in Both East & West, a Conduit that Bridges
+        <br />
+        Markets, Capital, Institutions and More
+      </p>
+    </div>
+
+    {/* Section 3: MOONSHOT VENTURES */}
+    <div className="relative mt-7.5 text-left">
+      <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-red-500">MOONSHOT</span>
+      <span className="connect-text-cn bilingual-font absolute -top-2.5 left-0 text-[2.5rem]/[3.75rem] font-bold text-red-500 opacity-0">
+        登月计划
+      </span>
+      <span className="connect-text-en ml-3 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal">VENTURES</span>
+      <p className="connect-text-en relative left-1 text-xs/4 font-semibold normal-case tracking-normal">
+        We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
+      </p>
+    </div>
+  </div>
+);
 
 type ConnectContentItem = {
   id: string;
@@ -14,7 +59,7 @@ type ConnectContentItem = {
     title: string;
     content: string;
   };
-  mobileSVGElement: JSX.Element;
+  mobileSVGElement?: JSX.Element;
   className?: string;
   buttonClass?: string;
 };
@@ -250,13 +295,16 @@ export default function FixedConnect() {
     }, 8000);
 
     return () => clearInterval(timer);
-  }, [isCN, setIsCN]);
+  }, [setIsCN]);
 
   return (
     <>
+      {/* New: Single-page mobile layout (replaces old 3-page scroll system) */}
+      {isMobile && <MobileConnectSinglePage />}
+
       {CONNECT_CONTENT.map((item) => (
         <Fragment key={item.id}>
-          {isMobile && item.mobileSVGElement}
+          {/* Removed old mobile scroll elements: {isMobile && item.mobileSVGElement} */}
           <div
             id={item.id}
             className={cn(

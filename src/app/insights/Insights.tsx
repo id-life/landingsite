@@ -6,14 +6,15 @@ import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import PodcastSection from '@/app/insights/_components/PodcastSection';
-import { useAtomValue } from 'jotai';
+import { useGSAP } from '@gsap/react';
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInsightsData, useInsightsWithGeoData } from '@/hooks/insights/fetch';
 
 export default function Insights() {
-  const currentPage = useAtomValue(currentPageAtom);
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
   // Insights 向上滚动 → 回到 Twin 页面
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
@@ -47,7 +48,7 @@ export default function Insights() {
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.end },
+        scrollTo: { y: st.end + 50 },
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
@@ -56,6 +57,26 @@ export default function Insights() {
     },
     isUp: false,
   });
+
+  // 添加页面锁定效果（与其他页面一致）
+  useGSAP(() => {
+    gsap.timeline({
+      scrollTrigger: {
+        id: 'insights-scroll-trigger',
+        trigger: `#${NAV_LIST[5].id}`,
+        start: 'top top',
+        end: '+=300%',
+        pin: true,
+        scrub: true,
+        onEnter: () => {
+          setCurrentPage(NAV_LIST[5]);
+        },
+        onEnterBack: () => {
+          setCurrentPage(NAV_LIST[5]);
+        },
+      },
+    });
+  }, []);
 
   // 根据当前页面启用/禁用滚动判断
   useEffect(() => {
