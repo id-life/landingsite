@@ -1,14 +1,14 @@
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useGSAP } from '@gsap/react';
-import { useGA } from '@/hooks/useGA';
-import { useProgress } from '@react-three/drei';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import Background from '@/components/common/Background';
 import { globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
+import Background from '@/components/common/Background';
+import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useGA } from '@/hooks/useGA';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
+import { useGSAP } from '@gsap/react';
+import { useProgress } from '@react-three/drei';
+import gsap from 'gsap';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { useSetAtom } from 'jotai';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export function OuterLoader() {
   const { progress, active, errors, item } = useProgress();
