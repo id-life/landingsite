@@ -10,9 +10,12 @@ export const GA_EVENT_NAMES = {
   SUBSCRIBE_LETTER: 'subscribe_letter',
   MEDIUM_CLICK: 'medium_click',
   ID_PAGE_VIEW: 'id_page_view',
+
   PAGE_LOAD_START: 'page_load_start',
   PAGE_LOAD_END: 'page_load_end',
   PAGE_LOAD_ITEM: 'page_load_item',
+  PAGE_LOAD_PROGRESS: 'page_load_progress',
+
   SUBSCRIBE_SUBMIT: 'subscribe_submit',
   SUBSCRIBE_SHOW: 'subscribe_show',
   SUBSCRIBE_CLOSE: 'subscribe_close',
@@ -167,6 +170,11 @@ export const GA_EVENT_LABELS = {
   EPISODE_PLAY: {
     START: 'start',
     PAUSE: 'pause',
+  },
+  PAGE_LOAD_PROGRESS: {
+    MODEL_ANIMATION: 'model_animation',
+    UI_APPEAR: 'ui_appear',
+    POPUP_APPEAR: 'popup_appear',
   },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,

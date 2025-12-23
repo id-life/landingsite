@@ -1,5 +1,7 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { trackEvent } from '@/hooks/useGA';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -37,7 +39,18 @@ export default function MobileDragonModel(props: {}) {
     const nav = document.querySelector('#mobile-nav');
     if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
     if (element)
-      gsap.fromTo(element, { opacity: 0 }, { opacity: 1, duration: 0.3, onComplete: () => setFadeInAnimCompleted(true) });
+      gsap.fromTo(
+        element,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.3,
+          onComplete: () => {
+            setFadeInAnimCompleted(true);
+            trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.UI_APPEAR });
+          },
+        },
+      );
   });
 
   useFrame(({ clock }) => {
@@ -116,6 +129,7 @@ export default function MobileDragonModel(props: {}) {
         delay: ANIMATION_DELAY,
         onComplete: () => {
           autoSwingRef.current = true;
+          trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.MODEL_ANIMATION });
         },
       });
     },

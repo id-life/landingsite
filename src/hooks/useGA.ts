@@ -19,14 +19,19 @@ export interface TrackEventOptions {
 }
 
 export function trackEvent(options: TrackEventOptions) {
-  sendGAEvent('event', options.name, { event_label: options.label, ...options });
+  const { name, label, ...rest } = options;
+  const payload = { event_label: label, ...rest };
+  // console.log('[GA]', name, payload);
+  sendGAEvent('event', name, payload);
 }
 
 export function useGA() {
-  const trackEvent = useCallback((options: TrackEventOptions) => {
+  const track = useCallback((options: TrackEventOptions) => {
     const { name, label, ...rest } = options;
-    sendGAEvent('event', name, { event_label: label, ...rest });
+    const payload = { event_label: label, ...rest };
+    // console.log('[GA]', name, payload);
+    sendGAEvent('event', name, payload);
   }, []);
 
-  return { trackEvent };
+  return { trackEvent: track };
 }

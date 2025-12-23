@@ -8,6 +8,7 @@ export function SubscribePopupStorageReporter() {
   const scriptContent = `
 (function() {
   function sendGAEvent() { (window.dataLayer??=[]).push(arguments) }
+  sendGAEvent('set', { visit_id: crypto.randomUUID() });
   const popupDismissed = localStorage.getItem(${localStorageKey});
   sendGAEvent('event', ${eventName}, { event_label: popupDismissed ? 'true' : 'false' });
 })()`;

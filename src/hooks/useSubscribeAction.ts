@@ -56,6 +56,7 @@ export function useSubscribeAction() {
     (isFirst?: boolean) => {
       timelineRef.current?.play();
       setIsSubscribeShow(true);
+      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.POPUP_APPEAR });
       if (isFirst) {
         trackEvent({
           name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
@@ -175,6 +176,7 @@ export function useMobileSubscribeAction() {
   useEffect(() => {
     if (hasShownAuto || !fadeInAnimCompleted) return;
     setIsSubscribeShow(true);
+    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.POPUP_APPEAR });
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
       label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
