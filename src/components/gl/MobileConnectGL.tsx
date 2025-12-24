@@ -151,7 +151,10 @@ function MobileConnectGL() {
       startAnimTLRef.current?.eventCallback('onComplete', () => {
         if (!hasPlayedEnToCnRef.current) {
           hasPlayedEnToCnRef.current = true;
-          playMobileEnToCnAnim();
+          // 延迟1秒播放EN→CN动画
+          gsap.delayedCall(1, () => {
+            playMobileEnToCnAnim();
+          });
         }
       });
     } else {

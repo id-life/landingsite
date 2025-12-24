@@ -100,7 +100,15 @@ function ConnectGL() {
           },
           onLeave: () => {
             setEnableUpJudge(false);
-            playFooterEnterAnim();
+            if (window.isNavScrolling) {
+              // 通过菜单导航进入，延迟1秒播放EN→CN动画
+              gsap.delayedCall(1, () => {
+                playFooterEnterAnim();
+              });
+            } else {
+              // 正常滚动，立即播放
+              playFooterEnterAnim();
+            }
           },
           onLeaveBack: () => {
             setEnableUpJudge(false);
