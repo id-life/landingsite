@@ -9,10 +9,12 @@ import ScrollBehavior from '@/components/common/ScrollBehavior';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { WebClarity } from '@/app/_components/web-clarity';
+import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
+import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
@@ -57,6 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       {gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
       <WebVitals />
       <WebClarity />
+      <SessionInvisibilityTracker />
       <body
         className={clsx(
           xirod.variable,
@@ -69,6 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         )}
         suppressHydrationWarning
       >
+        <SubscribePopupStorageReporter />
         <Providers>
           <ScrollBehavior />
           <HashRouter />

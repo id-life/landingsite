@@ -5,16 +5,22 @@ import { ModelType } from '@/components/twin/model/type';
 
 export const GA_EVENT_NAMES = {
   // common
+  SESSION_INVISIBLE_TIME: 'session_invisible_time',
   MUSIC_TOGGLE: 'music_toggle',
   SUBSCRIBE_LETTER: 'subscribe_letter',
   MEDIUM_CLICK: 'medium_click',
   ID_PAGE_VIEW: 'id_page_view',
+
   PAGE_LOAD_START: 'page_load_start',
   PAGE_LOAD_END: 'page_load_end',
   PAGE_LOAD_ITEM: 'page_load_item',
+  PAGE_LOAD_PROGRESS: 'page_load_progress',
+
   SUBSCRIBE_SUBMIT: 'subscribe_submit',
   SUBSCRIBE_SHOW: 'subscribe_show',
   SUBSCRIBE_CLOSE: 'subscribe_close',
+
+  SUBSCRIBE_POPUP_STORAGE: 'subscribe_popup_storage',
 
   // portfolio
   PORTFOLIO_VIEW: 'portfolio_view',
@@ -165,8 +171,14 @@ export const GA_EVENT_LABELS = {
     START: 'start',
     PAUSE: 'pause',
   },
+  PAGE_LOAD_PROGRESS: {
+    MODEL_ANIMATION: 'model_animation',
+    UI_APPEAR: 'ui_appear',
+    POPUP_APPEAR: 'popup_appear',
+  },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,
+  | 'SESSION_INVISIBLE_TIME'
   | 'PORTFOLIO_VIEW'
   | 'CONTACT_EMAIL'
   | 'PRESENCE_VIEW'
@@ -208,6 +220,7 @@ export const GA_EVENT_LABELS = {
   | 'EPISODE_END'
   | 'TIMELINE_JUMP'
   | 'SUBSCRIBE_SUBMIT'
+  | 'SUBSCRIBE_POPUP_STORAGE'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
   MODEL_SWITCH: Record<Uppercase<keyof typeof ModelType>, string>;
