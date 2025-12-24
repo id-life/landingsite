@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
@@ -43,10 +43,16 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
         </div>
         <div className="p-4">
           <h3 className="line-clamp-2 text-lg font-semibold">{data.title}</h3>
-          <div className="mt-4 flex items-center gap-2 text-sm font-medium uppercase text-black/40">
-            {data?.source && <span>{data.source}</span>}
-            {data?.source && data.publishDate && <span>·</span>}
-            {data?.publishDate && <span>{dayjs(data.publishDate).format('MMM DD, YYYY')}</span>}
+          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-black/40">
+            {data?.source || data?.publishDate ? (
+              <Fragment>
+                {data?.source && <span>{data.source}</span>}
+                {data?.source && data.publishDate && <span>·</span>}
+                {data?.publishDate && <span>{dayjs(data.publishDate).format('MMM DD, YYYY')}</span>}{' '}
+              </Fragment>
+            ) : (
+              <span>Article</span>
+            )}
           </div>
         </div>
       </div>
