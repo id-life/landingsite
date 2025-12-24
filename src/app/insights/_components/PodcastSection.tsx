@@ -197,17 +197,9 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
               isMobile && 'px-2 py-1.5 text-sm',
             )}
           >
-            <ViewAllBorderSVG
-              className={cn(
-                'absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600',
-                isMobile && 'fill-red-600',
-              )}
-            />
-            <p className={cn('group-hover:text-red-600', isMobile && 'text-red-600')}>VIEW ALL</p>
-            <RightSVG
-              key="view-all"
-              className={cn('w-5 fill-black group-hover:fill-red-600', isMobile && 'w-3.5 fill-red-600')}
-            />
+            <ViewAllBorderSVG className={cn('absolute left-0 top-0 h-full w-full fill-red-600')} />
+            <p className="text-red-600">VIEW ALL</p>
+            <RightSVG key="view-all" className={cn('w-5 fill-red-600', isMobile && 'w-3.5')} />
           </div>
         </div>
 

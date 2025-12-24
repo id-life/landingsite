@@ -83,7 +83,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         {/* Card content */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
           <h3 className="line-clamp-2 font-poppins text-lg/6 font-semibold text-black">{item.title}</h3>
-          <div className="flex items-center gap-3 font-poppins text-base/5 font-medium text-black/40">
+          <div className="flex items-center gap-1.5 font-poppins text-sm/5 font-medium text-black/40">
             {item.publisher && <span>{item.publisher}</span>}
             {item.publisher && item.publishDate && <span>·</span>}
             {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
@@ -225,17 +225,9 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
               isMobile && 'px-2 py-1.5 text-sm',
             )}
           >
-            <ViewAllBorderSVG
-              className={cn(
-                'absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600',
-                isMobile && 'fill-red-600',
-              )}
-            />
-            <p className={cn('group-hover:text-red-600', isMobile && 'text-red-600')}>VIEW ALL</p>
-            <RightSVG
-              key="view-all"
-              className={cn('w-5 fill-black group-hover:fill-red-600', isMobile && 'w-3.5 fill-red-600')}
-            />
+            <ViewAllBorderSVG className={'absolute left-0 top-0 h-full w-full fill-red-600'} />
+            <p className={cn('text-red-600')}>VIEW ALL</p>
+            <RightSVG key="view-all" className={cn('w-5 fill-red-600', isMobile && 'w-3.5')} />
           </div>
         </div>
 
