@@ -114,3 +114,16 @@ export type InsightsWithGeoItem = {
   isTop: boolean;
   publishDate: string | null;
 };
+
+// News page item type (combined from insights and geo)
+export type NewsPageItem = {
+  id: number;
+  title: string;
+  brief: string | null;
+  cover: string | null;
+  source: string | null;
+  publishDate: string | null;
+  url: string | null;
+  videoId: string | null;
+  isExternal: boolean;
+};

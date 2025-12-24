@@ -83,7 +83,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
       <div>
         <div className="mt-5 flex items-center justify-between">
           <div className="text-xl/5 font-medium">
-            <Link href="/news">Home</Link>
+            <Link href="/news">News</Link>
             <span className="text-black/50">&gt; Article</span>
           </div>
         </div>
