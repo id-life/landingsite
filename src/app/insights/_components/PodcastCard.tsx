@@ -5,7 +5,12 @@ import { formatDuration } from '@/utils/podcast';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
 import { currentAudioAtom, playlistAtom, podcastIDAtom, podcastLTAtom, PlayList } from '@/atoms/audio-player';
 
-export function PodcastCard({ item }: { item: PodcastItem }) {
+type PodcastCardProps = {
+  item: PodcastItem;
+  isMobile?: boolean;
+};
+
+export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
   const setCurrentAudio = useSetAtom(currentAudioAtom);
   const setPlaylist = useSetAtom(playlistAtom);
   const podcastIDList = useAtomValue(podcastIDAtom);
@@ -29,56 +34,68 @@ export function PodcastCard({ item }: { item: PodcastItem }) {
     }
   };
 
-  return (
-    <div className="footer-contact-clip border-2 border-[var(--subscribe-border)] bg-white/50 p-6 backdrop-blur-md mobile:border-0 mobile:p-5">
-      <span className="absolute left-0 top-0 block rotate-90 border-[1rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent mobile:hidden" />
-      <div className="flex items-start justify-between gap-4 mobile:gap-3">
-        <div>
-          <h3 className="line-clamp-2 font-poppins text-xl/6 font-bold mobile:text-base mobile:leading-6">{item.title}</h3>
+  // Mobile layout: keep original detailed card
+  if (isMobile) {
+    return (
+      <div className="border-0 bg-white/50 p-5 backdrop-blur-md">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="line-clamp-2 font-poppins text-base font-bold leading-6">{item.title}</h3>
+          </div>
+          <img
+            src="/imgs/podcast/podcast-play.png"
+            className="h-11 w-[45px] shrink-0 cursor-pointer duration-300 hover:scale-110"
+            alt=""
+            onClick={handlePlay}
+          />
         </div>
+        <p className="mt-2 truncate text-sm font-medium text-gray-450">{item.subtitle}</p>
+        <p className="mt-1 truncate text-sm font-medium">{item.description}</p>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              onClick={() => handleLinkClick('xyz', item.xyzLink)}
+              className={clsx(
+                'h-6 w-6 rounded-md border border-black/20',
+                item.xyzLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale',
+              )}
+              src="/imgs/podcast/fm_xyz.png"
+              alt=""
+            />
+            <img
+              onClick={() => handleLinkClick('spotify', item.spotifyLink)}
+              className={clsx('h-6 w-6 rounded-md', item.spotifyLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+              src="/imgs/podcast/fm_spotify.png"
+              alt=""
+            />
+            <img
+              onClick={() => handleLinkClick('podcast', item.podcastLink)}
+              className={clsx('h-6 w-6 rounded-md', item.podcastLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+              src="/imgs/podcast/fm_podcast.png"
+              alt=""
+            />
+          </div>
+          <div className="text-sm text-gray-450">
+            {dayjs(item.date).format('MMM DD, YYYY')} · {formatDuration(item.duration)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout: simplified card with title + description + play button
+  return (
+    <div className="border-2 border-white bg-white/50 px-5 py-4 backdrop-blur-sm">
+      <div className="flex items-center justify-between gap-4">
+        <h3 className="line-clamp-1 flex-1 font-poppins text-xl font-bold leading-8">{item.title}</h3>
         <img
-          src="/imgs/podcast/podcast-play.png"
-          className="w-11 shrink-0 cursor-pointer duration-300 hover:scale-110 mobile:h-11 mobile:w-[45px]"
-          alt=""
+          src="/imgs/podcast/podcast-play-white.svg"
+          className="h-10 w-10 shrink-0 cursor-pointer duration-300 hover:scale-110"
+          alt="Play"
           onClick={handlePlay}
         />
       </div>
-      <p className="mt-3 truncate text-base font-medium text-gray-450 mobile:mt-2 mobile:text-sm">{item.subtitle}</p>
-      <p className="mt-2 truncate text-base/6 font-medium mobile:mt-1 mobile:text-sm">{item.description}</p>
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img
-            onClick={() => handleLinkClick('xyz', item.xyzLink)}
-            className={clsx(
-              'w-7.5 mobile:h-6 mobile:w-6 mobile:rounded-md mobile:border mobile:border-black/20',
-              item.xyzLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale',
-            )}
-            src="/imgs/podcast/fm_xyz.png"
-            alt=""
-          />
-          <img
-            onClick={() => handleLinkClick('spotify', item.spotifyLink)}
-            className={clsx(
-              'w-7.5 mobile:h-6 mobile:w-6 mobile:rounded-md',
-              item.spotifyLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale',
-            )}
-            src="/imgs/podcast/fm_spotify.png"
-            alt=""
-          />
-          <img
-            onClick={() => handleLinkClick('podcast', item.podcastLink)}
-            className={clsx(
-              'w-7.5 mobile:h-6 mobile:w-6 mobile:rounded-md',
-              item.podcastLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale',
-            )}
-            src="/imgs/podcast/fm_podcast.png"
-            alt=""
-          />
-        </div>
-        <div className="text-base/6 text-gray-450 mobile:text-sm">
-          {dayjs(item.date).format('MMM DD, YYYY')} · {formatDuration(item.duration)}
-        </div>
-      </div>
+      <p className="mt-1 line-clamp-1 text-base font-medium">{item.description}</p>
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTu
 
   return (
     <div
-      className="relative h-full cursor-pointer overflow-hidden rounded-sm bg-gray-800"
+      className="relative h-full cursor-pointer overflow-hidden rounded-sm"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
@@ -39,7 +39,7 @@ export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTu
       <img
         src={videoId ? thumbnailUrl : pic}
         alt={title}
-        className={`h-full w-full object-cover transition-all duration-300 hover:scale-105`}
+        className={`size-full object-cover transition-all duration-300 hover:scale-105`}
       />
       {videoId && showPreview && (
         <div className="absolute inset-0 overflow-hidden">

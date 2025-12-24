@@ -8,6 +8,7 @@ import Pagination from './Pagination';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
 import RightSVG from '@/../public/svgs/podcast/right.svg?component';
+import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import { cn } from '@/utils';
@@ -19,17 +20,10 @@ type NewsAndTalksSectionProps = {
   isMobile?: boolean;
 };
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
+const ITEMS_PER_PAGE_MOBILE = 3;
 
-function NewsCard({
-  item,
-  variant = 'small',
-  isMobile = false,
-}: {
-  item: InsightItem;
-  variant?: 'large' | 'small';
-  isMobile?: boolean;
-}) {
+function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isYouTube = !!item.videoId;
 
@@ -46,60 +40,56 @@ function NewsCard({
     }
   };
 
-  const isLarge = variant === 'large' && !isMobile;
-
-  // Mobile: fixed height, same for all cards
-  // Desktop: large card fills container, small cards are half height
-  const cardHeightClass = isMobile ? 'h-[186px]' : isLarge ? 'h-full' : 'h-[calc(50%-0.5rem)]';
-
   // Use imageUrl if available, otherwise fallback for YouTube videos
   const thumbnailPic = item.imageUrl ?? '';
 
+  // Mobile layout: keep the overlay style
+  if (isMobile) {
+    return (
+      <>
+        <div className="group relative h-[9.25rem] cursor-pointer overflow-hidden rounded">
+          <div className="absolute inset-0">
+            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-black" />
+          <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4">
+            <div className="flex items-center gap-2 font-oxanium text-sm uppercase text-white">
+              {item.publisher && (
+                <>
+                  <span className="text-white/80">{item.publisher}</span>
+                  <span className="text-white/50">·</span>
+                </>
+              )}
+              {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
+            </div>
+            <h3 className="mt-1 line-clamp-2 font-poppins text-lg/6 font-medium text-white">{item.title}</h3>
+          </div>
+        </div>
+        {isYouTube && (
+          <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
+        )}
+      </>
+    );
+  }
+
+  // Desktop layout: vertical card with image on top, text below
   return (
     <>
-      <div className={`group relative cursor-pointer overflow-hidden rounded ${cardHeightClass}`}>
-        {/* YouTubeThumbnail fills the container absolutely */}
-        <div className="absolute inset-0">
+      <div className="group flex cursor-pointer flex-col overflow-hidden" onClick={handleClick}>
+        {/* Image */}
+        <div className="relative h-[9.25rem] w-full overflow-hidden">
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
         </div>
-        {/* Gradient and text overlay - pointer-events-none to allow hover through */}
-        <div
-          className={cn(
-            'pointer-events-none absolute inset-0',
-            isMobile
-              ? 'bg-gradient-to-b from-transparent to-black'
-              : 'bg-gradient-to-t from-black/80 via-black/20 to-transparent',
-          )}
-        />
-        <div className={cn('pointer-events-none absolute inset-0 flex flex-col justify-end', isMobile ? 'p-4' : 'p-6')}>
-          {/* Publisher and date row */}
-          <div
-            className={cn('flex items-center gap-2 font-oxanium uppercase text-white', isMobile ? 'text-sm' : 'mb-2 text-base')}
-          >
-            {item.publisher && (
-              <>
-                <span className="text-white/80">{item.publisher}</span>
-                <span className="text-white/50">·</span>
-              </>
-            )}
+        {/* Card content */}
+        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
+          <h3 className="line-clamp-2 font-poppins text-lg/6 font-semibold text-black">{item.title}</h3>
+          <div className="flex items-center gap-3 font-poppins text-base/5 font-medium text-black/40">
+            {item.publisher && <span>{item.publisher}</span>}
+            {item.publisher && item.publishDate && <span>·</span>}
             {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
           </div>
-          <h3
-            className={cn(
-              'font-poppins font-semibold text-white',
-              isMobile
-                ? 'mt-1 line-clamp-2 text-base font-medium leading-5'
-                : isLarge
-                  ? 'line-clamp-3 text-xl/6'
-                  : 'line-clamp-2 text-base/5',
-            )}
-          >
-            {item.title}
-          </h3>
         </div>
       </div>
-
-      {/* Video Modal for YouTube videos */}
       {isYouTube && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
       )}
@@ -109,12 +99,22 @@ function NewsCard({
 
 export default function NewsAndTalksSection({ items = [], isLoading, isMobile = false }: NewsAndTalksSectionProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
   const swiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileItemsPerPage = useMobileItemsPerPage(containerRef, isMobile);
-  const itemsPerPage = isMobile ? mobileItemsPerPage : ITEMS_PER_PAGE;
+  const itemsPerPage = isMobile ? mobileItemsPerPage : ITEMS_PER_PAGE_DESKTOP;
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
+
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
+  };
+
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
+  };
 
   const handlePaginationClick = (index: number) => {
     swiperRef.current?.slideTo(index);
@@ -136,13 +136,18 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
           </div>
         );
       }
+      // Desktop loading: 4x2 grid skeleton
       return (
-        <div className="flex h-full gap-4">
-          <div className="h-full flex-1 animate-pulse rounded bg-gray-800/50" />
-          <div className="flex h-full w-[19rem] flex-col gap-4">
-            <div className="h-1/2 animate-pulse rounded bg-gray-800/50" />
-            <div className="h-1/2 animate-pulse rounded bg-gray-800/50" />
-          </div>
+        <div className="grid grid-cols-4 gap-x-6 gap-y-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div key={index} className="flex flex-col">
+              <div className="h-[148px] animate-pulse rounded bg-gray-800/50" />
+              <div className="mt-0 space-y-2 border-2 border-white bg-white/50 p-3">
+                <div className="h-12 animate-pulse rounded bg-gray-800/30" />
+                <div className="h-4 w-2/3 animate-pulse rounded bg-gray-800/20" />
+              </div>
+            </div>
+          ))}
         </div>
       );
     }
@@ -174,36 +179,28 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
       );
     }
 
-    // Desktop layout: 1 large + 2 small per page
+    // Desktop layout: 4x2 grid per page
     return (
       <Swiper
         className="h-full w-full"
-        onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
+        onSlideChange={(swiper) => {
+          setCurrentPage(swiper.activeIndex);
+          setIsBeginning(swiper.isBeginning);
+          setIsEnd(swiper.isEnd);
+        }}
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         slidesPerView={1}
-        spaceBetween={16}
+        spaceBetween={24}
       >
         {Array.from({ length: totalPages }).map((_, pageIndex) => {
-          const pageItems = items.slice(pageIndex * ITEMS_PER_PAGE, (pageIndex + 1) * ITEMS_PER_PAGE);
-          const [mainItem, ...sideItems] = pageItems;
+          const pageItems = items.slice(pageIndex * ITEMS_PER_PAGE_DESKTOP, (pageIndex + 1) * ITEMS_PER_PAGE_DESKTOP);
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="flex h-full gap-4">
-                {mainItem && (
-                  <div className="h-full flex-1">
-                    <NewsCard item={mainItem} variant="large" />
-                  </div>
-                )}
-                <div className="flex h-full w-[19rem] flex-col gap-4">
-                  {sideItems.map((item) => (
-                    <NewsCard key={item.id} item={item} variant="small" />
-                  ))}
-                  {sideItems.length < 2 &&
-                    Array.from({ length: 2 - sideItems.length }).map((_, i) => (
-                      <div key={`empty-${i}`} className="h-[calc(50%-0.5rem)]" />
-                    ))}
-                </div>
+              <div className="grid grid-cols-4 gap-x-6 gap-y-4">
+                {pageItems.map((item) => (
+                  <NewsCard key={item.id} item={item} />
+                ))}
               </div>
             </SwiperSlide>
           );
@@ -242,28 +239,48 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
           </div>
         </div>
 
-        {/* Content */}
-        <div className={cn('mt-5', !isMobile && 'h-[16.25rem] flex-1')}>{renderContent()}</div>
+        {/* Content with arrow navigation */}
+        <div className={cn('relative mt-5', !isMobile && 'flex-1')}>
+          {/* Desktop left arrow */}
+          {!isMobile && totalPages > 1 && (
+            <button
+              onClick={handlePrev}
+              disabled={isBeginning}
+              className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
+            >
+              <ArrowDownSVG className="size-5 rotate-90 fill-black" />
+            </button>
+          )}
+
+          {renderContent()}
+
+          {/* Desktop right arrow */}
+          {!isMobile && totalPages > 1 && (
+            <button
+              onClick={handleNext}
+              disabled={isEnd}
+              className="absolute -right-16 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
+            >
+              <ArrowDownSVG className="size-5 -rotate-90 fill-black" />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Pagination */}
-      {isMobile ? (
-        totalPages > 1 && (
-          <div className="flex-center gap-2 py-4">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handlePaginationClick(index)}
-                className={cn('h-0.5 w-6 transition-all duration-300', {
-                  'bg-foreground': index === currentPage,
-                  'bg-gray-250': index !== currentPage,
-                })}
-              />
-            ))}
-          </div>
-        )
-      ) : (
-        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePaginationClick} />
+      {/* Mobile Pagination only */}
+      {isMobile && totalPages > 1 && (
+        <div className="flex-center gap-2 py-4">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePaginationClick(index)}
+              className={cn('h-0.5 w-6 transition-all duration-300', {
+                'bg-foreground': index === currentPage,
+                'bg-gray-250': index !== currentPage,
+              })}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

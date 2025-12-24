@@ -119,7 +119,7 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
               <SwiperSlide key={pageIndex}>
                 <div className="flex flex-col gap-5">
                   {pageItems.map((item) => (
-                    <PodcastCard key={item.id} item={item} />
+                    <PodcastCard key={item.id} item={item} isMobile />
                   ))}
                 </div>
               </SwiperSlide>
@@ -156,7 +156,40 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
       <div className={cn(isMobile && 'flex flex-1 flex-col justify-center overflow-hidden')}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className={cn('font-oxanium text-2xl font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>PODCAST</h2>
+          <div className="flex items-center gap-3">
+            <h2 className={cn('font-oxanium text-2xl font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+              PODCAST
+            </h2>
+            {/* Platform logos */}
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="h-6 w-6" />
+                </a>
+                <a
+                  href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="h-6 w-6" />
+                </a>
+                <a
+                  href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="h-6 w-6" />
+                </a>
+              </div>
+            )}
+          </div>
           <div
             onClick={handleViewAllClick}
             className={cn(
@@ -185,7 +218,7 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
             <button
               onClick={handlePrev}
               disabled={isBeginning}
-              className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+              className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-80"
             >
               <ArrowDownSVG className="size-5 rotate-90 fill-black" />
             </button>
@@ -197,7 +230,7 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
             <button
               onClick={handleNext}
               disabled={isEnd}
-              className="absolute -right-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-white transition-opacity disabled:opacity-30"
+              className="absolute -right-16 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
             >
               <ArrowDownSVG className="h-5 -rotate-90 fill-black" />
             </button>

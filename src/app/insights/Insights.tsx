@@ -96,9 +96,15 @@ export default function Insights() {
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="flex h-[calc(100vh-10rem)] flex-col gap-10 px-[20rem] pt-30">
-        <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} />
-        <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />
+      <div className="flex h-[calc(100vh-10rem)] flex-col gap-9 px-[20rem] pt-30">
+        {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
+        <div>
+          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />
+        </div>
+        {/* PODCAST section (bottom) - single row */}
+        <div className="shrink-0">
+          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} />
+        </div>
       </div>
     </div>
   );
