@@ -1,5 +1,3 @@
-import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
-import RightSVG from '@/../public/svgs/podcast/right.svg?component';
 import { cn } from '@/utils';
 
 interface ViewAllButtonProps {
@@ -12,13 +10,19 @@ export default function ViewAllButton({ onClick, isMobile = false }: ViewAllButt
     <div
       onClick={onClick}
       className={cn(
-        'group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base/5 font-semibold',
-        isMobile && 'px-2 py-1.5 text-sm',
+        'group relative flex h-8 cursor-pointer items-center justify-center gap-1 py-0.5 pl-2 pr-1 font-poppins text-base/5 font-semibold hover:opacity-80',
+        isMobile && 'h-8 w-24 text-sm',
       )}
     >
-      <ViewAllBorderSVG className="absolute left-0 top-0 h-full w-full fill-red-600" />
-      <p className="text-red-600">VIEW ALL</p>
-      <RightSVG className={cn('w-5 fill-red-600', isMobile && 'w-3.5')} />
+      {/* Border SVG with top-left cut corner */}
+      <svg className="absolute inset-0" viewBox="0 0 111 36" fill="none" preserveAspectRatio="none">
+        <path d="M10 1H110V35H1V10L10 1Z" stroke="#C11111" strokeWidth="2" />
+      </svg>
+      <span className="relative text-sm/5 text-red-600">VIEW ALL</span>
+      {/* Right chevron arrow */}
+      <svg className={cn('relative -mt-px size-4', isMobile && 'size-3')} viewBox="0 0 16 16" fill="none">
+        <path d="M6 4L10 8L6 12" stroke="#C11111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </div>
   );
 }
