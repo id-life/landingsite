@@ -241,6 +241,12 @@ export const useSpectrumData = () => {
             icon: '/imgs/investments/sponsors/hackaging.png',
             size: 'h-5',
           },
+          {
+            label: 'BioHackerDAO',
+            link: 'https://biohackerdao.org/',
+            icon: '/imgs/investments/sponsors/biohackerdao.png',
+            size: 'h-15',
+          },
         ],
       },
     ];

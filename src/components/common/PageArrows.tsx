@@ -38,16 +38,16 @@ export default function PageArrows({ className }: PageArrowsProps) {
     }
   }, [getTotal, setInnerPageTotal, innerPageTotal]);
 
-  const isLastPageAndInnerPage = useMemo(() => {
-    // 最后一页 & 最后一小进度,不展示向下箭头
-    return currentPage.id === NAV_LIST[6].id && innerPageIndex === innerPageTotal - 1;
-  }, [currentPage.id, innerPageIndex, innerPageTotal]);
+  const isConnectPage = useMemo(() => {
+    // Connect页面不展示向下箭头
+    return currentPage.id === NAV_LIST[6].id;
+  }, [currentPage.id]);
 
   return (
     <div className={cn('pointer-events-auto z-20 flex flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {!isLastPageAndInnerPage && <ArrowItem />}
+        {!isConnectPage && <ArrowItem />}
       </div>
     </div>
   );

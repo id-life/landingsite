@@ -234,7 +234,10 @@ const SpectrumItem = memo(
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={cn('flex', isSponsor ? 'max-w-[70rem] flex-wrap justify-center gap-x-7.5 gap-y-10' : 'flex-col')}
+                    className={cn(
+                      'flex items-center',
+                      isSponsor ? 'max-w-[70rem] flex-wrap justify-center gap-x-7.5 gap-y-10' : 'flex-col',
+                    )}
                   >
                     {spectrumLinks}
                   </motion.div>

@@ -89,6 +89,11 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const title3cn = gsap.utils.toArray('.connect-title3cn path');
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+
+    // 先停止之前的动画，避免快速切换时动画冲突
+    allEnTitles.forEach((item) => item && gsap.killTweensOf(item));
+    allCnTitles.forEach((item) => item && gsap.killTweensOf(item));
+
     const enDuration = allEnTitles.length * 0.02;
     allEnTitles.forEach((item, index) => {
       if (!item) return;
@@ -115,6 +120,11 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const title3cn = gsap.utils.toArray('.connect-title3cn path');
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+
+    // 先停止之前的动画，避免快速切换时动画冲突
+    allEnTitles.forEach((item) => item && gsap.killTweensOf(item));
+    allCnTitles.forEach((item) => item && gsap.killTweensOf(item));
+
     const cnDuration = allCnTitles.length * 0.02;
     allCnTitles.forEach((item, index) => {
       if (!item) return;

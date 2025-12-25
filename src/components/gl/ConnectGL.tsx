@@ -116,6 +116,7 @@ function ConnectGL() {
           onLeaveBack: () => {
             if (window.isResizing) return;
             setEnableUpJudge(false);
+            playFooterLeaveAnim();
           },
         },
       });
