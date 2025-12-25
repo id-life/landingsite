@@ -38,8 +38,13 @@ function ConnectGL() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const { sendValueShowEvent } = useConnectShowEvent();
 
+  const currentPage = useAtomValue(currentPageAtom);
   const currentPageIndex = useAtomValue(currentPageIndexAtom);
   const isScrollingRef = useRef(false);
+  const footerAnimDelayRef = useRef<gsap.core.Tween | null>(null);
+  const currentPageRef = useRef(currentPage);
+  currentPageRef.current = currentPage;
+
   const enableScroll = useCallback(() => {
     document.body.style.overflow = '';
   }, []);
@@ -76,6 +81,7 @@ function ConnectGL() {
           scrub: true,
           onEnter: () => {
             if (window.isResizing) return;
+            console.log('[ConnectGL] onEnter - 进入Connect页面');
             setCurrentPage(NAV_LIST[6]);
             setEnableUpJudge(true);
             if (window.isNavScrolling || window.isSmootherScrolling) return;
@@ -97,16 +103,37 @@ function ConnectGL() {
           },
           onEnterBack: () => {
             if (window.isResizing) return;
+            console.log('[ConnectGL] onEnterBack - 取消延迟调用并隐藏footer');
+            // 取消之前的延迟调用
+            if (footerAnimDelayRef.current) {
+              footerAnimDelayRef.current.kill();
+              footerAnimDelayRef.current = null;
+            }
             setEnableUpJudge(true);
             playFooterLeaveAnim();
           },
           onLeave: () => {
             if (window.isResizing) return;
             setEnableUpJudge(false);
+            console.log('[ConnectGL] onLeave - 显示footer', { isNavScrolling: window.isNavScrolling });
+            // 取消之前的延迟调用
+            if (footerAnimDelayRef.current) {
+              footerAnimDelayRef.current.kill();
+              footerAnimDelayRef.current = null;
+            }
             if (window.isNavScrolling) {
               // 通过菜单导航进入，延迟1秒播放EN→CN动画
-              gsap.delayedCall(1, () => {
-                playFooterEnterAnim();
+              footerAnimDelayRef.current = gsap.delayedCall(1, () => {
+                // 检查是否还在Connect页面，如果不在就不执行动画
+                const pageId = currentPageRef.current?.id;
+                console.log('[ConnectGL] 延迟调用执行', { currentPageId: pageId });
+                if (pageId === 'connect_page') {
+                  console.log('[ConnectGL] 确认在Connect页面 - 显示footer');
+                  playFooterEnterAnim();
+                } else {
+                  console.log('[ConnectGL] 已离开Connect页面 - 取消footer动画');
+                }
+                footerAnimDelayRef.current = null;
               });
             } else {
               // 正常滚动，立即播放
@@ -115,6 +142,12 @@ function ConnectGL() {
           },
           onLeaveBack: () => {
             if (window.isResizing) return;
+            console.log('[ConnectGL] onLeaveBack - 取消延迟调用并隐藏footer');
+            // 取消之前的延迟调用
+            if (footerAnimDelayRef.current) {
+              footerAnimDelayRef.current.kill();
+              footerAnimDelayRef.current = null;
+            }
             setEnableUpJudge(false);
             playFooterLeaveAnim();
           },

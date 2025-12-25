@@ -75,7 +75,14 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
 
   // Footer 动画 - 在 timeline 结束后独立执行
   const playFooterEnterAnim = () => {
+    console.log('[useConnectCrossAnimations] playFooterEnterAnim - 开始显示footer');
     setIsSubscribeShow(true);
+
+    // 先停止footer相关的所有动画
+    gsap.killTweensOf('.page-footer-contact');
+    gsap.killTweensOf('.sound-button');
+    gsap.killTweensOf('.scroll-title');
+
     gsap.to('.page-footer-contact', { bottom: isMobile ? '5rem' : '0rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.scroll-title', { opacity: 0, duration: 0.5 });
@@ -106,7 +113,14 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
   };
 
   const playFooterLeaveAnim = () => {
+    console.log('[useConnectCrossAnimations] playFooterLeaveAnim - 开始隐藏footer');
     setIsSubscribeShow(false);
+
+    // 先停止footer相关的所有动画
+    gsap.killTweensOf('.page-footer-contact');
+    gsap.killTweensOf('.sound-button');
+    gsap.killTweensOf('.scroll-title');
+
     gsap.to('.page-footer-contact', { bottom: '-20rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.sound-button', { bottom: '2.5rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.scroll-title', { opacity: 1, duration: 0.5 });
