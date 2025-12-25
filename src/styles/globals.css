@@ -352,4 +352,17 @@
     -webkit-clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
     clip-path: polygon(var(--clip-offset, 0.875rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-offset, 0.875rem));
   }
+
+  /* Podcast card with top-left cut corner and border */
+  .podcast-card-clip {
+    --corner-size: 1.25rem;
+    --border-width: 2px;
+    position: relative;
+    clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
+  }
+
+  .podcast-card-clip-inner {
+    clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
+    padding: 1.25rem;
+  }
 }

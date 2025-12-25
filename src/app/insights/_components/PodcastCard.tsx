@@ -85,17 +85,19 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
 
   // Desktop layout: simplified card with title + description + play button
   return (
-    <div className="border-2 border-white bg-white/50 px-5 py-4 backdrop-blur-sm">
-      <div className="flex items-center justify-between gap-4">
-        <h3 className="line-clamp-1 flex-1 font-poppins text-xl font-bold leading-8">{item.title}</h3>
-        <img
-          src="/imgs/podcast/podcast-play-white.svg"
-          className="h-10 w-10 shrink-0 cursor-pointer duration-300 hover:scale-110"
-          alt="Play"
-          onClick={handlePlay}
-        />
+    <div className="podcast-card-clip relative bg-white p-0.5">
+      <div className="podcast-card-clip-inner bg-[#F6F8FB]">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="line-clamp-1 flex-1 font-poppins text-xl font-bold leading-8">{item.title}</h3>
+          <img
+            src="/imgs/podcast/podcast-play-white.svg"
+            className="h-10 w-10 shrink-0 cursor-pointer duration-300 hover:scale-110"
+            alt="Play"
+            onClick={handlePlay}
+          />
+        </div>
+        <p className="mt-1 line-clamp-1 text-base font-medium">{item.description}</p>
       </div>
-      <p className="mt-1 line-clamp-1 text-base font-medium">{item.description}</p>
     </div>
   );
 }
