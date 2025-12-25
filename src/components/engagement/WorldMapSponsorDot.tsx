@@ -152,7 +152,7 @@ export function WorldMapSponsorDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-xl/6 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/6 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive ? (
