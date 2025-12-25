@@ -4,13 +4,12 @@ import React, { useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Pagination from './Pagination';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
-import ViewAllBorderSVG from '@/../public/svgs/podcast/view-all-border.svg?component';
-import RightSVG from '@/../public/svgs/podcast/right.svg?component';
-import ArrowDownSVG from '@/../public/svgs/arrow.svg?component';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
+import NavigationArrowButton from '@/app/insights/_components/NavigationArrowButton';
+import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
+import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
 import { InsightItem } from '@/hooks/insights/fetch';
 
@@ -218,61 +217,26 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
           <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
             NEWS & TALKS
           </h2>
-          <div
-            onClick={handleViewAllClick}
-            className={cn(
-              'group relative flex cursor-pointer items-center justify-between gap-1 px-2 py-2.5 text-base/5 font-semibold hover:opacity-80',
-              isMobile && 'px-2 py-1.5 text-sm',
-            )}
-          >
-            <ViewAllBorderSVG className={'absolute left-0 top-0 h-full w-full fill-red-600'} />
-            <p className={cn('text-red-600')}>VIEW ALL</p>
-            <RightSVG key="view-all" className={cn('w-4 fill-red-600', isMobile && 'w-3.5')} />
-          </div>
+          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content with arrow navigation */}
         <div className={cn('relative mt-5', !isMobile && 'flex-1')}>
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
-            <button
-              onClick={handlePrev}
-              disabled={isBeginning}
-              className="absolute -left-16 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
-            >
-              <ArrowDownSVG className="size-5 rotate-90 fill-black" />
-            </button>
+            <NavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />
           )}
 
           {renderContent()}
 
           {/* Desktop right arrow */}
-          {!isMobile && totalPages > 1 && (
-            <button
-              onClick={handleNext}
-              disabled={isEnd}
-              className="absolute -right-16 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
-            >
-              <ArrowDownSVG className="size-5 -rotate-90 fill-black" />
-            </button>
-          )}
+          {!isMobile && totalPages > 1 && <NavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" />}
         </div>
       </div>
 
       {/* Mobile Pagination only */}
-      {isMobile && totalPages > 1 && (
-        <div className="flex-center gap-2 py-4">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePaginationClick(index)}
-              className={cn('h-0.5 w-6 transition-all duration-300', {
-                'bg-foreground': index === currentPage,
-                'bg-gray-250': index !== currentPage,
-              })}
-            />
-          ))}
-        </div>
+      {isMobile && (
+        <MobilePaginationDots totalPages={totalPages} currentPage={currentPage} onPageChange={handlePaginationClick} />
       )}
     </div>
   );
