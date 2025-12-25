@@ -61,7 +61,14 @@ function Spectrum() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to profile
     scrollFn: () => {
-      if (!enableUpJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (
+        !enableUpJudge ||
+        currentPage.id !== NAV_LIST[2].id ||
+        window.isNavScrolling ||
+        window.isSmootherScrolling ||
+        window.isResizing
+      )
+        return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) {
         // console.log('[DEBUG] [Spectrum] portfolio-trigger not found');
@@ -88,7 +95,14 @@ function Spectrum() {
     // profile auto scroll to engagement
     scrollFn: () => {
       // console.log('[DEBUG] [Spectrum] DOWN scrollFn called - enableJudge:', enableJudge, 'currentPage:', currentPage.id, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableJudge || currentPage.id !== NAV_LIST[2].id || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (
+        !enableJudge ||
+        currentPage.id !== NAV_LIST[2].id ||
+        window.isNavScrolling ||
+        window.isSmootherScrolling ||
+        window.isResizing
+      )
+        return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Spectrum] engagement-scroll-trigger not found');
@@ -133,14 +147,17 @@ function Spectrum() {
         // markers: true,
         id: 'spectrum-trigger', // add an ID for later reference
         onEnter: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[2]);
           setActive(true);
         },
         onEnterBack: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[2]);
           setActive(true);
         },
         onLeaveBack: () => {
+          if (window.isResizing) return;
           setActive(false);
         },
       },

@@ -19,7 +19,7 @@ export default function Insights() {
   // Insights 向上滚动 → 回到 Twin 页面
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('twin-scroll-trigger');
       if (!st) return;
       window.isNavScrolling = true;
@@ -40,7 +40,7 @@ export default function Insights() {
   // Insights 向下滚动 → 前往 Connect 页面
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     scrollFn: () => {
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('connect-page1-scroll-trigger');
       if (!st) return;
       window.isNavScrolling = true;
@@ -69,9 +69,11 @@ export default function Insights() {
         pin: true,
         scrub: true,
         onEnter: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[5]);
         },
         onEnterBack: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[5]);
         },
       },

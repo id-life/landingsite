@@ -49,7 +49,7 @@ function ConnectGL() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // connect auto scroll to insights
     scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
@@ -75,6 +75,7 @@ function ConnectGL() {
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
+            if (window.isResizing) return;
             setCurrentPage(NAV_LIST[6]);
             setEnableUpJudge(true);
             if (window.isNavScrolling || window.isSmootherScrolling) return;
@@ -95,10 +96,12 @@ function ConnectGL() {
             });
           },
           onEnterBack: () => {
+            if (window.isResizing) return;
             setEnableUpJudge(true);
             playFooterLeaveAnim();
           },
           onLeave: () => {
+            if (window.isResizing) return;
             setEnableUpJudge(false);
             if (window.isNavScrolling) {
               // 通过菜单导航进入，延迟1秒播放EN→CN动画
@@ -111,6 +114,7 @@ function ConnectGL() {
             }
           },
           onLeaveBack: () => {
+            if (window.isResizing) return;
             setEnableUpJudge(false);
           },
         },

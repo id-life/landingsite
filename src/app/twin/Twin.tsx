@@ -39,7 +39,7 @@ function Twin() {
     // twin auto scroll to engagement
     scrollFn: () => {
       // console.log('[DEBUG] [Twin] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Twin] engagement-scroll-trigger not found');
@@ -71,7 +71,7 @@ function Twin() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Connect');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
@@ -110,17 +110,21 @@ function Twin() {
         pin: true,
         scrub: true,
         onEnter: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[4]);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onEnterBack: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[4]);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
+          if (window.isResizing) return;
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
         onLeave: () => {
+          if (window.isResizing) return;
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
         // onUpdate: (self) => {

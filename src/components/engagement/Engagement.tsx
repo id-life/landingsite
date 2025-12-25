@@ -22,7 +22,7 @@ function Engagement() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) {
         // console.log('[DEBUG] [Engagement] spectrum-trigger not found');
@@ -53,7 +53,7 @@ function Engagement() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('twin-scroll-trigger');
       if (!st) {
         // console.log('[DEBUG] [Engagement] twin-scroll-trigger not found');
@@ -85,9 +85,11 @@ function Engagement() {
         pin: true,
         scrub: true,
         onEnter: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[3]);
         },
         onEnterBack: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[3]);
         },
       },

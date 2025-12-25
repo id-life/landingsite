@@ -18,7 +18,7 @@ export default function Vision() {
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     scrollFn: () => {
       // console.log('[DEBUG] [Vision] DOWN scrollFn called - enableDownJudge:', enableDownJudge, 'isNavScrolling:', window.isNavScrolling);
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) {
         // console.log('[DEBUG] [Vision] portfolio-trigger not found');

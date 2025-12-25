@@ -14,22 +14,30 @@ export function useResizeRefresh() {
   const isRefreshingRef = useRef(false);
 
   useEffect(() => {
+    // Initialize the resize flag
+    window.isResizing = false;
+
     const handleResize = debounce(() => {
       if (isRefreshingRef.current) return;
       isRefreshingRef.current = true;
 
-      // 1. Refresh ScrollSmoother
+      // 1. Set resize flag to prevent ScrollTrigger callbacks from executing
+      window.isResizing = true;
+
+      // 2. Refresh ScrollSmoother
       const smoother = ScrollSmoother.get();
       smoother?.refresh();
 
-      // 2. Refresh all ScrollTriggers
+      // 3. Refresh all ScrollTriggers
       ScrollTrigger.refresh();
 
-      // 3. Reset global flags to prevent them from getting stuck
-      window.isNavScrolling = false;
-      window.isSmootherScrolling = false;
-
-      isRefreshingRef.current = false;
+      // 4. Delay reset of resize flag to ensure callbacks have finished
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.isResizing = false;
+          isRefreshingRef.current = false;
+        });
+      });
     }, 200);
 
     window.addEventListener('resize', handleResize);
