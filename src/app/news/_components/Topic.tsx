@@ -25,13 +25,13 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
   return (
     <>
       <div onClick={handleClick} className="group block cursor-pointer">
-        <div className="relative h-87 overflow-hidden">
+        <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">
           <img
             src={data.cover || '/imgs/news/insights-bg.webp'}
             alt={data.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent mobile:from-black/90 mobile:via-black/50" />
           {isYouTube && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white opacity-80 transition-opacity group-hover:opacity-100">
@@ -41,19 +41,25 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
               </div>
             </div>
           )}
-          <div className="absolute bottom-0 left-0 right-0 max-w-[75%] p-6 mobile:p-4">
+          <div className="absolute bottom-0 left-0 right-0 max-w-[75%] p-6 mobile:max-w-[90%] mobile:p-5">
             {data.publishDate && (
-              <div className="mb-2 font-medium text-white/80">{dayjs(data.publishDate).format('MMM DD, YYYY')}</div>
+              <div className="mb-2 font-medium text-white/80 mobile:mb-1.5 mobile:text-sm">
+                {dayjs(data.publishDate).format('MMM DD, YYYY')}
+              </div>
             )}
-            <h2 className="flex items-center gap-3 text-4xl font-semibold text-white mobile:text-lg">
+            <h2 className="flex items-center gap-3 text-4xl font-semibold text-white mobile:text-xl mobile:leading-7">
               <span className="truncate">{data.title}</span>
               {data.source && (
-                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 text-xs font-bold uppercase text-orange backdrop-blur-md">
+                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 text-xs font-bold uppercase text-orange backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-[10px]">
                   {data.source}
                 </span>
               )}
             </h2>
-            {data.brief && <p className="mt-4 line-clamp-2 font-medium text-white">{data.brief.replace(/[#*]/g, '').trim()}</p>}
+            {data.brief && (
+              <p className="mt-4 line-clamp-2 font-medium text-white mobile:mt-2 mobile:text-sm">
+                {data.brief.replace(/[#*]/g, '').trim()}
+              </p>
+            )}
           </div>
         </div>
       </div>

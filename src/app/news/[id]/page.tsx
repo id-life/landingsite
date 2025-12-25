@@ -81,20 +81,22 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div>
-        <div className="mt-5 flex items-center justify-between">
-          <div className="text-xl/5 font-medium">
+        <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
+          <div className="text-xl/5 font-medium mobile:text-base mobile:leading-5">
             <Link href="/news">News</Link>
             <span className="text-black/50">&gt; Article</span>
           </div>
         </div>
-        <div className="mt-10 rounded-3xl bg-white p-20 mobile:rounded mobile:p-5">
-          <div className="mb-5 flex items-center justify-center gap-2 text-sm/5 font-semibold">
-            <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
+        <div className="mt-10 rounded-3xl bg-white p-20 mobile:mt-5 mobile:rounded-lg mobile:p-4">
+          <div className="mb-5 flex items-center justify-center gap-2 text-sm/5 font-semibold mobile:mb-3.5 mobile:gap-1.5 mobile:text-xs">
+            <img src="/imgs/news/article_logo.webp" className="size-7 mobile:size-6" alt="" />
             Immortal Dragons
           </div>
-          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:text-2xl">{data.title}</h1>
+          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-xl mobile:leading-8">
+            {data.title}
+          </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-7.5 mobile:mt-5" />
-          <div className="markdown-body">
+          <div className="markdown-body mobile:text-sm mobile:[&_p]:leading-6">
             <Markdown rehypePlugins={[rehypeRaw]}>{data.content}</Markdown>
           </div>
         </div>

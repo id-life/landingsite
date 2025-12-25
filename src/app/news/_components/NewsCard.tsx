@@ -23,9 +23,9 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
     <>
       <div
         onClick={handleClick}
-        className="group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg"
+        className="group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg"
       >
-        <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
           <img
             src={data.cover || '/imgs/news/insights-bg.webp'}
             alt={data.title}
@@ -33,17 +33,17 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
           />
           {isYouTube && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white">
-                <svg className="ml-1 h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white mobile:h-12 mobile:w-12">
+                <svg className="ml-1 h-8 w-8 mobile:h-6 mobile:w-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
             </div>
           )}
         </div>
-        <div className="p-4">
-          <h3 className="line-clamp-2 text-lg font-semibold">{data.title}</h3>
-          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-black/40">
+        <div className="p-4 mobile:p-3">
+          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base">{data.title}</h3>
+          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-black/40 mobile:mt-1.5 mobile:text-sm/4.5">
             {data?.source || data?.publishDate ? (
               <Fragment>
                 {data?.source && <span>{data.source}</span>}

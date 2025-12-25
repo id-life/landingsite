@@ -167,10 +167,10 @@ export default async function NewsPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Topic data={featured} />
-      <div className="mt-7.5">
+      <div className="mt-7.5 mobile:mt-3">
         <SubTitle />
       </div>
-      <div className="mt-7.5 grid grid-cols-3 gap-x-6 gap-y-10 mobile:grid-cols-1 mobile:gap-5">
+      <div className="mt-7.5 grid grid-cols-3 gap-x-6 gap-y-10 mobile:mt-3 mobile:grid-cols-1 mobile:gap-3">
         {restNews.map((item) => (
           <NewsCard data={item} key={item.id} />
         ))}
