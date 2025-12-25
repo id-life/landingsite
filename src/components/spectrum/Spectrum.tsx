@@ -194,17 +194,15 @@ function Spectrum() {
 
       const cleanup: (() => void)[] = [];
 
-      spectrumRefs.current.forEach((div, idx) => {
+      // Only apply hover animation to first 4 items (not sponsor)
+      spectrumRefs.current.slice(0, 4).forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
-        const title = div.querySelector('.spectrum-title');
-        const titleCn = div.querySelector('.spectrum-title-cn');
-        // const selected = div?.querySelectorAll('.spectrum-selected-icon');
-        const icon = div?.querySelectorAll('.spectrum-icon');
+        const content = div.querySelector('.spectrum-item-content');
 
-        if (title) tl.to(title, { fontSize: '1.875rem', lineHeight: '2.25rem' });
-        if (titleCn) tl.to(titleCn, { fontSize: '1.5rem', lineHeight: '1.75rem' }, '<');
-        if (icon) tl.to(icon, { width: '2.25rem', height: '2.25rem' }, '<');
-        // if (selected) tl.to(selected, { opacity: 1 });
+        // Use transform scale instead of changing fontSize to avoid layout shifts
+        if (content) {
+          tl.to(content, { scale: 1.1, transformOrigin: 'top left' });
+        }
 
         mouseAnimations.current.set(idx, tl);
 
@@ -252,8 +250,8 @@ function Spectrum() {
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
         <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24 flex flex-col">
-            <div className="grid grid-cols-4 gap-3" ref={wrapperRef}>
+          <div className="flex flex-col">
+            <div className="flex justify-center gap-[9.375rem]" ref={wrapperRef}>
               {spectrumItems}
             </div>
             <div className="w-full">

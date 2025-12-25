@@ -110,7 +110,6 @@ export const useSpectrumData = () => {
         title: 'Translation & Publishing',
         titleCn: '翻译与出版',
         icon: <BookSVG />,
-        className: '-ml-8 mobile:ml-0',
         linksClassName: 'grid grid-cols-2',
         links: [
           {
@@ -152,7 +151,6 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
-        className: '-ml-8 mobile:ml-0',
         links: [
           {
             label: 'Access Digital Twin',

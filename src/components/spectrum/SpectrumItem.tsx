@@ -196,7 +196,7 @@ const SpectrumItem = memo(
         ));
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
-      // For sponsor: split links into first row (8 items) and remaining rows
+      // For sponsor: split links into first row (8 items with justify-between) and remaining rows (centered)
       const sponsorFirstRowCount = 8;
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];
@@ -251,11 +251,11 @@ const SpectrumItem = memo(
           onMouseEnter={onMouseEnter}
           className={cn(
             'spectrum-item relative cursor-pointer overflow-visible p-4 text-foreground',
-            isSponsor ? '' : 'h-[13.75rem] w-[25rem]',
+            isSponsor ? '' : 'h-[13.75rem]',
             className,
           )}
         >
-          <div className={cn('flex items-start gap-1.5', itemClassName)}>
+          <div className={cn('spectrum-item-content flex items-start gap-1.5', itemClassName)}>
             {isSponsor ? null : cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
             <div className={cn('flex flex-col', isSponsor && 'w-full items-center')}>
               {isSponsor ? (
@@ -285,9 +285,9 @@ const SpectrumItem = memo(
                       transition={{ duration: 0.2 }}
                       className="flex w-full flex-col gap-y-10"
                     >
-                      {/* First row: justify-between to align with content above */}
+                      {/* First row: justify-between to span full width */}
                       <div className="flex w-full items-center justify-between">{sponsorFirstRowLinks}</div>
-                      {/* Remaining rows: fixed 74px gap, centered */}
+                      {/* Remaining rows: centered */}
                       {sponsorRemainingLinks.length > 0 && (
                         <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorRemainingLinks}</div>
                       )}

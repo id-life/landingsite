@@ -49,7 +49,7 @@ export default function Logo() {
   };
 
   return (
-    <div className="relative h-10" onClick={handleClick}>
+    <div className="relative h-10 w-55 mobile:w-auto" onClick={handleClick}>
       <div id="logo-en" className="absolute left-0 top-0 h-full opacity-0 mobile:top-1/2 mobile:h-5 mobile:-translate-y-1/2">
         <LogoSVGen className="h-full cursor-pointer" />
       </div>
