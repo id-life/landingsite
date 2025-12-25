@@ -131,14 +131,14 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
         return (
           <div className="flex flex-col gap-5">
             {Array.from({ length: 2 }).map((_, index) => (
-              <div key={index} className="h-[186px] animate-pulse rounded bg-gray-800/50" />
+              <div key={index} className="h-[148px] animate-pulse rounded bg-gray-800/50" />
             ))}
           </div>
         );
       }
       // Desktop loading: 4x2 grid skeleton
       return (
-        <div className="grid grid-cols-4 gap-x-6 gap-y-4">
+        <div className="grid grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, index) => (
             <div key={index} className="flex flex-col">
               <div className="h-[148px] animate-pulse rounded bg-gray-800/50" />
@@ -197,7 +197,7 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="grid grid-cols-4 gap-x-6 gap-y-4">
+              <div className="grid grid-cols-4 gap-4">
                 {pageItems.map((item) => (
                   <NewsCard key={item.id} item={item} />
                 ))}
@@ -215,19 +215,19 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
       <div className={cn(isMobile ? 'flex flex-1 flex-col justify-center overflow-hidden' : 'flex flex-1 flex-col')}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className={cn('font-oxanium text-2xl font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+          <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
             NEWS & TALKS
           </h2>
           <div
             onClick={handleViewAllClick}
             className={cn(
-              'group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold',
+              'group relative flex cursor-pointer items-center justify-between gap-1 px-2 py-2.5 text-base/5 font-semibold hover:opacity-80',
               isMobile && 'px-2 py-1.5 text-sm',
             )}
           >
             <ViewAllBorderSVG className={'absolute left-0 top-0 h-full w-full fill-red-600'} />
             <p className={cn('text-red-600')}>VIEW ALL</p>
-            <RightSVG key="view-all" className={cn('w-5 fill-red-600', isMobile && 'w-3.5')} />
+            <RightSVG key="view-all" className={cn('w-4 fill-red-600', isMobile && 'w-3.5')} />
           </div>
         </div>
 

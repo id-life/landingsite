@@ -157,35 +157,35 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className={cn('font-oxanium text-2xl font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+            <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
               PODCAST
             </h2>
             {/* Platform logos */}
             {!isMobile && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <a
                   href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-80 transition-opacity hover:opacity-100"
+                  className="opacity-100 transition-opacity hover:opacity-80"
                 >
-                  <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="h-6 w-6" />
+                  <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
                 </a>
                 <a
                   href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-80 transition-opacity hover:opacity-100"
+                  className="opacity-100 transition-opacity hover:opacity-80"
                 >
-                  <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="h-6 w-6" />
+                  <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
                 </a>
                 <a
                   href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-80 transition-opacity hover:opacity-100"
+                  className="opacity-100 transition-opacity hover:opacity-80"
                 >
-                  <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="h-6 w-6" />
+                  <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
                 </a>
               </div>
             )}
@@ -193,13 +193,13 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
           <div
             onClick={handleViewAllClick}
             className={cn(
-              'group relative flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-base font-semibold',
+              'group relative flex cursor-pointer items-center justify-between gap-1 px-3 py-2 text-base font-semibold hover:opacity-80',
               isMobile && 'px-2 py-1.5 text-sm',
             )}
           >
             <ViewAllBorderSVG className={cn('absolute left-0 top-0 h-full w-full fill-red-600')} />
             <p className="text-red-600">VIEW ALL</p>
-            <RightSVG key="view-all" className={cn('w-5 fill-red-600', isMobile && 'w-3.5')} />
+            <RightSVG key="view-all" className={cn('w-4 fill-red-600', isMobile && 'w-3.5')} />
           </div>
         </div>
 
@@ -222,7 +222,7 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
             <button
               onClick={handleNext}
               disabled={isEnd}
-              className="absolute -right-16 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80"
+              className="absolute -right-16 top-1/2 z-10 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white disabled:opacity-80"
             >
               <ArrowDownSVG className="h-5 -rotate-90 fill-black" />
             </button>

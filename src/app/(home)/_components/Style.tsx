@@ -18,7 +18,7 @@ export default function Style() {
         background: var(--background);
       }
 
-      @media screen and (min-width: 1px) {
+      @media screen and (min-width: 768px) and (max-width: 1280px) {
         :root {
           font-size: 0.8333vw;
         }
