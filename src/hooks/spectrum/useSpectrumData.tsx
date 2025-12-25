@@ -36,6 +36,7 @@ export type SpectrumItemInfo = {
   titleCn: string;
   icon: JSX.Element;
   links?: SpectrumLinkItem[];
+  linksClassName?: string;
   className?: string;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 };
@@ -110,21 +111,25 @@ export const useSpectrumData = () => {
         titleCn: '翻译与出版',
         icon: <BookSVG />,
         className: '-ml-8 mobile:ml-0',
+        linksClassName: 'grid grid-cols-2',
         links: [
           {
-            label: 'The Network State',
-            labelClassName: 'italic',
-            routeKey: 'the-network-state',
-          },
-          {
-            label: 'Better With Age',
-            labelClassName: 'italic',
-            routeKey: 'better-with-age',
+            label: 'Bio/Acc Manifesto',
+            routeKey: 'biohacker-dao',
           },
           {
             label: 'The case against death',
             isComingSoon: true,
-            labelClassName: 'italic',
+            labelClassName: '-ml-4',
+          },
+          {
+            label: 'The Network State',
+            routeKey: 'the-network-state',
+          },
+          {
+            label: 'Better With Age',
+            labelClassName: '-ml-4',
+            routeKey: 'better-with-age',
           },
         ],
       },
@@ -138,7 +143,7 @@ export const useSpectrumData = () => {
             link: '/spectrum/influence-network',
           },
           {
-            label: 'Disease Management & Cure Status',
+            label: 'Disease Management',
             link: '/spectrum/disease-management',
           },
         ],

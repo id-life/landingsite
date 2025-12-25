@@ -252,11 +252,11 @@ function Spectrum() {
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
         <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="ml-24">
+          <div className="ml-24 flex flex-col">
             <div className="grid grid-cols-4 gap-3" ref={wrapperRef}>
               {spectrumItems}
             </div>
-            <div className="flex-center">
+            <div className="w-full">
               <SpectrumItem
                 key={sponsorItem.title}
                 item={sponsorItem}

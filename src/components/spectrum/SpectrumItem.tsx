@@ -90,7 +90,7 @@ const SpectrumLink = memo(
           <p
             onClick={handleClick}
             className={cn(
-              'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+              'spectrum-link-text group relative whitespace-nowrap font-poppins text-xs/5 font-medium capitalize',
               hasLink &&
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
               labelClassName,
@@ -99,7 +99,7 @@ const SpectrumLink = memo(
             {label}
           </p>
           {isComingSoon && (
-            <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+            <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
               coming soon
             </span>
           )}
@@ -123,7 +123,7 @@ const linksPerPage = 20;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
     ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
-      const { title, titleCn, icon, links, className: itemClassName } = item;
+      const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
 
       const { trackEvent } = useGA();
@@ -196,6 +196,54 @@ const SpectrumItem = memo(
         ));
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
+      // For sponsor: split links into first row (8 items) and remaining rows
+      const sponsorFirstRowCount = 8;
+      const sponsorFirstRowLinks = useMemo(() => {
+        if (!isSponsor) return [];
+        return visibleLinks.slice(0, sponsorFirstRowCount).map((item, index) => (
+          <motion.div
+            key={`${item.label}-${safePage}-${index}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.3,
+              delay: index * 0.05,
+              ease: 'easeOut',
+            }}
+          >
+            <SpectrumLink
+              item={item}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+          </motion.div>
+        ));
+      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+
+      const sponsorRemainingLinks = useMemo(() => {
+        if (!isSponsor) return [];
+        return visibleLinks.slice(sponsorFirstRowCount).map((item, index) => (
+          <motion.div
+            key={`${item.label}-${safePage}-remaining-${index}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.3,
+              delay: (sponsorFirstRowCount + index) * 0.05,
+              ease: 'easeOut',
+            }}
+          >
+            <SpectrumLink
+              item={item}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+          </motion.div>
+        ));
+      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+
       return (
         <div
           ref={ref}
@@ -209,7 +257,7 @@ const SpectrumItem = memo(
         >
           <div className={cn('flex items-start gap-1.5', itemClassName)}>
             {isSponsor ? null : cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
-            <div className={cn('flex flex-col', isSponsor && 'items-center')}>
+            <div className={cn('flex flex-col', isSponsor && 'w-full items-center')}>
               {isSponsor ? (
                 <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
                   <div className="flex gap-3">
@@ -226,21 +274,36 @@ const SpectrumItem = memo(
               <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize', isSponsor && 'hidden')}>
                 {titleCn}
               </h4>
-              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-10' : 'mt-5')}>
+              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-10 w-full' : 'mt-5')}>
                 <AnimatePresence mode="wait">
-                  <motion.div
-                    key="spectrum-links"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={cn(
-                      'flex items-center',
-                      isSponsor ? 'max-w-[70rem] flex-wrap justify-center gap-x-7.5 gap-y-10' : 'flex-col',
-                    )}
-                  >
-                    {spectrumLinks}
-                  </motion.div>
+                  {isSponsor ? (
+                    <motion.div
+                      key="spectrum-links-sponsor"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex w-full flex-col gap-y-10"
+                    >
+                      {/* First row: justify-between to align with content above */}
+                      <div className="flex w-full items-center justify-between">{sponsorFirstRowLinks}</div>
+                      {/* Remaining rows: fixed 74px gap, centered */}
+                      {sponsorRemainingLinks.length > 0 && (
+                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorRemainingLinks}</div>
+                      )}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="spectrum-links"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={linksClassName || 'flex flex-col'}
+                    >
+                      {spectrumLinks}
+                    </motion.div>
+                  )}
                 </AnimatePresence>
                 {showMoreButton && (
                   <motion.button
