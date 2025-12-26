@@ -63,26 +63,20 @@ function Twin() {
   });
 
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // twin auto scroll to connect
+    // twin auto scroll to insights
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Twin] DOWN scrollFn called - enableDownJudge:',
-      //   enableDownJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      // console.log('[DEBUG] [Twin] Starting DOWN auto-scroll to Connect');
+      const st = ScrollTrigger.getById('insights-scroll-trigger');
+      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: `#${NAV_LIST[5].id}` }, // insights page
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 }, // 跳转到停留阶段
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
-          // console.log('[DEBUG] [Twin] DOWN Auto-scroll completed');
         },
       });
     },

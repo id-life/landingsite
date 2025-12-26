@@ -88,12 +88,11 @@ export function useNavigation() {
       } else if (item.id === NAV_LIST[5].id) {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
-        // requestAnimationFrame(() => {
-        //   const st = ScrollTrigger.getById('twin-scroll-trigger');
-        //   const twinShow = st?.labelToScroll('twin-show');
-        //   if (!twinShow) return;
-        //   smoother?.scrollTo(twinShow, false);
-        // });
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById('insights-scroll-trigger');
+          if (!st) return;
+          smoother?.scrollTo(st.start + (st.end - st.start) * 0.5, false);
+        });
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);

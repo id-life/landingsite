@@ -61,7 +61,7 @@ function ConnectGL() {
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
-        scrollTo: { y: st.start },
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;

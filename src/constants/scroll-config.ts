@@ -7,7 +7,7 @@ export const SCROLL_ANIMATION_CONFIG = {
   },
 
   // 节流时间（毫秒）
-  THROTTLE_TIME: 300,
+  THROTTLE_TIME: 100,
 
   // 最小速度阈值
   MIN_VELOCITY: 0.01,
