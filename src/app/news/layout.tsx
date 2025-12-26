@@ -10,7 +10,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <NewsStyle />
-      <div className="mx-auto max-w-[90rem] px-4 mobile:px-5">
+      <div className="mx-auto px-[20rem] mobile:px-5">
         <NewsHeader />
         {children}
         <NewsFooter />
