@@ -1,42 +1,70 @@
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { throttle } from 'lodash-es';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 
 export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => void; isUp?: boolean }) => {
   const [enableJudge, setEnableJudge] = useState(false);
-  const scrollFnRef = useRef(scrollFn);
-  scrollFnRef.current = scrollFn;
+  const isScrollingRef = useRef(false);
+
+  const throttleScrollFn = useMemo(
+    () =>
+      throttle(() => {
+        // console.log(`[useScrollSmootherAction] Executing scrollFn, isUp: ${isUp}`);
+        isScrollingRef.current = true;
+        scrollFn?.();
+        // Don't disable immediately, let the scroll animation complete
+        isScrollingRef.current = false;
+      }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME),
+    [scrollFn],
+  );
 
   useEffect(() => {
-    const handleWheel = throttle(
-      (e: WheelEvent) => {
-        if (!enableJudge || window.isNavScrolling || window.isResizing) {
-          return;
-        }
+    const handleWheel = throttle((e) => {
+      if (!enableJudge) {
+        // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
+        return;
+      }
 
-        const deltaY = e?.deltaY ?? 0;
+      if (isScrollingRef.current || window.isNavScrolling || window.isResizing) {
+        // console.log(`[useScrollSmootherAction] Wheel ignored - already scrolling, isUp: ${isUp}`);
+        return;
+      }
 
-        if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
-          return;
-        }
+      const smoother = ScrollSmoother.get();
+      const smootherST = smoother?.scrollTrigger as ScrollTrigger | undefined;
+      if (!smootherST) return;
 
-        if (isUp && deltaY < 0) {
-          scrollFnRef.current?.();
-        }
-        if (!isUp && deltaY > 0) {
-          scrollFnRef.current?.();
-        }
-      },
-      SCROLL_ANIMATION_CONFIG.THROTTLE_TIME,
-      { leading: true, trailing: false },
-    );
+      const dir = smootherST.direction;
+      const velocity = smootherST.getVelocity();
+      const deltaY = e?.deltaY ?? 0;
+      console.log(
+        `[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity},e?.deltaY:${deltaY} isUp: ${isUp}`,
+      );
+
+      if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
+        // console.log(`[useScrollSmootherAction] Velocity too low, ignoring`);
+        return;
+      }
+
+      if (isUp && deltaY < 0) {
+        // console.log(`[useScrollSmootherAction] Triggering UP scroll`);
+        throttleScrollFn();
+      }
+      if (!isUp && deltaY > 0) {
+        // console.log(`[useScrollSmootherAction] Triggering DOWN scroll`);
+        throttleScrollFn();
+      }
+    }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME);
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      handleWheel.cancel?.();
+      // Cancel any pending throttled calls on unmount
+      throttleScrollFn.cancel?.();
     };
-  }, [enableJudge, isUp]);
+  }, [enableJudge, isUp, throttleScrollFn]);
 
   return { enableJudge, setEnableJudge };
 };
