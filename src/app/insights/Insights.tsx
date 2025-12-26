@@ -60,7 +60,7 @@ export default function Insights() {
 
   // 添加页面锁定效果（与其他页面一致）
   useGSAP(() => {
-    gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         id: 'insights-scroll-trigger',
         trigger: `#${NAV_LIST[5].id}`,
@@ -77,6 +77,20 @@ export default function Insights() {
           setCurrentPage(NAV_LIST[5]);
         },
       },
+    });
+
+    const factor = 10; // 动画因子，与 Engagement 保持一致
+
+    // 确保初始状态可见（解决从 Connect 返回时的问题）
+    tl.fromTo('.insights-content', { y: 0, opacity: 1 }, { y: 0, opacity: 1, duration: 2 * factor });
+
+    // 出场动画（向下滚动时淡出）
+    const exitDuration = 2 * factor;
+    tl.to('.insights-content', {
+      y: -30,
+      opacity: 0,
+      ease: 'power2.out',
+      duration: exitDuration,
     });
   }, []);
 
@@ -98,7 +112,7 @@ export default function Insights() {
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]">
+      <div className="insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]">
         {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
         <div className="-mt-10">
           <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />

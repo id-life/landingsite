@@ -55,11 +55,13 @@ function ConnectGL() {
     // connect auto scroll to insights
     scrollFn: () => {
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
+      const st = ScrollTrigger.getById('insights-scroll-trigger');
+      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
-        scrollTo: { y: `#${NAV_LIST[5].id}` },
+        scrollTo: { y: st.start },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
