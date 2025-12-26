@@ -2,7 +2,7 @@
 export const SCROLL_ANIMATION_CONFIG = {
   // 动画持续时间（毫秒）
   DURATION: {
-    FAST: 2000, // Vision, Portfolio, Spectrum, Engagement
+    FAST: 2000, // Vision, Portfolio, Spectrum, Engagement, Insights
     SLOW: 3000, // Twin, Connect
   },
 

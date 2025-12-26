@@ -25,7 +25,7 @@ export default function Insights() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
@@ -44,7 +44,7 @@ export default function Insights() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: `#${NAV_LIST[6].id}` },
         onComplete: () => {
