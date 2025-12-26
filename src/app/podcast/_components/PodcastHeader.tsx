@@ -47,7 +47,7 @@ export default function PodcastHeader() {
       <div className="flex items-center gap-6">
         {/* Logo - Left */}
         <div className="cursor-pointer" onClick={handleLogoClick}>
-          <LogoSVGen className="w-50 mobile:w-[10.625rem]" />
+          <LogoSVGen className="w-50 mobile:w-[7.75rem]" />
         </div>
 
         {/* Tabs - Center (Desktop only) */}
