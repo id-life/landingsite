@@ -81,7 +81,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         </div>
         {/* Card content */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
-          <h3 className="line-clamp-2 font-poppins text-lg/6 font-semibold text-black">{item.title}</h3>
+          <h3 className="line-clamp-2 font-poppins text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
           <div className="flex items-center gap-1.5 font-poppins text-sm/5 font-medium text-black/40">
             {item.publisher && <span>{item.publisher}</span>}
             {item.publisher && item.publishDate && <span>·</span>}
