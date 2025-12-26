@@ -7,15 +7,17 @@ import MobileFooter from '@/components/layout/footer/MobileFooter';
 
 export default function PodcastLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <div className="px-8 mobile:px-5 middle:px-[10rem] desktop:px-[20rem]">
-        <Suspense>
-          <PodcastHeader />
-          <PodcastNavTabs />
-        </Suspense>
-        {children}
+    <div>
+      <div className="flex w-full flex-col items-center px-10">
+        <div className="max-w-[50rem]">
+          <Suspense>
+            <PodcastHeader />
+            <PodcastNavTabs />
+          </Suspense>
+          {children}
+        </div>
       </div>
       <MobileFooter />
-    </>
+    </div>
   );
 }

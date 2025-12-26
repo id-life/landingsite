@@ -44,7 +44,7 @@ export default function PodcastHeader() {
 
   return (
     <div className="relative flex items-center justify-between py-10 mobile:py-5">
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-6">
         {/* Logo - Left */}
         <div className="cursor-pointer" onClick={handleLogoClick}>
           <LogoSVGen className="w-50 mobile:w-[10.625rem]" />
