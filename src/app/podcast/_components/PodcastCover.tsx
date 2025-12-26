@@ -25,11 +25,11 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
 
   return (
     <div>
-      <div className="flex gap-8.5">
+      <div className="flex gap-8.5 mobile:gap-4">
         <img className="w-45 rounded-xl mobile:w-30" src={data.cover} alt="" />
         <div className="flex flex-1 flex-col justify-between">
           <div>
-            <h2 className="text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
+            <h2 className="whitespace-nowrap text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
             </h2>

@@ -16,7 +16,7 @@ export default function PodcastNavTabs() {
   );
 
   return (
-    <div className="hidden mobile:flex mobile:justify-center mobile:gap-10 mobile:pb-5">
+    <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center mobile:pb-5">
       {PODCAST_NAV_LIST.map((item) => {
         const isActive = search === item.id;
         const [english, chinese] = item.title.split(' ').reduce(
@@ -39,8 +39,8 @@ export default function PodcastNavTabs() {
                 isActive ? 'text-[#c11111]' : 'text-[#222]',
               )}
             >
-              <p className="text-xs/4">{english}</p>
-              <p className="text-xs/4">{chinese}</p>
+              <p className="text-sm/4">{english}</p>
+              <p className="text-sm/4">{chinese}</p>
               {isActive && <div className="mx-auto mt-1.5 h-0.5 w-5 bg-[#c11111]" />}
             </div>
           </Link>
