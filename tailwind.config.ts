@@ -14,6 +14,8 @@ const config: Config = {
       screens: {
         mobile: { max: '768px' },
         tablet: { min: '768px', max: '1540px' },
+        middle: { min: '1200px' },
+        desktop: { min: '1540px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],

@@ -41,16 +41,16 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
               </div>
             </div>
           )}
-          <div className="absolute bottom-0 left-0 right-0 max-w-[75%] p-6 mobile:max-w-[90%] mobile:p-5">
+          <div className="absolute bottom-0 left-0 right-0 p-6 mobile:p-5">
             {data.publishDate && (
-              <div className="mb-2 font-medium text-white/80 mobile:mb-1.5 mobile:text-sm">
+              <div className="mb-2 font-medium text-white mobile:mb-1.5 mobile:text-xs">
                 {dayjs(data.publishDate).format('MMM DD, YYYY')}
               </div>
             )}
-            <h2 className="flex items-center gap-3 text-4xl font-semibold text-white mobile:text-xl mobile:leading-7">
-              <span className="truncate">{data.title}</span>
+            <h2 className="flex items-center gap-3 font-semibold text-white">
+              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8">{data.title}</span>
               {data.source && (
-                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 text-xs font-bold uppercase text-orange backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-[10px]">
+                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 text-lg/8 font-bold uppercase text-orange backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4">
                   {data.source}
                 </span>
               )}
