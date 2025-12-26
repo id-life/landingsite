@@ -81,21 +81,20 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div>
-        <div className="mt-5 flex items-center justify-between">
-          <div className="text-xl/5 font-medium">
-            <Link href="/news">Home</Link>
-            <span className="text-black/50">&gt; Article</span>
+        <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
+          <div className="text-xl/5 font-medium mobile:text-xs/5">
+            <Link href="/news">News</Link>
+            <span className="ml-1 text-black/50">&gt; Article</span>
           </div>
-          <p className="text-sm font-semibold">{dayjs(data.createdAt).fromNow()}</p>
         </div>
-        <div className="mt-10 rounded-3xl bg-white p-20 mobile:rounded mobile:p-5">
-          <div className="mb-5 flex items-center justify-center gap-2 text-sm/5 font-semibold">
+        <div className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
+          <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
             Immortal Dragons
           </div>
-          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:text-2xl">{data.title}</h1>
-          <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-7.5 mobile:mt-5" />
-          <div className="markdown-body">
+          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg">{data.title}</h1>
+          <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
+          <div className="markdown-body mobile:[&_p]:text-sm">
             <Markdown rehypePlugins={[rehypeRaw]}>{data.content}</Markdown>
           </div>
         </div>

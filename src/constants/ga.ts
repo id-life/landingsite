@@ -54,8 +54,8 @@ export const GA_EVENT_NAMES = {
   MODEL_LOAD_DURATION: 'model_load_duration',
   ANATOMY_LOAD_DURATION: 'anatomy_load_duration',
 
-  // value
-  VALUE_VIEW: 'value_view',
+  // connect
+  CONNECT_VIEW: 'connect_view',
 
   // music player
   MUSIC_PLAYER_START: 'music_player_start',
@@ -189,7 +189,7 @@ export const GA_EVENT_LABELS = {
   | 'MEDIUM_CLICK'
   | 'ANATOMY_SWITCH'
   | 'ID_PAGE_VIEW'
-  | 'VALUE_VIEW'
+  | 'CONNECT_VIEW'
   | 'SPECTRUM_HOVER'
   | 'SPECTRUM_CLICK'
   | 'MUSIC_PLAYER_END'

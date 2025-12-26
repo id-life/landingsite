@@ -12,7 +12,7 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
+import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -25,7 +25,9 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Value 页有
+    // PC版Insights没有内页切换，返回0让箭头直接导航到下一页
+    if (currentPage.id === NAV_LIST[5].id) return 0; // insights_page
+    return 3; // 只有Connect页有3个内页
   }, [currentPage]);
 
   // 更新 innerPageTotal
@@ -36,16 +38,16 @@ export default function PageArrows({ className }: PageArrowsProps) {
     }
   }, [getTotal, setInnerPageTotal, innerPageTotal]);
 
-  const isLastPageAndInnerPage = useMemo(() => {
-    // 最后一页 & 最后一小进度,不展示向下箭头
-    return currentPage.id === NAV_LIST[5].id && innerPageIndex === innerPageTotal - 1;
-  }, [currentPage.id, innerPageIndex, innerPageTotal]);
+  const isConnectPage = useMemo(() => {
+    // Connect页面不展示向下箭头
+    return currentPage.id === NAV_LIST[6].id;
+  }, [currentPage.id]);
 
   return (
     <div className={cn('pointer-events-auto z-20 flex flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {!isLastPageAndInnerPage && <ArrowItem />}
+        {!isConnectPage && <ArrowItem />}
       </div>
     </div>
   );
@@ -58,17 +60,17 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
-  const { sendValueShowEvent } = useValueShowEvent();
+  const { sendValueShowEvent } = useConnectShowEvent();
 
   const throttleTime = useMemo(() => {
-    if (currentPage.id === 'value_page') return 2000;
+    if (currentPage.id === 'connect_page') return 2000;
     return 500;
   }, [currentPage]);
 
   const handleClick = useThrottle(() => {
     console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
-    if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
+    if (HAS_INNER_PAGE_LIST.includes(currentPage.id) && innerPageTotal > 0) {
       // 有小进度条
       if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻

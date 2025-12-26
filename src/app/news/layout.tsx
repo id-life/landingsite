@@ -1,15 +1,21 @@
 'use client';
 
-import React, { ReactNode } from 'react';
-import NewsHeader from './_components/NewsHeader';
+import { ReactNode } from 'react';
 import NewsFooter from './_components/NewsFooter';
+import NewsHeader from './_components/NewsHeader';
+import NewsStyle from './_components/NewsStyle';
+import MobileFooter from '@/components/layout/footer/MobileFooter';
 
 export default function NewsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="container mx-auto max-w-screen-xl">
-      <NewsHeader />
-      {children}
-      <NewsFooter />
-    </div>
+    <>
+      <NewsStyle />
+      <div className="mx-auto px-[20rem] mobile:px-5">
+        <NewsHeader />
+        {children}
+        <NewsFooter />
+      </div>
+      <MobileFooter />
+    </>
   );
 }

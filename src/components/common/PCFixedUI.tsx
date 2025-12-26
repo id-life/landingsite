@@ -1,6 +1,6 @@
 'use client';
 
-import NewFixedValue from '@/app/value/NewFixedValue';
+import NewFixedConnect from '@/app/connect/NewFixedConnect';
 import { currentPageAtom } from '@/atoms';
 import { isBePartOfItShowAtom } from '@/atoms/character-relation';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
@@ -18,14 +18,7 @@ import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';
 
 export default function PCFixedUI() {
-  const { trackEvent } = useGA();
   const currentPage = useAtomValue(currentPageAtom);
-  const setIsBePartOfItShow = useSetAtom(isBePartOfItShowAtom);
-
-  const handleBePartOfIt = () => {
-    setIsBePartOfItShow(true);
-    trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
-  };
 
   return (
     <div id="pc-fixed-ui" className="opacity-0">
@@ -39,7 +32,7 @@ export default function PCFixedUI() {
       <ClientOnly>
         <DesktopAudioPlayer className="fixed bottom-10 right-10 z-[51]" />
       </ClientOnly>
-      <NewFixedValue />
+      <NewFixedConnect />
     </div>
   );
 }
@@ -54,7 +47,9 @@ const CarouselWrapper = memo(() => {
         transition={0.6}
         className={cn('scroll-title fixed bottom-10 left-10 z-30 w-[25rem]')}
       >
-        {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
+        {CAROUSEL_ITEMS?.map((item) => (
+          <CarouselItem key={item.cnText ?? item.text} {...item} />
+        ))}
       </VerticalCarousel>
     )
   );

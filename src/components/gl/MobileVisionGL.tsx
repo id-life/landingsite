@@ -95,11 +95,13 @@ export default function MobileVisionGL() {
     };
   }, [currentPage]);
 
+  // 只在 Vision 页面显示模型，其他页面立即隐藏
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[5].id) {
-      gsap.set(modelRef.current, { visible: false });
+    if (!modelRef.current) return;
+    if (currentPage.id === NAV_LIST[0].id) {
+      modelRef.current.visible = true;
     } else {
-      gsap.set(modelRef.current, { visible: true });
+      modelRef.current.visible = false;
     }
   }, [currentPage]);
 

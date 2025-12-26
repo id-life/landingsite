@@ -27,7 +27,7 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
         return;
       }
 
-      if (isScrollingRef.current || window.isNavScrolling) {
+      if (isScrollingRef.current || window.isNavScrolling || window.isResizing) {
         // console.log(`[useScrollSmootherAction] Wheel ignored - already scrolling, isUp: ${isUp}`);
         return;
       }

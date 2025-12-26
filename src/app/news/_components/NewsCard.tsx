@@ -1,26 +1,58 @@
 'use client';
 
+import { Fragment, useState } from 'react';
 import dayjs from 'dayjs';
-import Link from 'next/link';
-import { NewsListItem } from '@/apis/types';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { NewsPageItem } from '@/apis/types';
+import VideoModal from '@/app/insights/_components/VideoModal';
+import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 
-dayjs.extend(relativeTime);
+export default function NewsCard({ data }: { data: NewsPageItem }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isYouTube = !!data.videoId;
 
-export default function NewsCard({ data }: { data: NewsListItem }) {
+  const handleClick = () => {
+    if (isYouTube) {
+      setIsModalOpen(true);
+    } else if (data.isExternal && data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      window.open(`/news/${data.id}`, '_blank');
+    }
+  };
+
   return (
-    <div className="bg-white p-4 duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg">
-      <Link target="_blank" href={`/news/${data.id}`}>
-        <div className="flex items-center gap-2 text-base font-medium text-black/50">
-          <img src="/imgs/news/article_logo.webp" className="size-6" alt="" />
-          Immortal Dragons
+    <>
+      <div
+        onClick={handleClick}
+        className="group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg"
+      >
+        <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
+          <YouTubeThumbnail
+            pic={data.cover || '/imgs/news/insights-bg.webp'}
+            videoId={data.videoId ?? ''}
+            title={data.title}
+            onClick={handleClick}
+          />
         </div>
-        <h3 className="mt-2.5 line-clamp-2 h-14 text-lg font-semibold">{data.title}</h3>
-        <div className="mt-4 font-medium text-black/50">
-          Article <span className="px-1">·</span> {dayjs(data.createdAt).fromNow()}
+        <div className="p-4 mobile:p-3">
+          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base">{data.title}</h3>
+          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-black/40 mobile:mt-1.5 mobile:text-sm/4.5">
+            {data?.source || data?.publishDate ? (
+              <Fragment>
+                {data?.source && <span>{data.source}</span>}
+                {data?.source && data.publishDate && <span>·</span>}
+                {data?.publishDate && <span>{dayjs(data.publishDate).format('MMM DD, YYYY')}</span>}{' '}
+              </Fragment>
+            ) : (
+              <span>Article</span>
+            )}
+          </div>
         </div>
-        <p className="mt-4 line-clamp-3 text-sm font-medium">{data.brief.replace(/[#*]/g, '').trim()}</p>
-      </Link>
-    </div>
+      </div>
+
+      {isYouTube && (
+        <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />
+      )}
+    </>
   );
 }

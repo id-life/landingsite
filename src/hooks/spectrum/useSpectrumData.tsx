@@ -27,6 +27,8 @@ export type SpectrumLinkItem = {
   isComingSoon?: boolean;
   labelClassName?: string;
   routeKey?: string; // for URL routing
+  icon?: string;
+  size?: string;
 };
 
 export type SpectrumItemInfo = {
@@ -34,6 +36,7 @@ export type SpectrumItemInfo = {
   titleCn: string;
   icon: JSX.Element;
   links?: SpectrumLinkItem[];
+  linksClassName?: string;
   className?: string;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 };
@@ -81,9 +84,8 @@ export const useSpectrumData = () => {
       { key: 'edge-city-lanna', action: handleClickDot('meeting', 1) },
       { key: 'oxford-future-innovation-forum', action: handleClickDot('sponsor', 1) },
       // book
-      { key: 'bioacc-manifesto', action: handleClickDot('book', 1) },
       { key: 'the-network-state', action: handleClickDot('book', 0) },
-      { key: 'better-with-age', action: handleClickDot('book', 2) },
+      { key: 'better-with-age', action: handleClickDot('book', 1) },
       // sponsor
       { key: 'vitalist-bay-summit-grant', action: handleClickDot('meeting', 4) },
       { key: 'ardd-2025', action: handleClickDot('meeting', 6) },
@@ -92,7 +94,7 @@ export const useSpectrumData = () => {
       { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
       { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
       { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
-      { key: 'revive-me-2025', action: handleClickDot('sponsor', 4) },
+      { key: 'revive-me-2025', action: handleClickDot('sponsor', 2) },
       { key: 'healthy-longevity-medicine-conference', action: handleClickDot('meeting', 2) },
       // digital twin
       { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
@@ -105,142 +107,28 @@ export const useSpectrumData = () => {
   const spectrumData: SpectrumItemInfo[] = useMemo(() => {
     const data: SpectrumItemInfo[] = [
       {
-        title: 'Insights & Advocacy',
-        titleCn: '演讲与洞见',
-        icon: <MeetingSVG />,
-        links: [
-          {
-            label: 'Immortal Dragons Launching Announcement',
-            link: 'https://vcwire.tech/2025/08/12/immortal-dragons-launches-40m-longevity-fund/',
-          },
-          {
-            label: 'Immortal Dragons and 3D Biofabrication',
-            link: 'https://www.drugdiscoverynews.com/vascular-engineering-opens-the-door-to-organ-scale-tissue-replacement-16709',
-          },
-          {
-            label: 'Immortal Dragons and Longevity Asia',
-            link: 'https://www.biospectrumasia.com/analysis/26/26702/how-asia-is-pioneering-longevity-biotech.html',
-          },
-          {
-            label: 'Guest Article Piece with Drug Discovery Online',
-            link: 'https://www.drugdiscoveryonline.com/doc/notes-from-a-vc-what-it-takes-to-be-impactful-in-longevity-science-0001',
-          },
-          {
-            label: 'Vitalist Bay Fireside Chat',
-            link: 'https://www.youtube.com/watch?v=2FJi1k7xNuo',
-          },
-          {
-            label: 'Founder Interview with Beyond Tomorrow',
-            link: 'https://www.youtube.com/watch?v=Cwhcqi-xNM8',
-          },
-          {
-            label: 'Gene Therapies Roundtable with Liz Parrish',
-            link: 'https://www.youtube.com/watch?v=W3pBINeJUSg&t=3538s',
-          },
-          {
-            label: '2060 Longevity Forum Panel',
-            link: 'https://www.youtube.com/watch?v=JW7KbX7vcUM',
-          },
-        ],
-      },
-      {
         title: 'Translation & Publishing',
         titleCn: '翻译与出版',
         icon: <BookSVG />,
-        className: '-ml-8 mobile:ml-0',
+        linksClassName: 'grid grid-cols-2',
         links: [
           {
-            label: 'bio/acc manifesto',
-            routeKey: 'bioacc-manifesto',
-          },
-          {
-            label: 'The Network State',
-            labelClassName: 'italic',
-            routeKey: 'the-network-state',
-          },
-          {
-            label: 'Better With Age',
-            labelClassName: 'italic',
-            routeKey: 'better-with-age',
+            label: 'Bio/Acc Manifesto',
+            routeKey: 'biohacker-dao',
           },
           {
             label: 'The case against death',
             isComingSoon: true,
-            labelClassName: 'italic',
-          },
-        ],
-      },
-      {
-        title: 'Grant & Sponsorships',
-        titleCn: '赞助',
-        icon: <SponsorSVG />,
-        links: [
-          {
-            label: 'ARDD 2025',
-            routeKey: 'ardd-2025',
+            labelClassName: '-ml-4',
           },
           {
-            label: 'TimePie Longevity Forum 2025/9',
-            routeKey: 'timepie-longevity-forum',
+            label: 'The Network State',
+            routeKey: 'the-network-state',
           },
           {
-            label: 'Lifespan Research Institute',
-            routeKey: 'lifespan-research-institute',
-          },
-          {
-            label: 'Public Longevity Group',
-            routeKey: 'public-longevity-group',
-          },
-          {
-            label: 'Vitalist Bay Summit',
-            routeKey: 'vitalist-bay-summit-grant',
-          },
-          {
-            label: '2060 Longevity Forum',
-            routeKey: '2060-longevity-forum',
-          },
-          {
-            label: 'REVIVE ME 2025',
-            routeKey: 'revive-me-2025',
-          },
-          {
-            label: 'Health Longevity and Medicine Conference 2025',
-            routeKey: 'healthy-longevity-medicine-conference',
-          },
-          {
-            label: 'Cornerstone Non-profit Foundation',
-            link: 'https://www.cornerstoneondemand.org',
-          },
-          {
-            label: 'Beyond Tomorrow Podcast',
-            link: 'https://beyondtomorrowpodcast.com/',
-          },
-          {
-            label: 'HackAging.ai Hackathon', // 11
-            link: 'https://www.hackaging.ai/',
-          },
-          {
-            label: 'BiohackerDAO',
-            routeKey: 'biohacker-dao',
-          },
-          {
-            label: 'ETHPanda 青年黑客远航计划',
-            routeKey: 'eth-panda',
-          },
-        ],
-      },
-      {
-        title: 'Podcast',
-        titleCn: '播客',
-        icon: <PodcastSVG />,
-        links: [
-          {
-            label: 'Immortal Dragons  不朽真龙',
-            link: '/podcast',
-          },
-          {
-            label: 'Long Talk  龙门阵',
-            link: '/podcast?c=lt',
+            label: 'Better With Age',
+            labelClassName: '-ml-4',
+            routeKey: 'better-with-age',
           },
         ],
       },
@@ -254,7 +142,7 @@ export const useSpectrumData = () => {
             link: '/spectrum/influence-network',
           },
           {
-            label: 'Disease Management & Cure Status',
+            label: 'Disease Management',
             link: '/spectrum/disease-management',
           },
         ],
@@ -263,22 +151,10 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
-        className: '-ml-8 mobile:ml-0',
         links: [
           {
             label: 'Access Digital Twin',
             routeKey: 'digital-twin',
-          },
-        ],
-      },
-      {
-        title: 'ID Gallery Museum',
-        titleCn: '总部办公室',
-        icon: <MuseumSVG />,
-        links: [
-          {
-            label: '3 Biopolis Dr, Singapore 138623',
-            link: 'https://maps.app.goo.gl/sXGuujRuCP8nmjJF9',
           },
         ],
       },
@@ -294,6 +170,85 @@ export const useSpectrumData = () => {
           {
             label: 'Apply (EN)',
             link: 'https://id.life/career-en',
+          },
+        ],
+      },
+      {
+        title: 'Grant & Sponsorships',
+        titleCn: '赞助',
+        icon: <SponsorSVG />,
+        links: [
+          {
+            label: 'ARDD',
+            routeKey: 'ardd-2025',
+            icon: '/imgs/investments/sponsors/ardd.png',
+            size: 'h-15',
+          },
+          {
+            label: 'TimePie Longevity Forum',
+            routeKey: 'timepie-longevity-forum',
+            icon: '/imgs/investments/sponsors/time-pie.png',
+            size: 'h-15',
+          },
+          {
+            label: 'Lifespan Research Institute',
+            routeKey: 'lifespan-research-institute',
+            icon: '/imgs/investments/sponsors/lifespan.png',
+            size: 'h-12',
+          },
+          {
+            label: 'Public Longevity Group',
+            routeKey: 'public-longevity-group',
+            icon: '/imgs/investments/sponsors/public-longevity.png',
+            size: 'h-15',
+          },
+          {
+            label: 'Vitalist Bay Summit',
+            routeKey: 'vitalist-bay-summit-grant',
+            icon: '/imgs/investments/sponsors/vitalist-bay.png',
+            size: 'h-12',
+          },
+          {
+            label: '2060 Longevity Forum',
+            routeKey: '2060-longevity-forum',
+            icon: '/imgs/investments/sponsors/2060-longevity.png',
+            size: 'h-12',
+          },
+          {
+            label: 'REVIVE ME',
+            routeKey: 'revive-me-2025',
+            icon: '/imgs/investments/sponsors/revive-me.png',
+            size: 'h-12',
+          },
+          {
+            label: 'Health Longevity and Medicine Conference',
+            routeKey: 'healthy-longevity-medicine-conference',
+            icon: '/imgs/investments/sponsors/healthy-longevity.png',
+            size: 'h-15',
+          },
+          {
+            label: 'Cornerstone Non-profit Foundation',
+            link: 'https://www.cornerstoneondemand.org',
+            icon: '/imgs/investments/sponsors/cornerstone.png',
+            size: 'h-6.5',
+          },
+          {
+            label: 'Beyond Tomorrow Podcast',
+            link: 'https://beyondtomorrowpodcast.com/',
+            icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
+            size: 'h-5',
+          },
+          {
+            label: 'HackAging.ai Hackathon', // 11
+            link: 'https://www.hackaging.ai/',
+            icon: '/imgs/investments/sponsors/hackaging.png',
+            size: 'h-5',
+          },
+          {
+            label: 'BioHackerDAO',
+            link: 'https://biohackerdao.org/',
+            icon: '/imgs/investments/sponsors/biohackerdao.png',
+            size: 'h-15',
           },
         ],
       },

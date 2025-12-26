@@ -5,20 +5,15 @@ import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
-import { isSubscribeShowAtom } from '@/atoms/footer';
 import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
 import jsonp from '@/utils/jsonp';
-import { FloatingPortal, useFloatingPortalNode } from '@floating-ui/react';
-import { useGSAP } from '@gsap/react';
+import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
-import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -31,10 +26,7 @@ type Inputs = {
 export default function FooterContact() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const subscribeRef = useRef<HTMLDivElement>(null);
-  const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
-  const portalNode = useFloatingPortalNode();
+
   const {
     register,
     handleSubmit,
@@ -76,39 +68,10 @@ export default function FooterContact() {
     }
   };
 
-  useGSAP(
-    () => {
-      if (!portalNode) return;
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: 'footerTimeline',
-          trigger: wrapperRef.current,
-          start: 'top bottom+=50%',
-          end: 'bottom bottom+=50%',
-          scrub: true,
-          onEnter: () => {
-            setIsSubscribeShow(true);
-          },
-          onLeaveBack: () => {
-            setIsSubscribeShow(false);
-          },
-        },
-      });
-      timeline.to(subscribeRef.current, { bottom: isMobile ? '5rem' : '2.25rem' });
-      timeline.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
-      timeline.to('.scroll-title', { bottom: isMobile ? '25.5rem' : '22.5rem' }, '<');
-    },
-    { dependencies: [portalNode, isMobile] },
-  );
-
   return (
     <>
-      <div ref={wrapperRef} className="h-48" />
       <FloatingPortal>
-        <div
-          ref={subscribeRef}
-          className="page-footer-contact fixed -bottom-80 z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
-        >
+        <div className="page-footer-contact fixed -bottom-80 z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
             <div>
               <img className="w-[8.125rem]" src="/svgs/logo_without_gradient.svg" alt="" />

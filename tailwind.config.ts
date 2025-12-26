@@ -14,6 +14,8 @@ const config: Config = {
       screens: {
         mobile: { max: '768px' },
         tablet: { min: '768px', max: '1540px' },
+        middle: { min: '1200px' },
+        desktop: { min: '1540px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],
@@ -62,6 +64,7 @@ const config: Config = {
         71: '17.75rem',
         75: '18.75rem',
         76: '19rem',
+        87: '21.75rem',
         97: '24.25rem',
         100: '25rem',
         105: '26.25rem',
@@ -73,8 +76,10 @@ const config: Config = {
       colors: {
         gray: {
           200: '#D4D4D4',
+          250: '#B8B8B8',
           350: '#999999',
           400: '#9C979D',
+          450: '#797A7D',
           500: '#7b7b7d',
           550: '#666666',
           700: '#444444',
@@ -104,6 +109,7 @@ const config: Config = {
         },
         blue: {
           DEFAULT: '#43BBFF',
+          600: '#3A51FF',
         },
         purple: {
           DEFAULT: '#CE3AFF',

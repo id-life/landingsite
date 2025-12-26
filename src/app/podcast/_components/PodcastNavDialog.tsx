@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
@@ -6,19 +6,13 @@ import Dialog from '@/components/dialog';
 import { useThrottle } from '@/hooks/useThrottle';
 import { isPodcastNavOpenAtom } from '@/atoms/podcast';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { PODCAST_NAV_LIST, PodcastNavItem } from '@/app/podcast/_components/constant';
+import { usePathname, useRouter } from 'next/navigation';
+import { NAV_LIST, NavItem } from '@/components/nav/nav';
 
 function PodcastNavDialog() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [open, setOpen] = useAtom(isPodcastNavOpenAtom);
-
-  const search = useMemo(
-    () => (pathname === '/podcast' ? (searchParams.get('c') ?? PODCAST_NAV_LIST[0].id) : null),
-    [pathname, searchParams],
-  );
 
   const startAnim = useCallback((isOpen: boolean) => {
     if (isOpen) {
@@ -37,11 +31,11 @@ function PodcastNavDialog() {
     }
   }, []);
 
-  const handleNavClick = useThrottle((item: PodcastNavItem) => {
+  const handleNavClick = useThrottle((item: NavItem) => {
     startAnim(false);
     setTimeout(() => {
       setOpen(false);
-      router.push(item.link);
+      router.push(item.href);
     }, 600);
   }, 1000);
 
@@ -64,7 +58,7 @@ function PodcastNavDialog() {
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
           <div className="mt-16 font-tt">
-            {PODCAST_NAV_LIST.map((item) => (
+            {NAV_LIST.map((item) => (
               <div
                 onClick={() => handleNavClick(item)}
                 className={cn('flex-center mobile-nav-item relative py-6 text-white opacity-0')}
@@ -72,7 +66,7 @@ function PodcastNavDialog() {
               >
                 <div className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
                   {item.title}
-                  {search === item.id && (
+                  {pathname === item.href && (
                     <div className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
                   )}
                 </div>

@@ -13,7 +13,7 @@ import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useEffect, useCallback } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useValueShowEvent } from '@/hooks/valueGL/useValueShowEvent';
+import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -26,7 +26,8 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    return 3; // 目前就一个 Value 页有
+    if (currentPage.id === NAV_LIST[5].id) return 2; // Insights 页有 2 个内部页面 (Podcast, News & Talks)
+    return 3; // Connect 页有 3 个内部页面
   }, [currentPage]);
 
   // 更新 innerPageTotal
@@ -37,16 +38,16 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
     }
   }, [getTotal, setInnerPageTotal, innerPageTotal]);
 
-  const isLastPageAndInnerPage = useMemo(() => {
-    // 最后一页 & 最后一小进度,不展示向下箭头
-    return currentPage.id === NAV_LIST[5].id && innerPageIndex === innerPageTotal - 1;
-  }, [currentPage.id, innerPageIndex, innerPageTotal]);
+  const isConnectPage = useMemo(() => {
+    // Connect页面不展示向下箭头
+    return currentPage.id === NAV_LIST[6].id;
+  }, [currentPage.id]);
 
   return (
     <div className={cn('pointer-events-auto z-40 flex cursor-pointer flex-col items-center gap-5', className)}>
       <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
-        {!isLastPageAndInnerPage && <ArrowItem />}
+        {!isConnectPage && <ArrowItem />}
       </div>
     </div>
   );
@@ -60,7 +61,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const { mobileNavChange } = useMobileNavigation();
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
-  const { sendValueShowEvent } = useValueShowEvent();
+  const { sendValueShowEvent } = useConnectShowEvent();
 
   const handleClick = useThrottle(() => {
     if (mobileIsScrolling) return;

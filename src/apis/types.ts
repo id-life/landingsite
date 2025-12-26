@@ -14,6 +14,7 @@ export type AudioDataItem = {
   createdAt?: string;
   xyzLink?: string;
   podcastLink?: string;
+  spotifyLink?: string;
 };
 
 export interface CharacterRelationData {
@@ -41,6 +42,8 @@ export type NewsListItem = {
   category: string;
   createdAt: string;
   updatedAt: string;
+  cover?: string;
+  source?: string;
 };
 
 export type NewsContent = {
@@ -82,4 +85,45 @@ export type PodcastCommentItemType = {
   nickName: string;
   source: string;
   xyzCommentId: string;
+};
+
+// Insights API Types
+export type InsightsCategory = 'news' | 'talk' | 'essay' | 'coverage' | 'podcast';
+
+export type InsightsItem = {
+  id: number;
+  title: string;
+  category: InsightsCategory;
+  sequence: number;
+  url: string;
+  publishDate: string;
+  essayPic?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Insights with Geo API Types (for /insights/with-geo endpoint)
+export type InsightsWithGeoItem = {
+  id?: number;
+  title: string;
+  sequence: number;
+  contentType: 'insights' | 'geo';
+  url: string | null;
+  imageUrl: string | null;
+  publisher: string | null;
+  isTop: boolean;
+  publishDate: string | null;
+};
+
+// News page item type (combined from insights and geo)
+export type NewsPageItem = {
+  id: number;
+  title: string;
+  brief: string | null;
+  cover: string | null;
+  source: string | null;
+  publishDate: string | null;
+  url: string | null;
+  videoId: string | null;
+  isExternal: boolean;
 };

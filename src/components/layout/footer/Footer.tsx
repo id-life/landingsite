@@ -13,7 +13,7 @@ import { cn } from '@/utils';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { useAtomValue } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -26,7 +26,6 @@ type Inputs = {
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
   const subscribeType = useAtomValue(subscribeTypeAtom);
 
@@ -66,7 +65,6 @@ export default function Footer() {
 
   return (
     <>
-      <div ref={wrapperRef} className="h-52" />
       <FloatingPortal>
         <div className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
           <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">

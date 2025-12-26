@@ -64,7 +64,7 @@ function Portfolio() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
@@ -89,7 +89,7 @@ function Portfolio() {
       //   'isNavScrolling:',
       //   window.isNavScrolling,
       // );
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling) return;
+      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) {
         // console.log('[DEBUG] [Portfolio] spectrum-trigger not found');
@@ -149,14 +149,17 @@ function Portfolio() {
         scrub: true,
         id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[1]);
           setActiveAnim(true);
         },
         onEnterBack: () => {
+          if (window.isResizing) return;
           setCurrentPage(NAV_LIST[1]);
           setActiveAnim(true);
         },
         onLeaveBack: () => {
+          if (window.isResizing) return;
           setActiveAnim(false);
         },
       },

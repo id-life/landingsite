@@ -1,5 +1,5 @@
 import { NAV_LIST } from '@/components/nav/nav';
-import Value from './_components/Value';
+import Connect from './_components/Connect';
 
 export default function Processes() {
   return (
@@ -15,7 +15,7 @@ export default function Processes() {
         poster="/imgs/processes.jpg"
       />
       <div className="relative">
-        <Value />
+        <Connect />
       </div>
     </div>
   );

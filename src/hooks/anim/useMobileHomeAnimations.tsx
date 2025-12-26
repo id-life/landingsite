@@ -27,7 +27,7 @@ export function useMobileHomeAnimateInit() {
       stagger: 0.1,
     });
 
-    if ([NAV_LIST[3].id, NAV_LIST[4].id, NAV_LIST[5].id].includes(currentPage.id)) {
+    if ([NAV_LIST[3].id, NAV_LIST[4].id, NAV_LIST[5].id, NAV_LIST[6].id].includes(currentPage.id)) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
 

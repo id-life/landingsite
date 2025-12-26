@@ -2,7 +2,8 @@
 
 import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
-import Value from '@/app/value/Value';
+import Insights from '@/app/insights/Insights';
+import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
 import PCFixedUI from '@/components/common/PCFixedUI';
@@ -18,6 +19,7 @@ import { useGA } from '@/hooks/useGA';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
+import { useResizeRefresh } from '@/hooks/useResizeRefresh';
 import { useGSAP } from '@gsap/react';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -29,6 +31,9 @@ export default function Home() {
 
   const { trackEvent } = useGA();
   const { initializeAnimations } = useHomeAnimations();
+
+  // Refresh ScrollTrigger and ScrollSmoother on window resize
+  useResizeRefresh();
 
   useEffect(() => {
     if (isMounted && !isMobile) {
@@ -56,7 +61,8 @@ export default function Home() {
           <Spectrum />
           <Engagement />
           <Twin />
-          <Value />
+          <Insights />
+          <Connect />
           <Footer />
           <FooterContact />
         </div>
