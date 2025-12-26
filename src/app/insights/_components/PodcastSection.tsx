@@ -38,7 +38,7 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
   const containerRef = useRef<HTMLDivElement>(null);
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
-  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile);
+  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156); // 播客卡片106 + 间距20 + 30
 
   const allPodcasts = useMemo(() => [...podcastIDList, ...podcastLTList], [podcastIDList, podcastLTList]);
 
@@ -161,34 +161,32 @@ export default function PodcastSection({ podcasts = [], isLoading, isMobile = fa
               PODCAST
             </h2>
             {/* Platform logos */}
-            {!isMobile && (
-              <div className="flex items-center gap-1.5">
-                <a
-                  href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-100 transition-opacity hover:opacity-80"
-                >
-                  <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
-                </a>
-                <a
-                  href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-100 transition-opacity hover:opacity-80"
-                >
-                  <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
-                </a>
-                <a
-                  href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="opacity-100 transition-opacity hover:opacity-80"
-                >
-                  <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
-                </a>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5">
+              <a
+                href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-100 transition-opacity hover:opacity-80"
+              >
+                <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
+              </a>
+              <a
+                href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-100 transition-opacity hover:opacity-80"
+              >
+                <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
+              </a>
+              <a
+                href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-100 transition-opacity hover:opacity-80"
+              >
+                <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
+              </a>
+            </div>
           </div>
           <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
         </div>

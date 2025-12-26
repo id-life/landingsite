@@ -363,6 +363,5 @@
 
   .podcast-card-clip-inner {
     clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
-    padding: 1.25rem;
   }
 }

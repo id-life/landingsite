@@ -48,24 +48,24 @@ function MobileInsights() {
     >
       {/* Content Area with Flip Animation */}
       <div className="mobile-insights-content relative flex-1 overflow-hidden">
-        {/* Podcast Section */}
+        {/* News & Talks Section */}
         <div
           className={cn(
             'absolute inset-0 overflow-y-auto px-5 pb-4 transition-all duration-500 ease-in-out',
             innerPageIndex === 0 ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0',
           )}
         >
-          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} isMobile />
+          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile />
         </div>
 
-        {/* News & Talks Section */}
+        {/* Podcast Section */}
         <div
           className={cn(
             'absolute inset-0 overflow-y-auto px-5 pb-4 transition-all duration-500 ease-in-out',
             innerPageIndex === 1 ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0',
           )}
         >
-          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile />
+          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} isMobile />
         </div>
       </div>
     </div>

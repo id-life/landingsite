@@ -16,6 +16,7 @@ export const THEME_TRANSITIONS = {
     '--audio-desc': '#999999',
     '--subscribe-border': '#57595C80',
     '--subscribe-bg': '#00000033',
+    '--gradient-rotate': '90deg',
   },
   [PAGE_IDS.SPECTRUM]: {
     '--gradient-via': '#C1111111',
@@ -49,6 +50,7 @@ export const THEME_TRANSITIONS = {
     '--audio-desc': '#222222',
     '--subscribe-border': '#ffffff',
     '--subscribe-bg': '#ffffff33',
+    '--gradient-rotate': '90deg',
   },
   [PAGE_IDS.INSIGHTS]: {
     '--gradient-from': '#FFFFFF',
@@ -64,6 +66,7 @@ export const THEME_TRANSITIONS = {
     '--audio-desc': '#222222',
     '--subscribe-border': '#ffffff',
     '--subscribe-bg': '#ffffff33',
+    '--gradient-rotate': '90deg',
   },
 } as const;
 
