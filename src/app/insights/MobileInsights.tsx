@@ -3,7 +3,7 @@
 import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
-import { useInsightsData, useInsightsWithGeoData } from '@/hooks/insights/fetch';
+import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
@@ -15,8 +15,6 @@ function MobileInsights() {
   const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
-  // Use the old API for podcasts (will be migrated to /podcast/list separately)
-  const { podcasts, isLoading: isPodcastsLoading } = useInsightsData();
   // Use the new API for news & talks
   const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
 
@@ -65,7 +63,7 @@ function MobileInsights() {
             innerPageIndex === 1 ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0',
           )}
         >
-          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} isMobile />
+          <PodcastSection isMobile />
         </div>
       </div>
     </div>
