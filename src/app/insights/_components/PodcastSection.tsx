@@ -47,7 +47,6 @@ export default function PodcastSection({ isMobile = false }: PodcastSectionProps
     const allPodcasts = podcastIDData || [];
     return allPodcasts
       .sort((a, b) => (b?.insightSequence || b?.sequence || 0) - (a?.insightSequence || a?.sequence || 0)) // 越大越靠前，优先使用insightSequence排序
-      .slice(0, 6) // 只显示前6个
       .map((item) => ({
         id: item.id,
         title: item.title,
