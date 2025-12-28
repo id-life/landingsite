@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useMemo, useRef } from 'react';
-import { useAtomValue } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
-import { PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
+import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import NavigationArrowButton from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
@@ -25,42 +25,49 @@ export type PodcastItem = {
 };
 
 type PodcastSectionProps = {
-  podcasts?: { id: number }[];
-  isLoading?: boolean;
   isMobile?: boolean;
 };
 
-export default function PodcastSection({ podcasts = [], isLoading, isMobile = false }: PodcastSectionProps) {
+export default function PodcastSection({ isMobile = false }: PodcastSectionProps) {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const swiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
-  const podcastIDList = useAtomValue(podcastIDAtom);
-  const podcastLTList = useAtomValue(podcastLTAtom);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156); // 播客卡片106 + 间距20 + 30
 
-  const allPodcasts = useMemo(() => [...podcastIDList, ...podcastLTList], [podcastIDList, podcastLTList]);
+  // 直接调用 /podcast/list 接口获取两个分类的播客
+  const { data: podcastIDData, isLoading: isLoadingID } = useQuery({
+    queryKey: ['podcast_list', 'podcast_id'],
+    queryFn: () => fetchPodcastList('podcast_id'),
+    select: (res) => (res.code === 200 ? res.data : []),
+  });
+
+  const { data: podcastLTData, isLoading: isLoadingLT } = useQuery({
+    queryKey: ['podcast_list', 'podcast_lt'],
+    queryFn: () => fetchPodcastList('podcast_lt'),
+    select: (res) => (res.code === 200 ? res.data : []),
+  });
+
+  const isLoading = isLoadingID || isLoadingLT;
 
   const podcastData = useMemo<PodcastItem[]>(() => {
-    return podcasts
-      .map((podcast) => {
-        const item = allPodcasts.find((p) => p.id === podcast.id);
-        if (!item) return null;
-        return {
-          id: item.id,
-          title: item.title,
-          subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === PlayList.PODCAST_ID ? '· 《医药群星》' : '· 龙门阵Long Talk'}`,
-          description: item.description || '',
-          duration: item.duration,
-          date: item.createdAt!,
-          xyzLink: item.xyzLink,
-          podcastLink: item.podcastLink,
-          spotifyLink: item.spotifyLink,
-        } as PodcastItem;
-      })
-      .filter((item): item is NonNullable<typeof item> => item !== null);
-  }, [podcasts, allPodcasts]);
+    const allPodcasts = [...(podcastIDData || []), ...(podcastLTData || [])];
+    return allPodcasts
+      .sort((a, b) => b.sequence - a.sequence)
+      .slice(0, 6) // 只显示前6个
+      .map((item) => ({
+        id: item.id,
+        title: item.title,
+        subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === 'podcast_id' ? '· 《医药群星》' : '· 龙门阵Long Talk'}`,
+        description: item.description || '',
+        duration: item.duration,
+        date: item.createdAt,
+        xyzLink: item.xyzLink,
+        podcastLink: item.podcastLink,
+        spotifyLink: item.spotifyLink,
+      }));
+  }, [podcastIDData, podcastLTData]);
 
   const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
 

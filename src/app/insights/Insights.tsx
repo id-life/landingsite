@@ -11,7 +11,7 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useInsightsData, useInsightsWithGeoData } from '@/hooks/insights/fetch';
+import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 
 export default function Insights() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -115,8 +115,6 @@ export default function Insights() {
     }
   }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
-  // Use the old API for podcasts (will be migrated to /podcast/list separately)
-  const { podcasts, isLoading: isPodcastsLoading } = useInsightsData();
   // Use the new API for news & talks
   const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
 
@@ -129,7 +127,7 @@ export default function Insights() {
         </div>
         {/* PODCAST section (bottom) - single row */}
         <div className="shrink-0">
-          <PodcastSection podcasts={podcasts} isLoading={isPodcastsLoading} />
+          <PodcastSection />
         </div>
       </div>
     </div>
