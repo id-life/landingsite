@@ -11,9 +11,9 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile();
 
   return (
-    <div>
+    <div className="min-h-screen">
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
-        <div className="max-w-[50rem]">
+        <div className="w-full max-w-[50rem]">
           <Suspense>
             <PodcastHeader />
             <PodcastNavTabs />

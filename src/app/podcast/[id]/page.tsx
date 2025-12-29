@@ -94,7 +94,7 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
           <h1 className="text-center text-xl font-semibold mobile:text-base">{data.title}</h1>
           <PodcastLinks data={data} />
         </div>
-        <img className="mx-auto h-75 object-cover mobile:h-45" alt="" src={data.detailMedia} />
+        {data?.detailMedia ? <img className="mx-auto h-75 object-cover mobile:h-45" alt="" src={data.detailMedia} /> : null}
         <div className="my-9 mt-7.5 text-sm font-medium mobile:mb-7.5 mobile:mt-6 mobile:text-xs/4.5">{data.description}</div>
         <PodcastContentTab data={data} />
         <PodcastPlayer data={data} />
