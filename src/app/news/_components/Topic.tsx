@@ -50,7 +50,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
             <h2 className="flex items-center gap-3 font-semibold text-white">
               <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8">{data.title}</span>
               {data.source && (
-                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 text-lg/8 font-bold uppercase text-orange backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4">
+                <span className="shrink-0 rounded bg-orange/20 px-2 py-0.5 font-oxanium text-lg/8 font-bold uppercase text-orange backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4">
                   {data.source}
                 </span>
               )}

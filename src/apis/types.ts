@@ -66,7 +66,6 @@ export type PodcastItem = {
   duration: number;
   podcastLink: string;
   sequence: number;
-  insightSequence?: number;
   title: string;
   detailMedia: string;
   url: string;

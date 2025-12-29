@@ -4,9 +4,13 @@ import { ReactNode } from 'react';
 import NewsFooter from './_components/NewsFooter';
 import NewsHeader from './_components/NewsHeader';
 import NewsStyle from './_components/NewsStyle';
+import NewsSubscribeFooter from './_components/NewsSubscribeFooter';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function NewsLayout({ children }: { children: ReactNode }) {
+  const isMobile = useIsMobile();
+
   return (
     <>
       <NewsStyle />
@@ -15,7 +19,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
         {children}
         <NewsFooter />
       </div>
-      <MobileFooter />
+      {isMobile ? <MobileFooter /> : <NewsSubscribeFooter />}
     </>
   );
 }

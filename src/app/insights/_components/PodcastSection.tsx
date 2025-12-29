@@ -46,7 +46,7 @@ export default function PodcastSection({ isMobile = false }: PodcastSectionProps
   const podcastData = useMemo<PodcastItem[]>(() => {
     const allPodcasts = podcastIDData || [];
     return allPodcasts
-      .sort((a, b) => (b?.insightSequence || b?.sequence || 0) - (a?.insightSequence || a?.sequence || 0)) // 越大越靠前，优先使用insightSequence排序
+      .sort((a, b) => (b?.sequence || 0) - (a?.sequence || 0)) // 越大越靠前，优先使用insightSequence排序
       .map((item) => ({
         id: item.id,
         title: item.title,
