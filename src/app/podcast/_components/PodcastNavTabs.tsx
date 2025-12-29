@@ -39,8 +39,16 @@ export default function PodcastNavTabs() {
                 isActive ? 'text-[#c11111]' : 'text-[#222]',
               )}
             >
-              <p className="text-sm/4">{english}</p>
-              <p className="text-sm/4">{chinese}</p>
+              {item.id === 'lt' ? (
+                <p className="whitespace-nowrap text-sm/4">
+                  {english} {chinese}
+                </p>
+              ) : (
+                <>
+                  <p className="text-sm/4">{english}</p>
+                  <p className="text-sm/4">{chinese}</p>
+                </>
+              )}
               {isActive && <div className="mx-auto mt-1.5 h-0.5 w-5 bg-[#c11111]" />}
             </div>
           </Link>

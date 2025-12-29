@@ -36,30 +36,21 @@ export default function PodcastSection({ isMobile = false }: PodcastSectionProps
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156); // 播客卡片106 + 间距20 + 30
 
-  // 直接调用 /podcast/list 接口获取两个分类的播客
-  const { data: podcastIDData, isLoading: isLoadingID } = useQuery({
+  // 只获取 podcast_id 分类的播客
+  const { data: podcastIDData, isLoading } = useQuery({
     queryKey: ['podcast_list', 'podcast_id'],
     queryFn: () => fetchPodcastList('podcast_id'),
     select: (res) => (res.code === 200 ? res.data : []),
   });
 
-  const { data: podcastLTData, isLoading: isLoadingLT } = useQuery({
-    queryKey: ['podcast_list', 'podcast_lt'],
-    queryFn: () => fetchPodcastList('podcast_lt'),
-    select: (res) => (res.code === 200 ? res.data : []),
-  });
-
-  const isLoading = isLoadingID || isLoadingLT;
-
   const podcastData = useMemo<PodcastItem[]>(() => {
-    const allPodcasts = [...(podcastIDData || []), ...(podcastLTData || [])];
+    const allPodcasts = podcastIDData || [];
     return allPodcasts
-      .sort((a, b) => b.sequence - a.sequence)
-      .slice(0, 6) // 只显示前6个
+      .sort((a, b) => (b?.sequence || 0) - (a?.sequence || 0)) // 越大越靠前，优先使用insightSequence排序
       .map((item) => ({
         id: item.id,
         title: item.title,
-        subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} ${item.category === 'podcast_id' ? '· 《医药群星》' : '· 龙门阵Long Talk'}`,
+        subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} · 《医药群星》`,
         description: item.description || '',
         duration: item.duration,
         date: item.createdAt,
@@ -67,7 +58,7 @@ export default function PodcastSection({ isMobile = false }: PodcastSectionProps
         podcastLink: item.podcastLink,
         spotifyLink: item.spotifyLink,
       }));
-  }, [podcastIDData, podcastLTData]);
+  }, [podcastIDData]);
 
   const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
 

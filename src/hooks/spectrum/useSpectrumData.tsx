@@ -174,8 +174,8 @@ export const useSpectrumData = () => {
         ],
       },
       {
-        title: 'Grant & Sponsorships',
-        titleCn: '赞助',
+        title: 'Proudly Sponsoring & Supporting',
+        titleCn: '本机构赞助支持',
         icon: <SponsorSVG />,
         links: [
           {
@@ -203,12 +203,6 @@ export const useSpectrumData = () => {
             size: 'h-15',
           },
           {
-            label: 'Vitalist Bay Summit',
-            routeKey: 'vitalist-bay-summit-grant',
-            icon: '/imgs/investments/sponsors/vitalist-bay.png',
-            size: 'h-12',
-          },
-          {
             label: '2060 Longevity Forum',
             routeKey: '2060-longevity-forum',
             icon: '/imgs/investments/sponsors/2060-longevity.png',
@@ -225,6 +219,12 @@ export const useSpectrumData = () => {
             routeKey: 'healthy-longevity-medicine-conference',
             icon: '/imgs/investments/sponsors/healthy-longevity.png',
             size: 'h-15',
+          },
+          {
+            label: 'Vitalist Bay Summit',
+            routeKey: 'vitalist-bay-summit-grant',
+            icon: '/imgs/investments/sponsors/vitalist-bay.png',
+            size: 'h-12',
           },
           {
             label: 'Cornerstone Non-profit Foundation',
