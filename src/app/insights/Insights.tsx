@@ -120,7 +120,7 @@ export default function Insights() {
 
   return (
     <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="desktop:scale-[0.9] desktop2k:origin-center desktop2k:scale-[0.95]">
+      <div className="desktop:scale-[0.9] desktop2k:origin-center desktop2k:scale-[0.8]">
         <div className="insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]">
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
           <div className="-mt-10">
