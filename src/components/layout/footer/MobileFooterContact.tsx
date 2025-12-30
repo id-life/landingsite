@@ -16,7 +16,6 @@ import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import clsx from 'clsx';
 import { useAtom } from 'jotai';
-import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -92,17 +91,8 @@ export default function MobileFooterContact() {
 
   return (
     <FloatingPortal>
-      <AnimatePresence>
-        <motion.div
-          animate={isSubscribeShow ? 'open' : 'close'}
-          variants={{
-            open: { scale: 1, bottom: 0 },
-            close: { scale: 0, bottom: '-10rem' },
-          }}
-          transition={{
-            duration: 0.5,
-            ease: 'easeInOut',
-          }}
+      {isSubscribeShow && (
+        <div
           ref={subscribeRef}
           className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
@@ -184,8 +174,8 @@ export default function MobileFooterContact() {
             <br />
             t- Biopolis Dr, #01-15, Singapore 138623
           </p>
-        </motion.div>
-      </AnimatePresence>
+        </div>
+      )}
     </FloatingPortal>
   );
 }

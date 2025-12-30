@@ -68,13 +68,7 @@ function MobileConnectGL() {
     cnChars.forEach((char, index) => {
       gsap.to(char, { opacity: 1, duration, delay: enTotalTime + index * staggerTime, ease: 'power2.out' });
     });
-
-    // After text animation completes, show footer with slide-up
-    const cnTotalTime = cnChars.length * staggerTime + duration;
-    gsap.delayedCall(enTotalTime + cnTotalTime + 0.3, () => {
-      setIsSubscribeShow(true);
-    });
-  }, [setIsSubscribeShow]);
+  }, []);
 
   // Setup entry animation timeline
   useEffect(() => {
@@ -130,6 +124,9 @@ function MobileConnectGL() {
   // Handle page entry/exit
   useEffect(() => {
     if (currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id) {
+      // 立即显示底栏，不等动画完成
+      setIsSubscribeShow(true);
+
       // Show canvas immediately
       gsap.set('#vision-canvas', { opacity: 1 });
       // Restore FixedConnect elements visibility
