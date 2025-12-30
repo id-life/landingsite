@@ -1,11 +1,11 @@
 'use client';
 
-import { mobileCurrentPageAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
 import gsap from 'gsap';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
@@ -17,6 +17,9 @@ SwiperType.use([FreeMode]);
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pageTransitionTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const spectrumRefs = useRef<HTMLDivElement[]>([]);
@@ -31,6 +34,7 @@ function MobileSpectrum() {
     const index = swiper.activeIndex;
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
+    setInnerPageIndex(index);
   };
 
   // 创建入场动画
@@ -96,8 +100,17 @@ function MobileSpectrum() {
   }, []);
 
   useEffect(() => {
+    if (innerPageNavigateTo === null || currentPage.id !== NAV_LIST[2].id) return;
+    swiperRef.current?.slideTo(innerPageNavigateTo);
+    setInnerPageNavigateTo(null);
+  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
+
+  useEffect(() => {
     if (currentPage.id === NAV_LIST[2].id) {
       setParticleActive(true);
+      setInnerPageIndex(0);
+      setInnerPageTotal(spectrumData.length - 1); // slidesPerView=2, 所以 total = length - 1
+      swiperRef.current?.slideTo(0);
       createEnterAnimation();
     } else {
       setParticleActive(false);
@@ -105,7 +118,8 @@ function MobileSpectrum() {
     }
     setMobileImageIdx1(1);
     setMobileImageIdx2(2);
-  }, [createEnterAnimation, createExitAnimation, currentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, spectrumData.length]);
 
   return (
     <div

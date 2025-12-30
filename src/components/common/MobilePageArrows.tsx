@@ -11,9 +11,8 @@ import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useEffect } from 'react';
 import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
   className?: string;
@@ -24,19 +23,19 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
-  const getTotal = useCallback(() => {
-    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    if (currentPage.id === NAV_LIST[5].id) return 2; // Insights 页有 2 个内部页面 (Podcast, News & Talks)
-    return 3; // Connect 页有 3 个内部页面
-  }, [currentPage]);
-
-  // 更新 innerPageTotal
+  // 更新 innerPageTotal (Portfolio/Spectrum 由各自组件动态设置)
   useEffect(() => {
-    const total = getTotal();
-    if (innerPageTotal !== total) {
-      setInnerPageTotal(total);
+    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
+      setInnerPageTotal(0);
+      return;
     }
-  }, [getTotal, setInnerPageTotal, innerPageTotal]);
+    // Portfolio 和 Spectrum 由各自组件动态设置 innerPageTotal
+    if (currentPage.id === NAV_LIST[1].id || currentPage.id === NAV_LIST[2].id) return;
+    // Insights 使用固定值
+    if (currentPage.id === NAV_LIST[5].id) {
+      setInnerPageTotal(2); // Insights 页有 2 个内部页面 (News & Talks, Podcast)
+    }
+  }, [currentPage, setInnerPageTotal]);
 
   const isConnectPage = useMemo(() => {
     // Connect页面不展示向下箭头
@@ -61,24 +60,21 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const { mobileNavChange } = useMobileNavigation();
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
-  const { sendValueShowEvent } = useConnectShowEvent();
 
   const handleClick = useThrottle(() => {
     if (mobileIsScrolling) return;
-    console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
-      // 有小进度条
+      // 有内页翻页
       if (innerPageIndex === 0 && isUp) {
-        // 小进度开头 往上翻
+        // 第一个内页往上翻 -> 跳到上一个主页面
         mobileNavChange(NAV_LIST[currentPageIndex - 1]);
         return;
       } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
-        // 最后一个小进度 往下翻
+        // 最后一个内页往下翻 -> 跳到下一个主页面
         mobileNavChange(NAV_LIST[currentPageIndex + 1]);
         return;
       }
       setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
-      sendValueShowEvent(innerPageIndex + (isUp ? -1 : 1), 'click');
       return;
     }
     mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);

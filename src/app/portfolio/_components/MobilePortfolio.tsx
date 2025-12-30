@@ -1,4 +1,4 @@
-import { mobileCurrentPageAtom, mobilePortfolioPageIndexAtom, mobilePortfolioPageNavigateToAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
@@ -23,8 +23,9 @@ function MobilePortfolio() {
   const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
   const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
   const swiperRef = useRef<SwiperType>();
-  const setMobilePortfolioPageIndex = useSetAtom(mobilePortfolioPageIndexAtom);
-  const [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo] = useAtom(mobilePortfolioPageNavigateToAtom);
+  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [particleActive, setParticleActive] = useState(false);
 
@@ -92,20 +93,23 @@ function MobilePortfolio() {
     setActiveIndex(index);
     setMobileImageIdx1(index + 1);
     setMobileImageIdx2(index + 2);
-    setMobilePortfolioPageIndex(index);
+    setInnerPageIndex(index);
   };
 
   useEffect(() => {
-    if (mobilePortfolioPageNavigateTo === null) return;
-    swiperRef.current?.slideTo(mobilePortfolioPageNavigateTo);
-    setMobilePortfolioPageNavigateTo(null);
-  }, [mobilePortfolioPageNavigateTo, setMobilePortfolioPageNavigateTo]);
+    if (innerPageNavigateTo === null || currentPage.id !== NAV_LIST[1].id) return;
+    swiperRef.current?.slideTo(innerPageNavigateTo);
+    setInnerPageNavigateTo(null);
+  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
 
   useEffect(() => {
     if (currentPage.id === NAV_LIST[1].id) {
       setParticleActive(true);
       setMobileImageIdx1(1);
       setMobileImageIdx2(2);
+      setInnerPageIndex(0);
+      setInnerPageTotal(portfolio.length - 1); // slidesPerView=2, 所以 total = length - 1
+      swiperRef.current?.slideTo(0);
       createEnterAnimation();
     } else {
       setParticleActive(false);
