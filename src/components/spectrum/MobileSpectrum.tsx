@@ -1,7 +1,6 @@
 'use client';
 
 import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
 import gsap from 'gsap';
@@ -14,6 +13,8 @@ import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
 
 SwiperType.use([FreeMode]);
+
+const PAGE_ID = 'spectrum_page';
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -100,13 +101,13 @@ function MobileSpectrum() {
   }, []);
 
   useEffect(() => {
-    if (innerPageNavigateTo === null || currentPage.id !== NAV_LIST[2].id) return;
+    if (innerPageNavigateTo === null || currentPage.id !== PAGE_ID) return;
     swiperRef.current?.slideTo(innerPageNavigateTo);
     setInnerPageNavigateTo(null);
   }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[2].id) {
+    if (currentPage.id === PAGE_ID) {
       setParticleActive(true);
       setInnerPageIndex(0);
       setInnerPageTotal(spectrumData.length - 1); // slidesPerView=2, 所以 total = length - 1
@@ -124,9 +125,9 @@ function MobileSpectrum() {
   return (
     <div
       ref={wrapperRef}
-      id={NAV_LIST[2].id}
+      id={PAGE_ID}
       className={cn('page-container-mobile relative text-white', {
-        hidden: currentPage?.id !== NAV_LIST[2].id,
+        hidden: currentPage?.id !== PAGE_ID,
       })}
     >
       <ParticleGL

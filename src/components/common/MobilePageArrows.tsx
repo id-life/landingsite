@@ -12,7 +12,7 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useEffect } from 'react';
-import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
+import { hasBlackArrow, hasInnerPage, NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
   className?: string;
@@ -25,21 +25,21 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   // 更新 innerPageTotal (Portfolio/Spectrum 由各自组件动态设置)
   useEffect(() => {
-    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
+    if (!hasInnerPage(currentPage.id)) {
       setInnerPageTotal(0);
       return;
     }
     // Portfolio 和 Spectrum 由各自组件动态设置 innerPageTotal
-    if (currentPage.id === NAV_LIST[1].id || currentPage.id === NAV_LIST[2].id) return;
+    if (currentPage.id === 'portfolio_page' || currentPage.id === 'spectrum_page') return;
     // Insights 使用固定值
-    if (currentPage.id === NAV_LIST[5].id) {
+    if (currentPage.id === 'insights_page') {
       setInnerPageTotal(2); // Insights 页有 2 个内部页面 (News & Talks, Podcast)
     }
   }, [currentPage, setInnerPageTotal]);
 
   const isConnectPage = useMemo(() => {
     // Connect页面不展示向下箭头
-    return currentPage.id === NAV_LIST[6].id;
+    return currentPage.id === 'connect_page';
   }, [currentPage.id]);
 
   return (
@@ -63,7 +63,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
 
   const handleClick = useThrottle(() => {
     if (mobileIsScrolling) return;
-    if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
+    if (hasInnerPage(currentPage.id)) {
       // 有内页翻页
       if (innerPageIndex === 0 && isUp) {
         // 第一个内页往上翻 -> 跳到上一个主页面
@@ -84,7 +84,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        BLACK_ARROW_LIST.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

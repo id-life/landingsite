@@ -1,7 +1,6 @@
 'use client';
 
 import { innerPageIndexAtom, innerPageNavigateToAtom, mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
 import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
@@ -9,6 +8,8 @@ import { useAtom, useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
 import PodcastSection from './_components/PodcastSection';
 import NewsAndTalksSection from './_components/NewsAndTalksSection';
+
+const PAGE_ID = 'insights_page';
 
 function MobileInsights() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -20,7 +21,7 @@ function MobileInsights() {
 
   // 监听 innerPageNavigateTo 变化来切换页面
   useEffect(() => {
-    if (innerPageNavigateTo !== null && currentPage?.id === NAV_LIST[5].id) {
+    if (innerPageNavigateTo !== null && currentPage?.id === PAGE_ID) {
       setInnerPageIndex(innerPageNavigateTo);
       setInnerPageNavigateTo(null);
     }
@@ -28,7 +29,7 @@ function MobileInsights() {
 
   // 页面进入/离开动画
   useEffect(() => {
-    if (currentPage?.id === NAV_LIST[5].id) {
+    if (currentPage?.id === PAGE_ID) {
       enterAnimate();
     } else {
       leaveAnimate();
@@ -39,9 +40,9 @@ function MobileInsights() {
 
   return (
     <div
-      id={NAV_LIST[5].id}
+      id={PAGE_ID}
       className={cn('page-container-mobile mt-20 flex h-[calc(100svh-8.75rem)] flex-col', {
-        hidden: currentPage?.id !== NAV_LIST[5].id,
+        hidden: currentPage?.id !== PAGE_ID,
       })}
     >
       {/* Content Area with Flip Animation */}

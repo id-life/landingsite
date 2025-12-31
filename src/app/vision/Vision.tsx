@@ -1,6 +1,5 @@
 import { currentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
-import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
@@ -8,6 +7,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
+import { PAGE_IDS } from '@/constants/pages';
+
+const PAGE_ID = 'vision_page';
 
 export default function Vision() {
   const wrapperRef = useRef(null);
@@ -44,9 +46,9 @@ export default function Vision() {
   useGSAP(
     () => {
       ScrollTrigger.create({
-        trigger: `#${NAV_LIST[0].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top bottom',
-        endTrigger: `#${NAV_LIST[1].id}`,
+        endTrigger: `#${PAGE_IDS.PORTFOLIO}`,
         end: 'top top',
         id: 'vision-trigger',
       });
@@ -57,8 +59,7 @@ export default function Vision() {
 
   useEffect(() => {
     if (!globalLoaded) return;
-    if (currentPage.id === NAV_LIST[0].id) {
-      console.log('vision setEnableDownJudge true');
+    if (currentPage.id === PAGE_ID) {
       setEnableDownJudge(true);
     } else {
       setEnableDownJudge(false);
@@ -66,7 +67,7 @@ export default function Vision() {
   }, [currentPage, globalLoaded, setEnableDownJudge]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[0].id} className="page-container">
+    <div ref={wrapperRef} id={PAGE_ID} className="page-container">
       <div ref={visionBottomRef} className="group pointer-events-none absolute inset-0 -z-10 select-none"></div>
     </div>
   );

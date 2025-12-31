@@ -17,6 +17,9 @@ import SpectrumItem from './SpectrumItem';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowSVG } from '@/components/svg';
 
+const PAGE_ID = 'spectrum_page';
+const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+
 function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
@@ -59,32 +62,27 @@ function Spectrum() {
   }, []);
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // engagement auto scroll to profile
+    // spectrum auto scroll to insights
     scrollFn: () => {
       if (
         !enableUpJudge ||
-        currentPage.id !== NAV_LIST[2].id ||
+        currentPage.id !== PAGE_ID ||
         window.isNavScrolling ||
         window.isSmootherScrolling ||
         window.isResizing
       )
         return;
-      const st = ScrollTrigger.getById('portfolio-trigger');
-      if (!st) {
-        // console.log('[DEBUG] [Spectrum] portfolio-trigger not found');
-        return;
-      }
-      // console.log('[DEBUG] [Spectrum] Starting UP auto-scroll to Portfolio');
+      const st = ScrollTrigger.getById('insights-scroll-trigger');
+      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
-          // console.log('[DEBUG] [Spectrum] UP Auto-scroll completed');
         },
       });
     },
@@ -97,7 +95,7 @@ function Spectrum() {
       // console.log('[DEBUG] [Spectrum] DOWN scrollFn called - enableJudge:', enableJudge, 'currentPage:', currentPage.id, 'isNavScrolling:', window.isNavScrolling);
       if (
         !enableJudge ||
-        currentPage.id !== NAV_LIST[2].id ||
+        currentPage.id !== PAGE_ID ||
         window.isNavScrolling ||
         window.isSmootherScrolling ||
         window.isResizing
@@ -126,8 +124,7 @@ function Spectrum() {
   });
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[2].id) {
-      console.log('spectrum setEnableUpJudge & setEnableDownJudge true');
+    if (currentPage.id === PAGE_ID) {
       setEnableUpJudge(true);
       setEnableDownJudge(true);
     } else {
@@ -139,7 +136,7 @@ function Spectrum() {
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[2].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
@@ -148,12 +145,12 @@ function Spectrum() {
         id: 'spectrum-trigger', // add an ID for later reference
         onEnter: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(spectrumNavItem);
           setActive(true);
         },
         onEnterBack: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[2]);
+          setCurrentPage(spectrumNavItem);
           setActive(true);
         },
         onLeaveBack: () => {
@@ -236,7 +233,7 @@ function Spectrum() {
   );
 
   return (
-    <div id={NAV_LIST[2].id} className="page-container spectrum">
+    <div id={PAGE_ID} className="page-container spectrum">
       <ParticleGL
         isStatic
         activeAnim={active}

@@ -15,14 +15,14 @@ export interface PageConfig {
   readonly onLeave?: () => void;
 }
 
-// 页面ID常量，提供类型安全
+// 页面ID常量，提供类型安全 (新顺序: Mission, Portfolio, Insights, Spectrum, Presence, Twin, Connect)
 export const PAGE_IDS = {
   VISION: NAV_LIST[0].id,
   PORTFOLIO: NAV_LIST[1].id,
-  SPECTRUM: NAV_LIST[2].id,
-  ENGAGEMENT: NAV_LIST[3].id,
-  TWIN: NAV_LIST[4].id,
-  INSIGHTS: NAV_LIST[5].id,
+  INSIGHTS: NAV_LIST[2].id,
+  SPECTRUM: NAV_LIST[3].id,
+  ENGAGEMENT: NAV_LIST[4].id,
+  TWIN: NAV_LIST[5].id,
   VALUE: NAV_LIST[6].id,
 } as const;
 
@@ -34,13 +34,26 @@ export type PageId = (typeof PAGE_IDS)[keyof typeof PAGE_IDS];
  * 注意：只包含原代码中实际存在动画的页面，保持完全一致性
  */
 export const PAGE_CONFIGS: readonly PageConfig[] = [
-  // Vision 页
+  // Vision uses default CSS LIGHT theme - no ScrollTrigger needed
+
+  // Portfolio 页
   {
-    id: PAGE_IDS.VISION,
+    id: PAGE_IDS.PORTFOLIO,
     scrollTrigger: {
-      trigger: `#${PAGE_IDS.VISION}`,
-      start: 'center top',
-      end: 'bottom top',
+      trigger: `#${PAGE_IDS.PORTFOLIO}`,
+      start: 'top bottom',
+      end: 'top center',
+      scrub: true,
+    },
+  },
+
+  // Insights 页
+  {
+    id: PAGE_IDS.INSIGHTS,
+    scrollTrigger: {
+      trigger: `#${PAGE_IDS.INSIGHTS}`,
+      start: 'top bottom',
+      end: 'top center',
       scrub: true,
     },
   },
@@ -72,17 +85,6 @@ export const PAGE_CONFIGS: readonly PageConfig[] = [
     id: PAGE_IDS.TWIN,
     scrollTrigger: {
       trigger: `#${PAGE_IDS.TWIN}`,
-      start: 'top bottom',
-      end: 'top center',
-      scrub: true,
-    },
-  },
-
-  // Insights 页
-  {
-    id: PAGE_IDS.INSIGHTS,
-    scrollTrigger: {
-      trigger: `#${PAGE_IDS.INSIGHTS}`,
       start: 'top bottom',
       end: 'top center',
       scrub: true,

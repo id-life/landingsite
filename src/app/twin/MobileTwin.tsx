@@ -1,5 +1,4 @@
 import { mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
@@ -13,13 +12,15 @@ import SwitchAnatomyCamera from './_components/mobile/SwitchAnatomyCamera';
 import { ModelType } from '@/components/twin/model/type';
 import YTBDemo from './_components/mobile/YTBDemo';
 
+const PAGE_ID = 'twin_page';
+
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [, setCurrentModel] = useAtom(currentModelAtom);
   const [, setCurrentModelType] = useAtom(currentModelTypeAtom);
   useEffect(() => {
-    if (currentPage !== NAV_LIST[4]) {
+    if (currentPage.id !== PAGE_ID) {
       resetModel();
     }
   }, [currentPage]);
@@ -38,9 +39,9 @@ export default function MobileTwin() {
 
   return (
     <div
-      id={NAV_LIST[4].id}
+      id={PAGE_ID}
       className={cn('page-container-mobile', {
-        hidden: currentPage.id !== NAV_LIST[4].id,
+        hidden: currentPage.id !== PAGE_ID,
       })}
     >
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">

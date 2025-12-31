@@ -52,10 +52,10 @@ function ConnectGL() {
   const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({ modelRef });
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // connect auto scroll to insights
+    // connect auto scroll to twin
     scrollFn: () => {
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('insights-scroll-trigger');
+      const st = ScrollTrigger.getById('twin-scroll-trigger');
       if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;

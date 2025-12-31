@@ -1,5 +1,5 @@
 import { currentPageAtom, innerPageIndexAtom, innerPageTotalAtom, navigateToAtom } from '@/atoms';
-import { NAV_LIST, NavItem } from '@/components/nav/nav';
+import { NavItem } from '@/components/nav/nav';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -21,14 +21,14 @@ export function useNavigation() {
       if (!smoother) return;
 
       const id = item.id;
-      if (id === NAV_LIST[0].id) {
+      if (id === 'vision_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false, '1px');
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
         window.history.pushState({}, '', '/');
-      } else if (id === NAV_LIST[1].id) {
+      } else if (id === 'portfolio_page') {
         // portfolio 页 偏移 & contact 需要处理
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${id}`, false);
@@ -41,7 +41,7 @@ export function useNavigation() {
           window.isNavScrolling = false;
         }, 500);
         window.history.pushState({}, '', '/portfolio');
-      } else if (id === NAV_LIST[2].id) {
+      } else if (id === 'spectrum_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
@@ -56,7 +56,7 @@ export function useNavigation() {
         const currentHash = window.location.hash;
         const newUrl = currentHash ? `/spectrum${currentHash}` : '/spectrum';
         window.history.pushState({}, '', newUrl);
-      } else if (id === NAV_LIST[3].id) {
+      } else if (id === 'engagement_page') {
         // engagement 页
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -72,7 +72,7 @@ export function useNavigation() {
         const currentHash = window.location.hash;
         const newUrl = currentHash ? `/presence${currentHash}` : '/presence';
         window.history.pushState({}, '', newUrl);
-      } else if (item.id === NAV_LIST[4].id) {
+      } else if (id === 'twin_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
         requestAnimationFrame(() => {
@@ -85,7 +85,7 @@ export function useNavigation() {
           window.isNavScrolling = false;
         }, 500);
         window.history.pushState({}, '', '/digitaltwin');
-      } else if (item.id === NAV_LIST[5].id) {
+      } else if (id === 'insights_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
         requestAnimationFrame(() => {
@@ -97,7 +97,7 @@ export function useNavigation() {
           window.isNavScrolling = false;
         }, 500);
         window.history.pushState({}, '', '/insights');
-      } else if (item.id === NAV_LIST[6].id) {
+      } else if (id === 'connect_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
         requestAnimationFrame(() => {
@@ -119,7 +119,7 @@ export function useNavigation() {
       }
 
       setCurrentPage(item);
-      if (id === NAV_LIST[6].id) {
+      if (id === 'connect_page') {
         setInnerPageIndex(0);
       } else {
         setInnerPageTotal(0);

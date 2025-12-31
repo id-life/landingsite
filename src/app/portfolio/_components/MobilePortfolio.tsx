@@ -1,6 +1,5 @@
 import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
-import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { cn } from '@/utils';
 import gsap from 'gsap';
@@ -15,6 +14,8 @@ import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 
 SwiperType.use([FreeMode]);
+
+const PAGE_ID = 'portfolio_page';
 
 function MobilePortfolio() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -97,13 +98,13 @@ function MobilePortfolio() {
   };
 
   useEffect(() => {
-    if (innerPageNavigateTo === null || currentPage.id !== NAV_LIST[1].id) return;
+    if (innerPageNavigateTo === null || currentPage.id !== PAGE_ID) return;
     swiperRef.current?.slideTo(innerPageNavigateTo);
     setInnerPageNavigateTo(null);
   }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[1].id) {
+    if (currentPage.id === PAGE_ID) {
       setParticleActive(true);
       setMobileImageIdx1(1);
       setMobileImageIdx2(2);
@@ -121,9 +122,9 @@ function MobilePortfolio() {
   return (
     <div
       ref={wrapperRef}
-      id={NAV_LIST[1].id}
+      id={PAGE_ID}
       className={cn('page-container-mobile text-white', {
-        hidden: currentPage?.id !== NAV_LIST[1].id,
+        hidden: currentPage?.id !== PAGE_ID,
       })}
     >
       <ParticleGL

@@ -21,6 +21,9 @@ import PortfolioItem from './PortfolioItem';
 
 SwiperType.use([FreeMode]);
 
+const PAGE_ID = 'portfolio_page';
+const portfolioNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+
 const ParticleGLWrapper = () => {
   const imageIdx = useAtomValue(imageIdxAtom);
   const activeAnim = useAtomValue(activeAnimAtom);
@@ -81,26 +84,16 @@ function Portfolio() {
     isUp: true,
   });
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // profile auto scroll to engagement
+    // portfolio auto scroll to insights
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Portfolio] DOWN scrollFn called - enableDownJudge:',
-      //   enableDownJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('spectrum-trigger');
-      if (!st) {
-        // console.log('[DEBUG] [Portfolio] spectrum-trigger not found');
-        return;
-      }
-      // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Spectrum');
+      const st = ScrollTrigger.getById('insights-scroll-trigger');
+      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
+        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
@@ -142,7 +135,7 @@ function Portfolio() {
   useGSAP(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: `#${NAV_LIST[1].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
@@ -150,16 +143,17 @@ function Portfolio() {
         id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[1]);
+          setCurrentPage(portfolioNavItem);
           setActiveAnim(true);
         },
         onEnterBack: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[1]);
+          setCurrentPage(portfolioNavItem);
           setActiveAnim(true);
         },
         onLeaveBack: () => {
           if (window.isResizing) return;
+          setCurrentPage(NAV_LIST[0]);
           setActiveAnim(false);
         },
       },
@@ -177,8 +171,7 @@ function Portfolio() {
   }, []);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[1].id) {
-      console.log('portfolio setEnableUpJudge true');
+    if (currentPage.id === PAGE_ID) {
       setEnableUpJudge(true);
       setEnableDownJudge(true);
     } else {
@@ -210,7 +203,7 @@ function Portfolio() {
   }, [handleFundClick, handleMouseEnter]);
 
   return (
-    <div ref={wrapperRef} id={NAV_LIST[1].id} className="page-container text-white">
+    <div ref={wrapperRef} id={PAGE_ID} className="page-container text-white">
       <ParticleGLWrapper />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <ParticleGLContainer />

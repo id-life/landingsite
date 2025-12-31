@@ -58,10 +58,10 @@ export default function Home() {
         <div id="content">
           <Vision />
           <Portfolio />
+          <Insights />
           <Spectrum />
           <Engagement />
           <Twin />
-          <Insights />
           <Connect />
           <Footer />
           <FooterContact />
