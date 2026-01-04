@@ -31,9 +31,9 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
     }
     // Portfolio 和 Spectrum 由各自组件动态设置 innerPageTotal
     if (currentPage.id === 'portfolio_page' || currentPage.id === 'spectrum_page') return;
-    // Insights 使用固定值
+    // Insights 使用固定值 - 现在只有 1 个页面（News & Talks 和 Podcast 同时显示）
     if (currentPage.id === 'insights_page') {
-      setInnerPageTotal(2); // Insights 页有 2 个内部页面 (News & Talks, Podcast)
+      setInnerPageTotal(1);
     }
   }, [currentPage, setInnerPageTotal]);
 
