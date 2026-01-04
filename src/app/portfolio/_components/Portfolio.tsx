@@ -110,7 +110,7 @@ function Portfolio() {
   usePortfolioItemAnimation(wrapperRef, portfolioRefs, setImageIdx);
 
   const handleFundClick = useCallback(
-    (item: PortfolioItemInfo) => () => {
+    (item: PortfolioItemInfo) => {
       trackEvent({
         name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
         label: item.title,
@@ -186,7 +186,7 @@ function Portfolio() {
         key={item.title}
         item={item}
         className="w-76"
-        onClick={handleFundClick(item)}
+        onItemClick={handleFundClick}
         onMouseEnter={handleMouseEnter(item)}
         ref={(element) => {
           if (!element) return;

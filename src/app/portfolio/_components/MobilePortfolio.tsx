@@ -1,52 +1,86 @@
 import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
 import Contact from '@/components/portfolio/Contact';
+import Toast from '@/components/common/Toast';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Swiper as SwiperType } from 'swiper';
-import { FreeMode } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 
-SwiperType.use([FreeMode]);
-
 const PAGE_ID = 'portfolio_page';
+const HEIGHT_THRESHOLD = 700;
 
 function MobilePortfolio() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const portfolioRefs = useRef<HTMLDivElement[]>([]);
-  const [mobileImageIdx1, setMobileImageIdx1] = useState(0);
-  const [mobileImageIdx2, setMobileImageIdx2] = useState(0);
-  const swiperRef = useRef<SwiperType>();
-  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
+  const [showToast, setShowToast] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
+  const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [particleActive, setParticleActive] = useState(false);
 
   const { trackEvent } = useGA();
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleFundClick = (item: PortfolioItemInfo) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-      label: item.title,
-    });
-    if (!item.link) return;
-    window.open(item.link, '_blank');
+  // Calculate items per page based on screen height
+  useEffect(() => {
+    const checkHeight = () => {
+      setItemsPerPage(window.innerHeight > HEIGHT_THRESHOLD ? 6 : 4);
+    };
+    checkHeight();
+    window.addEventListener('resize', checkHeight);
+    return () => window.removeEventListener('resize', checkHeight);
+  }, []);
+
+  // Cleanup toast timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
+
+  // Calculate particle indices for all grid cells on current page
+  const getParticleIndices = () => {
+    const base = innerPageIndex * itemsPerPage;
+    const itemCount = Math.min(itemsPerPage, portfolio.length - base);
+    return Array.from({ length: itemCount }, (_, i) => base + i + 1);
   };
+  const particleIndices = getParticleIndices();
+
+  const handleFundClick = useCallback(
+    (item: PortfolioItemInfo) => {
+      trackEvent({
+        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
+        label: item.title,
+      });
+      if (!item.link) return;
+      window.open(item.link, '_blank');
+    },
+    [trackEvent],
+  );
+
+  const handleCopy = useCallback(() => {
+    setShowToast(true);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    toastTimeoutRef.current = setTimeout(() => setShowToast(false), 3000);
+  }, []);
+
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-  // 创建入场动画
   const createEnterAnimation = useCallback(() => {
     if (!wrapperRef.current) return;
 
-    // 如果存在之前的动画，先清理
     if (timelineRef.current) {
       timelineRef.current.kill();
     }
@@ -56,19 +90,15 @@ function MobilePortfolio() {
 
     tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
 
-    // 标题动画
     tl.fromTo('.page2-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
 
-    // Portfolio items 动画
     tl.fromTo('.page2-fund', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
 
-    // Contact 部分动画
     tl.fromTo('.page2-contact', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
 
     return tl;
   }, []);
 
-  // 创建退场动画
   const createExitAnimation = useCallback(() => {
     if (!wrapperRef.current) return;
 
@@ -89,35 +119,26 @@ function MobilePortfolio() {
     return tl;
   }, []);
 
-  const handleSlideChange = (swiper: SwiperType) => {
-    const index = swiper.activeIndex;
-    setActiveIndex(index);
-    setMobileImageIdx1(index + 1);
-    setMobileImageIdx2(index + 2);
-    setInnerPageIndex(index);
-  };
-
+  // Handle inner page navigation
   useEffect(() => {
     if (innerPageNavigateTo === null || currentPage.id !== PAGE_ID) return;
-    swiperRef.current?.slideTo(innerPageNavigateTo);
+    setInnerPageIndex(innerPageNavigateTo);
     setInnerPageNavigateTo(null);
-  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
+  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo, setInnerPageIndex]);
 
+  // Page enter/exit animations and reset state
   useEffect(() => {
     if (currentPage.id === PAGE_ID) {
       setParticleActive(true);
-      setMobileImageIdx1(1);
-      setMobileImageIdx2(2);
       setInnerPageIndex(0);
-      setInnerPageTotal(portfolio.length - 1); // slidesPerView=2, 所以 total = length - 1
-      swiperRef.current?.slideTo(0);
+      setInnerPageTotal(totalPages);
       createEnterAnimation();
     } else {
       setParticleActive(false);
       createExitAnimation();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [currentPage, totalPages]);
 
   return (
     <div
@@ -127,71 +148,60 @@ function MobilePortfolio() {
         hidden: currentPage?.id !== PAGE_ID,
       })}
     >
-      <ParticleGL
-        imageIdx={mobileImageIdx1}
-        activeAnim={particleActive}
-        id="particle-container-mobile-1"
-        getSourceImgInfos={portfolioGetSourceImgInfos}
-      />
-      <ParticleGL
-        imageIdx={mobileImageIdx2}
-        activeAnim={particleActive}
-        id="particle-container-mobile-2"
-        getSourceImgInfos={portfolioGetSourceImgInfos}
-      />
-      <div className="relative flex h-[100svh] flex-col items-center pb-16 pt-24">
-        <div id="particle-gl">
-          <div
-            id="particle-container-mobile-1"
-            className={cn('particle-container particle-container-mobile-1', { active: particleActive })}
-          >
-            <div className="particle-mask"></div>
-          </div>
-          <div
-            id="particle-container-mobile-2"
-            className={cn('particle-container particle-container-mobile-2', { active: particleActive })}
-          >
-            <div className="particle-mask"></div>
-          </div>
+      {/* Render ParticleGL instances for each grid cell */}
+      {particleIndices.map((imageIdx, i) => (
+        <ParticleGL
+          key={`particle-gl-${i}`}
+          imageIdx={imageIdx}
+          activeAnim={particleActive}
+          id={`particle-container-mobile-${i + 1}`}
+          getSourceImgInfos={portfolioGetSourceImgInfos}
+        />
+      ))}
+      <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21">
+        <div id="particle-gl" data-layout={itemsPerPage === 6 ? '2x3' : '2x2'}>
+          {/* Render particle containers for each grid cell */}
+          {Array.from({ length: itemsPerPage }).map((_, i) => (
+            <div
+              key={`container-${i}`}
+              id={`particle-container-mobile-${i + 1}`}
+              className={cn('particle-container', `particle-container-mobile-${i + 1}`, {
+                active: particleActive && i < particleIndices.length,
+              })}
+            >
+              <div className="particle-mask"></div>
+            </div>
+          ))}
         </div>
-        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-xl/7.5">Portfolio</div>
-        <div className="page2-fund overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
-          <Swiper
-            direction="vertical"
-            slidesPerView={2}
-            spaceBetween={0}
-            className="h-[60svh]"
-            onBeforeInit={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-            onSlideChange={handleSlideChange}
-            freeMode={{
-              enabled: true,
-              sticky: true, // 添加这个让它能对齐到最近的slide
-              momentumBounce: true, // 添加反弹效果
-              momentumRatio: 0.5, // 降低动量比率使滑动不会太滑
-              momentumVelocityRatio: 0.5, // 降低速度比率
-              minimumVelocity: 0.1, // 设置最小速度阈值
-            }}
-          >
-            {portfolio.map((item, index) => (
-              <SwiperSlide key={item.title} className="h-[30svh]">
-                <PortfolioItem
-                  item={item}
-                  onClick={() => handleFundClick(item)}
-                  ref={(element) => {
-                    if (!element) return;
-                    portfolioRefs.current[index] = element;
-                  }}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
+          Portfolio
         </div>
-        <div className="page2-contact flex-center relative h-12 w-full">
-          <Contact />
+        <div className="page2-fund relative flex-1 overflow-hidden px-4 mobile:mt-2 mobile:w-full">
+          {/* Paginated grid pages */}
+          {Array.from({ length: totalPages }).map((_, pageIdx) => (
+            <div
+              key={pageIdx}
+              className={cn(
+                'absolute inset-0 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
+                itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
+                innerPageIndex === pageIdx
+                  ? 'translate-y-0 opacity-100'
+                  : innerPageIndex > pageIdx
+                    ? '-translate-y-full opacity-0'
+                    : 'translate-y-full opacity-0',
+              )}
+            >
+              {portfolio.slice(pageIdx * itemsPerPage, (pageIdx + 1) * itemsPerPage).map((item) => (
+                <PortfolioItem key={item.title} item={item} onItemClick={handleFundClick} isGridMode />
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="page2-contact fixed bottom-6 left-5 z-10">
+          <Contact onCopy={handleCopy} />
         </div>
       </div>
+      <Toast visible={showToast} message="Copied successfully" />
     </div>
   );
 }
