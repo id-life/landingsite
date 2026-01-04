@@ -1,6 +1,8 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import ContactEmailSVG from '@/../public/svgs/contact-email.svg?component';
+import HomeSVG from '@/../public/svgs/home.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
@@ -94,19 +96,56 @@ export default function MobileFooterContact() {
       {isSubscribeShow && (
         <div
           ref={subscribeRef}
-          className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
+          className="page-footer fixed inset-x-0 bottom-0 z-[102] origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
         >
-          <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
-          <form id="subscribe-form" className="relative mt-7.5 flex gap-3" onSubmit={handleSubmit(onFormSubmit)}>
+          <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+          <div className="mt-3 flex justify-center gap-5">
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Youtube)}
+              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+            >
+              <CornerBorder hoverColor="#000" />
+              <YoutubeSVG className="size-5 fill-black" />
+              <span className="font-oxanium text-xs/3 font-bold">YOUTUBE</span>
+            </div>
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
+              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+            >
+              <CornerBorder hoverColor="#000" />
+              <LinkedinSVG className="size-5 fill-black" />
+              <span className="font-oxanium text-xs/3 font-bold">LINKEDIN</span>
+            </div>
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Media)}
+              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+            >
+              <CornerBorder hoverColor="#000" />
+              <MediaSVG className="size-5 fill-black" />
+              <span className="font-oxanium text-xs/3 font-bold">MEDIAKIT</span>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold uppercase">
+            <div className="flex items-center gap-1">
+              <HomeSVG className="size-5" />
+              <span>3 BIOPOLIS DR, #01-15, SINGAPORE 138623</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <ContactEmailSVG className="size-5" />
+              <span>CONTACT@ID.LIFE</span>
+            </div>
+          </div>
+          <div className="my-4 h-px w-full bg-black/20" />
+          <form id="subscribe-form" className="relative flex justify-between" onSubmit={handleSubmit(onFormSubmit)}>
             {errors.EMAIL && (
               <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
             )}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className={clsx('flex-center h-11 flex-1 border-2 p-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
+            <div className={clsx('flex-center h-11 w-[233px] border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
               <input
-                className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
+                className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
                 placeholder="Please enter email"
                 defaultValue=""
                 {...register('EMAIL', {
@@ -118,7 +157,7 @@ export default function MobileFooterContact() {
                 })}
               />
             </div>
-            <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-red-600 text-white">
+            <div className="footer-submit-clip relative h-11 w-[90px] bg-red-600 text-white">
               {isSubmitting ? (
                 <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
                   <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
@@ -130,7 +169,7 @@ export default function MobileFooterContact() {
                 </div>
               ) : null}
               <input
-                className={cn('w-full cursor-pointer py-3 text-base/5 font-semibold', {
+                className={cn('w-full cursor-pointer py-3 font-poppins text-base/5 font-semibold', {
                   'text-red-600': isSubmitting || isSubmitted,
                 })}
                 type="submit"
@@ -138,42 +177,10 @@ export default function MobileFooterContact() {
               />
             </div>
           </form>
-          <div className="mt-2 flex gap-1 font-poppins text-xs font-semibold">
-            <InfoSVG className="h-4" />
+          <div className="mt-3.5 flex gap-1.5 font-poppins text-xs/5 font-semibold text-black/50">
+            <InfoSVG className="size-4 shrink-0" />
             Join our longevity circle for priority access to pioneer research
           </div>
-          <div className="mb-3 mt-4 h-px w-full bg-black/10" />
-          <div className="flex-center gap-5">
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-              className="flex-center relative cursor-pointer gap-1 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <YoutubeSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">YOUTUBE</span>
-            </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-              className="flex-center relative cursor-pointer gap-0.5 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <LinkedinSVG className="-mt-0.5 size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">LINKEDIN</span>
-            </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Media)}
-              className="flex-center relative cursor-pointer gap-0.5 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <MediaSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">MEDIAKIT</span>
-            </div>
-          </div>
-          <p className="mt-6 text-center font-oxanium text-[.625rem]/3 font-semibold uppercase opacity-60">
-            e- mail: contact@id.life
-            <br />
-            t- Biopolis Dr, #01-15, Singapore 138623
-          </p>
         </div>
       )}
     </FloatingPortal>
