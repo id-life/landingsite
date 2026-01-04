@@ -45,11 +45,9 @@ const CarouselWrapper = memo(() => {
         itemHeight={48}
         duration={5}
         transition={0.6}
-        className={cn('scroll-title fixed bottom-10 left-10 z-30 w-[25rem]')}
+        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]')}
       >
-        {CAROUSEL_ITEMS?.map((item) => (
-          <CarouselItem key={item.cnText ?? item.text} {...item} />
-        ))}
+        {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
       </VerticalCarousel>
     )
   );
