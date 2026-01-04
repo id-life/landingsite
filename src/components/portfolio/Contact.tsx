@@ -27,18 +27,18 @@ export default function Contact({ onCopy }: ContactProps) {
   return (
     <div
       onClick={handleClick}
-      className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 hover:text-red-600 mobile:w-[7.125rem] mobile:text-xs/5"
+      className="group relative w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-red-600"
     >
       <SubscribeBorderSVG
         preserveAspectRatio="none"
-        className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 group-hover:stroke-red-600"
+        className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 notMobile:group-hover:stroke-red-600"
       />
       <div className="flex-center h-full w-full gap-4 mobile:gap-1">
         <span className="w-36 mobile:w-[5.625rem] mobile:text-[.625rem]/3.5 mobile:uppercase">contact@id.life</span>
         {state.value ? (
-          <CheckmarkSVG className="aspect-square size-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+          <CheckmarkSVG className="aspect-square size-3.5 stroke-white duration-300 notMobile:group-hover:stroke-red-600" />
         ) : (
-          <CopySVG className="aspect-square size-3.5 stroke-white duration-300 group-hover:stroke-red-600" />
+          <CopySVG className="aspect-square size-3.5 stroke-white duration-300 notMobile:group-hover:stroke-red-600" />
         )}
       </div>
     </div>

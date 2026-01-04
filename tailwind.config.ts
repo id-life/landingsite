@@ -13,6 +13,7 @@ const config: Config = {
     extend: {
       screens: {
         mobile: { max: '768px' },
+        notMobile: { min: '769px' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },
@@ -102,6 +103,7 @@ const config: Config = {
           800: '#FF1717',
         },
         green: {
+          DEFAULT: '#1EDB8C',
           600: '#318135',
         },
         yellow: {

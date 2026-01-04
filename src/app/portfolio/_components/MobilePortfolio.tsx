@@ -10,6 +10,7 @@ import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './port
 import PortfolioItem from './PortfolioItem';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useRetimer } from '@/hooks/useRetimer';
 
 const PAGE_ID = 'portfolio_page';
 const HEIGHT_THRESHOLD = 700;
@@ -25,7 +26,7 @@ function MobilePortfolio() {
   const [particleActive, setParticleActive] = useState(false);
 
   const { trackEvent } = useGA();
-  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const retimer = useRetimer();
 
   // Calculate items per page based on screen height
   useEffect(() => {
@@ -35,15 +36,6 @@ function MobilePortfolio() {
     checkHeight();
     window.addEventListener('resize', checkHeight);
     return () => window.removeEventListener('resize', checkHeight);
-  }, []);
-
-  // Cleanup toast timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
-    };
   }, []);
 
   const totalPages = Math.ceil(portfolio.length / itemsPerPage);
@@ -70,11 +62,8 @@ function MobilePortfolio() {
 
   const handleCopy = useCallback(() => {
     setShowToast(true);
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-    toastTimeoutRef.current = setTimeout(() => setShowToast(false), 3000);
-  }, []);
+    retimer(setTimeout(() => setShowToast(false), 3000));
+  }, [retimer]);
 
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
