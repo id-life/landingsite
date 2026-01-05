@@ -1,4 +1,4 @@
-import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
@@ -80,7 +80,13 @@ export function MobileWorldMapDotPoint({
           isActive={isActive}
         />
         {/* 标签 */}
-        <motion.div className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.div
+          className={cn(
+            '-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium',
+            MOBILE_MAP_SCALE.labelTextClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           {label ? `${label}, ` : ''}
           {country}
           {isActive && (

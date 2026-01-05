@@ -5,6 +5,7 @@ import { MeetingSVG, SponsorSVG, ArrowSVG } from '../svg';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { VideoWithPoster } from './VideoWithPoster';
 import FeatherImg from './FeatherImg';
+import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
@@ -29,7 +30,7 @@ export function PulseDot({
   isActive?: boolean;
 }) {
   return (
-    <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
+    <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
       <svg
         width={svgSize}
         height={svgSize}
@@ -331,13 +332,25 @@ export function MobileConferenceBadgesWithVideo({
 }) {
   return (
     <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
-      <div className="relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
-        <MeetingSVG className="size-4 fill-purple" />
+      <div
+        className={cn(
+          'relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1',
+          MOBILE_MAP_SCALE.badgeTextClass,
+          'font-semibold text-purple backdrop-blur-2xl',
+        )}
+      >
+        <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
         Conference
       </div>
       {(isSponsor || extraSponsor) && (
-        <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
-          <SponsorSVG className="size-5 fill-orange" />
+        <div
+          className={cn(
+            'relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1',
+            MOBILE_MAP_SCALE.badgeTextClass,
+            'font-semibold text-orange backdrop-blur-2xl',
+          )}
+        >
+          <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
           Sponsorship
         </div>
       )}
@@ -400,10 +413,16 @@ export function MobileContentSection({
         duration: 0.3,
         type: 'easeInOut',
       }}
-      className={cn('flex h-full max-w-[20rem] flex-col items-center gap-4 font-oxanium')}
+      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-4 font-oxanium')}
     >
       {title && (
-        <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+        <h3
+          className={cn(
+            'cursor-pointer whitespace-nowrap text-center',
+            MOBILE_MAP_SCALE.contentTitleClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           <span className="mr-2 whitespace-pre-wrap">{title}</span>
           {/*{period}*/}
         </h3>
@@ -420,7 +439,7 @@ export function MobileContentSection({
             className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
           >
             {imgs.map((img) => (
-              <FeatherImg className="h-[6.875rem] w-[12.5rem]" key={img.src} src={img.src} alt={img.alt} />
+              <FeatherImg className={MOBILE_MAP_SCALE.contentImageClass} key={img.src} src={img.src} alt={img.alt} />
             ))}
           </div>
         ) : null}

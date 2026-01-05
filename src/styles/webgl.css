@@ -85,12 +85,79 @@
   top: 50%;
 }
 
+/* Legacy mobile spectrum particles (kept for compatibility) */
 #spectrum-particle-container-mobile-1.particle-container-mobile-1 {
   top: calc(50% - 8rem);
 }
 
 #spectrum-particle-container-mobile-2.particle-container-mobile-2 {
   top: calc(50% + 9rem);
+}
+
+/* Spectrum Page 0 - 2x2 grid particles */
+.spectrum-particle-p0-tl {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 35%;
+  left: 25%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+.spectrum-particle-p0-tr {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 35%;
+  left: 75%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+.spectrum-particle-p0-bl {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 72%;
+  left: 25%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+.spectrum-particle-p0-br {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 72%;
+  left: 75%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+/* Spectrum Page 0 particles active state */
+.spectrum-particle-p0-tl.active,
+.spectrum-particle-p0-tr.active,
+.spectrum-particle-p0-bl.active,
+.spectrum-particle-p0-br.active {
+  opacity: 0.6;
+  pointer-events: auto;
+}
+
+/* Spectrum Page 1 - centered sponsor background */
+.spectrum-particle-p1 {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+}
+
+.spectrum-particle-p1.active {
+  opacity: 0.4;
+  pointer-events: auto;
 }
 
 .particle-container.active {

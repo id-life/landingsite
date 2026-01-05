@@ -34,62 +34,96 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
   color: '#C11111',
 };
 
+// ============================================================================
+// Mobile Map Scaling Constants - Adjust these to change overall mobile map scaling
+// ============================================================================
+export const MOBILE_MAP_SCALE = {
+  // Base scale multiplier (1.0 = current, 1.2 = 20% larger, etc.)
+  baseScale: 1.2,
+
+  // Dot container size (Tailwind class: size-X)
+  dotContainerSize: 'size-7', // default: size-6 (24px), size-7 = 28px
+
+  // Location label text size (Tailwind class: text-X/Y)
+  labelTextClass: 'text-lg/6', // default: text-base/5 (16px), text-lg = 18px
+
+  // Region icon size (Tailwind class: size-X)
+  regionIconSize: 'size-6', // default: size-5.5 (22px), size-6 = 24px
+
+  // Badge text size (Tailwind class: text-X/Y)
+  badgeTextClass: 'text-base/5', // default: text-sm/4 (14px), text-base = 16px
+
+  // Badge icon size (Tailwind class: size-X)
+  badgeIconSize: 'size-5', // default: size-4 (16px), size-5 = 20px
+
+  // Content image dimensions
+  contentImageClass: 'h-[8.25rem] w-[15rem]', // default: h-[6.875rem] w-[12.5rem] (110px × 200px)
+
+  // Content max width
+  contentMaxWidth: 'max-w-[24rem]', // default: max-w-[20rem] (320px)
+
+  // Content title text size
+  contentTitleClass: 'text-2xl/7', // default: text-xl/6 (20px), text-2xl = 24px
+};
+
 export type MapRegionDotData = {
   lat: number;
   lng: number;
   icon?: ReactNode;
 };
 
+// Region icon size: mobile uses MOBILE_MAP_SCALE.regionIconSize (default: size-6)
+// To change: update MOBILE_MAP_SCALE.regionIconSize AND the mobile:size-X classes below
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 40,
     lng: -106,
-    icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
+    icon: <AmericaSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 33,
     lng: 21,
-    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-6" />,
   },
   {
     lat: -14,
     lng: 97,
-    icon: <SingaporeSVG className="size-7 mobile:size-5.5" />,
+    icon: <SingaporeSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 30,
     lng: 99,
-    icon: <ChineseSVG className="size-7 mobile:size-5.5" />,
+    icon: <ChineseSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: -1,
     lng: -98,
-    icon: <HondurasSVG className="size-7 mobile:size-5.5" />,
+    icon: <HondurasSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 5,
     lng: 100,
-    icon: <ThailandSVG className="size-7 mobile:size-5.5" />,
+    icon: <ThailandSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 55,
     lng: -10,
-    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-6" />,
   },
   {
     lat: 64,
     lng: 8,
-    icon: <DenmarkSVG className="size-7 mobile:size-5.5" />,
+    icon: <DenmarkSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 42,
     lng: 0,
-    icon: <FranceSVG className="size-7 mobile:size-5.5" />,
+    icon: <FranceSVG className="size-7 mobile:size-6" />,
   },
   {
     lat: 13,
     lng: 51,
-    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-6" />,
   },
 ];
 

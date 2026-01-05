@@ -1,5 +1,5 @@
 import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
-import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
@@ -71,7 +71,7 @@ export function MobileWorldMapSponsorDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
+        <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
             width={svgSize}
             height={svgSize}
@@ -131,7 +131,13 @@ export function MobileWorldMapSponsorDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p
+          className={cn(
+            '-ml-1.5 flex items-center whitespace-nowrap font-oxanium',
+            MOBILE_MAP_SCALE.labelTextClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           {title}
           <AnimatePresence>
             {isActive ? (
@@ -141,9 +147,13 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
+                    className={cn(
+                      'flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1',
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-purple backdrop-blur-2xl',
+                    )}
                   >
-                    <MeetingSVG className="size-4 fill-purple" />
+                    <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
                     Conference
                   </motion.div>
                 ) : (
@@ -151,9 +161,13 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                    className={cn(
+                      'flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1',
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-orange backdrop-blur-2xl',
+                    )}
                   >
-                    <SponsorSVG className="size-4 fill-orange" />
+                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
                 )}
@@ -162,9 +176,13 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                    className={cn(
+                      '-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1',
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-orange backdrop-blur-2xl',
+                    )}
                   >
-                    <SponsorSVG className="size-4 fill-orange" />
+                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {extraText}
                   </motion.span>
                 )}

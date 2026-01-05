@@ -6,15 +6,13 @@ import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Swiper as SwiperType } from 'swiper';
-import { FreeMode } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import MobileSpectrumItem from './MobileSpectrumItem';
-
-SwiperType.use([FreeMode]);
+import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 
 const PAGE_ID = 'spectrum_page';
+const TOTAL_INNER_PAGES = 2; // Page 0: main items, Page 1: sponsors
+const PARTICLE_RESTART_DELAY = 50; // Delay in ms before activating particles on page entry
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -23,26 +21,30 @@ function MobileSpectrum() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pageTransitionTimelineRef = useRef<gsap.core.Timeline | null>(null);
-  const spectrumRefs = useRef<HTMLDivElement[]>([]);
-  const [mobileImageIdx1, setMobileImageIdx1] = useState(1);
-  const [mobileImageIdx2, setMobileImageIdx2] = useState(2);
-  const swiperRef = useRef<SwiperType>();
+  const page0Ref = useRef<HTMLDivElement>(null);
+  const page1Ref = useRef<HTMLDivElement>(null);
+  const particleP0Ref = useRef<HTMLDivElement>(null);
+  const particleP1Ref = useRef<HTMLDivElement>(null);
+  const [currentInnerPage, setCurrentInnerPage] = useState(0);
+  const currentInnerPageRef = useRef(currentInnerPage);
   const [particleActive, setParticleActive] = useState(false);
+  // Separate active states for each page's particles to allow crossfade
+  const [particleP0Active, setParticleP0Active] = useState(true);
+  const [particleP1Active, setParticleP1Active] = useState(false);
+  // Key to force ParticleGL remount on page entry (restarts animation from random positions)
+  const [particleKey, setParticleKey] = useState(0);
 
-  const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
+  const { spectrumMainItems, spectrumSponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
 
-  const handleSlideChange = (swiper: SwiperType) => {
-    const index = swiper.activeIndex;
-    setMobileImageIdx1(index + 1);
-    setMobileImageIdx2(index + 2);
-    setInnerPageIndex(index);
-  };
+  // Keep ref in sync with state
+  useEffect(() => {
+    currentInnerPageRef.current = currentInnerPage;
+  }, [currentInnerPage]);
 
-  // 创建入场动画
+  // Create enter animation
   const createEnterAnimation = useCallback(() => {
     if (!wrapperRef.current) return;
 
-    // 如果存在之前的动画，先清理
     if (pageTransitionTimelineRef.current) pageTransitionTimelineRef.current.kill();
 
     const tl = gsap.timeline();
@@ -50,7 +52,7 @@ function MobileSpectrum() {
 
     tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
 
-    // 标题动画
+    // Title animation
     tl.fromTo(
       '.spectrum-title',
       { opacity: 0, y: 30 },
@@ -63,9 +65,22 @@ function MobileSpectrum() {
       '-=0.6',
     );
 
-    // Portfolio items 动画
+    // Subtitle animation
     tl.fromTo(
-      '.spectrum-fund',
+      '.spectrum-subtitle',
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+      },
+      '-=0.5',
+    );
+
+    // Content animation
+    tl.fromTo(
+      '.spectrum-content',
       { opacity: 0, y: 30 },
       {
         opacity: 1,
@@ -73,13 +88,13 @@ function MobileSpectrum() {
         duration: 0.8,
         ease: 'power2.out',
       },
-      '-=0.6',
+      '-=0.4',
     );
 
     return tl;
   }, []);
 
-  // 创建退场动画
+  // Create exit animation
   const createExitAnimation = useCallback(() => {
     if (!wrapperRef.current) return;
 
@@ -100,27 +115,174 @@ function MobileSpectrum() {
     return tl;
   }, []);
 
+  // Slide transition between inner pages
+  const slideToPage = useCallback(
+    (targetPage: number) => {
+      if (targetPage === currentInnerPageRef.current) return;
+      if (targetPage < 0 || targetPage >= TOTAL_INNER_PAGES) return;
+
+      const isForward = targetPage > currentInnerPageRef.current;
+      const currentRef = currentInnerPageRef.current === 0 ? page0Ref : page1Ref;
+      const targetRef = targetPage === 0 ? page0Ref : page1Ref;
+      const currentParticleRef = currentInnerPageRef.current === 0 ? particleP0Ref : particleP1Ref;
+      const targetParticleRef = targetPage === 0 ? particleP0Ref : particleP1Ref;
+
+      if (!currentRef.current || !targetRef.current) return;
+
+      // Kill any ongoing transition
+      if (pageTransitionTimelineRef.current) {
+        pageTransitionTimelineRef.current.kill();
+      }
+
+      // Activate target particle animation before transition starts
+      if (targetPage === 0) {
+        setParticleP0Active(true);
+      } else {
+        setParticleP1Active(true);
+      }
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          const previousPage = currentInnerPageRef.current;
+          currentInnerPageRef.current = targetPage;
+          setCurrentInnerPage(targetPage);
+          setInnerPageIndex(targetPage);
+          // Deactivate previous particle after transition
+          if (previousPage === 0) {
+            setParticleP0Active(false);
+          } else {
+            setParticleP1Active(false);
+          }
+        },
+      });
+      pageTransitionTimelineRef.current = tl;
+
+      // Set initial position for target page
+      gsap.set(targetRef.current, {
+        y: isForward ? '100%' : '-100%',
+        opacity: 1,
+        display: 'flex',
+      });
+
+      // Set initial state for target particle container
+      if (targetParticleRef.current) {
+        gsap.set(targetParticleRef.current, {
+          opacity: 0,
+          display: 'block',
+        });
+      }
+
+      // Animate current page out and target page in
+      tl.to(
+        currentRef.current,
+        {
+          y: isForward ? '-100%' : '100%',
+          duration: 0.6,
+          ease: 'power2.inOut',
+        },
+        0,
+      );
+
+      tl.to(
+        targetRef.current,
+        {
+          y: '0%',
+          duration: 0.6,
+          ease: 'power2.inOut',
+        },
+        0,
+      );
+
+      // Crossfade particles - fade out current, fade in target
+      if (currentParticleRef.current) {
+        tl.to(
+          currentParticleRef.current,
+          {
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.inOut',
+          },
+          0,
+        );
+      }
+
+      if (targetParticleRef.current) {
+        tl.to(
+          targetParticleRef.current,
+          {
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.inOut',
+          },
+          0.1, // Slight delay for crossfade effect
+        );
+      }
+
+      tl.set(currentRef.current, { display: 'none' });
+      if (currentParticleRef.current) {
+        tl.set(currentParticleRef.current, { display: 'none' });
+      }
+    },
+    [setInnerPageIndex],
+  );
+
+  // Handle navigation from MobilePageArrows
   useEffect(() => {
     if (innerPageNavigateTo === null || currentPage.id !== PAGE_ID) return;
-    swiperRef.current?.slideTo(innerPageNavigateTo);
+    slideToPage(innerPageNavigateTo);
     setInnerPageNavigateTo(null);
-  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo]);
+  }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo, slideToPage]);
 
+  // Handle page activation/deactivation
   useEffect(() => {
     if (currentPage.id === PAGE_ID) {
-      setParticleActive(true);
+      // Reset to initial state first
+      setCurrentInnerPage(0);
       setInnerPageIndex(0);
-      setInnerPageTotal(spectrumData.length - 1); // slidesPerView=2, 所以 total = length - 1
-      swiperRef.current?.slideTo(0);
+      setInnerPageTotal(TOTAL_INNER_PAGES);
+
+      // Increment particleKey to force ParticleGL remount (restarts animation)
+      setParticleKey((prev) => prev + 1);
+
+      // First deactivate particles to ensure a clean restart
+      setParticleActive(false);
+      setParticleP0Active(false);
+      setParticleP1Active(false);
+
+      // Reset page positions immediately
+      if (page0Ref.current) {
+        gsap.set(page0Ref.current, { y: '0%', opacity: 1, display: 'flex' });
+      }
+      if (page1Ref.current) {
+        gsap.set(page1Ref.current, { y: '100%', opacity: 1, display: 'none' });
+      }
+
+      // Reset particle container positions immediately
+      if (particleP0Ref.current) {
+        gsap.set(particleP0Ref.current, { opacity: 1, display: 'block' });
+      }
+      if (particleP1Ref.current) {
+        gsap.set(particleP1Ref.current, { opacity: 0, display: 'none' });
+      }
+
+      // Activate particles after a brief delay to ensure clean restart cycle
+      const timer = setTimeout(() => {
+        setParticleP0Active(true);
+        setParticleP1Active(false);
+        setParticleActive(true);
+      }, PARTICLE_RESTART_DELAY);
+
       createEnterAnimation();
+
+      return () => clearTimeout(timer);
     } else {
       setParticleActive(false);
+      setParticleP0Active(false);
+      setParticleP1Active(false);
       createExitAnimation();
     }
-    setMobileImageIdx1(1);
-    setMobileImageIdx2(2);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, spectrumData.length]);
+  }, [currentPage]);
 
   return (
     <div
@@ -130,70 +292,118 @@ function MobileSpectrum() {
         hidden: currentPage?.id !== PAGE_ID,
       })}
     >
+      {/* Page 0 Particles - 2x2 grid */}
       <ParticleGL
+        key={`spectrum-p0-tl-${particleKey}`}
         isStatic
-        imageIdx={mobileImageIdx1}
-        activeAnim={particleActive}
-        id="spectrum-particle-container-mobile-1"
+        imageIdx={1}
+        activeAnim={particleActive && particleP0Active}
+        id="spectrum-particle-container-mobile-p0-tl"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
       <ParticleGL
+        key={`spectrum-p0-tr-${particleKey}`}
         isStatic
-        imageIdx={mobileImageIdx2}
-        activeAnim={particleActive}
-        id="spectrum-particle-container-mobile-2"
+        imageIdx={2}
+        activeAnim={particleActive && particleP0Active}
+        id="spectrum-particle-container-mobile-p0-tr"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
-      <div className="relative flex h-[100svh] flex-col items-center justify-center pb-16 pt-12">
-        <div id="spectrum-particle-gl-mobile">
+      <ParticleGL
+        key={`spectrum-p0-bl-${particleKey}`}
+        isStatic
+        imageIdx={3}
+        activeAnim={particleActive && particleP0Active}
+        id="spectrum-particle-container-mobile-p0-bl"
+        getSourceImgInfos={spectrumGetSourceImgInfos}
+      />
+      <ParticleGL
+        key={`spectrum-p0-br-${particleKey}`}
+        isStatic
+        imageIdx={4}
+        activeAnim={particleActive && particleP0Active}
+        id="spectrum-particle-container-mobile-p0-br"
+        getSourceImgInfos={spectrumGetSourceImgInfos}
+      />
+
+      {/* Page 1 Particle - centered for sponsors */}
+      <ParticleGL
+        key={`spectrum-p1-${particleKey}`}
+        isStatic
+        imageIdx={5}
+        activeAnim={particleActive && particleP1Active}
+        id="spectrum-particle-container-mobile-p1"
+        getSourceImgInfos={spectrumGetSourceImgInfos}
+      />
+
+      <div className="relative flex h-[100svh] flex-col items-center justify-start overflow-hidden pb-20 pt-20">
+        {/* Particle containers for Page 0 */}
+        <div ref={particleP0Ref} id="spectrum-particle-gl-mobile-p0" className="pointer-events-none absolute inset-0 z-0">
           <div
-            id="spectrum-particle-container-mobile-1"
-            className={cn('particle-container particle-container-mobile-1', { active: particleActive })}
-          ></div>
+            id="spectrum-particle-container-mobile-p0-tl"
+            className={cn('particle-container spectrum-particle-p0-tl', { active: particleActive && particleP0Active })}
+          />
           <div
-            id="spectrum-particle-container-mobile-2"
-            className={cn('particle-container particle-container-mobile-2', { active: particleActive })}
-          ></div>
+            id="spectrum-particle-container-mobile-p0-tr"
+            className={cn('particle-container spectrum-particle-p0-tr', { active: particleActive && particleP0Active })}
+          />
+          <div
+            id="spectrum-particle-container-mobile-p0-bl"
+            className={cn('particle-container spectrum-particle-p0-bl', { active: particleActive && particleP0Active })}
+          />
+          <div
+            id="spectrum-particle-container-mobile-p0-br"
+            className={cn('particle-container spectrum-particle-p0-br', { active: particleActive && particleP0Active })}
+          />
         </div>
-        <div className="spectrum-title mb-5 font-xirod text-xl/7.5 font-bold uppercase">spectrum</div>
-        <div className="spectrum-fund w-full overflow-hidden px-18 mobile:mt-0 mobile:gap-0 mobile:px-0">
-          <Swiper
-            direction="vertical"
-            slidesPerView={2}
-            spaceBetween={0}
-            className="h-[60svh]"
-            onBeforeInit={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-            onSlideChange={handleSlideChange}
-            freeMode={{
-              enabled: true,
-              sticky: true, // 添加这个让它能对齐到最近的slide
-              momentumBounce: true, // 添加反弹效果
-              momentumRatio: 0.5, // 降低动量比率使滑动不会太滑
-              momentumVelocityRatio: 0.5, // 降低速度比率
-              minimumVelocity: 0.1, // 设置最小速度阈值
-            }}
-          >
-            {spectrumData.map((item, index) => (
-              <SwiperSlide key={item.title} className="h-[30svh]">
+
+        {/* Particle container for Page 1 */}
+        <div
+          ref={particleP1Ref}
+          id="spectrum-particle-gl-mobile-p1"
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{ opacity: 0, display: 'none' }}
+        >
+          <div
+            id="spectrum-particle-container-mobile-p1"
+            className={cn('particle-container spectrum-particle-p1', { active: particleActive && particleP1Active })}
+          />
+        </div>
+
+        {/* Title Section */}
+        <div className="spectrum-title mb-1.5 mt-1 font-xirod text-[26px]/[30px] font-bold uppercase">SPECTRUM</div>
+        <div className="spectrum-subtitle mb-6 font-oxanium text-sm font-bold uppercase">WE DRIVE CHANGE BY..</div>
+
+        {/* Page Content Container */}
+        <div className="spectrum-content relative h-full w-full flex-1 overflow-hidden">
+          {/* Page 0: Main 4 items in 2x2 grid */}
+          <div ref={page0Ref} className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="grid w-full grid-cols-2 grid-rows-2 gap-y-10 px-4">
+              {spectrumMainItems.map((item, index) => (
                 <MobileSpectrumItem
-                  className="px-7.5"
+                  key={item.title}
                   item={item}
                   executeSpectrumRoute={executeSpectrumRoute}
                   updateUrlAndExecute={updateUrlAndExecute}
                   routeConfigs={routeConfigs}
-                  ref={(element) => {
-                    if (!element) return;
-                    spectrumRefs.current[index] = element;
-                  }}
+                  className="spectrum-grid-item"
                   onClick={(e) => {
                     item.onClick?.(e);
                   }}
                 />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+              ))}
+            </div>
+          </div>
+
+          {/* Page 1: Sponsors logo wall */}
+          <div ref={page1Ref} className="absolute inset-0 hidden flex-col items-center justify-center">
+            <MobileSpectrumSponsorPage
+              sponsorItem={spectrumSponsorItem}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+          </div>
         </div>
       </div>
     </div>

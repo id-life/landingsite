@@ -70,7 +70,7 @@ const MobileSpectrumLink = memo(
           <p
             onClick={handleClick}
             className={cn(
-              'spectrum-link-text group relative font-poppins text-xs/5 font-medium capitalize',
+              'spectrum-link-text group relative font-poppins text-[10px]/4 font-medium capitalize',
               hasLink &&
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
               labelClassName,
@@ -79,7 +79,7 @@ const MobileSpectrumLink = memo(
             {label}
           </p>
           {isComingSoon && (
-            <span className="flex-center inline-block h-5 rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+            <span className="flex-center inline-block h-3 rounded-sm bg-white/20 font-oxanium text-[.5rem]/3 capitalize text-white/50 backdrop-blur-2xl">
               coming soon
             </span>
           )}
@@ -174,19 +174,16 @@ const MobileSpectrumItem = memo(
           onClick={onClick}
           onMouseEnter={onMouseEnter}
           className={cn(
-            'spectrum-item flex-center relative h-full w-full cursor-pointer flex-col overflow-visible p-4 text-foreground',
+            'spectrum-item relative h-full w-full cursor-pointer flex-col overflow-visible p-2 text-foreground',
             className,
           )}
         >
           <div className={cn('flex flex-col items-center text-center', itemClassName)}>
-            <div className="flex items-center gap-1.5">
-              {cloneElement(icon, { className: 'spectrum-icon size-6 shrink-0 fill-white sm:size-7.5' })}
-              <h4 className="spectrum-title bilingual-font text-lg font-semibold capitalize sm:text-[1.625rem]/7.5">{title}</h4>
-            </div>
-            <h4 className="spectrum-title-cn bilingual-font mt-1 text-base font-bold capitalize sm:mt-2 sm:text-xl/6">
-              {titleCn}
-            </h4>
-            <div className="spectrum-links-container mt-3 flex flex-col sm:mt-5">
+            {/* Icon above title for grid layout */}
+            {cloneElement(icon, { className: 'spectrum-icon mb-0.5 size-6 shrink-0 fill-white' })}
+            <h4 className="spectrum-title bilingual-font font-oxanium text-sm font-semibold capitalize">{title}</h4>
+            <h4 className="spectrum-title-cn bilingual-font mt-3 text-sm font-bold capitalize">{titleCn}</h4>
+            <div className="spectrum-links-container mt-2 flex flex-col">
               <AnimatePresence mode="wait">
                 <motion.div
                   key="spectrum-links"
@@ -194,7 +191,7 @@ const MobileSpectrumItem = memo(
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center sm:items-start"
+                  className="flex flex-col items-center gap-1 [text-shadow:0_0_4px_black]"
                 >
                   {spectrumLinks}
                 </motion.div>
@@ -202,10 +199,10 @@ const MobileSpectrumItem = memo(
               {showMoreButton && (
                 <motion.button
                   onClick={handleMoreClick}
-                  className="mt-1 flex items-center justify-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100 sm:justify-start"
+                  className="mt-1 flex items-center justify-center gap-1 font-poppins text-[10px]/4 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100"
                 >
                   {buttonText}
-                  <ArrowSVG className="size-3 fill-current transition duration-300" />
+                  <ArrowSVG className="size-2.5 fill-current transition duration-300" />
                 </motion.button>
               )}
             </div>

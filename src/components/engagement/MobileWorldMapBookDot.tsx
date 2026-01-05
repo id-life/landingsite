@@ -1,5 +1,5 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
-import { DEFAULT_PULSE_CONFIG, MapBookDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
@@ -70,7 +70,7 @@ export function MobileWorldMapBookDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
+        <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
             width={svgSize}
             height={svgSize}
@@ -130,7 +130,13 @@ export function MobileWorldMapBookDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p
+          className={cn(
+            '-ml-1.5 flex items-center whitespace-nowrap font-oxanium',
+            MOBILE_MAP_SCALE.labelTextClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           {title}
           <AnimatePresence>
             {isActive && (
@@ -138,9 +144,13 @@ export function MobileWorldMapBookDotPoint({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="flex items-center gap-1 rounded-lg bg-blue/20 p-1 text-sm/4 font-semibold text-blue backdrop-blur-2xl"
+                className={cn(
+                  'flex items-center gap-1 rounded-lg bg-blue/20 p-1',
+                  MOBILE_MAP_SCALE.badgeTextClass,
+                  'font-semibold text-blue backdrop-blur-2xl',
+                )}
               >
-                <BookSVG className="size-4 fill-cyan" />
+                <BookSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-cyan')} />
                 Translation
               </motion.span>
             )}
