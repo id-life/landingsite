@@ -20,6 +20,8 @@ export function PulseDot({
   pulse1,
   pulse2,
   isActive,
+  containerClassName,
+  svgClassName = 'absolute -left-full -top-full size-18',
 }: {
   svgSize: number;
   centerPoint: number;
@@ -28,15 +30,18 @@ export function PulseDot({
   pulse1: { fromRadius: number; toRadius: number; duration: number };
   pulse2: { fromRadius: number; toRadius: number; duration: number };
   isActive?: boolean;
+  containerClassName?: string;
+  svgClassName?: string;
 }) {
   return (
-    <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
-      <svg
-        width={svgSize}
-        height={svgSize}
-        viewBox={`0 0 ${svgSize} ${svgSize}`}
-        className="absolute -left-full -top-full size-18"
-      >
+    <div
+      className={cn(
+        'relative',
+        containerClassName ?? MOBILE_MAP_SCALE.dotContainerSize,
+        isActive ? 'overflow-visible' : 'overflow-hidden',
+      )}
+    >
+      <svg width={svgSize} height={svgSize} viewBox={`0 0 ${svgSize} ${svgSize}`} className={svgClassName}>
         <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
         {isActive && (
           <>

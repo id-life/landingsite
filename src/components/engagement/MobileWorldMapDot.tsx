@@ -6,7 +6,7 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { PulseDot, ExtraSponsorSection, MobileConferenceBadgesWithVideo, MobileContentSection } from './WorldMapDotComponents';
+import { ExtraSponsorSection, MobileConferenceBadgesWithVideo, MobileContentSection, PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -78,6 +78,8 @@ export function MobileWorldMapDotPoint({
           pulse1={pulse1}
           pulse2={pulse2}
           isActive={isActive}
+          containerClassName="size-4"
+          svgClassName={`${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}`}
         />
         {/* 标签 */}
         <motion.div

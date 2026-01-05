@@ -10,6 +10,7 @@ import { VideoWithPoster } from './VideoWithPoster';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -70,65 +71,17 @@ export function MobileWorldMapBookDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
-          <svg
-            width={svgSize}
-            height={svgSize}
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="absolute -left-full -top-full size-18"
-          >
-            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-            {isActive && (
-              <>
-                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  <animate
-                    attributeName="r"
-                    from={pulse1.fromRadius}
-                    to={pulse1.toRadius}
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx={centerPoint}
-                  cy={centerPoint}
-                  r={pulse2.fromRadius}
-                  stroke={color}
-                  strokeWidth="2"
-                  fill="none"
-                  opacity="0.5"
-                >
-                  <animate
-                    attributeName="r"
-                    from={pulse2.fromRadius}
-                    to={pulse2.toRadius}
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-              </>
-            )}
-          </svg>
-        </div>
+        <PulseDot
+          svgSize={svgSize}
+          centerPoint={centerPoint}
+          centerRadius={centerRadius}
+          color={color}
+          pulse1={pulse1}
+          pulse2={pulse2}
+          isActive={isActive}
+          containerClassName={MOBILE_MAP_SCALE.dotContainerSize}
+          svgClassName={`${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}`}
+        />
         {/* 标签 */}
         <motion.p
           className={cn(
@@ -207,15 +160,15 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[13.75rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              className={cn('absolute left-0 top-0 flex w-[9rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
             >
               <VideoWithPoster
                 coverUrl={coverUrl}
                 videoUrl={videoUrl}
                 title={title}
                 containerClass={cn('-mt-6', containerClass)}
-                coverClass="size-[13.75rem]"
-                videoClass="size-[13.75rem]"
+                coverClass="size-[8.5rem]"
+                videoClass="size-[8.5rem]"
               />
               <motion.div
                 variants={{
@@ -230,9 +183,9 @@ export function MobileWorldMapBookDotContent({
                   type: 'easeInOut',
                   delay: 0.2,
                 }}
-                className="-mt-3 flex cursor-pointer flex-col items-center gap-3"
+                className="-mt-3 flex cursor-pointer flex-col items-center gap-2"
               >
-                <h4 className="text-base/5 font-semibold capitalize text-white">{bookTitle}</h4>
+                <h4 className="text-sm/4 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
                   <LinkSVG className={cn('size-4 fill-blue', { 'fill-gray-400': !link })} />
                   <p className={cn('ml-1 whitespace-nowrap text-xs/3 font-medium text-blue', { 'text-gray-400': !link })}>

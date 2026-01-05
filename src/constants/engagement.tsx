@@ -39,31 +39,35 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
 // ============================================================================
 export const MOBILE_MAP_SCALE = {
   // Base scale multiplier (1.0 = current, 1.2 = 20% larger, etc.)
-  baseScale: 1.2,
+  baseScale: 0.8,
 
   // Dot container size (Tailwind class: size-X)
-  dotContainerSize: 'size-7', // default: size-6 (24px), size-7 = 28px
+  dotContainerSize: 'size-5', // 20px
+
+  // Dot SVG positioning and size for mobile (used in PulseDot component)
+  dotSvgSize: 'size-14', // 56px - SVG element size for mobile dots
+  dotSvgPosition: 'absolute -left-[150%] -top-[150%]', // SVG positioning to center the pulse effect
 
   // Location label text size (Tailwind class: text-X/Y)
-  labelTextClass: 'text-lg/6', // default: text-base/5 (16px), text-lg = 18px
+  labelTextClass: 'text-xs/3', // 12px
 
   // Region icon size (Tailwind class: size-X)
-  regionIconSize: 'size-6', // default: size-5.5 (22px), size-6 = 24px
+  regionIconSize: 'size-4', // 16px
 
   // Badge text size (Tailwind class: text-X/Y)
-  badgeTextClass: 'text-base/5', // default: text-sm/4 (14px), text-base = 16px
+  badgeTextClass: 'text-[10px]/[14px]', // 10px
 
   // Badge icon size (Tailwind class: size-X)
-  badgeIconSize: 'size-5', // default: size-4 (16px), size-5 = 20px
+  badgeIconSize: 'size-3', // 12px
 
   // Content image dimensions
-  contentImageClass: 'h-[8.25rem] w-[15rem]', // default: h-[6.875rem] w-[12.5rem] (110px × 200px)
+  contentImageClass: 'h-[5.5rem] w-[10rem]', // 88px × 160px
 
   // Content max width
-  contentMaxWidth: 'max-w-[24rem]', // default: max-w-[20rem] (320px)
+  contentMaxWidth: 'max-w-[16rem]', // 256px
 
   // Content title text size
-  contentTitleClass: 'text-2xl/7', // default: text-xl/6 (20px), text-2xl = 24px
+  contentTitleClass: 'text-base/4', // 16px
 };
 
 export type MapRegionDotData = {
@@ -78,52 +82,52 @@ export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 40,
     lng: -106,
-    icon: <AmericaSVG className="size-7 mobile:size-6" />,
+    icon: <AmericaSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 33,
     lng: 21,
-    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-6" />,
+    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
   {
     lat: -14,
     lng: 97,
-    icon: <SingaporeSVG className="size-7 mobile:size-6" />,
+    icon: <SingaporeSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 30,
     lng: 99,
-    icon: <ChineseSVG className="size-7 mobile:size-6" />,
+    icon: <ChineseSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: -1,
     lng: -98,
-    icon: <HondurasSVG className="size-7 mobile:size-6" />,
+    icon: <HondurasSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 5,
     lng: 100,
-    icon: <ThailandSVG className="size-7 mobile:size-6" />,
+    icon: <ThailandSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 55,
     lng: -10,
-    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-6" />,
+    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 64,
     lng: 8,
-    icon: <DenmarkSVG className="size-7 mobile:size-6" />,
+    icon: <DenmarkSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 42,
     lng: 0,
-    icon: <FranceSVG className="size-7 mobile:size-6" />,
+    icon: <FranceSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 13,
     lng: 51,
-    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-6" />,
+    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
 ];
 
@@ -618,23 +622,20 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   },
 ];
 
-export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number; offset?: number }[] = [
-  { type: 'sponsor', index: 3, offset: 40 },
-  { type: 'meeting', index: 4, offset: 20 },
-  { type: 'book', index: 2, offset: 80 },
-  { type: 'meeting', index: 3 },
-  { type: 'sponsor', index: 2, offset: 80 },
-  { type: 'sponsor', index: 1, offset: 80 },
-  { type: 'meeting', index: 5, offset: 80 },
-  { type: 'meeting', index: 7, offset: 80 },
-  { type: 'meeting', index: 6, offset: 80 },
-  { type: 'book', index: 0, offset: 40 },
-  { type: 'book', index: 1, offset: 40 },
-  { type: 'sponsor', index: 4, offset: 80 },
-  { type: 'sponsor', index: 0, offset: 50 },
-  { type: 'meeting', index: 2, offset: 300 },
-  { type: 'meeting', index: 1, offset: 280 },
-  { type: 'meeting', index: 0, offset: 310 },
+export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number }[] = [
+  { type: 'meeting', index: 6 }, // 1. Copenhagen, Denmark
+  { type: 'sponsor', index: 0 }, // 2. Oxford, UK
+  { type: 'meeting', index: 5 }, // 3. London, UK
+  { type: 'meeting', index: 7 }, // 4. Aix-En-Provence, France
+  { type: 'book', index: 0 }, // 5. Lustica Bay, Montenegro
+  { type: 'sponsor', index: 2 }, // 6. Abu Dhabi, UAE
+  { type: 'meeting', index: 0 }, // 7. Shanghai, China
+  { type: 'meeting', index: 1 }, // 8. Chiang Mai, Thailand
+  { type: 'meeting', index: 2 }, // 9. Singapore
+  { type: 'meeting', index: 4 }, // 10. Berkeley, USA
+  { type: 'sponsor', index: 1 }, // 11. San Francisco, USA
+  { type: 'book', index: 1 }, // 12. Los Angeles, USA
+  { type: 'meeting', index: 3 }, // 13. Roatan, Honduras
 ];
 
 export const getMobileDotShowInfo = (type: 'sponsor' | 'book' | 'meeting', index: number) => {

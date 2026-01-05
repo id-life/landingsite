@@ -1,7 +1,7 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
-import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
+import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
@@ -20,13 +20,12 @@ export function useMobileEngagementAnim() {
   useEventBus(
     MessageType.MOBILE_SCROLL_TO_ACTIVE_POINT,
     ({ type, index }: { type: 'meeting' | 'book' | 'sponsor'; index: number }) => {
-      const offset = getMobileDotShowInfo(type, index)?.offset ?? 0;
       handleUserInteraction();
-      scrollToActivePoint(type, index, offset);
+      scrollToActivePoint(type, index);
     },
   );
 
-  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offset: number = 0) => {
+  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
     const scrollContainer = document.querySelector('.world-map-container');
     const activeEle =
       type === 'meeting'
@@ -37,8 +36,9 @@ export function useMobileEngagementAnim() {
     if (scrollContainer && activeEle) {
       const containerEl = scrollContainer as HTMLDivElement;
       const eleEl = activeEle as HTMLDivElement;
-      const targetScrollLeft = eleEl.offsetLeft - offset;
-      containerEl.scrollTo({ behavior: 'smooth', left: targetScrollLeft });
+      // Auto-center the element on screen
+      const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2;
+      containerEl.scrollTo({ behavior: 'smooth', left: Math.max(0, targetScrollLeft) });
     }
   }, []);
 
@@ -71,7 +71,7 @@ export function useMobileEngagementAnim() {
       }
 
       const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
-      const { type, index, offset } = point;
+      const { type, index } = point;
       // 重置之前激活的点
       setActiveBookDot(null);
       setActiveMeetingDot(null);
@@ -85,7 +85,7 @@ export function useMobileEngagementAnim() {
       } else if (type === 'sponsor') {
         setActiveSponsorDot(index);
       }
-      scrollToActivePoint(type, index, offset);
+      scrollToActivePoint(type, index);
     },
     [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
   );
@@ -129,7 +129,7 @@ export function useMobileEngagementAnim() {
     dotShowIntervalRef.current = setInterval(() => {
       showPoint(currentIndex);
       currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    }, 2000);
+    }, 3000); // 3s interval for better user comprehension and smoother auto-scroll experience
   }, [showPoint]);
 
   const enterAnimate = useCallback(() => {
@@ -154,10 +154,10 @@ export function useMobileEngagementAnim() {
       },
     );
 
-    // 在入场动画开始前设置初始滚动位置
+    // 在入场动画开始前设置初始滚动位置 - 居中显示欧亚大陆
     const mapContainerForScroll = document.querySelector('.world-map-container') as HTMLElement | null;
     if (mapContainerForScroll) {
-      const initialScroll = mapContainerForScroll.scrollWidth * 0.12; // 初始向右滚动 12%
+      const initialScroll = mapContainerForScroll.scrollWidth * 0.35; // 初始向右滚动 35% 以居中显示欧亚大陆
       mapContainerForScroll.scrollLeft = initialScroll;
     }
 

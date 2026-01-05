@@ -10,6 +10,7 @@ import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -71,65 +72,17 @@ export function MobileWorldMapSponsorDotPoint({
     >
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className={cn('relative', MOBILE_MAP_SCALE.dotContainerSize, isActive ? 'overflow-visible' : 'overflow-hidden')}>
-          <svg
-            width={svgSize}
-            height={svgSize}
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="absolute -left-full -top-full size-18"
-          >
-            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-            {isActive && (
-              <>
-                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  <animate
-                    attributeName="r"
-                    from={pulse1.fromRadius}
-                    to={pulse1.toRadius}
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx={centerPoint}
-                  cy={centerPoint}
-                  r={pulse2.fromRadius}
-                  stroke={color}
-                  strokeWidth="2"
-                  fill="none"
-                  opacity="0.5"
-                >
-                  <animate
-                    attributeName="r"
-                    from={pulse2.fromRadius}
-                    to={pulse2.toRadius}
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-              </>
-            )}
-          </svg>
-        </div>
+        <PulseDot
+          svgSize={svgSize}
+          centerPoint={centerPoint}
+          centerRadius={centerRadius}
+          color={color}
+          pulse1={pulse1}
+          pulse2={pulse2}
+          isActive={isActive}
+          containerClassName={MOBILE_MAP_SCALE.dotContainerSize}
+          svgClassName={`${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}`}
+        />
         {/* 标签 */}
         <motion.p
           className={cn(
@@ -301,7 +254,7 @@ const MobileSponsorItem = memo(
           animate="visible"
           exit="hidden"
           className={cn(
-            'clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+            'clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
           )}
           onMouseLeave={onMouseLeave}
           variants={{
@@ -327,10 +280,10 @@ const MobileSponsorItem = memo(
             videoUrl={videoUrl}
             title={alt}
             containerClass="-mt-4"
-            videoClass="size-[13.75rem]"
-            coverClass="size-[13.75rem]"
+            videoClass="size-[8.5rem]"
+            coverClass="size-[8.5rem]"
           />
-          <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
+          <h4 className="-mt-5 whitespace-pre-wrap text-center text-sm/4 font-semibold capitalize text-white">{alt}</h4>
         </motion.div>
       </a>
     );

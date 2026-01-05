@@ -1,12 +1,13 @@
 'use client';
 
 import { mobileCurrentPageAtom } from '@/atoms';
-import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, mobileMapScrollProgressAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { throttle } from 'lodash-es';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMeasure } from 'react-use';
 import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
@@ -34,11 +35,32 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   lineColor = '#C11111',
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
   const [activeMeetingDot, setActiveMeetingDot] = useAtom(activeMeetingDotAtom);
+  const setScrollProgress = useSetAtom(mobileMapScrollProgressAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  // 处理滚动进度更新 - throttled for performance on mobile devices
+  const handleScroll = useMemo(
+    () =>
+      throttle(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        setScrollLeft(container.scrollLeft);
+        if (maxScroll <= 0) {
+          setScrollProgress(0);
+          return;
+        }
+        const progress = container.scrollLeft / maxScroll;
+        setScrollProgress(Math.min(1, Math.max(0, progress)));
+      }, 16), // Update at ~60fps for smooth sync
+    [setScrollProgress],
+  );
   const isAnyActive = useMemo(
     () => activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null,
     [activeBookDot, activeMeetingDot, activeSponsorDot],
@@ -147,36 +169,56 @@ export const MobileWorldMap = memo(function WorldMapComponent({
     }
   }, [currentPage, setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot, globalLoaded]);
 
+  // Cleanup throttled function on unmount
+  useEffect(() => {
+    return () => {
+      handleScroll.cancel();
+    };
+  }, [handleScroll]);
+
   return (
-    <div
-      className="world-map-container relative mt-5 aspect-[63/30] h-[calc(100svh_-_1.25rem)] w-full justify-center overflow-auto bg-black/20 font-sans opacity-0"
-      onClick={handleBackgroundClick}
-    >
-      <WorldMapSVG
-        ref={ref}
-        className={cn(
-          'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-        )}
-      />
-      {regionDotsPoints}
-      {dotsPoints}
-      {bookDotsPoints}
-      {sponsorDotsPoints}
-      {dotsContents}
-      {bookDotsContents}
-      {sponsorDotsContents}
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 756 360`}
-        className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
+    <div className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[55vh] w-full">
+      {/* Scrollable map container */}
+      <div
+        ref={containerRef}
+        className="world-map-container hide-scrollbar relative h-full w-full overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
+        onClick={handleBackgroundClick}
+        onScroll={handleScroll}
       >
-        <defs>
-          <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
-            <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
-            <feComposite in="overlay" in2="SourceGraphic" operator="over" />
-          </filter>
-        </defs>
-      </svg>
+        {/* Spacer for scroll width - creates scrollable area since SVG is absolutely positioned */}
+        <div className="h-px shrink-0" style={{ width: 'calc(55vh * 63 / 30)' }} />
+        <WorldMapSVG
+          ref={ref}
+          className={cn(
+            'world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+          )}
+        />
+        {regionDotsPoints}
+        {dotsPoints}
+        {bookDotsPoints}
+        {sponsorDotsPoints}
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 756 360`}
+          className="pointer-events-none absolute left-0 top-0 h-full select-none overflow-visible"
+        >
+          <defs>
+            <filter id="black-overlay" x="0" y="0" width="100%" height="100%">
+              <feFlood floodColor="black" floodOpacity="0.5" result="overlay" />
+              <feComposite in="overlay" in2="SourceGraphic" operator="over" />
+            </filter>
+          </defs>
+        </svg>
+      </div>
+      {/* Popup content container - positioned outside scrollable area to avoid clipping */}
+      <div
+        className="pointer-events-none absolute inset-0 overflow-visible"
+        style={{ transform: `translateX(-${scrollLeft}px)` }}
+      >
+        {dotsContents}
+        {bookDotsContents}
+        {sponsorDotsContents}
+      </div>
     </div>
   );
 });
