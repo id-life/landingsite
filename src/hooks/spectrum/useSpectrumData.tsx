@@ -120,7 +120,7 @@ export const useSpectrumData = () => {
           {
             label: 'The case against death',
             isComingSoon: true,
-            labelClassName: '-ml-4 text-[.5rem]/3',
+            labelClassName: '-ml-4 mobile:ml-0 text-[.5rem]/3',
           },
           {
             label: 'The Network State',
@@ -128,7 +128,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Better With Age',
-            labelClassName: '-ml-4',
+            labelClassName: '-ml-4 mobile:ml-0',
             routeKey: 'better-with-age',
           },
         ],

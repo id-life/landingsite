@@ -99,8 +99,8 @@
   pointer-events: none;
   opacity: 0;
   position: absolute;
-  top: 35%;
-  left: 25%;
+  top: 38%;
+  left: 28%;
   transform: translateX(-50%) translateY(-50%);
   z-index: -1;
 }
@@ -109,7 +109,7 @@
   pointer-events: none;
   opacity: 0;
   position: absolute;
-  top: 35%;
+  top: 38%;
   left: 75%;
   transform: translateX(-50%) translateY(-50%);
   z-index: -1;
@@ -119,8 +119,8 @@
   pointer-events: none;
   opacity: 0;
   position: absolute;
-  top: 72%;
-  left: 25%;
+  top: calc(80% - 12dvh);
+  left: 30%;
   transform: translateX(-50%) translateY(-50%);
   z-index: -1;
 }
@@ -129,7 +129,7 @@
   pointer-events: none;
   opacity: 0;
   position: absolute;
-  top: 72%;
+  top: calc(81% - 12dvh);
   left: 75%;
   transform: translateX(-50%) translateY(-50%);
   z-index: -1;
