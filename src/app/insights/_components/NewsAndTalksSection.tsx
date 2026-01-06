@@ -6,7 +6,7 @@ import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
-import NavigationArrowButton from '@/app/insights/_components/NavigationArrowButton';
+import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
 import { InsightItem } from '@/hooks/insights/fetch';
@@ -43,18 +43,17 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   if (isMobile) {
     return (
       <>
-        <div className="group flex cursor-pointer flex-col overflow-hidden rounded-lg" onClick={handleClick}>
+        <div className="group flex cursor-pointer flex-col overflow-hidden" onClick={handleClick}>
           {/* Image */}
-          <div className="relative aspect-[16/10] w-full overflow-hidden">
+          <div className="relative h-[4.25rem] w-full overflow-hidden">
             <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
           </div>
           {/* Card content */}
-          <div className="flex flex-col gap-1 bg-white p-3">
-            <h3 className="line-clamp-1 font-poppins text-sm font-semibold text-black">{item.title}</h3>
-            <div className="flex items-center gap-1 font-poppins text-xs text-black/40">
-              {item.publisher && <span className="line-clamp-1 max-w-[50%]">{item.publisher}</span>}
-              {item.publisher && item.publishDate && <span>·</span>}
-              {item.publishDate && <span className="shrink-0">{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
+          <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
+            <h3 className="line-clamp-1 font-poppins text-xs/4 font-medium text-black">{item.title}</h3>
+            <div className="flex w-full flex-col text-left font-poppins text-[10px]/3 text-black/40">
+              {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
+              {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
           </div>
         </div>
@@ -93,10 +92,10 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
 // Constants for dynamic calculation (in pixels)
 const NEWS_HEADER_HEIGHT = 44; // Header text height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 160; // Header (~44px) + gap (24px) + cards (~92px)
+const PODCAST_SECTION_HEIGHT = 128; // Header (44px) + gap (12px) + 1 row of cards (72px)
 const SECTION_GAP = 24; // gap-6 between News and Podcast sections
-const NEWS_CARD_ROW_HEIGHT = 155; // Card: aspect-[16/10] image (~100px) + content padding + text (~55px)
-const NEWS_CARD_GAP = 12; // gap-3 between rows
+const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
+const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
 function calculateMobileItemCount(containerHeight: number): number {
   // Available height for news content (cards area only)
@@ -183,11 +182,11 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
         return (
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: skeletonCount }).map((_, index) => (
-              <div key={index} className="flex flex-col overflow-hidden rounded-lg">
-                <div className="aspect-[16/10] w-full animate-pulse bg-gray-800/50" />
+              <div key={index} className="flex flex-col overflow-hidden">
+                <div className="h-[68px] w-full animate-pulse bg-gray-800/50" />
                 <div className="space-y-1 bg-white p-3">
-                  <div className="h-4 w-3/4 animate-pulse rounded bg-gray-800/30" />
-                  <div className="h-3 w-1/2 animate-pulse rounded bg-gray-800/20" />
+                  <div className="h-4 w-3/4 animate-pulse bg-gray-800/30" />
+                  <div className="h-3 w-1/2 animate-pulse bg-gray-800/20" />
                 </div>
               </div>
             ))}
@@ -199,10 +198,10 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
         <div className="grid grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, index) => (
             <div key={index} className="flex flex-col">
-              <div className="h-[148px] animate-pulse rounded bg-gray-800/50" />
+              <div className="h-[148px] animate-pulse bg-gray-800/50" />
               <div className="mt-0 space-y-2 border-2 border-white bg-white/50 p-3">
-                <div className="h-12 animate-pulse rounded bg-gray-800/30" />
-                <div className="h-4 w-2/3 animate-pulse rounded bg-gray-800/20" />
+                <div className="h-12 animate-pulse bg-gray-800/30" />
+                <div className="h-4 w-2/3 animate-pulse bg-gray-800/20" />
               </div>
             </div>
           ))}
@@ -227,7 +226,7 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
             const pageItems = items.slice(pageIndex * mobileItemCount, (pageIndex + 1) * mobileItemCount);
             return (
               <SwiperSlide key={pageIndex}>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5">
                   {pageItems.map((item) => (
                     <NewsCard key={item.id} item={item} isMobile />
                   ))}
@@ -284,22 +283,22 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
         <div className={cn('relative mt-5', !isMobile && 'flex-1')}>
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
-            <NavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />
+            <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />
           )}
 
           {/* Mobile left arrow */}
           {isMobile && totalMobilePages > 1 && (
-            <NavigationArrowButton onClick={handleMobilePrev} disabled={isMobileBeginning} direction="prev" isMobile />
+            <MobileNavigationArrowButton onClick={handleMobilePrev} disabled={isMobileBeginning} direction="prev" />
           )}
 
           {renderContent()}
 
           {/* Desktop right arrow */}
-          {!isMobile && totalPages > 1 && <NavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" />}
+          {!isMobile && totalPages > 1 && <PCNavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" />}
 
           {/* Mobile right arrow */}
           {isMobile && totalMobilePages > 1 && (
-            <NavigationArrowButton onClick={handleMobileNext} disabled={isMobileEnd} direction="next" isMobile />
+            <MobileNavigationArrowButton onClick={handleMobileNext} disabled={isMobileEnd} direction="next" />
           )}
         </div>
       </div>

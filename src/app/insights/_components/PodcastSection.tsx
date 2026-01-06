@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
-import NavigationArrowButton from '@/app/insights/_components/NavigationArrowButton';
+import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
@@ -233,22 +233,22 @@ export default function PodcastSection({ isMobile = false, compact = false }: Po
         </div>
 
         {/* Content */}
-        <div className={cn('relative mt-6', !isMobile && 'pr-0')}>
+        <div className={cn('relative mt-3', !isMobile && 'pr-0')}>
           {/* Desktop arrows */}
-          {!isMobile && !compact && <NavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />}
+          {!isMobile && !compact && <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />}
 
           {/* Compact mode arrows */}
           {compact && totalCompactPages > 1 && (
-            <NavigationArrowButton onClick={handleCompactPrev} disabled={isCompactBeginning} direction="prev" isMobile />
+            <MobileNavigationArrowButton onClick={handleCompactPrev} disabled={isCompactBeginning} direction="prev" />
           )}
 
           {renderContent()}
 
-          {!isMobile && !compact && <NavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" />}
+          {!isMobile && !compact && <PCNavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" />}
 
           {/* Compact mode arrows */}
           {compact && totalCompactPages > 1 && (
-            <NavigationArrowButton onClick={handleCompactNext} disabled={isCompactEnd} direction="next" isMobile />
+            <MobileNavigationArrowButton onClick={handleCompactNext} disabled={isCompactEnd} direction="next" />
           )}
         </div>
       </div>

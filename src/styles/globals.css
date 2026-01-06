@@ -364,4 +364,10 @@
   .podcast-card-clip-inner {
     clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
   }
+  @media (max-width: 768px) {
+    .podcast-card-clip {
+      --corner-size: 16px;
+      --border-width: 1px;
+    }
+  }
 }

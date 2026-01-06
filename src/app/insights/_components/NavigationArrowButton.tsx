@@ -6,23 +6,16 @@ interface NavigationArrowButtonProps {
   disabled: boolean;
   direction: 'prev' | 'next';
   className?: string;
-  isMobile?: boolean;
 }
 
-export default function NavigationArrowButton({
-  onClick,
-  disabled,
-  direction,
-  className,
-  isMobile,
-}: NavigationArrowButtonProps) {
+export function PCNavigationArrowButton({ onClick, disabled, direction, className }: NavigationArrowButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className={cn(
         'absolute top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
-        isMobile ? (direction === 'prev' ? '-left-5' : '-right-5') : direction === 'prev' ? '-left-16' : '-right-16',
+        direction === 'prev' ? '-left-16' : '-right-16',
         className,
       )}
     >
@@ -32,3 +25,23 @@ export default function NavigationArrowButton({
     </button>
   );
 }
+
+export function MobileNavigationArrowButton({ onClick, disabled, direction, className }: NavigationArrowButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white disabled:bg-[#F7F8FB] disabled:fill-[#999999]',
+        direction === 'prev' ? '-left-5' : '-right-5',
+        className,
+      )}
+    >
+      <ArrowDownSVG
+        className={cn('size-4 fill-current', direction === 'prev' ? 'rotate-90' : '-rotate-90', { 'fill-[#999999]': disabled })}
+      />
+    </button>
+  );
+}
+
+export default PCNavigationArrowButton;
