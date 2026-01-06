@@ -119,20 +119,40 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
     { url: '/imgs/particle/3.png', resize: [600, 576], baseScale: 1, mobileScaleMultiplier: 0.95 },
     { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004 },
     { url: '/imgs/particle/11.png', resize: [512, 262], baseScale: 1.2, loadPercentage: 0.0012 },
-    { url: '/imgs/particle/oisin.png', resize: [600, 163], baseScale: 1.2, mobileScaleMultiplier: 0.7, loadPercentage: 0.005 },
+    {
+      url: '/imgs/particle/oisin.png',
+      resize: [600, 163],
+      baseScale: 1.2,
+      mobileScaleMultiplier: 2.8,
+      loadPercentage: 0.005,
+      mobileUrl: '/imgs/particle/oisin-mobile.png',
+      mobileResize: [164, 164] as [number, number],
+    },
     {
       url: '/imgs/particle/etheros.png',
       resize: [600, 146],
       baseScale: 1.2,
-      mobileScaleMultiplier: 0.7,
-      loadPercentage: 0.005,
+      mobileScaleMultiplier: 1.5,
+      loadPercentage: 0.003,
+      mobileUrl: '/imgs/particle/etheros-mobile.png',
+      mobileResize: [328, 328] as [number, number],
     },
     { url: '/imgs/particle/2.png', resize: [600, 536], baseScale: 0.7, loadPercentage: 0.0012 },
-    { url: '/imgs/particle/7.png', resize: [860, 82], baseScale: 1.2, mobileScaleMultiplier: 0.7, loadPercentage: 0.004 },
+    {
+      url: '/imgs/particle/7.png',
+      resize: [860, 82],
+      baseScale: 1.2,
+      mobileScaleMultiplier: 1.5,
+      loadPercentage: 0.003,
+      mobileUrl: '/imgs/particle/vitalia-mobile.png',
+      mobileResize: [328, 328] as [number, number],
+    },
   ];
 
-  return configs.map(({ baseScale, mobileScaleMultiplier = 1, ...rest }) => ({
+  return configs.map(({ baseScale, mobileScaleMultiplier = 1, mobileUrl, mobileResize, url, resize, ...rest }) => ({
     ...rest,
+    url: isMobile && mobileUrl ? mobileUrl : url,
+    resize: isMobile && mobileResize ? mobileResize : resize,
     scaleNum: isMobile ? baseScale * MOBILE_PARTICLE_SCALE * mobileScaleMultiplier : baseScale,
   }));
 };
