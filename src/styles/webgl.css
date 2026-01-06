@@ -8,6 +8,34 @@
   z-index: -1;
 }
 
+/* Mobile portfolio particle background layer - grid based */
+.particle-gl-mobile-bg {
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Grid cell based particle container for mobile portfolio */
+.particle-container-grid-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.particle-container-grid-cell.active {
+  opacity: 0.5;
+}
+
+/* Canvas inside grid cell - centered */
+.particle-container-grid-cell canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Portfolio mobile particles - 2x3 grid layout (6 containers) */
 /* Row 1: items 1 (left), 2 (right) */
 .particle-container.particle-container-mobile-1 {

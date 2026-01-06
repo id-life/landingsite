@@ -148,25 +148,32 @@ function MobilePortfolio() {
         />
       ))}
       <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21">
-        <div id="particle-gl" data-layout={itemsPerPage === 6 ? '2x3' : '2x2'}>
-          {/* Render particle containers for each grid cell */}
-          {Array.from({ length: itemsPerPage }).map((_, i) => (
-            <div
-              key={`container-${i}`}
-              id={`particle-container-mobile-${i + 1}`}
-              className={cn('particle-container', `particle-container-mobile-${i + 1}`, {
-                active: particleActive && i < particleIndices.length,
-              })}
-            >
-              <div className="particle-mask"></div>
-            </div>
-          ))}
-        </div>
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
           Portfolio
         </div>
         <div className="page2-fund relative flex-1 overflow-hidden px-4 mobile:mt-2 mobile:w-full">
-          {/* Paginated grid pages */}
+          {/* Background layer: particle grid - absolute positioned behind portfolio items */}
+          <div
+            id="particle-gl"
+            className={cn(
+              'particle-gl-mobile-bg absolute inset-0 grid grid-cols-2 px-4',
+              itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
+            )}
+            data-layout={itemsPerPage === 6 ? '2x3' : '2x2'}
+          >
+            {Array.from({ length: itemsPerPage }).map((_, i) => (
+              <div
+                key={`container-${i}`}
+                id={`particle-container-mobile-${i + 1}`}
+                className={cn('particle-container-grid-cell', {
+                  active: particleActive && i < particleIndices.length,
+                })}
+              >
+                <div className="particle-mask"></div>
+              </div>
+            ))}
+          </div>
+          {/* Foreground layer: paginated portfolio items grid */}
           {Array.from({ length: totalPages }).map((_, pageIdx) => (
             <div
               key={pageIdx}
