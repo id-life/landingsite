@@ -7,9 +7,17 @@ import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
 
+// 自动播放配置
+const AUTO_PLAY_CONFIG = {
+  scrollDuration: 800, // 滚动时长（毫秒）
+  activateDelay: 500, // 滚动开始后多久激活新点（毫秒）
+  interval: 2500, // 自动播放间隔（毫秒）
+} as const;
+
 export function useMobileEngagementAnim() {
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const activateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const userInteractedRef = useRef(false);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
@@ -52,6 +60,11 @@ export function useMobileEngagementAnim() {
       clearInterval(dotShowIntervalRef.current);
       dotShowIntervalRef.current = null;
     }
+    // 清理延迟激活的定时器
+    if (activateTimeoutRef.current) {
+      clearTimeout(activateTimeoutRef.current);
+      activateTimeoutRef.current = null;
+    }
   }, []);
 
   // 用户交互处理函数
@@ -72,20 +85,33 @@ export function useMobileEngagementAnim() {
 
       const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
       const { type, index } = point;
-      // 重置之前激活的点
+
+      // 清理之前的激活定时器
+      if (activateTimeoutRef.current) {
+        clearTimeout(activateTimeoutRef.current);
+        activateTimeoutRef.current = null;
+      }
+
+      // 第一步：重置所有点（让当前点淡出）
       setActiveBookDot(null);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
 
-      // 激活新点
-      if (type === 'book') {
-        setActiveBookDot(index);
-      } else if (type === 'meeting') {
-        setActiveMeetingDot(index);
-      } else if (type === 'sponsor') {
-        setActiveSponsorDot(index);
-      }
+      // 第二步：开始滚动
       scrollToActivePoint(type, index);
+
+      // 第三步：延迟后激活新点
+      activateTimeoutRef.current = setTimeout(() => {
+        if (userInteractedRef.current) return;
+
+        if (type === 'book') {
+          setActiveBookDot(index);
+        } else if (type === 'meeting') {
+          setActiveMeetingDot(index);
+        } else if (type === 'sponsor') {
+          setActiveSponsorDot(index);
+        }
+      }, AUTO_PLAY_CONFIG.activateDelay);
     },
     [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
   );
@@ -129,7 +155,7 @@ export function useMobileEngagementAnim() {
     dotShowIntervalRef.current = setInterval(() => {
       showPoint(currentIndex);
       currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
-    }, 3000); // 3s interval for better user comprehension and smoother auto-scroll experience
+    }, AUTO_PLAY_CONFIG.interval);
   }, [showPoint]);
 
   const enterAnimate = useCallback(() => {
@@ -141,35 +167,43 @@ export function useMobileEngagementAnim() {
 
     stopAutoShowDot();
 
-    const enterTL = gsap.timeline({
-      duration: 0.3,
+    // 获取所有需要动画的元素
+    const container = document.querySelector('.world-map-container') as HTMLElement | null;
+    const mapImg = document.querySelector('.world-map-img') as HTMLElement | null;
+    const regions = document.querySelectorAll('.world-map-region');
+    const dots = document.querySelectorAll('.world-map-dot');
+    const bookDots = document.querySelectorAll('.world-map-dot-book');
+    const sponsorDots = document.querySelectorAll('.world-map-dot-sponsor');
+
+    // 设置初始状态（使用 style 而不是 GSAP set）
+    if (container) {
+      container.style.opacity = '0';
+      // 设置初始滚动位置 - 居中显示欧亚大陆
+      const initialScroll = container.scrollWidth * 0.35;
+      container.scrollLeft = initialScroll;
+    }
+    if (mapImg) {
+      mapImg.style.opacity = '0';
+    }
+    [regions, dots, bookDots, sponsorDots].forEach((nodeList) => {
+      nodeList.forEach((el) => {
+        (el as HTMLElement).style.opacity = '0';
+      });
     });
 
-    // 设置初始状态
-    enterTL.set(
-      ['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-container'],
-      {
-        opacity: 0,
-        duration: 0,
-      },
-    );
-
-    // 在入场动画开始前设置初始滚动位置 - 居中显示欧亚大陆
-    const mapContainerForScroll = document.querySelector('.world-map-container') as HTMLElement | null;
-    if (mapContainerForScroll) {
-      const initialScroll = mapContainerForScroll.scrollWidth * 0.35; // 初始向右滚动 35% 以居中显示欧亚大陆
-      mapContainerForScroll.scrollLeft = initialScroll;
-    }
-
     // 入场动画序列
+    const enterTL = gsap.timeline();
+
     enterTL.to('.world-map-container', {
       opacity: 1,
+      duration: 0.3,
     });
     enterTL.to(
       '.world-map-img',
       {
         y: 0,
         opacity: 1,
+        duration: 0.3,
         ease: 'none',
       },
       '<',
@@ -178,6 +212,7 @@ export function useMobileEngagementAnim() {
     enterTL.to(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 1,
       scale: 1,
+      duration: 0.3,
       ease: 'power2.out',
       stagger: 0.02,
     });
@@ -185,8 +220,6 @@ export function useMobileEngagementAnim() {
     enterTL.add(() => {
       startAutoDotShow();
     }, '+=0.3');
-
-    enterTL.play();
 
     const cleanup = setupEventListeners();
 

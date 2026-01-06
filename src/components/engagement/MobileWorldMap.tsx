@@ -7,7 +7,7 @@ import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from 
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from 'react';
 import { useMeasure } from 'react-use';
 import { NAV_LIST } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
@@ -43,6 +43,11 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth }] = useMeasure<SVGSVGElement>();
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  // 手动触摸滚动状态
+  const touchStartXRef = useRef(0);
+  const scrollStartRef = useRef(0);
+  const isDraggingRef = useRef(false);
 
   // 处理滚动进度更新 - throttled for performance on mobile devices
   const handleScroll = useMemo(
@@ -159,6 +164,29 @@ export const MobileWorldMap = memo(function WorldMapComponent({
     setActiveMeetingDot(null);
   }, [setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
+  // 手动触摸滚动处理
+  const handleTouchStart = (e: ReactTouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    touchStartXRef.current = touch.clientX;
+    scrollStartRef.current = containerRef.current?.scrollLeft ?? 0;
+    isDraggingRef.current = true;
+  };
+
+  const handleTouchMove = (e: ReactTouchEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current || !containerRef.current) return;
+    const container = containerRef.current;
+    const touch = e.touches[0];
+    const deltaX = touchStartXRef.current - touch.clientX;
+    const newScrollLeft = scrollStartRef.current + deltaX;
+    // 限制在可滚动范围内
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    container.scrollLeft = Math.max(0, Math.min(maxScroll, newScrollLeft));
+  };
+
+  const handleTouchEnd = () => {
+    isDraggingRef.current = false;
+  };
+
   // 确保在组件卸载时重置状态
   useEffect(() => {
     if (!globalLoaded) return;
@@ -181,9 +209,12 @@ export const MobileWorldMap = memo(function WorldMapComponent({
       {/* Scrollable map container */}
       <div
         ref={containerRef}
-        className="world-map-container hide-scrollbar relative h-full w-full overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
+        className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
         onClick={handleBackgroundClick}
         onScroll={handleScroll}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Spacer for scroll width - creates scrollable area since SVG is absolutely positioned */}
         <div className="h-px shrink-0" style={{ width: 'calc(55vh * 63 / 30)' }} />
