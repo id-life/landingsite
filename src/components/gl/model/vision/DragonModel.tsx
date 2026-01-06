@@ -20,8 +20,8 @@ const INIT_ROTATION = Math.PI / 2;
 const DESKTOP_SCALE = 0.13;
 const DRAG_SENSITIVITY = 150;
 const RECOVERY_DURATION = 1.5;
-const ANIMATION_DURATION = 3.0;
-const ANIMATION_DELAY = 0.3;
+const ANIMATION_DURATION = 2.1;
+const ANIMATION_DELAY = 0.21;
 const AUTO_SWING_AMPLITUDE = 0.1;
 
 export function useOptimizedGLTF() {
@@ -58,7 +58,7 @@ export default function DragonModel() {
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
     const tl = gsap.timeline({
-      duration: 0.3,
+      duration: 0.21,
       onComplete: () => {
         setFadeInAnimCompleted(true);
         trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.UI_APPEAR });

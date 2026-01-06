@@ -61,7 +61,7 @@ export default function CenterLogo() {
         // Animate fade in
         gsap.to([logoMaterial, descMaterial], {
           opacity: 1,
-          duration: 1.2,
+          duration: 0.84,
           ease: 'power2.out',
         });
       }
