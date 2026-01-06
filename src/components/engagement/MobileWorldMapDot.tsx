@@ -6,7 +6,12 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { ExtraSponsorSection, MobileConferenceBadgesWithVideo, MobileContentSection, PulseDot } from './WorldMapDotComponents';
+import {
+  MobileExtraSponsorSection,
+  MobileConferenceBadgesWithVideo,
+  MobileContentSection,
+  PulseDot,
+} from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -207,7 +212,7 @@ export function MobileWorldMapDotContent({
               />
             )}
             {extraSponsor && (
-              <ExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
+              <MobileExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
             )}
           </div>
         </div>

@@ -336,10 +336,17 @@ export function MobileConferenceBadgesWithVideo({
   onVideoClick?: (e: MouseEvent) => void;
 }) {
   return (
-    <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
+    <div
+      className={cn(
+        'absolute flex flex-col items-start',
+        MOBILE_MAP_SCALE.badgeContainerTopClass,
+        MOBILE_MAP_SCALE.badgeGapClass,
+      )}
+    >
       <div
         className={cn(
-          'relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1',
+          'relative flex items-center gap-0.5 rounded bg-purple/20',
+          MOBILE_MAP_SCALE.badgePaddingClass,
           MOBILE_MAP_SCALE.badgeTextClass,
           'font-semibold text-purple backdrop-blur-2xl',
         )}
@@ -350,7 +357,8 @@ export function MobileConferenceBadgesWithVideo({
       {(isSponsor || extraSponsor) && (
         <div
           className={cn(
-            'relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1',
+            'relative flex items-center gap-0.5 rounded bg-orange/20',
+            MOBILE_MAP_SCALE.badgePaddingClass,
             MOBILE_MAP_SCALE.badgeTextClass,
             'font-semibold text-orange backdrop-blur-2xl',
           )}
@@ -410,7 +418,7 @@ export function MobileContentSection({
         },
         visible: {
           opacity: 1,
-          height: '70dvh',
+          height: '45dvh',
         },
       }}
       transition={{
@@ -418,7 +426,7 @@ export function MobileContentSection({
         duration: 0.3,
         type: 'easeInOut',
       }}
-      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-4 font-oxanium')}
+      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-oxanium')}
     >
       {title && (
         <h3
@@ -450,5 +458,75 @@ export function MobileContentSection({
         ) : null}
       </a>
     </motion.div>
+  );
+}
+
+// Mobile extra sponsor section with smaller sizes for mobile viewport
+export function MobileExtraSponsorSection({
+  extraSponsor,
+  onClick,
+  className,
+}: {
+  extraSponsor: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
+  onClick: (e: MouseEvent) => void;
+  className?: string;
+}) {
+  return (
+    <a
+      href={extraSponsor.link}
+      target="_blank"
+      rel="noreferrer"
+      className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}
+      onClick={onClick}
+    >
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className={cn(
+          'flex origin-top-left flex-col items-center overflow-visible font-oxanium',
+          MOBILE_MAP_SCALE.extraSponsorWidth,
+        )}
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: -10,
+            transformOrigin: 'top left',
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transformOrigin: 'top left',
+          },
+        }}
+        transition={{
+          staggerChildren: 0.05,
+          duration: 0.3,
+          type: 'easeInOut',
+        }}
+      >
+        <h4
+          className={cn(
+            'whitespace-pre-wrap text-center font-semibold capitalize text-white',
+            MOBILE_MAP_SCALE.extraSponsorTitleClass,
+          )}
+        >
+          {extraSponsor.alt}
+        </h4>
+        <VideoWithPoster
+          coverUrl={extraSponsor.coverUrl}
+          videoUrl={extraSponsor.videoUrl}
+          title={extraSponsor.alt}
+          containerClass={MOBILE_MAP_SCALE.extraSponsorMarginTop}
+          videoClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+          coverClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+        />
+      </motion.div>
+    </a>
   );
 }

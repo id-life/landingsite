@@ -55,19 +55,34 @@ export const MOBILE_MAP_SCALE = {
   regionIconSize: 'size-4', // 16px
 
   // Badge text size (Tailwind class: text-X/Y)
-  badgeTextClass: 'text-[10px]/[14px]', // 10px
+  badgeTextClass: 'text-[8px]/[10px]', // 8px
 
   // Badge icon size (Tailwind class: size-X)
-  badgeIconSize: 'size-3', // 12px
+  badgeIconSize: 'size-2.5', // 10px
+
+  // Badge padding (Tailwind class: px-X py-Y)
+  badgePaddingClass: 'px-0.5 py-0.5',
+
+  // Badge gap between items (Tailwind class: gap-X)
+  badgeGapClass: 'gap-1',
+
+  // Badge container top offset
+  badgeContainerTopClass: 'top-[calc(100%_+_0.125rem)]',
 
   // Content image dimensions
-  contentImageClass: 'h-[5.5rem] w-[10rem]', // 88px × 160px
+  contentImageClass: 'h-[4rem] w-[7.5rem]', // 64px × 120px
 
   // Content max width
-  contentMaxWidth: 'max-w-[16rem]', // 256px
+  contentMaxWidth: 'max-w-[12rem]', // 192px
 
   // Content title text size
-  contentTitleClass: 'text-base/4', // 16px
+  contentTitleClass: 'text-xs/4', // 14px
+
+  // Extra sponsor section dimensions
+  extraSponsorWidth: 'w-[12rem]', // 192px
+  extraSponsorTitleClass: 'text-xs/4', // 16px
+  extraSponsorLogoSize: 'size-[10rem]', // 160px
+  extraSponsorMarginTop: '-mt-3',
 };
 
 export type MapRegionDotData = {
@@ -228,7 +243,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     link: 'https://www.edgecity.live/lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    mobileContentTransformClass: '-translate-x-full -translate-y-[50%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[30%]',
     pcDotHotAreaClass: 'top-[25.5vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-0', 'world-map-dot-2'],
     imgs: [
@@ -256,7 +271,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum Singapore',
     link: 'https://founderslongevity.co/#speakers',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
-    mobileContentTransformClass: '-translate-x-full -translate-y-[50%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[70%]',
     pcDotHotAreaClass: 'top-[39.5vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-0',

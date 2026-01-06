@@ -101,7 +101,8 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      'flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1',
+                      'flex items-center gap-0.5 rounded bg-purple/20',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
                       'font-semibold text-purple backdrop-blur-2xl',
                     )}
@@ -115,7 +116,8 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      'flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1',
+                      'flex items-center gap-0.5 rounded bg-orange/20',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
                       'font-semibold text-orange backdrop-blur-2xl',
                     )}
@@ -130,7 +132,8 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      '-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1',
+                      '-ml-2 flex items-center gap-0.5 rounded bg-orange/20',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
                       'font-semibold text-orange backdrop-blur-2xl',
                     )}
@@ -283,7 +286,7 @@ const MobileSponsorItem = memo(
             videoClass="size-[8.5rem]"
             coverClass="size-[8.5rem]"
           />
-          <h4 className="-mt-5 whitespace-pre-wrap text-center text-sm/4 font-semibold capitalize text-white">{alt}</h4>
+          <h4 className="-mt-5 whitespace-pre-wrap text-center text-xs/4 font-semibold capitalize text-white">{alt}</h4>
         </motion.div>
       </a>
     );
