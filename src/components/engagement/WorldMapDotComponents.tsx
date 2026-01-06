@@ -36,7 +36,7 @@ export function PulseDot({
   return (
     <div
       className={cn(
-        'relative',
+        'pulse-dot relative',
         containerClassName ?? MOBILE_MAP_SCALE.dotContainerSize,
         isActive ? 'overflow-visible' : 'overflow-hidden',
       )}

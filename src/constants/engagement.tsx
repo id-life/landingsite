@@ -46,10 +46,10 @@ export const MOBILE_MAP_SCALE = {
 
   // Dot SVG positioning and size for mobile (used in PulseDot component)
   dotSvgSize: 'size-14', // 56px - SVG element size for mobile dots
-  dotSvgPosition: 'absolute -left-[150%] -top-[150%]', // SVG positioning to center the pulse effect
+  dotSvgPosition: 'absolute left-[-16px] top-[-18px]', // SVG positioning to center the pulse effect
 
   // Location label text size (Tailwind class: text-X/Y)
-  labelTextClass: 'text-xs/3', // 12px
+  labelTextClass: 'text-[8px]/[12px]', // 12px
 
   // Region icon size (Tailwind class: size-X)
   regionIconSize: 'size-4', // 16px
@@ -522,6 +522,7 @@ export type MapBookDotData = {
   pulseConfig?: PulseConfig; // custom pulse config
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   containerClass?: string;
+  mobileContentTransformClass?: string; // mobile popup content transform class
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
@@ -536,6 +537,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/',
     activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 15,
@@ -549,6 +551,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
     containerClass: 'scale-[0.9]',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-sponsor-3'],
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
 ];
 
@@ -573,6 +576,7 @@ export type MapSponsorDotData = {
     videoUrl: string;
     link: string;
   };
+  mobileContentTransformClass?: string; // mobile popup content transform class
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -591,6 +595,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     ],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Conference',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 24,
@@ -608,6 +613,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     },
     sponsorText: 'Grant',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 10,
@@ -619,6 +625,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: 'https://revivemeexpo.com/',
     sponsorText: 'Conference',
     extraText: 'Sponsorship',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
 ];
 
