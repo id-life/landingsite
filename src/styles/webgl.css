@@ -160,6 +160,21 @@
   pointer-events: auto;
 }
 
+/* Spectrum mobile particle containers inside items */
+.spectrum-particle-item-bg {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.spectrum-particle-item-bg.active {
+  opacity: 0.6;
+}
+
+/* Sponsor page (Page 1) particle - larger background */
+.spectrum-particle-p1-bg.active {
+  opacity: 0.4;
+}
+
 .particle-container.active {
   opacity: 0.8;
   pointer-events: auto;

@@ -256,7 +256,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Founders Longevity Forum Singapore',
     link: 'https://founderslongevity.co/#speakers',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[60%]',
-    mobileContentTransformClass: '-translate-x-full -translate-y-[70%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[50%]',
     pcDotHotAreaClass: 'top-[39.5vh]',
     activeOtherDarkerDotIDs: [
       'world-map-dot-sponsor-0',

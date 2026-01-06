@@ -7,12 +7,48 @@ import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
-import MobileSpectrumItem from './MobileSpectrumItem';
+import MobileSpectrumItem, { ParticleConfig } from './MobileSpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 
 const PAGE_ID = 'spectrum_page';
 const TOTAL_INNER_PAGES = 2; // Page 0: main items, Page 1: sponsors
 const PARTICLE_RESTART_DELAY = 50; // Delay in ms before activating particles on page entry
+
+// Particle container IDs for each grid item (2x2 layout: tl, tr, bl, br)
+const PARTICLE_CONTAINER_IDS = [
+  'spectrum-particle-container-mobile-p0-tl',
+  'spectrum-particle-container-mobile-p0-tr',
+  'spectrum-particle-container-mobile-p0-bl',
+  'spectrum-particle-container-mobile-p0-br',
+];
+
+// Default particle configuration applied to all items
+const DEFAULT_PARTICLE_CONFIG: ParticleConfig = {
+  offset: { x: '0px', y: '0px' },
+  scale: 1,
+};
+
+// Per-item particle config overrides (index matches PARTICLE_CONTAINER_IDS)
+// Order: Translation & Publishing, Evanglism, Digital Twin, Global Internship
+const PARTICLE_CONFIG_OVERRIDES: (Partial<ParticleConfig> | undefined)[] = [
+  undefined, // Translation & Publishing (top-left)
+  undefined, // Evanglism (top-right)
+  { offset: { x: '10px', y: '-20px' } }, // Digital Twin (bottom-left)
+  { offset: { x: '10px', y: '-20px' } }, // Global Internship (bottom-right)
+];
+
+// Merge default config with per-item overrides
+const getParticleConfig = (index: number): ParticleConfig => {
+  const override = PARTICLE_CONFIG_OVERRIDES[index];
+  if (!override) return DEFAULT_PARTICLE_CONFIG;
+  return {
+    offset: {
+      x: override.offset?.x ?? DEFAULT_PARTICLE_CONFIG.offset?.x,
+      y: override.offset?.y ?? DEFAULT_PARTICLE_CONFIG.offset?.y,
+    },
+    scale: override.scale ?? DEFAULT_PARTICLE_CONFIG.scale,
+  };
+};
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -23,8 +59,6 @@ function MobileSpectrum() {
   const pageTransitionTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const page0Ref = useRef<HTMLDivElement>(null);
   const page1Ref = useRef<HTMLDivElement>(null);
-  const particleP0Ref = useRef<HTMLDivElement>(null);
-  const particleP1Ref = useRef<HTMLDivElement>(null);
   const [currentInnerPage, setCurrentInnerPage] = useState(0);
   const currentInnerPageRef = useRef(currentInnerPage);
   const [particleActive, setParticleActive] = useState(false);
@@ -124,8 +158,6 @@ function MobileSpectrum() {
       const isForward = targetPage > currentInnerPageRef.current;
       const currentRef = currentInnerPageRef.current === 0 ? page0Ref : page1Ref;
       const targetRef = targetPage === 0 ? page0Ref : page1Ref;
-      const currentParticleRef = currentInnerPageRef.current === 0 ? particleP0Ref : particleP1Ref;
-      const targetParticleRef = targetPage === 0 ? particleP0Ref : particleP1Ref;
 
       if (!currentRef.current || !targetRef.current) return;
 
@@ -164,14 +196,6 @@ function MobileSpectrum() {
         display: 'flex',
       });
 
-      // Set initial state for target particle container
-      if (targetParticleRef.current) {
-        gsap.set(targetParticleRef.current, {
-          opacity: 0,
-          display: 'block',
-        });
-      }
-
       // Animate current page out and target page in
       tl.to(
         currentRef.current,
@@ -193,35 +217,7 @@ function MobileSpectrum() {
         0,
       );
 
-      // Crossfade particles - fade out current, fade in target
-      if (currentParticleRef.current) {
-        tl.to(
-          currentParticleRef.current,
-          {
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.inOut',
-          },
-          0,
-        );
-      }
-
-      if (targetParticleRef.current) {
-        tl.to(
-          targetParticleRef.current,
-          {
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.inOut',
-          },
-          0.1, // Slight delay for crossfade effect
-        );
-      }
-
       tl.set(currentRef.current, { display: 'none' });
-      if (currentParticleRef.current) {
-        tl.set(currentParticleRef.current, { display: 'none' });
-      }
     },
     [setInnerPageIndex],
   );
@@ -255,14 +251,6 @@ function MobileSpectrum() {
       }
       if (page1Ref.current) {
         gsap.set(page1Ref.current, { y: '100%', opacity: 1, display: 'none' });
-      }
-
-      // Reset particle container positions immediately
-      if (particleP0Ref.current) {
-        gsap.set(particleP0Ref.current, { opacity: 1, display: 'block' });
-      }
-      if (particleP1Ref.current) {
-        gsap.set(particleP1Ref.current, { opacity: 0, display: 'none' });
       }
 
       // Activate particles after a brief delay to ensure clean restart cycle
@@ -337,39 +325,6 @@ function MobileSpectrum() {
       />
 
       <div className="relative flex h-[100svh] flex-col items-center justify-start overflow-hidden pb-20 pt-20">
-        {/* Particle containers for Page 0 */}
-        <div ref={particleP0Ref} id="spectrum-particle-gl-mobile-p0" className="pointer-events-none absolute inset-0 z-0">
-          <div
-            id="spectrum-particle-container-mobile-p0-tl"
-            className={cn('particle-container spectrum-particle-p0-tl', { active: particleActive && particleP0Active })}
-          />
-          <div
-            id="spectrum-particle-container-mobile-p0-tr"
-            className={cn('particle-container spectrum-particle-p0-tr', { active: particleActive && particleP0Active })}
-          />
-          <div
-            id="spectrum-particle-container-mobile-p0-bl"
-            className={cn('particle-container spectrum-particle-p0-bl', { active: particleActive && particleP0Active })}
-          />
-          <div
-            id="spectrum-particle-container-mobile-p0-br"
-            className={cn('particle-container spectrum-particle-p0-br', { active: particleActive && particleP0Active })}
-          />
-        </div>
-
-        {/* Particle container for Page 1 */}
-        <div
-          ref={particleP1Ref}
-          id="spectrum-particle-gl-mobile-p1"
-          className="pointer-events-none absolute inset-0 z-0"
-          style={{ opacity: 0, display: 'none' }}
-        >
-          <div
-            id="spectrum-particle-container-mobile-p1"
-            className={cn('particle-container spectrum-particle-p1', { active: particleActive && particleP1Active })}
-          />
-        </div>
-
         {/* Title Section */}
         <div className="spectrum-title mb-1.5 mt-1 font-xirod text-[26px]/[30px] font-bold uppercase">SPECTRUM</div>
         <div className="spectrum-subtitle mb-6 font-oxanium text-sm font-bold uppercase">WE DRIVE CHANGE BY..</div>
@@ -387,6 +342,10 @@ function MobileSpectrum() {
                   updateUrlAndExecute={updateUrlAndExecute}
                   routeConfigs={routeConfigs}
                   className="spectrum-grid-item"
+                  particleContainerId={PARTICLE_CONTAINER_IDS[index]}
+                  particleActive={particleActive && particleP0Active}
+                  particleConfig={getParticleConfig(index)}
+                  linksInRow={index === 3} // Global Internship: Apply links in one row
                   onClick={(e) => {
                     item.onClick?.(e);
                   }}
@@ -397,6 +356,16 @@ function MobileSpectrum() {
 
           {/* Page 1: Sponsors logo wall */}
           <div ref={page1Ref} className="absolute inset-0 hidden flex-col items-center justify-center">
+            {/* Particle container for sponsor page - centered background */}
+            <div
+              id="spectrum-particle-container-mobile-p1"
+              className={cn(
+                'spectrum-particle-item-bg spectrum-particle-p1-bg pointer-events-none absolute left-1/2 top-1/2 z-[-1] -translate-x-1/2 -translate-y-1/2',
+                {
+                  active: particleActive && particleP1Active,
+                },
+              )}
+            />
             <MobileSpectrumSponsorPage
               sponsorItem={spectrumSponsorItem}
               executeSpectrumRoute={executeSpectrumRoute}

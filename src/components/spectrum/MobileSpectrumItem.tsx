@@ -7,6 +7,14 @@ import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, u
 import { ArrowSVG } from '../svg';
 import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 
+/** Particle configuration for position offset and scale */
+export interface ParticleConfig {
+  /** Offset for particle container position, e.g. { x: '10px', y: '-5px' } */
+  offset?: { x?: string; y?: string };
+  /** Scale factor for particle size, e.g. 0.8 for 80% size */
+  scale?: number;
+}
+
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
@@ -16,6 +24,12 @@ interface SpectrumItemProps {
   executeSpectrumRoute?: (key: string) => void;
   updateUrlAndExecute?: (key: string) => void;
   routeConfigs?: SpectrumRouteConfig[];
+  particleContainerId?: string;
+  particleActive?: boolean;
+  /** Particle configuration (offset, scale) */
+  particleConfig?: ParticleConfig;
+  /** Display links in a row instead of column */
+  linksInRow?: boolean;
 }
 
 const MobileSpectrumLink = memo(
@@ -94,7 +108,21 @@ MobileSpectrumLink.displayName = 'MobileSpectrumLink';
 const linksPerPage = 5;
 const MobileSpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs }, ref) => {
+    (
+      {
+        item,
+        onClick,
+        className,
+        executeSpectrumRoute,
+        updateUrlAndExecute,
+        routeConfigs,
+        particleContainerId,
+        particleActive,
+        particleConfig,
+        linksInRow,
+      },
+      ref,
+    ) => {
       const { title, titleCn, icon, links, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
 
@@ -157,7 +185,10 @@ const MobileSpectrumItem = memo(
               delay: index * 0.05,
               ease: 'easeOut',
             }}
+            className={linksInRow ? 'flex items-center gap-1' : ''}
           >
+            {/* Separator for row layout (except first item) */}
+            {linksInRow && index > 0 && <span className="font-poppins text-[10px]/4">/</span>}
             <MobileSpectrumLink
               item={item}
               executeSpectrumRoute={executeSpectrumRoute}
@@ -166,7 +197,7 @@ const MobileSpectrumItem = memo(
             />
           </motion.div>
         ));
-      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, linksInRow]);
 
       return (
         <div
@@ -178,6 +209,23 @@ const MobileSpectrumItem = memo(
             className,
           )}
         >
+          {/* Particle container - positioned behind content */}
+          {particleContainerId && (
+            <div
+              id={particleContainerId}
+              className={cn(
+                'spectrum-particle-item-bg pointer-events-none absolute left-1/2 top-1/2 z-[-1] -translate-x-1/2 -translate-y-1/2',
+                {
+                  active: particleActive,
+                },
+              )}
+              style={{
+                marginLeft: particleConfig?.offset?.x,
+                marginTop: particleConfig?.offset?.y,
+                transform: `translate(-50%, -50%)${particleConfig?.scale ? ` scale(${particleConfig.scale})` : ''}`,
+              }}
+            />
+          )}
           <div className={cn('flex flex-col items-center text-center', itemClassName)}>
             {/* Icon above title for grid layout */}
             {cloneElement(icon, { className: 'spectrum-icon mb-0.5 size-6 shrink-0 fill-white' })}
@@ -191,7 +239,7 @@ const MobileSpectrumItem = memo(
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center gap-1 [text-shadow:0_0_4px_black]"
+                  className={cn('flex items-center gap-1 [text-shadow:0_0_4px_black]', linksInRow ? 'flex-row' : 'flex-col')}
                 >
                   {spectrumLinks}
                 </motion.div>

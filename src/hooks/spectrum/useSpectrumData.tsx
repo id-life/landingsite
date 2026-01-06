@@ -152,6 +152,7 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
+        className: 'mobile:pt-4',
         links: [
           {
             label: 'Access Digital Twin',
@@ -163,6 +164,7 @@ export const useSpectrumData = () => {
         title: 'Global Internship',
         titleCn: '实习生计划',
         icon: <InternSVG />,
+        className: 'mobile:pt-4',
         links: [
           {
             label: 'Apply (CN)',
