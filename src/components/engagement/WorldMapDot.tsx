@@ -87,10 +87,13 @@ export function WorldMapDotPoint({
         top: `${top}px`,
       }}
     >
+      {/* 热区 */}
       <div className="absolute -inset-5 cursor-pointer" />
+      {/* 内容 */}
       <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
         <PulseDot
+          containerClassName="size-6"
           svgSize={svgSize}
           centerPoint={centerPoint}
           centerRadius={centerRadius}

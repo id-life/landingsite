@@ -136,14 +136,14 @@ export default function MobileFooterContact() {
             </div>
           </div>
           <div className="my-4 h-px w-full bg-black/20" />
-          <form id="subscribe-form" className="relative flex justify-between" onSubmit={handleSubmit(onFormSubmit)}>
+          <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
             {errors.EMAIL && (
               <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
             )}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
             <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className={clsx('flex-center h-11 w-[233px] border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
+            <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
               <input
                 className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
                 placeholder="Please enter email"

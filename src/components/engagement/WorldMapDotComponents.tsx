@@ -145,7 +145,7 @@ export function VideoTalkButton({ videoUrl, onClick }: { videoUrl: string; onCli
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 0.85 }}
       exit={{ opacity: 0, scale: 0.5 }}
-      className="-left-[calc(100%_-_3.75rem)]x pointer-events-auto absolute top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
+      className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
     >
       <div className="clip-talk-content bg-white p-0.5">
         <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
@@ -377,11 +377,11 @@ export function MobileConferenceBadgesWithVideo({
           exit={{ opacity: 0, scale: 0.5 }}
           className="pointer-events-auto flex cursor-pointer flex-col"
         >
-          <div className="clip-talk-content -ml-1 bg-white p-0.5">
-            <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
-              <YoutubeSVG className="size-5 fill-white" />
-              <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
-              <ArrowSVG className="size-4 -rotate-90 fill-white" />
+          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
+            <div className="clip-talk-content flex items-center gap-0.5 bg-[#0F0F0F] px-1.5 py-1 [--clip-offset:6px]">
+              <YoutubeSVG className="size-3 fill-white" />
+              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>
         </motion.a>

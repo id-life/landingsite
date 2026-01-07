@@ -30,7 +30,7 @@ export default function PodcastHeader() {
 
   const handleLogoClick = () => {
     trackEvent({ name: GA_EVENT_NAMES.ID_HOME_REDIRECT });
-    window.open('/', '_blank');
+    window.location.href = '/';
   };
 
   const handleSubscribeClick = () => {
