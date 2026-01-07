@@ -18,6 +18,7 @@ import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import clsx from 'clsx';
 import { useAtom } from 'jotai';
+import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -93,96 +94,123 @@ export default function MobileFooterContact() {
 
   return (
     <FloatingPortal>
-      {isSubscribeShow && (
-        <div
-          ref={subscribeRef}
-          className="page-footer fixed inset-x-0 bottom-0 z-[102] origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
-        >
-          <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
-          <div className="mt-3 flex justify-center gap-5">
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-            >
-              <CornerBorder hoverColor="#000" />
-              <YoutubeSVG className="size-5 fill-black" />
-              <span className="font-oxanium text-xs/3 font-bold">YOUTUBE</span>
+      <AnimatePresence mode="wait">
+        {isSubscribeShow ? (
+          <motion.div
+            key="expanded"
+            ref={subscribeRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="page-footer fixed inset-x-0 bottom-0 z-[102] border-2 border-white bg-white/20 p-5 text-black backdrop-blur-xl"
+          >
+            <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+            <div className="mt-3 flex justify-center gap-5">
+              <div
+                onClick={() => handleLinkClick(MediaLinkType.Youtube)}
+                className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+              >
+                <CornerBorder hoverColor="#000" />
+                <YoutubeSVG className="size-5 fill-black" />
+                <span className="font-oxanium text-xs/3 font-bold">YOUTUBE</span>
+              </div>
+              <div
+                onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
+                className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+              >
+                <CornerBorder hoverColor="#000" />
+                <LinkedinSVG className="size-5 fill-black" />
+                <span className="font-oxanium text-xs/3 font-bold">LINKEDIN</span>
+              </div>
+              <div
+                onClick={() => handleLinkClick(MediaLinkType.Media)}
+                className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
+              >
+                <CornerBorder hoverColor="#000" />
+                <MediaSVG className="size-5 fill-black" />
+                <span className="font-oxanium text-xs/3 font-bold">MEDIAKIT</span>
+              </div>
             </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-            >
-              <CornerBorder hoverColor="#000" />
-              <LinkedinSVG className="size-5 fill-black" />
-              <span className="font-oxanium text-xs/3 font-bold">LINKEDIN</span>
+            <div className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold uppercase">
+              <div className="flex items-center gap-1">
+                <HomeSVG className="size-5" />
+                <span>3 BIOPOLIS DR, #01-15, SINGAPORE 138623</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <ContactEmailSVG className="size-5" />
+                <span>CONTACT@ID.LIFE</span>
+              </div>
             </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Media)}
-              className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-            >
-              <CornerBorder hoverColor="#000" />
-              <MediaSVG className="size-5 fill-black" />
-              <span className="font-oxanium text-xs/3 font-bold">MEDIAKIT</span>
+            <div className="my-4 h-px w-full bg-black/20" />
+            <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
+              {errors.EMAIL && (
+                <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+              )}
+              <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
+              <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
+              <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+              <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
+                <input
+                  className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
+                  placeholder="Please enter email"
+                  defaultValue=""
+                  {...register('EMAIL', {
+                    required: 'Please fill in this field',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Please enter email address',
+                    },
+                  })}
+                />
+              </div>
+              <div className="footer-submit-clip relative h-11 w-[90px] bg-red-600 text-white">
+                {isSubmitting ? (
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
+                    <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+                  </div>
+                ) : null}
+                {isSubmitted ? (
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
+                    <CheckedSVG className="w-6 stroke-white stroke-[3]" />
+                  </div>
+                ) : null}
+                <input
+                  className={cn('w-[5.625rem] cursor-pointer py-3 font-poppins text-base/5 font-semibold', {
+                    'text-red-600': isSubmitting || isSubmitted,
+                  })}
+                  type="submit"
+                  value="Submit"
+                />
+              </div>
+            </form>
+            <div className="mt-3 flex gap-1.5 font-poppins text-xs/5 font-semibold text-black/50">
+              <InfoSVG className="size-4 shrink-0" />
+              Join our longevity circle for priority access to pioneer research
             </div>
-          </div>
-          <div className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold uppercase">
-            <div className="flex items-center gap-1">
-              <HomeSVG className="size-5" />
-              <span>3 BIOPOLIS DR, #01-15, SINGAPORE 138623</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <ContactEmailSVG className="size-5" />
-              <span>CONTACT@ID.LIFE</span>
-            </div>
-          </div>
-          <div className="my-4 h-px w-full bg-black/20" />
-          <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
-            {errors.EMAIL && (
-              <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
-            )}
-            <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-            <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-            <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
-              <input
-                className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
-                placeholder="Please enter email"
-                defaultValue=""
-                {...register('EMAIL', {
-                  required: 'Please fill in this field',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Please enter email address',
-                  },
-                })}
-              />
-            </div>
-            <div className="footer-submit-clip relative h-11 w-[90px] bg-red-600 text-white">
-              {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
-                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
-                </div>
-              ) : null}
-              {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
-                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
-                </div>
-              ) : null}
-              <input
-                className={cn('w-full cursor-pointer py-3 font-poppins text-base/5 font-semibold', {
-                  'text-red-600': isSubmitting || isSubmitted,
-                })}
-                type="submit"
-                value="Submit"
-              />
-            </div>
-          </form>
-          <div className="mt-3.5 flex gap-1.5 font-poppins text-xs/5 font-semibold text-black/50">
-            <InfoSVG className="size-4 shrink-0" />
-            Join our longevity circle for priority access to pioneer research
-          </div>
-        </div>
-      )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="collapsed"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            onClick={() => setIsSubscribeShow(true)}
+            className="group fixed bottom-7 left-5 z-[102] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-poppins text-base/5 font-semibold hover:opacity-80"
+          >
+            {/* Border SVG with top-left cut corner */}
+            <svg className="absolute inset-0" viewBox="0 0 100 36" fill="none" preserveAspectRatio="none">
+              <path d="M10 1H99V35H1V10L10 1Z" stroke="#C11111" strokeWidth="2" />
+            </svg>
+            <span className="relative text-sm/5 text-red-600">Connect</span>
+            {/* Right chevron arrow */}
+            <svg className="relative -mt-px size-4" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke="#C11111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </FloatingPortal>
   );
 }
