@@ -1,3 +1,8 @@
+#p5_loading {
+  /* fix p5 loading text */
+  display: none;
+}
+
 .particle-container {
   pointer-events: none;
   opacity: 0;

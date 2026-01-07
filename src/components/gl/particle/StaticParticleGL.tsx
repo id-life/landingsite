@@ -165,7 +165,7 @@ const StaticParticleGL = ({
       }
 
       p5.draw = () => {
-        if (!isAnimActive) return;
+        if (!isAnimActive || !particles?.length) return;
         p5.clear();
         p5.background(255, 0); // transparent background
 

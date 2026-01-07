@@ -19,6 +19,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import clsx from 'clsx';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
+import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -34,6 +35,8 @@ export default function MobileFooterContact() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
+  const pathname = usePathname();
+  const isConnectPage = pathname === '/connect';
   const {
     register,
     handleSubmit,
@@ -189,7 +192,7 @@ export default function MobileFooterContact() {
               Join our longevity circle for priority access to pioneer research
             </div>
           </motion.div>
-        ) : (
+        ) : isConnectPage ? (
           <motion.div
             key="collapsed"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -197,7 +200,7 @@ export default function MobileFooterContact() {
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={() => setIsSubscribeShow(true)}
-            className="group fixed bottom-7 left-5 z-[102] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-poppins text-base/5 font-semibold hover:opacity-80"
+            className="group fixed bottom-6.5 left-5 z-[90] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-poppins text-base/5 font-semibold hover:opacity-80"
           >
             {/* Border SVG with top-left cut corner */}
             <svg className="absolute inset-0" viewBox="0 0 100 36" fill="none" preserveAspectRatio="none">
@@ -209,7 +212,7 @@ export default function MobileFooterContact() {
               <path d="M6 4L10 8L6 12" stroke="#C11111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </FloatingPortal>
   );
