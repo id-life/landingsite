@@ -1,16 +1,16 @@
 import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { memo, useMemo } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { PulseDot } from './WorldMapDotComponents';
+import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -101,12 +101,13 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      'flex items-center gap-0.5 rounded bg-purple/20',
+                      'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-purple backdrop-blur-2xl',
+                      'font-semibold text-purple',
                     )}
                   >
+                    <BadgeBlurBg className="bg-purple/20" />
                     <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
                     Conference
                   </motion.div>
@@ -116,12 +117,13 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      'flex items-center gap-0.5 rounded bg-orange/20',
+                      'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-orange backdrop-blur-2xl',
+                      'font-semibold text-orange',
                     )}
                   >
+                    <BadgeBlurBg className="bg-orange/20" />
                     <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
@@ -132,12 +134,13 @@ export function MobileWorldMapSponsorDotPoint({
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      '-ml-2 flex items-center gap-0.5 rounded bg-orange/20',
+                      'relative -ml-2 flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-orange backdrop-blur-2xl',
+                      'font-semibold text-orange',
                     )}
                   >
+                    <BadgeBlurBg className="bg-orange/20" />
                     <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {extraText}
                   </motion.span>

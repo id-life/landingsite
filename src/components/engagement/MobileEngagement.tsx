@@ -47,10 +47,13 @@ function MobileEngagement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  // Note: Don't use CSS animation (e.g., animate-fade-in) here as it creates
+  // a stacking context that breaks backdrop-filter in child components.
+  // GSAP handles the fade-in animation in enterAnimate() instead.
   return (
     <div
       id={PAGE_ID}
-      className={cn('relative h-[calc(100dvh-10.875rem)] w-full animate-fade-in text-white transition-all duration-100', {
+      className={cn('relative h-[calc(100dvh-10.875rem)] w-full text-white transition-all duration-100', {
         hidden: currentPage?.id !== PAGE_ID,
       })}
     >

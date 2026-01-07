@@ -1,15 +1,22 @@
+import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
+import { MOBILE_MAP_SCALE } from '@/constants/engagement';
+import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { MouseEvent } from 'react';
-import { cn } from '@/utils';
-import { MeetingSVG, SponsorSVG, ArrowSVG } from '../svg';
-import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import { VideoWithPoster } from './VideoWithPoster';
+import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
-import { MOBILE_MAP_SCALE } from '@/constants/engagement';
+import { VideoWithPoster } from './VideoWithPoster';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
 // ============================================================================
+
+// Badge blur background layer
+// Note: Parent elements must not have active CSS animations (e.g., animate-fade-in)
+// as they create stacking contexts that break backdrop-filter
+export function BadgeBlurBg({ className }: { className?: string }) {
+  return <div className={cn('absolute inset-0 -z-10 rounded backdrop-blur-2xl', className)} />;
+}
 
 // Pulsing dot SVG animation with center point and ripple effects
 export function PulseDot({
@@ -345,24 +352,26 @@ export function MobileConferenceBadgesWithVideo({
     >
       <div
         className={cn(
-          'relative flex items-center gap-0.5 rounded bg-purple/20',
+          'relative flex items-center gap-0.5 rounded',
           MOBILE_MAP_SCALE.badgePaddingClass,
           MOBILE_MAP_SCALE.badgeTextClass,
-          'font-semibold text-purple backdrop-blur-2xl',
+          'font-semibold text-purple',
         )}
       >
+        <BadgeBlurBg className="bg-purple/20" />
         <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
         Conference
       </div>
       {(isSponsor || extraSponsor) && (
         <div
           className={cn(
-            'relative flex items-center gap-0.5 rounded bg-orange/20',
+            'relative flex items-center gap-0.5 rounded',
             MOBILE_MAP_SCALE.badgePaddingClass,
             MOBILE_MAP_SCALE.badgeTextClass,
-            'font-semibold text-orange backdrop-blur-2xl',
+            'font-semibold text-orange',
           )}
         >
+          <BadgeBlurBg className="bg-orange/20" />
           <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
           Sponsorship
         </div>

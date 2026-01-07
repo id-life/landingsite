@@ -48,6 +48,10 @@ function MobilePortfolio() {
   };
   const particleIndices = getParticleIndices();
 
+  // Get opacity for each particle based on config
+  const particleConfigs = useMemo(() => portfolioGetSourceImgInfos(true), []);
+  const getParticleOpacity = (idx: number) => particleConfigs[particleIndices[idx]]?.opacity ?? 0.5;
+
   const handleFundClick = useCallback(
     (item: PortfolioItemInfo) => {
       trackEvent({
@@ -168,6 +172,7 @@ function MobilePortfolio() {
                 className={cn('particle-container-grid-cell', {
                   active: particleActive && i < particleIndices.length,
                 })}
+                style={particleActive && i < particleIndices.length ? { opacity: getParticleOpacity(i) } : undefined}
               >
                 <div className="particle-mask"></div>
               </div>

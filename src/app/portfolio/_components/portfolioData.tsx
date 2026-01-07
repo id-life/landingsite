@@ -101,11 +101,22 @@ export const portfolio: PortfolioItemInfo[] = [
 // Higher = larger particles, Lower = smaller particles
 const MOBILE_PARTICLE_SCALE = 0.3;
 
+type ParticleConfig = {
+  url: string;
+  resize: number[];
+  baseScale: number;
+  loadPercentage?: number;
+  mobileScaleMultiplier?: number;
+  mobileUrl?: string;
+  mobileResize?: [number, number];
+  mobileOpacity?: number;
+};
+
 export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
   // Base scale values for each particle (desktop values)
-  const configs = [
+  const configs: ParticleConfig[] = [
     { url: '/imgs/particle/0.png', resize: [512, 300], baseScale: 2.2 },
-    { url: '/imgs/particle/1.png', resize: [600, 600], baseScale: 0.8, loadPercentage: 0.005 },
+    { url: '/imgs/particle/1.png', resize: [600, 600], baseScale: 0.8, loadPercentage: 0.005, mobileOpacity: 0.3 },
     { url: '/imgs/particle/5.png', resize: [300, 307], baseScale: 1, mobileScaleMultiplier: 1.8, loadPercentage: 0.008 },
     { url: '/imgs/particle/9.png', resize: [600, 600], baseScale: 1, loadPercentage: 0.0012 },
     { url: '/imgs/particle/4.png', resize: [300, 300], baseScale: 1.4, mobileScaleMultiplier: 1.4, loadPercentage: 0.002 },
@@ -115,9 +126,10 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       baseScale: 1,
       mobileScaleMultiplier: 0.8,
       loadPercentage: 0.002,
+      mobileOpacity: 0.3,
     },
-    { url: '/imgs/particle/3.png', resize: [600, 576], baseScale: 1, mobileScaleMultiplier: 0.95 },
-    { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004 },
+    { url: '/imgs/particle/3.png', resize: [600, 576], baseScale: 1, mobileScaleMultiplier: 0.95, mobileOpacity: 0.3 },
+    { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004, mobileOpacity: 0.3 },
     { url: '/imgs/particle/11.png', resize: [512, 262], baseScale: 1.2, loadPercentage: 0.002 },
     {
       url: '/imgs/particle/oisin.png',
@@ -127,6 +139,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.005,
       mobileUrl: '/imgs/particle/oisin-mobile.png',
       mobileResize: [164, 164] as [number, number],
+      mobileOpacity: 0.3,
     },
     {
       url: '/imgs/particle/etheros.png',
@@ -135,6 +148,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileScaleMultiplier: 1.5,
       loadPercentage: 0.002,
       mobileUrl: '/imgs/particle/etheros-mobile.png',
+      mobileOpacity: 0.3,
       mobileResize: [328, 328] as [number, number],
     },
     { url: '/imgs/particle/2.png', resize: [600, 536], baseScale: 0.7, loadPercentage: 0.0012 },
@@ -146,13 +160,17 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.002,
       mobileUrl: '/imgs/particle/vitalia-mobile.png',
       mobileResize: [328, 328] as [number, number],
+      mobileOpacity: 0.3,
     },
   ];
 
-  return configs.map(({ baseScale, mobileScaleMultiplier = 1, mobileUrl, mobileResize, url, resize, ...rest }) => ({
-    ...rest,
-    url: isMobile && mobileUrl ? mobileUrl : url,
-    resize: isMobile && mobileResize ? mobileResize : resize,
-    scaleNum: isMobile ? baseScale * MOBILE_PARTICLE_SCALE * mobileScaleMultiplier : baseScale,
-  }));
+  return configs.map(
+    ({ baseScale, mobileScaleMultiplier = 1, mobileUrl, mobileResize, mobileOpacity, url, resize, ...rest }) => ({
+      ...rest,
+      url: isMobile && mobileUrl ? mobileUrl : url,
+      resize: isMobile && mobileResize ? mobileResize : resize,
+      scaleNum: isMobile ? baseScale * MOBILE_PARTICLE_SCALE * mobileScaleMultiplier : baseScale,
+      opacity: isMobile ? (mobileOpacity ?? 0.5) : 0.8,
+    }),
+  );
 };

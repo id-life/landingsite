@@ -1,16 +1,16 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
-import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
-import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useMemo } from 'react';
-import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
-import { VideoWithPoster } from './VideoWithPoster';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { PulseDot } from './WorldMapDotComponents';
+import { cn } from '@/utils';
+import { useAtom } from 'jotai';
+import { AnimatePresence, motion, Variants } from 'motion/react';
+import { useMemo } from 'react';
+import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
+import { VideoWithPoster } from './VideoWithPoster';
+import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -97,12 +97,13 @@ export function MobileWorldMapBookDotPoint({
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 className={cn(
-                  'flex items-center gap-0.5 rounded bg-blue/20',
+                  'relative flex items-center gap-0.5 rounded',
                   MOBILE_MAP_SCALE.badgePaddingClass,
                   MOBILE_MAP_SCALE.badgeTextClass,
-                  'font-semibold text-blue backdrop-blur-2xl',
+                  'font-semibold text-blue',
                 )}
               >
+                <BadgeBlurBg className="bg-blue/20" />
                 <BookSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-cyan')} />
                 Translation
               </motion.span>
