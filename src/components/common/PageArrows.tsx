@@ -25,9 +25,11 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const getTotal = useCallback(() => {
     if (!hasInnerPage(currentPage.id)) return 0;
-    // PC版Insights没有内页切换，返回0让箭头直接导航到下一页
-    if (currentPage.id === 'insights_page') return 0;
-    return 3; // 只有Connect页有3个内页
+    // PC版这些页面没有内页切换，返回0让箭头直接导航到下一页
+    if (currentPage.id === 'insights_page' || currentPage.id === 'portfolio_page' || currentPage.id === 'spectrum_page') {
+      return 0;
+    }
+    return 0; // 目前所有页面都不使用内页切换
   }, [currentPage]);
 
   // 更新 innerPageTotal

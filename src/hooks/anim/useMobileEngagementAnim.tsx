@@ -1,7 +1,7 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
-import { MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
+import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
@@ -29,11 +29,12 @@ export function useMobileEngagementAnim() {
     MessageType.MOBILE_SCROLL_TO_ACTIVE_POINT,
     ({ type, index }: { type: 'meeting' | 'book' | 'sponsor'; index: number }) => {
       handleUserInteraction();
-      scrollToActivePoint(type, index);
+      const dotInfo = getMobileDotShowInfo(type, index);
+      scrollToActivePoint(type, index, dotInfo?.offsetX ?? 0);
     },
   );
 
-  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number) => {
+  const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offsetX: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
     const activeEle =
       type === 'meeting'
@@ -44,8 +45,8 @@ export function useMobileEngagementAnim() {
     if (scrollContainer && activeEle) {
       const containerEl = scrollContainer as HTMLDivElement;
       const eleEl = activeEle as HTMLDivElement;
-      // Auto-center the element on screen
-      const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2;
+      // Auto-center the element on screen, with custom offset
+      const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2 + offsetX;
       containerEl.scrollTo({ behavior: 'smooth', left: Math.max(0, targetScrollLeft) });
     }
   }, []);
@@ -84,7 +85,7 @@ export function useMobileEngagementAnim() {
       }
 
       const point = MOBILE_DOT_SHOW_ORDER[currentIndex];
-      const { type, index } = point;
+      const { type, index, offsetX = 0 } = point;
 
       // 清理之前的激活定时器
       if (activateTimeoutRef.current) {
@@ -98,7 +99,7 @@ export function useMobileEngagementAnim() {
       setActiveSponsorDot(null);
 
       // 第二步：开始滚动
-      scrollToActivePoint(type, index);
+      scrollToActivePoint(type, index, offsetX);
 
       // 第三步：延迟后激活新点
       activateTimeoutRef.current = setTimeout(() => {

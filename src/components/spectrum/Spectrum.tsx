@@ -191,7 +191,7 @@ function Spectrum() {
 
       const cleanup: (() => void)[] = [];
 
-      // Only apply hover animation to first 4 items (not sponsor)
+      // Apply hover animation to first 4 items
       spectrumRefs.current.slice(0, 4).forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         const content = div.querySelector('.spectrum-item-content');
@@ -221,6 +221,20 @@ function Spectrum() {
           tl.kill();
         });
       });
+
+      // Apply hover particle effect to sponsor item (index 4 -> imageIdx 5)
+      const sponsorDiv = spectrumRefs.current[4];
+      if (sponsorDiv) {
+        const handleSponsorMouseEnter = () => {
+          throttledSetImageIdx(5);
+        };
+
+        sponsorDiv.addEventListener('mouseenter', handleSponsorMouseEnter);
+
+        cleanup.push(() => {
+          sponsorDiv.removeEventListener('mouseenter', handleSponsorMouseEnter);
+        });
+      }
 
       cleanupFunctions.current = cleanup;
 

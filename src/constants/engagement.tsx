@@ -644,20 +644,24 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   },
 ];
 
-export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number }[] = [
-  { type: 'meeting', index: 6 }, // 1. Copenhagen, Denmark
-  { type: 'sponsor', index: 0 }, // 2. Oxford, UK
-  { type: 'meeting', index: 5 }, // 3. London, UK
-  { type: 'meeting', index: 7 }, // 4. Aix-En-Provence, France
-  { type: 'book', index: 0 }, // 5. Lustica Bay, Montenegro
-  { type: 'sponsor', index: 2 }, // 6. Abu Dhabi, UAE
-  { type: 'meeting', index: 0 }, // 7. Shanghai, China
-  { type: 'meeting', index: 1 }, // 8. Chiang Mai, Thailand
-  { type: 'meeting', index: 2 }, // 9. Singapore
-  { type: 'meeting', index: 4 }, // 10. Berkeley, USA
-  { type: 'sponsor', index: 1 }, // 11. San Francisco, USA
-  { type: 'book', index: 1 }, // 12. Los Angeles, USA
-  { type: 'meeting', index: 3 }, // 13. Roatan, Honduras
+export const MOBILE_DOT_SHOW_ORDER: {
+  type: 'sponsor' | 'book' | 'meeting';
+  index: number;
+  offsetX?: number; // 水平偏移量（像素），正值向右偏移，负值向左偏移
+}[] = [
+  { type: 'meeting', index: 6, offsetX: 0 }, // 1. Copenhagen, Denmark
+  { type: 'sponsor', index: 0, offsetX: 0 }, // 2. Oxford, UK
+  { type: 'meeting', index: 5, offsetX: -110 }, // 3. London, UK
+  { type: 'meeting', index: 7, offsetX: -50 }, // 4. Aix-En-Provence, France
+  { type: 'book', index: 0, offsetX: 0 }, // 5. Lustica Bay, Montenegro
+  { type: 'sponsor', index: 2, offsetX: 40 }, // 6. Abu Dhabi, UAE
+  { type: 'meeting', index: 0, offsetX: 0 }, // 7. Shanghai, China
+  { type: 'meeting', index: 1, offsetX: 0 }, // 8. Chiang Mai, Thailand
+  { type: 'meeting', index: 2, offsetX: 0 }, // 9. Singapore
+  { type: 'meeting', index: 4, offsetX: 80 }, // 10. Berkeley, USA
+  { type: 'sponsor', index: 1, offsetX: 80 }, // 11. San Francisco, USA
+  { type: 'book', index: 1, offsetX: 0 }, // 12. Los Angeles, USA
+  { type: 'meeting', index: 3, offsetX: 90 }, // 13. Roatan, Honduras
 ];
 
 export const getMobileDotShowInfo = (type: 'sponsor' | 'book' | 'meeting', index: number) => {

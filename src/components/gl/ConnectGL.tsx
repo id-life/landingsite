@@ -1,18 +1,16 @@
-import { currentPageAtom, currentPageIndexAtom, innerPageIndexAtom, innerPageNavigateToAtom } from '@/atoms';
+import { currentPageAtom } from '@/atoms';
 import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
-import { CONNECT_PAGE_INDEX } from '@/constants/config';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useConnectCrossAnimations } from '@/hooks/connectGL/useConnectCrossAnimations';
-import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, RefObject, useCallback, useEffect, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { memo, RefObject, useRef } from 'react';
 import * as THREE from 'three';
 
 type TitleProps = {
@@ -34,20 +32,11 @@ TitleSVG.displayName = 'TitleSVG';
 function ConnectGL() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
-  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
-  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const { sendValueShowEvent } = useConnectShowEvent();
 
   const currentPage = useAtomValue(currentPageAtom);
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
-  const isScrollingRef = useRef(false);
   const footerAnimDelayRef = useRef<gsap.core.Tween | null>(null);
   const currentPageRef = useRef(currentPage);
   currentPageRef.current = currentPage;
-
-  const enableScroll = useCallback(() => {
-    document.body.style.overflow = '';
-  }, []);
 
   const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({ modelRef });
 
@@ -159,23 +148,6 @@ function ConnectGL() {
     },
     { dependencies: [] },
   );
-  useEffect(() => {
-    if (currentPageIndex !== CONNECT_PAGE_INDEX || innerPageNavigateTo === null) return;
-    const st = ScrollTrigger.getById(`connect-page${innerPageNavigateTo + 1}-scroll-trigger`);
-    if (st) {
-      isScrollingRef.current = true;
-      gsap.to(window, {
-        duration: 1,
-        scrollTo: st.end,
-        onComplete: () => {
-          isScrollingRef.current = false;
-          enableScroll();
-        },
-      });
-    }
-    setInnerPageIndex(innerPageNavigateTo);
-    setInnerPageNavigateTo(null);
-  }, [currentPageIndex, innerPageNavigateTo, setInnerPageIndex, setInnerPageNavigateTo, enableScroll]);
 
   return (
     <group position={[0, -10, 0]}>
