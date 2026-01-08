@@ -38,7 +38,9 @@ function ConnectGL() {
   const currentPageRef = useRef(currentPage);
   currentPageRef.current = currentPage;
 
-  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({ modelRef });
+  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim, playEnToCnAnim } = useConnectCrossAnimations({
+    modelRef,
+  });
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // connect auto scroll to twin
@@ -75,6 +77,21 @@ function ConnectGL() {
             console.log('[ConnectGL] onEnter - 进入Connect页面');
             setCurrentPage(NAV_LIST[6]);
             setEnableUpJudge(true);
+            // 立即显示底栏
+            playFooterEnterAnim();
+            // 取消之前的延迟调用
+            if (footerAnimDelayRef.current) {
+              footerAnimDelayRef.current.kill();
+              footerAnimDelayRef.current = null;
+            }
+            // 延迟1秒后播放 EN→CN 动画，让英文有时间停留
+            footerAnimDelayRef.current = gsap.delayedCall(1, () => {
+              const pageId = currentPageRef.current?.id;
+              if (pageId === 'connect_page') {
+                playEnToCnAnim();
+              }
+              footerAnimDelayRef.current = null;
+            });
             if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
@@ -107,29 +124,25 @@ function ConnectGL() {
             if (window.isResizing) return;
             setEnableUpJudge(false);
             console.log('[ConnectGL] onLeave - 显示footer', { isNavScrolling: window.isNavScrolling });
+            // 立即显示底栏
+            playFooterEnterAnim();
             // 取消之前的延迟调用
             if (footerAnimDelayRef.current) {
               footerAnimDelayRef.current.kill();
               footerAnimDelayRef.current = null;
             }
-            if (window.isNavScrolling) {
-              // 通过菜单导航进入，延迟1秒播放EN→CN动画
-              footerAnimDelayRef.current = gsap.delayedCall(1, () => {
-                // 检查是否还在Connect页面，如果不在就不执行动画
-                const pageId = currentPageRef.current?.id;
-                console.log('[ConnectGL] 延迟调用执行', { currentPageId: pageId });
-                if (pageId === 'connect_page') {
-                  console.log('[ConnectGL] 确认在Connect页面 - 显示footer');
-                  playFooterEnterAnim();
-                } else {
-                  console.log('[ConnectGL] 已离开Connect页面 - 取消footer动画');
-                }
-                footerAnimDelayRef.current = null;
-              });
-            } else {
-              // 正常滚动，立即播放
-              playFooterEnterAnim();
-            }
+            // 延迟1秒后播放 EN→CN 动画，让英文有时间停留
+            footerAnimDelayRef.current = gsap.delayedCall(1, () => {
+              const pageId = currentPageRef.current?.id;
+              console.log('[ConnectGL] 延迟调用执行', { currentPageId: pageId });
+              if (pageId === 'connect_page') {
+                console.log('[ConnectGL] 确认在Connect页面 - 播放EN→CN动画');
+                playEnToCnAnim();
+              } else {
+                console.log('[ConnectGL] 已离开Connect页面 - 取消EN→CN动画');
+              }
+              footerAnimDelayRef.current = null;
+            });
           },
           onLeaveBack: () => {
             if (window.isResizing) return;
