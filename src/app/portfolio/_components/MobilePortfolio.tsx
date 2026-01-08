@@ -11,6 +11,7 @@ import PortfolioItem from './PortfolioItem';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useRetimer } from '@/hooks/useRetimer';
+import { useWindowResize } from '@/hooks/useWindowResize';
 
 const PAGE_ID = 'portfolio_page';
 const HEIGHT_THRESHOLD = 700;
@@ -29,14 +30,11 @@ function MobilePortfolio() {
   const retimer = useRetimer();
 
   // Calculate items per page based on screen height
-  useEffect(() => {
-    const checkHeight = () => {
-      setItemsPerPage(window.innerHeight > HEIGHT_THRESHOLD ? 6 : 4);
-    };
-    checkHeight();
-    window.addEventListener('resize', checkHeight);
-    return () => window.removeEventListener('resize', checkHeight);
+  const checkHeight = useCallback(() => {
+    setItemsPerPage(window.innerHeight > HEIGHT_THRESHOLD ? 6 : 4);
   }, []);
+
+  useWindowResize(checkHeight);
 
   const totalPages = Math.ceil(portfolio.length / itemsPerPage);
 

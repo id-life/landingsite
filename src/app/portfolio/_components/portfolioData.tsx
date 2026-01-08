@@ -19,7 +19,13 @@ export const portfolio: PortfolioItemInfo[] = [
   {
     title: 'Frontier Bio',
     description: 'The future of engineered tissue',
-    image: <img className={cn('w-68', mobileImageClassName)} src="/imgs/investments/frontier-bio.webp" alt="frontier-bio" />,
+    image: (
+      <img
+        className={cn('w-68', mobileImageClassName, 'mobile:max-w-[230px]')}
+        src="/imgs/investments/frontier-bio.webp"
+        alt="frontier-bio"
+      />
+    ),
     link: 'https://www.frontierbio.com/',
   },
   {

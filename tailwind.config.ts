@@ -18,6 +18,7 @@ const config: Config = {
         middle: { min: '1200px' },
         desktop: { min: '1540px' },
         desktop2k: { min: '1920px' },
+        ipad: { min: '500px', max: '768px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],

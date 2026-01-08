@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,6 +10,8 @@ import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insi
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
 import { InsightItem } from '@/hooks/insights/fetch';
+import { useContainerResize } from '@/hooks/useContainerResize';
+import { useWindowResize } from '@/hooks/useWindowResize';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -124,35 +126,34 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);
   const totalMobilePages = Math.ceil(items.length / mobileItemCount);
 
-  // Mobile: calculate items based on available container height
-  useEffect(() => {
+  const containerResizeCallback = useCallback(
+    (entry: ResizeObserverEntry) => {
+      if (!isMobile) return;
+      const containerHeight = entry.contentRect.height;
+      const count = calculateMobileItemCount(containerHeight);
+      setMobileItemCount(count);
+    },
+    [isMobile],
+  );
+
+  // Mobile: calculate items based on container height (using ResizeObserver)
+  useContainerResize(containerRef, containerResizeCallback, '.mobile-insights-content');
+
+  const windowResizeCallback = useCallback(() => {
     if (!isMobile) return;
 
-    const calculateItems = () => {
-      // Get the parent container height (MobileInsights content area)
-      const parentContainer = containerRef.current?.closest('.mobile-insights-content');
-      if (parentContainer) {
-        const containerHeight = parentContainer.clientHeight;
-        const count = calculateMobileItemCount(containerHeight);
-        setMobileItemCount(count);
-      } else {
-        // Fallback: use viewport height
-        const viewportHeight = window.innerHeight;
-        const containerHeight = viewportHeight - 140 - 80; // Subtract top margin and nav
-        const count = calculateMobileItemCount(containerHeight);
-        setMobileItemCount(count);
-      }
-    };
+    // Only use this fallback if parent container doesn't exist
+    const parentContainer = containerRef.current?.closest('.mobile-insights-content');
+    if (parentContainer) return;
 
-    // Initial calculation after DOM is ready
-    const timer = setTimeout(calculateItems, 0);
-    window.addEventListener('resize', calculateItems);
-
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', calculateItems);
-    };
+    const viewportHeight = window.innerHeight;
+    const containerHeight = viewportHeight - 140 - 80;
+    const count = calculateMobileItemCount(containerHeight);
+    setMobileItemCount(count);
   }, [isMobile]);
+
+  // Mobile: fallback to window resize if parent container is not found
+  useWindowResize(windowResizeCallback);
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();

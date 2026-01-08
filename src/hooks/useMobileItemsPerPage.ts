@@ -1,4 +1,5 @@
-import { useEffect, useState, RefObject } from 'react';
+import { useCallback, useState, RefObject } from 'react';
+import { useContainerResize } from './useContainerResize';
 
 const DEFAULT_SLOT_HEIGHT = 206; // 默认卡片高度146 + 间距20 + 40
 
@@ -9,21 +10,18 @@ export function useMobileItemsPerPage(
 ) {
   const [itemsPerPage, setItemsPerPage] = useState(3);
 
-  useEffect(() => {
-    if (!isMobile || !containerRef.current) return;
+  const calculateItems = useCallback(
+    (entry: ResizeObserverEntry) => {
+      if (!isMobile) return;
 
-    const calculateItems = () => {
-      const containerHeight = containerRef.current?.clientHeight || 0;
+      const containerHeight = entry.contentRect.height;
       const items = Math.floor(containerHeight / slotHeight);
       setItemsPerPage(Math.max(2, Math.min(6, items)));
-    };
+    },
+    [isMobile, slotHeight],
+  );
 
-    const observer = new ResizeObserver(calculateItems);
-    observer.observe(containerRef.current);
-    calculateItems();
-
-    return () => observer.disconnect();
-  }, [isMobile, slotHeight, containerRef]);
+  useContainerResize(containerRef, calculateItems);
 
   return itemsPerPage;
 }
