@@ -21,7 +21,7 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'The future of engineered tissue',
     image: (
       <img
-        className={cn('w-68', mobileImageClassName, 'mobile:max-w-[230px]')}
+        className={cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]')}
         src="/imgs/investments/frontier-bio.webp"
         alt="frontier-bio"
       />
@@ -60,7 +60,7 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'Artificial Womb (AW) technology',
     image: (
       <img
-        className={cn(mobileImageClassName, 'h-12 mobile:h-12')}
+        className={cn(mobileImageClassName, 'h-12 mobile:-mt-3 mobile:h-10')}
         src="/imgs/investments/kangaroo-biomedical.webp"
         alt="kangaroo-biomedical"
       />
@@ -69,12 +69,14 @@ export const portfolio: PortfolioItemInfo[] = [
   {
     title: 'VIBE SCIENCE',
     description: 'Builds consumer brain wellness technology',
-    image: <img className={cn(mobileImageClassName, 'w-24 mobile:h-14')} src="/imgs/investments/vibe.webp" alt="vitalia" />,
+    image: <img className={cn(mobileImageClassName, 'w-24 mobile:h-12')} src="/imgs/investments/vibe.webp" alt="vitalia" />,
   },
   {
     title: 'Oisin Biotechnologies',
     description: 'Genetic Medicines for Health and Longevity',
-    image: <img className={cn('w-[11.25rem]', mobileImageClassName)} src="/imgs/investments/oisin.webp" alt="oisin" />,
+    image: (
+      <img className={cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11')} src="/imgs/investments/oisin.webp" alt="oisin" />
+    ),
     link: 'https://www.oisinbio.com/',
   },
   {
@@ -82,7 +84,7 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'Small molecule enzyme mimetics for neuroprotection and healthspan',
     image: (
       <img
-        className={cn(mobileImageClassName, 'w-[8.375rem] mobile:h-13')}
+        className={cn(mobileImageClassName, 'w-[8.375rem] mobile:h-11')}
         src="/imgs/investments/etheros.webp"
         alt="etheros"
       />
@@ -116,6 +118,7 @@ type ParticleConfig = {
   mobileUrl?: string;
   mobileResize?: [number, number];
   mobileOpacity?: number;
+  mobileLoadPercentage?: number;
 };
 
 export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
@@ -123,8 +126,15 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
   const configs: ParticleConfig[] = [
     { url: '/imgs/particle/0.png', resize: [512, 300], baseScale: 2.2 },
     { url: '/imgs/particle/1.png', resize: [600, 600], baseScale: 0.8, loadPercentage: 0.005, mobileOpacity: 0.3 },
-    { url: '/imgs/particle/5.png', resize: [300, 307], baseScale: 1, mobileScaleMultiplier: 1.8, loadPercentage: 0.008 },
-    { url: '/imgs/particle/9.png', resize: [600, 600], baseScale: 1, loadPercentage: 0.0012 },
+    {
+      url: '/imgs/particle/5.png',
+      resize: [300, 307],
+      baseScale: 1,
+      mobileScaleMultiplier: 1.8,
+      loadPercentage: 0.008,
+      mobileLoadPercentage: 0.004,
+    },
+    { url: '/imgs/particle/9.png', resize: [600, 600], baseScale: 1, loadPercentage: 0.0012, mobileLoadPercentage: 0.002 },
     { url: '/imgs/particle/4.png', resize: [300, 300], baseScale: 1.4, mobileScaleMultiplier: 1.4, loadPercentage: 0.002 },
     {
       url: '/imgs/particle/immune-bridge.png',
@@ -134,7 +144,14 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.002,
       mobileOpacity: 0.3,
     },
-    { url: '/imgs/particle/3.png', resize: [600, 576], baseScale: 1, mobileScaleMultiplier: 0.95, mobileOpacity: 0.3 },
+    {
+      url: '/imgs/particle/3.png',
+      resize: [600, 576],
+      baseScale: 1,
+      loadPercentage: 0.002,
+      mobileScaleMultiplier: 0.95,
+      mobileOpacity: 0.3,
+    },
     { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004, mobileOpacity: 0.3 },
     { url: '/imgs/particle/11.png', resize: [512, 262], baseScale: 1.2, loadPercentage: 0.002 },
     {
@@ -143,6 +160,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       baseScale: 1.2,
       mobileScaleMultiplier: 2.8,
       loadPercentage: 0.005,
+      mobileLoadPercentage: 0.003,
       mobileUrl: '/imgs/particle/oisin-mobile.png',
       mobileResize: [164, 164] as [number, number],
       mobileOpacity: 0.3,
@@ -153,6 +171,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       baseScale: 1.2,
       mobileScaleMultiplier: 1.5,
       loadPercentage: 0.002,
+      mobileLoadPercentage: 0.0012,
       mobileUrl: '/imgs/particle/etheros-mobile.png',
       mobileOpacity: 0.3,
       mobileResize: [328, 328] as [number, number],
@@ -171,12 +190,24 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
   ];
 
   return configs.map(
-    ({ baseScale, mobileScaleMultiplier = 1, mobileUrl, mobileResize, mobileOpacity, url, resize, ...rest }) => ({
+    ({
+      baseScale,
+      mobileScaleMultiplier = 1,
+      mobileUrl,
+      mobileResize,
+      mobileOpacity,
+      loadPercentage,
+      mobileLoadPercentage,
+      url,
+      resize,
+      ...rest
+    }) => ({
       ...rest,
       url: isMobile && mobileUrl ? mobileUrl : url,
       resize: isMobile && mobileResize ? mobileResize : resize,
       scaleNum: isMobile ? baseScale * MOBILE_PARTICLE_SCALE * mobileScaleMultiplier : baseScale,
       opacity: isMobile ? (mobileOpacity ?? 0.5) : 0.8,
+      loadPercentage: isMobile && mobileLoadPercentage !== undefined ? mobileLoadPercentage : loadPercentage,
     }),
   );
 };

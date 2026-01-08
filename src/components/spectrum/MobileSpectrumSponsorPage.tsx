@@ -80,9 +80,9 @@ const MobileSpectrumSponsorPage = memo(
     const { icon, links } = sponsorItem;
 
     return (
-      <div className={cn('flex h-full w-full flex-col items-center justify-center px-6', className)}>
+      <div className={cn('mt-3 flex w-full flex-col items-center justify-center px-6', className)}>
         {/* Header */}
-        <div className="mb-6 flex items-center gap-2">
+        <div className="mb-8 flex items-center gap-2">
           {cloneElement(icon, { className: 'size-6 shrink-0 fill-white' })}
           <h4 className="font-oxanium text-base font-semibold">Proudly Supporting</h4>
           <span className="bilingual-font text-sm font-bold">本机构赞助支持</span>

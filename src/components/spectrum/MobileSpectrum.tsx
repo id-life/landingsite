@@ -325,15 +325,16 @@ function MobileSpectrum() {
       />
 
       <div className="relative flex h-[100svh] flex-col items-center justify-start overflow-hidden pb-20 pt-20">
-        {/* Title Section */}
-        <div className="spectrum-title mb-1.5 mt-1 font-xirod text-[26px]/[30px] font-bold uppercase">SPECTRUM</div>
-        <div className="spectrum-subtitle mb-6 font-oxanium text-sm font-bold uppercase">WE DRIVE CHANGE BY..</div>
-
         {/* Page Content Container */}
-        <div className="spectrum-content relative h-full w-full flex-1 overflow-hidden">
+        <div className="spectrum-content relative flex h-full w-full flex-1 overflow-hidden">
           {/* Page 0: Main 4 items in 2x2 grid */}
           <div ref={page0Ref} className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="grid w-full grid-cols-2 grid-rows-2 gap-y-10 px-4">
+            {/* Title Section */}
+            <div className="spectrum-title mb-1.5 mt-1 text-center font-xirod text-[26px]/[30px] font-bold uppercase">
+              SPECTRUM
+            </div>
+            <div className="spectrum-subtitle text-center font-oxanium text-sm font-bold uppercase">WE DRIVE CHANGE BY..</div>
+            <div className="mt-6 grid w-full grid-cols-2 grid-rows-2 gap-y-10 px-4">
               {spectrumMainItems.map((item, index) => (
                 <MobileSpectrumItem
                   key={item.title}
@@ -356,6 +357,14 @@ function MobileSpectrum() {
 
           {/* Page 1: Sponsors logo wall */}
           <div ref={page1Ref} className="absolute inset-0 hidden flex-col items-center justify-center">
+            {/* Title Section */}
+            <div className="spectrum-title mb-1.5 mt-1 text-center font-xirod text-[26px]/[30px] font-bold uppercase">
+              SPECTRUM
+            </div>
+            <div className="spectrum-subtitle mb-6 text-center font-oxanium text-sm font-bold uppercase">
+              WE DRIVE CHANGE BY..
+            </div>
+
             {/* Particle container for sponsor page - centered background */}
             <div
               id="spectrum-particle-container-mobile-p1"

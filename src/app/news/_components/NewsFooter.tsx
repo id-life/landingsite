@@ -56,7 +56,7 @@ export default function NewsFooter() {
   };
 
   return (
-    <div className="relative z-10 -mx-5 flex flex-col border-2 border-white bg-white/20 pb-15 pt-30 backdrop-blur-lg mobile:mt-5 mobile:p-5">
+    <div className="relative z-10 -mx-5 flex flex-col pb-15 pt-30 mobile:mt-5 mobile:border-2 mobile:border-white mobile:bg-white/20 mobile:p-5 mobile:backdrop-blur-lg">
       {/* Desktop Layout */}
       <div className="flex items-start justify-between mobile:hidden">
         <div className="flex flex-col items-start gap-5 self-stretch">

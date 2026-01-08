@@ -150,15 +150,15 @@ function MobilePortfolio() {
         />
       ))}
       <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21">
-        <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
+        <div className="page2-title relative top-10 font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
           Portfolio
         </div>
-        <div className="page2-fund relative flex-1 overflow-hidden px-4 mobile:mt-2 mobile:w-full">
+        <div className="page2-fund relative top-10 flex-1 overflow-hidden px-4 mobile:w-full">
           {/* Background layer: particle grid - absolute positioned behind portfolio items */}
           <div
             id="particle-gl"
             className={cn(
-              'particle-gl-mobile-bg absolute inset-0 grid grid-cols-2 px-4',
+              'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4',
               itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
             )}
             data-layout={itemsPerPage === 6 ? '2x3' : '2x2'}
@@ -181,7 +181,7 @@ function MobilePortfolio() {
             <div
               key={pageIdx}
               className={cn(
-                'absolute inset-0 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
+                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
                 itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
                 innerPageIndex === pageIdx
                   ? 'translate-y-0 opacity-100'
