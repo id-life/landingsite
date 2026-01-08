@@ -1,4 +1,4 @@
-import { DEFAULT_PULSE_CONFIG, MapDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
@@ -6,7 +6,12 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { PulseDot, ExtraSponsorSection, MobileConferenceBadgesWithVideo, MobileContentSection } from './WorldMapDotComponents';
+import {
+  MobileExtraSponsorSection,
+  MobileConferenceBadgesWithVideo,
+  MobileContentSection,
+  PulseDot,
+} from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -68,7 +73,7 @@ export function MobileWorldMapDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
         <PulseDot
           svgSize={svgSize}
@@ -78,9 +83,16 @@ export function MobileWorldMapDotPoint({
           pulse1={pulse1}
           pulse2={pulse2}
           isActive={isActive}
+          svgClassName={`${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}`}
         />
         {/* 标签 */}
-        <motion.div className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.div
+          className={cn(
+            'flex flex-col items-start whitespace-nowrap font-oxanium',
+            MOBILE_MAP_SCALE.labelTextClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           {label ? `${label}, ` : ''}
           {country}
           {isActive && (
@@ -200,7 +212,7 @@ export function MobileWorldMapDotContent({
               />
             )}
             {extraSponsor && (
-              <ExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
+              <MobileExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
             )}
           </div>
         </div>

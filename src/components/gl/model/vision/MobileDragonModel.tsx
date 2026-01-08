@@ -14,8 +14,8 @@ import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
 
 const InitRotation = Math.PI / 2;
-const ANIMATION_DURATION = 3.0;
-const ANIMATION_DELAY = 0.3;
+const ANIMATION_DURATION = 2.1;
+const ANIMATION_DELAY = 0.21;
 
 export default function MobileDragonModel(props: {}) {
   const { events, clock } = useThree();
@@ -37,14 +37,14 @@ export default function MobileDragonModel(props: {}) {
   const triggerFadeInAnimation = contextSafe(() => {
     const element = document.querySelector('#mobile-fixed-ui');
     const nav = document.querySelector('#mobile-nav');
-    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.21 });
     if (element)
       gsap.fromTo(
         element,
         { opacity: 0 },
         {
           opacity: 1,
-          duration: 0.3,
+          duration: 0.21,
           onComplete: () => {
             setFadeInAnimCompleted(true);
             trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.UI_APPEAR });

@@ -13,10 +13,12 @@ const config: Config = {
     extend: {
       screens: {
         mobile: { max: '768px' },
+        notMobile: { min: '769px' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },
         desktop2k: { min: '1920px' },
+        ipad: { min: '500px', max: '768px' },
       },
       fontFamily: {
         xirod: ['var(--font-xirod)'],
@@ -36,7 +38,9 @@ const config: Config = {
         8.5: '2.125rem',
         9.5: '2.375rem',
         10.5: '2.625rem',
+        11: '2.75rem',
         12.5: '3.125rem',
+        13: '3.25rem',
         14: '3.5rem',
         14.5: '3.625rem',
         15: '3.75rem',
@@ -100,6 +104,7 @@ const config: Config = {
           800: '#FF1717',
         },
         green: {
+          DEFAULT: '#1EDB8C',
           600: '#318135',
         },
         yellow: {

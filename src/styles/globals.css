@@ -273,6 +273,10 @@
     @apply flex items-center justify-center;
   }
 
+  .flex-center-y {
+    @apply flex flex-col items-center justify-center;
+  }
+
   .submit-btn {
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
     @apply relative w-full cursor-pointer bg-red-600 py-3 text-base/5 font-semibold text-white;
@@ -363,5 +367,11 @@
 
   .podcast-card-clip-inner {
     clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
+  }
+  @media (max-width: 768px) {
+    .podcast-card-clip {
+      --corner-size: 16px;
+      --border-width: 1px;
+    }
   }
 }

@@ -29,6 +29,7 @@ export type SpectrumLinkItem = {
   routeKey?: string; // for URL routing
   icon?: string;
   size?: string;
+  mobileSize?: string;
 };
 
 export type SpectrumItemInfo = {
@@ -119,7 +120,7 @@ export const useSpectrumData = () => {
           {
             label: 'The case against death',
             isComingSoon: true,
-            labelClassName: '-ml-4',
+            labelClassName: '-ml-4 mobile:ml-0 text-[.5rem]/3',
           },
           {
             label: 'The Network State',
@@ -127,7 +128,7 @@ export const useSpectrumData = () => {
           },
           {
             label: 'Better With Age',
-            labelClassName: '-ml-4',
+            labelClassName: '-ml-4 mobile:ml-0',
             routeKey: 'better-with-age',
           },
         ],
@@ -151,6 +152,7 @@ export const useSpectrumData = () => {
         title: 'Digital Twin',
         titleCn: '数字孪生',
         icon: <DigitalTwinSVG />,
+        className: 'mobile:pt-4',
         links: [
           {
             label: 'Access Digital Twin',
@@ -162,6 +164,7 @@ export const useSpectrumData = () => {
         title: 'Global Internship',
         titleCn: '实习生计划',
         icon: <InternSVG />,
+        className: 'mobile:pt-4',
         links: [
           {
             label: 'Apply (CN)',
@@ -174,6 +177,7 @@ export const useSpectrumData = () => {
         ],
       },
       {
+        className: 'mobile:text-xl',
         title: 'Proudly Sponsoring & Supporting',
         titleCn: '本机构赞助支持',
         icon: <SponsorSVG />,
@@ -183,72 +187,84 @@ export const useSpectrumData = () => {
             routeKey: 'ardd-2025',
             icon: '/imgs/investments/sponsors/ardd.png',
             size: 'h-15',
+            mobileSize: 'h-10.5 ipad:h-15',
           },
           {
             label: 'TimePie Longevity Forum',
             routeKey: 'timepie-longevity-forum',
             icon: '/imgs/investments/sponsors/time-pie.png',
             size: 'h-15',
+            mobileSize: 'h-10.5 ipad:h-14',
           },
           {
             label: 'Lifespan Research Institute',
             routeKey: 'lifespan-research-institute',
             icon: '/imgs/investments/sponsors/lifespan.png',
             size: 'h-12',
+            mobileSize: 'h-8 ipad:h-13',
           },
           {
             label: 'Public Longevity Group',
             routeKey: 'public-longevity-group',
             icon: '/imgs/investments/sponsors/public-longevity.png',
             size: 'h-15',
+            mobileSize: 'h-10.5 ipad:h-15',
           },
           {
             label: '2060 Longevity Forum',
             routeKey: '2060-longevity-forum',
             icon: '/imgs/investments/sponsors/2060-longevity.png',
             size: 'h-12',
+            mobileSize: 'h-8 ipad:h-13',
           },
           {
             label: 'REVIVE ME',
             routeKey: 'revive-me-2025',
             icon: '/imgs/investments/sponsors/revive-me.png',
             size: 'h-12',
+            mobileSize: 'h-8 ipad:h-13',
           },
           {
             label: 'Health Longevity and Medicine Conference',
             routeKey: 'healthy-longevity-medicine-conference',
             icon: '/imgs/investments/sponsors/healthy-longevity.png',
             size: 'h-15',
+            mobileSize: 'h-10.5 ipad:h-15',
           },
           {
             label: 'Vitalist Bay Summit',
             routeKey: 'vitalist-bay-summit-grant',
             icon: '/imgs/investments/sponsors/vitalist-bay.png',
             size: 'h-12',
+            mobileSize: 'h-8 ipad:h-13',
           },
           {
             label: 'Cornerstone Non-profit Foundation',
             link: 'https://www.cornerstoneondemand.org',
             icon: '/imgs/investments/sponsors/cornerstone.png',
             size: 'h-6.5',
+            mobileSize: 'h-4.5 ipad:h-6.5',
           },
           {
             label: 'Beyond Tomorrow Podcast',
             link: 'https://beyondtomorrowpodcast.com/',
             icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
             size: 'h-5',
+            mobileSize: 'h-3.5 ipad:h-4.5',
           },
           {
             label: 'HackAging.ai Hackathon', // 11
             link: 'https://www.hackaging.ai/',
             icon: '/imgs/investments/sponsors/hackaging.png',
             size: 'h-5',
+            mobileSize: 'h-3.5 ipad:h-4.5',
           },
           {
             label: 'BioHackerDAO',
             link: 'https://biohackerdao.org/',
             icon: '/imgs/investments/sponsors/biohackerdao.png',
             size: 'h-15',
+            mobileSize: 'h-10.5 ipad:h-15',
           },
         ],
       },
@@ -256,7 +272,18 @@ export const useSpectrumData = () => {
     return data;
   }, []);
 
-  return { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs };
+  // For mobile: separate main items (first 4) from sponsors (last item)
+  const spectrumMainItems = useMemo(() => spectrumData.slice(0, 4), [spectrumData]);
+  const spectrumSponsorItem = useMemo(() => spectrumData[4], [spectrumData]);
+
+  return {
+    spectrumData,
+    spectrumMainItems,
+    spectrumSponsorItem,
+    executeSpectrumRoute,
+    updateUrlAndExecute,
+    routeConfigs,
+  };
 };
 
 export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
@@ -268,15 +295,27 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
       resize: [512, 300],
     },
     {
-      url: '/imgs/particle/spectrum/01.png',
+      url: '/imgs/particle/spectrum/02.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
+      scaleNum: isMobile ? 0.3 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
-      url: '/imgs/particle/spectrum/02.png',
+      url: '/imgs/particle/spectrum/05.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
+      scaleNum: isMobile ? 0.3 : 0.9, // Larger for sponsor page (single particle)
+      // loadPercentage: isMobile ? 0.01 : 0.015,
+    },
+    {
+      url: '/imgs/particle/spectrum/06.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.3 : 0.9,
+      // loadPercentage: isMobile ? 0.01 : 0.015,
+    },
+    {
+      url: '/imgs/particle/spectrum/08.png',
+      resize: [700, 700],
+      scaleNum: isMobile ? 0.3 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
@@ -285,33 +324,22 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
       scaleNum: isMobile ? 0.4 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
+    // deprecated particles
     {
-      url: '/imgs/particle/spectrum/04.png',
+      url: '/imgs/particle/spectrum/01.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
-      // loadPercentage: isMobile ? 0.01 : 0.015,
-    },
-    {
-      url: '/imgs/particle/spectrum/05.png',
-      resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
-      // loadPercentage: isMobile ? 0.01 : 0.015,
-    },
-    {
-      url: '/imgs/particle/spectrum/06.png',
-      resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
+      scaleNum: isMobile ? 0.3 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
       url: '/imgs/particle/spectrum/07.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
+      scaleNum: isMobile ? 0.3 : 0.9,
     },
     {
-      url: '/imgs/particle/spectrum/08.png',
+      url: '/imgs/particle/spectrum/04.png',
       resize: [700, 700],
-      scaleNum: isMobile ? 0.4 : 0.9,
+      scaleNum: isMobile ? 0.3 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
   ];

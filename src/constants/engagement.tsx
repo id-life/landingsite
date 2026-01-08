@@ -34,62 +34,115 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
   color: '#C11111',
 };
 
+// ============================================================================
+// Mobile Map Scaling Constants - Adjust these to change overall mobile map scaling
+// ============================================================================
+export const MOBILE_MAP_SCALE = {
+  // Base scale multiplier (1.0 = current, 1.2 = 20% larger, etc.)
+  baseScale: 0.8,
+
+  // Dot container size (Tailwind class: size-X)
+  dotContainerSize: 'size-5', // 20px
+
+  // Dot SVG positioning and size for mobile (used in PulseDot component)
+  dotSvgSize: 'size-14', // 56px - SVG element size for mobile dots
+  dotSvgPosition: 'absolute left-[-16px] top-[-18px]', // SVG positioning to center the pulse effect
+
+  // Location label text size (Tailwind class: text-X/Y)
+  labelTextClass: 'text-[8px]/[12px]', // 12px
+
+  // Region icon size (Tailwind class: size-X)
+  regionIconSize: 'size-4', // 16px
+
+  // Badge text size (Tailwind class: text-X/Y)
+  badgeTextClass: 'text-[8px]/[10px]', // 8px
+
+  // Badge icon size (Tailwind class: size-X)
+  badgeIconSize: 'size-2.5', // 10px
+
+  // Badge padding (Tailwind class: px-X py-Y)
+  badgePaddingClass: 'px-0.5 py-0.5',
+
+  // Badge gap between items (Tailwind class: gap-X)
+  badgeGapClass: 'gap-1',
+
+  // Badge container top offset
+  badgeContainerTopClass: 'top-[calc(100%_+_0.125rem)]',
+
+  // Content image dimensions
+  contentImageClass: 'h-[4rem] w-[7.5rem]', // 64px × 120px
+
+  // Content max width
+  contentMaxWidth: 'max-w-[12rem]', // 192px
+
+  // Content title text size
+  contentTitleClass: 'text-xs/4', // 14px
+
+  // Extra sponsor section dimensions
+  extraSponsorWidth: 'w-[12rem]', // 192px
+  extraSponsorTitleClass: 'text-xs/4', // 16px
+  extraSponsorLogoSize: 'size-[10rem]', // 160px
+  extraSponsorMarginTop: '-mt-3',
+};
+
 export type MapRegionDotData = {
   lat: number;
   lng: number;
   icon?: ReactNode;
 };
 
+// Region icon size: mobile uses MOBILE_MAP_SCALE.regionIconSize (default: size-6)
+// To change: update MOBILE_MAP_SCALE.regionIconSize AND the mobile:size-X classes below
 export const WORLD_MAP_REGION_DOTS: MapRegionDotData[] = [
   {
     lat: 40,
     lng: -106,
-    icon: <AmericaSVG className="size-7 mobile:size-5.5" />,
+    icon: <AmericaSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 33,
     lng: 21,
-    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/montenegro.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
   {
     lat: -14,
     lng: 97,
-    icon: <SingaporeSVG className="size-7 mobile:size-5.5" />,
+    icon: <SingaporeSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 30,
     lng: 99,
-    icon: <ChineseSVG className="size-7 mobile:size-5.5" />,
+    icon: <ChineseSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: -1,
     lng: -98,
-    icon: <HondurasSVG className="size-7 mobile:size-5.5" />,
+    icon: <HondurasSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 5,
     lng: 100,
-    icon: <ThailandSVG className="size-7 mobile:size-5.5" />,
+    icon: <ThailandSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 55,
     lng: -10,
-    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/uk.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 64,
     lng: 8,
-    icon: <DenmarkSVG className="size-7 mobile:size-5.5" />,
+    icon: <DenmarkSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 42,
     lng: 0,
-    icon: <FranceSVG className="size-7 mobile:size-5.5" />,
+    icon: <FranceSVG className="size-7 mobile:size-3.5" />,
   },
   {
     lat: 13,
     lng: 51,
-    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-5.5" />,
+    icon: <img src="/imgs/engagement/uae.webp" alt="" className="size-7 mobile:size-3.5" />,
   },
 ];
 
@@ -190,7 +243,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Edge City Lanna',
     link: 'https://www.edgecity.live/lanna',
     contentTransformClass: '-translate-x-[calc(100%_+_1rem)] -translate-y-[40%]',
-    mobileContentTransformClass: '-translate-x-full -translate-y-[50%]',
+    mobileContentTransformClass: '-translate-x-full -translate-y-[30%]',
     pcDotHotAreaClass: 'top-[25.5vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-0', 'world-map-dot-2'],
     imgs: [
@@ -484,6 +537,7 @@ export type MapBookDotData = {
   pulseConfig?: PulseConfig; // custom pulse config
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   containerClass?: string;
+  mobileContentTransformClass?: string; // mobile popup content transform class
 };
 export const MAP_BOOK_DOTS: MapBookDotData[] = [
   {
@@ -498,6 +552,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://www.thenetworkstate-zh.com/foreword/',
     activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 15,
@@ -511,6 +566,7 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
     containerClass: 'scale-[0.9]',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-sponsor-3'],
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
 ];
 
@@ -535,6 +591,7 @@ export type MapSponsorDotData = {
     videoUrl: string;
     link: string;
   };
+  mobileContentTransformClass?: string; // mobile popup content transform class
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
   {
@@ -553,6 +610,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     ],
     link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
     sponsorText: 'Conference',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 24,
@@ -570,6 +628,7 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     },
     sponsorText: 'Grant',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 10,
@@ -581,26 +640,28 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     link: 'https://revivemeexpo.com/',
     sponsorText: 'Conference',
     extraText: 'Sponsorship',
+    mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
 ];
 
-export const MOBILE_DOT_SHOW_ORDER: { type: 'sponsor' | 'book' | 'meeting'; index: number; offset?: number }[] = [
-  { type: 'sponsor', index: 3, offset: 40 },
-  { type: 'meeting', index: 4, offset: 20 },
-  { type: 'book', index: 2, offset: 80 },
-  { type: 'meeting', index: 3 },
-  { type: 'sponsor', index: 2, offset: 80 },
-  { type: 'sponsor', index: 1, offset: 80 },
-  { type: 'meeting', index: 5, offset: 80 },
-  { type: 'meeting', index: 7, offset: 80 },
-  { type: 'meeting', index: 6, offset: 80 },
-  { type: 'book', index: 0, offset: 40 },
-  { type: 'book', index: 1, offset: 40 },
-  { type: 'sponsor', index: 4, offset: 80 },
-  { type: 'sponsor', index: 0, offset: 50 },
-  { type: 'meeting', index: 2, offset: 300 },
-  { type: 'meeting', index: 1, offset: 280 },
-  { type: 'meeting', index: 0, offset: 310 },
+export const MOBILE_DOT_SHOW_ORDER: {
+  type: 'sponsor' | 'book' | 'meeting';
+  index: number;
+  offsetX?: number; // 水平偏移量（像素），正值向右偏移，负值向左偏移
+}[] = [
+  { type: 'meeting', index: 6, offsetX: 0 }, // 1. Copenhagen, Denmark
+  { type: 'sponsor', index: 0, offsetX: 0 }, // 2. Oxford, UK
+  { type: 'meeting', index: 5, offsetX: -110 }, // 3. London, UK
+  { type: 'meeting', index: 7, offsetX: -50 }, // 4. Aix-En-Provence, France
+  { type: 'book', index: 0, offsetX: 0 }, // 5. Lustica Bay, Montenegro
+  { type: 'sponsor', index: 2, offsetX: 40 }, // 6. Abu Dhabi, UAE
+  { type: 'meeting', index: 0, offsetX: 0 }, // 7. Shanghai, China
+  { type: 'meeting', index: 1, offsetX: 0 }, // 8. Chiang Mai, Thailand
+  { type: 'meeting', index: 2, offsetX: 0 }, // 9. Singapore
+  { type: 'meeting', index: 4, offsetX: 80 }, // 10. Berkeley, USA
+  { type: 'sponsor', index: 1, offsetX: 80 }, // 11. San Francisco, USA
+  { type: 'book', index: 1, offsetX: 0 }, // 12. Los Angeles, USA
+  { type: 'meeting', index: 3, offsetX: 90 }, // 13. Roatan, Honduras
 ];
 
 export const getMobileDotShowInfo = (type: 'sponsor' | 'book' | 'meeting', index: number) => {

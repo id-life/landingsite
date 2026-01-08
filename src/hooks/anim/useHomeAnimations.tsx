@@ -1,43 +1,81 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { PAGE_CONFIGS, PAGE_IDS, type PageConfig } from '@/constants/pages';
-import { SCROLL_SMOOTHER_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config';
+import { SCROLL_SMOOTHER_DEFAULTS, THEME_TRANSITION_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 
+// 背景点阵过渡配置
+const BG_TRANSITION = {
+  duration: THEME_TRANSITION_DEFAULTS.duration,
+  ease: THEME_TRANSITION_DEFAULTS.ease,
+};
+
 // 主题处理映射表 - 将特殊逻辑抽象为配置
 const THEME_HANDLERS = {
   [PAGE_IDS.VISION]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
-    // Vision 页面：先隐藏背景再切换主题
-    timeline.to('.base-background2', { opacity: 0 });
-    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.VISION]);
+    // Vision 页面：浅色主题，显示背景点阵
+    timeline.to(root, {
+      ...THEME_TRANSITIONS[PAGE_IDS.VISION],
+      ...THEME_TRANSITION_DEFAULTS,
+    });
+    timeline.to('.base-background2', { opacity: 1, ...BG_TRANSITION }, '<');
+  },
+  [PAGE_IDS.PORTFOLIO]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Portfolio 页面：先隐藏背景再切换到黑红主题
+    timeline.to('.base-background2', { opacity: 0, ...BG_TRANSITION });
+    timeline.to(
+      root,
+      {
+        ...THEME_TRANSITIONS[PAGE_IDS.PORTFOLIO],
+        ...THEME_TRANSITION_DEFAULTS,
+      },
+      '<',
+    );
+  },
+  [PAGE_IDS.INSIGHTS]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
+    // Insights 页面：浅色主题，显示背景
+    timeline.to(root, {
+      ...THEME_TRANSITIONS[PAGE_IDS.INSIGHTS],
+      ...THEME_TRANSITION_DEFAULTS,
+    });
+    timeline.to('.base-background2', { opacity: 1, ...BG_TRANSITION }, '<');
   },
   [PAGE_IDS.SPECTRUM]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
-    // Spectrum 页面：使用较长的切换时间
-    timeline.to(root, {
-      ...THEME_TRANSITIONS[PAGE_IDS.SPECTRUM],
-      duration: 3,
-    });
+    // Spectrum 页面：隐藏背景，使用较长的切换时间
+    timeline.to('.base-background2', { opacity: 0, ...BG_TRANSITION });
+    timeline.to(
+      root,
+      {
+        ...THEME_TRANSITIONS[PAGE_IDS.SPECTRUM],
+        duration: 1,
+        ease: THEME_TRANSITION_DEFAULTS.ease,
+      },
+      '<',
+    );
   },
   [PAGE_IDS.ENGAGEMENT]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
-    // Engagement 页面：快速预设后正常切换
-    timeline.to(root, {
-      ...THEME_TRANSITIONS[PAGE_IDS.ENGAGEMENT],
-      duration: 0.01,
-    });
-    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.ENGAGEMENT]);
+    // Engagement 页面：隐藏背景，平滑切换
+    timeline.to('.base-background2', { opacity: 0, ...BG_TRANSITION });
+    timeline.to(
+      root,
+      {
+        ...THEME_TRANSITIONS[PAGE_IDS.ENGAGEMENT],
+        ...THEME_TRANSITION_DEFAULTS,
+      },
+      '<',
+    );
   },
   [PAGE_IDS.TWIN]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
     // Twin 页面：切换主题后显示背景
-    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.TWIN]);
-    timeline.to('.base-background2', { opacity: 1 });
-  },
-  [PAGE_IDS.INSIGHTS]: (timeline: gsap.core.Timeline, root: HTMLElement) => {
-    // Insights 页面：浅色主题，与 Twin 相似
-    timeline.to(root, THEME_TRANSITIONS[PAGE_IDS.INSIGHTS]);
+    timeline.to(root, {
+      ...THEME_TRANSITIONS[PAGE_IDS.TWIN],
+      ...THEME_TRANSITION_DEFAULTS,
+    });
+    timeline.to('.base-background2', { opacity: 1, ...BG_TRANSITION }, '<');
   },
 } as const;
 
@@ -67,14 +105,19 @@ export function useHomeAnimations() {
   }, []);
 
   // 创建基于配置的动画函数
-  const createConfigBasedAnimation = contextSafe((config: PageConfig) => {
+  const createConfigBasedAnimation = contextSafe((config: PageConfig, index: number) => {
     try {
+      // 获取上一个页面 ID（用于 onLeaveBack）
+      // index 0 是 Portfolio，上一个是 Vision (NAV_LIST[0])
+      const previousPageId = index === 0 ? NAV_LIST[0].id : PAGE_CONFIGS[index - 1].id;
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           ...config.scrollTrigger,
           onEnter: () => handlePageChange(config.id, config.onEnter),
           onEnterBack: () => handlePageChange(config.id, config.onEnterBack),
           onLeave: config.onLeave,
+          onLeaveBack: () => handlePageChange(previousPageId),
         },
       });
 
@@ -94,11 +137,9 @@ export function useHomeAnimations() {
       ScrollSmoother.create(SCROLL_SMOOTHER_DEFAULTS);
 
       // 基于配置创建所有页面动画
-      const animations = PAGE_CONFIGS.map((config) => {
-        return createConfigBasedAnimation(config);
-      }).filter(Boolean);
-
-      console.log(`Successfully initialized ${animations.length} page animations`);
+      PAGE_CONFIGS.forEach((config, index) => {
+        createConfigBasedAnimation(config, index);
+      });
     } catch (error) {
       console.error('Failed to initialize animations:', error);
     }

@@ -11,9 +11,8 @@ import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useMemo, useEffect, useCallback } from 'react';
-import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
-import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
+import { useMemo, useEffect } from 'react';
+import { hasBlackArrow, hasInnerPage, NAV_LIST } from '../nav/nav';
 
 interface PageArrowsProps {
   className?: string;
@@ -24,23 +23,23 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
   const innerPageIndex = useAtomValue(innerPageIndexAtom);
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
-  const getTotal = useCallback(() => {
-    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    if (currentPage.id === NAV_LIST[5].id) return 2; // Insights 页有 2 个内部页面 (Podcast, News & Talks)
-    return 3; // Connect 页有 3 个内部页面
-  }, [currentPage]);
-
-  // 更新 innerPageTotal
+  // 更新 innerPageTotal (Portfolio/Spectrum 由各自组件动态设置)
   useEffect(() => {
-    const total = getTotal();
-    if (innerPageTotal !== total) {
-      setInnerPageTotal(total);
+    if (!hasInnerPage(currentPage.id)) {
+      setInnerPageTotal(0);
+      return;
     }
-  }, [getTotal, setInnerPageTotal, innerPageTotal]);
+    // Portfolio 和 Spectrum 由各自组件动态设置 innerPageTotal
+    if (currentPage.id === 'portfolio_page' || currentPage.id === 'spectrum_page') return;
+    // Insights 使用固定值 - 现在只有 1 个页面（News & Talks 和 Podcast 同时显示）
+    if (currentPage.id === 'insights_page') {
+      setInnerPageTotal(1);
+    }
+  }, [currentPage, setInnerPageTotal]);
 
   const isConnectPage = useMemo(() => {
     // Connect页面不展示向下箭头
-    return currentPage.id === NAV_LIST[6].id;
+    return currentPage.id === 'connect_page';
   }, [currentPage.id]);
 
   return (
@@ -61,24 +60,21 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const innerPageTotal = useAtomValue(innerPageTotalAtom);
   const { mobileNavChange } = useMobileNavigation();
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
-  const { sendValueShowEvent } = useConnectShowEvent();
 
   const handleClick = useThrottle(() => {
     if (mobileIsScrolling) return;
-    console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
-    if (HAS_INNER_PAGE_LIST.includes(currentPage.id)) {
-      // 有小进度条
+    if (hasInnerPage(currentPage.id)) {
+      // 有内页翻页
       if (innerPageIndex === 0 && isUp) {
-        // 小进度开头 往上翻
+        // 第一个内页往上翻 -> 跳到上一个主页面
         mobileNavChange(NAV_LIST[currentPageIndex - 1]);
         return;
       } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
-        // 最后一个小进度 往下翻
+        // 最后一个内页往下翻 -> 跳到下一个主页面
         mobileNavChange(NAV_LIST[currentPageIndex + 1]);
         return;
       }
       setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
-      sendValueShowEvent(innerPageIndex + (isUp ? -1 : 1), 'click');
       return;
     }
     mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
@@ -88,7 +84,7 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        BLACK_ARROW_LIST.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >

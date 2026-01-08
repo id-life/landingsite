@@ -13,6 +13,9 @@ import { useAtom, useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+const PAGE_ID = 'twin_page';
+const twinNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+
 function Twin() {
   const isResetDemo = useRef(false);
   const { ref, inView } = useInView({ threshold: 0 });
@@ -63,17 +66,15 @@ function Twin() {
   });
 
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // twin auto scroll to insights
+    // twin auto scroll to connect
     scrollFn: () => {
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('insights-scroll-trigger');
-      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 }, // 跳转到停留阶段
+        scrollTo: { y: '#connect_page' },
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
@@ -84,8 +85,7 @@ function Twin() {
   });
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[4].id) {
-      console.log('twin setEnableUpJudge & setEnableDownJudge true');
+    if (currentPage.id === PAGE_ID) {
       setEnableUpJudge(true);
       setEnableDownJudge(true);
     } else {
@@ -98,19 +98,19 @@ function Twin() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'twin-scroll-trigger',
-        trigger: `#${NAV_LIST[4].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
         scrub: true,
         onEnter: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[4]);
+          setCurrentPage(twinNavItem);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onEnterBack: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[4]);
+          setCurrentPage(twinNavItem);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
@@ -153,7 +153,7 @@ function Twin() {
   }, [inView]);
 
   return (
-    <div id={NAV_LIST[4].id} ref={ref} className="page-container twin">
+    <div id={PAGE_ID} ref={ref} className="page-container twin">
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>

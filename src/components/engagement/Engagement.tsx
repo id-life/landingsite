@@ -10,6 +10,9 @@ import { useAtom } from 'jotai';
 import { memo, useEffect } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+const PAGE_ID = 'engagement_page';
+const engagementNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+
 function Engagement() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
@@ -79,18 +82,18 @@ function Engagement() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'engagement-scroll-trigger',
-        trigger: `#${NAV_LIST[3].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
         scrub: true,
         onEnter: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(engagementNavItem);
         },
         onEnterBack: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[3]);
+          setCurrentPage(engagementNavItem);
         },
       },
     });
@@ -157,8 +160,7 @@ function Engagement() {
   }, []);
 
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[3].id) {
-      console.log('engagement setEnableUpJudge & setEnableDownJudge true');
+    if (currentPage.id === PAGE_ID) {
       setEnableUpJudge(true);
       setEnableDownJudge(true);
     } else {
@@ -168,7 +170,7 @@ function Engagement() {
   }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   return (
-    <div id={NAV_LIST[3].id} className="page-container engagement">
+    <div id={PAGE_ID} className="page-container engagement">
       <div id="map-container" className="relative flex h-[100svh] flex-col items-center justify-center">
         <WorldMap
           dots={WORLD_MAP_DOTS}

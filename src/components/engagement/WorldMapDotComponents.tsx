@@ -1,14 +1,22 @@
+import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
+import { MOBILE_MAP_SCALE } from '@/constants/engagement';
+import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { MouseEvent } from 'react';
-import { cn } from '@/utils';
-import { MeetingSVG, SponsorSVG, ArrowSVG } from '../svg';
-import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import { VideoWithPoster } from './VideoWithPoster';
+import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
 import FeatherImg from './FeatherImg';
+import { VideoWithPoster } from './VideoWithPoster';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
 // ============================================================================
+
+// Badge blur background layer
+// Note: Parent elements must not have active CSS animations (e.g., animate-fade-in)
+// as they create stacking contexts that break backdrop-filter
+export function BadgeBlurBg({ className }: { className?: string }) {
+  return <div className={cn('absolute inset-0 -z-10 rounded backdrop-blur-2xl', className)} />;
+}
 
 // Pulsing dot SVG animation with center point and ripple effects
 export function PulseDot({
@@ -19,6 +27,8 @@ export function PulseDot({
   pulse1,
   pulse2,
   isActive,
+  containerClassName,
+  svgClassName = 'absolute -left-full -top-full size-18',
 }: {
   svgSize: number;
   centerPoint: number;
@@ -27,15 +37,18 @@ export function PulseDot({
   pulse1: { fromRadius: number; toRadius: number; duration: number };
   pulse2: { fromRadius: number; toRadius: number; duration: number };
   isActive?: boolean;
+  containerClassName?: string;
+  svgClassName?: string;
 }) {
   return (
-    <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
-      <svg
-        width={svgSize}
-        height={svgSize}
-        viewBox={`0 0 ${svgSize} ${svgSize}`}
-        className="absolute -left-full -top-full size-18"
-      >
+    <div
+      className={cn(
+        'pulse-dot relative',
+        containerClassName ?? MOBILE_MAP_SCALE.dotContainerSize,
+        isActive ? 'overflow-visible' : 'overflow-hidden',
+      )}
+    >
+      <svg width={svgSize} height={svgSize} viewBox={`0 0 ${svgSize} ${svgSize}`} className={svgClassName}>
         <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
         {isActive && (
           <>
@@ -139,7 +152,7 @@ export function VideoTalkButton({ videoUrl, onClick }: { videoUrl: string; onCli
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 0.85 }}
       exit={{ opacity: 0, scale: 0.5 }}
-      className="-left-[calc(100%_-_3.75rem)]x pointer-events-auto absolute top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
+      className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
     >
       <div className="clip-talk-content bg-white p-0.5">
         <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
@@ -330,14 +343,36 @@ export function MobileConferenceBadgesWithVideo({
   onVideoClick?: (e: MouseEvent) => void;
 }) {
   return (
-    <div className="absolute top-[calc(100%_+_0.25rem)] flex flex-col items-start gap-2">
-      <div className="relative flex items-center gap-1 rounded-lg bg-purple/20 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl">
-        <MeetingSVG className="size-4 fill-purple" />
+    <div
+      className={cn(
+        'absolute flex flex-col items-start',
+        MOBILE_MAP_SCALE.badgeContainerTopClass,
+        MOBILE_MAP_SCALE.badgeGapClass,
+      )}
+    >
+      <div
+        className={cn(
+          'relative flex items-center gap-0.5 rounded',
+          MOBILE_MAP_SCALE.badgePaddingClass,
+          MOBILE_MAP_SCALE.badgeTextClass,
+          'font-semibold text-purple',
+        )}
+      >
+        <BadgeBlurBg className="bg-purple/20" />
+        <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
         Conference
       </div>
       {(isSponsor || extraSponsor) && (
-        <div className="relative flex items-center gap-1 rounded-lg bg-orange/20 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl">
-          <SponsorSVG className="size-5 fill-orange" />
+        <div
+          className={cn(
+            'relative flex items-center gap-0.5 rounded',
+            MOBILE_MAP_SCALE.badgePaddingClass,
+            MOBILE_MAP_SCALE.badgeTextClass,
+            'font-semibold text-orange',
+          )}
+        >
+          <BadgeBlurBg className="bg-orange/20" />
+          <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
           Sponsorship
         </div>
       )}
@@ -351,11 +386,11 @@ export function MobileConferenceBadgesWithVideo({
           exit={{ opacity: 0, scale: 0.5 }}
           className="pointer-events-auto flex cursor-pointer flex-col"
         >
-          <div className="clip-talk-content -ml-1 bg-white p-0.5">
-            <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
-              <YoutubeSVG className="size-5 fill-white" />
-              <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
-              <ArrowSVG className="size-4 -rotate-90 fill-white" />
+          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
+            <div className="clip-talk-content flex items-center gap-0.5 bg-[#0F0F0F] px-1.5 py-1 [--clip-offset:6px]">
+              <YoutubeSVG className="size-3 fill-white" />
+              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>
         </motion.a>
@@ -392,7 +427,7 @@ export function MobileContentSection({
         },
         visible: {
           opacity: 1,
-          height: '70dvh',
+          height: '45dvh',
         },
       }}
       transition={{
@@ -400,10 +435,16 @@ export function MobileContentSection({
         duration: 0.3,
         type: 'easeInOut',
       }}
-      className={cn('flex h-full max-w-[20rem] flex-col items-center gap-4 font-oxanium')}
+      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-oxanium')}
     >
       {title && (
-        <h3 className="cursor-pointer whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+        <h3
+          className={cn(
+            'cursor-pointer whitespace-nowrap text-center',
+            MOBILE_MAP_SCALE.contentTitleClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           <span className="mr-2 whitespace-pre-wrap">{title}</span>
           {/*{period}*/}
         </h3>
@@ -420,11 +461,81 @@ export function MobileContentSection({
             className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
           >
             {imgs.map((img) => (
-              <FeatherImg className="h-[6.875rem] w-[12.5rem]" key={img.src} src={img.src} alt={img.alt} />
+              <FeatherImg className={MOBILE_MAP_SCALE.contentImageClass} key={img.src} src={img.src} alt={img.alt} />
             ))}
           </div>
         ) : null}
       </a>
     </motion.div>
+  );
+}
+
+// Mobile extra sponsor section with smaller sizes for mobile viewport
+export function MobileExtraSponsorSection({
+  extraSponsor,
+  onClick,
+  className,
+}: {
+  extraSponsor: {
+    alt: string;
+    coverUrl: string;
+    videoUrl: string;
+    link: string;
+  };
+  onClick: (e: MouseEvent) => void;
+  className?: string;
+}) {
+  return (
+    <a
+      href={extraSponsor.link}
+      target="_blank"
+      rel="noreferrer"
+      className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}
+      onClick={onClick}
+    >
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className={cn(
+          'flex origin-top-left flex-col items-center overflow-visible font-oxanium',
+          MOBILE_MAP_SCALE.extraSponsorWidth,
+        )}
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: -10,
+            transformOrigin: 'top left',
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transformOrigin: 'top left',
+          },
+        }}
+        transition={{
+          staggerChildren: 0.05,
+          duration: 0.3,
+          type: 'easeInOut',
+        }}
+      >
+        <h4
+          className={cn(
+            'whitespace-pre-wrap text-center font-semibold capitalize text-white',
+            MOBILE_MAP_SCALE.extraSponsorTitleClass,
+          )}
+        >
+          {extraSponsor.alt}
+        </h4>
+        <VideoWithPoster
+          coverUrl={extraSponsor.coverUrl}
+          videoUrl={extraSponsor.videoUrl}
+          title={extraSponsor.alt}
+          containerClass={MOBILE_MAP_SCALE.extraSponsorMarginTop}
+          videoClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+          coverClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+        />
+      </motion.div>
+    </a>
   );
 }

@@ -1,21 +1,23 @@
 import { mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST } from '@/components/nav/nav';
 import { BACKGROUND_THEME } from '@/constants/config';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useMobileThemeTransition } from '../useMobileThemeTransition';
 
+// 隐藏固定 UI 的页面
+const HIDE_FIXED_UI_PAGES = ['engagement_page', 'twin_page', 'insights_page', 'connect_page'] as const;
+
 export function useMobileHomeAnimateInit() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const { transitionToTheme } = useMobileThemeTransition();
 
   useEffect(() => {
-    if (NAV_LIST[1].id === currentPage.id) {
+    if (currentPage.id === 'portfolio_page') {
       transitionToTheme(BACKGROUND_THEME.BLACK_RED);
-    } else if (NAV_LIST[2].id === currentPage.id) {
+    } else if (currentPage.id === 'spectrum_page') {
       transitionToTheme(BACKGROUND_THEME.BLACK_RED_2);
-    } else if (NAV_LIST[3].id === currentPage.id) {
+    } else if (currentPage.id === 'engagement_page') {
       transitionToTheme(BACKGROUND_THEME.BLACK);
     } else {
       transitionToTheme(BACKGROUND_THEME.LIGHT);
@@ -27,7 +29,7 @@ export function useMobileHomeAnimateInit() {
       stagger: 0.1,
     });
 
-    if ([NAV_LIST[3].id, NAV_LIST[4].id, NAV_LIST[5].id, NAV_LIST[6].id].includes(currentPage.id)) {
+    if (HIDE_FIXED_UI_PAGES.includes(currentPage.id as (typeof HIDE_FIXED_UI_PAGES)[number])) {
       tl.to(['.fixed-top', '.fixed-bottom'], {
         opacity: 0,
 

@@ -1,15 +1,16 @@
 import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
-import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
+import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
+import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { memo, useMemo } from 'react';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -69,69 +70,27 @@ export function MobileWorldMapSponsorDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
         {/* 中心红点和波纹 */}
-        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
-          <svg
-            width={svgSize}
-            height={svgSize}
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="absolute -left-full -top-full size-18"
-          >
-            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-            {isActive && (
-              <>
-                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  <animate
-                    attributeName="r"
-                    from={pulse1.fromRadius}
-                    to={pulse1.toRadius}
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx={centerPoint}
-                  cy={centerPoint}
-                  r={pulse2.fromRadius}
-                  stroke={color}
-                  strokeWidth="2"
-                  fill="none"
-                  opacity="0.5"
-                >
-                  <animate
-                    attributeName="r"
-                    from={pulse2.fromRadius}
-                    to={pulse2.toRadius}
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-              </>
-            )}
-          </svg>
-        </div>
+        <PulseDot
+          svgSize={svgSize}
+          centerPoint={centerPoint}
+          centerRadius={centerRadius}
+          color={color}
+          pulse1={pulse1}
+          pulse2={pulse2}
+          isActive={isActive}
+          containerClassName={MOBILE_MAP_SCALE.dotContainerSize}
+          svgClassName={`${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}`}
+        />
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/5 font-semibold capitalize text-white">
+        <motion.p
+          className={cn(
+            'flex items-center whitespace-nowrap font-oxanium',
+            MOBILE_MAP_SCALE.labelTextClass,
+            'font-semibold capitalize text-white',
+          )}
+        >
           {title}
           <AnimatePresence>
             {isActive ? (
@@ -141,9 +100,15 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-sm/4 font-semibold text-purple backdrop-blur-2xl"
+                    className={cn(
+                      'relative flex items-center gap-0.5 rounded',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-purple',
+                    )}
                   >
-                    <MeetingSVG className="size-4 fill-purple" />
+                    <BadgeBlurBg className="bg-purple/20" />
+                    <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
                     Conference
                   </motion.div>
                 ) : (
@@ -151,9 +116,15 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                    className={cn(
+                      'relative flex items-center gap-0.5 rounded',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-orange',
+                    )}
                   >
-                    <SponsorSVG className="size-4 fill-orange" />
+                    <BadgeBlurBg className="bg-orange/20" />
+                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
                 )}
@@ -162,9 +133,15 @@ export function MobileWorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="-ml-4 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-sm/4 font-semibold text-orange backdrop-blur-2xl"
+                    className={cn(
+                      'relative -ml-2 flex items-center gap-0.5 rounded',
+                      MOBILE_MAP_SCALE.badgePaddingClass,
+                      MOBILE_MAP_SCALE.badgeTextClass,
+                      'font-semibold text-orange',
+                    )}
                   >
-                    <SponsorSVG className="size-4 fill-orange" />
+                    <BadgeBlurBg className="bg-orange/20" />
+                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {extraText}
                   </motion.span>
                 )}
@@ -283,7 +260,7 @@ const MobileSponsorItem = memo(
           animate="visible"
           exit="hidden"
           className={cn(
-            'clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
+            'clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
           )}
           onMouseLeave={onMouseLeave}
           variants={{
@@ -309,10 +286,10 @@ const MobileSponsorItem = memo(
             videoUrl={videoUrl}
             title={alt}
             containerClass="-mt-4"
-            videoClass="size-[13.75rem]"
-            coverClass="size-[13.75rem]"
+            videoClass="size-[8.5rem]"
+            coverClass="size-[8.5rem]"
           />
-          <h4 className="-mt-5 whitespace-pre-wrap text-center text-base/5 font-semibold capitalize text-white">{alt}</h4>
+          <h4 className="-mt-5 whitespace-pre-wrap text-center text-xs/4 font-semibold capitalize text-white">{alt}</h4>
         </motion.div>
       </a>
     );

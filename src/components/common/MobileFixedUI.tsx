@@ -3,8 +3,8 @@
 import FixedConnect from '@/app/connect/FixedConnect';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { ClientOnly } from '@/components/common/ClientOnly';
-import MobileAudioPlayer from '../audio/MobileAudioPlayer';
 import { useAtomValue } from 'jotai';
+import MobileAudioPlayer from '../audio/MobileAudioPlayer';
 import { NAV_LIST } from '../nav/nav';
 import MobilePageArrows from './MobilePageArrows';
 import MobileScrollButton from './MobileScrollButton';
@@ -22,7 +22,7 @@ export default function MobileFixedUI() {
 
       <FixedConnect />
       <ClientOnly>
-        <MobileAudioPlayer className="fixed bottom-8.5 right-5 z-10" />
+        <MobileAudioPlayer className="fixed bottom-7 right-4 z-10" />
       </ClientOnly>
     </div>
   );

@@ -18,8 +18,9 @@ export function useMobileNavigation() {
       if (isTransitioning || mobileIsScrolling) return;
 
       setCurrentPage(item);
+      setInnerPageIndex(0); // 切换页面时重置内页索引
       if (item?.id === NAV_LIST[6].id) {
-        setInnerPageIndex(0);
+        // connect 页面不需要额外处理
       } else {
         gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
         setInnerPageTotal(0);

@@ -1,44 +1,18 @@
 'use client';
 
-import CheckedSVG from '@/../public/svgs/checked.svg?component';
-import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
-import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import MediaSVG from '@/../public/svgs/media.svg?component';
-import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
-import CornerBorder from '@/components/common/CornerBorder';
-import { InfoSVG } from '@/components/svg';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
-import { useGA } from '@/hooks/useGA';
-import { cn } from '@/utils';
-import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
-import clsx from 'clsx';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-
-type Inputs = {
-  EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
-};
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useRef } from 'react';
+import FooterContactContent from './FooterContactContent';
 
 export default function MobileFooterContact() {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const subscribeRef = useRef<HTMLDivElement>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
-
-  const { trackEvent } = useGA();
+  const pathname = usePathname();
+  const isConnectPage = pathname === '/connect';
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -58,133 +32,42 @@ export default function MobileFooterContact() {
     };
   }, [handleClickOutside, isSubscribeShow]);
 
-  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
-
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
-    });
-  };
-  const handleLinkClick = (type: MediaLinkTypeKey) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.MEDIUM_CLICK,
-      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
-    });
-
-    if (type === MediaLinkType.Youtube) {
-      window.open(Links.youtube, '__blank');
-    }
-    if (type === MediaLinkType.Linkedin) {
-      window.open(Links.linkedin, '__blank');
-    }
-    if (type === MediaLinkType.Media) {
-      window.open(Links.media, '__blank');
-    }
-  };
-
   return (
     <FloatingPortal>
-      <AnimatePresence>
-        <motion.div
-          animate={isSubscribeShow ? 'open' : 'close'}
-          variants={{
-            open: { scale: 1, bottom: 0 },
-            close: { scale: 0, bottom: '-10rem' },
-          }}
-          transition={{
-            duration: 0.5,
-            ease: 'easeInOut',
-          }}
-          ref={subscribeRef}
-          className="page-footer fixed inset-x-0 bottom-0 z-40 origin-center border-2 border-white bg-white/20 p-4 pt-5 text-black backdrop-blur-xl"
-        >
-          <h3 className="font-oxanium text-2xl/7.5 font-bold uppercase">SUBSCRIBE</h3>
-          <form id="subscribe-form" className="relative mt-7.5 flex gap-3" onSubmit={handleSubmit(onFormSubmit)}>
-            {errors.EMAIL && (
-              <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
-            )}
-            <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-            <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-            <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-            <div className={clsx('flex-center h-11 flex-1 border-2 p-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
-              <input
-                className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-black"
-                placeholder="Please enter email"
-                defaultValue=""
-                {...register('EMAIL', {
-                  required: 'Please fill in this field',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Please enter email address',
-                  },
-                })}
-              />
-            </div>
-            <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-red-600 text-white">
-              {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
-                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
-                </div>
-              ) : null}
-              {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center font-bold">
-                  <CheckedSVG className="w-6 stroke-white stroke-[3]" />
-                </div>
-              ) : null}
-              <input
-                className={cn('w-full cursor-pointer py-3 text-base/5 font-semibold', {
-                  'text-red-600': isSubmitting || isSubmitted,
-                })}
-                type="submit"
-                value="Submit"
-              />
-            </div>
-          </form>
-          <div className="mt-2 flex gap-1 font-poppins text-xs font-semibold">
-            <InfoSVG className="h-4" />
-            Join our longevity circle for priority access to pioneer research
-          </div>
-          <div className="mb-3 mt-4 h-px w-full bg-black/10" />
-          <div className="flex-center gap-5">
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-              className="flex-center relative cursor-pointer gap-1 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <YoutubeSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">YOUTUBE</span>
-            </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-              className="flex-center relative cursor-pointer gap-0.5 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <LinkedinSVG className="-mt-0.5 size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">LINKEDIN</span>
-            </div>
-            <div
-              onClick={() => handleLinkClick(MediaLinkType.Media)}
-              className="flex-center relative cursor-pointer gap-0.5 p-2"
-            >
-              <CornerBorder hoverColor="#000" />
-              <MediaSVG className="size-4 fill-black" />
-              <span className="font-oxanium text-[.625rem]/[.625rem] font-bold">MEDIAKIT</span>
-            </div>
-          </div>
-          <p className="mt-6 text-center font-oxanium text-[.625rem]/3 font-semibold uppercase opacity-60">
-            e- mail: contact@id.life
-            <br />
-            t- Biopolis Dr, #01-15, Singapore 138623
-          </p>
-        </motion.div>
+      <AnimatePresence mode="wait">
+        {isSubscribeShow ? (
+          <motion.div
+            key="expanded"
+            ref={subscribeRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="page-footer fixed inset-x-0 bottom-0 z-[102] border-2 border-white bg-white/20 p-5 backdrop-blur-xl"
+          >
+            <FooterContactContent />
+          </motion.div>
+        ) : isConnectPage ? (
+          <motion.div
+            key="collapsed"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            onClick={() => setIsSubscribeShow(true)}
+            className="group fixed bottom-6.5 left-5 z-[90] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-poppins text-base/5 font-semibold hover:opacity-80"
+          >
+            {/* Border SVG with top-left cut corner */}
+            <svg className="absolute inset-0" viewBox="0 0 100 36" fill="none" preserveAspectRatio="none">
+              <path d="M10 1H99V35H1V10L10 1Z" stroke="#C11111" strokeWidth="2" />
+            </svg>
+            <span className="relative text-sm/5 text-red-600">Connect</span>
+            {/* Right chevron arrow */}
+            <svg className="relative -mt-px size-4" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke="#C11111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        ) : null}
       </AnimatePresence>
     </FloatingPortal>
   );

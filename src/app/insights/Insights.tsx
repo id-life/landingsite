@@ -13,21 +13,24 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 
+const PAGE_ID = 'insights_page';
+const insightsNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+
 export default function Insights() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
-  // Insights 向上滚动 → 回到 Twin 页面
+  // Insights 向上滚动 → 回到 Portfolio 页面
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     scrollFn: () => {
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('twin-scroll-trigger');
+      const st = ScrollTrigger.getById('portfolio-trigger');
       if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
+        scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
@@ -37,16 +40,18 @@ export default function Insights() {
     isUp: true,
   });
 
-  // Insights 向下滚动 → 前往 Connect 页面
+  // Insights 向下滚动 → 前往 Spectrum 页面
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     scrollFn: () => {
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
+      const st = ScrollTrigger.getById('spectrum-trigger');
+      if (!st) return;
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
         duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: `#${NAV_LIST[6].id}` },
+        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
@@ -61,18 +66,18 @@ export default function Insights() {
     const tl = gsap.timeline({
       scrollTrigger: {
         id: 'insights-scroll-trigger',
-        trigger: `#${NAV_LIST[5].id}`,
+        trigger: `#${PAGE_ID}`,
         start: 'top top',
         end: '+=300%',
         pin: true,
         scrub: true,
         onEnter: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[5]);
+          setCurrentPage(insightsNavItem);
         },
         onEnterBack: () => {
           if (window.isResizing) return;
-          setCurrentPage(NAV_LIST[5]);
+          setCurrentPage(insightsNavItem);
         },
       },
     });
@@ -106,7 +111,7 @@ export default function Insights() {
 
   // 根据当前页面启用/禁用滚动判断
   useEffect(() => {
-    if (currentPage.id === NAV_LIST[5].id) {
+    if (currentPage.id === PAGE_ID) {
       setEnableUpJudge(true);
       setEnableDownJudge(true);
     } else {
@@ -119,8 +124,8 @@ export default function Insights() {
   const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
 
   return (
-    <div id={NAV_LIST[5].id} className="page-container insights h-screen">
-      <div className="desktop:scale-[0.95] desktop2k:origin-center desktop2k:scale-[0.8]">
+    <div id={PAGE_ID} className="page-container insights h-screen">
+      <div className="desktop:scale-[0.95] desktop2k:origin-center desktop2k:scale-[0.85]">
         <div className="insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]">
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
           <div className="-mt-10">

@@ -4,9 +4,9 @@ import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
-import PodcastSVG from '@/../public/svgs/podcast.svg?component';
-import XyzSVG from '@/../public/svgs/xyz.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
+import CornerBorder from '@/components/common/CornerBorder';
+import FooterContactContent from '@/components/layout/footer/FooterContactContent';
 import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
@@ -53,88 +53,92 @@ export default function NewsFooter() {
     if (type === MediaLinkType.Media) {
       window.open(Links.media, '__blank');
     }
-
-    if (type === MediaLinkType.Podcast) {
-      window.open(Links.podcast, '__blank');
-    }
-    if (type === MediaLinkType.Xyz) {
-      window.open(Links.xyz, '__blank');
-    }
   };
 
   return (
-    <div className="relative z-10 flex items-stretch justify-between pb-15 pt-30 mobile:flex-col mobile:gap-10 mobile:px-5 mobile:pb-7.5 mobile:pt-15">
-      <div className="flex flex-col items-start justify-between">
-        <img className="w-[14.2rem]" src="/svgs/logo-en.svg" alt="" />
-        <div className="flex items-center gap-7 mobile:mt-6">
-          <YoutubeSVG
-            onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-            className="size-6 cursor-pointer fill-black hover:fill-red-600"
-          />
-          <LinkedinSVG
-            onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-            className="size-6 cursor-pointer fill-black hover:fill-red-600"
-          />
+    <div className="relative z-10 -mx-5 flex flex-col pb-15 pt-30 mobile:mt-5 mobile:border-2 mobile:border-white mobile:bg-white/20 mobile:p-5 mobile:backdrop-blur-lg">
+      {/* Desktop Layout */}
+      <div className="flex items-start justify-between mobile:hidden">
+        <div className="flex flex-col items-start gap-5 self-stretch">
+          <img className="h-12 w-auto" src="/svgs/logo-en.svg" alt="" />
+          <div className="mt-auto flex items-center gap-5">
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Youtube)}
+              className="relative flex h-10 w-[7.7rem] cursor-pointer items-center justify-center gap-2"
+            >
+              <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
+              <YoutubeSVG className="size-6 fill-black" />
+              <span className="font-oxanium text-base font-bold uppercase">Youtube</span>
+            </div>
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
+              className="relative flex h-10 w-[7.7rem] cursor-pointer items-center justify-center gap-2"
+            >
+              <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
+              <LinkedinSVG className="size-6 fill-black" />
+              <span className="font-oxanium text-base font-bold uppercase">LinkedIn</span>
+            </div>
+            <div
+              onClick={() => handleLinkClick(MediaLinkType.Media)}
+              className="relative flex h-10 w-[7.7rem] cursor-pointer items-center justify-center gap-2"
+            >
+              <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
+              <MediaSVG className="size-6 fill-black" />
+              <span className="font-oxanium text-base font-bold uppercase">MediaKit</span>
+            </div>
+          </div>
+        </div>
+        <div className="font-oxanium text-base/5 font-bold uppercase">
+          <p className="opacity-50">Contact</p>
+          <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
+            <img className="size-5" src="/svgs/home.svg" alt="" />3 Biopolis Dr, #01-15, Singapore 138623
+          </div>
+          <div className="mt-3 flex items-center justify-start gap-1.5 font-poppins font-semibold">
+            <img className="size-5" src="/svgs/contact-email.svg" alt="" />
+            contact@id.life
+          </div>
+        </div>
+        <div className="font-oxanium text-base/5">
+          <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
+          <form id="subscribe-form" className="mt-7 flex flex-col" onSubmit={onFormSubmit}>
+            <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
+            <input type="hidden" name="amp;id" value="af9154d6b5" />
+            <input type="hidden" name="amp;f_id" value="00e418e1f0" />
+            <div className="border-2 border-black p-3">
+              <input
+                id="news-subscribe-email"
+                className="w-[25rem] bg-transparent font-poppins text-xs font-semibold"
+                placeholder="Please enter email"
+                type="email"
+                name="EMAIL"
+                required
+                defaultValue=""
+              />
+            </div>
+            <div className="mt-3 flex items-start gap-1.5 font-poppins text-xs font-semibold">
+              <InfoSVG className="size-4 shrink-0" />
+              Join our longevity circle for priority access to pioneer research
+            </div>
+            <div className="footer-submit-clip relative mt-3 h-11 w-[10.5rem] self-end bg-red-600 text-white">
+              {isSubmitting ? (
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                  <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+                </div>
+              ) : null}
+              {isSubmitted ? (
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                  <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                </div>
+              ) : null}
+              <input className="h-full w-full cursor-pointer font-poppins text-base/5 font-bold" type="submit" value="Submit" />
+            </div>
+          </form>
+        </div>
+      </div>
 
-          <MediaSVG
-            onClick={() => handleLinkClick(MediaLinkType.Media)}
-            className="size-6 cursor-pointer fill-black hover:fill-red-600"
-          />
-          <PodcastSVG
-            onClick={() => handleLinkClick(MediaLinkType.Podcast)}
-            className="size-6 cursor-pointer fill-black hover:fill-red-600"
-          />
-          <XyzSVG
-            onClick={() => handleLinkClick(MediaLinkType.Xyz)}
-            className="h-4.5 cursor-pointer fill-black hover:fill-red-600"
-          />
-        </div>
-      </div>
-      <div className="font-oxanium text-base/5 font-bold uppercase">
-        <p className="opacity-50">Contact</p>
-        <div className="mt-7 flex items-center justify-start gap-1.5">
-          <img src="/svgs/home.svg" alt="" />3 Biopolis Dr, #01-15, Singapore 138623
-        </div>
-        <div className="mt-3 flex items-center justify-start gap-1.5">
-          <img src="/svgs/contact-email.svg" alt="" />
-          contact@id.life
-        </div>
-      </div>
-      <div className="font-oxanium text-base/5">
-        <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
-        <form id="subscribe-form" className="mt-7 flex flex-col" onSubmit={onFormSubmit}>
-          <input type="hidden" name="u" value="e6f88de977cf62de3628d944e" />
-          <input type="hidden" name="amp;id" value="af9154d6b5" />
-          <input type="hidden" name="amp;f_id" value="00e418e1f0" />
-          <div className="flex-1 border-2 border-black p-2">
-            <input
-              id="news-subscribe-email"
-              className="w-[18rem] bg-transparent text-sm font-semibold"
-              placeholder="Please enter email"
-              type="email"
-              name="EMAIL"
-              required
-              defaultValue=""
-            />
-          </div>
-          <div className="mt-4 flex gap-1.5 font-poppins text-xs font-semibold opacity-50">
-            <InfoSVG className="ml-2 h-4" />
-            Join our longevity circle for priority access to pioneer research
-          </div>
-          <div className="footer-submit-clip mt-3 w-[10.5rem] self-end bg-red-600 text-white">
-            {isSubmitting ? (
-              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
-                <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
-              </div>
-            ) : null}
-            {isSubmitted ? (
-              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
-                <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
-              </div>
-            ) : null}
-            <input className="w-full cursor-pointer py-3 text-base/5 font-bold" type="submit" value="Subscribe" />
-          </div>
-        </form>
+      {/* Mobile Layout - reuse FooterContactContent */}
+      <div className="hidden mobile:block">
+        <FooterContactContent />
       </div>
     </div>
   );

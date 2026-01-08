@@ -73,7 +73,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     });
   };
 
-  // Footer 动画 - 在 timeline 结束后独立执行
+  // Footer 动画 - 只显示底栏，不包含 EN→CN 动画
   const playFooterEnterAnim = () => {
     console.log('[useConnectCrossAnimations] playFooterEnterAnim - 开始显示footer');
     setIsSubscribeShow(true);
@@ -86,8 +86,11 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.to('.page-footer-contact', { bottom: isMobile ? '5rem' : '0rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem', duration: 0.5, ease: 'power2.out' });
     gsap.to('.scroll-title', { opacity: 0, duration: 0.5 });
+  };
 
-    // 英文标题一个一个消失，然后中文标题一个一个出现
+  // EN→CN 动画 - 英文标题一个一个消失，然后中文标题一个一个出现
+  const playEnToCnAnim = () => {
+    console.log('[useConnectCrossAnimations] playEnToCnAnim - 开始EN→CN动画');
     const title1 = gsap.utils.toArray('.connect-title1 *');
     const title1cn = gsap.utils.toArray('.connect-title1cn path');
     const title2 = gsap.utils.toArray('.connect-title2 *');
@@ -97,18 +100,14 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
 
-    // 先停止之前的动画，避免快速切换时动画冲突
-    allEnTitles.forEach((item) => item && gsap.killTweensOf(item));
-    allCnTitles.forEach((item) => item && gsap.killTweensOf(item));
-
     const enDuration = allEnTitles.length * 0.02;
     allEnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02, overwrite: 'auto' });
     });
     allCnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 1, duration: 0.05, delay: enDuration + index * 0.02 });
+      gsap.to(item, { opacity: 1, duration: 0.05, delay: enDuration + index * 0.02, overwrite: 'auto' });
     });
   };
 
@@ -135,18 +134,14 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
 
-    // 先停止之前的动画，避免快速切换时动画冲突
-    allEnTitles.forEach((item) => item && gsap.killTweensOf(item));
-    allCnTitles.forEach((item) => item && gsap.killTweensOf(item));
-
     const cnDuration = allCnTitles.length * 0.02;
     allCnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02 });
+      gsap.to(item, { opacity: 0, duration: 0.05, delay: index * 0.02, overwrite: 'auto' });
     });
     allEnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 1, duration: 0.05, delay: cnDuration + index * 0.02 });
+      gsap.to(item, { opacity: 1, duration: 0.05, delay: cnDuration + index * 0.02, overwrite: 'auto' });
     });
   };
   const createPage2CrossAnim = (tl: GSAPTimeline) => {
@@ -319,5 +314,6 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     createPage3CrossAnim,
     playFooterEnterAnim,
     playFooterLeaveAnim,
+    playEnToCnAnim,
   };
 };

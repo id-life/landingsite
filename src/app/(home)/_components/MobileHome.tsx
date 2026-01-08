@@ -44,10 +44,10 @@ export default function MobileHome() {
       <div id="wrapper" className="">
         <MobileVision />
         <MobilePortfolio />
+        <MobileInsights />
         <MobileSpectrum />
         <MobileEngagement />
         <MobileTwin />
-        <MobileInsights />
         <MobileConnect />
         <MobileFooter />
         <MobileFooterContact />

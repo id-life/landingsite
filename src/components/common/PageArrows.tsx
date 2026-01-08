@@ -11,7 +11,7 @@ import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
-import { BLACK_ARROW_LIST, HAS_INNER_PAGE_LIST, NAV_LIST } from '../nav/nav';
+import { hasBlackArrow, hasInnerPage, NAV_LIST } from '../nav/nav';
 import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
 
 interface PageArrowsProps {
@@ -24,10 +24,12 @@ export default function PageArrows({ className }: PageArrowsProps) {
   const [innerPageTotal, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
   const getTotal = useCallback(() => {
-    if (!HAS_INNER_PAGE_LIST.includes(currentPage.id)) return 0;
-    // PC版Insights没有内页切换，返回0让箭头直接导航到下一页
-    if (currentPage.id === NAV_LIST[5].id) return 0; // insights_page
-    return 3; // 只有Connect页有3个内页
+    if (!hasInnerPage(currentPage.id)) return 0;
+    // PC版这些页面没有内页切换，返回0让箭头直接导航到下一页
+    if (currentPage.id === 'insights_page' || currentPage.id === 'portfolio_page' || currentPage.id === 'spectrum_page') {
+      return 0;
+    }
+    return 0; // 目前所有页面都不使用内页切换
   }, [currentPage]);
 
   // 更新 innerPageTotal
@@ -40,7 +42,7 @@ export default function PageArrows({ className }: PageArrowsProps) {
 
   const isConnectPage = useMemo(() => {
     // Connect页面不展示向下箭头
-    return currentPage.id === NAV_LIST[6].id;
+    return currentPage.id === 'connect_page';
   }, [currentPage.id]);
 
   return (
@@ -68,9 +70,8 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
   }, [currentPage]);
 
   const handleClick = useThrottle(() => {
-    console.log('click', { innerPageIndex, innerPageTotal, isUp, currentPageIndex });
     onClick?.();
-    if (HAS_INNER_PAGE_LIST.includes(currentPage.id) && innerPageTotal > 0) {
+    if (hasInnerPage(currentPage.id) && innerPageTotal > 0) {
       // 有小进度条
       if (innerPageIndex === 0 && isUp) {
         // 小进度开头 往上翻
@@ -92,7 +93,7 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
     <div
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
-        BLACK_ARROW_LIST.includes(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
+        hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >
