@@ -12,6 +12,7 @@ import { cn } from '@/utils';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { useRouter } from 'next/navigation';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -125,6 +126,7 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);
   const totalMobilePages = Math.ceil(items.length / mobileItemCount);
+  const router = useRouter();
 
   const containerResizeCallback = useCallback(
     (entry: ResizeObserverEntry) => {
@@ -172,7 +174,8 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
   };
 
   const handleViewAllClick = () => {
-    window.open('/news', '_blank');
+    if (isMobile) router.push('/news');
+    else window.open('/news', '_blank');
   };
 
   const renderContent = () => {
