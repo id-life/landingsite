@@ -11,6 +11,7 @@ import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insi
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
+import { useRouter } from 'next/navigation';
 
 export type PodcastItem = {
   id: number;
@@ -68,6 +69,7 @@ export default function PodcastSection({ isMobile = false, compact = false }: Po
 
   const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
   const totalCompactPages = Math.ceil(podcastData.length / COMPACT_ITEMS_PER_PAGE);
+  const router = useRouter();
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
@@ -91,7 +93,9 @@ export default function PodcastSection({ isMobile = false, compact = false }: Po
   };
 
   const handleViewAllClick = () => {
-    window.open('/podcast', '_blank');
+    if (isMobile) {
+      router.push('/podcast');
+    } else window.open('/podcast', '_blank');
   };
 
   const renderContent = () => {
