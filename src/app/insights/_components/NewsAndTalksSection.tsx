@@ -9,6 +9,7 @@ import VideoModal from '@/app/insights/_components/VideoModal';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { cn } from '@/utils';
+import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
@@ -18,6 +19,7 @@ type NewsAndTalksSectionProps = {
   items?: InsightItem[];
   isLoading?: boolean;
   isMobile?: boolean;
+  isVisible?: boolean;
 };
 
 const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
@@ -114,7 +116,12 @@ function calculateMobileItemCount(containerHeight: number): number {
   return clampedRows * 2; // 2 columns
 }
 
-export default function NewsAndTalksSection({ items = [], isLoading, isMobile = false }: NewsAndTalksSectionProps) {
+export default function NewsAndTalksSection({
+  items = [],
+  isLoading,
+  isMobile = false,
+  isVisible = true,
+}: NewsAndTalksSectionProps) {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isMobileBeginning, setIsMobileBeginning] = useState(true);
@@ -139,7 +146,7 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
   );
 
   // Mobile: calculate items based on container height (using ResizeObserver)
-  useContainerResize(containerRef, containerResizeCallback, '.mobile-insights-content');
+  useContainerResize(containerRef, containerResizeCallback, '.mobile-insights-content', [isVisible]);
 
   const windowResizeCallback = useCallback(() => {
     if (!isMobile) return;
@@ -174,8 +181,11 @@ export default function NewsAndTalksSection({ items = [], isLoading, isMobile = 
   };
 
   const handleViewAllClick = () => {
-    if (isMobile) router.push('/news');
-    else window.open('/news', '_blank');
+    if (isMobile) {
+      // Save current page state before navigation for browser back button
+      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
+      router.push('/news');
+    } else window.open('/news', '_blank');
   };
 
   const renderContent = () => {

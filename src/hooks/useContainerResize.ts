@@ -9,11 +9,13 @@ import { useEffect, useRef, RefObject } from 'react';
  * @param containerRef - Ref to the container element to observe
  * @param callback - Function to call when container size changes
  * @param selector - Optional CSS selector to find parent container (using closest())
+ * @param dependencies - Optional dependencies array to force re-observation when values change
  */
 export function useContainerResize(
   containerRef: RefObject<HTMLElement>,
   callback: (entry: ResizeObserverEntry) => void,
   selector?: string,
+  dependencies: unknown[] = [],
 ) {
   const callbackRef = useRef(callback);
 
@@ -42,8 +44,24 @@ export function useContainerResize(
 
     resizeObserver.observe(targetElement);
 
+    // Manually trigger callback with current dimensions after layout
+    // This ensures callback fires even if ResizeObserver doesn't (e.g., after display: none -> visible)
+    const rafId = requestAnimationFrame(() => {
+      if (!targetElement) return;
+      const rect = targetElement.getBoundingClientRect();
+      if (rect.height > 0 && rect.width > 0) {
+        // Create a mock ResizeObserverEntry with current dimensions
+        callbackRef.current({
+          target: targetElement,
+          contentRect: rect,
+        } as ResizeObserverEntry);
+      }
+    });
+
     return () => {
+      cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
     };
-  }, [containerRef, selector]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef, selector, JSON.stringify(dependencies)]);
 }

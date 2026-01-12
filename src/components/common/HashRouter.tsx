@@ -4,9 +4,11 @@ import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
+import { STORAGE_KEY } from '@/constants/storage';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useNavigation } from '@/hooks/useNavigation';
+import { ensureMobileUIVisible, ensureDesktopUIVisible, ensureUIVisibleIfHidden } from '@/utils/ui';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
@@ -22,6 +24,20 @@ export default function HashRouter() {
   const handlePathnameNavigation = useCallback(() => {
     if (!globalLoaded || isMobile === null) return;
     const { pathname } = window.location;
+
+    // Check if returning from /news or /podcast on mobile
+    if (isMobile && pathname === '/') {
+      const returnPageId = sessionStorage.getItem(STORAGE_KEY.MOBILE_RETURN_PAGE);
+      if (returnPageId) {
+        sessionStorage.removeItem(STORAGE_KEY.MOBILE_RETURN_PAGE);
+        const returnNavItem = NAV_LIST.find((item) => item.id === returnPageId);
+        if (returnNavItem) {
+          mobileNavChange(returnNavItem);
+          return;
+        }
+      }
+    }
+
     const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
     if (matchingNavItem) {
       isMobile ? mobileNavChange(matchingNavItem) : handleNavClick(matchingNavItem);
@@ -50,15 +66,9 @@ export default function HashRouter() {
     if (pathname !== '/') {
       // fixed initial ui opacity, see DragonModel triggerFadeInAnimation
       if (isMobile) {
-        const mobileNav = document.querySelector('#mobile-nav');
-        const mobileElement = document.querySelector('#mobile-fixed-ui');
-        if (mobileNav) gsap.set(mobileNav, { opacity: 1 });
-        if (mobileElement) gsap.set(mobileElement, { opacity: 1 });
+        ensureMobileUIVisible();
       } else {
-        const nav = document.querySelector('#nav');
-        const element = document.querySelector('#pc-fixed-ui');
-        if (nav) gsap.set(nav, { opacity: 1 });
-        if (element) gsap.set(element, { opacity: 1 });
+        ensureDesktopUIVisible();
       }
 
       setFadeInAnimCompleted(true);
@@ -70,6 +80,23 @@ export default function HashRouter() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalLoaded, handleHashNavigation, isMobile]);
+
+  // Ensure UI remains visible after browser navigation (e.g., back button)
+  useEffect(() => {
+    if (!globalLoaded || isMobile === null) return;
+
+    const handlePopState = () => {
+      // When navigating back to the main page, ensure UI elements are visible
+      ensureUIVisibleIfHidden(isMobile);
+    };
+
+    // Listen to popstate (browser back/forward button)
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [globalLoaded, isMobile]);
 
   return null;
 }
