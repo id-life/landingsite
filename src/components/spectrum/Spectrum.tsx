@@ -2,8 +2,8 @@
 
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
@@ -11,11 +11,9 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
-import { cloneElement, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumItem from './SpectrumItem';
-import { AnimatePresence, motion } from 'motion/react';
-import { ArrowSVG } from '@/components/svg';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;

@@ -4,6 +4,7 @@ import { mobileCurrentPageAtom } from '@/atoms';
 import { useMobileInsightsAnim } from '@/hooks/anim/useMobileInsightsAnim';
 import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 import { cn } from '@/utils';
+import { ensureMobileUIVisible } from '@/utils/ui';
 import { useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
 import PodcastSection from './_components/PodcastSection';
@@ -13,9 +14,20 @@ const PAGE_ID = 'insights_page';
 
 function MobileInsights() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const isVisible = currentPage?.id === PAGE_ID;
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
   // Use the new API for news & talks
   const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
+
+  // Ensure fixed UI elements are visible when page becomes visible
+  useEffect(() => {
+    if (isVisible) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        ensureMobileUIVisible();
+      });
+    }
+  }, [isVisible]);
 
   // 页面进入/离开动画
   useEffect(() => {
@@ -37,10 +49,10 @@ function MobileInsights() {
       {/* Content Area - centered with both sections */}
       <div className="mobile-insights-content flex flex-1 flex-col justify-center gap-6 overflow-y-auto px-5 pb-4">
         {/* News & Talks Section */}
-        <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile />
+        <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile isVisible={isVisible} />
 
         {/* Podcast Section (compact mode - 2 items) */}
-        <PodcastSection isMobile compact />
+        <PodcastSection isMobile compact isVisible={isVisible} />
       </div>
     </div>
   );

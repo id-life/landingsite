@@ -1,11 +1,15 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useCallback } from 'react';
+import { ensureMobileUIVisible } from '@/utils/ui';
 
 export function useMobileInsightsAnim() {
   const { contextSafe } = useGSAP();
 
   const enterAnimate = contextSafe(() => {
+    // Ensure fixed UI elements are visible (important for browser back navigation)
+    ensureMobileUIVisible();
+
     const tl = gsap.timeline({
       delay: 0.5, // 等待上一页退出动画
     });

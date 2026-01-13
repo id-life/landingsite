@@ -7,6 +7,7 @@ export function useMobileItemsPerPage(
   containerRef: RefObject<HTMLDivElement>,
   isMobile: boolean,
   slotHeight = DEFAULT_SLOT_HEIGHT,
+  isVisible = true,
 ) {
   const [itemsPerPage, setItemsPerPage] = useState(3);
 
@@ -21,7 +22,7 @@ export function useMobileItemsPerPage(
     [isMobile, slotHeight],
   );
 
-  useContainerResize(containerRef, calculateItems);
+  useContainerResize(containerRef, calculateItems, undefined, [isVisible]);
 
   return itemsPerPage;
 }

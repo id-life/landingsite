@@ -10,6 +10,7 @@ import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
+import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
 import { useRouter } from 'next/navigation';
 
@@ -28,11 +29,12 @@ export type PodcastItem = {
 type PodcastSectionProps = {
   isMobile?: boolean;
   compact?: boolean; // Show only 2 items in a grid without swiper (for combined view)
+  isVisible?: boolean;
 };
 
 const COMPACT_ITEMS_PER_PAGE = 2;
 
-export default function PodcastSection({ isMobile = false, compact = false }: PodcastSectionProps) {
+export default function PodcastSection({ isMobile = false, compact = false, isVisible = true }: PodcastSectionProps) {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
@@ -41,7 +43,7 @@ export default function PodcastSection({ isMobile = false, compact = false }: Po
   const swiperRef = useRef<SwiperType>();
   const compactSwiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
-  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156); // 播客卡片106 + 间距20 + 30
+  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible); // 播客卡片106 + 间距20 + 30
 
   // 只获取 podcast_id 分类的播客
   const { data: podcastIDData, isLoading } = useQuery({
@@ -94,6 +96,8 @@ export default function PodcastSection({ isMobile = false, compact = false }: Po
 
   const handleViewAllClick = () => {
     if (isMobile) {
+      // Save current page state before navigation for browser back button
+      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
       router.push('/podcast');
     } else window.open('/podcast', '_blank');
   };
