@@ -6,6 +6,7 @@ export type PortfolioItemInfo = {
   description: string;
   image: JSX.Element;
   link?: string;
+  logoUrl: string;
 };
 
 const mobileImageClassName = 'mobile:h-full mobile:w-auto mobile:object-contain';
@@ -13,8 +14,15 @@ export const portfolio: PortfolioItemInfo[] = [
   {
     title: 'Healthspan Capital',
     description: 'Active early stage LongBio fund',
-    image: <img className={cn('w-19.5', mobileImageClassName)} src="/imgs/investments/healthspan.webp" alt="healthspan" />,
+    image: (
+      <img
+        className={cn('w-19.5', mobileImageClassName)}
+        src="/imgs/investments/healthspan.webp"
+        alt="Healthspan Capital logo - Active early stage LongBio fund"
+      />
+    ),
     link: 'https://www.healthspancapital.vc/',
+    logoUrl: '/imgs/investments/healthspan.webp',
   },
   {
     title: 'Frontier Bio',
@@ -23,37 +31,62 @@ export const portfolio: PortfolioItemInfo[] = [
       <img
         className={cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]')}
         src="/imgs/investments/frontier-bio.webp"
-        alt="frontier-bio"
+        alt="Frontier Bio logo - The future of engineered tissue"
       />
     ),
     link: 'https://www.frontierbio.com/',
+    logoUrl: '/imgs/investments/frontier-bio.webp',
   },
   {
     title: 'Unlimited Bio',
     description: 'Accelerate clinical trials',
-    image: <img className={cn('w-19.5', mobileImageClassName)} src="/imgs/investments/unlimited.webp" alt="unlimited" />,
+    image: (
+      <img
+        className={cn('w-19.5', mobileImageClassName)}
+        src="/imgs/investments/unlimited.webp"
+        alt="Unlimited Bio logo - Accelerate clinical trials"
+      />
+    ),
     link: 'https://www.unlimited.bio/',
+    logoUrl: '/imgs/investments/unlimited.webp',
   },
   {
     title: 'R3 Bio',
     description: 'Stealth mode biotech',
     image: (
-      <img className={cn(mobileImageClassName, 'w-[8.75rem] mobile:w-[6.25rem]')} src="/imgs/investments/r3.webp" alt="r3" />
+      <img
+        className={cn(mobileImageClassName, 'w-[8.75rem] mobile:w-[6.25rem]')}
+        src="/imgs/investments/r3.webp"
+        alt="R3 Bio logo - Stealth mode biotech"
+      />
     ),
+    logoUrl: '/imgs/investments/r3.webp',
   },
   {
     title: 'Immune Bridge',
     description: 'A new generation of allogeneic cell therapies to make cancer cures accessible to everyone',
     image: (
-      <img className={cn('w-[12.5rem]', mobileImageClassName)} src="/imgs/investments/immune-bridge.webp" alt="immune-bridge" />
+      <img
+        className={cn('w-[12.5rem]', mobileImageClassName)}
+        src="/imgs/investments/immune-bridge.webp"
+        alt="Immune Bridge logo - Allogeneic cell therapies for accessible cancer cures"
+      />
     ),
     link: 'https://www.immunebridge.com/',
+    logoUrl: '/imgs/investments/immune-bridge.webp',
   },
   {
     title: 'Mito Health',
     description: 'AI powered concierge doctor',
-    image: <img className={cn(mobileImageClassName, 'w-36 mobile:w-[6rem]')} src="/imgs/investments/mito.webp" alt="mito" />,
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-36 mobile:w-[6rem]')}
+        src="/imgs/investments/mito.webp"
+        alt="Mito Health logo - AI powered concierge doctor"
+      />
+    ),
     link: 'https://mitohealth.com/',
+    logoUrl: '/imgs/investments/mito.webp',
   },
   {
     title: 'Kangaroo Biomedical',
@@ -62,22 +95,35 @@ export const portfolio: PortfolioItemInfo[] = [
       <img
         className={cn(mobileImageClassName, 'h-12 mobile:-mt-3 mobile:h-10')}
         src="/imgs/investments/kangaroo-biomedical.webp"
-        alt="kangaroo-biomedical"
+        alt="Kangaroo Biomedical logo - Artificial Womb technology"
       />
     ),
+    logoUrl: '/imgs/investments/kangaroo-biomedical.webp',
   },
   {
     title: 'VIBE SCIENCE',
     description: 'Builds consumer brain wellness technology',
-    image: <img className={cn(mobileImageClassName, 'w-24 mobile:h-12')} src="/imgs/investments/vibe.webp" alt="vitalia" />,
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-24 mobile:h-12')}
+        src="/imgs/investments/vibe.webp"
+        alt="VIBE SCIENCE logo - Consumer brain wellness technology"
+      />
+    ),
+    logoUrl: '/imgs/investments/vibe.webp',
   },
   {
     title: 'Oisin Biotechnologies',
     description: 'Genetic Medicines for Health and Longevity',
     image: (
-      <img className={cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11')} src="/imgs/investments/oisin.webp" alt="oisin" />
+      <img
+        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11')}
+        src="/imgs/investments/oisin.webp"
+        alt="Oisin Biotechnologies logo - Genetic medicines for health and longevity"
+      />
     ),
     link: 'https://www.oisinbio.com/',
+    logoUrl: '/imgs/investments/oisin.webp',
   },
   {
     title: 'Etheros Pharmaceuticals',
@@ -86,24 +132,53 @@ export const portfolio: PortfolioItemInfo[] = [
       <img
         className={cn(mobileImageClassName, 'w-[8.375rem] mobile:h-11')}
         src="/imgs/investments/etheros.webp"
-        alt="etheros"
+        alt="Etheros Pharmaceuticals logo - Small molecule enzyme mimetics for neuroprotection"
       />
     ),
     link: 'https://etherospharma.com/',
+    logoUrl: '/imgs/investments/etheros.webp',
   },
   {
     title: 'Longevity.Technology',
     description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
-    image: <img className={cn('w-19.5', mobileImageClassName)} src="/imgs/investments/longevity.webp" alt="longevity" />,
+    image: (
+      <img
+        className={cn('w-19.5', mobileImageClassName)}
+        src="/imgs/investments/longevity.webp"
+        alt="Longevity.Technology logo - Daily news and insights on longevity market"
+      />
+    ),
     link: 'https://longevity.technology/',
+    logoUrl: '/imgs/investments/longevity.webp',
   },
   {
     title: 'Vitalia',
     description: 'Accelerated longevity startups Special economic zone',
-    image: <img className={cn('w-19.5', mobileImageClassName)} src="/imgs/investments/vitalia.webp" alt="vitalia" />,
+    image: (
+      <img
+        className={cn('w-19.5', mobileImageClassName)}
+        src="/imgs/investments/vitalia.webp"
+        alt="Vitalia logo - Accelerated longevity startups special economic zone"
+      />
+    ),
     // link: 'https://vitalia.city/',
+    logoUrl: '/imgs/investments/vitalia.webp',
   },
 ];
+
+export const getPortfolioJsonLd = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'IMMORTAL DRAGONS Portfolio',
+  url: 'https://id.life/portfolio',
+  hasPart: portfolio.map((item) => ({
+    '@type': 'Organization',
+    name: item.title,
+    description: item.description,
+    logo: `https://id.life${item.logoUrl}`,
+    ...(item.link && { url: item.link }),
+  })),
+});
 
 // Mobile particle scale multiplier - adjust this to uniformly control mobile particle size
 // Higher = larger particles, Lower = smaller particles

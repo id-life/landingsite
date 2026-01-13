@@ -81,7 +81,7 @@ const SpectrumLink = memo(
       if (icon) {
         return (
           <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
-            <img src={icon} onClick={handleClick} alt="" className={cn('duration-300 hover:scale-110', size)} />
+            <img src={icon} onClick={handleClick} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
           </div>
         );
       }

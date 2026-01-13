@@ -2,16 +2,7 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { HTMLAttributes, useCallback, useMemo } from 'react';
-import {
-  BookSVG,
-  DigitalTwinSVG,
-  InternSVG,
-  MeetingSVG,
-  MuseumSVG,
-  PodcastSVG,
-  RelationSVG,
-  SponsorSVG,
-} from '../../components/svg';
+import { BookSVG, DigitalTwinSVG, InternSVG, RelationSVG, SponsorSVG } from '../../components/svg';
 import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
