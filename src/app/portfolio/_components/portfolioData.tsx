@@ -1,4 +1,5 @@
 import { cn } from '@/utils';
+import { ItemList, WithContext } from 'schema-dts';
 
 export type PortfolioItemInfo = {
   title: string;
@@ -166,17 +167,22 @@ export const portfolio: PortfolioItemInfo[] = [
   },
 ];
 
-export const getPortfolioJsonLd = () => ({
+export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
+  '@type': 'ItemList',
   name: 'IMMORTAL DRAGONS Portfolio',
   url: 'https://id.life/portfolio',
-  hasPart: portfolio.map((item) => ({
-    '@type': 'Organization',
-    name: item.title,
-    description: item.description,
-    logo: `https://id.life${item.logoUrl}`,
-    ...(item.link && { url: item.link }),
+  numberOfItems: portfolio.length,
+  itemListElement: portfolio.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'Organization',
+      name: item.title,
+      description: item.description,
+      logo: `https://id.life${item.logoUrl}`,
+      ...(item.link && { url: item.link }),
+    },
   })),
 });
 

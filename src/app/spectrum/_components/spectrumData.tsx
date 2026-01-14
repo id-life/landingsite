@@ -1,6 +1,7 @@
 // Shared spectrum data - used by both useSpectrumData hook and SpectrumSEO component
 
 import { BookSVG, DigitalTwinSVG, InternSVG, RelationSVG, SponsorSVG } from '@/components/svg';
+import { CollectionPage, WithContext } from 'schema-dts';
 
 export type SpectrumLinkData = {
   label: string;
@@ -159,7 +160,7 @@ export const spectrumBaseData: SpectrumItemData[] = [
   },
 ];
 
-export const getSpectrumJsonLd = () => ({
+export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',

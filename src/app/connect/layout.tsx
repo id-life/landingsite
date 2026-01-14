@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { Graph } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'CONNECT 联结',
@@ -31,19 +32,58 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Connects',
-    name: 'Connects',
-    url: 'https://www.id.life/connect',
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'DefinedTermSet',
-    name: 'Connects',
-  },
-];
+const jsonLd: Graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.id.life/#website',
+      name: 'Immortal Dragons',
+      url: 'https://www.id.life/',
+    },
+    {
+      '@type': 'WebPage',
+      '@id': 'https://www.id.life/connect#webpage',
+      name: 'Connect',
+      url: 'https://www.id.life/connect',
+      isPartOf: { '@id': 'https://www.id.life/#website' },
+      about: { '@id': 'https://www.id.life/#org' },
+      mainEntity: { '@id': 'https://www.id.life/#org' },
+      description: 'Contact Immortal Dragons for partnerships, media, and community connections.',
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.id.life/#org',
+      name: 'Immortal Dragons',
+      url: 'https://www.id.life/',
+      email: 'contact@id.life',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '3 Biopolis Dr, #01-15',
+        addressLocality: 'Singapore',
+        postalCode: '138623',
+        addressCountry: 'SG',
+      },
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'general inquiries',
+          email: 'contact@id.life',
+          availableLanguage: ['en', 'zh'],
+          url: 'https://www.id.life/connect',
+        },
+      ],
+      sameAs: ['https://www.youtube.com/@Immortal-Dragons', 'https://www.linkedin.com/company/immortaldragons/'],
+      subjectOf: [
+        {
+          '@type': 'CreativeWork',
+          name: 'Immortal Dragons Media Kit',
+          url: 'https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG',
+        },
+      ],
+    },
+  ],
+};
 export default function ConnectLayout({ children }: { children: ReactNode }) {
   return (
     <>

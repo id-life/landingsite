@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { SoftwareApplication, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'DigitalTwin 孪生',
@@ -31,26 +32,25 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
+const jsonLd: WithContext<SoftwareApplication> = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Digital Twin',
+  description:
+    'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
+  url: 'https://www.id.life/digitaltwin',
   applicationCategory: 'MedicalApplication',
   operatingSystem: 'Web',
-  creator: 'IMMORTAL DRAGONS',
+  creator: {
+    '@type': 'Organization',
+    name: 'IMMORTAL DRAGONS',
+    url: 'https://www.id.life',
+  },
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
     availability: 'https://schema.org/OnlineOnly',
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    ratingCount: '1250',
-    reviewCount: '1024',
-    bestRating: '5',
-    worstRating: '1',
   },
 };
 

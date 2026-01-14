@@ -67,80 +67,34 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd: WithContext<ItemList> = {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: 'Immortal Dragons News',
-  description: 'Latest news and insights from Immortal Dragons',
-  url: 'https://www.id.life/news',
-  numberOfItems: 4,
-  itemListElement: [
-    {
+// Generate JSON-LD dynamically from news data
+function generateNewsJsonLd(news: NewsPageItem[]): WithContext<ItemList> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Immortal Dragons News',
+    description: 'Latest news and insights from Immortal Dragons',
+    url: 'https://www.id.life/news',
+    numberOfItems: news.length,
+    itemListElement: news.map((item, index) => ({
       '@type': 'ListItem',
-      position: 1,
+      position: index + 1,
       item: {
         '@type': 'NewsArticle',
-        '@id': 'https://www.id.life/news/10001',
-        headline: '不朽真龙：引领长寿革命的使命驱动型基金',
-        datePublished: '2025-07-10T08:22:16.222Z',
-        image: 'https://www.id.life/imgs/news/insights-bg.webp',
+        '@id': item.url?.startsWith('/')
+          ? `https://www.id.life${item.url}`
+          : (item.url ?? `https://www.id.life/news/${item.id}`),
+        headline: item.title,
+        ...(item.publishDate && { datePublished: item.publishDate }),
+        image: item.cover ?? 'https://www.id.life/imgs/news/insights-bg.webp',
         author: {
           '@type': 'Organization',
-          name: 'Immortal Dragons',
-          url: 'https://www.id.life/news/10001',
+          name: item.source ?? 'Immortal Dragons',
         },
       },
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      item: {
-        '@type': 'NewsArticle',
-        '@id': 'https://www.id.life/news/10002',
-        headline: '探索不朽真龙的投资组合：从Healthspan Capital到Longevity.Technology',
-        datePublished: '2025-07-10T08:22:16.357Z',
-        image: 'https://www.id.life/imgs/news/insights-bg.webp',
-        author: {
-          '@type': 'Organization',
-          name: 'Immortal Dragons',
-          url: 'https://www.id.life/news/10002',
-        },
-      },
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      item: {
-        '@type': 'NewsArticle',
-        '@id': 'https://www.id.life/news/10003',
-        headline: 'Boyang的基因疗法实验：不朽真龙创始人的亲身经历',
-        datePublished: '2025-07-10T08:22:16.481Z',
-        image: 'https://www.id.life/imgs/news/insights-bg.webp',
-        author: {
-          '@type': 'Organization',
-          name: 'Immortal Dragons',
-          url: 'https://www.id.life/news/10003',
-        },
-      },
-    },
-    {
-      '@type': 'ListItem',
-      position: 4,
-      item: {
-        '@type': 'NewsArticle',
-        '@id': 'https://www.id.life/news/10004',
-        headline: '全身替换技术：不朽真龙投资的激进长寿方案解析',
-        datePublished: '2025-07-10T08:22:16.612Z',
-        image: 'https://www.id.life/imgs/news/insights-bg.webp',
-        author: {
-          '@type': 'Organization',
-          name: 'Immortal Dragons',
-          url: 'https://www.id.life/news/10004',
-        },
-      },
-    },
-  ],
-};
+    })),
+  };
+}
 
 export default async function NewsPage() {
   const insightsRes = await fetchInsightsWithGeo();
@@ -149,6 +103,7 @@ export default async function NewsPage() {
   // Transform and sort
   const news = transformToNewsPageItems(insightsItems);
   const [featured, ...restNews] = news;
+  const jsonLd = generateNewsJsonLd(news);
 
   return (
     <>

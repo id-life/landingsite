@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import INStyle from '../_components/INStyle';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
+import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'Influence Network | Immortal Dragons',
@@ -31,9 +32,23 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd: WithContext<CollectionPage> = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Influence Network',
+  url: 'https://www.id.life/spectrum/influence-network',
+  description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Immortal Dragons',
+    url: 'https://www.id.life',
+  },
+};
+
 export default function InfluenceNetworkLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <INStyle />
       <div className="relative h-full w-full">
         <SpectrumHeader className="fixed left-0 top-0 w-full animate-fade-in" />
