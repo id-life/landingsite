@@ -1,5 +1,5 @@
-import { fetchNewsList, fetchInsightsWithGeo } from '@/apis';
-import { InsightsWithGeoItem, NewsListItem, NewsPageItem } from '@/apis/types';
+import { fetchInsightsWithGeo } from '@/apis';
+import { InsightsWithGeoItem, NewsPageItem } from '@/apis/types';
 import NewsCard from './_components/NewsCard';
 import { ItemList, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
@@ -12,31 +12,21 @@ function extractYouTubeVideoId(url: string): string | null {
   return match ? match[1] : null;
 }
 
-function transformToNewsPageItems(insightsWithGeoItems: InsightsWithGeoItem[], geoListItems: NewsListItem[]): NewsPageItem[] {
-  // Create a map for geo list items by id for brief lookup
-  const geoMap = new Map(geoListItems.map((item) => [item.id, item]));
-
-  // Sort: isTop first, then insights by sequence, then geo by sequence
-  const sortedItems = [...insightsWithGeoItems].sort((a, b) => {
-    // 1. isTop priority
+function transformToNewsPageItems(items: InsightsWithGeoItem[]): NewsPageItem[] {
+  // Sort: isTop first, then by sequence ascending
+  const sortedItems = [...items].sort((a, b) => {
     if (a.isTop && !b.isTop) return -1;
     if (!a.isTop && b.isTop) return 1;
-    // 2. insights before geo
-    if (a.contentType === 'insights' && b.contentType === 'geo') return -1;
-    if (a.contentType === 'geo' && b.contentType === 'insights') return 1;
-    // 3. same type: sort by sequence ascending
     return a.sequence - b.sequence;
   });
 
   return sortedItems.map((item) => {
-    const isGeo = item.contentType === 'geo';
-    const geoDetails = isGeo && item.id ? geoMap.get(item.id) : undefined;
     const videoId = item.url ? extractYouTubeVideoId(item.url) : null;
 
     return {
       id: item.id ?? 0,
       title: item.title,
-      brief: geoDetails?.brief ?? null,
+      brief: null,
       cover: item.imageUrl,
       source: item.publisher,
       publishDate: item.publishDate,
@@ -153,14 +143,11 @@ const jsonLd: WithContext<ItemList> = {
 };
 
 export default async function NewsPage() {
-  // Fetch from both endpoints in parallel
-  const [insightsWithGeoRes, geoListRes] = await Promise.all([fetchInsightsWithGeo(), fetchNewsList()]);
-
-  const insightsWithGeoItems = insightsWithGeoRes.code === 200 ? insightsWithGeoRes.data : [];
-  const geoListItems = geoListRes.code === 200 ? geoListRes.data : [];
+  const insightsRes = await fetchInsightsWithGeo();
+  const insightsItems = insightsRes.code === 200 ? insightsRes.data.filter((item) => item.contentType !== 'geo') : [];
 
   // Transform and sort
-  const news = transformToNewsPageItems(insightsWithGeoItems, geoListItems);
+  const news = transformToNewsPageItems(insightsItems);
   const [featured, ...restNews] = news;
 
   return (

@@ -1,35 +1,21 @@
+import { spectrumBaseData, SpectrumItemData, SpectrumLinkData } from '@/app/spectrum/_components/spectrumData';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { HTMLAttributes, useCallback, useMemo } from 'react';
-import { BookSVG, DigitalTwinSVG, InternSVG, RelationSVG, SponsorSVG } from '../../components/svg';
 import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
 import { SpectrumRouteConfig, useSpectrumRouter } from './useSpectrumRouter';
 
-export type SpectrumLinkItem = {
+export type SpectrumLinkItem = SpectrumLinkData & {
   key?: string;
-  label: string;
-  link?: string; // jumpTo link
-  onClick?: () => void; // jumpTo some where
+  onClick?: () => void;
   className?: string;
-  isComingSoon?: boolean;
-  labelClassName?: string;
-  routeKey?: string; // for URL routing
-  icon?: string;
-  size?: string;
-  mobileSize?: string;
 };
 
-export type SpectrumItemInfo = {
-  title: string;
-  titleCn: string;
-  icon: JSX.Element;
-  links?: SpectrumLinkItem[];
-  linksClassName?: string;
-  className?: string;
+export type SpectrumItemInfo = SpectrumItemData & {
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
 };
 
@@ -96,172 +82,7 @@ export const useSpectrumData = () => {
 
   const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);
 
-  const spectrumData: SpectrumItemInfo[] = useMemo(() => {
-    const data: SpectrumItemInfo[] = [
-      {
-        title: 'Translation & Publishing',
-        titleCn: '翻译与出版',
-        icon: <BookSVG />,
-        linksClassName: 'grid grid-cols-2',
-        links: [
-          {
-            label: 'Bio/Acc Manifesto',
-            routeKey: 'biohacker-dao',
-          },
-          {
-            label: 'The case against death',
-            isComingSoon: true,
-            labelClassName: '-ml-4 mobile:ml-0 text-[.5rem]/3',
-          },
-          {
-            label: 'The Network State',
-            routeKey: 'the-network-state',
-          },
-          {
-            label: 'Better With Age',
-            labelClassName: '-ml-4 mobile:ml-0',
-            routeKey: 'better-with-age',
-          },
-        ],
-      },
-      {
-        title: 'Evanglism',
-        titleCn: '布道者',
-        icon: <RelationSVG />,
-        links: [
-          {
-            label: 'Influence Network',
-            link: '/spectrum/influence-network',
-          },
-          {
-            label: 'Disease Management',
-            link: '/spectrum/disease-management',
-          },
-        ],
-      },
-      {
-        title: 'Digital Twin',
-        titleCn: '数字孪生',
-        icon: <DigitalTwinSVG />,
-        className: 'mobile:pt-4',
-        links: [
-          {
-            label: 'Access Digital Twin',
-            routeKey: 'digital-twin',
-          },
-        ],
-      },
-      {
-        title: 'Global Internship',
-        titleCn: '实习生计划',
-        icon: <InternSVG />,
-        className: 'mobile:pt-4',
-        links: [
-          {
-            label: 'Apply (CN)',
-            link: 'https://id.life/career',
-          },
-          {
-            label: 'Apply (EN)',
-            link: 'https://id.life/career-en',
-          },
-        ],
-      },
-      {
-        className: 'mobile:text-xl',
-        title: 'Proudly Sponsoring & Supporting',
-        titleCn: '本机构赞助支持',
-        icon: <SponsorSVG />,
-        links: [
-          {
-            label: 'ARDD',
-            routeKey: 'ardd-2025',
-            icon: '/imgs/investments/sponsors/ardd.png',
-            size: 'h-15',
-            mobileSize: 'h-10.5 ipad:h-15',
-          },
-          {
-            label: 'TimePie Longevity Forum',
-            routeKey: 'timepie-longevity-forum',
-            icon: '/imgs/investments/sponsors/time-pie.png',
-            size: 'h-15',
-            mobileSize: 'h-10.5 ipad:h-14',
-          },
-          {
-            label: 'Lifespan Research Institute',
-            routeKey: 'lifespan-research-institute',
-            icon: '/imgs/investments/sponsors/lifespan.png',
-            size: 'h-12',
-            mobileSize: 'h-8 ipad:h-13',
-          },
-          {
-            label: 'Public Longevity Group',
-            routeKey: 'public-longevity-group',
-            icon: '/imgs/investments/sponsors/public-longevity.png',
-            size: 'h-15',
-            mobileSize: 'h-10.5 ipad:h-15',
-          },
-          {
-            label: '2060 Longevity Forum',
-            routeKey: '2060-longevity-forum',
-            icon: '/imgs/investments/sponsors/2060-longevity.png',
-            size: 'h-12',
-            mobileSize: 'h-8 ipad:h-13',
-          },
-          {
-            label: 'REVIVE ME',
-            routeKey: 'revive-me-2025',
-            icon: '/imgs/investments/sponsors/revive-me.png',
-            size: 'h-12',
-            mobileSize: 'h-8 ipad:h-13',
-          },
-          {
-            label: 'Health Longevity and Medicine Conference',
-            routeKey: 'healthy-longevity-medicine-conference',
-            icon: '/imgs/investments/sponsors/healthy-longevity.png',
-            size: 'h-15',
-            mobileSize: 'h-10.5 ipad:h-15',
-          },
-          {
-            label: 'Vitalist Bay Summit',
-            routeKey: 'vitalist-bay-summit-grant',
-            icon: '/imgs/investments/sponsors/vitalist-bay.png',
-            size: 'h-12',
-            mobileSize: 'h-8 ipad:h-13',
-          },
-          {
-            label: 'Cornerstone Non-profit Foundation',
-            link: 'https://www.cornerstoneondemand.org',
-            icon: '/imgs/investments/sponsors/cornerstone.png',
-            size: 'h-6.5',
-            mobileSize: 'h-4.5 ipad:h-6.5',
-          },
-          {
-            label: 'Beyond Tomorrow Podcast',
-            link: 'https://beyondtomorrowpodcast.com/',
-            icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
-            size: 'h-5',
-            mobileSize: 'h-3.5 ipad:h-4.5',
-          },
-          {
-            label: 'HackAging.ai Hackathon', // 11
-            link: 'https://www.hackaging.ai/',
-            icon: '/imgs/investments/sponsors/hackaging.png',
-            size: 'h-5',
-            mobileSize: 'h-3.5 ipad:h-4.5',
-          },
-          {
-            label: 'BioHackerDAO',
-            link: 'https://biohackerdao.org/',
-            icon: '/imgs/investments/sponsors/biohackerdao.png',
-            size: 'h-15',
-            mobileSize: 'h-10.5 ipad:h-15',
-          },
-        ],
-      },
-    ];
-    return data;
-  }, []);
+  const spectrumData: SpectrumItemInfo[] = spectrumBaseData;
 
   // For mobile: separate main items (first 4) from sponsors (last item)
   const spectrumMainItems = useMemo(() => spectrumData.slice(0, 4), [spectrumData]);

@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { getSpectrumJsonLd } from './_components/spectrumData';
+import SpectrumSEO from './_components/SpectrumSEO';
 
 export const metadata: Metadata = {
   title: 'Spectrum 谱系',
@@ -31,21 +33,15 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CreativeWorkSeries',
-  name: 'Spectrum',
-  applicationCategory: 'ProductivityApplication + NewsMedia',
-  operatingSystem: 'Web',
-  creator: 'IMMORTAL DRAGONS',
-};
-
 export default function SpectrumLayout({ children }: { children: ReactNode }) {
+  const jsonLd = getSpectrumJsonLd();
+
   return (
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <SpectrumSEO />
       <Style />
       <ClientNav />
       {children}
