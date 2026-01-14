@@ -3,6 +3,7 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { getPortfolioJsonLd } from './_components/portfolioData';
+import PortfolioSEO from './_components/PortfolioSEO';
 
 export const metadata: Metadata = {
   title: 'Portfolio 投资',
@@ -40,6 +41,7 @@ export default function PortfolioLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <PortfolioSEO />
       <Style />
       <ClientNav />
       {children}
