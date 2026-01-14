@@ -6,7 +6,8 @@ import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'Insights 洞见',
-  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  description:
+    'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Insights 洞见',
     siteName: 'Immortal Dragons',
-    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+    description:
+      'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
     images: [
       {
         url: 'https://cdn.id.life/id-life-cover-2.webp',
@@ -35,7 +37,8 @@ const jsonLd: WithContext<CollectionPage> = {
   '@type': 'CollectionPage',
   name: 'Insights 洞见',
   url: 'https://www.id.life/insights',
-  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  description:
+    'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
   isPartOf: {
     '@type': 'WebSite',
     name: 'Immortal Dragons',
