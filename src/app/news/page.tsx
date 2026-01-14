@@ -156,7 +156,8 @@ export default async function NewsPage() {
   // Fetch from both endpoints in parallel
   const [insightsWithGeoRes, geoListRes] = await Promise.all([fetchInsightsWithGeo(), fetchNewsList()]);
 
-  const insightsWithGeoItems = insightsWithGeoRes.code === 200 ? insightsWithGeoRes.data : [];
+  const insightsWithGeoItems =
+    insightsWithGeoRes.code === 200 ? insightsWithGeoRes.data.filter((item) => item.contentType !== 'geo') : [];
   const geoListItems = geoListRes.code === 200 ? geoListRes.data : [];
 
   // Transform and sort
