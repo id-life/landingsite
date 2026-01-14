@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { DefinedTermSet, WebPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   title: 'CONNECT 联结',
@@ -31,10 +32,10 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = [
+const jsonLd: (WithContext<WebPage> | WithContext<DefinedTermSet>)[] = [
   {
     '@context': 'https://schema.org',
-    '@type': 'Connects',
+    '@type': 'WebPage',
     name: 'Connects',
     url: 'https://www.id.life/connect',
   },
