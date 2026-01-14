@@ -3,7 +3,7 @@ import { fetchPodcastDetail } from '@/apis';
 import PodcastContentTab from '@/app/podcast/[id]/_components/PodcastContentTab';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
-import { NewsArticle, WithContext } from 'schema-dts';
+import { PodcastEpisode, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
 
 export const revalidate = 300; // 5min
@@ -62,19 +62,37 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   const { id } = params;
   const data = await getCachePodcastDetail(id);
 
-  const jsonLd: WithContext<NewsArticle> = {
+  // Convert duration (seconds) to ISO 8601 format (PT{H}H{M}M{S}S)
+  const formatDuration = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    let duration = 'PT';
+    if (hours > 0) duration += `${hours}H`;
+    if (minutes > 0) duration += `${minutes}M`;
+    if (secs > 0) duration += `${secs}S`;
+    return duration || 'PT0S';
+  };
+
+  const jsonLd: WithContext<PodcastEpisode> = {
     '@context': 'https://schema.org',
-    '@type': 'NewsArticle',
-    headline: data.title,
-    author: {
-      '@type': 'Organization',
-      name: 'Immortal Dragons',
-      url: `https://www.id.life/podcast/${id}`,
-    },
-    datePublished: data.createdAt,
-    dateModified: data.createdAt,
-    image: data.detailMedia,
+    '@type': 'PodcastEpisode',
+    name: data.title,
     description: data.description,
+    url: `https://www.id.life/podcast/${id}`,
+    datePublished: data.createdAt,
+    image: data.detailMedia,
+    episodeNumber: data.sequence,
+    timeRequired: formatDuration(data.duration),
+    associatedMedia: {
+      '@type': 'MediaObject',
+      contentUrl: data.url,
+    },
+    partOfSeries: {
+      '@type': 'PodcastSeries',
+      name: 'Immortal Dragons Podcast',
+      url: 'https://www.id.life/podcast',
+    },
     publisher: {
       '@type': 'Organization',
       name: 'Immortal Dragons',
