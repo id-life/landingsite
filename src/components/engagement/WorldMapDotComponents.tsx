@@ -200,7 +200,7 @@ export function ContentSection({
         transition={{
           staggerChildren: 0.1,
           duration: 0.3,
-          type: 'easeInOut',
+          ease: 'easeInOut',
         }}
         className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
       >
@@ -268,7 +268,7 @@ export function ExtraSponsorSection({
         transition={{
           staggerChildren: 0.05,
           duration: 0.3,
-          type: 'easeInOut',
+          ease: 'easeInOut',
         }}
       >
         <h4 className="-mx-10 whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
@@ -433,7 +433,7 @@ export function MobileContentSection({
       transition={{
         staggerChildren: 0.1,
         duration: 0.3,
-        type: 'easeInOut',
+        ease: 'easeInOut',
       }}
       className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-oxanium')}
     >
@@ -516,7 +516,7 @@ export function MobileExtraSponsorSection({
         transition={{
           staggerChildren: 0.05,
           duration: 0.3,
-          type: 'easeInOut',
+          ease: 'easeInOut',
         }}
       >
         <h4

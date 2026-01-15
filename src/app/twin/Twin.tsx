@@ -150,7 +150,7 @@ function Twin() {
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });
       isResetDemo.current = false;
     }
-  }, [inView]);
+  }, [inView, setCurrentModel, setCurrentModelType]);
 
   return (
     <div id={PAGE_ID} ref={ref} className="page-container twin">

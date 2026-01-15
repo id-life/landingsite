@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PodcastList from '@/app/podcast/_components/PodcastList';
 import PodcastCover from '@/app/podcast/_components/PodcastCover';
 import { PODCAST_METADATA, PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
@@ -88,7 +88,7 @@ const jsonLd: WithContext<PodcastSeries> = {
 
 export default async function PodcastPage({ searchParams }: { searchParams: SearchParams }) {
   const { c } = searchParams;
-  const category = useMemo(() => c ?? PODCAST_NAV_LIST[0].id, [c]);
+  const category = c ?? PODCAST_NAV_LIST[0].id;
 
   return (
     <>

@@ -81,7 +81,7 @@ export function Model() {
         }
       }
     }
-  }, [currentAnatomyCamera, currentModel, currentModelType]);
+  }, [currentAnatomyCamera, currentModel, currentModelType, supportsWebm]);
 
   return (
     <div

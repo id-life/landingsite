@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
-    "@gsap/react": "^2.1.1",
+    "@gsap/react": "file:./packages/gsap-react-2.1.1.tgz",
     "@microsoft/clarity": "^1.0.0",
     "@next/third-parties": "^15.0.2",
     "@p5-wrapper/react": "^4.4.2",
@@ -40,7 +40,7 @@
     "echarts-for-react": "^3.0.2",
     "github-markdown-css": "^5.8.1",
     "glslify-loader": "^2.0.0",
-    "gsap": "npm:@gsap/business@^3.12.5",
+    "gsap": "file:./packages/gsap-3.12.5.tgz",
     "jotai": "^2.9.3",
     "leva": "^0.9.35",
     "lodash-es": "^4.17.21",

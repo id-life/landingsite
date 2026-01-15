@@ -1,7 +1,7 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import SwitchModel from './_components/mobile/SwitchModel';
 import SwitchSkin from './_components/mobile/SwitchSkin';
 import Description from './_components/mobile/Description';
@@ -19,13 +19,7 @@ export default function MobileTwin() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [, setCurrentModel] = useAtom(currentModelAtom);
   const [, setCurrentModelType] = useAtom(currentModelTypeAtom);
-  useEffect(() => {
-    if (currentPage.id !== PAGE_ID) {
-      resetModel();
-    }
-  }, [currentPage]);
-
-  const resetModel = () => {
+  const resetModel = useCallback(() => {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
     gsap.to('.twin-title', { opacity: 1 });
@@ -35,7 +29,13 @@ export default function MobileTwin() {
     gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
-  };
+  }, [setCurrentModel, setCurrentModelType]);
+
+  useEffect(() => {
+    if (currentPage.id !== PAGE_ID) {
+      resetModel();
+    }
+  }, [currentPage, resetModel]);
 
   return (
     <div

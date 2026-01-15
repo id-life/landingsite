@@ -159,7 +159,7 @@ export default function useCurrentAudio() {
       const waveForm = waveFormRef.current;
       const dBASpectrum = dBASpectrumRef.current;
       const sampleRate = audioContext.sampleRate;
-      analyser.getByteFrequencyData(spectrum);
+      analyser.getByteFrequencyData(spectrum as Uint8Array<ArrayBuffer>);
       spectrum.forEach((byteLevel, idx) => {
         dBASpectrum[idx] = uint8TodB(byteLevel) + weightingsRef.current[idx];
       });
@@ -168,7 +168,7 @@ export default function useCurrentAudio() {
         [-120, 0],
       )[1];
       const maxPowerFrequency = highestPowerBin * (sampleRate / 2 / analyser.frequencyBinCount);
-      analyser.getByteTimeDomainData(waveForm);
+      analyser.getByteTimeDomainData(waveForm as Uint8Array<ArrayBuffer>);
       const result = waveForm.reduce((acc, y) => Math.max(acc, y), 128) - 128;
       eventBus.next({
         type: MessageType.SIRI_WAVE_CONFIG,

@@ -2,7 +2,7 @@ import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useEffect, useMemo, useRef } from 'react';
 import { useMeasure } from 'react-use';
-import _ from 'lodash-es';
+import { shuffle } from 'lodash-es';
 import { useIsMounted } from '@/hooks/useIsMounted';
 
 const tags = [
@@ -60,10 +60,10 @@ const commonList: { tag: string; desc: string }[] = [
 
 export default function Connect() {
   const isMounted = useIsMounted();
-  const loop1Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
-  const loop2Tags = useMemo(() => _.shuffle(tags2.concat(tags2CN)), []);
-  const loop3Tags = useMemo(() => _.shuffle(tags.concat(tagsCN)), []);
-  const loop4Tags = useMemo(() => _.shuffle(tags2.concat(tags2CN)), []);
+  const loop1Tags = useMemo(() => shuffle(tags.concat(tagsCN)), []);
+  const loop2Tags = useMemo(() => shuffle(tags2.concat(tags2CN)), []);
+  const loop3Tags = useMemo(() => shuffle(tags.concat(tagsCN)), []);
+  const loop4Tags = useMemo(() => shuffle(tags2.concat(tags2CN)), []);
 
   const tagsRef1 = useRef<HTMLDivElement>(null);
   const tagsRef2 = useRef<HTMLDivElement>(null);
