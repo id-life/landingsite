@@ -243,7 +243,7 @@ export function WorldMapBookDotContent({
                 }}
                 transition={{
                   duration: 0.3,
-                  type: 'easeInOut',
+                  ease: 'easeInOut',
                   delay: 0.2,
                 }}
                 className="flex cursor-pointer flex-col items-center gap-4"

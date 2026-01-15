@@ -35,7 +35,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       }}
       transition={{
         duration: 0.3,
-        type: 'easeInOut',
+        ease: 'easeInOut',
       }}
       // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >

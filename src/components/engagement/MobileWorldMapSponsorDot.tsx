@@ -278,7 +278,7 @@ const MobileSponsorItem = memo(
           transition={{
             staggerChildren: 0.05,
             duration: 0.3,
-            type: 'easeInOut',
+            ease: 'easeInOut',
           }}
         >
           <VideoWithPoster

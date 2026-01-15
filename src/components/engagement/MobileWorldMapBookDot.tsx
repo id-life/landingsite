@@ -181,7 +181,7 @@ export function MobileWorldMapBookDotContent({
                 }}
                 transition={{
                   duration: 0.3,
-                  type: 'easeInOut',
+                  ease: 'easeInOut',
                   delay: 0.2,
                 }}
                 className="-mt-3 flex cursor-pointer flex-col items-center gap-2"
