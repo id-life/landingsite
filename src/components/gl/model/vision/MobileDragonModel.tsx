@@ -138,11 +138,12 @@ export default function MobileDragonModel(props: {}) {
 
   // Clean up geometry and material
   useEffect(() => {
+    const mesh = meshRef.current;
     return () => {
       if (geometry) {
         geometry.dispose();
       }
-      const material = meshRef.current?.material as any;
+      const material = mesh?.material as any;
       if (material && material.dispose) {
         material.dispose();
       }
