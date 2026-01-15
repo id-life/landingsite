@@ -45,10 +45,16 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'Document-Policy',
-            value: 'js-profiling',
-          },
+          // 性能分析
+          { key: 'Document-Policy', value: 'js-profiling' },
+          // 防止点击劫持
+          { key: 'X-Frame-Options', value: 'DENY' },
+          // 防止 MIME 类型嗅探
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          // 控制 Referer 信息
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // 限制不需要的浏览器功能
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
       },
     ];
