@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
 
   const data = await getCacheNewsContent(id);
 
-  if (!data) {
+  if (!data || data.status === 'UNPUBLISH') {
     return notFound();
   }
 
