@@ -51,6 +51,7 @@ export type NewsContent = {
   title: string;
   content: string;
   category: string;
+  status?: string;
   description: string;
   keyWords: string;
   createdAt: string;
