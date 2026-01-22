@@ -1,9 +1,23 @@
 import type { MetadataRoute } from 'next';
 import { fetchNewsList, fetchPodcastList } from '@/apis';
 
+// Timeout wrapper for API calls during build
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number = 5000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error('Request timeout')), timeoutMs)),
+  ]);
+}
+
 async function getNewsEntries(): Promise<MetadataRoute.Sitemap> {
   try {
-    const res = await fetchNewsList();
+    // Skip if API URL is not configured
+    if (!process.env.NEXT_PUBLIC_API_PREFIX) {
+      console.warn('Sitemap: NEXT_PUBLIC_API_PREFIX not configured, skipping news entries');
+      return [];
+    }
+
+    const res = await withTimeout(fetchNewsList(), 5000);
     if (res.code === 200 && Array.isArray(res.data)) {
       return res.data.map((item) => ({
         url: `https://www.id.life/news/${item.id}`,
@@ -13,14 +27,24 @@ async function getNewsEntries(): Promise<MetadataRoute.Sitemap> {
       }));
     }
     return [];
-  } catch {
+  } catch (error) {
+    console.warn('Sitemap: Failed to fetch news entries:', error instanceof Error ? error.message : 'Unknown error');
     return [];
   }
 }
 
 async function getPodcastEntries(): Promise<MetadataRoute.Sitemap> {
   try {
-    const [idRes, ltRes] = await Promise.all([fetchPodcastList('podcast_id'), fetchPodcastList('podcast_lt')]);
+    // Skip if API URL is not configured
+    if (!process.env.NEXT_PUBLIC_API_PREFIX) {
+      console.warn('Sitemap: NEXT_PUBLIC_API_PREFIX not configured, skipping podcast entries');
+      return [];
+    }
+
+    const [idRes, ltRes] = await Promise.all([
+      withTimeout(fetchPodcastList('podcast_id'), 5000),
+      withTimeout(fetchPodcastList('podcast_lt'), 5000),
+    ]);
 
     const entries: MetadataRoute.Sitemap = [];
 
@@ -47,7 +71,8 @@ async function getPodcastEntries(): Promise<MetadataRoute.Sitemap> {
     }
 
     return entries;
-  } catch {
+  } catch (error) {
+    console.warn('Sitemap: Failed to fetch podcast entries:', error instanceof Error ? error.message : 'Unknown error');
     return [];
   }
 }
