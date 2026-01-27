@@ -18,3 +18,12 @@ export function formatDuration(seconds: number) {
 
   return result || '0Min';
 }
+
+export function formatPlaybackTime(seconds: number) {
+  const dur = dayjs.duration(seconds, 'seconds');
+  const hours = Math.floor(dur.asHours());
+  if (hours > 0) {
+    return dur.format('H:mm:ss');
+  }
+  return dur.format('mm:ss');
+}
