@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import dayjs from 'dayjs';
 import { PodcastItem } from '@/apis/types';
-import dayjsDuration from 'dayjs/plugin/duration';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
@@ -11,8 +9,7 @@ import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import PodcastSiriWave from '@/app/podcast/[id]/_components/PodcastSiriWave';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-
-dayjs.extend(dayjsDuration);
+import { formatPlaybackTime } from '@/utils/podcast';
 
 type PodcastPlayerProps = {
   data: PodcastItem;
@@ -129,8 +126,8 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
           </div>
         </div>
         <div className="mr-3 flex items-center justify-between text-xs/3.5 font-medium text-gray-350">
-          <p className="w-9 text-white">{dayjs.duration(audioRef.current?.currentTime ?? 0, 'seconds').format('mm:ss')}</p>
-          <p>/&nbsp;{dayjs.duration(data.duration, 'seconds').format('mm:ss')}</p>
+          <p className="w-12 text-white">{formatPlaybackTime(audioRef.current?.currentTime ?? 0)}</p>
+          <p>/&nbsp;{formatPlaybackTime(data.duration)}</p>
         </div>
       </div>
     </div>
