@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

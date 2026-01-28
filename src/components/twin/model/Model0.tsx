@@ -27,16 +27,16 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
     cartilageTissue,
     skeletalSystem,
   ] = useGLTF([
-    'https://cdn.id.life/full_male/cloth-v1.glb',
-    'https://cdn.id.life/full_male/integumentary_system_tin.glb',
-    'https://cdn.id.life/landingsite/twin/muscular_system.glb',
-    'https://cdn.id.life/twin/m0/connective_tissue.glb',
-    'https://cdn.id.life/landingsite/twin/organs.glb',
-    'https://cdn.id.life/twin/m0/lymphatic_system.glb',
-    'https://cdn.id.life/landingsite/twin/vascular_system.glb',
-    'https://cdn.id.life/twin/m0/nervous_system.glb',
-    'https://cdn.id.life/twin/m0/cartilage_tissue.glb',
-    'https://cdn.id.life/landingsite/twin/skeletal_system.glb',
+    'https://resources.id.life/full_male/cloth-v1.glb',
+    'https://resources.id.life/full_male/integumentary_system_tin.glb',
+    'https://resources.id.life/landingsite/twin/muscular_system.glb',
+    'https://resources.id.life/twin/m0/connective_tissue.glb',
+    'https://resources.id.life/landingsite/twin/organs.glb',
+    'https://resources.id.life/twin/m0/lymphatic_system.glb',
+    'https://resources.id.life/landingsite/twin/vascular_system.glb',
+    'https://resources.id.life/twin/m0/nervous_system.glb',
+    'https://resources.id.life/twin/m0/cartilage_tissue.glb',
+    'https://resources.id.life/landingsite/twin/skeletal_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);
@@ -219,7 +219,7 @@ const Model0 = forwardRef<ModelRef>(function ({}, ref) {
       changeArrayData(vascularSystem, 'visible', true);
       changeArrayData(otherSystem, 'visible', false);
     }
-  }
+  };
 
   useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
     switchAnatomyModule(payload.index);

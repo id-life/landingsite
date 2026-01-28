@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

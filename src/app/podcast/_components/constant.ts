@@ -24,7 +24,7 @@ export type PodcastHeaderItem = {
 
 export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
   [PODCAST_NAV_LIST[0].id]: {
-    cover: 'https://cdn.id.life/audio/idfm_logo@small.webp',
+    cover: 'https://resources.id.life/audio/idfm_logo@small.webp',
     title: '不朽真龙',
     enTitle: 'Immortal Dragons',
     description:
@@ -34,7 +34,7 @@ export const PODCAST_COVER: Record<PodcastCategory, PodcastHeaderItem> = {
     spotifyLink: 'https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu',
   },
   [PODCAST_NAV_LIST[1].id]: {
-    cover: 'https://cdn.id.life/audio/longtalk_logo@small.webp',
+    cover: 'https://resources.id.life/audio/longtalk_logo@small.webp',
     title: '龙门阵',
     enTitle: 'Long Talk',
     description:
@@ -62,7 +62,7 @@ export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
         '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
       images: [
         {
-          url: 'https://cdn.id.life/audio/idfm_logo@small.webp',
+          url: 'https://resources.id.life/audio/idfm_logo@small.webp',
         },
       ],
     },
@@ -90,7 +90,7 @@ export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
         '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
       images: [
         {
-          url: 'https://cdn.id.life/audio/longtalk_logo@small.webp',
+          url: 'https://resources.id.life/audio/longtalk_logo@small.webp',
         },
       ],
     },

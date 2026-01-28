@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

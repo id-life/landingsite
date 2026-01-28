@@ -26,7 +26,7 @@ export const metadata: Metadata = {
       "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

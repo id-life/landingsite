@@ -11,9 +11,9 @@ import { AnatomyCamera } from '@/atoms/twin';
 
 const Model3 = forwardRef<ModelRef>(function ({}, ref) {
   const [cloth, integumentarySystem, vascularSystem] = useGLTF([
-    'https://cdn.id.life/full_male/cloth-v1.glb',
-    'https://cdn.id.life/m3/integumentary_system_fat.glb',
-    'https://cdn.id.life/landingsite/twin/vascular_system.glb',
+    'https://resources.id.life/full_male/cloth-v1.glb',
+    'https://resources.id.life/m3/integumentary_system_fat.glb',
+    'https://resources.id.life/landingsite/twin/vascular_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);

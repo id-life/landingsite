@@ -26,7 +26,7 @@ export const metadata: Metadata = {
       'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },
