@@ -141,7 +141,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
       <audio
         ref={audioRef}
         className="bottom-0-0 invisible fixed left-0 size-0.5"
-        src="https://cdn.id.life/id-bgm-01.mp3"
+        src="https://resources.id.life/id-bgm-01.mp3"
         // autoPlay
         loop
       />

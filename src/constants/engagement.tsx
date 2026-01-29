@@ -197,37 +197,37 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-1', 'world-map-dot-2'],
     secondImgs: [
       {
-        src: 'https://cdn.id.life/engagement/Shanghai-01.webp',
+        src: 'https://resources.id.life/engagement/Shanghai-01.webp',
         alt: 'Shanghai-01.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Shanghai-02.webp',
+        src: 'https://resources.id.life/engagement/Shanghai-02.webp',
         alt: 'Shanghai-02.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Shanghai-03.webp',
+        src: 'https://resources.id.life/engagement/Shanghai-03.webp',
         alt: 'Shanghai-03.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Shanghai-04.webp',
+        src: 'https://resources.id.life/engagement/Shanghai-04.webp',
         alt: 'Shanghai-04.webp',
       },
     ],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/timepie-2025-01.webp',
+        src: 'https://resources.id.life/engagement/timepie-2025-01.webp',
         alt: 'timepie-2025-01.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/timepie-2025-02.webp',
+        src: 'https://resources.id.life/engagement/timepie-2025-02.webp',
         alt: 'timepie-2025-02.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/timepie-2025-03.webp',
+        src: 'https://resources.id.life/engagement/timepie-2025-03.webp',
         alt: 'timepie-2025-03.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/timepie-2025-04.webp',
+        src: 'https://resources.id.life/engagement/timepie-2025-04.webp',
         alt: 'timepie-2025-04.webp',
       },
     ],
@@ -248,15 +248,15 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-0', 'world-map-dot-0', 'world-map-dot-2'],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/Chiangmai-1.webp',
+        src: 'https://resources.id.life/engagement/Chiangmai-1.webp',
         alt: 'Chiangmai-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Chiangmai-2.webp',
+        src: 'https://resources.id.life/engagement/Chiangmai-2.webp',
         alt: 'Chiangmai-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Chiangmai-3.webp',
+        src: 'https://resources.id.life/engagement/Chiangmai-3.webp',
         alt: 'Chiangmai-3.webp',
       },
     ],
@@ -282,30 +282,30 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/Singapore-1.webp',
+        src: 'https://resources.id.life/engagement/Singapore-1.webp',
         alt: 'Singapore-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Singapore-2.webp',
+        src: 'https://resources.id.life/engagement/Singapore-2.webp',
         alt: 'Singapore-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Singapore-3.webp',
+        src: 'https://resources.id.life/engagement/Singapore-3.webp',
         alt: 'Singapore-3.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Singapore-4.webp',
+        src: 'https://resources.id.life/engagement/Singapore-4.webp',
         alt: 'Singapore-4.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Singapore-5.webp',
+        src: 'https://resources.id.life/engagement/Singapore-5.webp',
         alt: 'Singapore-5.webp',
       },
     ],
     extraSponsor: {
       alt: 'Healthy Longevity Medicine\nConference',
-      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.png',
-      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-09.webm',
+      coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.png',
+      videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.webm',
       link: 'https://www.hlmconference.com/',
     },
   },
@@ -325,23 +325,23 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     activeOtherDarkerDotIDs: ['world-map-dot-sponsor-2', 'world-map-dot-sponsor-1', 'world-map-dot-5', 'world-map-dot-7'],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/Honduras-5.webp',
+        src: 'https://resources.id.life/engagement/Honduras-5.webp',
         alt: 'Honduras-5.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Honduras-1.webp',
+        src: 'https://resources.id.life/engagement/Honduras-1.webp',
         alt: 'Honduras-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Honduras-2.webp',
+        src: 'https://resources.id.life/engagement/Honduras-2.webp',
         alt: 'Honduras-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Honduras-3.webp',
+        src: 'https://resources.id.life/engagement/Honduras-3.webp',
         alt: 'Honduras-3.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Honduras-4.webp',
+        src: 'https://resources.id.life/engagement/Honduras-4.webp',
         alt: 'Honduras-4.webp',
       },
     ],
@@ -364,27 +364,27 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     videoUrl: 'https://www.youtube.com/watch?v=2FJi1k7xNuo&t=1382s',
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-1.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-1.webp',
         alt: 'vitalistbay-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-2.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-2.webp',
         alt: 'vitalistbay-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-3.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-3.webp',
         alt: 'vitalistbay-3.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-4.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-4.webp',
         alt: 'vitalistbay-4.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-5.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-5.webp',
         alt: 'vitalistbay-5.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/Berkeley-6.webp',
+        src: 'https://resources.id.life/engagement/Berkeley-6.webp',
         alt: 'vitalistbay-6.webp',
       },
     ],
@@ -414,29 +414,29 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
     secondImgs: [
       {
-        src: 'https://cdn.id.life/engagement/London-1.webp',
+        src: 'https://resources.id.life/engagement/London-1.webp',
         alt: 'London-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/London-2.webp',
+        src: 'https://resources.id.life/engagement/London-2.webp',
         alt: 'London-21.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/London-3.webp',
+        src: 'https://resources.id.life/engagement/London-3.webp',
         alt: 'London-3.webp',
       },
     ],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/London-Global-1.webp',
+        src: 'https://resources.id.life/engagement/London-Global-1.webp',
         alt: 'London-Global-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/London-Global-2.webp',
+        src: 'https://resources.id.life/engagement/London-Global-2.webp',
         alt: 'London-Global-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/London-Global-3.webp',
+        src: 'https://resources.id.life/engagement/London-Global-3.webp',
         alt: 'London-Global-3.webp',
       },
     ],
@@ -465,19 +465,19 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/ardd-2025-1.webp',
+        src: 'https://resources.id.life/engagement/ardd-2025-1.webp',
         alt: 'ardd-2025-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/ardd-2025-2.webp',
+        src: 'https://resources.id.life/engagement/ardd-2025-2.webp',
         alt: 'ardd-2025-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/ardd-2025-3.webp',
+        src: 'https://resources.id.life/engagement/ardd-2025-3.webp',
         alt: 'ardd-2025-3.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/ardd-2025-4.webp',
+        src: 'https://resources.id.life/engagement/ardd-2025-4.webp',
         alt: 'ardd-2025-4.webp',
       },
     ],
@@ -505,19 +505,19 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     ],
     imgs: [
       {
-        src: 'https://cdn.id.life/engagement/2060lf-2025-1.webp',
+        src: 'https://resources.id.life/engagement/2060lf-2025-1.webp',
         alt: '2060lf-2025-1.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/2060lf-2025-2.webp',
+        src: 'https://resources.id.life/engagement/2060lf-2025-2.webp',
         alt: '2060lf-2025-2.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/2060lf-2025-3.webp',
+        src: 'https://resources.id.life/engagement/2060lf-2025-3.webp',
         alt: '2060lf-2025-3.webp',
       },
       {
-        src: 'https://cdn.id.life/engagement/2060lf-2025-4.webp',
+        src: 'https://resources.id.life/engagement/2060lf-2025-4.webp',
         alt: '2060lf-2025-4.webp',
       },
     ],
@@ -547,8 +547,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     title: 'Lustica Bay, Montenegro',
     bookTitle: 'The Network State',
     desc: 'Chinese Version by Boyang',
-    coverUrl: 'https://cdn.id.life/engagement/book-01.webp',
-    videoUrl: 'https://cdn.id.life/engagement/book-01.webm',
+    coverUrl: 'https://resources.id.life/engagement/book-01.webp',
+    videoUrl: 'https://resources.id.life/engagement/book-01.webm',
     link: 'https://www.thenetworkstate-zh.com/foreword/',
     activeOtherDarkerDotIDs: ['world-map-dot-book-1', 'world-map-dot-sponsor-0', 'world-map-dot-5'],
     containerClass: 'scale-[0.9]',
@@ -561,8 +561,8 @@ export const MAP_BOOK_DOTS: MapBookDotData[] = [
     title: 'Los Angeles, USA',
     bookTitle: 'Better With Age 乐龄',
     desc: 'Chinese Version',
-    coverUrl: 'https://cdn.id.life/engagement/book-03.webp',
-    videoUrl: 'https://cdn.id.life/engagement/book-03.webm',
+    coverUrl: 'https://resources.id.life/engagement/book-03.webp',
+    videoUrl: 'https://resources.id.life/engagement/book-03.webm',
     link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
     containerClass: 'scale-[0.9]',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-sponsor-3'],
@@ -599,8 +599,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -5,
     title: 'Oxford, UK',
     alt: 'Oxford Future Innovation Forum',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.png',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-03.webm',
+    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.png',
+    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.webm',
     activeOtherDarkerDotIDs: [
       'world-map-dot-book-0',
       'world-map-dot-book-1',
@@ -617,13 +617,13 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: -123.5,
     title: 'San Francisco, USA',
     alt: 'Public Longevity\nGroup',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.png',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05.webm',
+    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.png',
+    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.webm',
     link: 'https://publiclongevitygroup.framer.website/',
     extraSponsor: {
       alt: 'Lifespan Research\nInstitute',
-      coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.png',
-      videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-05-2.webm',
+      coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.png',
+      videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.webm',
       link: 'https://www.lifespan.io/',
     },
     sponsorText: 'Grant',
@@ -635,8 +635,8 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lng: 54,
     title: 'Abu Dhabi, UAE',
     alt: 'REVIVE ME',
-    coverUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webp',
-    videoUrl: 'https://cdn.id.life/engagement/sponsor/sponsor-08.webm',
+    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webp',
+    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webm',
     link: 'https://revivemeexpo.com/',
     sponsorText: 'Conference',
     extraText: 'Sponsorship',

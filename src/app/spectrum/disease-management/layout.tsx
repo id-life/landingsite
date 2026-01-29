@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

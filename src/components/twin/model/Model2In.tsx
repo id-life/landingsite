@@ -28,16 +28,16 @@ const Model2In = forwardRef<ModelRef>(function ({}, ref) {
     cartilageTissue,
     skeletalSystem,
   ] = useGLTF([
-    'https://cdn.id.life/full_male/cloth-v1.glb',
-    'https://cdn.id.life/full_male/integumentary_system_tin.glb',
-    'https://cdn.id.life/twin/m2/muscular_system.glb',
-    'https://cdn.id.life/twin/m0/connective_tissue.glb',
-    'https://cdn.id.life/landingsite/twin/organs.glb',
-    'https://cdn.id.life/twin/m0/lymphatic_system.glb',
-    'https://cdn.id.life/landingsite/twin/vascular_system.glb',
-    'https://cdn.id.life/twin/m0/nervous_system.glb',
-    'https://cdn.id.life/twin/m0/cartilage_tissue.glb',
-    'https://cdn.id.life/landingsite/twin/skeletal_system.glb',
+    'https://resources.id.life/full_male/cloth-v1.glb',
+    'https://resources.id.life/full_male/integumentary_system_tin.glb',
+    'https://resources.id.life/twin/m2/muscular_system.glb',
+    'https://resources.id.life/twin/m0/connective_tissue.glb',
+    'https://resources.id.life/landingsite/twin/organs.glb',
+    'https://resources.id.life/twin/m0/lymphatic_system.glb',
+    'https://resources.id.life/landingsite/twin/vascular_system.glb',
+    'https://resources.id.life/twin/m0/nervous_system.glb',
+    'https://resources.id.life/twin/m0/cartilage_tissue.glb',
+    'https://resources.id.life/landingsite/twin/skeletal_system.glb',
   ]);
 
   const clothScene = useMemo(() => SkeletonUtils.clone(cloth.scene), [cloth.scene]);
@@ -151,16 +151,16 @@ const Model2In = forwardRef<ModelRef>(function ({}, ref) {
 
   return (
     <Center scale={5}>
-        <primitive visible={true} object={clothScene} />
-        <primitive visible={true} object={integumentarySystemScene} />
-        <primitive visible={true} object={muscularSystemScene} />
-        <primitive visible={true} object={connectiveTissueScene} />
-        <primitive visible={true} object={organsScene} />
-        <primitive visible={true} object={lymphaticSystemScene} />
-        <primitive visible={true} object={vascularSystemScene} />
-        <primitive visible={true} object={nervousSystemScene} />
-        <primitive visible={true} object={cartilageTissueScene} />
-        <primitive visible={true} object={skeletalSystemScene} />
+      <primitive visible={true} object={clothScene} />
+      <primitive visible={true} object={integumentarySystemScene} />
+      <primitive visible={true} object={muscularSystemScene} />
+      <primitive visible={true} object={connectiveTissueScene} />
+      <primitive visible={true} object={organsScene} />
+      <primitive visible={true} object={lymphaticSystemScene} />
+      <primitive visible={true} object={vascularSystemScene} />
+      <primitive visible={true} object={nervousSystemScene} />
+      <primitive visible={true} object={cartilageTissueScene} />
+      <primitive visible={true} object={skeletalSystemScene} />
     </Center>
   );
 });

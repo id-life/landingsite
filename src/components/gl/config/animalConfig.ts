@@ -24,14 +24,14 @@ export const ANIMAL_CONFIG: AnimalConfig[] = [
     mesh: [{ name: 'JF_skin_in', reflectivity: 0.04, anisotropy: 0.5 }],
   },
   {
-    path: 'https://cdn.id.life/animal3_v1.glb',
+    path: 'https://resources.id.life/animal3_v1.glb',
     scale: 1.1,
     animation: 0,
     resolution: 32,
     mesh: [{ name: 'Object_12', reflectivity: 0.04, anisotropy: 0.5 }],
   },
   {
-    path: 'https://cdn.id.life/animal4.glb',
+    path: 'https://resources.id.life/animal4.glb',
     scale: 55,
     animation: 0,
     resolution: 32,

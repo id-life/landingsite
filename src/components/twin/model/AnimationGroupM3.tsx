@@ -14,7 +14,7 @@ export type AnimationGroupHandle = {
   stopAnimationLoop: () => void;
 };
 const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ modelRef }, ref) => {
-  const { nodes, materials, animations } = useGLTF('https://cdn.id.life/m3/test-v1.glb') as unknown as {
+  const { nodes, materials, animations } = useGLTF('https://resources.id.life/m3/test-v1.glb') as unknown as {
     nodes: {
       Basic_T_shirts001: THREE.SkinnedMesh;
       Gym_Short001: THREE.SkinnedMesh;

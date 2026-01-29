@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore, supporting radical life extension technologies with focus on impact over financial return.',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },
@@ -35,7 +35,7 @@ const jsonLd: WithContext<Organization> = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   url: 'https://www.id.life',
-  logo: 'https://cdn.id.life/logo.png',
+  logo: 'https://resources.id.life/logo.png',
   name: 'IMMORTAL DRAGONS',
   description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
   email: 'dragons@id.life',

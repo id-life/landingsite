@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

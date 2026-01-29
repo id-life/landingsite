@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
       description: data?.description,
       images: [
         {
-          url: 'https://cdn.id.life/id-life-cover-2.webp',
+          url: 'https://resources.id.life/id-life-cover-2.webp',
         },
       ],
     },
@@ -65,14 +65,14 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     },
     datePublished: data.createdAt,
     dateModified: data.createdAt,
-    image: 'https://cdn.id.life/id-life-cover-2.webp',
+    image: 'https://resources.id.life/id-life-cover-2.webp',
     description: data.content.slice(0, 50),
     publisher: {
       '@type': 'Organization',
       name: 'Immortal Dragons',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://cdn.id.life/logo.png',
+        url: 'https://resources.id.life/logo.png',
       },
     },
   };

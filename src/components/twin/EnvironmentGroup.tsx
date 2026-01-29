@@ -4,7 +4,7 @@ import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
 function EnvironmentGroup() {
-  const texture = useLoader(RGBELoader, 'https://cdn.id.life/env/neutral.hdr');
+  const texture = useLoader(RGBELoader, 'https://resources.id.life/env/neutral.hdr');
   return (
     <Environment>
       <mesh scale={100} rotation={[0, 1.56, 0]}>

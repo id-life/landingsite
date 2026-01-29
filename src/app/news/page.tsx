@@ -61,7 +61,7 @@ export const metadata: Metadata = {
       "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
     images: [
       {
-        url: 'https://cdn.id.life/id-life-cover-2.webp',
+        url: 'https://resources.id.life/id-life-cover-2.webp',
       },
     ],
   },

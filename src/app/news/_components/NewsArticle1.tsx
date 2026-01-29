@@ -5,7 +5,7 @@ export default function NewsArticle1() {
   return (
     <div style={{ height: 0, overflow: 'hidden' }}>
       <div>Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.</div>
-      <img src="https://cdn.id.life/id-life-cover-2.webp" alt="" />
+      <img src="https://resources.id.life/id-life-cover-2.webp" alt="" />
       <NewsContent />
       <Link href="/podcast">Podcast</Link>
       <Link href="/podcast?c=lt">Long talk</Link>

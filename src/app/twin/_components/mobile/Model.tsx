@@ -71,13 +71,13 @@ export function Model() {
         }
       } else {
         if (!currentModel || currentModel === PredictionModel.M0) {
-          return ['https://cdn.id.life/twin/M0-1.webm'];
+          return ['https://resources.id.life/twin/M0-1.webm'];
         } else if (currentModel === PredictionModel.M1) {
-          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M1-1.webm'];
+          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M1-1.webm'];
         } else if (currentModel === PredictionModel.M2) {
-          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M2-1.webm'];
+          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M2-1.webm'];
         } else if (currentModel === PredictionModel.M3) {
-          return ['https://cdn.id.life/twin/M0-1.webm', 'https://cdn.id.life/twin/M3-1.webm'];
+          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M3-1.webm'];
         }
       }
     }
