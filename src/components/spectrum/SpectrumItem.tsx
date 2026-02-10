@@ -197,7 +197,7 @@ const SpectrumItem = memo(
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
       // For sponsor: split links into first row (8 items with justify-between) and remaining rows (centered)
-      const sponsorFirstRowCount = 7;
+      const sponsorFirstRowCount = 8;
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];
         return visibleLinks.slice(0, sponsorFirstRowCount).map((item, index) => (

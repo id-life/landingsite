@@ -129,6 +129,27 @@ export const spectrumBaseData: SpectrumItemData[] = [
         mobileSize: 'h-8 ipad:h-13',
       },
       {
+        label: 'UNIVERSITY OF COPENHAGEN PROJECT: Aging Brain Rejuvenation',
+        routeKey: 'university-of-copenhagen-project-aging-brain-rejuvenation',
+        icon: '/imgs/investments/sponsors/aging-brain.png',
+        size: 'h-18',
+        mobileSize: 'h-14 ipad:h-18',
+      },
+      {
+        label: 'UNIVERSITY OF OXFORD PROJECT: Heart Aging And Metabolism',
+        routeKey: 'university-of-oxford-project-heart-aging-and-metabolism',
+        icon: '/imgs/investments/sponsors/heart-aging.png',
+        size: 'h-18',
+        mobileSize: 'h-14 ipad:h-18',
+      },
+      {
+        label: 'Stanford University PROJECT: Brain Resilience Mechanism',
+        routeKey: 'stanford-university-project-brain-resilience-mechanism',
+        icon: '/imgs/investments/sponsors/brain-resilience.png',
+        size: 'h-18',
+        mobileSize: 'h-14 ipad:h-18',
+      },
+      {
         label: 'Cornerstone Non-profit Foundation',
         link: 'https://www.cornerstoneondemand.org',
         icon: '/imgs/investments/sponsors/cornerstone.png',
