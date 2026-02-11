@@ -1,3 +1,4 @@
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 import { cn } from '@/utils';
@@ -111,10 +112,12 @@ export function PulseDot({
 // Conference and Sponsor badges that appear on hover
 export function ConferenceBadges({
   isSponsor,
+  isResearch,
   extraSponsor,
 }: {
   isSponsor?: boolean;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  isResearch?: boolean;
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
 }) {
   return (
     <motion.div className="absolute -left-0.5 top-[calc(100%_+_0.25rem)] flex items-center">
@@ -127,7 +130,7 @@ export function ConferenceBadges({
         <MeetingSVG className="size-5 fill-purple" />
         Conference
       </motion.div>
-      {(isSponsor || extraSponsor) && (
+      {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
@@ -136,6 +139,17 @@ export function ConferenceBadges({
         >
           <SponsorSVG className="size-5 fill-orange" />
           Sponsorship
+        </motion.div>
+      )}
+      {isResearch && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 0.83 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange-600/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange-600 backdrop-blur-2xl"
+        >
+          <ResearchSVG className="size-5 fill-orange-600" />
+          Research
         </motion.div>
       )}
     </motion.div>
@@ -298,7 +312,7 @@ export function ContentHotAreas({
   link?: string;
   pcDotHotAreaClass?: string;
   videoUrl?: string;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
   onClick: (e: MouseEvent) => void;
 }) {
   return (
@@ -315,13 +329,14 @@ export function ContentHotAreas({
         })}
         onClick={onClick}
       ></div>
-      {extraSponsor && (
+      {extraSponsor?.map((sponsor) => (
         <a
-          href={extraSponsor.link}
+          key={sponsor.link}
+          href={sponsor.link}
           target="_blank"
           className="pointer-events-auto absolute -right-[90%] top-0 h-[40dvh] w-[17rem] cursor-pointer"
         ></a>
-      )}
+      ))}
     </>
   );
 }
@@ -333,12 +348,14 @@ export function ContentHotAreas({
 // Mobile conference badges and video button (inline version for mobile)
 export function MobileConferenceBadgesWithVideo({
   isSponsor,
+  isResearch,
   extraSponsor,
   videoUrl,
   onVideoClick,
 }: {
   isSponsor?: boolean;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  isResearch?: boolean;
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
   videoUrl?: string;
   onVideoClick?: (e: MouseEvent) => void;
 }) {
@@ -362,7 +379,7 @@ export function MobileConferenceBadgesWithVideo({
         <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
         Conference
       </div>
-      {(isSponsor || extraSponsor) && (
+      {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
         <div
           className={cn(
             'relative flex items-center gap-0.5 rounded',
@@ -374,6 +391,20 @@ export function MobileConferenceBadgesWithVideo({
           <BadgeBlurBg className="bg-orange/20" />
           <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
           Sponsorship
+        </div>
+      )}
+      {isResearch && (
+        <div
+          className={cn(
+            'relative flex items-center gap-0.5 rounded',
+            MOBILE_MAP_SCALE.badgePaddingClass,
+            MOBILE_MAP_SCALE.badgeTextClass,
+            'font-semibold text-orange-600',
+          )}
+        >
+          <BadgeBlurBg className="bg-orange-600/20" />
+          <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange-600')} />
+          Research
         </div>
       )}
       {videoUrl && onVideoClick && (

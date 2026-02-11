@@ -12,6 +12,7 @@ import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
 import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
 import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
 import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
@@ -35,6 +36,7 @@ export {
   MeetingSVG,
   SingaporeSVG,
   SponsorSVG,
+  ResearchSVG,
   ThailandSVG,
   WorldMapSVG,
   LinkSVG,

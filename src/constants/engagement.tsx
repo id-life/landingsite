@@ -171,14 +171,17 @@ export type MapDotData = {
   activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   link?: string; // jump link
   isSponsor?: boolean; // is also a sponsor dot
+  isResearch?: boolean; // is also a research dot
   videoUrl?: string;
   // if has sponsor
+  extraSponsorContainerClass?: string; // class for the extraSponsor container
   extraSponsor?: {
     alt: string;
     coverUrl: string;
     videoUrl: string;
     link: string;
-  };
+    className?: string; // class for individual item positioning
+  }[];
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
   {
@@ -302,12 +305,14 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'Singapore-5.webp',
       },
     ],
-    extraSponsor: {
-      alt: 'Healthy Longevity Medicine\nConference',
-      coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.png',
-      videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.webm',
-      link: 'https://www.hlmconference.com/',
-    },
+    extraSponsor: [
+      {
+        alt: 'Healthy Longevity Medicine\nConference',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.png',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-09.webm',
+        link: 'https://www.hlmconference.com/',
+      },
+    ],
   },
   {
     index: 3,
@@ -357,7 +362,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalist Bay Summit',
     link: 'https://www.vitalistbay.com/summit',
     isSponsor: true,
-    contentTransformClass: 'translate-x-[85%] -translate-y-[35%]',
+    contentTransformClass: 'translate-x-[75%] -translate-y-[35%]',
     mobileContentTransformClass: 'translate-x-full -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3', 'world-map-dot-sponsor-3'],
@@ -388,6 +393,22 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'vitalistbay-6.webp',
       },
     ],
+    extraSponsor: [
+      {
+        alt: 'Research Project:\nBrain Resilience Mechanism',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-1.webp',
+        videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-1.webm',
+        link: '',
+      },
+      {
+        alt: '',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-2.webp',
+        videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-2.webm',
+        link: '',
+        className: 'top-60',
+      },
+    ],
+    isResearch: true,
   },
   {
     index: 5,
