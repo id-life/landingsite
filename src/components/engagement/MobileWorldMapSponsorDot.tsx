@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { memo, useMemo } from 'react';
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
@@ -26,7 +27,20 @@ export function MobileWorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { lat, lng, title, pulseConfig, mobileLat, mobileLng, sponsorText, extraText } = dot;
+  const {
+    lat,
+    lng,
+    title,
+    pulseConfig,
+    mobileLat,
+    mobileLng,
+    isConference,
+    conferenceText,
+    isSponsor,
+    sponsorText,
+    isResearch,
+    researchText,
+  } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-sponsor-${index}`,
@@ -95,7 +109,7 @@ export function MobileWorldMapSponsorDotPoint({
           <AnimatePresence>
             {isActive ? (
               <>
-                {sponsorText === 'Conference' ? (
+                {isConference ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
@@ -109,9 +123,10 @@ export function MobileWorldMapSponsorDotPoint({
                   >
                     <BadgeBlurBg className="bg-purple/20" />
                     <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
-                    Conference
+                    {conferenceText ?? 'Conference'}
                   </motion.div>
-                ) : (
+                ) : null}
+                {isSponsor ? (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
@@ -127,22 +142,22 @@ export function MobileWorldMapSponsorDotPoint({
                     <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
-                )}
-                {extraText && (
+                ) : null}
+                {isResearch && (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className={cn(
-                      'relative -ml-2 flex items-center gap-0.5 rounded',
+                      'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-orange',
+                      'font-semibold text-orange-600',
                     )}
                   >
-                    <BadgeBlurBg className="bg-orange/20" />
-                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
-                    {extraText}
+                    <BadgeBlurBg className="bg-orange-600/20" />
+                    <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange-600')} />
+                    {researchText ?? 'Research'}
                   </motion.span>
                 )}
               </>
@@ -163,7 +178,7 @@ export function MobileWorldMapSponsorDotContent({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { alt, link, coverUrl, videoUrl, lat, lng, mobileLat, mobileLng, title, extraSponsor } = dot;
+  const { data, lat, lng, mobileLat, mobileLng, title } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
@@ -183,7 +198,7 @@ export function MobileWorldMapSponsorDotContent({
     }
   };
 
-  const handleLinkClick = (e: React.MouseEvent) => {
+  const handleLinkClick = (e: React.MouseEvent, link?: string) => {
     e.stopPropagation();
     if (link) {
       trackEvent({
@@ -207,27 +222,18 @@ export function MobileWorldMapSponsorDotContent({
           }}
         >
           <div className="flex items-center">
-            <MobileSponsorItem
-              key="sponsor-item-1"
-              alt={alt}
-              link={link}
-              coverUrl={coverUrl}
-              videoUrl={videoUrl}
-              onMouseLeave={handleContentMouseLeave}
-              onClick={handleLinkClick}
-            />
-            {extraSponsor ? (
+            {data.map((item, itemIndex) => (
               <MobileSponsorItem
-                key="sponsor-item-2"
-                alt={extraSponsor.alt}
-                link={extraSponsor.link}
-                coverUrl={extraSponsor.coverUrl}
-                videoUrl={extraSponsor.videoUrl}
+                key={`sponsor-item-${itemIndex}`}
+                alt={item.alt}
+                link={item.link}
+                coverUrl={item.coverUrl}
+                videoUrl={item.videoUrl}
                 onMouseLeave={handleContentMouseLeave}
-                onClick={handleLinkClick}
-                className="-ml-6"
+                onClick={(e) => handleLinkClick(e, item.link)}
+                className={cn(itemIndex > 0 && '-ml-6', item.className)}
               />
-            ) : null}
+            ))}
           </div>
         </div>
       )}
@@ -253,44 +259,50 @@ const MobileSponsorItem = memo(
     onClick: (e: React.MouseEvent) => void;
     className?: string;
   }) => {
+    const content = (
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className={cn('clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-oxanium')}
+        onMouseLeave={onMouseLeave}
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: -10,
+            transformOrigin: 'top left',
+          },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transformOrigin: 'top left',
+          },
+        }}
+        transition={{
+          staggerChildren: 0.05,
+          duration: 0.3,
+          ease: 'easeInOut',
+        }}
+      >
+        <VideoWithPoster
+          coverUrl={coverUrl}
+          videoUrl={videoUrl}
+          title={alt}
+          containerClass="-mt-4"
+          videoClass="size-[8.5rem]"
+          coverClass="size-[8.5rem]"
+        />
+        <h4 className="-mt-5 whitespace-pre-wrap text-center text-xs/4 font-semibold capitalize text-white">{alt}</h4>
+      </motion.div>
+    );
+
+    if (!link) {
+      return <div className={cn('pointer-events-auto', className)}>{content}</div>;
+    }
+
     return (
       <a href={link} target="_blank" rel="noreferrer" className={cn('pointer-events-auto', className)} onClick={onClick}>
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className={cn(
-            'clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-oxanium',
-          )}
-          onMouseLeave={onMouseLeave}
-          variants={{
-            hidden: {
-              opacity: 0,
-              y: -10,
-              transformOrigin: 'top left',
-            },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transformOrigin: 'top left',
-            },
-          }}
-          transition={{
-            staggerChildren: 0.05,
-            duration: 0.3,
-            ease: 'easeInOut',
-          }}
-        >
-          <VideoWithPoster
-            coverUrl={coverUrl}
-            videoUrl={videoUrl}
-            title={alt}
-            containerClass="-mt-4"
-            videoClass="size-[8.5rem]"
-            coverClass="size-[8.5rem]"
-          />
-          <h4 className="-mt-5 whitespace-pre-wrap text-center text-xs/4 font-semibold capitalize text-white">{alt}</h4>
-        </motion.div>
+        {content}
       </a>
     );
   },

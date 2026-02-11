@@ -132,7 +132,7 @@ export function MobileWorldMapDotContent({
     secondImgs,
     secondTitle,
     extraSponsor,
-    extraSponsorContainerClass,
+    extraSponsorContainerClassMobile,
   } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
@@ -214,13 +214,13 @@ export function MobileWorldMapDotContent({
               />
             )}
             {extraSponsor && extraSponsor.length > 0 && (
-              <div className={extraSponsorContainerClass}>
-                {extraSponsor.map((sponsor) => (
+              <div className={extraSponsorContainerClassMobile}>
+                {extraSponsor.map((sponsor, sponsorIndex) => (
                   <MobileExtraSponsorSection
-                    key={sponsor.link}
+                    key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
                     extraSponsor={sponsor}
                     onClick={handleLinkClick}
-                    className={cn('-right-[90%]', sponsor.className)}
+                    className={cn('-right-[90%]', sponsor.classNameMobile)}
                   />
                 ))}
               </div>

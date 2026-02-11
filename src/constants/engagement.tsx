@@ -174,13 +174,15 @@ export type MapDotData = {
   isResearch?: boolean; // is also a research dot
   videoUrl?: string;
   // if has sponsor
-  extraSponsorContainerClass?: string; // class for the extraSponsor container
+  extraSponsorContainerClassPc?: string; // class for the extraSponsor container (pc)
+  extraSponsorContainerClassMobile?: string; // class for the extraSponsor container (mobile)
   extraSponsor?: {
     alt: string;
     coverUrl: string;
     videoUrl: string;
     link: string;
-    className?: string; // class for individual item positioning
+    classNamePc?: string; // class for individual item positioning (pc)
+    classNameMobile?: string; // class for individual item positioning (mobile)
   }[];
 };
 export const WORLD_MAP_DOTS: MapDotData[] = [
@@ -362,7 +364,7 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     title: 'Vitalist Bay Summit',
     link: 'https://www.vitalistbay.com/summit',
     isSponsor: true,
-    contentTransformClass: 'translate-x-[75%] -translate-y-[35%]',
+    contentTransformClass: 'translate-x-[125%] -translate-y-[35%]',
     mobileContentTransformClass: 'translate-x-full -translate-y-[32%]',
     pcDotHotAreaClass: 'right-full -left-full top-[23vh]',
     activeOtherDarkerDotIDs: ['world-map-dot-book-2', 'world-map-dot-3', 'world-map-dot-sponsor-3'],
@@ -399,13 +401,15 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-1.webp',
         videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-1.webm',
         link: '',
+        classNameMobile: '-right-[135%]',
       },
       {
         alt: '',
         coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-2.webp',
         videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-2.webm',
         link: '',
-        className: 'top-60',
+        classNamePc: 'top-60',
+        classNameMobile: 'top-40 -right-[135%]',
       },
     ],
     isResearch: true,
@@ -502,6 +506,18 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
         alt: 'ardd-2025-4.webp',
       },
     ],
+    extraSponsor: [
+      {
+        alt: 'Research Project:\nAging Brain Rejuvenation',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-aging-brain.webp',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-aging-brain.webm',
+        link: '',
+        classNamePc: 'top-60',
+        classNameMobile: 'top-50 -right-[125%]',
+      },
+    ],
+    isResearch: true,
+    isSponsor: true,
   },
   {
     lat: 38,
@@ -596,22 +612,23 @@ export type MapSponsorDotData = {
   lng: number;
   mobileLat?: number;
   mobileLng?: number;
-  alt?: string;
   icon?: string;
-  link?: string;
-  coverUrl?: string;
-  videoUrl?: string;
   title: string;
-  pulseConfig?: PulseConfig; // custom pulse config
-  activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
-  sponsorText?: string;
-  extraText?: string;
-  extraSponsor?: {
+  data: {
     alt: string;
     coverUrl: string;
     videoUrl: string;
     link: string;
-  };
+    className?: string; // class for individual item positioning
+  }[];
+  isConference?: boolean; // show conference badge
+  conferenceText?: string; // conference badge text
+  isSponsor?: boolean; // is also a sponsor dot
+  sponsorText?: string; // sponsor badge text
+  isResearch?: boolean; // is also a research dot
+  researchText?: string; // research badge text
+  pulseConfig?: PulseConfig; // custom pulse config
+  activeOtherDarkerDotIDs?: string[]; // when active, the other dots will be more transparent
   mobileContentTransformClass?: string; // mobile popup content transform class
 };
 export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
@@ -619,9 +636,20 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lat: 54,
     lng: -5,
     title: 'Oxford, UK',
-    alt: 'Oxford Future Innovation Forum',
-    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.png',
-    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.webm',
+    data: [
+      {
+        alt: 'Research Project:\nHeart Aging and Metabolism',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-heart-aging.webp',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-heart-aging.webm',
+        link: '',
+      },
+      {
+        alt: 'Oxford Future Innovation Forum',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.png',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-03.webm',
+        link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
+      },
+    ],
     activeOtherDarkerDotIDs: [
       'world-map-dot-book-0',
       'world-map-dot-book-1',
@@ -629,24 +657,30 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
       'world-map-dot-6',
       'world-map-dot-7',
     ],
-    link: 'https://mp.weixin.qq.com/s?__biz=MzI0MzUyODQ1MA==&mid=2247538673&idx=1&sn=8d3e1d197bb192808d1b0bf3b139b72d&chksm=e969b19cde1e388ab6a92c8a94aed3542aff8975b2ef9f95fb2275aa8735e66c7a0f916f1312&scene=178&cur_album_id=3764396479562301443#rd',
-    sponsorText: 'Conference',
+    isConference: true,
+    isResearch: true,
+    isSponsor: true,
     mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
   {
     lat: 24,
     lng: -123.5,
     title: 'San Francisco, USA',
-    alt: 'Public Longevity\nGroup',
-    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.png',
-    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.webm',
-    link: 'https://publiclongevitygroup.framer.website/',
-    extraSponsor: {
-      alt: 'Lifespan Research\nInstitute',
-      coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.png',
-      videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.webm',
-      link: 'https://www.lifespan.io/',
-    },
+    data: [
+      {
+        alt: 'Public Longevity\nGroup',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.png',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05.webm',
+        link: 'https://publiclongevitygroup.framer.website/',
+      },
+      {
+        alt: 'Lifespan Research\nInstitute',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.png',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-05-2.webm',
+        link: 'https://www.lifespan.io/',
+      },
+    ],
+    isSponsor: true,
     sponsorText: 'Grant',
     activeOtherDarkerDotIDs: ['world-map-dot-3', 'world-map-dot-4', 'world-map-dot-book-2'],
     mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
@@ -655,12 +689,16 @@ export const MAP_SPONSOR_DOTS: MapSponsorDotData[] = [
     lat: 10,
     lng: 54,
     title: 'Abu Dhabi, UAE',
-    alt: 'REVIVE ME',
-    coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webp',
-    videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webm',
-    link: 'https://revivemeexpo.com/',
-    sponsorText: 'Conference',
-    extraText: 'Sponsorship',
+    data: [
+      {
+        alt: 'REVIVE ME',
+        coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webp',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-08.webm',
+        link: 'https://revivemeexpo.com/',
+      },
+    ],
+    isConference: true,
+    isSponsor: true,
     mobileContentTransformClass: 'translate-x-[10%] translate-y-2',
   },
 ];

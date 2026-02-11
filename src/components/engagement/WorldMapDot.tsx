@@ -139,7 +139,7 @@ export function WorldMapDotContent({
     secondImgs,
     secondTitle,
     extraSponsor,
-    extraSponsorContainerClass,
+    extraSponsorContainerClassPc,
   } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
@@ -252,13 +252,13 @@ export function WorldMapDotContent({
               <ContentSection title={secondTitle} period={period} imgs={secondImgs} link={link} onClick={handleLinkClick} />
             )}
             {extraSponsor && extraSponsor.length > 0 && (
-              <div className={extraSponsorContainerClass}>
-                {extraSponsor.map((sponsor) => (
+              <div className={extraSponsorContainerClassPc}>
+                {extraSponsor.map((sponsor, sponsorIndex) => (
                   <ExtraSponsorSection
-                    key={sponsor.link}
+                    key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
                     extraSponsor={sponsor}
                     onClick={handleLinkClick}
-                    className={sponsor.className}
+                    className={sponsor.classNamePc}
                   />
                 ))}
               </div>
