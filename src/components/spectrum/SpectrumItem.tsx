@@ -33,7 +33,7 @@ const SpectrumLink = memo(
     const { trackEvent } = useGA();
 
     const { key, label, link, isComingSoon, onClick, icon, labelClassName, routeKey, size } = item;
-    const hasLink = Boolean(link || onClick || routeKey);
+    const hasLink = Boolean(link);
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
     const { pathname, useHash } = routeConfig ?? {};
 
@@ -54,6 +54,11 @@ const SpectrumLink = memo(
           name: GA_EVENT_NAMES.SPECTRUM_CLICK,
           label: key ?? label,
         });
+
+        if (link) {
+          window.open(link, '_blank');
+          return;
+        }
 
         if (event?.metaKey || event?.ctrlKey) {
           // cmd + click
@@ -197,7 +202,7 @@ const SpectrumItem = memo(
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
       // For sponsor: split links into first row (8 items with justify-between) and remaining rows (centered)
-      const sponsorFirstRowCount = 7;
+      const sponsorFirstRowCount = 8;
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];
         return visibleLinks.slice(0, sponsorFirstRowCount).map((item, index) => (

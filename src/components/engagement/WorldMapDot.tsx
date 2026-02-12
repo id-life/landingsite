@@ -31,7 +31,7 @@ export function WorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { country, label, lat, lng, pulseConfig, isSponsor, extraSponsor } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, isResearch, extraSponsor } = dot;
   // const isClickOpenRef = useRef(false);
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const { handleClickPoint, handleMouseEnter, activeMeetingDot } = useEngagementClickPoint();
@@ -107,7 +107,7 @@ export function WorldMapDotPoint({
           {label ? `${label}, ` : ''}
           {country}
           <AnimatePresence>
-            {isActive && <ConferenceBadges isSponsor={isSponsor} extraSponsor={extraSponsor} />}
+            {isActive && <ConferenceBadges isSponsor={isSponsor} isResearch={isResearch} extraSponsor={extraSponsor} />}
           </AnimatePresence>
         </motion.p>
       </div>
@@ -139,6 +139,7 @@ export function WorldMapDotContent({
     secondImgs,
     secondTitle,
     extraSponsor,
+    extraSponsorContainerClassPc,
   } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
@@ -250,7 +251,18 @@ export function WorldMapDotContent({
             {secondTitle && (
               <ContentSection title={secondTitle} period={period} imgs={secondImgs} link={link} onClick={handleLinkClick} />
             )}
-            {extraSponsor && <ExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} />}
+            {extraSponsor && extraSponsor.length > 0 && (
+              <div className={extraSponsorContainerClassPc}>
+                {extraSponsor.map((sponsor, sponsorIndex) => (
+                  <ExtraSponsorSection
+                    key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
+                    extraSponsor={sponsor}
+                    onClick={handleLinkClick}
+                    className={sponsor.classNamePc}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

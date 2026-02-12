@@ -1,3 +1,4 @@
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 import { cn } from '@/utils';
@@ -111,10 +112,12 @@ export function PulseDot({
 // Conference and Sponsor badges that appear on hover
 export function ConferenceBadges({
   isSponsor,
+  isResearch,
   extraSponsor,
 }: {
   isSponsor?: boolean;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  isResearch?: boolean;
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
 }) {
   return (
     <motion.div className="absolute -left-0.5 top-[calc(100%_+_0.25rem)] flex items-center">
@@ -127,7 +130,7 @@ export function ConferenceBadges({
         <MeetingSVG className="size-5 fill-purple" />
         Conference
       </motion.div>
-      {(isSponsor || extraSponsor) && (
+      {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
@@ -136,6 +139,17 @@ export function ConferenceBadges({
         >
           <SponsorSVG className="size-5 fill-orange" />
           Sponsorship
+        </motion.div>
+      )}
+      {isResearch && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 0.83 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange-600/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange-600 backdrop-blur-2xl"
+        >
+          <ResearchSVG className="size-5 fill-orange-600" />
+          Research
         </motion.div>
       )}
     </motion.div>
@@ -181,46 +195,54 @@ export function ContentSection({
   scrollContainerRef?: React.RefObject<HTMLDivElement>;
   onClick: (e: MouseEvent) => void;
 }) {
+  const content = (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      variants={{
+        hidden: {
+          opacity: 0,
+          height: 0,
+        },
+        visible: {
+          opacity: 1,
+          height: '70dvh',
+        },
+      }}
+      transition={{
+        staggerChildren: 0.1,
+        duration: 0.3,
+        ease: 'easeInOut',
+      }}
+      className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
+    >
+      {title && (
+        <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
+          <span className="mr-2 whitespace-pre-wrap">{title}</span>
+          {/*{period}*/}
+        </h3>
+      )}
+      {imgs?.length ? (
+        <div
+          ref={scrollContainerRef}
+          className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+        >
+          {imgs.map((img) => (
+            <FeatherImg key={img.src} src={img.src} alt={img.alt} />
+          ))}
+        </div>
+      ) : null}
+    </motion.div>
+  );
+
+  if (!link) {
+    return <div className="pointer-events-auto">{content}</div>;
+  }
+
   return (
     <a href={link} target="_blank" className="pointer-events-auto" onClick={onClick}>
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        variants={{
-          hidden: {
-            opacity: 0,
-            height: 0,
-          },
-          visible: {
-            opacity: 1,
-            height: '70dvh',
-          },
-        }}
-        transition={{
-          staggerChildren: 0.1,
-          duration: 0.3,
-          ease: 'easeInOut',
-        }}
-        className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
-      >
-        {title && (
-          <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-            <span className="mr-2 whitespace-pre-wrap">{title}</span>
-            {/*{period}*/}
-          </h3>
-        )}
-        {imgs?.length ? (
-          <div
-            ref={scrollContainerRef}
-            className="hide-scrollbar pointer-events-auto flex grow flex-col overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-          >
-            {imgs.map((img) => (
-              <FeatherImg key={img.src} src={img.src} alt={img.alt} />
-            ))}
-          </div>
-        ) : null}
-      </motion.div>
+      {content}
     </a>
   );
 }
@@ -240,6 +262,48 @@ export function ExtraSponsorSection({
   onClick: (e: MouseEvent) => void;
   className?: string;
 }) {
+  const content = (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="flex w-[17rem] origin-top-left flex-col items-center overflow-visible font-oxanium"
+      variants={{
+        hidden: {
+          opacity: 0,
+          y: -10,
+          transformOrigin: 'top left',
+        },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transformOrigin: 'top left',
+        },
+      }}
+      transition={{
+        staggerChildren: 0.05,
+        duration: 0.3,
+        ease: 'easeInOut',
+      }}
+    >
+      <h4 className="-mx-10 whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
+        {extraSponsor.alt}
+      </h4>
+      <VideoWithPoster
+        coverUrl={extraSponsor.coverUrl}
+        videoUrl={extraSponsor.videoUrl}
+        title={extraSponsor.alt}
+        containerClass="-mt-5"
+        videoClass="size-[15.5rem]"
+        coverClass="size-[15.5rem]"
+      />
+    </motion.div>
+  );
+
+  if (!extraSponsor.link) {
+    return <div className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}>{content}</div>;
+  }
+
   return (
     <a
       href={extraSponsor.link}
@@ -248,41 +312,7 @@ export function ExtraSponsorSection({
       className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}
       onClick={onClick}
     >
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        className="flex w-[17rem] origin-top-left flex-col items-center overflow-visible font-oxanium"
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: -10,
-            transformOrigin: 'top left',
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transformOrigin: 'top left',
-          },
-        }}
-        transition={{
-          staggerChildren: 0.05,
-          duration: 0.3,
-          ease: 'easeInOut',
-        }}
-      >
-        <h4 className="-mx-10 whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
-          {extraSponsor.alt}
-        </h4>
-        <VideoWithPoster
-          coverUrl={extraSponsor.coverUrl}
-          videoUrl={extraSponsor.videoUrl}
-          title={extraSponsor.alt}
-          containerClass="-mt-5"
-          videoClass="size-[15.5rem]"
-          coverClass="size-[15.5rem]"
-        />
-      </motion.div>
+      {content}
     </a>
   );
 }
@@ -298,16 +328,18 @@ export function ContentHotAreas({
   link?: string;
   pcDotHotAreaClass?: string;
   videoUrl?: string;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
   onClick: (e: MouseEvent) => void;
 }) {
   return (
     <>
-      <a
-        href={link}
-        target="_blank"
-        className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38dvh] cursor-pointer"
-      ></a>
+      {link ? (
+        <a
+          href={link}
+          target="_blank"
+          className="pointer-events-auto absolute -inset-4 bottom-auto z-10 h-[38dvh] cursor-pointer"
+        ></a>
+      ) : null}
       <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
       <div
         className={cn('pointer-events-auto absolute -right-80 left-full h-20', pcDotHotAreaClass, {
@@ -315,12 +347,15 @@ export function ContentHotAreas({
         })}
         onClick={onClick}
       ></div>
-      {extraSponsor && (
-        <a
-          href={extraSponsor.link}
-          target="_blank"
-          className="pointer-events-auto absolute -right-[90%] top-0 h-[40dvh] w-[17rem] cursor-pointer"
-        ></a>
+      {extraSponsor?.map((sponsor, sponsorIndex) =>
+        sponsor.link ? (
+          <a
+            key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
+            href={sponsor.link}
+            target="_blank"
+            className="pointer-events-auto absolute -right-[90%] top-0 h-[40dvh] w-[17rem] cursor-pointer"
+          ></a>
+        ) : null,
       )}
     </>
   );
@@ -333,12 +368,14 @@ export function ContentHotAreas({
 // Mobile conference badges and video button (inline version for mobile)
 export function MobileConferenceBadgesWithVideo({
   isSponsor,
+  isResearch,
   extraSponsor,
   videoUrl,
   onVideoClick,
 }: {
   isSponsor?: boolean;
-  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string };
+  isResearch?: boolean;
+  extraSponsor?: { alt: string; coverUrl: string; videoUrl: string; link: string }[];
   videoUrl?: string;
   onVideoClick?: (e: MouseEvent) => void;
 }) {
@@ -362,7 +399,7 @@ export function MobileConferenceBadgesWithVideo({
         <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
         Conference
       </div>
-      {(isSponsor || extraSponsor) && (
+      {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
         <div
           className={cn(
             'relative flex items-center gap-0.5 rounded',
@@ -374,6 +411,20 @@ export function MobileConferenceBadgesWithVideo({
           <BadgeBlurBg className="bg-orange/20" />
           <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
           Sponsorship
+        </div>
+      )}
+      {isResearch && (
+        <div
+          className={cn(
+            'relative flex items-center gap-0.5 rounded',
+            MOBILE_MAP_SCALE.badgePaddingClass,
+            MOBILE_MAP_SCALE.badgeTextClass,
+            'font-semibold text-orange-600',
+          )}
+        >
+          <BadgeBlurBg className="bg-orange-600/20" />
+          <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange-600')} />
+          Research
         </div>
       )}
       {videoUrl && onVideoClick && (
@@ -415,7 +466,18 @@ export function MobileContentSection({
   scrollContainerRef?: React.RefObject<HTMLDivElement>;
   onClick: (e: MouseEvent) => void;
 }) {
-  return (
+  const scrollContent = imgs?.length ? (
+    <div
+      ref={scrollContainerRef}
+      className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
+    >
+      {imgs.map((img) => (
+        <FeatherImg className={MOBILE_MAP_SCALE.contentImageClass} key={img.src} src={img.src} alt={img.alt} />
+      ))}
+    </div>
+  ) : null;
+
+  const content = (
     <motion.div
       initial="hidden"
       animate="visible"
@@ -449,25 +511,24 @@ export function MobileContentSection({
           {/*{period}*/}
         </h3>
       )}
-      <a
-        href={link}
-        target="_blank"
-        className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]"
-        onClick={onClick}
-      >
-        {imgs?.length ? (
-          <div
-            ref={scrollContainerRef}
-            className="pointer-events-auto flex flex-col [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_75%,transparent)]"
-          >
-            {imgs.map((img) => (
-              <FeatherImg className={MOBILE_MAP_SCALE.contentImageClass} key={img.src} src={img.src} alt={img.alt} />
-            ))}
-          </div>
-        ) : null}
-      </a>
+      {link ? (
+        <a
+          href={link}
+          target="_blank"
+          className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]"
+          onClick={onClick}
+        >
+          {scrollContent}
+        </a>
+      ) : (
+        <div className="hide-scrollbar pointer-events-auto h-full grow overflow-auto pb-12 [mask-image:linear-gradient(to_bottom,transparent,white_0%,white_90%,transparent)]">
+          {scrollContent}
+        </div>
+      )}
     </motion.div>
   );
+
+  return content;
 }
 
 // Mobile extra sponsor section with smaller sizes for mobile viewport
@@ -485,6 +546,56 @@ export function MobileExtraSponsorSection({
   onClick: (e: MouseEvent) => void;
   className?: string;
 }) {
+  const content = (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className={cn(
+        'flex origin-top-left flex-col items-center overflow-visible font-oxanium',
+        MOBILE_MAP_SCALE.extraSponsorWidth,
+      )}
+      variants={{
+        hidden: {
+          opacity: 0,
+          y: -10,
+          transformOrigin: 'top left',
+        },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transformOrigin: 'top left',
+        },
+      }}
+      transition={{
+        staggerChildren: 0.05,
+        duration: 0.3,
+        ease: 'easeInOut',
+      }}
+    >
+      <h4
+        className={cn(
+          'whitespace-pre-wrap text-center font-semibold capitalize text-white',
+          MOBILE_MAP_SCALE.extraSponsorTitleClass,
+        )}
+      >
+        {extraSponsor.alt}
+      </h4>
+      <VideoWithPoster
+        coverUrl={extraSponsor.coverUrl}
+        videoUrl={extraSponsor.videoUrl}
+        title={extraSponsor.alt}
+        containerClass={MOBILE_MAP_SCALE.extraSponsorMarginTop}
+        videoClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+        coverClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
+      />
+    </motion.div>
+  );
+
+  if (!extraSponsor.link) {
+    return <div className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}>{content}</div>;
+  }
+
   return (
     <a
       href={extraSponsor.link}
@@ -493,49 +604,7 @@ export function MobileExtraSponsorSection({
       className={cn('pointer-events-auto absolute -right-[90%] top-0 overflow-visible', className)}
       onClick={onClick}
     >
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        className={cn(
-          'flex origin-top-left flex-col items-center overflow-visible font-oxanium',
-          MOBILE_MAP_SCALE.extraSponsorWidth,
-        )}
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: -10,
-            transformOrigin: 'top left',
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transformOrigin: 'top left',
-          },
-        }}
-        transition={{
-          staggerChildren: 0.05,
-          duration: 0.3,
-          ease: 'easeInOut',
-        }}
-      >
-        <h4
-          className={cn(
-            'whitespace-pre-wrap text-center font-semibold capitalize text-white',
-            MOBILE_MAP_SCALE.extraSponsorTitleClass,
-          )}
-        >
-          {extraSponsor.alt}
-        </h4>
-        <VideoWithPoster
-          coverUrl={extraSponsor.coverUrl}
-          videoUrl={extraSponsor.videoUrl}
-          title={extraSponsor.alt}
-          containerClass={MOBILE_MAP_SCALE.extraSponsorMarginTop}
-          videoClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
-          coverClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
-        />
-      </motion.div>
+      {content}
     </a>
   );
 }

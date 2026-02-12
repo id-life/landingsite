@@ -97,6 +97,7 @@ const config: Config = {
         },
         orange: {
           DEFAULT: '#FFE500',
+          600: '#FF613A',
         },
         red: {
           500: '#BB1212',

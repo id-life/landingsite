@@ -28,7 +28,7 @@ export function MobileWorldMapDotPoint({
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
   const { trackEvent } = useGA();
-  const { country, label, lat, lng, pulseConfig, isSponsor, videoUrl, title, extraSponsor } = dot;
+  const { country, label, lat, lng, pulseConfig, isSponsor, isResearch, videoUrl, title, extraSponsor } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
     id: `world-map-dot-${index}`,
@@ -98,6 +98,7 @@ export function MobileWorldMapDotPoint({
           {isActive && (
             <MobileConferenceBadgesWithVideo
               isSponsor={isSponsor}
+              isResearch={isResearch}
               extraSponsor={extraSponsor}
               videoUrl={videoUrl}
               onVideoClick={handleVideoClick}
@@ -131,6 +132,7 @@ export function MobileWorldMapDotContent({
     secondImgs,
     secondTitle,
     extraSponsor,
+    extraSponsorContainerClassMobile,
   } = dot;
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
@@ -211,8 +213,17 @@ export function MobileWorldMapDotContent({
                 onClick={handleLinkClick}
               />
             )}
-            {extraSponsor && (
-              <MobileExtraSponsorSection extraSponsor={extraSponsor} onClick={handleLinkClick} className="-right-[90%]" />
+            {extraSponsor && extraSponsor.length > 0 && (
+              <div className={extraSponsorContainerClassMobile}>
+                {extraSponsor.map((sponsor, sponsorIndex) => (
+                  <MobileExtraSponsorSection
+                    key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
+                    extraSponsor={sponsor}
+                    onClick={handleLinkClick}
+                    className={cn('-right-[90%]', sponsor.classNameMobile)}
+                  />
+                ))}
+              </div>
             )}
           </div>
         </div>
