@@ -33,7 +33,7 @@ const SpectrumLink = memo(
     const { trackEvent } = useGA();
 
     const { key, label, link, isComingSoon, onClick, icon, labelClassName, routeKey, size } = item;
-    const hasLink = Boolean(link || onClick || routeKey);
+    const hasLink = Boolean(link);
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
     const { pathname, useHash } = routeConfig ?? {};
 
@@ -54,6 +54,11 @@ const SpectrumLink = memo(
           name: GA_EVENT_NAMES.SPECTRUM_CLICK,
           label: key ?? label,
         });
+
+        if (link) {
+          window.open(link, '_blank');
+          return;
+        }
 
         if (event?.metaKey || event?.ctrlKey) {
           // cmd + click

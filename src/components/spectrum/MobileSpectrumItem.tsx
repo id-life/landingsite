@@ -47,7 +47,7 @@ const MobileSpectrumLink = memo(
     const { trackEvent } = useGA();
 
     const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
-    const hasLink = Boolean(link || onClick || routeKey);
+    const hasLink = Boolean(link);
 
     const handleClick = useCallback(
       (e: React.MouseEvent) => {
@@ -58,6 +58,11 @@ const MobileSpectrumLink = memo(
           name: GA_EVENT_NAMES.SPECTRUM_CLICK,
           label: key ?? label,
         });
+
+        if (link) {
+          window.open(link, '_blank');
+          return;
+        }
 
         if (routeKey) {
           // Normal click - update URL and execute action in current page
@@ -70,7 +75,6 @@ const MobileSpectrumLink = memo(
         }
 
         onClick?.();
-        if (link) window.open(link, '_blank');
       },
       [hasLink, trackEvent, key, label, onClick, link, routeKey, executeSpectrumRoute, updateUrlAndExecute],
     );
@@ -79,7 +83,7 @@ const MobileSpectrumLink = memo(
     const { pathname, useHash } = routeConfig ?? {};
 
     return (
-      <a href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)} target="_blank">
+      <a href={link || undefined} target="_blank">
         <div className="relative flex items-center gap-1">
           <p
             onClick={handleClick}

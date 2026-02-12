@@ -29,7 +29,7 @@ const SponsorLogoItem = memo(
   }) => {
     const { trackEvent } = useGA();
     const { key, label, link, onClick, routeKey, icon, mobileSize } = item;
-    const hasLink = Boolean(link || onClick || routeKey);
+    const hasLink = Boolean(link);
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -39,6 +39,11 @@ const SponsorLogoItem = memo(
         name: GA_EVENT_NAMES.SPECTRUM_CLICK,
         label: key ?? label,
       });
+
+      if (link) {
+        window.open(link, '_blank');
+        return;
+      }
 
       if (routeKey) {
         if (updateUrlAndExecute) {
@@ -50,7 +55,6 @@ const SponsorLogoItem = memo(
       }
 
       onClick?.();
-      if (link) window.open(link, '_blank');
     };
 
     const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
@@ -58,7 +62,7 @@ const SponsorLogoItem = memo(
 
     return (
       <a
-        href={generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash)}
+        href={link || undefined}
         target="_blank"
         onClick={handleClick}
         className="flex items-center justify-center transition-opacity hover:opacity-80"
