@@ -48,7 +48,7 @@ const PortfolioItem = memo(
             className={cn(
               'fund-desc mx-auto text-xs/5',
               isGridMode
-                ? 'mt-3 line-clamp-2 w-full px-2 text-[.625rem]/4 font-medium'
+                ? 'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium'
                 : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5',
             )}
           >

@@ -94,7 +94,7 @@ export const portfolio: PortfolioItemInfo[] = [
     description: 'Small molecules atherosclerosis solution',
     image: (
       <img
-        className={cn(mobileImageClassName, 'w-36 mobile:w-[6rem]')}
+        className={cn('w-[12.5rem]', mobileImageClassName)}
         src="/imgs/investments/cyclarity.webp"
         alt="Cyclarity Therapeutics logo - Small molecules atherosclerosis solution"
       />
