@@ -77,6 +77,32 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/immune-bridge.webp',
   },
   {
+    title: 'Retro Biosciences',
+    description: 'Cellular Partial Reprogramming',
+    image: (
+      <img
+        className={cn('w-[12.5rem]', mobileImageClassName)}
+        src="/imgs/investments/retro.webp"
+        alt="Retro Biosciences logo - Cellular Partial Reprogramming"
+      />
+    ),
+    link: 'https://www.retro.bio/',
+    logoUrl: '/imgs/investments/retro.webp',
+  },
+  {
+    title: 'Cyclarity Therapeutics',
+    description: 'Small molecules atherosclerosis solution',
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-36 mobile:w-[6rem]')}
+        src="/imgs/investments/cyclarity.webp"
+        alt="Cyclarity Therapeutics logo - Small molecules atherosclerosis solution"
+      />
+    ),
+    link: 'https://cyclaritytx.com/',
+    logoUrl: '/imgs/investments/cyclarity.webp',
+  },
+  {
     title: 'Mito Health',
     description: 'AI powered concierge doctor',
     image: (
@@ -223,6 +249,26 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       baseScale: 1,
       mobileScaleMultiplier: 0.8,
       loadPercentage: 0.002,
+      mobileOpacity: 0.3,
+    },
+    {
+      url: '/imgs/particle/retro.png',
+      resize: [568, 170],
+      baseScale: 1.2,
+      mobileScaleMultiplier: 1.5,
+      loadPercentage: 0.002,
+      mobileUrl: '/imgs/particle/retro-mobile.png',
+      mobileResize: [328, 328] as [number, number],
+      mobileOpacity: 0.3,
+    },
+    {
+      url: '/imgs/particle/cyclarity.png',
+      resize: [800, 115],
+      baseScale: 1.2,
+      mobileScaleMultiplier: 1.5,
+      loadPercentage: 0.002,
+      mobileUrl: '/imgs/particle/cyclarity-mobile.png',
+      mobileResize: [328, 328] as [number, number],
       mobileOpacity: 0.3,
     },
     {
