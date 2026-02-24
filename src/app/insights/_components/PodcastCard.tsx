@@ -1,6 +1,6 @@
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
-import { currentAudioAtom, playlistAtom, podcastIDAtom, podcastLTAtom, PlayList } from '@/atoms/audio-player';
+import { podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
 type PodcastCardProps = {
   item: PodcastItem;
@@ -8,8 +8,6 @@ type PodcastCardProps = {
 };
 
 export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
-  const setCurrentAudio = useSetAtom(currentAudioAtom);
-  const setPlaylist = useSetAtom(playlistAtom);
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
 
@@ -17,13 +15,7 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
     const audioData = podcastIDList.find((p) => p.id === item.id) || podcastLTList.find((p) => p.id === item.id);
     if (!audioData) return;
 
-    setCurrentAudio(audioData);
-
-    if (audioData.category === PlayList.PODCAST_ID) {
-      setPlaylist(podcastIDList);
-    } else if (audioData.category === PlayList.PODCAST_LT) {
-      setPlaylist(podcastLTList);
-    }
+    window.open(`/podcast/${audioData.id}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
