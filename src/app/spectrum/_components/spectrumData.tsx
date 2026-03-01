@@ -49,8 +49,8 @@ export const spectrumBaseData: SpectrumItemData[] = [
     titleCn: '布道者',
     icon: <RelationSVG />,
     links: [
-      { label: 'Influence Network', link: 'https://landingsite-test.id.life/spectrum/influence-network' },
-      { label: 'Disease Management', link: 'https://landingsite-test.id.life/spectrum/disease-management' },
+      { label: 'Influence Network', link: 'https://www.id.life/spectrum/influence-network' },
+      { label: 'Disease Management', link: 'https://www.id.life/spectrum/disease-management' },
     ],
   },
   {
@@ -58,7 +58,7 @@ export const spectrumBaseData: SpectrumItemData[] = [
     titleCn: '数字孪生',
     icon: <DigitalTwinSVG />,
     className: 'mobile:pt-4',
-    links: [{ label: 'Access Digital Twin', link: 'https://landingsite-test.id.life/digitaltwin' }],
+    links: [{ label: 'Access Digital Twin', link: 'https://www.id.life/digitaltwin' }],
   },
   {
     title: 'Global Internship',
