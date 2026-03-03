@@ -201,8 +201,9 @@ const SpectrumItem = memo(
         ));
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
-      // For sponsor: split links into first row (8 items with justify-between) and remaining rows (centered)
-      const sponsorFirstRowCount = 8;
+      // For sponsor: split links into three rows (6 / 7 / remaining)
+      const sponsorFirstRowCount = 6;
+      const sponsorSecondRowCount = 7;
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];
         return visibleLinks.slice(0, sponsorFirstRowCount).map((item, index) => (
@@ -226,9 +227,9 @@ const SpectrumItem = memo(
         ));
       }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
-      const sponsorRemainingLinks = useMemo(() => {
+      const sponsorSecondRowLinks = useMemo(() => {
         if (!isSponsor) return [];
-        return visibleLinks.slice(sponsorFirstRowCount).map((item, index) => (
+        return visibleLinks.slice(sponsorFirstRowCount, sponsorFirstRowCount + sponsorSecondRowCount).map((item, index) => (
           <motion.div
             key={`${item.label}-${safePage}-remaining-${index}`}
             initial={{ opacity: 0, y: 10 }}
@@ -236,6 +237,29 @@ const SpectrumItem = memo(
             transition={{
               duration: 0.3,
               delay: (sponsorFirstRowCount + index) * 0.05,
+              ease: 'easeOut',
+            }}
+          >
+            <SpectrumLink
+              item={item}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+          </motion.div>
+        ));
+      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+
+      const sponsorThirdRowLinks = useMemo(() => {
+        if (!isSponsor) return [];
+        return visibleLinks.slice(sponsorFirstRowCount + sponsorSecondRowCount).map((item, index) => (
+          <motion.div
+            key={`${item.label}-${safePage}-remaining-2-${index}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.3,
+              delay: (sponsorFirstRowCount + sponsorSecondRowCount + index) * 0.05,
               ease: 'easeOut',
             }}
           >
@@ -292,9 +316,13 @@ const SpectrumItem = memo(
                     >
                       {/* First row: justify-between to span full width */}
                       <div className="flex w-full items-center justify-between">{sponsorFirstRowLinks}</div>
-                      {/* Remaining rows: centered */}
-                      {sponsorRemainingLinks.length > 0 && (
-                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorRemainingLinks}</div>
+                      {/* Second row: centered */}
+                      {sponsorSecondRowLinks.length > 0 && (
+                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorSecondRowLinks}</div>
+                      )}
+                      {/* Third row: centered */}
+                      {sponsorThirdRowLinks.length > 0 && (
+                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorThirdRowLinks}</div>
                       )}
                     </motion.div>
                   ) : (
