@@ -5,7 +5,7 @@ import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrum
 import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import { cloneElement, memo } from 'react';
+import { cloneElement, memo, useEffect, useState } from 'react';
 
 interface MobileSpectrumSponsorPageProps {
   sponsorItem: SpectrumItemInfo;
@@ -83,8 +83,20 @@ const MobileSpectrumSponsorPage = memo(
   ({ sponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, className }: MobileSpectrumSponsorPageProps) => {
     const { icon, links } = sponsorItem;
 
+    // Scale down the entire sponsor block on short viewports (e.g. iPhone SE)
+    // so all logos remain visible without scrolling.
+    const DESIGN_HEIGHT = 844; // iPhone 12 Pro viewport height
+    const [zoom, setZoom] = useState(1);
+    useEffect(() => {
+      const z = Math.min(1, window.innerHeight / DESIGN_HEIGHT);
+      if (z < 1) setZoom(z);
+    }, []);
+
     return (
-      <div className={cn('mt-3 flex w-full flex-col items-center justify-center px-6', className)}>
+      <div
+        className={cn('mt-3 flex w-full flex-col items-center justify-center px-6', className)}
+        style={zoom < 1 ? { zoom } : undefined}
+      >
         {/* Header */}
         <div className="mb-8 flex items-center gap-2">
           {cloneElement(icon, { className: 'size-6 shrink-0 fill-white' })}
@@ -92,8 +104,8 @@ const MobileSpectrumSponsorPage = memo(
           <span className="bilingual-font text-sm font-bold">本机构赞助支持</span>
         </div>
 
-        {/* Logo Wall - Flex wrap layout */}
-        <div className="flex w-full flex-wrap items-center justify-center gap-4">
+        {/* Logo Wall - max-w locks layout across all phone sizes, released on ipad */}
+        <div className="flex w-full max-w-[342px] flex-wrap items-center justify-center gap-4 ipad:max-w-none">
           {links?.map((item, index) => (
             <SponsorLogoItem
               key={item.label || index}
