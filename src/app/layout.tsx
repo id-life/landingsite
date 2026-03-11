@@ -21,7 +21,8 @@ const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'tru
 
 export const metadata: Metadata = {
   title: 'Immortal Dragons 不朽真龙',
-  description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+  description:
+    'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
   keywords: [
     'Longevity',
     'anti-aging',
@@ -36,7 +37,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
-    description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
+    description:
+      'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
