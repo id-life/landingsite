@@ -20,6 +20,11 @@ const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
 
 export const metadata: Metadata = {
+  verification: {
+    other: {
+      'baidu-site-verification': 'codeva-3t6o5pvEVk',
+    },
+  },
   title: 'Immortal Dragons 不朽真龙',
   description:
     'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
