@@ -11,6 +11,7 @@ import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { WebClarity } from '@/app/_components/web-clarity';
 import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
+import Image from 'next/image';
 import type { Metadata, Viewport } from 'next';
 
 import '@/styles/globals.css';
@@ -79,6 +80,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         )}
         suppressHydrationWarning
       >
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            width: 1,
+            height: 1,
+            overflow: 'hidden',
+            opacity: 0,
+            pointerEvents: 'none',
+            clipPath: 'inset(50%)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <Image src="/imgs/id-logo-large.png" alt="" width={216} height={200} priority unoptimized />
+          <Image src="/imgs/id-logo-small.png" alt="" width={113} height={105} priority unoptimized />
+        </div>
         <SubscribePopupStorageReporter />
         <Providers>
           <ScrollBehavior />
