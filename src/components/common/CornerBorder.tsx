@@ -16,7 +16,7 @@ function CornerBorder({
       className="corner-button absolute inset-0"
       style={
         {
-          '--corner-border-color': color || '#000',
+          '--corner-border-color': color || '#666',
           '--corner-border-size': size || '6px',
           '--corner-border-width': width || '2px',
           '--corner-border-hover-color': hoverColor || '#C11111',

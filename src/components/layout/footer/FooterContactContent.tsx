@@ -1,11 +1,16 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import BilibiliSVG from '@/../public/svgs/bilibili.svg?component';
 import ContactEmailSVG from '@/../public/svgs/contact-email.svg?component';
 import HomeSVG from '@/../public/svgs/home.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
+import RedbookSVG from '@/../public/svgs/redbook.svg?component';
+import SpotifySVG from '@/../public/svgs/spotify.svg?component';
+import WechatSVG from '@/../public/svgs/wechat.svg?component';
+import XiaoyuzhouSVG from '@/../public/svgs/xiaoyuzhou.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
@@ -15,7 +20,7 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import jsonp from '@/utils/jsonp';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -59,45 +64,51 @@ export default function FooterContactContent() {
       label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
     });
 
-    if (type === MediaLinkType.Youtube) {
-      window.open(Links.youtube, '__blank');
-    }
-    if (type === MediaLinkType.Linkedin) {
-      window.open(Links.linkedin, '__blank');
-    }
-    if (type === MediaLinkType.Media) {
-      window.open(Links.media, '__blank');
-    }
+    window.open(Links[type], '__blank');
   };
+
+  const mediaRows = useMemo(
+    () => [
+      [
+        { type: MediaLinkType.Youtube, label: 'YOUTUBE', Icon: YoutubeSVG, iconClassName: 'size-4' },
+        {
+          type: MediaLinkType.Linkedin,
+          label: 'LINKEDIN',
+          Icon: LinkedinSVG,
+          iconClassName: '-mt-0.5 size-4',
+        },
+        { type: MediaLinkType.Spotify, label: 'SPOTIFY', Icon: SpotifySVG, iconClassName: 'size-4' },
+        { type: MediaLinkType.Media, label: 'MEDIAKIT', Icon: MediaSVG, iconClassName: 'size-4' },
+      ],
+      [
+        { type: MediaLinkType.Xiaoyuzhou, label: '小宇宙', Icon: XiaoyuzhouSVG, iconClassName: 'size-4' },
+        { type: MediaLinkType.Bilibili, label: 'BILIBILI', Icon: BilibiliSVG, iconClassName: 'size-4' },
+        { type: MediaLinkType.Redbook, label: '小红书', Icon: RedbookSVG, iconClassName: 'size-4' },
+        { type: MediaLinkType.Wechat, label: '公众号', Icon: WechatSVG, iconClassName: 'size-4' },
+      ],
+    ],
+    [],
+  );
 
   return (
     <div className="text-black">
       <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
-      <div className="mt-3 flex justify-center gap-5">
-        <div
-          onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-          className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-        >
-          <CornerBorder hoverColor="#000" />
-          <YoutubeSVG className="size-5 fill-black" />
-          <span className="font-oxanium text-xs/3 font-bold">YOUTUBE</span>
-        </div>
-        <div
-          onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-          className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-        >
-          <CornerBorder hoverColor="#000" />
-          <LinkedinSVG className="size-5 fill-black" />
-          <span className="font-oxanium text-xs/3 font-bold">LINKEDIN</span>
-        </div>
-        <div
-          onClick={() => handleLinkClick(MediaLinkType.Media)}
-          className="flex-center relative h-8 w-[98px] cursor-pointer gap-1"
-        >
-          <CornerBorder hoverColor="#000" />
-          <MediaSVG className="size-5 fill-black" />
-          <span className="font-oxanium text-xs/3 font-bold">MEDIAKIT</span>
-        </div>
+      <div className="mt-3">
+        {mediaRows.map((row, rowIndex) => (
+          <div key={rowIndex} className={cn('flex justify-between gap-2', rowIndex === 1 && 'mt-4')}>
+            {row.map(({ type, label, Icon, iconClassName }) => (
+              <div
+                key={type}
+                onClick={() => handleLinkClick(type)}
+                className="flex-center relative h-[25px] w-[77px] cursor-pointer gap-1"
+              >
+                <CornerBorder hoverColor="#000" size="4px" color="#666" />
+                <Icon className={cn(iconClassName, 'fill-black')} />
+                <span className="font-oxanium text-[10px]/3 font-bold">{label}</span>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
       <div className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold uppercase">
         <div className="flex items-center gap-1">
