@@ -48,9 +48,11 @@ export const spectrumBaseData: SpectrumItemData[] = [
     title: 'Evangelism',
     titleCn: '布道者',
     icon: <RelationSVG />,
+    linksClassName: 'grid grid-cols-2 gap-x-6',
     links: [
       { label: 'Influence Network', link: 'https://www.id.life/spectrum/influence-network' },
       { label: 'Disease Management', link: 'https://www.id.life/spectrum/disease-management' },
+      { label: 'Longevity Trend Radar', link: 'https://longevity-trend-radar.vercel.app' },
     ],
   },
   {
