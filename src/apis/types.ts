@@ -116,6 +116,16 @@ export type InsightsWithGeoItem = {
   publishDate: string | null;
 };
 
+export type LongevityWeeklyItem = {
+  id: number;
+  title: string;
+  brief: string | null;
+  url: string | null;
+  publishDate: string | null;
+  sequence: number;
+  publisher: string | null;
+};
+
 // News page item type (combined from insights and geo)
 export type NewsPageItem = {
   id: number;
