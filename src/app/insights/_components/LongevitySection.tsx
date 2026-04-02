@@ -1,40 +1,66 @@
-'use client';
+﻿'use client';
 
-import { useState, useMemo, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Swiper as SwiperType } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { PodcastCard } from '@/app/insights/_components/PodcastCard';
-import { fetchPodcastList } from '@/apis';
-import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
-import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
+import RedbookSVG from '@/../public/svgs/redbook.svg?component';
+import WechatSVG from '@/../public/svgs/wechat.svg?component';
+import ZhihuSVG from '@/../public/svgs/zhihu.svg?component';
+import { fetchLongevityWeeklyList } from '@/apis';
+import { MobileNavigationArrowButton, PCNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
+import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { cn } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useMemo, useRef, useState } from 'react';
+import { Swiper as SwiperType } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-export type PodcastItem = {
+type LongevityItem = {
   id: number;
   title: string;
-  subtitle: string;
   description: string;
-  duration: number;
-  date: string;
-  xyzLink?: string;
-  spotifyLink?: string;
-  podcastLink?: string;
+  link: string | null;
 };
 
-type PodcastSectionProps = {
+type LongevitySectionProps = {
   isMobile?: boolean;
-  compact?: boolean; // Show only 2 items in a grid without swiper (for combined view)
+  compact?: boolean;
   isVisible?: boolean;
 };
 
 const COMPACT_ITEMS_PER_PAGE = 2;
+const WECHAT_LINK =
+  'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzcwNjE2OTY1Nw==&action=getalbum&album_id=4431348105913057287&subscene=27&scenenote=https%3A%2F%2Fmp.weixin.qq.com%2Fs%3F__biz%3DMzcwNjE2OTY1Nw%3D%3D%26mid%3D2247483730%26idx%3D1%26sn%3D217f54b92976778a7e6c978a4e805286%26chksm%3Df50e0bf9fb4abcb1443622811c53cf24713e7a94499971a3db6a43ae4b3447f15ffd0cb2e747%26scene%3D27%26ascene%3D0%26devicetype%3DiOS26.3.1%26version%3D18004330%26nettype%3DWIFI%26lang%3Den%26countrycode%3DCN%26fontScale%3D100%26exportkey%3Dn_ChQIAhIQx5hBjQ8GOG6mu%252BI1V%252BqW5hLeAQIE97dBBAEAAAAAAISzGW0zJ54AAAAOpnltbLcz9gKNyK89dVj0Ywaz9IIZRpnFE2mWp6TfHKwSUyl4DGAYVcDhwBQU0RdZRB2YFOHHFVi67QAS3pE%252BNffpWdz4n9x1faBtf8Ov29Nev9BaPPzWBuRuhWQJtQL1FrvuBac92gyUvTZM1ir6S7LTyoVA7Q6%252F3G2PeO3JC2YG2CXBLTEfFav0q5JoNrhrE5G9JhF5wQ2tn10aK7knf3sUDBCrXSx1Fza0xdy9KXphiZVD%252F%252FD9d2WD3w8xvMgYCaf%252B%252FxwZ4Q%253D%253D%26pass_ticket%3DLANnhQ74Aqic0XMcfJxe%252FZm3jBKNpG3m01gXc2HkZ4ToUVeNQvhn1egCauXUaO5r%26wx_header%3D3&nolastread=1#wechat_redirect';
+const REDBOOK_LINK = 'https://xhslink.com/m/8j90ABQa9jS';
+const ZHIHU_LINK = 'https://www.zhihu.com/column/c_2021919119344150153';
 
-export default function PodcastSection({ isMobile = false, compact = false, isVisible = true }: PodcastSectionProps) {
+function LongevityCard({ item }: { item: LongevityItem }) {
+  const handleClick = () => {
+    if (!item.link) return;
+    window.open(item.link, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div onClick={handleClick} className={cn('podcast-card-clip relative bg-white p-0.5', item.link && 'cursor-pointer')}>
+      <div className="podcast-card-clip-inner bg-[#F6F8FB] p-4 mobile:p-3">
+        <div className="flex items-center justify-between gap-3 mobile:gap-2">
+          <h3 className="line-clamp-1 flex-1 font-poppins text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+            {item.title}
+          </h3>
+          <img
+            src="/imgs/podcast/podcast-play-white.svg"
+            className="invisible size-10 shrink-0 duration-300 hover:scale-110 mobile:size-8"
+            alt="Open"
+          />
+        </div>
+        <p className="line-clamp-1 text-base font-medium mobile:text-[10px]/4">{item.description}</p>
+      </div>
+    </div>
+  );
+}
+
+export default function LongevitySection({ isMobile = false, compact = false, isVisible = true }: LongevitySectionProps) {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
@@ -43,35 +69,36 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   const swiperRef = useRef<SwiperType>();
   const compactSwiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
-  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible); // 播客卡片106 + 间距20 + 30
+  const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
+  const router = useRouter();
+  const pageSize = Math.max(1, itemsPerPage);
 
-  // 只获取 podcast_id 分类的播客
-  const { data: podcastIDData, isLoading } = useQuery({
-    queryKey: ['podcast_list', 'podcast_id'],
-    queryFn: () => fetchPodcastList('podcast_id'),
+  const { data: longevityWeeklyData = [], isLoading } = useQuery({
+    queryKey: ['longevity_weekly_list'],
+    queryFn: () => fetchLongevityWeeklyList(),
     select: (res) => (res.code === 200 ? res.data : []),
   });
 
-  const podcastData = useMemo<PodcastItem[]>(() => {
-    const allPodcasts = podcastIDData || [];
-    return allPodcasts
-      .sort((a, b) => (b?.sequence || 0) - (a?.sequence || 0)) // 越大越靠前，优先使用insightSequence排序
+  const longevityData = useMemo<LongevityItem[]>(() => {
+    return [...longevityWeeklyData]
+      .sort((a, b) => {
+        const sequenceDiff = a.sequence - b.sequence;
+        if (sequenceDiff !== 0) return sequenceDiff;
+
+        const aTime = a.publishDate ? Date.parse(a.publishDate) : 0;
+        const bTime = b.publishDate ? Date.parse(b.publishDate) : 0;
+        return bTime - aTime;
+      })
       .map((item) => ({
         id: item.id,
-        title: item.title,
-        subtitle: `${item.artist || '不朽真龙 Immortal Dragons'} · 《医药群星》`,
-        description: item.description || '',
-        duration: item.duration,
-        date: item.createdAt,
-        xyzLink: item.xyzLink,
-        podcastLink: item.podcastLink,
-        spotifyLink: item.spotifyLink,
+        title: item.title || ``,
+        description: item.brief || '',
+        link: item.url || '',
       }));
-  }, [podcastIDData]);
+  }, [longevityWeeklyData]);
 
-  const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
-  const totalCompactPages = Math.ceil(podcastData.length / COMPACT_ITEMS_PER_PAGE);
-  const router = useRouter();
+  const totalPages = isMobile ? Math.max(1, Math.ceil(longevityData.length / pageSize)) : 1;
+  const totalCompactPages = Math.max(1, Math.ceil(longevityData.length / COMPACT_ITEMS_PER_PAGE));
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
@@ -96,10 +123,11 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
 
   const handleViewAllClick = () => {
     if (isMobile) {
-      // Save current page state before navigation for browser back button
       sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-      router.push('/podcast');
-    } else window.open('/podcast', '_blank');
+      router.push(WECHAT_LINK);
+    } else {
+      window.open(WECHAT_LINK, '_blank');
+    }
   };
 
   const renderContent = () => {
@@ -108,13 +136,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
       return (
         <div className={cn('flex gap-6', (isMobile || compact) && 'grid grid-cols-2 gap-3')}>
           {Array.from({ length: skeletonCount }).map((_, index) => (
-            <div key={index} className="w-full space-y-3 bg-white/50 p-5">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 space-y-2">
-                  <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
-                  <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
-                </div>
-                <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
+            <div key={index} className="podcast-card-clip relative bg-white p-0.5">
+              <div className="podcast-card-clip-inner space-y-3 bg-[#F6F8FB] p-4 mobile:p-3">
+                <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/20 mobile:h-4" />
+                <div className="h-4 w-full animate-pulse rounded bg-gray-800/15 mobile:h-3" />
               </div>
             </div>
           ))}
@@ -122,7 +147,14 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
       );
     }
 
-    // Compact mode: Swiper with 2 items per page (for combined view on mobile Insights)
+    if (!longevityData.length) {
+      return (
+        <div className="podcast-card-clip relative bg-white p-0.5">
+          <div className="podcast-card-clip-inner bg-[#F6F8FB] p-4 text-sm text-black/50">No longevity weekly data yet.</div>
+        </div>
+      );
+    }
+
     if (compact) {
       return (
         <Swiper
@@ -136,12 +168,12 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
           spaceBetween={16}
         >
           {Array.from({ length: totalCompactPages }).map((_, pageIndex) => {
-            const pageItems = podcastData.slice(pageIndex * COMPACT_ITEMS_PER_PAGE, (pageIndex + 1) * COMPACT_ITEMS_PER_PAGE);
+            const pageItems = longevityData.slice(pageIndex * COMPACT_ITEMS_PER_PAGE, (pageIndex + 1) * COMPACT_ITEMS_PER_PAGE);
             return (
               <SwiperSlide key={pageIndex}>
                 <div className="grid grid-cols-2 gap-3">
                   {pageItems.map((item) => (
-                    <PodcastCard key={item.id} item={item} isMobile />
+                    <LongevityCard key={item.id} item={item} />
                   ))}
                 </div>
               </SwiperSlide>
@@ -151,7 +183,6 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
       );
     }
 
-    // Mobile layout: dynamic items per page, vertical
     if (isMobile) {
       return (
         <Swiper
@@ -162,13 +193,13 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
           spaceBetween={16}
         >
           {Array.from({ length: totalPages }).map((_, pageIndex) => {
-            const pageItems = podcastData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
+            const pageItems = longevityData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
 
             return (
               <SwiperSlide key={pageIndex}>
                 <div className="flex flex-col gap-5">
                   {pageItems.map((item) => (
-                    <PodcastCard key={item.id} item={item} isMobile />
+                    <LongevityCard key={item.id} item={item} />
                   ))}
                 </div>
               </SwiperSlide>
@@ -178,7 +209,6 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
       );
     }
 
-    // Desktop layout: horizontal swiper
     return (
       <Swiper
         className="h-full w-full"
@@ -188,11 +218,12 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
           setIsEnd(swiper.isEnd);
         }}
         slidesPerView={2}
+        slidesPerGroup={1}
         spaceBetween={24}
       >
-        {podcastData.map((item) => (
+        {longevityData.map((item) => (
           <SwiperSlide key={item.id}>
-            <PodcastCard item={item} />
+            <LongevityCard item={item} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -201,53 +232,47 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
 
   return (
     <div ref={containerRef} className={cn('relative flex flex-col', isMobile && !compact && 'h-full')}>
-      {/* Mobile: wrap header + content for vertical centering (not in compact mode) */}
       <div className={cn(isMobile && !compact && 'flex flex-1 flex-col justify-center overflow-hidden')}>
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
-              PODCAST
+              长生周报
             </h2>
-            {/* Platform logos */}
             <div className="flex items-center gap-1.5">
               <a
-                href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
+                href={WECHAT_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="opacity-100 transition-opacity hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
+                <WechatSVG className="size-6 fill-black" />
               </a>
               <a
-                href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
+                href={REDBOOK_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="opacity-100 transition-opacity hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
+                <RedbookSVG className="size-6 fill-black" />
               </a>
               <a
-                href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
+                href={ZHIHU_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="opacity-100 transition-opacity hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
+                <ZhihuSVG className="size-6 fill-black" />
               </a>
             </div>
           </div>
           <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
-        {/* Content */}
         <div className={cn('relative mt-3', !isMobile && 'pr-0')}>
-          {/* Desktop arrows */}
           {!isMobile && !compact && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" className="-left-5" />
           )}
 
-          {/* Compact mode arrows */}
           {compact && totalCompactPages > 1 && (
             <MobileNavigationArrowButton onClick={handleCompactPrev} disabled={isCompactBeginning} direction="prev" />
           )}
@@ -258,14 +283,12 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
             <PCNavigationArrowButton onClick={handleNext} disabled={isEnd} direction="next" className="-right-5" />
           )}
 
-          {/* Compact mode arrows */}
           {compact && totalCompactPages > 1 && (
             <MobileNavigationArrowButton onClick={handleCompactNext} disabled={isCompactEnd} direction="next" />
           )}
         </div>
       </div>
 
-      {/* Mobile Internal Pagination (not shown in compact mode) */}
       {isMobile && !compact && (
         <MobilePaginationDots totalPages={totalPages} currentPage={currentPage} onPageChange={handlePaginationClick} />
       )}

@@ -14,7 +14,7 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'absolute top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
+        'absolute top-1/2 z-10 flex size-7.5 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
         direction === 'prev' ? '-left-16' : '-right-16',
         className,
       )}

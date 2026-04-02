@@ -1,9 +1,14 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import BilibiliSVG from '@/../public/svgs/bilibili.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import MediaSVG from '@/../public/svgs/media.svg?component';
+import RedbookSVG from '@/../public/svgs/redbook.svg?component';
+import SpotifySVG from '@/../public/svgs/spotify.svg?component';
+import WechatSVG from '@/../public/svgs/wechat.svg?component';
+import XiaoyuzhouSVG from '@/../public/svgs/xiaoyuzhou.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
@@ -13,7 +18,7 @@ import { useGA } from '@/hooks/useGA';
 import jsonp from '@/utils/jsonp';
 import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -56,50 +61,57 @@ export default function FooterContact() {
       name: GA_EVENT_NAMES.MEDIUM_CLICK,
       label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<MediaLinkTypeKey>],
     });
-
-    if (type === MediaLinkType.Youtube) {
-      window.open(Links.youtube, '__blank');
-    }
-    if (type === MediaLinkType.Linkedin) {
-      window.open(Links.linkedin, '__blank');
-    }
-    if (type === MediaLinkType.Media) {
-      window.open(Links.media, '__blank');
-    }
   };
+
+  const mediaRows = useMemo(
+    () => [
+      [
+        { type: MediaLinkType.Youtube, label: 'YOUTUBE', Icon: YoutubeSVG, iconClassName: 'size-6' },
+        {
+          type: MediaLinkType.Linkedin,
+          label: 'LINKEDIN',
+          Icon: LinkedinSVG,
+          iconClassName: '-mt-0.5 size-6',
+        },
+        { type: MediaLinkType.Spotify, label: 'SPOTIFY', Icon: SpotifySVG, iconClassName: 'size-6' },
+        { type: MediaLinkType.Media, label: 'MEDIAKIT', Icon: MediaSVG, iconClassName: 'size-6' },
+      ],
+      [
+        { type: MediaLinkType.Xiaoyuzhou, label: '小宇宙', Icon: XiaoyuzhouSVG, iconClassName: 'size-6' },
+        { type: MediaLinkType.Bilibili, label: 'BILIBILI', Icon: BilibiliSVG, iconClassName: 'size-6' },
+        { type: MediaLinkType.Redbook, label: '小红书', Icon: RedbookSVG, iconClassName: 'size-6' },
+        { type: MediaLinkType.Wechat, label: '公众号', Icon: WechatSVG, iconClassName: 'size-6' },
+      ],
+    ],
+    [],
+  );
 
   return (
     <>
       <FloatingPortal>
         <div className="page-footer-contact fixed -bottom-80 z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
           <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
-            <div>
-              <img className="w-[8.125rem]" src="/svgs/logo_without_gradient.svg" alt="" />
-              <div className="mt-18 flex gap-5">
-                <div
-                  onClick={() => handleLinkClick(MediaLinkType.Youtube)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
-                >
-                  <CornerBorder />
-                  <YoutubeSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
-                  <span className="font-oxanium text-base/5 font-bold uppercase">YOUTUBE</span>
-                </div>
-                <div
-                  onClick={() => handleLinkClick(MediaLinkType.Linkedin)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 transition duration-300 hover:text-red-600"
-                >
-                  <CornerBorder />
-                  <LinkedinSVG className="-mt-0.5 size-6 fill-black transition duration-300 group-hover:fill-red-600" />
-                  <span className="font-oxanium text-base/5 font-bold uppercase transition duration-300">LINKEDIN</span>
-                </div>
-                <div
-                  onClick={() => handleLinkClick(MediaLinkType.Media)}
-                  className="group relative flex h-10 cursor-pointer items-center justify-center gap-1 px-2.5 py-2 font-oxanium text-base/4 font-bold transition duration-300 hover:text-red-600"
-                >
-                  <CornerBorder />
-                  <MediaSVG className="size-6 fill-black transition duration-300 group-hover:fill-red-600" />
-                  <span className="font-oxanium text-base/5 font-bold uppercase">MEDIAKIT</span>
-                </div>
+            <div className="mb-7.5 font-oxanium font-bold uppercase">
+              <p className="opacity-50">Media</p>
+              <div className="mt-7">
+                {mediaRows.map((row, rowIndex) => (
+                  <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
+                    {row.map(({ type, label, Icon, iconClassName }) => (
+                      <a
+                        key={type}
+                        onClick={() => handleLinkClick(type)}
+                        href={Links[type]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 hover:text-red-600"
+                      >
+                        <CornerBorder />
+                        <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-red-600')} />
+                        <span className="font-oxanium text-base/5 font-bold uppercase">{label}</span>
+                      </a>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold uppercase">

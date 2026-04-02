@@ -128,9 +128,14 @@ export const GA_EVENT_LABELS = {
   MEDIUM_CLICK: {
     YOUTUBE: 'youtube',
     LINKEDIN: 'linkedin',
+    SPOTIFY: 'spotify',
     MEDIA: 'drive',
     PODCAST: 'podcast',
     XYZ: 'xyz',
+    XIAOYUZHOU: 'xiaoyuzhou',
+    BILIBILI: 'bilibili',
+    REDBOOK: 'redbook',
+    WECHAT: 'wechat',
   },
   ANATOMY_SWITCH: {
     CAMERA0: '0',

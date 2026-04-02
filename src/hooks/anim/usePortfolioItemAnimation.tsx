@@ -1,18 +1,18 @@
-import { useGSAP } from '@gsap/react';
+﻿import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { RefObject } from 'react';
 import { useThrottle } from '../useThrottle';
 
 export interface PortfolioItemAnimationConfig {
-  /** 组件是否启用 */
+  /** 缁勪欢鏄惁鍚敤 */
   enabled?: boolean;
-  /** 图像索引更新的节流延迟 */
+  /** 鍥惧儚绱㈠紩鏇存柊鐨勮妭娴佸欢杩?*/
   throttleDelay?: number;
 }
 
 /**
- * Portfolio 项目悬停动画 Hook
- * 专门处理 Portfolio 组件中的复杂悬停动画逻辑
+ * Portfolio 椤圭洰鎮仠鍔ㄧ敾 Hook
+ * 涓撻棬澶勭悊 Portfolio 缁勪欢涓殑澶嶆潅鎮仠鍔ㄧ敾閫昏緫
  */
 export function usePortfolioItemAnimation(
   wrapperRef: RefObject<HTMLDivElement>,
@@ -23,29 +23,27 @@ export function usePortfolioItemAnimation(
   const { enabled = true, throttleDelay = 200 } = config;
   const { contextSafe } = useGSAP();
 
-  // 创建节流的图像索引更新函数
+  // 鍒涘缓鑺傛祦鐨勫浘鍍忕储寮曟洿鏂板嚱鏁?
   const throttledSetImageIdx = useThrottle((index: number) => {
     onImageIndexChange(index);
   }, throttleDelay);
 
-  // 创建单个项目的悬停动画
+  // 鍒涘缓鍗曚釜椤圭洰鐨勬偓鍋滃姩鐢?
   const createItemHoverAnimation = contextSafe((div: HTMLDivElement) => {
     const tl = gsap.timeline({
       paused: true,
       defaults: { ease: 'power2.out', duration: 0.3 },
     });
 
-    // 主要缩放动画
-    tl.to(div, { scale: 1.1 });
+    // 涓昏缂╂斁鍔ㄧ敾
 
-    // 子元素动画
+    // 瀛愬厓绱犲姩鐢?
     const title = div.querySelector('.fund-title');
     const selected = title?.querySelectorAll('img');
     const desc = div.querySelector('.fund-desc');
     const subtitle = div.querySelector('.fund-subtitle');
 
     if (title) {
-      tl.to(title, { fontSize: '1.5rem', fontWeight: 600, lineHeight: '1.75rem' });
     }
 
     if (selected) {
@@ -86,7 +84,7 @@ export function usePortfolioItemAnimation(
 
       if (!wrapper) return;
 
-      // 整个资金区域的事件监听
+      // 鏁翠釜璧勯噾鍖哄煙鐨勪簨浠剁洃鍚?
       const handleWrapperMouseEnter = () => {
         isMouseInFundArea = true;
       };
@@ -99,7 +97,7 @@ export function usePortfolioItemAnimation(
       wrapper.addEventListener('mouseenter', handleWrapperMouseEnter);
       wrapper.addEventListener('mouseleave', handleWrapperMouseLeave);
 
-      // 为每个项目创建动画和事件监听
+      // 涓烘瘡涓」鐩垱寤哄姩鐢诲拰浜嬩欢鐩戝惉
       const itemAnimations: gsap.core.Timeline[] = [];
 
       portfolioRefs.current.forEach((div, idx) => {
@@ -115,7 +113,7 @@ export function usePortfolioItemAnimation(
 
         const handleMouseLeave = () => {
           animation.reverse();
-          // 只有当鼠标确实离开整个资金区域时才重置图像索引
+          // 鍙湁褰撻紶鏍囩‘瀹炵寮€鏁翠釜璧勯噾鍖哄煙鏃舵墠閲嶇疆鍥惧儚绱㈠紩
           if (!isMouseInFundArea) {
             throttledSetImageIdx(0);
           }
@@ -128,7 +126,7 @@ export function usePortfolioItemAnimation(
     {
       scope: wrapperRef,
       dependencies: [enabled, portfolioRefs.current?.length],
-      revertOnUpdate: true, // 自动清理事件监听器和动画
+      revertOnUpdate: true, // 鑷姩娓呯悊浜嬩欢鐩戝惉鍣ㄥ拰鍔ㄧ敾
     },
   );
 

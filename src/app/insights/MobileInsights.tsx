@@ -9,6 +9,7 @@ import { useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
 import PodcastSection from './_components/PodcastSection';
 import NewsAndTalksSection from './_components/NewsAndTalksSection';
+import LongevitySection from './_components/LongevitySection';
 
 const PAGE_ID = 'insights_page';
 
@@ -53,6 +54,7 @@ function MobileInsights() {
 
         {/* Podcast Section (compact mode - 2 items) */}
         <PodcastSection isMobile compact isVisible={isVisible} />
+        <LongevitySection isMobile isVisible={isVisible} compact />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   PodcastCommentItemType,
   InsightsItem,
   InsightsWithGeoItem,
+  LongevityWeeklyItem,
 } from '@/apis/types';
 
 export const fetchAudioData = () => request.get<any, Response<AudioDataItem[]>>('/music-player/list');
@@ -35,3 +36,6 @@ export const fetchInsights = () => request.get<any, Response<InsightsItem[]>>('/
 
 // Insights with Geo API (for insights page News & Talks section)
 export const fetchInsightsWithGeo = () => request.get<any, Response<InsightsWithGeoItem[]>>('/insights/with-geo');
+
+// Longevity Weekly API (for insights page Longevity section)
+export const fetchLongevityWeeklyList = () => request.get<any, Response<LongevityWeeklyItem[]>>('/longevity-weekly/list');

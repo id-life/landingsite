@@ -5,13 +5,14 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
-import PodcastSection from '@/app/insights/_components/PodcastSection';
+import LongevitySection from '@/app/insights/_components/LongevitySection';
 import { useGSAP } from '@gsap/react';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
+import PodcastSection from './_components/PodcastSection';
 
 const PAGE_ID = 'insights_page';
 const insightsNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -131,9 +132,10 @@ export default function Insights() {
           <div className="-mt-10">
             <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />
           </div>
-          {/* PODCAST section (bottom) - single row */}
-          <div className="shrink-0">
+          {/* Bottom sections */}
+          <div className="grid shrink-0 grid-cols-2 gap-12">
             <PodcastSection />
+            <LongevitySection />
           </div>
         </div>
       </div>
