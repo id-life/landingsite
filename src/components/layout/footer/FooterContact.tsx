@@ -61,8 +61,6 @@ export default function FooterContact() {
       name: GA_EVENT_NAMES.MEDIUM_CLICK,
       label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<MediaLinkTypeKey>],
     });
-
-    window.open(Links[type], '__blank');
   };
 
   const mediaRows = useMemo(
@@ -99,15 +97,18 @@ export default function FooterContact() {
                 {mediaRows.map((row, rowIndex) => (
                   <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
                     {row.map(({ type, label, Icon, iconClassName }) => (
-                      <div
+                      <a
                         key={type}
                         onClick={() => handleLinkClick(type)}
+                        href={Links[type]}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 hover:text-red-600"
                       >
                         <CornerBorder />
                         <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-red-600')} />
                         <span className="font-oxanium text-base/5 font-bold uppercase">{label}</span>
-                      </div>
+                      </a>
                     ))}
                   </div>
                 ))}

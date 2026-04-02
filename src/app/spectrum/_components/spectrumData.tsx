@@ -33,13 +33,13 @@ export const spectrumBaseData: SpectrumItemData[] = [
       { label: 'Bio/Acc Manifesto', link: 'https://bioacc.life/zh/' },
       {
         label: 'The case against death',
-        isComingSoon: true,
-        labelClassName: '-ml-4 mobile:ml-0 text-[.5rem]/3',
+        link: 'https://book.douban.com/subject/38180553/',
+        isComingSoon: false,
       },
       { label: 'The Network State', link: 'https://www.thenetworkstate-zh.com/foreword/' },
       {
         label: 'Better With Age',
-        labelClassName: '-ml-4 mobile:ml-0',
+        labelClassName: 'mobile:ml-0',
         link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
       },
     ],
