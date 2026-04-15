@@ -11,15 +11,14 @@ import PortfolioItem from './PortfolioItem';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useRetimer } from '@/hooks/useRetimer';
-import { useWindowResize } from '@/hooks/useWindowResize';
 
 const PAGE_ID = 'portfolio_page';
-const HEIGHT_THRESHOLD = 700;
+const FIRST_PAGE_COUNT = 6;
+const SECOND_PAGE_COUNT = 4;
 
 function MobilePortfolio() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [showToast, setShowToast] = useState(false);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
   const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
@@ -29,20 +28,26 @@ function MobilePortfolio() {
   const { trackEvent } = useGA();
   const retimer = useRetimer();
 
-  // Calculate items per page based on screen height
-  const checkHeight = useCallback(() => {
-    setItemsPerPage(window.innerHeight > HEIGHT_THRESHOLD ? 6 : 4);
+  const pageItemIndices = useMemo(() => {
+    const allIndices = portfolio.map((_, index) => index);
+    const firstPage = allIndices.slice(0, FIRST_PAGE_COUNT);
+    const secondPage = allIndices.slice(FIRST_PAGE_COUNT, FIRST_PAGE_COUNT + SECOND_PAGE_COUNT);
+    const thirdPage = allIndices.slice(FIRST_PAGE_COUNT + SECOND_PAGE_COUNT);
+    return [firstPage, secondPage, thirdPage].filter((indices) => indices.length > 0);
   }, []);
 
-  useWindowResize(checkHeight);
+  const pageItems = useMemo(() => {
+    return pageItemIndices.map((indices) => indices.map((index) => portfolio[index]));
+  }, [pageItemIndices]);
 
-  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
+  const totalPages = pageItems.length;
+  const currentItems = pageItems[innerPageIndex] ?? [];
+  const currentGridRows = currentItems.length > 4 ? 'grid-rows-3' : 'grid-rows-2';
 
   // Calculate particle indices for all grid cells on current page
   const getParticleIndices = () => {
-    const base = innerPageIndex * itemsPerPage;
-    const itemCount = Math.min(itemsPerPage, portfolio.length - base);
-    return Array.from({ length: itemCount }, (_, i) => base + i + 1);
+    const currentPageIndices = pageItemIndices[innerPageIndex] ?? [];
+    return currentPageIndices.map((index) => index + 1);
   };
   const particleIndices = getParticleIndices();
 
@@ -159,11 +164,12 @@ function MobilePortfolio() {
             id="particle-gl"
             className={cn(
               'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4',
-              itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
+              currentGridRows,
+              innerPageIndex >= 1 && 'py-24',
             )}
-            data-layout={itemsPerPage === 6 ? '2x3' : '2x2'}
+            data-layout={currentGridRows === 'grid-rows-3' ? '2x3' : '2x2'}
           >
-            {Array.from({ length: itemsPerPage }).map((_, i) => (
+            {Array.from({ length: currentItems.length }).map((_, i) => (
               <div
                 key={`container-${i}`}
                 id={`particle-container-mobile-${i + 1}`}
@@ -182,7 +188,8 @@ function MobilePortfolio() {
               key={pageIdx}
               className={cn(
                 'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
-                itemsPerPage === 6 ? 'grid-rows-3' : 'grid-rows-2',
+                pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
+                pageIdx >= 1 && 'py-32',
                 innerPageIndex === pageIdx
                   ? 'translate-y-0 opacity-100'
                   : innerPageIndex > pageIdx
@@ -190,7 +197,7 @@ function MobilePortfolio() {
                     : 'translate-y-full opacity-0',
               )}
             >
-              {portfolio.slice(pageIdx * itemsPerPage, (pageIdx + 1) * itemsPerPage).map((item) => (
+              {pageItems[pageIdx].map((item) => (
                 <PortfolioItem key={item.title} item={item} onItemClick={handleFundClick} isGridMode />
               ))}
             </div>
