@@ -1,8 +1,8 @@
 import React from 'react';
 import AboutHeader from './_components/AboutHeader';
-import AboutFooter from '@/app/about/_components/AboutFooter';
-import AboutCanvas from '@/app/about/_components/AboutCanvas';
-import AboutFixedUI from '@/app/about/_components/AboutFixedUI';
+import AboutFooter from '@/app/_about/_components/AboutFooter';
+import AboutCanvas from '@/app/_about/_components/AboutCanvas';
+import AboutFixedUI from '@/app/_about/_components/AboutFixedUI';
 
 export default function AboutPage() {
   return (
