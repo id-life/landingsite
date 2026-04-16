@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import AboutStyle from '@/app/about/_components/AboutStyle';
+import AboutStyle from '@/app/_about/_components/AboutStyle';
 import type { Metadata } from 'next';
 import { Organization, WithContext } from 'schema-dts';
 

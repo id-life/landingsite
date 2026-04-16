@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { EffectComposer } from '@react-three/postprocessing';
-import AnimalModel from '@/app/about/_components/AnimalModel';
+import AnimalModel from '@/app/_about/_components/AnimalModel';
 
 export default function AboutCanvas() {
   return (
