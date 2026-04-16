@@ -9,7 +9,7 @@ export default function NewsArticle1() {
       <NewsContent />
       <Link href="/podcast">Podcast</Link>
       <Link href="/podcast?c=lt">Long talk</Link>
-      <Link href="/about">About</Link>
+      {/* <Link href="/about">About</Link> */}
       <Link href="/news">News</Link>
     </div>
   );
