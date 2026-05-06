@@ -13,6 +13,12 @@ export default function NewsStyle() {
         font-size: 16px;
       }
 
+      @media screen and (min-width: 769px) and (max-width: 1320px) {
+        :root {
+          font-size: clamp(9.125px, calc(1.25vw - 0.5px), 16px);
+        }
+      }
+
       body {
         overscroll-behavior: none;
         background: var(--background);

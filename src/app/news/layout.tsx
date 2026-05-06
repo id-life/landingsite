@@ -15,7 +15,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <NewsStyle />
-      <div className={cn('mx-auto px-[20rem] mobile:px-5', 'origin-top desktop:scale-[0.95] desktop2k:scale-[0.85]')}>
+      <div className={cn('mx-auto w-[80rem] mobile:w-auto mobile:px-5')}>
         <NewsHeader />
         {children}
         <NewsFooter />
