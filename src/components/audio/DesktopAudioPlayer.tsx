@@ -65,7 +65,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   };
 
   const title = useMemo(
-    () => (data?.artist ? `${data?.title} - ${data?.artist}` : `${data?.title}`),
+    () => (data?.artist ? `${data?.title} - ${data?.artist}` : `${data?.title ?? ''}`),
     [data?.title, data?.artist],
   );
 
