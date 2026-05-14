@@ -85,8 +85,8 @@ export const useSpectrumData = () => {
   const spectrumData: SpectrumItemInfo[] = spectrumBaseData;
 
   // For mobile: separate main items (first 4) from sponsors (last item)
-  const spectrumMainItems = useMemo(() => spectrumData.slice(0, 4), [spectrumData]);
-  const spectrumSponsorItem = useMemo(() => spectrumData[4], [spectrumData]);
+  const spectrumMainItems = useMemo(() => spectrumData.slice(0, 3), [spectrumData]);
+  const spectrumSponsorItem = useMemo(() => spectrumData[3], [spectrumData]);
 
   return {
     spectrumData,

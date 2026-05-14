@@ -62,16 +62,16 @@ export const spectrumBaseData: SpectrumItemData[] = [
     className: 'mobile:pt-4',
     links: [{ label: 'Access Digital Twin', link: 'https://www.id.life/digitaltwin' }],
   },
-  {
-    title: 'Global Internship',
-    titleCn: '实习生计划',
-    icon: <InternSVG />,
-    className: 'mobile:pt-4',
-    links: [
-      { label: 'Apply (CN)', link: 'https://id.life/career' },
-      { label: 'Apply (EN)', link: 'https://id.life/career-en' },
-    ],
-  },
+  // {
+  //   title: 'Global Internship',
+  //   titleCn: '实习生计划',
+  //   icon: <InternSVG />,
+  //   className: 'mobile:pt-4',
+  //   links: [
+  //     { label: 'Apply (CN)', link: 'https://id.life/career' },
+  //     { label: 'Apply (EN)', link: 'https://id.life/career-en' },
+  //   ],
+  // },
   {
     title: 'Proudly Supporting',
     titleCn: '本机构赞助支持',
