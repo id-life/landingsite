@@ -30,7 +30,7 @@ function Spectrum() {
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const spectrumItems = useMemo(() => {
-    return spectrumData.slice(0, 4).map((item, index) => (
+    return spectrumData.slice(0, 3).map((item, index) => (
       <SpectrumItem
         key={item.title}
         item={item}
@@ -189,8 +189,8 @@ function Spectrum() {
 
       const cleanup: (() => void)[] = [];
 
-      // Apply hover animation to first 4 items
-      spectrumRefs.current.slice(0, 4).forEach((div, idx) => {
+      // Apply hover animation to first 3 items
+      spectrumRefs.current.slice(0, 3).forEach((div, idx) => {
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
         const content = div.querySelector('.spectrum-item-content');
 

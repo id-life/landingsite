@@ -305,14 +305,6 @@ function MobileSpectrum() {
         id="spectrum-particle-container-mobile-p0-bl"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
-      <ParticleGL
-        key={`spectrum-p0-br-${particleKey}`}
-        isStatic
-        imageIdx={4}
-        activeAnim={particleActive && particleP0Active}
-        id="spectrum-particle-container-mobile-p0-br"
-        getSourceImgInfos={spectrumGetSourceImgInfos}
-      />
 
       {/* Page 1 Particle - centered for sponsors */}
       <ParticleGL
@@ -346,7 +338,6 @@ function MobileSpectrum() {
                   particleContainerId={PARTICLE_CONTAINER_IDS[index]}
                   particleActive={particleActive && particleP0Active}
                   particleConfig={getParticleConfig(index)}
-                  linksInRow={index === 3} // Global Internship: Apply links in one row
                   onClick={(e) => {
                     item.onClick?.(e);
                   }}
