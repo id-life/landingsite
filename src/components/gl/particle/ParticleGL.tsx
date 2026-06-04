@@ -19,9 +19,15 @@ const ParticleGL = ({
   imageIdx: number;
   id?: string;
   isStatic?: boolean;
-  getSourceImgInfos: (
-    isMobile: boolean,
-  ) => { scaleNum?: number; resize?: number[]; url: string; loadPercentage?: number; resolution?: number }[];
+  getSourceImgInfos: (isMobile: boolean) => {
+    scaleNum?: number;
+    resize?: number[];
+    url: string;
+    loadPercentage?: number;
+    resolution?: number;
+    forceColor?: [number, number, number];
+    instantColor?: boolean;
+  }[];
 }) => {
   return isStatic ? (
     <StaticReactP5Wrapper activeAnim={activeAnim} imageIdx={imageIdx} id={id} getSourceImgInfos={getSourceImgInfos} />
