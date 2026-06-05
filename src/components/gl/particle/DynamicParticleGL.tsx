@@ -26,6 +26,8 @@ const DynamicParticleGL = ({
     url: string;
     loadPercentage?: number;
     resolution?: number;
+    forceColor?: [number, number, number];
+    instantColor?: boolean;
   }[];
 }) => {
   const wrappedSketch = useMemo(() => {
@@ -48,6 +50,8 @@ const DynamicParticleGL = ({
         url: string;
         loadPercentage?: number;
         resolution?: number;
+        forceColor?: [number, number, number];
+        instantColor?: boolean;
       }[] = getSourceImgInfos ? getSourceImgInfos(IS_MOBILE) : [];
 
       p5.updateWithProps = (props) => {
@@ -86,6 +90,8 @@ const DynamicParticleGL = ({
           loadPercentage = defaultConfig.loadPercentage,
           resolution = defaultConfig.resolution,
           resize = [0, 0],
+          forceColor,
+          instantColor,
         } = sourceImgInfos[idx] ?? {};
         const sourceImg = sourceImgs[idx];
         if (!sourceImg) return;
@@ -124,7 +130,7 @@ const DynamicParticleGL = ({
               continue;
             }
 
-            const pixelColor = p5.color(pixelR, pixelG, pixelB);
+            const pixelColor = forceColor ? p5.color(...forceColor) : p5.color(pixelR, pixelG, pixelB);
             let newParticle: Particle;
             if (preParticleIndexes.length > 0) {
               // Re-use existing particle - optimized random selection
@@ -142,6 +148,9 @@ const DynamicParticleGL = ({
             newParticle.target.x = x + p5.width / 2 - sourceImg.width / 2;
             newParticle.target.y = y + p5.height / 2 - sourceImg.height / 2;
             newParticle.endColor = pixelColor;
+            if (instantColor) {
+              newParticle.currentColor = pixelColor;
+            }
           }
         }
         // Kill off any left over particles that aren't assigned to anything.

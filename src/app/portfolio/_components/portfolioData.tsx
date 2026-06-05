@@ -103,6 +103,19 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/cyclarity.webp',
   },
   {
+    title: 'KindBio',
+    description: 'Abundant Organ Medicine',
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
+        src="/imgs/investments/kindbio.webp"
+        alt="KindBio logo - Abundant Organ Medicine"
+      />
+    ),
+    link: 'https://kindbiotechnology.com/',
+    logoUrl: '/imgs/investments/kindbio.webp',
+  },
+  {
     title: 'Mito Health',
     description: 'AI powered concierge doctor',
     image: (
@@ -221,6 +234,8 @@ type ParticleConfig = {
   resize: number[];
   baseScale: number;
   loadPercentage?: number;
+  forceColor?: [number, number, number];
+  instantColor?: boolean;
   mobileScaleMultiplier?: number;
   mobileUrl?: string;
   mobileResize?: [number, number];
@@ -269,6 +284,16 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.002,
       mobileUrl: '/imgs/particle/cyclarity-mobile.png',
       mobileResize: [328, 328] as [number, number],
+      mobileOpacity: 0.3,
+    },
+    {
+      url: '/imgs/particle/kindbio.png',
+      resize: [450, 352],
+      baseScale: 1.8,
+      mobileScaleMultiplier: 1.8,
+      loadPercentage: 0.002,
+      forceColor: [18, 49, 87],
+      instantColor: true,
       mobileOpacity: 0.3,
     },
     {

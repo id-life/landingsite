@@ -197,6 +197,13 @@ export const spectrumBaseData: SpectrumItemData[] = [
         size: 'h-12',
         mobileSize: 'h-8 ipad:h-12',
       },
+      {
+        label: 'Sundial Initiative',
+        link: 'https://sundial-initiative.org/',
+        icon: '/imgs/investments/sponsors/sundial-initiative.webp',
+        size: 'h-12',
+        mobileSize: 'h-8 ipad:h-12',
+      },
     ],
   },
 ];
