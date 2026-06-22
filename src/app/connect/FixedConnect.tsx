@@ -49,8 +49,8 @@ const MobileConnectSinglePage = () => {
         <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-red-500">
           MOONSHOT
         </span>
-        <span className="connect-text-cn bilingual-font absolute -top-2.5 left-0 text-[2.5rem]/[3.75rem] font-bold text-red-500 opacity-0">
-          登月计划
+        <span className="connect-text-cn absolute left-0 top-0 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal opacity-0">
+          MOONSHOT
         </span>
         <span className="connect-text-en ml-3 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal">VENTURES</span>
         <p className="connect-text-en relative left-1 text-xs/4 font-semibold normal-case tracking-normal">
@@ -129,8 +129,8 @@ const CONNECT_CONTENT: ConnectContentItem[] = [
           <span className="connect-text-en connect-text-en-4 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal">
             VENTURES
           </span>
-          <span className="connect-text-cn connect-text-cn-1 bilingual-font absolute left-0 top-10 text-[3.75rem]/[4.625rem] font-bold text-red-500">
-            登月计划
+          <span className="connect-text-cn connect-text-cn-1 absolute left-0 top-0 whitespace-nowrap text-[3.5rem]/[4.625rem] uppercase tracking-normal">
+            MOONSHOT
           </span>
           <span className="connect-text-en relative left-1 mt-4 text-xs/4 font-semibold tracking-normal">
             We Stand with Bold Unorthodox Ideas
@@ -182,7 +182,7 @@ const CONNECT_CONTENT: ConnectContentItem[] = [
           <br />
           Bridges Markets, Capital, Institutions and More
         </p>
-        <p className="mt-7.5 text-red-500">MOONSHOT</p>
+        <p className="mt-7.5">MOONSHOT</p>
         <p className="">VENTURES</p>
         <p className="mt-2.5 text-xs/4 font-semibold normal-case">
           We Stand with Bold Unorthodox Ideas
