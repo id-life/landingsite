@@ -62,7 +62,7 @@ export default function FixedConnectPage2() {
             {/*S*/}
             <path d="M513,77.3v-7.8h37.1c3.5,0,5.3-1.7,5.3-5.2v-9.1c0-3-1.4-4.8-4.1-5.4l-24.4-4.9c-9.3-1.8-13.9-8.1-13.9-18.7v-6.6C513,6.5,519.5,0,532.6,0h28l7.1,5.5v7.8h-34.7c-3.5,0-5.3,1.7-5.3,5.2v8c0,3,1.4,4.8,4.1,5.4l24.4,4.8c9.3,1.9,13.9,8.2,13.9,18.7v7.8c0,13-6.5,19.6-19.6,19.6h-30.4l-7.1-5.5Z" />
           </svg>
-          <div className="connect-title3cn pointer-events-none absolute left-0 top-0 font-oxanium text-[5rem]/[5rem] font-semibold uppercase tracking-normal">
+          <div className="connect-title3cn pointer-events-none absolute left-0 top-6 font-oxanium text-[8.125rem]/[8.125rem] font-semibold uppercase tracking-normal">
             <span className="connect-title3cn-text opacity-0">MOONSHOT</span>
           </div>
           <svg className="hidden" viewBox="0 0 548 132" fill="none" xmlns="http://www.w3.org/2000/svg">
