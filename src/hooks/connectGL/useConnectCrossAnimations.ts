@@ -16,6 +16,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
 
   const setValuePageIndex = useSetAtom(innerPageIndexAtom);
   const setIsSubscribeShow = useSetAtom(isSubscribeShowAtom);
+  const getTitle3CnElements = () => gsap.utils.toArray('.connect-title3cn path, .connect-title3cn-text');
 
   // page cross anim
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
@@ -96,7 +97,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const title2 = gsap.utils.toArray('.connect-title2 *');
     const title2cn = gsap.utils.toArray('.connect-title2cn path');
     const title3 = gsap.utils.toArray('.connect-title3 *');
-    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const title3cn = getTitle3CnElements();
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
 
@@ -134,7 +135,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const title2 = gsap.utils.toArray('.connect-title2 *');
     const title2cn = gsap.utils.toArray('.connect-title2cn path');
     const title3 = gsap.utils.toArray('.connect-title3 *');
-    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const title3cn = getTitle3CnElements();
     const allEnTitles = [...title1, ...title2, ...title3];
     const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
 
@@ -242,7 +243,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     if (!modelRef.current) return;
     // page 4
     const title3 = gsap.utils.toArray('.connect-title3 *');
-    const title3cn = gsap.utils.toArray('.connect-title3cn path');
+    const title3cn = getTitle3CnElements();
     const title4 = gsap.utils.toArray('.connect-title4 *');
     const title4cn = gsap.utils.toArray('.connect-title4cn path');
     const title5 = gsap.utils.toArray('.connect-title5 *');
