@@ -1,14 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/career",
-      "destination": "https://www.id.life/"
-    },
-    {
-      "source": "/career-en",
-      "destination": "https://www.id.life/"
-    }
-  ],
   "headers": [
     {
       "source": "/models/(.*)",
