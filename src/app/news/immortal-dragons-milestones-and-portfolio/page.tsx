@@ -9,8 +9,8 @@ import { NewsArticle, WithContext } from 'schema-dts';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 
-const articleTitle = '百度百科扩展';
-const articleDescription = '不朽真龙的重要事件、投资组合、翻译出版、行业赞助及相关媒体报道与参考资料。';
+const articleTitle = '不朽真龙公司咨询';
+const articleDescription = '不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。';
 const articleUrl = 'https://www.id.life/news/immortal-dragons-milestones-and-portfolio';
 const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-milestones-and-portfolio/article.md');
 
