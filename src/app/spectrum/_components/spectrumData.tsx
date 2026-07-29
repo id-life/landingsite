@@ -194,6 +194,13 @@ export const spectrumBaseData: SpectrumItemData[] = [
         size: 'h-12',
         mobileSize: 'h-8 ipad:h-12',
       },
+      {
+        label: 'Nakauchi Lab – Stem Cell Research',
+        link: 'https://med.stanford.edu/nakauchilab.html',
+        icon: '/imgs/investments/sponsors/nakauchi-lab.png',
+        size: 'h-16',
+        mobileSize: 'h-9 ipad:h-11',
+      },
     ],
   },
 ];
