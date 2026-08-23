@@ -141,16 +141,17 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/kangaroo-biomedical.webp',
   },
   {
-    title: 'VIBE SCIENCE',
+    title: 'DOMAYN',
     description: 'Builds consumer brain wellness technology',
     image: (
       <img
-        className={cn(mobileImageClassName, 'w-24 mobile:h-12')}
-        src="/imgs/investments/vibe.webp"
-        alt="VIBE SCIENCE logo - Consumer brain wellness technology"
+        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
+        src="/imgs/investments/domayn.webp"
+        alt="DOMAYN logo - Consumer brain wellness technology"
       />
     ),
-    logoUrl: '/imgs/investments/vibe.webp',
+    link: 'https://domayn.com/',
+    logoUrl: '/imgs/investments/domayn.webp',
   },
   {
     title: 'Oisin Biotechnologies',
@@ -305,7 +306,15 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileOpacity: 0.3,
     },
     { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004, mobileOpacity: 0.3 },
-    { url: '/imgs/particle/11.png', resize: [512, 262], baseScale: 1.2, loadPercentage: 0.002 },
+    {
+      url: '/imgs/particle/domayn.png',
+      resize: [760, 115],
+      baseScale: 1,
+      loadPercentage: 0.005,
+      mobileScaleMultiplier: 0.8,
+      mobileLoadPercentage: 0.012,
+      mobileOpacity: 0.35,
+    },
     {
       url: '/imgs/particle/oisin.png',
       resize: [600, 163],
