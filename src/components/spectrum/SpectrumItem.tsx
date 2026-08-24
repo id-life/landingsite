@@ -124,7 +124,7 @@ const SpectrumLink = memo(
 
 SpectrumLink.displayName = 'SpectrumLink';
 
-const linksPerPage = 20;
+const linksPerPage = 21;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
     ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
@@ -201,8 +201,8 @@ const SpectrumItem = memo(
         ));
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
-      // For sponsor: split links into three rows (6 / 7 / remaining)
-      const sponsorFirstRowCount = 6;
+      // For sponsor: split the 21 logos evenly across three rows.
+      const sponsorFirstRowCount = 7;
       const sponsorSecondRowCount = 7;
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];

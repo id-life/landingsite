@@ -83,6 +83,13 @@ export const spectrumBaseData: SpectrumItemData[] = [
         mobileSize: 'h-9 ipad:h-11',
       },
       {
+        label: 'XPRIZE',
+        link: 'https://www.xprize.org/',
+        icon: '/imgs/investments/sponsors/xprize.png',
+        size: 'h-9',
+        mobileSize: 'h-6 ipad:h-9',
+      },
+      {
         label: 'Lifespan Research Institute',
         link: 'https://lifespan.io/',
         icon: '/imgs/investments/sponsors/lifespan.png',
