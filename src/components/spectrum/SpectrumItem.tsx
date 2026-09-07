@@ -12,13 +12,14 @@ interface SpectrumItemProps {
   link?: string;
   className?: string;
   onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
+  onHover?: () => void;
   executeSpectrumRoute?: (key: string) => void;
   updateUrlAndExecute?: (key: string) => void;
   routeConfigs?: SpectrumRouteConfig[];
   isSponsor?: boolean;
 }
 
-const SpectrumLink = memo(
+export const SpectrumLink = memo(
   ({
     item,
     executeSpectrumRoute,
@@ -113,7 +114,7 @@ const SpectrumLink = memo(
     }, [icon, hasLink, handleClick, labelClassName, label, isComingSoon, size]);
 
     return hasLink ? (
-      <a href={url} target="_blank">
+      <a href={url} target="_blank" rel="noopener noreferrer">
         {renderContent()}
       </a>
     ) : (
@@ -124,16 +125,17 @@ const SpectrumLink = memo(
 
 SpectrumLink.displayName = 'SpectrumLink';
 
-const linksPerPage = 21;
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
+    ({ item, onClick, onHover, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
       const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
+      const linksPerPage = 21;
 
       const { trackEvent } = useGA();
 
       const onMouseEnter = () => {
+        onHover?.();
         trackEvent({
           name: GA_EVENT_NAMES.SPECTRUM_HOVER,
           label: title,
@@ -177,7 +179,7 @@ const SpectrumItem = memo(
           showMoreButton: true,
           buttonText,
         };
-      }, [links, totalLinks, safePage]);
+      }, [links, totalLinks, safePage, linksPerPage]);
 
       const spectrumLinks = useMemo(() => {
         return visibleLinks.map((item, index) => (
@@ -201,12 +203,10 @@ const SpectrumItem = memo(
         ));
       }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
 
-      // For sponsor: split the 21 logos evenly across three rows.
-      const sponsorFirstRowCount = 7;
-      const sponsorSecondRowCount = 7;
+      // Keep the supporting institutions visible together in three rows.
       const sponsorFirstRowLinks = useMemo(() => {
         if (!isSponsor) return [];
-        return visibleLinks.slice(0, sponsorFirstRowCount).map((item, index) => (
+        return visibleLinks.map((item, index) => (
           <motion.div
             key={`${item.label}-${safePage}-${index}`}
             initial={{ opacity: 0, y: 10 }}
@@ -214,52 +214,6 @@ const SpectrumItem = memo(
             transition={{
               duration: 0.3,
               delay: index * 0.05,
-              ease: 'easeOut',
-            }}
-          >
-            <SpectrumLink
-              item={item}
-              executeSpectrumRoute={executeSpectrumRoute}
-              updateUrlAndExecute={updateUrlAndExecute}
-              routeConfigs={routeConfigs}
-            />
-          </motion.div>
-        ));
-      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
-
-      const sponsorSecondRowLinks = useMemo(() => {
-        if (!isSponsor) return [];
-        return visibleLinks.slice(sponsorFirstRowCount, sponsorFirstRowCount + sponsorSecondRowCount).map((item, index) => (
-          <motion.div
-            key={`${item.label}-${safePage}-remaining-${index}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.3,
-              delay: (sponsorFirstRowCount + index) * 0.05,
-              ease: 'easeOut',
-            }}
-          >
-            <SpectrumLink
-              item={item}
-              executeSpectrumRoute={executeSpectrumRoute}
-              updateUrlAndExecute={updateUrlAndExecute}
-              routeConfigs={routeConfigs}
-            />
-          </motion.div>
-        ));
-      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
-
-      const sponsorThirdRowLinks = useMemo(() => {
-        if (!isSponsor) return [];
-        return visibleLinks.slice(sponsorFirstRowCount + sponsorSecondRowCount).map((item, index) => (
-          <motion.div
-            key={`${item.label}-${safePage}-remaining-2-${index}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.3,
-              delay: (sponsorFirstRowCount + sponsorSecondRowCount + index) * 0.05,
               ease: 'easeOut',
             }}
           >
@@ -285,10 +239,14 @@ const SpectrumItem = memo(
           )}
         >
           <div className={cn('spectrum-item-content flex items-start gap-1.5', itemClassName)}>
-            {isSponsor ? null : cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
+            {isSponsor
+              ? null
+              : cloneElement(icon, {
+                  className: cn(icon.props.className, 'spectrum-icon size-7.5 shrink-0 fill-white'),
+                })}
             <div className={cn('flex flex-col', isSponsor && 'w-full items-center')}>
               {isSponsor ? (
-                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-xl/6 font-semibold capitalize">
                   <div className="flex gap-3">
                     {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
                     <p>{title}</p>
@@ -303,7 +261,7 @@ const SpectrumItem = memo(
               <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize', isSponsor && 'hidden')}>
                 {titleCn}
               </h4>
-              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-10 w-full' : 'mt-5')}>
+              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-6 w-full' : 'mt-5')}>
                 <AnimatePresence mode="wait">
                   {isSponsor ? (
                     <motion.div
@@ -312,18 +270,11 @@ const SpectrumItem = memo(
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex w-full flex-col gap-y-10"
+                      className="flex w-full flex-col"
                     >
-                      {/* First row: justify-between to span full width */}
-                      <div className="flex w-full items-center justify-between">{sponsorFirstRowLinks}</div>
-                      {/* Second row: centered */}
-                      {sponsorSecondRowLinks.length > 0 && (
-                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorSecondRowLinks}</div>
-                      )}
-                      {/* Third row: centered */}
-                      {sponsorThirdRowLinks.length > 0 && (
-                        <div className="flex w-full items-center justify-center gap-[4.625rem]">{sponsorThirdRowLinks}</div>
-                      )}
+                      <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain">
+                        {sponsorFirstRowLinks}
+                      </div>
                     </motion.div>
                   ) : (
                     <motion.div
@@ -341,7 +292,10 @@ const SpectrumItem = memo(
                 {showMoreButton && (
                   <motion.button
                     onClick={handleMoreClick}
-                    className="mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100"
+                    className={cn(
+                      'mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100',
+                      isSponsor && 'mt-4 self-center',
+                    )}
                   >
                     {buttonText}
                     <ArrowSVG className="size-3 fill-current transition duration-300" />

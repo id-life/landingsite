@@ -1,6 +1,6 @@
 // Shared spectrum data - used by both useSpectrumData hook and SpectrumSEO component
 
-import { BookSVG, DigitalTwinSVG, InternSVG, RelationSVG, SponsorSVG } from '@/components/svg';
+import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export type SpectrumLinkData = {
@@ -42,6 +42,10 @@ export const spectrumBaseData: SpectrumItemData[] = [
         labelClassName: 'mobile:ml-0',
         link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
       },
+      {
+        label: 'Springer Nature, Frontiers of Longevity Science',
+        link: 'https://link.springer.com/book/9783032327222',
+      },
     ],
   },
   {
@@ -51,7 +55,10 @@ export const spectrumBaseData: SpectrumItemData[] = [
     linksClassName: 'grid grid-cols-2 gap-x-6',
     links: [
       { label: 'Influence Network', link: 'https://www.id.life/spectrum/influence-network' },
-      { label: 'Disease Management', link: 'https://www.id.life/spectrum/disease-management' },
+      {
+        label: 'Disease Management',
+        link: 'https://www.id.life/spectrum/disease-management',
+      },
       { label: 'Longevity Trend Radar', link: 'https://longevity-trend-radar.vercel.app' },
     ],
   },
@@ -61,6 +68,26 @@ export const spectrumBaseData: SpectrumItemData[] = [
     icon: <DigitalTwinSVG />,
     className: 'mobile:pt-4',
     links: [{ label: 'Access Digital Twin', link: 'https://www.id.life/digitaltwin' }],
+  },
+  {
+    title: 'Papers & Reviews',
+    titleCn: '论文与评论',
+    icon: <ResearchSVG className="[&_path]:fill-white" />,
+    linksClassName: 'flex max-w-[15rem] flex-col gap-1',
+    links: [
+      {
+        label: 'Mitochondrial quality control as a central pharmacological target in aging',
+        link: 'https://pubmed.ncbi.nlm.nih.gov/41956139/',
+      },
+      {
+        label: 'Magnesium as a Bioenergetic Checkpoint Linking Mitochondrial Function, Metabolic Disease, and Aging',
+        link: 'https://onlinelibrary.wiley.com/doi/full/10.1111/acel.70578',
+      },
+      {
+        label: 'The GLP-1–Mitochondria Axis in Metabolic Aging',
+        link: 'https://onlinelibrary.wiley.com/doi/10.1111/acel.70676',
+      },
+    ],
   },
   {
     title: 'Proudly Supporting',
@@ -218,7 +245,7 @@ export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',
   url: 'https://id.life/spectrum',
   description:
-    "Immortal Dragon's variety of longevity initiatives including translation, publishing, sponsorships, digital twin, and global internship programs.",
+    "Immortal Dragon's variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
   hasPart: spectrumBaseData.map((item) => ({
     '@type': 'WebPageElement',
     name: `${item.title} (${item.titleCn})`,

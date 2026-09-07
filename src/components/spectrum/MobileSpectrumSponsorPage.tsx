@@ -88,8 +88,10 @@ const MobileSpectrumSponsorPage = memo(
     const DESIGN_HEIGHT = 844; // iPhone 12 Pro viewport height
     const [zoom, setZoom] = useState(1);
     useEffect(() => {
-      const z = Math.min(1, window.innerHeight / DESIGN_HEIGHT);
-      if (z < 1) setZoom(z);
+      const updateZoom = () => setZoom(Math.min(1, window.innerHeight / DESIGN_HEIGHT));
+      updateZoom();
+      window.addEventListener('resize', updateZoom);
+      return () => window.removeEventListener('resize', updateZoom);
     }, []);
 
     return (

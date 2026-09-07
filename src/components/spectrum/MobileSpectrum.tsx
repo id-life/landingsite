@@ -7,48 +7,12 @@ import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
-import MobileSpectrumItem, { ParticleConfig } from './MobileSpectrumItem';
+import SpectrumInitiatives from './SpectrumInitiatives';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 
 const PAGE_ID = 'spectrum_page';
 const TOTAL_INNER_PAGES = 2; // Page 0: main items, Page 1: sponsors
 const PARTICLE_RESTART_DELAY = 50; // Delay in ms before activating particles on page entry
-
-// Particle container IDs for each grid item (2x2 layout: tl, tr, bl, br)
-const PARTICLE_CONTAINER_IDS = [
-  'spectrum-particle-container-mobile-p0-tl',
-  'spectrum-particle-container-mobile-p0-tr',
-  'spectrum-particle-container-mobile-p0-bl',
-  'spectrum-particle-container-mobile-p0-br',
-];
-
-// Default particle configuration applied to all items
-const DEFAULT_PARTICLE_CONFIG: ParticleConfig = {
-  offset: { x: '0px', y: '0px' },
-  scale: 1,
-};
-
-// Per-item particle config overrides (index matches PARTICLE_CONTAINER_IDS)
-// Order: Translation & Publishing, Evanglism, Digital Twin, Global Internship
-const PARTICLE_CONFIG_OVERRIDES: (Partial<ParticleConfig> | undefined)[] = [
-  undefined, // Translation & Publishing (top-left)
-  undefined, // Evanglism (top-right)
-  { offset: { x: '10px', y: '-20px' } }, // Digital Twin (bottom-left)
-  { offset: { x: '10px', y: '-20px' } }, // Global Internship (bottom-right)
-];
-
-// Merge default config with per-item overrides
-const getParticleConfig = (index: number): ParticleConfig => {
-  const override = PARTICLE_CONFIG_OVERRIDES[index];
-  if (!override) return DEFAULT_PARTICLE_CONFIG;
-  return {
-    offset: {
-      x: override.offset?.x ?? DEFAULT_PARTICLE_CONFIG.offset?.x,
-      y: override.offset?.y ?? DEFAULT_PARTICLE_CONFIG.offset?.y,
-    },
-    scale: override.scale ?? DEFAULT_PARTICLE_CONFIG.scale,
-  };
-};
 
 function MobileSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
@@ -67,6 +31,7 @@ function MobileSpectrum() {
   const [particleP1Active, setParticleP1Active] = useState(false);
   // Key to force ParticleGL remount on page entry (restarts animation from random positions)
   const [particleKey, setParticleKey] = useState(0);
+  const [activeInitiativeIndex, setActiveInitiativeIndex] = useState(0);
 
   const { spectrumMainItems, spectrumSponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
 
@@ -280,29 +245,12 @@ function MobileSpectrum() {
         hidden: currentPage?.id !== PAGE_ID,
       })}
     >
-      {/* Page 0 Particles - 2x2 grid */}
       <ParticleGL
-        key={`spectrum-p0-tl-${particleKey}`}
+        key={`spectrum-p0-${particleKey}`}
         isStatic
-        imageIdx={1}
+        imageIdx={activeInitiativeIndex + 1}
         activeAnim={particleActive && particleP0Active}
-        id="spectrum-particle-container-mobile-p0-tl"
-        getSourceImgInfos={spectrumGetSourceImgInfos}
-      />
-      <ParticleGL
-        key={`spectrum-p0-tr-${particleKey}`}
-        isStatic
-        imageIdx={2}
-        activeAnim={particleActive && particleP0Active}
-        id="spectrum-particle-container-mobile-p0-tr"
-        getSourceImgInfos={spectrumGetSourceImgInfos}
-      />
-      <ParticleGL
-        key={`spectrum-p0-bl-${particleKey}`}
-        isStatic
-        imageIdx={3}
-        activeAnim={particleActive && particleP0Active}
-        id="spectrum-particle-container-mobile-p0-bl"
+        id="spectrum-particle-container-mobile-initiatives"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
 
@@ -319,41 +267,37 @@ function MobileSpectrum() {
       <div className="relative flex h-[100svh] flex-col items-center justify-start overflow-hidden pb-20 pt-20">
         {/* Page Content Container */}
         <div className="spectrum-content relative flex h-full w-full flex-1 overflow-hidden">
-          {/* Page 0: Main 4 items in 2x2 grid */}
-          <div ref={page0Ref} className="absolute inset-0 flex flex-col items-center justify-center">
-            {/* Title Section */}
-            <div className="spectrum-title mb-1.5 mt-1 text-center font-xirod text-[26px]/[30px] font-bold uppercase">
-              SPECTRUM
-            </div>
-            <div className="spectrum-subtitle text-center font-oxanium text-sm font-bold uppercase">WE DRIVE CHANGE BY..</div>
-            <div className="mt-6 grid w-full grid-cols-2 grid-rows-2 gap-y-10 px-4">
-              {spectrumMainItems.map((item, index) => (
-                <MobileSpectrumItem
-                  key={item.title}
-                  item={item}
-                  executeSpectrumRoute={executeSpectrumRoute}
-                  updateUrlAndExecute={updateUrlAndExecute}
-                  routeConfigs={routeConfigs}
-                  className="spectrum-grid-item"
-                  particleContainerId={PARTICLE_CONTAINER_IDS[index]}
-                  particleActive={particleActive && particleP0Active}
-                  particleConfig={getParticleConfig(index)}
-                  onClick={(e) => {
-                    item.onClick?.(e);
-                  }}
-                />
-              ))}
+          {/* Share the expanded initiatives with desktop; keep the existing sponsor page. */}
+          <div ref={page0Ref} className="absolute inset-0 flex flex-col px-5">
+            <h1 className="spectrum-title mb-5 text-center font-xirod text-[26px]/[30px] font-bold uppercase">Spectrum</h1>
+            <div
+              id="spectrum-particle-container-mobile-initiatives"
+              className="pointer-events-none absolute inset-0 overflow-hidden opacity-20 [&_canvas]:absolute [&_canvas]:left-1/2 [&_canvas]:top-1/2 [&_canvas]:-translate-x-1/2 [&_canvas]:-translate-y-1/2 [&_canvas]:scale-[0.56]"
+              aria-hidden="true"
+            />
+            <div
+              className="relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain pb-6"
+              tabIndex={0}
+              aria-label="Spectrum initiatives content"
+            >
+              <SpectrumInitiatives
+                items={spectrumMainItems}
+                onSelect={setActiveInitiativeIndex}
+                executeSpectrumRoute={executeSpectrumRoute}
+                updateUrlAndExecute={updateUrlAndExecute}
+                routeConfigs={routeConfigs}
+              />
             </div>
           </div>
 
           {/* Page 1: Sponsors logo wall */}
-          <div ref={page1Ref} className="absolute inset-0 hidden flex-col items-center justify-center">
+          <div
+            ref={page1Ref}
+            className="absolute inset-0 hidden flex-col items-center justify-start overflow-y-auto overflow-x-hidden overscroll-contain pb-3 [&>*]:shrink-0"
+          >
             {/* Title Section */}
             <div className="spectrum-title mb-1.5 mt-1 text-center font-xirod text-[26px]/[30px] font-bold uppercase">
               SPECTRUM
-            </div>
-            <div className="spectrum-subtitle mb-6 text-center font-oxanium text-sm font-bold uppercase">
-              WE DRIVE CHANGE BY..
             </div>
 
             {/* Particle container for sponsor page - centered background */}
