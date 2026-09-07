@@ -85,8 +85,8 @@ export const useSpectrumData = () => {
   const spectrumData: SpectrumItemInfo[] = spectrumBaseData;
 
   // For mobile: separate main items (first 4) from sponsors (last item)
-  const spectrumMainItems = useMemo(() => spectrumData.slice(0, 3), [spectrumData]);
-  const spectrumSponsorItem = useMemo(() => spectrumData[3], [spectrumData]);
+  const spectrumMainItems = useMemo(() => spectrumData.slice(0, 4), [spectrumData]);
+  const spectrumSponsorItem = useMemo(() => spectrumData[4], [spectrumData]);
 
   return {
     spectrumData,
@@ -125,7 +125,7 @@ export const spectrumGetSourceImgInfos = (isMobile: boolean) => {
       // loadPercentage: isMobile ? 0.01 : 0.015,
     },
     {
-      url: '/imgs/particle/spectrum/08.png',
+      url: '/imgs/particle/spectrum/papers-reviews.png',
       resize: [700, 700],
       scaleNum: isMobile ? 0.3 : 0.9,
       // loadPercentage: isMobile ? 0.01 : 0.015,

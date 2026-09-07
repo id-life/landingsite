@@ -1,5 +1,15 @@
 ## Getting Started
 
+Use Node.js 24 for local development and builds:
+
+```bash
+nvm install
+nvm use
+npm ci
+```
+
+The `.nvmrc` file selects Node 24 locally. `engines.node` in `package.json` pins Vercel builds and Node.js functions to `24.x`, overriding the project dashboard default.
+
 First, run the development server:
 
 ```bash

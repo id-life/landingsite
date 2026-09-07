@@ -5,14 +5,14 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
-import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtom } from 'jotai';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
+import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
 
 const PAGE_ID = 'spectrum_page';
@@ -22,42 +22,14 @@ function Spectrum() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
   const [imageIdx, setImageIdx] = useState(1);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const spectrumRefs = useRef<HTMLDivElement[]>([]);
-  const animTimeline = useRef<gsap.core.Timeline | null>(null);
-  const mouseAnimations = useRef<Map<number, gsap.core.Timeline>>(new Map());
-  const cleanupFunctions = useRef<(() => void)[]>([]);
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
-  const spectrumItems = useMemo(() => {
-    return spectrumData.slice(0, 3).map((item, index) => (
-      <SpectrumItem
-        key={item.title}
-        item={item}
-        executeSpectrumRoute={executeSpectrumRoute}
-        updateUrlAndExecute={updateUrlAndExecute}
-        routeConfigs={routeConfigs}
-        onClick={(e) => {
-          item.onClick?.(e);
-        }}
-        ref={(element) => {
-          if (element) {
-            spectrumRefs.current[index] = element;
-          }
-        }}
-      />
-    ));
-  }, [spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
-
+  const initiativeItems = spectrumData.slice(0, 4);
   const sponsorItem = spectrumData[spectrumData.length - 1];
 
-  const windowDimensions = useMemo(() => {
-    if (typeof window === 'undefined') return { width: 0, height: 0 };
-    return {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-  }, []);
+  const selectInitiative = (index: number) => {
+    setImageIdx(index + 1);
+  };
 
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // spectrum auto scroll to insights
@@ -177,73 +149,6 @@ function Spectrum() {
     // });
   }, []);
 
-  const throttledSetImageIdx = useThrottle((index: number) => {
-    setImageIdx(index);
-  }, 200);
-
-  useGSAP(
-    () => {
-      if (!spectrumRefs.current.length) return;
-      const wrapper = wrapperRef.current;
-      if (!wrapper) return;
-
-      const cleanup: (() => void)[] = [];
-
-      // Apply hover animation to first 3 items
-      spectrumRefs.current.slice(0, 3).forEach((div, idx) => {
-        const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.3 } });
-        const content = div.querySelector('.spectrum-item-content');
-
-        // Use transform scale instead of changing fontSize to avoid layout shifts
-        if (content) {
-          tl.to(content, { scale: 1.1, transformOrigin: 'top left' });
-        }
-
-        mouseAnimations.current.set(idx, tl);
-
-        const handleMouseEnter = () => {
-          throttledSetImageIdx(idx + 1);
-          tl.play();
-        };
-
-        const handleMouseLeave = () => {
-          tl.reverse();
-        };
-
-        div.addEventListener('mouseenter', handleMouseEnter);
-        div.addEventListener('mouseleave', handleMouseLeave);
-
-        cleanup.push(() => {
-          div.removeEventListener('mouseenter', handleMouseEnter);
-          div.removeEventListener('mouseleave', handleMouseLeave);
-          tl.kill();
-        });
-      });
-
-      // Apply hover particle effect to sponsor item (index 4 -> imageIdx 5)
-      const sponsorDiv = spectrumRefs.current[4];
-      if (sponsorDiv) {
-        const handleSponsorMouseEnter = () => {
-          throttledSetImageIdx(5);
-        };
-
-        sponsorDiv.addEventListener('mouseenter', handleSponsorMouseEnter);
-
-        cleanup.push(() => {
-          sponsorDiv.removeEventListener('mouseenter', handleSponsorMouseEnter);
-        });
-      }
-
-      cleanupFunctions.current = cleanup;
-
-      return () => {
-        cleanup.forEach((fn) => fn());
-        mouseAnimations.current.clear();
-      };
-    },
-    { scope: wrapperRef, dependencies: [] },
-  );
-
   return (
     <div id={PAGE_ID} className="page-container spectrum">
       <ParticleGL
@@ -253,32 +158,36 @@ function Spectrum() {
         id="spectrum-particle-container"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
-        <h1 className="spectrum-title font-xirod text-[2.5rem]/[4.5rem] uppercase text-white">spectrum</h1>
-        <div id="spectrum-particle-gl">
+      <div className="relative flex h-[100svh] flex-col overflow-y-auto px-10 pb-20 pt-28 xl:px-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
+        <header className="spectrum-title relative z-10 pb-5 text-center">
+          <h1 className="font-xirod text-[2.75rem]/none uppercase text-white">Spectrum</h1>
+        </header>
+        <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
-        <div className="spectrum-fund mt-12 overflow-hidden px-18">
-          <div className="flex flex-col">
-            <div className="flex justify-center gap-[9.375rem]" ref={wrapperRef}>
-              {spectrumItems}
-            </div>
-            <div className="w-full">
+        <div className="spectrum-fund relative z-10 mt-2 flex flex-1 flex-col py-3">
+          <div className="flex flex-1 flex-col justify-evenly">
+            <SpectrumInitiatives
+              items={initiativeItems}
+              onSelect={selectInitiative}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+            <div className="mt-6 w-full pb-4 pt-2">
               <SpectrumItem
                 key={sponsorItem.title}
                 item={sponsorItem}
-                isSponsor={true}
+                isSponsor
+                className="!p-0"
                 executeSpectrumRoute={executeSpectrumRoute}
                 updateUrlAndExecute={updateUrlAndExecute}
                 routeConfigs={routeConfigs}
                 onClick={(e) => {
                   sponsorItem.onClick?.(e);
                 }}
-                ref={(element) => {
-                  if (element) {
-                    spectrumRefs.current[spectrumData.length - 1] = element;
-                  }
-                }}
+                onHover={() => setImageIdx(5)}
               />
             </div>
           </div>
