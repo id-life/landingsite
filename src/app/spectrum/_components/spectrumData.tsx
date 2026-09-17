@@ -87,6 +87,19 @@ export const spectrumBaseData: SpectrumItemData[] = [
         label: 'The GLP-1–Mitochondria Axis in Metabolic Aging',
         link: 'https://onlinelibrary.wiley.com/doi/10.1111/acel.70676',
       },
+      {
+        label:
+          'Ferroptosis and ovarian senescence: integrating lipid metabolism, iron homeostasis, and established aging pathways',
+        link: 'https://www.nature.com/articles/s41514-026-00508-0',
+      },
+      {
+        label: 'Clonal Mosaicism of Mitochondrial DNA Heteroplasmy as a Molecular Clock of Aging',
+        link: 'https://onlinelibrary.wiley.com/doi/10.1111/acel.70718',
+      },
+      {
+        label: 'Reproducibility-driven clinical translation of spatial multi-omics in precision medicine',
+        link: 'https://link.springer.com/article/10.1186/s12967-026-08988-0',
+      },
     ],
   },
   {
