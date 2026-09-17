@@ -70,7 +70,7 @@ export const spectrumBaseData: SpectrumItemData[] = [
     links: [{ label: 'Access Digital Twin', link: 'https://www.id.life/digitaltwin' }],
   },
   {
-    title: 'Peer reviews',
+    title: 'Peer Reviews',
     titleCn: '论文与综述',
     icon: <ResearchSVG className="[&_path]:fill-white" />,
     linksClassName: 'flex max-w-[15rem] flex-col gap-1',

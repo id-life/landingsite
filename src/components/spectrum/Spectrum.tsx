@@ -24,7 +24,8 @@ function Spectrum() {
   const [imageIdx, setImageIdx] = useState(1);
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
-  const initiativeItems = spectrumData.slice(0, 4);
+  const initiativeItems = spectrumData.slice(0, 3);
+  const publicationItem = spectrumData[3];
   const sponsorItem = spectrumData[spectrumData.length - 1];
 
   const selectInitiative = (index: number) => {
@@ -166,8 +167,8 @@ function Spectrum() {
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
-        <div className="spectrum-fund relative z-10 mt-2 flex flex-1 flex-col py-3">
-          <div className="flex flex-1 flex-col justify-evenly">
+        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3">
+          <div className="flex flex-1 flex-col justify-evenly gap-6">
             <SpectrumInitiatives
               items={initiativeItems}
               onSelect={selectInitiative}
@@ -175,7 +176,15 @@ function Spectrum() {
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
             />
-            <div className="mt-6 w-full pb-4 pt-2">
+            <SpectrumInitiatives
+              items={[publicationItem]}
+              layout="publications"
+              onSelect={() => selectInitiative(3)}
+              executeSpectrumRoute={executeSpectrumRoute}
+              updateUrlAndExecute={updateUrlAndExecute}
+              routeConfigs={routeConfigs}
+            />
+            <div className="w-full pb-4 pt-2">
               <SpectrumItem
                 key={sponsorItem.title}
                 item={sponsorItem}
