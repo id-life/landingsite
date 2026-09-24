@@ -22,6 +22,7 @@ import PortfolioItem from './PortfolioItem';
 SwiperType.use([FreeMode]);
 
 const PAGE_ID = 'portfolio_page';
+const FIRST_ROW_COUNT = 8;
 const portfolioNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
 
 const ParticleGLWrapper = () => {
@@ -195,8 +196,8 @@ function Portfolio() {
       />
     ));
 
-    const firstRow = items.slice(0, 7);
-    const secondRow = items.slice(7);
+    const firstRow = items.slice(0, FIRST_ROW_COUNT);
+    const secondRow = items.slice(FIRST_ROW_COUNT);
 
     return { firstRow, secondRow };
   }, [handleFundClick, handleMouseEnter]);
@@ -209,7 +210,7 @@ function Portfolio() {
         <div className="page2-title font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</div>
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-12">
           <div className="flex flex-col gap-8">
-            <div className="grid grid-cols-7 justify-items-center">{portfolioItems.firstRow}</div>
+            <div className="grid grid-cols-8 justify-items-center">{portfolioItems.firstRow}</div>
             <div className="grid grid-cols-7 justify-items-center">{portfolioItems.secondRow}</div>
           </div>
         </div>

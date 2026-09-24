@@ -14,7 +14,7 @@ import { useRetimer } from '@/hooks/useRetimer';
 
 const PAGE_ID = 'portfolio_page';
 const FIRST_PAGE_COUNT = 6;
-const SECOND_PAGE_COUNT = 4;
+const SECOND_PAGE_COUNT = 6;
 
 function MobilePortfolio() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -165,7 +165,7 @@ function MobilePortfolio() {
             className={cn(
               'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4',
               currentGridRows,
-              innerPageIndex >= 1 && 'py-24',
+              innerPageIndex >= 1 && currentGridRows === 'grid-rows-2' && 'py-24',
             )}
             data-layout={currentGridRows === 'grid-rows-3' ? '2x3' : '2x2'}
           >
@@ -189,7 +189,7 @@ function MobilePortfolio() {
               className={cn(
                 'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
-                pageIdx >= 1 && 'py-32',
+                pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32',
                 innerPageIndex === pageIdx
                   ? 'translate-y-0 opacity-100'
                   : innerPageIndex > pageIdx
