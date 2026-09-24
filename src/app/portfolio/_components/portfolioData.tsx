@@ -141,7 +141,7 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/kangaroo-biomedical.webp',
   },
   {
-    title: 'RenewalBio',
+    title: 'Renewal Bio',
     description: 'Ex Utero Synthetic Embryos',
     image: (
       <img
