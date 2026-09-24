@@ -141,6 +141,19 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/kangaroo-biomedical.webp',
   },
   {
+    title: 'RenewalBio',
+    description: 'Ex Utero Synthetic Embryos',
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-[10.625rem] mobile:h-auto mobile:w-[7.5rem]')}
+        src="/imgs/investments/renewal-bio.webp"
+        alt="RenewalBio logo - Ex utero synthetic embryos"
+      />
+    ),
+    link: 'https://www.renewal.bio/',
+    logoUrl: '/imgs/investments/renewal-bio.webp',
+  },
+  {
     title: 'DOMAYN',
     description: 'Builds consumer brain wellness technology',
     image: (
@@ -306,6 +319,15 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileOpacity: 0.3,
     },
     { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004, mobileOpacity: 0.3 },
+    {
+      url: '/imgs/particle/renewal-bio.png',
+      resize: [860, 129],
+      baseScale: 1.2,
+      mobileScaleMultiplier: 1.1,
+      loadPercentage: 0.004,
+      mobileLoadPercentage: 0.008,
+      mobileOpacity: 0.35,
+    },
     {
       url: '/imgs/particle/domayn.png',
       resize: [760, 115],
