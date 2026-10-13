@@ -20,11 +20,11 @@
 
 ### 2026 年 1 月：参与行业年度展望
 
-创始人 Boyang Wang 的观点被 Bio\-IT World 与 Drug Discovery News 的 2026 年行业趋势前瞻报道引用，议题涉及人工智能在药物发现中的应用、全球政策变化的影响与数据标准化
+创始人 朢舶洋（Boyang Wang） 的观点被 Bio\-IT World 与 Drug Discovery News 的 2026 年行业趋势前瞻报道引用，议题涉及人工智能在药物发现中的应用、全球政策变化的影响与数据标准化
 
 ### 2026 年 4 月：主流媒体报道与署名文章
 
-美国《纽约邮报》（New York Post）刊发对 Boyang Wang 的专访。同月，Boyang Wang 在 VC Wire 发表署名文章《The Longevity Bubble》，并接受 Securities\.io 专访，就长寿赛道估值问题作出表述
+美国《纽约邮报》（New York Post）刊发对 朢舶洋（Boyang Wang） 的专访。同月，朢舶洋（Boyang Wang） 在 VC Wire 发表署名文章《The Longevity Bubble》，并接受 Securities\.io 专访，就长寿赛道估值问题作出表述
 
 ### 2026 年 5—7 月：参与中国生物医药政策议题讨论
 
