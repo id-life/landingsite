@@ -218,6 +218,19 @@ export const portfolio: PortfolioItemInfo[] = [
     // link: 'https://vitalia.city/',
     logoUrl: '/imgs/investments/vitalia.webp',
   },
+  {
+    title: 'EONARK',
+    description: 'AI-driven longevity drug discovery',
+    image: (
+      <img
+        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
+        src="/imgs/investments/eonark.svg"
+        alt="EONARK logo - AI-driven longevity drug discovery"
+      />
+    ),
+    link: 'https://eonark.ai/',
+    logoUrl: '/imgs/investments/eonark.svg',
+  },
 ];
 
 export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
@@ -369,6 +382,15 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileUrl: '/imgs/particle/vitalia-mobile.png',
       mobileResize: [328, 328] as [number, number],
       mobileOpacity: 0.3,
+    },
+    {
+      url: '/imgs/investments/eonark.svg',
+      resize: [830, 180],
+      baseScale: 1,
+      mobileScaleMultiplier: 1.1,
+      loadPercentage: 0.005,
+      mobileLoadPercentage: 0.008,
+      mobileOpacity: 0.35,
     },
   ];
 

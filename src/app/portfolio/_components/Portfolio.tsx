@@ -211,7 +211,7 @@ function Portfolio() {
         <div className="page2-fund mb-2.5 mt-12 overflow-hidden px-12">
           <div className="flex flex-col gap-8">
             <div className="grid grid-cols-8 justify-items-center">{portfolioItems.firstRow}</div>
-            <div className="grid grid-cols-7 justify-items-center">{portfolioItems.secondRow}</div>
+            <div className="grid grid-cols-8 justify-items-center">{portfolioItems.secondRow}</div>
           </div>
         </div>
         <div className="page2-contact">
