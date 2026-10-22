@@ -27,12 +27,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Frontier Bio',
-    description: 'The future of engineered tissue',
+    description: '3D Biofabrication',
     image: (
       <img
         className={cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]')}
         src="/imgs/investments/frontier-bio.webp"
-        alt="Frontier Bio logo - The future of engineered tissue"
+        alt="Frontier Bio logo - 3D Biofabrication"
       />
     ),
     link: 'https://www.frontierbio.com/',
@@ -40,12 +40,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Unlimited Bio',
-    description: 'Accelerate clinical trials',
+    description: 'Combinatorial Gene Therapy',
     image: (
       <img
         className={cn('w-19.5', mobileImageClassName)}
         src="/imgs/investments/unlimited.webp"
-        alt="Unlimited Bio logo - Accelerate clinical trials"
+        alt="Unlimited Bio logo - Combinatorial Gene Therapy"
       />
     ),
     link: 'https://www.unlimited.bio/',
@@ -65,12 +65,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Immune Bridge',
-    description: 'A new generation of allogeneic cell therapies to make cancer cures accessible to everyone',
+    description: 'Allogenic Cell Therapies Platform',
     image: (
       <img
         className={cn('w-[12.5rem]', mobileImageClassName)}
         src="/imgs/investments/immune-bridge.webp"
-        alt="Immune Bridge logo - Allogeneic cell therapies for accessible cancer cures"
+        alt="Immune Bridge logo - Allogenic Cell Therapies Platform"
       />
     ),
     link: 'https://www.immunebridge.com/',
@@ -104,12 +104,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'KindBio',
-    description: 'Abundant Organ Medicine',
+    description: 'Integrated Organ Network',
     image: (
       <img
         className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
         src="/imgs/investments/kindbio.webp"
-        alt="KindBio logo - Abundant Organ Medicine"
+        alt="KindBio logo - Integrated Organ Network"
       />
     ),
     link: 'https://kindbiotechnology.com/',
@@ -155,12 +155,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'DOMAYN',
-    description: 'Builds consumer brain wellness technology',
+    description: 'Neural Modulation Device',
     image: (
       <img
         className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
         src="/imgs/investments/domayn.webp"
-        alt="DOMAYN logo - Consumer brain wellness technology"
+        alt="DOMAYN logo - Neural Modulation Device"
       />
     ),
     link: 'https://domayn.com/',
@@ -168,12 +168,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Oisin Biotechnologies',
-    description: 'Genetic Medicines for Health and Longevity',
+    description: 'Gene Therapy and Delivery Platform',
     image: (
       <img
         className={cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11')}
         src="/imgs/investments/oisin.webp"
-        alt="Oisin Biotechnologies logo - Genetic medicines for health and longevity"
+        alt="Oisin Biotechnologies logo - Gene Therapy and Delivery Platform"
       />
     ),
     link: 'https://www.oisinbio.com/',
@@ -181,12 +181,12 @@ export const portfolio: PortfolioItemInfo[] = [
   },
   {
     title: 'Etheros Pharmaceuticals',
-    description: 'Small molecule enzyme mimetics for neuroprotection and healthspan',
+    description: 'Small Molecule Therapy for ALS',
     image: (
       <img
         className={cn(mobileImageClassName, 'w-[8.375rem] mobile:h-11')}
         src="/imgs/investments/etheros.webp"
-        alt="Etheros Pharmaceuticals logo - Small molecule enzyme mimetics for neuroprotection"
+        alt="Etheros Pharmaceuticals logo - Small Molecule Therapy for ALS"
       />
     ),
     link: 'https://etherospharma.com/',
