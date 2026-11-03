@@ -42,8 +42,8 @@
 
 ### 行业布道
 
-- 演讲与播客：Vitalist Bay投资人对谈[22]、Beyond Tomorrow创始人访谈[23]、新加坡Founders Longevity Forum圆桌[70]、新加坡LW3投资人主题演讲[68]、深圳Longevity Biotech Exchange主题演讲[69]等
-- 书籍翻译与出版：瑞典哲学家Ingemar Patrick Linden所著的The Case Against Death，中文版《死亡批判》[24]；Better With Age，中文版《乐龄：健康老龄化的积极心理学》；前Coinbase首席技术官Balaji Srinivasan所著的The Network State，中文在线译本《网络国家》；Bio/Acc Manifesto；以及Springer Nature出版的Frontiers of Longevity Science第3卷第14章。
+- 演讲与播客：Vitalist Bay投资人对谈、Beyond Tomorrow创始人访谈、新加坡Founders Longevity Forum圆桌、新加坡LW3投资人主题演讲、深圳Longevity Biotech Exchange主题演讲等
+- 书籍翻译与出版：瑞典哲学家Ingemar Patrick Linden所著的The Case Against Death，中文版《死亡批判》；Better With Age，中文版《乐龄：健康老龄化的积极心理学》；前Coinbase首席技术官Balaji Srinivasan所著的The Network State，中文在线译本《网络国家》；Bio/Acc Manifesto；以及Springer Nature出版的Frontiers of Longevity Science第3卷第14章。
 - 长寿领域领军人物演讲翻译：例如Aubrey de Grey（LEV基金会主席）和Brian Kennedy（新加坡国立大学健康长寿转化研究项目负责人）的演讲等
 - 中文长寿播客：中文长寿播客，在小宇宙、哔哩哔哩、Spotify等平台发布。
 
@@ -82,7 +82,7 @@
 | Public Longevity Group | Lifespan Research Institute旗下项目，研究公众对长寿科学的态度。 |
 | 2060 Longevity Forum | 法国2060 Foundation主办的长寿论坛。 |
 | REVIVE ME | 阿布扎比长寿与健康科技峰会。 |
-| Healthy Longevity and Medicine Conference | 新加坡国立大学医学院等合办的健康长寿与医学会议[33]。 |
+| Healthy Longevity and Medicine Conference | 新加坡国立大学医学院等合办的健康长寿与医学会议。 |
 | Vitalist Bay Summit | 美国伯克利长寿主题快闪城市及峰会；不朽真龙为创始赞助方。 |
 | University of Copenhagen Project: Aging Brain Rejuvenation | 哥本哈根大学健康老龄化中心，开发清除衰老星形胶质细胞的化合物。 |
 | University of Oxford Project: Heart Aging and Metabolism | 牛津大学心脏衰老代谢机制与饮食干预研究。 |
@@ -101,8 +101,8 @@
 
 ### 基金定位与投资逻辑
 
-- 一期基金发布后，长寿产业媒体Longevity.Technology、生物医药新闻媒体BioWorld和VC Wire相继报道，BioWorld指出基金资金大部分来自创始人,。中文媒体36氪、凤凰网财经等于2026年3月报道基金设立。
-- 亚洲生物科技媒体BioSpectrum Asia 2025年10月分析亚洲长寿产业时引用Boyang：亚洲政府资金受行政程序约束，而长寿技术研发周期长，希望延长健康寿命的前科技创业者因此成为不可或缺的私人资金来源[48]。
+- 一期基金发布后，长寿产业媒体Longevity.Technology、生物医药新闻媒体BioWorld和VC Wire相继报道，BioWorld指出基金资金大部分来自创始人。中文媒体36氪、凤凰网财经等于2026年3月报道基金设立。
+- 亚洲生物科技媒体BioSpectrum Asia 2025年10月分析亚洲长寿产业时引用Boyang：亚洲政府资金受行政程序约束，而长寿技术研发周期长，希望延长健康寿命的前科技创业者因此成为不可或缺的私人资金来源。
 - 英国《金融时报》（Financial Times）2025年12月的科技播客Tech Tonic以新加坡为长寿医学样本制作专题，Boyang作为风险投资人受访；同期嘉宾包括新加坡卫生部高级政务部长陈杰豪和新加坡国立大学教授Andrea Maier。
 - MIT Technology Review 2026年3月报道R3 Bio时，列出不朽真龙为其投资方之一，并提及Boyang在2024年的一轮融资中投资50万美元。
 - 《纽约邮报》（New York Post）2026年4月专访介绍基金专投高风险、高回报的"登月"项目，并列举Frontier Bio、Unlimited Bio等投资案例。
