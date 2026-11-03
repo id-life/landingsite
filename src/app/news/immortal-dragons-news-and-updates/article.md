@@ -77,7 +77,7 @@
 | --- | --- |
 | ARDD | 衰老研究与药物发现会议，每年在哥本哈根举行；不朽真龙为ARDD 2025赞助商。 |
 | Nakauchi Lab – Stem Cell Research | 斯坦福大学中内啓光干细胞实验室。 |
-| XPRIZE | 奖金竞赛基金会；不朽真龙为XPRIZE Healthspan合作伙伴，赞助2026年决赛入围颁奖典礼[15, 32]。 |
+| XPRIZE | 奖金竞赛基金会；不朽真龙为XPRIZE Healthspan合作伙伴，赞助2026年决赛入围颁奖典礼。 |
 | Lifespan Research Institute | 美国长寿非营利组织；不朽真龙为其Lifespan Alliance首批赞助方。 |
 | Public Longevity Group | Lifespan Research Institute旗下项目，研究公众对长寿科学的态度。 |
 | 2060 Longevity Forum | 法国2060 Foundation主办的长寿论坛。 |
