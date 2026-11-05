@@ -28,27 +28,46 @@ async function newsLines() {
   }
 }
 
-async function podcastLines() {
+// The two shows restart their episode numbering (both have an E01), so each gets its own heading.
+const PODCAST_SERIES = [
+  {
+    category: 'podcast_id',
+    title: '不朽真龙 Immortal Dragons Podcast',
+    path: '/podcast',
+    about: 'Longevity science, technology and investment, including Chinese translations of talks by longevity researchers.',
+  },
+  {
+    category: 'podcast_lt',
+    title: '龙门阵 Long Talk',
+    path: '/podcast?c=lt',
+    about: 'Casual conversations from the Immortal Dragons team on health, technology, culture and everyday life.',
+  },
+];
+
+async function podcastSeriesBlock({ category, title, path, about }: (typeof PODCAST_SERIES)[number]) {
   try {
-    const results = await Promise.all([fetchPodcastList('podcast_id'), fetchPodcastList('podcast_lt')]);
-    return results.flatMap((res) =>
-      res.code === 200 && Array.isArray(res.data)
-        ? res.data.map((item) => `- [${item.title}](${absoluteUrl(`/podcast/${item.id}`)})`)
-        : [],
-    );
+    const res = await fetchPodcastList(category);
+    if (res.code !== 200 || !Array.isArray(res.data) || !res.data.length) return '';
+    const episodes = res.data.map((item) => `- [${item.title}](${absoluteUrl(`/podcast/${item.id}`)})`);
+    return `### ${title}\n\n${about} All episodes: ${absoluteUrl(path)}\n\n${episodes.join('\n')}\n`;
   } catch {
-    return [];
+    return '';
   }
 }
 
+async function podcastSection() {
+  const blocks = (await Promise.all(PODCAST_SERIES.map(podcastSeriesBlock))).filter(Boolean);
+  return blocks.length ? `## Podcast episodes\n\n${blocks.join('\n')}` : '';
+}
+
 export async function GET() {
-  const [news, podcasts] = await Promise.all([newsLines(), podcastLines()]);
+  const [news, podcasts] = await Promise.all([newsLines(), podcastSection()]);
 
   const body = [
     LLMS_HEADER,
     section('Portfolio', portfolioLines()),
     section('Latest news', news),
-    section('Podcast episodes', podcasts),
+    podcasts,
     LLMS_CHINESE_SUMMARY,
   ]
     .filter(Boolean)
