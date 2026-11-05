@@ -6,6 +6,7 @@ import { getSpectrumJsonLd } from './_components/spectrumData';
 import SpectrumSEO from './_components/SpectrumSEO';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/spectrum' },
   title: 'Spectrum 谱系',
   description:
     "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",

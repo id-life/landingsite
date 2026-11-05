@@ -6,6 +6,7 @@ import { getPortfolioJsonLd } from './_components/portfolioData';
 import PortfolioSEO from './_components/PortfolioSEO';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/portfolio' },
   title: 'Portfolio 投资',
   description:
     "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",

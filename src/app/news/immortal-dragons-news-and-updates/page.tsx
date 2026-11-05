@@ -17,6 +17,7 @@ const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-news
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/news/immortal-dragons-news-and-updates' },
   title: 'Immortal Dragons News and Updates',
   description: articleDescription,
   openGraph: {

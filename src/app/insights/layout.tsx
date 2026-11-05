@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/insights' },
   title: 'Insights 洞见',
   description:
     'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',

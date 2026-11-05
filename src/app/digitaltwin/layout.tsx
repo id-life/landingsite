@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { SoftwareApplication, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/digitaltwin' },
   title: 'DigitalTwin 孪生',
   description:
     'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',

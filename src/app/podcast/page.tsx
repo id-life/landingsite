@@ -9,8 +9,8 @@ export const revalidate = 300; // 5min
 
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const { c } = searchParams;
-  const id = c ?? PODCAST_NAV_LIST[0].id;
-  return { ...PODCAST_METADATA[id] };
+  const nav = PODCAST_NAV_LIST.find((item) => item.id === c) ?? PODCAST_NAV_LIST[0];
+  return { ...PODCAST_METADATA[nav.id], alternates: { canonical: nav.link } };
 }
 
 type SearchParams = { [key: string]: PodcastCategory | undefined };

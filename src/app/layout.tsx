@@ -13,6 +13,7 @@ import { SessionInvisibilityTracker } from '@/app/_components/session-invisibili
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import Image from 'next/image';
 import type { Metadata, Viewport } from 'next';
+import { SITE_URL } from '@/constants/site';
 
 import '@/styles/globals.css';
 import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
@@ -21,6 +22,7 @@ const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   verification: {
     other: {
       'baidu-site-verification': 'codeva-3t6o5pvEVk',

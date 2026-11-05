@@ -46,3 +46,9 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Local reference documents (not for the repo)
+*.docx
+
+# Local planning docs (not for the repo)
+docs/
