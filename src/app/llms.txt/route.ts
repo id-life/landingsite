@@ -1,5 +1,6 @@
 import { fetchNewsList, fetchPodcastList } from '@/apis';
 import { portfolio } from '@/app/portfolio/_components/portfolioData';
+import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastNavItem } from '@/app/podcast/_components/constant';
 import { absoluteUrl } from '@/constants/site';
 import { LLMS_CHINESE_SUMMARY, LLMS_HEADER } from './content';
 
@@ -29,34 +30,22 @@ async function newsLines() {
 }
 
 // The two shows restart their episode numbering (both have an E01), so each gets its own heading.
-const PODCAST_SERIES = [
-  {
-    category: 'podcast_id',
-    title: '不朽真龙 Immortal Dragons Podcast',
-    path: '/podcast',
-    about: 'Longevity science, technology and investment, including Chinese translations of talks by longevity researchers.',
-  },
-  {
-    category: 'podcast_lt',
-    title: '龙门阵 Long Talk',
-    path: '/podcast?c=lt',
-    about: 'Casual conversations from the Immortal Dragons team on health, technology, culture and everyday life.',
-  },
-];
-
-async function podcastSeriesBlock({ category, title, path, about }: (typeof PODCAST_SERIES)[number]) {
+// Titles, descriptions and links come from the podcast page's own constants — no separate copy.
+async function podcastSeriesBlock({ id, link }: PodcastNavItem) {
+  const { title, enTitle } = PODCAST_COVER[id];
+  const description = PODCAST_METADATA[id].description ?? '';
   try {
-    const res = await fetchPodcastList(category);
+    const res = await fetchPodcastList(`podcast_${id}`);
     if (res.code !== 200 || !Array.isArray(res.data) || !res.data.length) return '';
     const episodes = res.data.map((item) => `- [${item.title}](${absoluteUrl(`/podcast/${item.id}`)})`);
-    return `### ${title}\n\n${about} All episodes: ${absoluteUrl(path)}\n\n${episodes.join('\n')}\n`;
+    return `### ${title} ${enTitle}\n\n${description}\n\nAll episodes: ${absoluteUrl(link)}\n\n${episodes.join('\n')}\n`;
   } catch {
     return '';
   }
 }
 
 async function podcastSection() {
-  const blocks = (await Promise.all(PODCAST_SERIES.map(podcastSeriesBlock))).filter(Boolean);
+  const blocks = (await Promise.all(PODCAST_NAV_LIST.map(podcastSeriesBlock))).filter(Boolean);
   return blocks.length ? `## Podcast episodes\n\n${blocks.join('\n')}` : '';
 }
 
