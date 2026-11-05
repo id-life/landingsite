@@ -49,7 +49,7 @@ const jsonLd: WithContext<Organization> = {
     streetAddress: '3 Biopolis Dr, #01-15',
     addressLocality: 'Singapore',
     addressCountry: 'SG',
-    postalCode: '537846',
+    postalCode: '138623',
   },
 };
 

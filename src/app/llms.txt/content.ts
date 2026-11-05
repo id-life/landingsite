@@ -14,7 +14,7 @@ export const LLMS_HEADER = `# Immortal Dragons (不朽真龙)
 
 - Name: Immortal Dragons (Chinese: 不朽真龙)
 - Founder: Boyang Wang (朢舶洋), who studied at the National University of Singapore and Yale University
-- Headquarters: 3 Biopolis Dr, #01-15, Singapore 537846
+- Headquarters: 3 Biopolis Dr, #01-15, Singapore 138623
 - Fund I size: approximately US$40 million (BioWorld reported that most of the capital comes from the founder)
 - Investments: 15+, from pre-seed to Series A, no geographic restriction
 - Also invests as a limited partner (LP) in other longevity biotech (longbio) funds
