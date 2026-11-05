@@ -5,11 +5,14 @@ import { Organization, WithContext } from 'schema-dts';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 
+// Shared by the meta tags, JSON-LD and the hidden intro so search engines see the same English text.
+const HOME_DESCRIPTION =
+  'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.';
+
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
   title: 'Immortal Dragons 不朽真龙',
-  description:
-    'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
+  description: HOME_DESCRIPTION,
   keywords: [
     'Longevity',
     'anti-aging',
@@ -24,8 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
-    description:
-      'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
+    description: HOME_DESCRIPTION,
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -41,8 +43,7 @@ const jsonLd: WithContext<Organization> = {
   logo: 'https://resources.id.life/logo.png',
   name: 'Immortal Dragons',
   alternateName: '不朽真龙',
-  description:
-    'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
+  description: HOME_DESCRIPTION,
   email: 'dragons@id.life',
   address: {
     '@type': 'PostalAddress',
@@ -70,6 +71,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
           除投资之外，<strong>不朽真龙</strong>
           也翻译出版书籍、资助行业会议与学术机构、制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念与信仰。
         </p>
+
+        <p lang="en">{HOME_DESCRIPTION}</p>
       </div>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
