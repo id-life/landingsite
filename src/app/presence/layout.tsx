@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { WebPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/presence' },
   title: 'Presence 印记',
   description:
     "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",

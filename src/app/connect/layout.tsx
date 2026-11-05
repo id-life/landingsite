@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Graph } from 'schema-dts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/connect' },
   title: 'CONNECT 联结',
   description:
     "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",

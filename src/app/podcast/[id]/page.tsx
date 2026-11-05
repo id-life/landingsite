@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
     title: `${data.title} | Immortal Dragons`,
     description: data.description,
     keywords: data.keywords,
+    alternates: { canonical: `/podcast/${id}` },
     openGraph: {
       title: `${data.title} | Immortal Dragons`,
       siteName: 'Immortal Dragons',

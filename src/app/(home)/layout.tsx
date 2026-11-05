@@ -6,6 +6,7 @@ import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/' },
   title: 'Immortal Dragons 不朽真龙',
   description:
     'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
@@ -48,17 +49,17 @@ const jsonLd: WithContext<Organization> = {
     streetAddress: '3 Biopolis Dr, #01-15',
     addressLocality: 'Singapore',
     addressCountry: 'SG',
-    postalCode: '537846',
+    postalCode: '138623',
   },
 };
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <div data-nosnippet style={{ width: 0, height: 0, overflow: 'hidden', display: 'block' }}>
+      <div style={{ width: 0, height: 0, overflow: 'hidden', display: 'block' }}>
         <p>
           <strong>不朽真龙</strong>
-          是一家投资长生不老领域的使命驱动基金，致力于支持那些经济回报尚不明确、被主流资本忽视、但具备长期价值的突破性项目。
+          是一家投资激进延寿领域的使命驱动基金，致力于支持那些经济回报尚不明确、被主流资本忽视、但具备长期价值的突破性项目。
         </p>
 
         <p>

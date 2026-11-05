@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     title: `${data?.title} - Immortal Dragons`,
     description: data?.description,
     keywords: formatKeywords(data?.keyWords),
+    alternates: { canonical: `/news/${id}` },
     openGraph: {
       title: `${data?.title} - Immortal Dragons`,
       siteName: 'Immortal Dragons',

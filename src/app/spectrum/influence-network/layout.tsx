@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/spectrum/influence-network' },
   title: 'Influence Network | Immortal Dragons',
   description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
   keywords: [
