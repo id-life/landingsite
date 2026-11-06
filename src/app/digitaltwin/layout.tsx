@@ -2,14 +2,18 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import DigitalTwinSummary from '@/app/digitaltwin/_components/DigitalTwinSummary';
 import { ORG_REF } from '@/constants/entity';
 import { SoftwareApplication, WithContext } from 'schema-dts';
+
+const PAGE_TITLE = 'DigitalTwin 孪生';
+const PAGE_DESCRIPTION =
+  'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/digitaltwin' },
   title: 'DigitalTwin 孪生',
-  description:
-    'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
+  description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',
     'anti-aging',
@@ -24,8 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'DigitalTwin 孪生',
     siteName: 'Immortal Dragons',
-    description:
-      'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
+    description: PAGE_DESCRIPTION,
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -38,8 +41,7 @@ const jsonLd: WithContext<SoftwareApplication> = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Digital Twin',
-  description:
-    'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
+  description: PAGE_DESCRIPTION,
   url: 'https://www.id.life/digitaltwin',
   applicationCategory: 'MedicalApplication',
   operatingSystem: 'Web',
@@ -60,6 +62,7 @@ export default function DigitalTwinLayout({ children }: { children: ReactNode })
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />
+      <DigitalTwinSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
       {children}
     </>
   );

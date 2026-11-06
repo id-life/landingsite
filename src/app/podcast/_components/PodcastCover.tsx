@@ -29,10 +29,10 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
         <img className="w-45 rounded-xl mobile:w-30" src={data.cover} alt="" />
         <div className="flex flex-1 flex-col justify-between">
           <div>
-            <h2 className="whitespace-nowrap text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
+            <h1 className="whitespace-nowrap text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
-            </h2>
+            </h1>
             <p className="mt-4 text-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
