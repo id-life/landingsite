@@ -19,7 +19,7 @@ export const LLMS_HEADER = `# Immortal Dragons (不朽真龙)
 - Investments: 15+, from pre-seed to Series A, no geographic restriction
 - Also invests as a limited partner (LP) in other longevity biotech (longbio) funds
 - Website: https://www.id.life
-- Contact: dragons@id.life
+- Contact: contact@id.life
 
 ## Investment themes
 

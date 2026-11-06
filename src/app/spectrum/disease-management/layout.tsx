@@ -3,6 +3,7 @@ import DMStyle from '@/app/spectrum/_components/DMStyle';
 import '@/styles/components/disease-management-page.css';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
+import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import { MedicalWebPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -41,17 +42,18 @@ const jsonLd: WithContext<MedicalWebPage> = {
     '@type': 'MedicalAudience',
     audienceType: 'Patient',
   },
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'Immortal Dragons',
-    url: 'https://www.id.life',
-  },
+  isPartOf: { '@id': WEBSITE_ID },
 };
+
+const breadcrumb = breadcrumbJsonLd([
+  { name: 'Spectrum', path: '/spectrum' },
+  { name: 'Disease Management', path: '/spectrum/disease-management' },
+]);
 
 export default function DiseaseManagementLayout({ children }: { children: ReactNode }) {
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
       <DMStyle />
       <SpectrumHeader className="animate-fade-in" />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">

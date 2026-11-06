@@ -20,7 +20,7 @@ export const DigitalTwinYoutubeLink = 'https://www.youtube.com/watch?v=NHaU1GLd2
 export const Links = {
   [MediaLinkType.Youtube]: 'https://www.youtube.com/@Immortal-Dragons',
   [MediaLinkType.Linkedin]: 'https://www.linkedin.com/company/immortaldragons/',
-  [MediaLinkType.Spotify]: 'https://open.spotify.com/show/2KcbM8lzsA8QO7xDqtvpl5',
+  [MediaLinkType.Spotify]: 'https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu',
   [MediaLinkType.Media]: 'https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG',
   [MediaLinkType.Podcast]: 'https://podcasts.apple.com/cn/podcast/不朽真龙-immortaldragons/id1815210084',
   [MediaLinkType.Xyz]: 'https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8',

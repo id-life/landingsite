@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { WEBSITE_ID } from '@/constants/entity';
 import { WebPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -40,11 +41,7 @@ const jsonLd: WithContext<WebPage> = {
   url: 'https://www.id.life/presence',
   description:
     "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'Immortal Dragons',
-    url: 'https://www.id.life',
-  },
+  isPartOf: { '@id': WEBSITE_ID },
 };
 
 export default function PresenceLayout({ children }: { children: ReactNode }) {

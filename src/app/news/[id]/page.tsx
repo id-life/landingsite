@@ -1,3 +1,5 @@
+import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
+import { absoluteUrl } from '@/constants/site';
 import React, { cache } from 'react';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
@@ -60,27 +62,23 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: data.title,
-    author: {
-      '@type': 'Organization',
-      name: 'Immortal Dragons',
-    },
+    url: absoluteUrl(`/news/${id}`),
+    mainEntityOfPage: absoluteUrl(`/news/${id}`),
+    author: ORG_REF,
     datePublished: data.createdAt,
-    dateModified: data.createdAt,
-    image: 'https://resources.id.life/id-life-cover-2.webp',
-    description: data.content.slice(0, 50),
-    publisher: {
-      '@type': 'Organization',
-      name: 'Immortal Dragons',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://resources.id.life/logo.png',
-      },
-    },
+    dateModified: data.updatedAt || data.createdAt,
+    image: ORG_COVER,
+    description: data.description || data.content.slice(0, 50),
+    publisher: ORG_REF,
   };
+  const breadcrumb = breadcrumbJsonLd([
+    { name: 'News', path: '/news' },
+    { name: data.title, path: `/news/${id}` },
+  ]);
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import INStyle from '../_components/INStyle';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
+import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -39,17 +40,18 @@ const jsonLd: WithContext<CollectionPage> = {
   name: 'Influence Network',
   url: 'https://www.id.life/spectrum/influence-network',
   description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'Immortal Dragons',
-    url: 'https://www.id.life',
-  },
+  isPartOf: { '@id': WEBSITE_ID },
 };
+
+const breadcrumb = breadcrumbJsonLd([
+  { name: 'Spectrum', path: '/spectrum' },
+  { name: 'Influence Network', path: '/spectrum/influence-network' },
+]);
 
 export default function InfluenceNetworkLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
       <INStyle />
       <div className="relative h-full w-full">
         <SpectrumHeader className="fixed left-0 top-0 w-full animate-fade-in" />
