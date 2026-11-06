@@ -2,14 +2,20 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import InsightsSummary from '@/app/insights/_components/InsightsSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { CollectionPage, WithContext } from 'schema-dts';
+
+const PAGE_TITLE = 'Insights 洞见';
+const PAGE_DESCRIPTION =
+  'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.';
+
+export const revalidate = 300; // 5min, same as /news
 
 export const metadata: Metadata = {
   alternates: { canonical: '/insights' },
   title: 'Insights 洞见',
-  description:
-    'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
+  description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',
     'anti-aging',
@@ -24,8 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Insights 洞见',
     siteName: 'Immortal Dragons',
-    description:
-      'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
+    description: PAGE_DESCRIPTION,
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -39,8 +44,7 @@ const jsonLd: WithContext<CollectionPage> = {
   '@type': 'CollectionPage',
   name: 'Insights 洞见',
   url: 'https://www.id.life/insights',
-  description:
-    'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
+  description: PAGE_DESCRIPTION,
   isPartOf: { '@id': WEBSITE_ID },
 };
 
@@ -52,6 +56,7 @@ export default function InsightsLayout({ children }: { children: ReactNode }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />
+      <InsightsSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
       {children}
     </>
   );

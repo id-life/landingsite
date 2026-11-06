@@ -2,15 +2,19 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import ConnectSummary from '@/app/connect/_components/ConnectSummary';
 import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
 import { ORG_EMAIL, ORG_ID, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
 
+const PAGE_TITLE = 'CONNECT 联结';
+const PAGE_DESCRIPTION =
+  "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.";
+
 export const metadata: Metadata = {
   alternates: { canonical: '/connect' },
   title: 'CONNECT 联结',
-  description:
-    "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
+  description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',
     'anti-aging',
@@ -25,8 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'CONNECT 联结',
     siteName: 'Immortal Dragons',
-    description:
-      "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
+    description: PAGE_DESCRIPTION,
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -78,6 +81,7 @@ export default function ConnectLayout({ children }: { children: ReactNode }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />
+      <ConnectSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
       {children}
     </>
   );
