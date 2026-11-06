@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
+import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
@@ -41,20 +42,15 @@ const jsonLd: WithContext<NewsArticle> = {
   description: articleDescription,
   url: articleUrl,
   mainEntityOfPage: articleUrl,
-  image: 'https://resources.id.life/id-life-cover-2.webp',
-  author: {
-    '@type': 'Organization',
-    name: 'Immortal Dragons',
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Immortal Dragons',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://resources.id.life/logo.png',
-    },
-  },
+  image: ORG_COVER,
+  author: ORG_REF,
+  publisher: ORG_REF,
 };
+
+const breadcrumb = breadcrumbJsonLd([
+  { name: 'News', path: '/news' },
+  { name: articleTitle, path: '/news/immortal-dragons-milestones-and-portfolio' },
+]);
 
 function getArticleContent() {
   return fs
@@ -68,7 +64,7 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">

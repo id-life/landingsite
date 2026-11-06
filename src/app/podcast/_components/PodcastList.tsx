@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { fetchPodcastList } from '@/apis';
 import { PodcastCategory } from '@/app/podcast/_components/constant';
 import PodcastListItem from '@/app/podcast/_components/PodcastListItem';
+import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
 
 type PodcastListProps = {
   category: PodcastCategory;
@@ -9,9 +9,7 @@ type PodcastListProps = {
 
 export default async function PodcastList(props: PodcastListProps) {
   const { category } = props;
-  const data = await fetchPodcastList(`podcast_${category}`);
-  const list = data.code == 200 ? data.data : [];
-  list.sort((a, b) => b.sequence - a.sequence);
+  const list = await getPodcastEpisodes(category);
 
   return (
     <div className="grid gap-12 mobile:gap-9">

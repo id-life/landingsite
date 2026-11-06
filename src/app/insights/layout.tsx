@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { WEBSITE_ID } from '@/constants/entity';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -40,11 +41,7 @@ const jsonLd: WithContext<CollectionPage> = {
   url: 'https://www.id.life/insights',
   description:
     'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'Immortal Dragons',
-    url: 'https://www.id.life',
-  },
+  isPartOf: { '@id': WEBSITE_ID },
 };
 
 export default function InsightsLayout({ children }: { children: ReactNode }) {

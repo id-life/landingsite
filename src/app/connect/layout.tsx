@@ -3,6 +3,8 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { Graph } from 'schema-dts';
+import { Links, MediaLinkType } from '@/constants/links';
+import { ORG_EMAIL, ORG_ID, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/connect' },
@@ -36,50 +38,33 @@ export const metadata: Metadata = {
 const jsonLd: Graph = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': 'WebSite',
-      '@id': 'https://www.id.life/#website',
-      name: 'Immortal Dragons',
-      url: 'https://www.id.life/',
-    },
+    WEBSITE,
     {
       '@type': 'WebPage',
       '@id': 'https://www.id.life/connect#webpage',
       name: 'Connect',
       url: 'https://www.id.life/connect',
-      isPartOf: { '@id': 'https://www.id.life/#website' },
-      about: { '@id': 'https://www.id.life/#org' },
-      mainEntity: { '@id': 'https://www.id.life/#org' },
+      isPartOf: { '@id': WEBSITE_ID },
+      about: { '@id': ORG_ID },
+      mainEntity: { '@id': ORG_ID },
       description: 'Contact Immortal Dragons for partnerships, media, and community connections.',
     },
     {
-      '@type': 'Organization',
-      '@id': 'https://www.id.life/#org',
-      name: 'Immortal Dragons',
-      url: 'https://www.id.life/',
-      email: 'contact@id.life',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '3 Biopolis Dr, #01-15',
-        addressLocality: 'Singapore',
-        postalCode: '138623',
-        addressCountry: 'SG',
-      },
+      ...ORGANIZATION,
       contactPoint: [
         {
           '@type': 'ContactPoint',
           contactType: 'general inquiries',
-          email: 'contact@id.life',
+          email: ORG_EMAIL,
           availableLanguage: ['en', 'zh'],
           url: 'https://www.id.life/connect',
         },
       ],
-      sameAs: ['https://www.youtube.com/@Immortal-Dragons', 'https://www.linkedin.com/company/immortaldragons/'],
       subjectOf: [
         {
           '@type': 'CreativeWork',
           name: 'Immortal Dragons Media Kit',
-          url: 'https://drive.google.com/drive/folders/1vajrjCq-nAX1LVSzJ_fETL2GKI0-ckrG',
+          url: Links[MediaLinkType.Media],
         },
       ],
     },

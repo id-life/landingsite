@@ -3,7 +3,9 @@ import { fetchPodcastDetail } from '@/apis';
 import PodcastContentTab from '@/app/podcast/[id]/_components/PodcastContentTab';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
-import { PodcastEpisode, WithContext } from 'schema-dts';
+import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
+import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 
 export const revalidate = 300; // 5min
@@ -63,46 +65,15 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   const { id } = params;
   const data = await getCachePodcastDetail(id);
 
-  // Convert duration (seconds) to ISO 8601 format (PT{H}H{M}M{S}S)
-  const formatDuration = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    let duration = 'PT';
-    if (hours > 0) duration += `${hours}H`;
-    if (minutes > 0) duration += `${minutes}M`;
-    if (secs > 0) duration += `${secs}S`;
-    return duration || 'PT0S';
-  };
-
-  const jsonLd: WithContext<PodcastEpisode> = {
-    '@context': 'https://schema.org',
-    '@type': 'PodcastEpisode',
-    name: data.title,
-    description: data.description,
-    url: `https://www.id.life/podcast/${id}`,
-    datePublished: data.createdAt,
-    image: data.detailMedia,
-    episodeNumber: data.sequence,
-    timeRequired: formatDuration(data.duration),
-    associatedMedia: {
-      '@type': 'MediaObject',
-      contentUrl: data.url,
-    },
-    partOfSeries: {
-      '@type': 'PodcastSeries',
-      name: 'Immortal Dragons Podcast',
-      url: 'https://www.id.life/podcast',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Immortal Dragons',
-      logo: {
-        '@type': 'ImageObject',
-        url: data.album,
-      },
-    },
-  };
+  const category = categoryOf(data);
+  const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
+  const jsonLd = [
+    { '@context': 'https://schema.org', ...podcastEpisodeJsonLd(data), publisher: ORG_REF },
+    breadcrumbJsonLd([
+      { name: `${PODCAST_COVER[category].title} ${PODCAST_COVER[category].enTitle}`, path: nav.link },
+      { name: data.title, path: `/podcast/${id}` },
+    ]),
+  ];
 
   return (
     <>

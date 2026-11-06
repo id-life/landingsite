@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { ORG_REF } from '@/constants/entity';
 import { SoftwareApplication, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -42,11 +43,7 @@ const jsonLd: WithContext<SoftwareApplication> = {
   url: 'https://www.id.life/digitaltwin',
   applicationCategory: 'MedicalApplication',
   operatingSystem: 'Web',
-  creator: {
-    '@type': 'Organization',
-    name: 'IMMORTAL DRAGONS',
-    url: 'https://www.id.life',
-  },
+  creator: ORG_REF,
   offers: {
     '@type': 'Offer',
     price: '0',
