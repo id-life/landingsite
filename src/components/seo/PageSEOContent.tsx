@@ -2,6 +2,8 @@
 // Crawlers that don't run JavaScript read this; it is visually hidden (sr-only) but stays in the
 // accessibility tree. Only pass copy that the page already shows — never new claims.
 
+import { isInternalHref } from '@/constants/site';
+
 export type SEOText = string | { text: string; lang?: string };
 
 export type SEOItem = {
@@ -57,8 +59,9 @@ export default function PageSEOContent({ title, intro, sections }: PageSEOConten
               {section.items.map((item) => (
                 <li key={`${item.title}-${item.href ?? ''}`}>
                   <h3>
-                    {/* Hidden layer: keep its links out of the keyboard tab order. */}
-                    {item.href ? (
+                    {/* Hidden layer: only internal links, kept out of the keyboard tab order. External
+                        targets render as text — hidden outbound links read as link spam. */}
+                    {isInternalHref(item.href) ? (
                       <a href={item.href} tabIndex={-1}>
                         {item.title}
                       </a>

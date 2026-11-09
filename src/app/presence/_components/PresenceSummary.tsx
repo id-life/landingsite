@@ -1,3 +1,4 @@
+import ArticleExcerpt from '@/components/seo/ArticleExcerpt';
 import PageSEOContent, { type SEOItem } from '@/components/seo/PageSEOContent';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/engagement';
 
@@ -30,14 +31,18 @@ function sponsorItems(): SEOItem[] {
 
 export default function PresenceSummary({ title, description }: { title: string; description: string }) {
   return (
-    <PageSEOContent
-      title={title}
-      intro={[description]}
-      sections={[
-        { heading: 'Conference', items: eventItems() },
-        { heading: 'Translation & Publishing 翻译与出版', items: bookItems() },
-        { heading: 'Sponsorship & Research', items: sponsorItems() },
-      ]}
-    />
+    <>
+      <PageSEOContent
+        title={title}
+        intro={[description]}
+        sections={[
+          { heading: 'Conference', items: eventItems() },
+          { heading: 'Translation & Publishing 翻译与出版', items: bookItems() },
+          { heading: 'Sponsorship & Research', items: sponsorItems() },
+        ]}
+      />
+      {/* The map only names events and sponsors; the profile article says what each one is. */}
+      <ArticleExcerpt headings={['行业布道', '三、行业赞助']} />
+    </>
   );
 }
