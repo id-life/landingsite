@@ -6,6 +6,7 @@ import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
 import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
+import HomeProfile from '@/app/(home)/_components/HomeProfile';
 
 // Chinese intro for crawlers, from the 不朽真龙介绍 profile (previously a hidden 0×0 block).
 const HOME_INTRO_CN = [
@@ -53,6 +54,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
         title="Immortal Dragons 不朽真龙"
         intro={[...HOME_INTRO_CN.map((text) => ({ text, lang: 'zh-CN' })), { text: ORG_DESCRIPTION, lang: 'en' }]}
       />
+      <HomeProfile />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

@@ -56,7 +56,16 @@ export default function PageSEOContent({ title, intro, sections }: PageSEOConten
             <ul>
               {section.items.map((item) => (
                 <li key={`${item.title}-${item.href ?? ''}`}>
-                  <h3>{item.href ? <a href={item.href}>{item.title}</a> : item.title}</h3>
+                  <h3>
+                    {/* Hidden layer: keep its links out of the keyboard tab order. */}
+                    {item.href ? (
+                      <a href={item.href} tabIndex={-1}>
+                        {item.title}
+                      </a>
+                    ) : (
+                      item.title
+                    )}
+                  </h3>
                   <Paragraphs text={item.text} />
                 </li>
               ))}

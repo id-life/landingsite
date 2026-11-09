@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import type { Metadata } from 'next';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
@@ -8,12 +6,12 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { NewsArticle, WithContext } from 'schema-dts';
 import 'github-markdown-css/github-markdown-light.css';
+import { getArticleContent } from './content';
 import '@/styles/markdown.css';
 
 const articleTitle = '不朽真龙介绍';
 const articleDescription = '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。';
 const articleUrl = 'https://www.id.life/news/immortal-dragons-news-and-updates';
-const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-news-and-updates/article.md');
 
 export const dynamic = 'force-static';
 
@@ -51,13 +49,6 @@ const breadcrumb = breadcrumbJsonLd([
   { name: 'News', path: '/news' },
   { name: articleTitle, path: '/news/immortal-dragons-news-and-updates' },
 ]);
-
-function getArticleContent() {
-  return fs
-    .readFileSync(articlePath, 'utf8')
-    .replace(/^# .+\r?\n+/, '')
-    .replace(/\\([._-])/g, '$1');
-}
 
 export default function ImmortalDragonsNewsAndUpdatesPage() {
   const articleContent = getArticleContent();

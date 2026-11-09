@@ -1,5 +1,5 @@
 import { fetchNewsList, fetchPodcastList } from '@/apis';
-import { portfolio } from '@/app/portfolio/_components/portfolioData';
+import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioData';
 import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastNavItem } from '@/app/podcast/_components/constant';
 import { absoluteUrl } from '@/constants/site';
 import { LLMS_CHINESE_SUMMARY, LLMS_HEADER } from './content';
@@ -10,10 +10,6 @@ export const revalidate = 86400;
 const MAX_NEWS = 20;
 
 const section = (title: string, lines: string[]) => (lines.length ? `## ${title}\n\n${lines.join('\n')}\n` : '');
-
-function portfolioLines() {
-  return portfolio.map(({ title, description, link }) => `- ${link ? `[${title}](${link})` : title}: ${description}`);
-}
 
 // API failures only drop the affected section; llms.txt itself must always render.
 async function newsLines() {
@@ -54,7 +50,7 @@ export async function GET() {
 
   const body = [
     LLMS_HEADER,
-    section('Portfolio', portfolioLines()),
+    section('Portfolio', portfolioMarkdownLines()),
     section('Latest news', news),
     podcasts,
     LLMS_CHINESE_SUMMARY,
