@@ -1,4 +1,4 @@
-import Markdown from 'react-markdown';
+import Markdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LLMS_HEADER } from '@/app/llms.txt/content';
 import { getArticleContent } from '@/app/news/immortal-dragons-news-and-updates/content';
@@ -36,17 +36,28 @@ function englishProfile() {
   return [intro, ...sections, `## Portfolio\n\n${portfolioMarkdownLines().join('\n')}`].join('\n\n');
 }
 
+// The profile stays hidden after hydration, so its links must not be keyboard tab stops.
+const markdownComponents: Components = {
+  a: ({ node: _node, ...props }) => <a {...props} tabIndex={-1} />,
+};
+
 export default function HomeProfile() {
   return (
     <div className="sr-only">
       <section lang="zh-CN" aria-label="不朽真龙介绍">
-        <Markdown remarkPlugins={[remarkGfm]}>{chineseProfile()}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          {chineseProfile()}
+        </Markdown>
         <p>
-          <a href={ARTICLE_PATH}>阅读全文：不朽真龙介绍</a>
+          <a href={ARTICLE_PATH} tabIndex={-1}>
+            阅读全文：不朽真龙介绍
+          </a>
         </p>
       </section>
       <section lang="en" aria-label="About Immortal Dragons">
-        <Markdown remarkPlugins={[remarkGfm]}>{englishProfile()}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          {englishProfile()}
+        </Markdown>
       </section>
     </div>
   );
