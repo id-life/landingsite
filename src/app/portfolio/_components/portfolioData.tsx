@@ -233,6 +233,10 @@ export const portfolio: PortfolioItemInfo[] = [
   },
 ];
 
+/** Markdown list lines ("- [Name](link): description") for text renderings such as llms.txt and the homepage profile. */
+export const portfolioMarkdownLines = () =>
+  portfolio.map(({ title, description, link }) => `- ${link ? `[${title}](${link})` : title}: ${description}`);
+
 export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
