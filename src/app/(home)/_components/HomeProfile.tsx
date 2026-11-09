@@ -36,9 +36,19 @@ function englishProfile() {
   return [intro, ...sections, `## Portfolio\n\n${portfolioMarkdownLines().join('\n')}`].join('\n\n');
 }
 
-// The profile stays hidden after hydration, so its links must not be keyboard tab stops.
+// Hidden links: external ones render as plain text (hidden outbound links read as link spam, and
+// /portfolio already links the companies visibly); internal ones stay, out of the keyboard tab order.
+const isInternal = (href?: string) => Boolean(href?.startsWith('/'));
+
 const markdownComponents: Components = {
-  a: ({ node: _node, ...props }) => <a {...props} tabIndex={-1} />,
+  a: ({ node: _node, href, children, ...props }) =>
+    isInternal(href) ? (
+      <a {...props} href={href} tabIndex={-1}>
+        {children}
+      </a>
+    ) : (
+      <>{children}</>
+    ),
 };
 
 export default function HomeProfile() {
