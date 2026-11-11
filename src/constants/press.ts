@@ -1,5 +1,5 @@
 // Press releases and syndicated coverage about Immortal Dragons and its portfolio companies.
-// Titles and dates are copied from the published pages; `date` is omitted where the page could not be read.
+// Titles and dates are copied from the published pages.
 
 export type PressItem = {
   title: string;
@@ -15,24 +15,6 @@ export const FUND_PRESS: PressItem[] = [
     source: 'Yahoo Finance',
     url: 'https://finance.yahoo.com/news/immortal-dragons-launches-40m-longevity-211000083.html',
     date: '2025-07-16',
-  },
-  {
-    title: 'Immortal Dragons Backs Frontier Bio: Advancing 3D Biofabrication for Tissue Engineering',
-    source: 'Yahoo Finance',
-    url: 'https://finance.yahoo.com/news/immortal-dragons-backs-frontier-bio-124500651.html',
-    date: '2025-08-29',
-  },
-  {
-    title: 'Immortal Dragons Backs Unlimited Bio',
-    source: 'The Columbus Dispatch',
-    url: 'https://www.dispatch.com/press-release/story/126903/immortal-dragons-backs-unlimited-bio/',
-  },
-  {
-    title:
-      'Immortal Dragons Backs Etheros Pharmaceuticals: Targeting Aging-Related Disease with Breakthrough Catalytic Antioxidants',
-    source: 'Yahoo Finance',
-    url: 'https://finance.yahoo.com/news/immortal-dragons-backs-etheros-pharmaceuticals-221000545.html',
-    date: '2025-12-09',
   },
   {
     title: 'Singapore: The Longevity Lab Reimagining Human Life Extension',
