@@ -51,12 +51,12 @@ export const COMMENTS_TYPE = {
 
 export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
   [PODCAST_NAV_LIST[0].id]: {
-    title: '不朽真龙 Immortal Dragons Podcast | Immortal Dragons',
+    title: 'Podcast 播客 | Immortal Dragons 不朽真龙',
     description:
       '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
     keywords: ['Longevity', 'Health', 'Science', 'Tech', 'Investment', 'Biotech', '长寿', '健康', '科技', '投资', '生物科技'],
     openGraph: {
-      title: '不朽真龙 Immortal Dragons Podcast | Immortal Dragons',
+      title: 'Podcast 播客 | Immortal Dragons 不朽真龙',
       siteName: 'Immortal Dragons',
       description:
         '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
