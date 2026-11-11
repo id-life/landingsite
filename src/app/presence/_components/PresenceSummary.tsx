@@ -1,4 +1,5 @@
 import ArticleExcerpt from '@/components/seo/ArticleExcerpt';
+import EnglishProfileExcerpt from '@/components/seo/EnglishProfileExcerpt';
 import PageSEOContent, { type SEOItem } from '@/components/seo/PageSEOContent';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/engagement';
 
@@ -42,6 +43,7 @@ export default function PresenceSummary({ title, description }: { title: string;
         ]}
       />
       {/* The map only names events and sponsors; the profile article says what each one is. */}
+      <EnglishProfileExcerpt sections={['advocacy', 'sponsorships']} />
       <ArticleExcerpt headings={['行业布道', '三、行业赞助']} />
     </>
   );

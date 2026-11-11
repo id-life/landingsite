@@ -1,4 +1,4 @@
-import { LLMS_HEADER } from '@/app/llms.txt/content';
+import { LLMS_SECTIONS, llmsIntro, llmsSection } from '@/app/llms.txt/content';
 import {
   ARTICLE_PATH,
   ARTICLE_TITLE,
@@ -10,11 +10,11 @@ import HiddenMarkdown from '@/components/seo/HiddenMarkdown';
 
 // Server-rendered bilingual profile for crawlers on the 3D homepage (visually hidden, sr-only).
 // No new copy: Chinese is the 不朽真龙介绍 article up to its 行业点评 chapter (the parts the homepage
-// itself shows — fund, portfolio, sponsors); English is the same facts as already translated for
+// itself shows — fund, portfolio, sponsors); English is the official English profile as kept in
 // llms.txt, plus the portfolio list. Both follow their sources automatically.
 
 const ARTICLE_STOP_HEADING = '## 四、行业点评';
-const EN_SECTIONS = ['Key facts', 'Investment themes', 'Beyond capital'];
+const EN_SECTIONS = ['keyFacts', 'themes', 'advocacy', 'sponsorships'] as const;
 
 function chineseProfile() {
   const article = getArticleContent();
@@ -22,21 +22,9 @@ function chineseProfile() {
   return stripImages(end === -1 ? article : article.slice(0, end));
 }
 
-/** Body of a `## heading` section in a markdown string, up to the next `## `. */
-function markdownSection(markdown: string, heading: string) {
-  const start = markdown.indexOf(`## ${heading}\n`);
-  if (start === -1) return '';
-  const next = markdown.indexOf('\n## ', start + 3);
-  return markdown.slice(start, next === -1 ? undefined : next).trim();
-}
-
 function englishProfile() {
-  const intro = LLMS_HEADER.split('\n')
-    .filter((line) => line.startsWith('>'))
-    .map((line) => line.replace(/^>\s?/, ''))
-    .join('\n');
-  const sections = EN_SECTIONS.map((heading) => markdownSection(LLMS_HEADER, heading)).filter(Boolean);
-  return [intro, ...sections, `## Portfolio\n\n${portfolioMarkdownLines().join('\n')}`].join('\n\n');
+  const sections = EN_SECTIONS.map((key) => llmsSection(LLMS_SECTIONS[key])).filter(Boolean);
+  return [llmsIntro(), ...sections, `## Portfolio\n\n${portfolioMarkdownLines().join('\n')}`].join('\n\n');
 }
 
 export default function HomeProfile() {

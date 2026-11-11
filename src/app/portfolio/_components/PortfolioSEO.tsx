@@ -1,4 +1,5 @@
 import ArticleExcerpt from '@/components/seo/ArticleExcerpt';
+import EnglishProfileExcerpt from '@/components/seo/EnglishProfileExcerpt';
 import { portfolio } from './portfolioData';
 
 // Hidden crawler text for the 3D portfolio page. Company sites are linked from the visible cards,
@@ -21,6 +22,7 @@ export default function PortfolioSEO() {
           ))}
         </ul>
       </section>
+      <EnglishProfileExcerpt sections={['themes']} />
       <ArticleExcerpt headings={['投资主题', '二、投资组合']} />
     </>
   );

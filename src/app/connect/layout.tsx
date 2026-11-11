@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import ConnectSummary from '@/app/connect/_components/ConnectSummary';
 import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
-import { ORG_EMAIL, ORG_ID, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
+import { ORG_EMAIL, ORG_ID, ORG_PRESS, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
 
 const PAGE_TITLE = 'CONNECT 联结';
 const PAGE_DESCRIPTION =
@@ -64,6 +64,7 @@ const jsonLd: Graph = {
         },
       ],
       subjectOf: [
+        ...ORG_PRESS,
         {
           '@type': 'CreativeWork',
           name: 'Immortal Dragons Media Kit',
