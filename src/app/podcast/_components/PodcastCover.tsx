@@ -30,6 +30,8 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
         <div className="flex flex-1 flex-col justify-between">
           <div>
             <h1 className="whitespace-nowrap text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
+              {/* The show is named after the company; say what this page is for readers that only get the heading. */}
+              <span className="sr-only">Podcast 播客: </span>
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
             </h1>

@@ -22,7 +22,16 @@ async function seriesJsonLd(category: PodcastCategory) {
   const episodes = await getPodcastEpisodes(nav.id);
   return [
     { '@context': 'https://schema.org', ...podcastSeriesJsonLd(nav.id, episodes) },
-    breadcrumbJsonLd([{ name: `${PODCAST_COVER[nav.id].title} ${PODCAST_COVER[nav.id].enTitle}`, path: nav.link }]),
+    // The main show shares the company's name, so its crumb is labelled by what the page is.
+    breadcrumbJsonLd([
+      {
+        name:
+          nav.id === PODCAST_NAV_LIST[0].id
+            ? 'Podcast 播客'
+            : `${PODCAST_COVER[nav.id].title} ${PODCAST_COVER[nav.id].enTitle}`,
+        path: nav.link,
+      },
+    ]),
   ];
 }
 
