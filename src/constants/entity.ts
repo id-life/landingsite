@@ -1,5 +1,6 @@
 import type { BreadcrumbList, Organization, WithContext } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
+import { FUND_PRESS } from '@/constants/press';
 import { SITE_URL, absoluteUrl } from '@/constants/site';
 
 // Single source for the Immortal Dragons entity used by every JSON-LD block.
@@ -39,6 +40,15 @@ export const ORG_SAME_AS = [
   Links[MediaLinkType.Wechat],
 ];
 
+/** Press coverage about the organization, for Organization.subjectOf. */
+export const ORG_PRESS = FUND_PRESS.map(({ title, source, url, date }) => ({
+  '@type': 'NewsArticle' as const,
+  headline: title,
+  url,
+  ...(date && { datePublished: date }),
+  publisher: { '@type': 'Organization' as const, name: source },
+}));
+
 /** Lightweight reference to the organization for author / publisher / creator fields. */
 export const ORG_REF = {
   '@type': 'Organization',
@@ -73,6 +83,7 @@ export const ORGANIZATION: Exclude<Organization, string> = {
   address: ORG_ADDRESS,
   knowsAbout: ['Replacement Strategy', 'Neuro & Brain Rejuvenation', 'Cells and Gene Therapy', 'Reproduction Technology'],
   sameAs: ORG_SAME_AS,
+  subjectOf: ORG_PRESS,
 };
 
 export const WEBSITE = {
