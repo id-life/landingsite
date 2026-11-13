@@ -4,7 +4,9 @@ import PodcastContentTab from '@/app/podcast/[id]/_components/PodcastContentTab'
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
 import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
+import { episodeSummary } from '@/app/podcast/_components/summary';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 
@@ -16,6 +18,11 @@ const getCachePodcastDetail = cache(async (id: string) => {
   const res = await fetchPodcastDetail(id);
   return res.data;
 });
+
+// Description for search engines; falls back to the transcript when the API description is thin or shared.
+async function getSummary(data: NonNullable<Awaited<ReturnType<typeof getCachePodcastDetail>>>) {
+  return episodeSummary(data, await getPodcastEpisodes(categoryOf(data)));
+}
 
 type Params = { id: string };
 type PodcastPlayerProps = {
@@ -43,15 +50,16 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
     };
   }
 
+  const description = await getSummary(data);
   return {
     title: `${data.title} | Immortal Dragons`,
-    description: data.description,
+    description,
     keywords: data.keywords,
     alternates: { canonical: `/podcast/${id}` },
     openGraph: {
       title: `${data.title} | Immortal Dragons`,
       siteName: 'Immortal Dragons',
-      description: data.description,
+      description,
       images: [
         {
           url: data.detailMedia,
@@ -68,7 +76,12 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   const category = categoryOf(data);
   const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
   const jsonLd = [
-    { '@context': 'https://schema.org', ...podcastEpisodeJsonLd(data), publisher: ORG_REF },
+    {
+      '@context': 'https://schema.org',
+      ...podcastEpisodeJsonLd(data),
+      description: await getSummary(data),
+      publisher: ORG_REF,
+    },
     breadcrumbJsonLd([
       { name: `${PODCAST_COVER[category].title} ${PODCAST_COVER[category].enTitle}`, path: nav.link },
       { name: data.title, path: `/podcast/${id}` },
