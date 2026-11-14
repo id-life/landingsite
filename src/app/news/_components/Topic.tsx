@@ -23,7 +23,6 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         href={href}
         external={isExternal}
         onActivate={() => setIsModalOpen(true)}
-        label={data.title}
         className="group block cursor-pointer"
       >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">

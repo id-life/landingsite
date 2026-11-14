@@ -21,13 +21,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
 
   return (
     <>
-      <CardShell
-        href={href}
-        external={isExternal}
-        onActivate={openVideo}
-        label={data.title}
-        className={cardClassName}
-      >
+      <CardShell href={href} external={isExternal} onActivate={openVideo} className={cardClassName}>
         <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
           <YouTubeThumbnail
             pic={data.cover || '/imgs/news/insights-bg.webp'}

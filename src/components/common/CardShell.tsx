@@ -5,8 +5,6 @@ type CardShellProps = {
   href?: string;
   external?: boolean;
   onActivate?: () => void;
-  /** Accessible name when the card is a button. */
-  label?: string;
   className?: string;
   children: ReactNode;
 };
@@ -15,7 +13,7 @@ type CardShellProps = {
  * Outer element of a clickable card: a real <a> when it navigates (so crawlers, middle-click,
  * keyboard and screen readers all work), otherwise a keyboard-operable button.
  */
-export default function CardShell({ href, external = false, onActivate, label, className, children }: CardShellProps) {
+export default function CardShell({ href, external = false, onActivate, className, children }: CardShellProps) {
   if (href) {
     return (
       <a href={href} className={className} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
@@ -30,7 +28,9 @@ export default function CardShell({ href, external = false, onActivate, label, c
     }
   };
   return (
-    <div role="button" tabIndex={0} aria-label={label} onClick={onActivate} onKeyDown={onKeyDown} className={className}>
+    // No aria-label: the accessible name comes from the card's visible text. A label holding only the title
+    // failed WCAG 2.5.3 (label-content-name-mismatch) because the card also shows the date and source.
+    <div role="button" tabIndex={0} onClick={onActivate} onKeyDown={onKeyDown} className={className}>
       {children}
     </div>
   );
