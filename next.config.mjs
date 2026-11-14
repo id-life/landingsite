@@ -18,6 +18,11 @@ const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED
 const nextConfig = {
   reactStrictMode: false,
   transpilePackages: ['three'],
+  // src has ~59 debugging console.log calls (one fired on every wheel event). Strip console.log/info/debug
+  // from production bundles; keep warn and error so real problems still reach the console and Sentry.
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
   env: {
     NEXT_PUBLIC_DEPLOY_ENV: deployEnv,
     NEXT_PUBLIC_ANALYTICS_ENABLED: analyticsEnabled ? '1' : '0',

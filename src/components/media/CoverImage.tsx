@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { cn } from '@/utils';
 
-// Hosts configured in next.config.mjs images.remotePatterns. Covers from any other host fall back
-// to a plain lazy <img>, because next/image throws for unconfigured hosts.
+// Hosts configured in next.config.mjs images.remotePatterns. Covers from any other host are served
+// unoptimized, because the next/image loader throws for unconfigured hosts.
 const OPTIMIZED_HOSTS = new Set(['cdn.id.life', 'resources.id.life', 'img.youtube.com', 'i.ytimg.com']);
 
 function canOptimize(src: string) {
@@ -33,17 +33,9 @@ type CoverImageProps = {
 export default function CoverImage({ src, alt, sizes, className, priority = false }: CoverImageProps) {
   const classes = cn('size-full object-cover', className);
   if (!src) return null;
-  if (!canOptimize(src)) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt={alt}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
-        className={cn('absolute inset-0', classes)}
-      />
-    );
-  }
-  return <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className={classes} />;
+  // Unconfigured hosts are served as-is (`unoptimized` skips the loader and its host check) but still
+  // get next/image's lazy loading, async decoding and fill layout.
+  return (
+    <Image src={src} alt={alt} fill sizes={sizes} priority={priority} unoptimized={!canOptimize(src)} className={classes} />
+  );
 }

@@ -7,7 +7,9 @@ import SpectrumSEO from './_components/SpectrumSEO';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum' },
-  title: 'Spectrum 谱系',
+  // An object, not a string: a string title here would reset the title template for the nested
+  // /spectrum/* pages, which then shipped without the brand.
+  title: { default: 'Spectrum 谱系', template: '%s | Immortal Dragons 不朽真龙' },
   description:
     "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
   keywords: [
