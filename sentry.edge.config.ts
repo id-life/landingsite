@@ -7,5 +7,6 @@ Sentry.init({
   // Errors are reported from Vercel production and preview builds only, tagged by environment;
   // local and self-hosted UAT builds stay out of the production Sentry project.
   environment: process.env.NEXT_PUBLIC_DEPLOY_ENV,
-  enabled: process.env.NODE_ENV !== 'development' && process.env.NEXT_PUBLIC_DEPLOY_ENV !== 'local',
+  enabled:
+    process.env.NODE_ENV !== 'development' && ['production', 'preview'].includes(process.env.NEXT_PUBLIC_DEPLOY_ENV ?? ''),
 });
