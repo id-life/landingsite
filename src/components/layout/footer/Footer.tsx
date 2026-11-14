@@ -10,7 +10,7 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import jsonp from '@/utils/jsonp';
+import { subscribeNewsletter } from '@/utils/subscribe';
 import { FloatingPortal } from '@floating-ui/react';
 import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -35,6 +35,7 @@ export default function Footer() {
     formState: { errors },
     clearErrors,
     reset,
+    setError,
   } = useForm<Inputs>();
 
   const { trackEvent } = useGA();
@@ -48,15 +49,15 @@ export default function Footer() {
   }, [isSubscribeShow, reset, clearErrors]);
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
-
+    const result = await subscribeNewsletter(formData);
+    setIsSubmitting(false);
+    if (!result.ok) {
+      setError('EMAIL', { type: 'server', message: result.message });
+      return;
+    }
+    setIsSubmitted(true);
+    // Counted only when Mailchimp confirms, so the event measures subscriptions, not attempts.
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,

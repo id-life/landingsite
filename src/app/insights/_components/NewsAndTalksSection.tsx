@@ -181,11 +181,10 @@ export default function NewsAndTalksSection({
   };
 
   const handleViewAllClick = () => {
-    if (isMobile) {
-      // Save current page state before navigation for browser back button
-      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-      router.push('/news');
-    } else window.open('/news', '_blank');
+    // Same tab on every device; Back returns to Insights (mobile restores it from sessionStorage,
+    // desktop from the /insights URL).
+    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
+    router.push('/news');
   };
 
   const renderContent = () => {

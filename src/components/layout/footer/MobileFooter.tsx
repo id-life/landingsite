@@ -20,8 +20,16 @@ type Inputs = {
 };
 
 export default function MobileFooter() {
-  const { isSubscribeShow, subscribeRef, handleClickOutside, onFormSubmit, isSubmitting, isSubmitted, handleClose } =
-    useMobileSubscribeAction();
+  const {
+    isSubscribeShow,
+    subscribeRef,
+    handleClickOutside,
+    onFormSubmit,
+    isSubmitting,
+    isSubmitted,
+    submitError,
+    handleClose,
+  } = useMobileSubscribeAction();
 
   const {
     register,
@@ -64,8 +72,10 @@ export default function MobileFooter() {
             className="relative mt-7.5 flex gap-4 px-2 mobile:gap-3 mobile:px-0"
             onSubmit={handleSubmit(onFormSubmit)}
           >
-            {errors.EMAIL && (
-              <span className="absolute -top-5 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+            {(errors.EMAIL || submitError) && (
+              <span role="alert" className="absolute -top-5 font-poppins text-xs font-semibold text-red-600">
+                {errors.EMAIL?.message ?? submitError}
+              </span>
             )}
             <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
             <input type="hidden" {...register('amp;id')} value="af9154d6b5" />

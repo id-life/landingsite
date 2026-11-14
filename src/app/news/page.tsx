@@ -12,7 +12,7 @@ export const revalidate = 300; // 5min
 
 export const metadata: Metadata = {
   alternates: { canonical: '/news' },
-  title: 'News 新闻 | Immortal Dragons',
+  title: 'News 新闻',
   description:
     "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
   keywords: [

@@ -11,27 +11,32 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import jsonp from '@/utils/jsonp';
+import { subscribeNewsletter } from '@/utils/subscribe';
 import { FormEvent, useState } from 'react';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { trackEvent } = useGA();
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
-    const formData = new FormData(event.currentTarget);
-    const params = new URLSearchParams();
-    formData.forEach((value: any, key) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
+    const fields: Record<string, string> = {};
+    new FormData(event.currentTarget).forEach((value, key) => {
+      fields[key] = String(value);
     });
+    setSubmitError(null);
+    setIsSubmitting(true);
+    const result = await subscribeNewsletter(fields);
+    setIsSubmitting(false);
+    if (!result.ok) {
+      setSubmitError(result.message);
+      return;
+    }
+    setIsSubmitted(true);
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
@@ -115,6 +120,11 @@ export default function NewsFooter() {
                 defaultValue=""
               />
             </div>
+            {submitError && (
+              <p role="alert" className="mt-2 font-poppins text-xs font-semibold text-red-600">
+                {submitError}
+              </p>
+            )}
             <div className="mt-3 flex items-start gap-1.5 font-poppins text-xs font-semibold">
               <InfoSVG className="size-4 shrink-0" />
               Join our longevity circle for priority access to pioneer research

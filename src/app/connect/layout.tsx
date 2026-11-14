@@ -13,7 +13,7 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   alternates: { canonical: '/connect' },
-  title: 'CONNECT 联结',
+  title: 'Connect 联结',
   description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',

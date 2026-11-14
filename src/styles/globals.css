@@ -2,8 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+/* Focus: no ring for mouse and touch, a visible ring for keyboard users (WCAG 2.4.7). */
+:focus:not(:focus-visible) {
   outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #c11111;
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -100px;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  background: #1f1e1b;
+  color: #ffffff;
+  font: 600 14px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  border-radius: 6px;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 1rem;
+}
+
+/* Visitors who ask the system for less motion get state changes without CSS animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer base {

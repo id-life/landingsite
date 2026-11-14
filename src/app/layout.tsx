@@ -14,6 +14,7 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import Image from 'next/image';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
+import { ANALYTICS_ENABLED } from '@/constants/env';
 
 import '@/styles/globals.css';
 import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
       'baidu-site-verification': 'codeva-3t6o5pvEVk',
     },
   },
-  title: 'Immortal Dragons 不朽真龙',
+  title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons 不朽真龙' },
   description:
     'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
   keywords: [
@@ -55,21 +56,20 @@ export const metadata: Metadata = {
   },
 };
 
+// Pinch zoom stays enabled (WCAG 1.4.4); iOS ignores zoom locks anyway, so the lock only hurt Android users.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <GoogleTagManager gtmId="GTM-NZKZJ38H" />
-      {gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
-      <WebVitals />
-      <WebClarity />
-      <SessionInvisibilityTracker />
+      {ANALYTICS_ENABLED && <GoogleTagManager gtmId="GTM-NZKZJ38H" />}
+      {ANALYTICS_ENABLED && gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
+      {ANALYTICS_ENABLED && <WebVitals />}
+      {ANALYTICS_ENABLED && <WebClarity />}
+      {ANALYTICS_ENABLED && <SessionInvisibilityTracker />}
       <body
         className={clsx(
           xirod.variable,
@@ -98,15 +98,20 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Image src="/imgs/id-logo-large.png" alt="" width={216} height={200} priority unoptimized />
           <Image src="/imgs/id-logo-small.png" alt="" width={113} height={105} priority unoptimized />
         </div>
-        <SubscribePopupStorageReporter />
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        {ANALYTICS_ENABLED && <SubscribePopupStorageReporter />}
         <Providers>
           <ScrollBehavior />
           <HashRouter />
-          {children}
+          <main id="main-content" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
           <Background />
         </Providers>
-        <Analytics />
-        <SpeedInsights />
+        {ANALYTICS_ENABLED && <Analytics />}
+        {ANALYTICS_ENABLED && <SpeedInsights />}
       </body>
     </html>
   );

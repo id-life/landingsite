@@ -1,8 +1,8 @@
-import { hasShownAutoSubscribeAtom } from '@/atoms';
+import { currentPageIndexAtom, hasShownAutoSubscribeAtom, mobileCurrentPageIndexAtom } from '@/atoms';
 import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import jsonp from '@/utils/jsonp';
+import { subscribeNewsletter } from '@/utils/subscribe';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -10,6 +10,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { trackEvent } from './useGA';
 import { useThrottle } from './useThrottle';
+
+/** Section index (0-based in NAV_LIST) whose arrival may open the subscribe popup: 3 = Spectrum. */
+const AUTO_POPUP_SECTION_INDEX = 3;
 
 type Inputs = {
   EMAIL: string;
@@ -115,11 +118,19 @@ export function useSubscribeAction() {
     }
   };
 
-  // Auto-popup logic, only play when first time load
+  // Auto-popup: once, after the visitor has engaged (reached the 4th section), never over the hero
+  // on arrival. It used to open as soon as the intro finished, covering the tagline.
+  const currentPageIndex = useAtomValue(currentPageIndexAtom);
   useEffect(() => {
-    if (hasShownAuto || !fadeInAnimCompleted) return;
-    handleStart(true);
-  }, [fadeInAnimCompleted, handleStart, hasShownAuto]);
+    if (hasShownAuto || !fadeInAnimCompleted || currentPageIndex < AUTO_POPUP_SECTION_INDEX) return;
+    // Wait for the section transition to settle: a scroll event closes this popup on desktop, so
+    // opening it mid-transition would flash it and mark it as seen.
+    const timer = setTimeout(() => {
+      if (window.isNavScrolling || window.isSmootherScrolling) return;
+      handleStart(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [fadeInAnimCompleted, handleStart, hasShownAuto, currentPageIndex]);
 
   return {
     hasShownAuto,
@@ -156,25 +167,28 @@ export function useMobileSubscribeAction() {
     }
   };
 
-  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
-    setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
+    setSubmitError(null);
+    setIsSubmitting(true);
+    const result = await subscribeNewsletter(formData);
+    setIsSubmitting(false);
+    if (!result.ok) {
+      setSubmitError(result.message);
+      return;
+    }
+    setIsSubmitted(true);
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
     });
   };
 
-  // Auto-popup logic, only play when first time load
+  // Auto-popup: once, after the visitor has engaged (reached the 4th section).
+  const mobilePageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   useEffect(() => {
-    if (hasShownAuto || !fadeInAnimCompleted) return;
+    if (hasShownAuto || !fadeInAnimCompleted || mobilePageIndex < AUTO_POPUP_SECTION_INDEX) return;
     setIsSubscribeShow(true);
     trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.POPUP_APPEAR });
     trackEvent({
@@ -182,7 +196,7 @@ export function useMobileSubscribeAction() {
       label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
     });
     setSubscribeType('first');
-  }, [fadeInAnimCompleted, hasShownAuto, setIsSubscribeShow, setSubscribeType]);
+  }, [fadeInAnimCompleted, hasShownAuto, mobilePageIndex, setIsSubscribeShow, setSubscribeType]);
 
   useEffect(() => {
     if (isSubscribeShow) {
@@ -198,6 +212,7 @@ export function useMobileSubscribeAction() {
     onFormSubmit,
     isSubmitting,
     isSubmitted,
+    submitError,
     handleClose,
   };
 }

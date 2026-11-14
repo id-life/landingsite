@@ -1,4 +1,6 @@
 import { useAtomValue } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { STORAGE_KEY } from '@/constants/storage';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
 import { podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
@@ -10,12 +12,15 @@ type PodcastCardProps = {
 export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
   const podcastIDList = useAtomValue(podcastIDAtom);
   const podcastLTList = useAtomValue(podcastLTAtom);
+  const router = useRouter();
 
   const handlePlay = () => {
     const audioData = podcastIDList.find((p) => p.id === item.id) || podcastLTList.find((p) => p.id === item.id);
     if (!audioData) return;
 
-    window.open(`/podcast/${audioData.id}`, '_blank', 'noopener,noreferrer');
+    // Same tab: the episode page is part of this site.
+    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
+    router.push(`/podcast/${audioData.id}`);
   };
 
   return (

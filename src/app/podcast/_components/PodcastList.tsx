@@ -14,7 +14,7 @@ export default async function PodcastList(props: PodcastListProps) {
   return (
     <div className="grid gap-12 mobile:gap-9">
       {list.map((item) => (
-        <Link className="overflow-hidden" key={item.id} target="_blank" href={`/podcast/${item.id}`}>
+        <Link className="overflow-hidden" key={item.id} href={`/podcast/${item.id}`}>
           <PodcastListItem key={item.id} data={item} />
         </Link>
       ))}

@@ -12,7 +12,7 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   alternates: { canonical: '/presence' },
-  title: 'Presence 印记',
+  title: 'Presence 印迹',
   description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',

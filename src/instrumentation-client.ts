@@ -12,7 +12,10 @@ Sentry.init({
   // tracePropagationTargets: ['localhost', /^https:\/\/yourserver\.io\/api/],
 
   debug: false,
-  enabled: process.env.NODE_ENV !== 'development',
+  // Errors are reported from Vercel production and preview builds only, tagged by environment;
+  // local and self-hosted UAT builds stay out of the production Sentry project.
+  environment: process.env.NEXT_PUBLIC_DEPLOY_ENV,
+  enabled: process.env.NODE_ENV !== 'development' && process.env.NEXT_PUBLIC_DEPLOY_ENV !== 'local',
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

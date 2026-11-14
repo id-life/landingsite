@@ -12,7 +12,7 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   alternates: { canonical: '/digitaltwin' },
-  title: 'DigitalTwin 孪生',
+  title: 'Digital Twin 孪生',
   description: PAGE_DESCRIPTION,
   keywords: [
     'Longevity',

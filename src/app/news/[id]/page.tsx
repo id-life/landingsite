@@ -20,8 +20,16 @@ export const dynamicParams = true;
 export const dynamic = 'force-static';
 
 const getCacheNewsContent = cache(async (id: string) => {
-  const res = await fetchNewsContent(id);
-  return res.code == 200 ? res.data : undefined;
+  try {
+    const res = await fetchNewsContent(id);
+    return res.code == 200 ? res.data : undefined;
+  } catch (error) {
+    // The API rejects a malformed or unknown id with 400/404: render the not-found page, not a 500.
+    // Anything else (API down) still throws, so ISR keeps serving the last good version.
+    const code = (error as { code?: number } | undefined)?.code;
+    if (code === 400 || code === 404) return undefined;
+    throw error;
+  }
 });
 
 export async function generateStaticParams() {
@@ -32,7 +40,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
   const data = await getCacheNewsContent(id);
   return {
-    title: `${data?.title} - Immortal Dragons`,
+    title: { absolute: `${data?.title} | Immortal Dragons` },
     description: data?.description,
     keywords: formatKeywords(data?.keyWords),
     alternates: { canonical: `/news/${id}` },

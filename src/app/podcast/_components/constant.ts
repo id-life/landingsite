@@ -51,7 +51,7 @@ export const COMMENTS_TYPE = {
 
 export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
   [PODCAST_NAV_LIST[0].id]: {
-    title: 'Podcast 播客 | Immortal Dragons 不朽真龙',
+    title: 'Podcast 播客',
     description:
       '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
     keywords: ['Longevity', 'Health', 'Science', 'Tech', 'Investment', 'Biotech', '长寿', '健康', '科技', '投资', '生物科技'],
@@ -68,7 +68,7 @@ export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
     },
   },
   [PODCAST_NAV_LIST[1].id]: {
-    title: '龙门阵 Long Talk Podcast | Immortal Dragons',
+    title: '龙门阵 Long Talk Podcast',
     description:
       '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
     keywords: [

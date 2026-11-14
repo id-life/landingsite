@@ -18,7 +18,7 @@ import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
-import jsonp from '@/utils/jsonp';
+import { subscribeNewsletter } from '@/utils/subscribe';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -38,20 +38,21 @@ export default function FooterContactContent() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<Inputs>();
 
   const { trackEvent } = useGA();
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
-    const params = new URLSearchParams();
-    Object.entries(formData).forEach(([key, value]) => params.append(key, value));
-    const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    });
-
+    const result = await subscribeNewsletter(formData);
+    setIsSubmitting(false);
+    if (!result.ok) {
+      setError('EMAIL', { type: 'server', message: result.message });
+      return;
+    }
+    setIsSubmitted(true);
+    // Counted only when Mailchimp confirms, so the event measures subscriptions, not attempts.
     trackEvent({
       name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
       label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,

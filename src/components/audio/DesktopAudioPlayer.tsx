@@ -9,7 +9,7 @@ import AudioTitle from '@/components/audio/AudioTitle';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
-import useCurrentMusicControl from '@/hooks/audio/useCurrentAudio';
+import useCurrentMusicControl, { getAudioContext } from '@/hooks/audio/useCurrentAudio';
 import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { motion } from 'motion/react';
@@ -40,8 +40,13 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
   const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
-  const { data, isPlaying, dispatch, audioContext } = useCurrentMusicControl();
+  const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
+  // The playlist panel (and its waveform, which downloads and decodes the whole track) mounts on first open.
+  const [hasOpened, setHasOpened] = useState(false);
+  useEffect(() => {
+    if (isOpen) setHasOpened(true);
+  }, [isOpen]);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
@@ -55,6 +60,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setHasInteracted(true);
+    const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
@@ -102,7 +108,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             style={{ originX: 1, originY: 1 }}
             className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
           >
-            <DesktopMusicContent isPlaying={isPlaying} audioContext={audioContext} />
+            {hasOpened && <DesktopMusicContent isPlaying={isPlaying} />}
           </motion.div>
         </Popover.Content>
       </Popover.Portal>

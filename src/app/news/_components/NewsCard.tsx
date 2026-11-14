@@ -5,33 +5,36 @@ import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
+import CardShell from '@/components/common/CardShell';
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isYouTube = !!data.videoId;
 
-  const handleClick = () => {
-    if (isYouTube) {
-      setIsModalOpen(true);
-    } else if (data.isExternal && data.url) {
-      window.open(data.url, '_blank');
-    } else {
-      window.open(`/news/${data.id}`, '_blank');
-    }
-  };
+  // Articles are real links (crawlable, middle-click and keyboard work): external press opens in a
+  // new tab, our own articles in the same tab. Videos open the modal.
+  const isExternal = Boolean(data.isExternal && data.url);
+  const href = isYouTube ? undefined : isExternal ? (data.url ?? undefined) : `/news/${data.id}`;
+  const openVideo = () => setIsModalOpen(true);
+  const cardClassName =
+    'group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg';
 
   return (
     <>
-      <div
-        onClick={handleClick}
-        className="group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg"
+      <CardShell
+        href={href}
+        external={isExternal}
+        onActivate={openVideo}
+        label={data.title}
+        className={cardClassName}
       >
         <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
           <YouTubeThumbnail
             pic={data.cover || '/imgs/news/insights-bg.webp'}
             videoId={data.videoId ?? ''}
             title={data.title}
-            onClick={handleClick}
+            onClick={() => {}}
+            sizes="(max-width: 768px) 92vw, 30vw"
           />
         </div>
         <div className="p-4 mobile:p-3">
@@ -48,7 +51,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
             )}
           </div>
         </div>
-      </div>
+      </CardShell>
 
       {isYouTube && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />

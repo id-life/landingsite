@@ -7,6 +7,7 @@ import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/const
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: 'Immortal Dragons 不朽真龙',
+      title: { absolute: 'Episode not found | Immortal Dragons 不朽真龙' },
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
       keywords: [
         'Longevity',
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
   }
 
   return {
-    title: `${data.title} | Immortal Dragons`,
+    title: { absolute: `${data.title} | Immortal Dragons` },
     description: data.description,
     keywords: data.keywords,
     alternates: { canonical: `/podcast/${id}` },
@@ -64,6 +65,8 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
 export default async function PodcastContentPage({ params }: PodcastPlayerProps) {
   const { id } = params;
   const data = await getCachePodcastDetail(id);
+  // The API answers an unknown id with code 200 and data null; that is a 404, not a server error.
+  if (!data) notFound();
 
   const category = categoryOf(data);
   const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];

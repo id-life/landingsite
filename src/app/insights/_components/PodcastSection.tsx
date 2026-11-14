@@ -95,11 +95,8 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   };
 
   const handleViewAllClick = () => {
-    if (isMobile) {
-      // Save current page state before navigation for browser back button
-      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-      router.push('/podcast');
-    } else window.open('/podcast', '_blank');
+    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
+    router.push('/podcast');
   };
 
   const renderContent = () => {

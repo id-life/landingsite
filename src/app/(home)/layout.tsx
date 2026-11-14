@@ -17,7 +17,7 @@ const HOME_INTRO_CN = [
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
-  title: 'Immortal Dragons 不朽真龙',
+  title: { absolute: 'Immortal Dragons 不朽真龙' },
   description: ORG_DESCRIPTION,
   keywords: [
     'Longevity',

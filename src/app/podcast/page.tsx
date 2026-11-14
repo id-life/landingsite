@@ -37,7 +37,8 @@ async function seriesJsonLd(category: PodcastCategory) {
 
 export default async function PodcastPage({ searchParams }: { searchParams: SearchParams }) {
   const { c } = searchParams;
-  const category = c ?? PODCAST_NAV_LIST[0].id;
+  // An unknown ?c= value used to crash the page; fall back to the main show.
+  const category = PODCAST_NAV_LIST.find((item) => item.id === c)?.id ?? PODCAST_NAV_LIST[0].id;
   const jsonLd = await seriesJsonLd(category);
 
   return (

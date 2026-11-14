@@ -4,6 +4,8 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
+import CoverImage from '@/components/media/CoverImage';
+import CardShell from '@/components/common/CardShell';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,24 +14,25 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
 
   const isYouTube = !!data.videoId;
 
-  const handleClick = () => {
-    if (isYouTube) {
-      setIsModalOpen(true);
-    } else if (data.isExternal && data.url) {
-      window.open(data.url, '_blank');
-    } else {
-      window.open(`/news/${data.id}`, '_blank');
-    }
-  };
+  const isExternal = Boolean(data.isExternal && data.url);
+  const href = isYouTube ? undefined : isExternal ? (data.url ?? undefined) : `/news/${data.id}`;
 
   return (
     <>
-      <div onClick={handleClick} className="group block cursor-pointer">
+      <CardShell
+        href={href}
+        external={isExternal}
+        onActivate={() => setIsModalOpen(true)}
+        label={data.title}
+        className="group block cursor-pointer"
+      >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">
-          <img
+          <CoverImage
             src={data.cover || '/imgs/news/insights-bg.webp'}
             alt={data.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 1200px"
+            priority
+            className="transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent mobile:from-black/90 mobile:via-black/50" />
           {isYouTube && (
@@ -62,7 +65,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
             )}
           </div>
         </div>
-      </div>
+      </CardShell>
 
       {isYouTube && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />

@@ -29,8 +29,9 @@ import React from 'react';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
+import { getAudioContext } from '@/hooks/audio/useCurrentAudio';
 
-export default function DesktopMusicContent({ isPlaying, audioContext }: { isPlaying: boolean; audioContext: AudioContext }) {
+export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean }) {
   const musicList = useAtomValue(musicListAtom);
   const podcastID = useAtomValue(podcastIDAtom);
   const podcastLT = useAtomValue(podcastLTAtom);
@@ -73,6 +74,7 @@ export default function DesktopMusicContent({ isPlaying, audioContext }: { isPla
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }

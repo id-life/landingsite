@@ -1,15 +1,24 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import CoverImage from '@/components/media/CoverImage';
 
 type YouTubeThumbnailProps = {
   videoId: string;
   title: string;
   pic: string;
   onClick: () => void;
+  /** Rendered width hint for next/image; defaults to a card in a multi-column grid. */
+  sizes?: string;
 };
 
-export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTubeThumbnailProps) {
+export default function YouTubeThumbnail({
+  videoId,
+  title,
+  onClick,
+  pic,
+  sizes = '(max-width: 768px) 45vw, 22vw',
+}: YouTubeThumbnailProps) {
   const [showPreview, setShowPreview] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -36,10 +45,11 @@ export default function YouTubeThumbnail({ videoId, title, onClick, pic }: YouTu
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
-      <img
+      <CoverImage
         src={videoId ? thumbnailUrl : pic}
         alt={title}
-        className={`size-full object-cover transition-all duration-300 hover:scale-105`}
+        sizes={sizes}
+        className="transition-all duration-300 hover:scale-105"
       />
       {videoId && showPreview && (
         <div className="absolute inset-0 overflow-hidden">

@@ -8,7 +8,7 @@ import { MedicalWebPage, WithContext } from 'schema-dts';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum/disease-management' },
-  title: 'Disease Management & Cure Status | Immortal Dragons',
+  title: 'Disease Management & Cure Status',
   description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
   keywords: [
     'curable diseases',

@@ -43,8 +43,21 @@ export default function NewsSubscribeFooter() {
     };
   }, [isReady]);
 
+  // Auto-popup: once, when the reader is 60% of the way down the page (it used to open on arrival
+  // and close on the first scroll, which also marked it as seen forever).
+  const [engaged, setEngaged] = useState(false);
   useEffect(() => {
-    if (!isReady || hasShownAuto) return;
+    if (hasShownAuto) return;
+    const check = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && window.scrollY / max >= 0.6) setEngaged(true);
+    };
+    window.addEventListener('scroll', check, { passive: true });
+    return () => window.removeEventListener('scroll', check);
+  }, [hasShownAuto]);
+
+  useEffect(() => {
+    if (!isReady || hasShownAuto || !engaged) return;
 
     setIsSubscribeShow(true);
     setSubscribeType('first');
@@ -52,7 +65,7 @@ export default function NewsSubscribeFooter() {
       name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
       label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
     });
-  }, [isReady, hasShownAuto, setIsSubscribeShow, setSubscribeType]);
+  }, [isReady, hasShownAuto, engaged, setIsSubscribeShow, setSubscribeType]);
 
   const handleClose = useCallback(() => {
     timelineRef.current?.reverse();
@@ -81,17 +94,6 @@ export default function NewsSubscribeFooter() {
 
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
-  }, [isSubscribeShow, handleClose]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isSubscribeShow) {
-        handleClose();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, [isSubscribeShow, handleClose]);
 
   useEffect(() => {

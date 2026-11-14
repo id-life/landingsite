@@ -19,8 +19,18 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const analyser = audioContext.createAnalyser();
+// Created on first use, not at import: an AudioContext made before any user gesture starts
+// suspended and logs an autoplay warning on every page load.
+let sharedAudioContext: AudioContext | null = null;
+let sharedAnalyser: AnalyserNode | null = null;
+export function getAudioContext() {
+  sharedAudioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+  return sharedAudioContext;
+}
+function getAnalyser() {
+  sharedAnalyser ??= getAudioContext().createAnalyser();
+  return sharedAnalyser;
+}
 const approxVisualisationUpdateFrequency = 5;
 
 const RA = (f: number) =>
@@ -28,16 +38,18 @@ const RA = (f: number) =>
   ((f ** 2 + 20.6 ** 2) * Math.sqrt((f ** 2 + 107.7 ** 2) * (f ** 2 + 737.9 ** 2)) * (f ** 2 + 12194 ** 2));
 const A = (f: number) => 20 * Math.log10(RA(f)) + 2.0;
 
-const uint8TodB = (byteLevel: number) =>
-  (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
+const uint8TodB = (byteLevel: number) => {
+  const analyser = getAnalyser();
+  return (byteLevel / 255) * (analyser.maxDecibels - analyser.minDecibels) + analyser.minDecibels;
+};
 
 export default function useCurrentAudio() {
   const hasInteractedRef = useRef(false);
   const currentAudio = useAtomValue(currentAudioAtom);
   const playStatus = useAtomValue(currentPlayStatusAtom);
-  const waveFormRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
-  const spectrumRef = useRef<Uint8Array>(new Uint8Array(analyser.frequencyBinCount));
-  const dBASpectrumRef = useRef<Float32Array>(new Float32Array(analyser.frequencyBinCount));
+  const waveFormRef = useRef<Uint8Array>(new Uint8Array(0));
+  const spectrumRef = useRef<Uint8Array>(new Uint8Array(0));
+  const dBASpectrumRef = useRef<Float32Array>(new Float32Array(0));
   const lastExecutionTimeRef = useRef<number>(0);
   const weightingsRef = useRef<number[]>([-100]);
   const nextAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -68,9 +80,10 @@ export default function useCurrentAudio() {
       nextAudioRef.current = null;
     }
 
-    const nextAudio = new Audio(nextTrackToPlay.url);
+    const nextAudio = new Audio();
     nextAudio.crossOrigin = 'anonymous';
     nextAudio.preload = 'auto';
+    nextAudio.src = nextTrackToPlay.url;
     nextAudio.load();
 
     nextAudioRef.current = nextAudio;
@@ -100,9 +113,11 @@ export default function useCurrentAudio() {
       nextAudioRef.current = null;
       isPreloaded = true;
     } else {
-      audio = new Audio(currentAudio.url);
+      // preload 'none': nothing is downloaded until the visitor presses play (the first track is 5.6 MB).
+      audio = new Audio();
       audio.crossOrigin = 'anonymous';
-      audio.load();
+      audio.preload = 'none';
+      audio.src = currentAudio.url;
     }
 
     audio.volume = 0.3;
@@ -110,6 +125,8 @@ export default function useCurrentAudio() {
 
     const setupAudio = () => {
       if (!isMobile) {
+        const audioContext = getAudioContext();
+        const analyser = getAnalyser();
         const source = audioContext.createMediaElementSource(audio);
         const sampleRate = audioContext.sampleRate;
         const totalNumberOfSamples = sampleRate / approxVisualisationUpdateFrequency;
@@ -155,6 +172,9 @@ export default function useCurrentAudio() {
       const now = Date.now();
       if (now - lastExecutionTimeRef.current < 1000 / approxVisualisationUpdateFrequency) return;
       lastExecutionTimeRef.current = now;
+      if (!spectrumRef.current.length) return;
+      const audioContext = getAudioContext();
+      const analyser = getAnalyser();
       const spectrum = spectrumRef.current;
       const waveForm = waveFormRef.current;
       const dBASpectrum = dBASpectrumRef.current;
@@ -202,24 +222,18 @@ export default function useCurrentAudio() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAudio, isMobile]);
 
+  // Sound is opt-in: music starts only from the player's own play control. (It used to start on
+  // the visitor's first click anywhere on the page, which counts as autoplay under WCAG 1.4.2.)
+  // The first interaction is still reported for analytics.
   useEffect(() => {
-    const enableAutoplay = () => {
+    const reportInteraction = () => {
       if (hasInteractedRef.current) return;
       hasInteractedRef.current = true;
       trackEvent({ name: GA_EVENT_NAMES.USER_INTERACT });
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-      if (!playStatus) {
-        dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.INTERACT });
-      }
     };
-    document.addEventListener('click', enableAutoplay, { once: true });
-
-    return () => {
-      document.removeEventListener('click', enableAutoplay);
-    };
-  }, [dispatch, playStatus, trackEvent]);
+    document.addEventListener('click', reportInteraction, { once: true });
+    return () => document.removeEventListener('click', reportInteraction);
+  }, [trackEvent]);
 
   // 清理预加载的资源
   useEffect(() => {
@@ -238,7 +252,10 @@ export default function useCurrentAudio() {
     () => ({
       data: currentAudio,
       dispatch,
-      audioContext,
+      // A getter, so the AudioContext is created when a control first reads it (inside a click handler).
+      get audioContext() {
+        return getAudioContext();
+      },
       ...controls,
     }),
     [controls, currentAudio, dispatch],
