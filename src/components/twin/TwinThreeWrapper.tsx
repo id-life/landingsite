@@ -29,8 +29,10 @@ import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useDeferredAssets } from '@/hooks/useDeferredAssets';
 
 export default function TwinThreeWrapper() {
+  const deferredReady = useDeferredAssets();
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
@@ -232,45 +234,50 @@ export default function TwinThreeWrapper() {
               <View.Port />
             </Suspense>
           </Canvas>
-          {currentModel && (
-            <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-              {modelType === ModelType.Skin && <Model0Out />}
-              {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
-              <EnvironmentGroup />
-              <LightGroup ambientIntensity={1.6} />
-              <ExtendedCameraControls ref={controlRefs[0]} />
-            </View>
-          )}
-          {currentModel === PredictionModel.M1 && (
-            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-              {modelType === ModelType.Skin && <Model1Out />}
-              {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
-              <EnvironmentGroup />
-              <LightGroup ambientIntensity={1.6} />
-              <ExtendedCameraControls ref={controlRefs[1]} />
-            </View>
-          )}
-          {currentModel === PredictionModel.M2 && (
-            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-              {modelType === ModelType.Skin && <Model2Out />}
-              {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
-              <EnvironmentGroup />
-              <LightGroup ambientIntensity={1.6} />
-              <ExtendedCameraControls ref={controlRefs[1]} />
-            </View>
-          )}
-          {currentModel === PredictionModel.M3 && (
-            <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-              <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-              {modelType === ModelType.Skin && <Model3Out />}
-              {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
-              <EnvironmentGroup />
-              <LightGroup ambientIntensity={1.6} />
-              <ExtendedCameraControls ref={controlRefs[1]} />
-            </View>
+          {/* Avatar, anatomy models and the HDR load after the first screen is up (about 6 MB). */}
+          {deferredReady && (
+            <>
+              {currentModel && (
+                <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  {modelType === ModelType.Skin && <Model0Out />}
+                  {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
+                  <EnvironmentGroup />
+                  <LightGroup ambientIntensity={1.6} />
+                  <ExtendedCameraControls ref={controlRefs[0]} />
+                </View>
+              )}
+              {currentModel === PredictionModel.M1 && (
+                <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  {modelType === ModelType.Skin && <Model1Out />}
+                  {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
+                  <EnvironmentGroup />
+                  <LightGroup ambientIntensity={1.6} />
+                  <ExtendedCameraControls ref={controlRefs[1]} />
+                </View>
+              )}
+              {currentModel === PredictionModel.M2 && (
+                <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  {modelType === ModelType.Skin && <Model2Out />}
+                  {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
+                  <EnvironmentGroup />
+                  <LightGroup ambientIntensity={1.6} />
+                  <ExtendedCameraControls ref={controlRefs[1]} />
+                </View>
+              )}
+              {currentModel === PredictionModel.M3 && (
+                <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  {modelType === ModelType.Skin && <Model3Out />}
+                  {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
+                  <EnvironmentGroup />
+                  <LightGroup ambientIntensity={1.6} />
+                  <ExtendedCameraControls ref={controlRefs[1]} />
+                </View>
+              )}
+            </>
           )}
         </ErrorBoundary>
       </div>

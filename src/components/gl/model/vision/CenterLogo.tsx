@@ -10,6 +10,8 @@ import { useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
+const POINTER_DAMPING = 2.5;
+
 export default function CenterLogo() {
   const { pointer, size } = useThree();
   const groupRef = useRef<THREE.Group>(null);
@@ -68,7 +70,7 @@ export default function CenterLogo() {
     }
   }, [globalLoaded]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (!groupRef.current || !smootherRef.current) return;
 
     const positionX = THREE.MathUtils.mapLinear(pointer.x, -1, 1, -0.15, 0.15);
@@ -76,14 +78,21 @@ export default function CenterLogo() {
     const rotationX = THREE.MathUtils.mapLinear(pointer.y, -1, 1, Math.PI / 32, -Math.PI / 32);
     const rotationY = THREE.MathUtils.mapLinear(pointer.x, -1, 1, Math.PI / 32, -Math.PI / 32);
 
-    gsap.to(groupRef.current.position, { x: positionX, y: positionY, duration: 0.8 });
-    gsap.to(groupRef.current.rotation, { x: rotationX, y: rotationY, duration: 0.8 });
+    // Pointer parallax with frame-rate independent damping. This used to start two new GSAP tweens
+    // on every frame (about 96 live tweens at 60 Hz); lambda 2.5 reproduces the same easing.
+    const group = groupRef.current;
+    const dt = Math.min(delta, 0.1);
+    group.position.x = THREE.MathUtils.damp(group.position.x, positionX, POINTER_DAMPING, dt);
+    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, rotationX, POINTER_DAMPING, dt);
+    group.rotation.y = THREE.MathUtils.damp(group.rotation.y, rotationY, POINTER_DAMPING, dt);
 
     const scrollTop = smootherRef.current.scrollTop();
     const scrollY = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 0, 10);
     if (scrollY) {
-      groupRef.current.position.y = scrollY;
-      groupRef.current.position.z = -5 - scrollY;
+      group.position.y = scrollY;
+      group.position.z = -5 - scrollY;
+    } else {
+      group.position.y = THREE.MathUtils.damp(group.position.y, positionY, POINTER_DAMPING, dt);
     }
   });
 

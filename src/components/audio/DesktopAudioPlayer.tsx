@@ -12,7 +12,7 @@ import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import useCurrentMusicControl, { getAudioContext } from '@/hooks/audio/useCurrentAudio';
 import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
@@ -42,11 +42,6 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const musicList = useAtomValue(musicListAtom);
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
-  // The playlist panel (and its waveform, which downloads and decodes the whole track) mounts on first open.
-  const [hasOpened, setHasOpened] = useState(false);
-  useEffect(() => {
-    if (isOpen) setHasOpened(true);
-  }, [isOpen]);
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
@@ -98,20 +93,28 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         </div>
       </Popover.Trigger>
       <Popover.Anchor className={clsx('pointer-events-none h-[26px]', className)} />
-      <Popover.Portal forceMount>
-        <Popover.Content asChild align="end" side="top" avoidCollisions={false} sideOffset={16}>
-          <motion.div
-            variants={motionVariants}
-            transition={motionTransition}
-            initial="hidden"
-            animate={isOpen ? 'visible' : 'hidden'}
-            style={{ originX: 1, originY: 1 }}
-            className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
-          >
-            {hasOpened && <DesktopMusicContent isPlaying={isPlaying} />}
-          </motion.div>
-        </Popover.Content>
-      </Popover.Portal>
+      {/* Mounted only while open (plus its exit animation). A permanently mounted Content keeps Radix's
+          invisible focus-guard spans in <body>, which made the first Tab stop on the page an invisible element,
+          and it mounted the playlist (and its waveform download) on every page load. */}
+      <AnimatePresence>
+        {isOpen && (
+          <Popover.Portal forceMount key="playlist">
+            <Popover.Content forceMount asChild align="end" side="top" avoidCollisions={false} sideOffset={16}>
+              <motion.div
+                variants={motionVariants}
+                transition={motionTransition}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                style={{ originX: 1, originY: 1 }}
+                className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
+              >
+                <DesktopMusicContent isPlaying={isPlaying} />
+              </motion.div>
+            </Popover.Content>
+          </Popover.Portal>
+        )}
+      </AnimatePresence>
     </Popover.Root>
   );
 }

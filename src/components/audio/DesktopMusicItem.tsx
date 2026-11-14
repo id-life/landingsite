@@ -41,6 +41,15 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
     wavesurferRef.current = wavesurfer;
   }, [data.url, isCurrent, onSeekTo]);
 
+  // The playlist now unmounts when it closes: release the waveform (its audio buffer and listeners) with it.
+  useEffect(
+    () => () => {
+      wavesurferRef.current?.destroy();
+      wavesurferRef.current = null;
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!wavesurferRef.current) return;
     if (playStatus && isCurrent) {

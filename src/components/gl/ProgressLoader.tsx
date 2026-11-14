@@ -1,4 +1,5 @@
-import { globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
+import { fadeInAnimCompletedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
+import { ensureDesktopUIVisible, ensureMobileUIVisible } from '@/utils/ui';
 import Background from '@/components/common/Background';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useGA } from '@/hooks/useGA';
@@ -9,6 +10,8 @@ import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+const LOADER_TIMEOUT_MS = 15000;
 
 export function OuterLoader() {
   const { progress, active, errors, item } = useProgress();
@@ -27,12 +30,35 @@ export function OuterLoader() {
   const [, forceUpdate] = useState({});
   const progressRef = useRef();
 
+  // Fail open: an asset that errors, or a load that takes longer than LOADER_TIMEOUT_MS, no longer
+  // leaves the visitor on an endless loader with no navigation. The UI is revealed and the scene
+  // fills in when (if) its assets arrive.
+  const [failOpen, setFailOpen] = useState(false);
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  useEffect(() => {
+    const timer = setTimeout(() => setFailOpen(true), LOADER_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (errors.length > 0 && !active) setFailOpen(true);
+  }, [errors, active]);
+  useEffect(() => {
+    if (!failOpen || !show) return;
+    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: 'fail_open' });
+    setIsLoadingUI(true);
+    setGlobalLoaded(true);
+    setShow(false);
+    if (window.matchMedia('(max-width: 768px)').matches) ensureMobileUIVisible();
+    else ensureDesktopUIVisible();
+    setFadeInAnimCompleted(true);
+  }, [failOpen, show, setFadeInAnimCompleted, setGlobalLoaded, setIsLoadingUI, trackEvent]);
+
   const isLoaded = useMemo(() => progress === 100 && !active, [active, progress]);
   const isLoading = useMemo(() => progress > 0 && progress < 100 && active, [active, progress]);
 
   useGSAP(
     () => {
-      if (progress <= maxProgressRef.current) return;
+      if (!show || progress <= maxProgressRef.current) return;
 
       const now = Date.now();
       const timeDiff = now - lastProgressUpdateTime.current;
@@ -168,11 +194,14 @@ export function OuterLoader() {
   );
 
   useEffect(() => {
+    // Only while the loader is on screen: models for later sections load after the reveal and must
+    // not freeze scrolling.
+    if (!show) return;
     const smoother = ScrollSmoother.get();
     if (!smoother) return;
     smoother.paused(isLoading);
     if (isLoading) setIsLoadingUI(true);
-  }, [isLoading, setIsLoadingUI]);
+  }, [isLoading, setIsLoadingUI, show]);
 
   useEffect(() => {
     return () => {
