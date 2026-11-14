@@ -20,8 +20,11 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
 import { useResizeRefresh } from '@/hooks/useResizeRefresh';
+import { useSectionInput } from '@/hooks/anim/useSectionInput';
+import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
+import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
 export default function Home() {
@@ -34,6 +37,11 @@ export default function Home() {
 
   // Refresh ScrollTrigger and ScrollSmoother on window resize
   useResizeRefresh();
+  // Keyboard and touch step through sections like the wheel does.
+  useSectionInput();
+  // Address bar and tab title follow the visible section (after the initial deep link is applied).
+  const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
+  useSectionUrlSync(currentPage, initialRouteHandled);
 
   useEffect(() => {
     if (isMounted && !isMobile) {

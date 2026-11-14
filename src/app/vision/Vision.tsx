@@ -1,7 +1,7 @@
 import { currentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -30,7 +30,7 @@ export default function Vision() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
+        duration: sectionDuration('FAST'),
         scrollTo: { y: st.start + (st.end - st.start) * 0.95 },
         onComplete: () => {
           window.isNavScrolling = false;

@@ -6,7 +6,7 @@ import Contact from '@/components/portfolio/Contact';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
@@ -73,7 +73,7 @@ function Portfolio() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
+        duration: sectionDuration('FAST'),
         scrollTo: { y: 0 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {
@@ -93,7 +93,7 @@ function Portfolio() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
+        duration: sectionDuration('FAST'),
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         onComplete: () => {
           window.isNavScrolling = false;

@@ -18,6 +18,9 @@ import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
 import { useGA } from '@/hooks/useGA';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAtomValue } from 'jotai';
+import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
+import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
+import { initialRouteHandledAtom } from '@/atoms';
 import { useEffect } from 'react';
 
 export default function MobileHome() {
@@ -36,6 +39,11 @@ export default function MobileHome() {
   }, [mobileCurrentPage, isMobile, trackEvent]);
 
   useMobileHomeAnimateInit();
+  // Vertical swipes step through sections, like the arrow buttons.
+  useMobileSwipe();
+  // Mobile section changes push their own URL; keep the tab title in step.
+  const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
+  useSectionUrlSync(mobileCurrentPage, initialRouteHandled, { replaceUrl: false });
 
   return (
     <>

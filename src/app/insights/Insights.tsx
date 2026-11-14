@@ -3,7 +3,7 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import LongevitySection from '@/app/insights/_components/LongevitySection';
 import { useGSAP } from '@gsap/react';
@@ -29,7 +29,7 @@ export default function Insights() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
+        duration: sectionDuration('FAST'),
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
         onComplete: () => {
@@ -50,7 +50,7 @@ export default function Insights() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.FAST / 1000,
+        duration: sectionDuration('FAST'),
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
         onComplete: () => {

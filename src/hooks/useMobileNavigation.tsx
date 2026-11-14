@@ -27,8 +27,8 @@ export function useMobileNavigation() {
       }
 
       if (item.href !== window.location.pathname) {
-        // if has hash, don't pushState
-        window.history.pushState({}, '', item.href);
+        // Keep the query string (campaign parameters) across section changes.
+        window.history.pushState({}, '', `${item.href}${window.location.search}`);
       }
     },
     [isTransitioning, mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],

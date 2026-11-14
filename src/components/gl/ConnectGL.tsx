@@ -1,7 +1,7 @@
 import { currentPageAtom } from '@/atoms';
 import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
-import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { useConnectCrossAnimations } from '@/hooks/connectGL/useConnectCrossAnimations';
 import { useGSAP } from '@gsap/react';
@@ -51,7 +51,7 @@ function ConnectGL() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        duration: sectionDuration('SLOW'),
         scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         onComplete: () => {

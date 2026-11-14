@@ -11,6 +11,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { ensureMobileUIVisible, ensureDesktopUIVisible, ensureUIVisibleIfHidden } from '@/utils/ui';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
 
 export default function HashRouter() {
@@ -20,6 +21,7 @@ export default function HashRouter() {
   const isMobile = useIsMobile();
   const hashLoadedRef = useRef(false);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  const setInitialRouteHandled = useSetAtom(initialRouteHandledAtom);
 
   const handlePathnameNavigation = useCallback(() => {
     if (!globalLoaded || isMobile === null) return;
@@ -62,6 +64,7 @@ export default function HashRouter() {
     if (!globalLoaded || hashLoadedRef.current) return;
     hashLoadedRef.current = true; // 处理初始页面加载
     handleHashNavigation();
+    setInitialRouteHandled(true);
     const { pathname } = window.location;
     if (pathname !== '/') {
       // fixed initial ui opacity, see DragonModel triggerFadeInAnimation
@@ -88,6 +91,12 @@ export default function HashRouter() {
     const handlePopState = () => {
       // When navigating back to the main page, ensure UI elements are visible
       ensureUIVisibleIfHidden(isMobile);
+      // Back / Forward between sections: move the view to the section in the address. (Before, the
+      // address changed but the page stayed between two sections.)
+      const item = NAV_LIST.find((navItem) => navItem.href === window.location.pathname);
+      if (!item) return;
+      if (isMobile) mobileNavChange(item);
+      else handleNavClick(item);
     };
 
     // Listen to popstate (browser back/forward button)
@@ -96,7 +105,7 @@ export default function HashRouter() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [globalLoaded, isMobile]);
+  }, [globalLoaded, isMobile, handleNavClick, mobileNavChange]);
 
   return null;
 }

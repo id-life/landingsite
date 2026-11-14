@@ -103,10 +103,13 @@ export const THEME_TRANSITIONS = {
 } as const;
 
 // ScrollSmoother 默认配置
+// smooth was true (= 0.8 s of trailing lag after every scroll); 0.5 s keeps the glide and makes a
+// section change settle about 0.3 s sooner. No smoothing for visitors who prefer reduced motion.
+const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 export const SCROLL_SMOOTHER_DEFAULTS: ScrollSmoother.Vars = {
   wrapper: '#wrapper',
   content: '#content',
-  smooth: true,
+  smooth: reduceMotion ? 0 : 0.5,
   effects: false,
   smoothTouch: 0.1,
   // onUpdate: (self) => {

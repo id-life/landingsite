@@ -6,7 +6,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -53,7 +53,7 @@ function Twin() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        duration: sectionDuration('SLOW'),
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
         onComplete: () => {
@@ -73,7 +73,7 @@ function Twin() {
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
-        duration: SCROLL_ANIMATION_CONFIG.DURATION.SLOW / 1000,
+        duration: sectionDuration('SLOW'),
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
         scrollTo: { y: '#connect_page' },
         onComplete: () => {

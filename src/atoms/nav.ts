@@ -10,6 +10,9 @@ export const mobileNavOpenAtom = atom<boolean>(false);
 
 export const navigateToAtom = atom<NavItem | null>(null);
 
+/** True once HashRouter has applied the initial URL (deep link) after the experience loaded. */
+export const initialRouteHandledAtom = atom<boolean>(false);
+
 // 移动端 portfolio 轮播页面进度条
 export const mobilePortfolioPageIndexAtom = atom<number>(0);
 export const mobilePortfolioPageNavigateToAtom = atom<number | null>(null);

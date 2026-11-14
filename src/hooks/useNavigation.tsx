@@ -9,6 +9,16 @@ import { engagementProgressMap } from './engagement/useEngagementJumpTo';
 import { useThrottle } from './useThrottle';
 import { useGSAP } from '@gsap/react';
 
+/**
+ * One history entry per explicit navigation, and none when the address is already right (Back and
+ * Forward call the same navigation; pushing again there would break the Forward stack). Keeps the
+ * query string so campaign parameters survive.
+ */
+function pushSectionUrl(path: string, hash = '') {
+  if (window.location.pathname === path && window.location.hash === hash) return;
+  window.history.pushState({}, '', `${path}${window.location.search}${hash}`);
+}
+
 export function useNavigation() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
@@ -27,7 +37,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/');
+        pushSectionUrl('/');
       } else if (id === 'portfolio_page') {
         // portfolio 页 偏移 & contact 需要处理
         window.isNavScrolling = true;
@@ -40,7 +50,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/portfolio');
+        pushSectionUrl('/portfolio');
       } else if (id === 'spectrum_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -53,9 +63,7 @@ export function useNavigation() {
           window.isNavScrolling = false;
         }, 500);
         // Preserve hash if it exists (for spectrum routing)
-        const currentHash = window.location.hash;
-        const newUrl = currentHash ? `/spectrum${currentHash}` : '/spectrum';
-        window.history.pushState({}, '', newUrl);
+        pushSectionUrl('/spectrum', window.location.hash);
       } else if (id === 'engagement_page') {
         // engagement 页
         window.isNavScrolling = true;
@@ -69,9 +77,7 @@ export function useNavigation() {
           window.isNavScrolling = false;
         }, 500);
         // Preserve hash if it exists (for spectrum routing)
-        const currentHash = window.location.hash;
-        const newUrl = currentHash ? `/presence${currentHash}` : '/presence';
-        window.history.pushState({}, '', newUrl);
+        pushSectionUrl('/presence', window.location.hash);
       } else if (id === 'twin_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
@@ -84,7 +90,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/digitaltwin');
+        pushSectionUrl('/digitaltwin');
       } else if (id === 'insights_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false, 'top 10px');
@@ -96,7 +102,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/insights');
+        pushSectionUrl('/insights');
       } else if (id === 'connect_page') {
         window.isNavScrolling = true;
         smoother?.scrollTo(`#${item.id}`, false);
@@ -108,7 +114,7 @@ export function useNavigation() {
         setTimeout(() => {
           window.isNavScrolling = false;
         }, 500);
-        window.history.pushState({}, '', '/connect');
+        pushSectionUrl('/connect');
       } else {
         // 其他 正常滚
         window.isNavScrolling = true;

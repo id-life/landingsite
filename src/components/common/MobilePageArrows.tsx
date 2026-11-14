@@ -52,7 +52,11 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
   );
 }
 
-function ArrowItem({ isUp }: { isUp?: boolean }) {
+/**
+ * One step through the phone experience: the next / previous inner page of Portfolio, Insights and
+ * Spectrum, then the next / previous section. Shared by the arrow buttons and the swipe gesture.
+ */
+export function useMobileSectionStep() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
@@ -61,34 +65,43 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const { mobileNavChange } = useMobileNavigation();
   const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
 
-  const handleClick = useThrottle(() => {
+  return useThrottle((isUp: boolean) => {
     if (mobileIsScrolling) return;
     if (hasInnerPage(currentPage.id)) {
       // 有内页翻页
       if (innerPageIndex === 0 && isUp) {
         // 第一个内页往上翻 -> 跳到上一个主页面
-        mobileNavChange(NAV_LIST[currentPageIndex - 1]);
+        if (currentPageIndex > 0) mobileNavChange(NAV_LIST[currentPageIndex - 1]);
         return;
       } else if (innerPageIndex === innerPageTotal - 1 && !isUp) {
         // 最后一个内页往下翻 -> 跳到下一个主页面
-        mobileNavChange(NAV_LIST[currentPageIndex + 1]);
+        if (currentPageIndex < NAV_LIST.length - 1) mobileNavChange(NAV_LIST[currentPageIndex + 1]);
         return;
       }
       setInnerPageNavigateTo(innerPageIndex + (isUp ? -1 : 1));
       return;
     }
-    mobileNavChange(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
-  }, 1000);
+    const target = NAV_LIST[currentPageIndex + (isUp ? -1 : 1)];
+    if (target) mobileNavChange(target);
+  }, 700);
+}
+
+function ArrowItem({ isUp }: { isUp?: boolean }) {
+  const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const step = useMobileSectionStep();
 
   return (
-    <div
+    <button
+      type="button"
+      aria-label={isUp ? 'Previous section' : 'Next section'}
       className={cn(
-        'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
+        // 40 px circle with a 48 px touch target (the ::before pseudo-element extends the hit area).
+        'flex-center relative h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm before:absolute before:-inset-1 before:content-[""]',
         hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
-      onClick={handleClick}
+      onClick={() => step(Boolean(isUp))}
     >
-      <ArrowDownSVG className={cn('h-5 w-5 fill-white', { 'rotate-180': isUp })} />
-    </div>
+      <ArrowDownSVG aria-hidden="true" className={cn('h-5 w-5 fill-white', { 'rotate-180': isUp })} />
+    </button>
   );
 }

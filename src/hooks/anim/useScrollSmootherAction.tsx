@@ -3,65 +3,66 @@ import { throttle } from 'lodash-es';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
+import { SECTION_STEP_EVENT, SectionStepDetail } from '@/utils/section-step';
 
+/**
+ * One direction of section stepping for one section: while `enableJudge` is true (the section is
+ * current), a wheel flick, an arrow / page key or a vertical swipe in this direction runs scrollFn.
+ */
 export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => void; isUp?: boolean }) => {
   const [enableJudge, setEnableJudge] = useState(false);
   const isScrollingRef = useRef(false);
+  // Latest scrollFn without re-binding listeners on every render.
+  const scrollFnRef = useRef(scrollFn);
+  scrollFnRef.current = scrollFn;
 
   const throttleScrollFn = useMemo(
     () =>
       throttle(() => {
-        // console.log(`[useScrollSmootherAction] Executing scrollFn, isUp: ${isUp}`);
         isScrollingRef.current = true;
-        scrollFn?.();
-        // Don't disable immediately, let the scroll animation complete
+        scrollFnRef.current?.();
         isScrollingRef.current = false;
       }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME),
-    [scrollFn],
+    [],
   );
 
   useEffect(() => {
-    const handleWheel = throttle((e) => {
-      if (!enableJudge) {
-        // console.log(`[useScrollSmootherAction] Wheel ignored - enableJudge: false, isUp: ${isUp}`);
-        return;
-      }
+    const busy = () => isScrollingRef.current || window.isNavScrolling || window.isResizing;
 
-      if (isScrollingRef.current || window.isNavScrolling || window.isResizing) {
-        // console.log(`[useScrollSmootherAction] Wheel ignored - already scrolling, isUp: ${isUp}`);
-        return;
-      }
+    const handleWheel = throttle((e: WheelEvent) => {
+      if (!enableJudge || busy()) return;
+      // Pinch-zoom on a trackpad arrives as a wheel event with ctrlKey; horizontal swipes are not
+      // section changes.
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
 
       const smoother = ScrollSmoother.get();
       const smootherST = smoother?.scrollTrigger as ScrollTrigger | undefined;
       if (!smootherST) return;
 
-      const dir = smootherST.direction;
-      const velocity = smootherST.getVelocity();
       const deltaY = e?.deltaY ?? 0;
-      console.log(
-        `[useScrollSmootherAction] Wheel event - dir: ${dir}, velocity: ${velocity},e?.deltaY:${deltaY} isUp: ${isUp}`,
-      );
+      if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) return;
 
-      if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) {
-        // console.log(`[useScrollSmootherAction] Velocity too low, ignoring`);
-        return;
-      }
-
-      if (isUp && deltaY < 0) {
-        // console.log(`[useScrollSmootherAction] Triggering UP scroll`);
-        throttleScrollFn();
-      }
-      if (!isUp && deltaY > 0) {
-        // console.log(`[useScrollSmootherAction] Triggering DOWN scroll`);
-        throttleScrollFn();
-      }
+      if ((isUp && deltaY < 0) || (!isUp && deltaY > 0)) throttleScrollFn();
     }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME);
 
+    const handleStep = (event: Event) => {
+      const detail = (event as CustomEvent<SectionStepDetail>).detail;
+      if (!enableJudge) return;
+      if (busy()) {
+        detail.handled = true; // swallow input during a transition instead of letting it scroll natively
+        return;
+      }
+      if ((detail.dir === 'up') !== Boolean(isUp)) return;
+      detail.handled = true;
+      throttleScrollFn();
+    };
+
     window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener(SECTION_STEP_EVENT, handleStep);
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      // Cancel any pending throttled calls on unmount
+      window.removeEventListener(SECTION_STEP_EVENT, handleStep);
+      handleWheel.cancel();
       throttleScrollFn.cancel?.();
     };
   }, [enableJudge, isUp, throttleScrollFn]);
