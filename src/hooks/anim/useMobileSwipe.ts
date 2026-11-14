@@ -7,26 +7,26 @@ import { useMobileSectionStep } from '@/components/common/MobilePageArrows';
 
 const IGNORE = '.swiper, [data-no-swipe], .touch-none, input, textarea, select, [role="dialog"], [aria-modal="true"]';
 
-/** True when a scrollable ancestor of the target (or the page itself) can still scroll that way. */
-function canScroll(target: Element | null, dir: 'up' | 'down') {
+/** The nearest ancestor of the target that scrolls vertically on its own, if any. */
+function verticalScroller(target: Element | null): Element | null {
   let el: Element | null = target;
   while (el && el !== document.body && el !== document.documentElement) {
     const style = getComputedStyle(el);
-    if (/(auto|scroll)/.test(style.overflowY) && el.scrollHeight > el.clientHeight + 1) {
-      if (dir === 'down' && el.scrollTop + el.clientHeight < el.scrollHeight - 1) return true;
-      if (dir === 'up' && el.scrollTop > 0) return true;
-    }
+    if (/(auto|scroll)/.test(style.overflowY) && el.scrollHeight > el.clientHeight + 1) return el;
     el = el.parentElement;
   }
-  const page = document.scrollingElement ?? document.documentElement;
-  if (dir === 'down') return window.scrollY + window.innerHeight < page.scrollHeight - 1;
-  return window.scrollY > 0;
+  return null;
 }
 
 /**
  * Vertical swipes move through the phone experience like the arrow buttons. (Before, only the two
  * 40 px arrows, the START pill and the menu could change sections.) Content that scrolls on its
  * own (the Connect section) scrolls first; a swipe past its edge changes section.
+ *
+ * "Did this swipe scroll something?" is measured, not predicted. Predicting from scrollHeight broke
+ * on a page a couple of pixels taller than the viewport (iOS Safari's toolbars do this routinely):
+ * the body cannot scroll (overflow hidden) but the check said it could, and every swipe up was
+ * swallowed.
  */
 export function useMobileSwipe() {
   const step = useMobileSectionStep();
@@ -42,8 +42,9 @@ export function useMobileSwipe() {
   useEffect(() => {
     let startX = 0;
     let startY = 0;
-    let couldScrollDown = false;
-    let couldScrollUp = false;
+    let scroller: Element | null = null;
+    let scrollerTop = 0;
+    let pageY = 0;
     let tracking = false;
 
     const onStart = (event: TouchEvent) => {
@@ -54,10 +55,9 @@ export function useMobileSwipe() {
       const touch = event.touches[0];
       startX = touch.clientX;
       startY = touch.clientY;
-      // Remember whether content could scroll when the finger went down, so a swipe that scrolls
-      // content to its end does not also change section.
-      couldScrollDown = canScroll(target, 'down');
-      couldScrollUp = canScroll(target, 'up');
+      scroller = verticalScroller(target);
+      scrollerTop = scroller?.scrollTop ?? 0;
+      pageY = window.scrollY;
       tracking = true;
     };
     const onEnd = (event: TouchEvent) => {
@@ -69,7 +69,11 @@ export function useMobileSwipe() {
       const dy = touch.clientY - startY;
       if (Math.abs(dy) < 50 || Math.abs(dy) < Math.abs(dx) * 1.3) return;
       const dir = dy < 0 ? 'down' : 'up';
-      if ((dir === 'down' && couldScrollDown) || (dir === 'up' && couldScrollUp)) return;
+      // The swipe scrolled content (or the page): it was a scroll, not a section change. A swipe
+      // against content already at its edge moves nothing, so it changes section.
+      const scrolled =
+        Math.abs(window.scrollY - pageY) > 2 || (scroller !== null && Math.abs(scroller.scrollTop - scrollerTop) > 2);
+      if (scrolled) return;
       if (pageRef.current.id === 'connect_page' && dir === 'down') return; // last section
       stepRef.current(dir === 'up');
     };
