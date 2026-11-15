@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import PresenceSummary from '@/app/presence/_components/PresenceSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { WebPage, WithContext } from 'schema-dts';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'Presence 印记';
 const PAGE_DESCRIPTION =
@@ -49,8 +50,7 @@ const jsonLd: WithContext<WebPage> = {
 export default function PresenceLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Style />
       <ClientNav />

@@ -4,6 +4,7 @@ import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { getSpectrumJsonLd } from './_components/spectrumData';
 import SpectrumSEO from './_components/SpectrumSEO';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum' },
@@ -41,8 +42,7 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpectrumSEO />
       <Style />

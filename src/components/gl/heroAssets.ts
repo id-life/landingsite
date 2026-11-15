@@ -2,8 +2,9 @@ import { useLoader, useThree } from '@react-three/fiber';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import * as THREE from 'three';
-import { DRACOLoader, GLTF, GLTFLoader } from 'three-stdlib';
+import { GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 import { heroReadyAtom } from '@/atoms/loading';
+import { HERO_MODEL_URL, HERO_TEXTURE_URLS } from './heroAssetUrls';
 
 /**
  * The first screen's own assets (the dragon model and the four wordmark textures) load through this
@@ -12,14 +13,6 @@ import { heroReadyAtom } from '@/atoms/loading';
  * the first screen back.
  */
 export const heroLoadingManager = new THREE.LoadingManager();
-
-export const HERO_MODEL_URL = '/models/logo_v1.glb';
-export const HERO_TEXTURE_URLS = [
-  '/textures/logos/logo-en.png',
-  '/textures/logos/logo-cn.png',
-  '/textures/logos/main-description.png',
-  '/textures/logos/main-description-cn.png',
-] as const;
 
 // R3F keeps one loader instance per loader class, so the hero gets classes of its own: setting a
 // manager on the shared GLTFLoader would also move the twin and jellyfish onto it.
@@ -35,10 +28,10 @@ class HeroTextureLoader extends THREE.TextureLoader {
   }
 }
 
-let heroDraco: DRACOLoader | null = null;
+// The hero model is Meshopt-compressed (scripts/encode-hero-model.mjs): its decoder ships inside
+// three-stdlib, so the first screen fetches no Draco decoder.
 const heroGLTFExtensions = (loader: GLTFLoader) => {
-  if (!heroDraco) heroDraco = new DRACOLoader(heroLoadingManager).setDecoderPath('/assets/draco/');
-  loader.setDRACOLoader(heroDraco);
+  loader.setMeshoptDecoder(typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder);
 };
 
 /** The dragon model (same result shape as drei's useGLTF: nodes and materials included). */
