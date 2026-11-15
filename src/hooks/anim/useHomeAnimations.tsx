@@ -8,6 +8,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import { reportError } from '@/lib/report';
+import { beats } from '@/motion/tokens';
 
 // 背景点阵过渡配置
 const BG_TRANSITION = {
@@ -52,7 +53,7 @@ const THEME_HANDLERS = {
       root,
       {
         ...THEME_TRANSITIONS[PAGE_IDS.SPECTRUM],
-        duration: 1,
+        duration: beats(1),
         ease: THEME_TRANSITION_DEFAULTS.ease,
       },
       '<',

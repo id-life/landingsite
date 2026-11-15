@@ -7,6 +7,7 @@ import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimatio
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import { cn } from '@/utils';
+import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -97,6 +98,8 @@ function Portfolio() {
 
   useGSAP(() => {
     const tl = gsap.timeline({
+      // Scrubbed: lengths are beats (shares of the section's scroll), not seconds.
+      defaults: { duration: beats(0.5) },
       scrollTrigger: {
         trigger: `#${PAGE_ID}`,
         start: 'top top',
@@ -121,16 +124,11 @@ function Portfolio() {
         },
       },
     });
-    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: 2 });
-    tl.from('.page2-title', {
-      delay: 0.5,
-      y: (_, target) => target.offsetHeight,
-      rotateX: 45,
-      rotateY: 15,
-      opacity: 0,
-    });
-    tl.from('.page2-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
-    tl.from('.page2-contact', { y: (_, target) => target.offsetHeight / 2, rotateX: 45, rotateY: 15, opacity: 0 });
+    tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: beats(2) });
+    // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
+    tl.from('.page2-title', { delay: beats(0.5), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.from('.page2-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.from('.page2-contact', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
   }, []);
 
   useEffect(() => {

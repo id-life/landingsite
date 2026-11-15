@@ -1,10 +1,12 @@
+import { DURATION, EASE } from '@/motion/tokens';
+
 // 统一的滚动动画配置
 export const SCROLL_ANIMATION_CONFIG = {
-  // Section-to-section transition length (ms). Was 2000 / 3000 ms with input locked throughout,
-  // 2 to 6x longer than motion guidance (NN/g 100-500 ms, Material 3 tops out at 1000 ms).
+  // Every section-to-section transition plays the section token (src/motion/tokens.ts, MOT-08). They were
+  // 2000 / 3000 ms with input locked, then 900 / 1200 ms after wave 0.
   DURATION: {
-    FAST: 900, // Vision, Portfolio, Spectrum, Engagement, Insights
-    SLOW: 1200, // Twin, Connect (camera move through the 3D scene)
+    FAST: DURATION.section, // Vision, Portfolio, Spectrum, Engagement, Insights
+    SLOW: DURATION.section, // Twin, Connect (camera move through the 3D scene)
   },
 
   // 节流时间（毫秒）
@@ -14,7 +16,7 @@ export const SCROLL_ANIMATION_CONFIG = {
   MIN_VELOCITY: 0.01,
   // 动画缓动函数
   EASING: {
-    DEFAULT: 'power2.inOut',
+    DEFAULT: EASE.inOut,
   },
 } as const;
 
@@ -25,12 +27,5 @@ export function prefersReducedMotion() {
 
 /** Section transition duration in seconds; near-instant for visitors who prefer reduced motion. */
 export function sectionDuration(kind: keyof typeof SCROLL_ANIMATION_CONFIG.DURATION) {
-  return prefersReducedMotion() ? 0.05 : SCROLL_ANIMATION_CONFIG.DURATION[kind] / 1000;
-}
-
-// 滚动状态枚举
-export enum ScrollState {
-  IDLE = 'idle',
-  SCROLLING = 'scrolling',
-  LOCKED = 'locked',
+  return prefersReducedMotion() ? DURATION.instant : SCROLL_ANIMATION_CONFIG.DURATION[kind];
 }

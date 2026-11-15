@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { EASE } from '@/motion/tokens';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -147,7 +148,7 @@ const ProgressLoader = forwardRef<ProgressLoaderHandle>((_, ref) => {
       tween.current = gsap.to(shown.current, {
         value: Math.max(shown.current.value, value),
         duration,
-        ease: 'none',
+        ease: EASE.linear,
         onUpdate: () => {
           const offset = `${shown.current.value.toFixed(2)}%`;
           redStopRef.current?.setAttribute('offset', offset);

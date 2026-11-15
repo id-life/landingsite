@@ -11,6 +11,7 @@ import { cn } from '@/utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { track } from '@/lib/analytics/track';
 import { motion } from 'motion/react';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -114,7 +115,7 @@ const CharacterRelation = () => {
           opacity: isBePartOfItShow ? 0 : 1,
           pointerEvents: isBePartOfItShow ? 'none' : 'auto',
         }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: DURATION.base, ease: EASE.inOut }}
       >
         {showBePartOfItBtnText}
       </motion.button>

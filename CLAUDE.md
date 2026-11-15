@@ -81,6 +81,11 @@ Each job is its own status check. Run the same commands locally before pushing.
 - **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
   R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
   300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
+- **Motion tokens** (MOT-08, `src/motion/tokens.ts`): every duration, ease, stagger and distance. GSAP gets the eases
+  under their token names and `gsap.defaults` from `src/motion/gsap.ts` (imported by `gsap-plugins.ts`); CSS gets
+  `--dur-*` / `--ease-*` (Tailwind `duration-<token>`, `ease-token-<name>`); motion gets `MOTION.*` (`presets.ts`).
+  Inside a scrubbed timeline lengths are `beats(n)`. Lint rejects a numeric `duration:`, a string `ease:` and timing
+  among a `gsap.timeline()`'s own vars outside `src/motion`. `docs/motion-inventory.md` has the mapping.
 - **GSAP stays in the experience.** Plugins are registered in `src/utils/gsap-plugins.ts`, imported by the experience's
   entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
   `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.

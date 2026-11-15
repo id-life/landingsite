@@ -9,6 +9,7 @@ import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
+import { DURATION } from '@/motion/tokens';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
@@ -59,16 +60,18 @@ export default function DragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
+    // The nav and the fixed UI fade in together in DURATION.fast. (A duration among the timeline's own vars is
+    // ignored by GSAP: the two default 0.5 s fades ran one after the other, 1.21 s instead of 0.21 s; MOT-08.)
     const tl = gsap.timeline({
-      duration: 0.21,
+      defaults: { duration: DURATION.fast },
       onComplete: () => {
         setFadeInAnimCompleted(true);
       },
     });
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
-    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 });
-    if (element) tl.fromTo(element, { opacity: 0 }, { opacity: 1 });
+    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 }, 0);
+    if (element) tl.fromTo(element, { opacity: 0 }, { opacity: 1 }, 0);
     tl.play();
   });
 

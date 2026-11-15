@@ -7,6 +7,7 @@ import { useConnectCrossAnimations } from '@/hooks/connectGL/useConnectCrossAnim
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
+import { EASE } from '@/motion/tokens';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
@@ -82,9 +83,10 @@ function ConnectGL() {
             window.isSmootherScrolling = true;
             smoother.paused(true);
             gsap.to(smoother, {
+              // eslint-disable-next-line no-restricted-syntax -- this auto-scroll is removed by MOT-01
               duration: 3,
               scrollTop: tl1.scrollTrigger.end + 50,
-              ease: 'none',
+              ease: EASE.linear,
               onComplete: () => {
                 smoother.paused(false);
                 window.isNavScrolling = false;

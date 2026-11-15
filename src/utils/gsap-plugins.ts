@@ -7,6 +7,8 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { registerSmootherLookup } from '@/utils/smoother';
+// The motion tokens' eases and GSAP defaults (MOT-08), before any experience tween is created.
+import '@/motion/gsap';
 
 /**
  * GSAP plugin registration for the 3D experience, imported for its side effect by the experience's entry

@@ -2,6 +2,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useCallback } from 'react';
 import { ensureMobileUIVisible } from '@/utils/ui';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export function useMobileInsightsAnim() {
   const { contextSafe } = useGSAP();
@@ -28,8 +29,8 @@ export function useMobileInsightsAnim() {
     tl.to('.mobile-insights-content', {
       opacity: 1,
       y: 0,
-      duration: 0.5,
-      ease: 'power2.out',
+      duration: DURATION.moderate,
+      ease: EASE.out,
     });
 
     // 底部导航淡入
@@ -37,8 +38,8 @@ export function useMobileInsightsAnim() {
       '.mobile-insights-nav',
       {
         opacity: 1,
-        duration: 0.3,
-        ease: 'power2.out',
+        duration: DURATION.base,
+        ease: EASE.out,
       },
       '-=0.2',
     );

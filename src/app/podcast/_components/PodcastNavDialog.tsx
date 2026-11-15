@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import gsap from 'gsap';
+import { playMenuItems } from '@/motion/menu';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import Dialog from '@/components/dialog';
@@ -15,20 +15,7 @@ function PodcastNavDialog() {
   const [open, setOpen] = useAtom(isPodcastNavOpenAtom);
 
   const startAnim = useCallback((isOpen: boolean) => {
-    if (isOpen) {
-      gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-      gsap.to('.mobile-nav-item', {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power4.out',
-        delay: -0.06,
-      });
-    } else {
-      gsap.set('.mobile-nav-item', { y: 0 });
-      gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
-    }
+    playMenuItems('.mobile-nav-item', isOpen);
   }, []);
 
   const handleNavClick = useThrottle((item: NavItem) => {

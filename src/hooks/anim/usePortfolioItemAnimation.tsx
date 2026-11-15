@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import { RefObject } from 'react';
 import { useThrottle } from '../useThrottle';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export interface PortfolioItemAnimationConfig {
   /** 缁勪欢鏄惁鍚敤 */
@@ -32,7 +33,7 @@ export function usePortfolioItemAnimation(
   const createItemHoverAnimation = contextSafe((div: HTMLDivElement) => {
     const tl = gsap.timeline({
       paused: true,
-      defaults: { ease: 'power2.out', duration: 0.3 },
+      defaults: { ease: EASE.out, duration: DURATION.base },
     });
 
     // 涓昏缂╂斁鍔ㄧ敾

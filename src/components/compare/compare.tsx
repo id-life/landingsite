@@ -7,6 +7,7 @@ import { IconDotsVertical } from '@tabler/icons-react';
 import gsap from 'gsap';
 import Image from 'next/image';
 import { reportMediaError } from '@/lib/report';
+import { DURATION, EASE } from '@/motion/tokens';
 
 interface CompareProps {
   firstImage?: string;
@@ -115,15 +116,15 @@ export const Compare = ({
                   if (fillRef.current) {
                     gsap.to(fillRef.current, {
                       width: '100%',
-                      duration: 0.5,
-                      ease: 'none',
+                      duration: DURATION.moderate,
+                      ease: EASE.linear,
                     });
                   }
                   if (inverseTextRef.current) {
                     gsap.to(inverseTextRef.current, {
                       clipPath: 'inset(0 0% 0 0)',
-                      duration: 0.5,
-                      ease: 'none',
+                      duration: DURATION.moderate,
+                      ease: EASE.linear,
                     });
                   }
 
@@ -315,7 +316,7 @@ export const Compare = ({
               top: '0',
               zIndex: 40,
             }}
-            transition={{ duration: 0 }}
+            transition={{ duration: DURATION.instant }}
           >
             <div className="absolute left-0 top-[43%] z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
             <div className="absolute left-0 top-[43%] z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
@@ -349,7 +350,7 @@ export const Compare = ({
               style={{
                 clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
               }}
-              transition={{ duration: 0 }}
+              transition={{ duration: DURATION.instant }}
             >
               {isVideo ? (
                 <video
@@ -386,7 +387,7 @@ export const Compare = ({
             style={{
               clipPath: `inset(0 0 0 ${sliderXPercent}%)`,
             }}
-            transition={{ duration: 0 }}
+            transition={{ duration: DURATION.instant }}
           >
             {isVideo ? (
               <video

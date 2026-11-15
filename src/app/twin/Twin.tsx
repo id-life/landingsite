@@ -7,6 +7,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -122,9 +123,9 @@ function Twin() {
     // tl.add(() => {
     //   setEnableUpJudge(true);
     // });
-    tl.to(imageContainerRef.current, { height: '100svh' });
-    tl.to('#twin-three-wrapper', { opacity: 1, duration: 1, ease: 'power3.out' });
-    tl.to('#twin-three-wrapper', { opacity: 0, duration: 1 }, 'twin-show');
+    tl.to(imageContainerRef.current, { height: '100svh', duration: beats(0.5) });
+    tl.to('#twin-three-wrapper', { opacity: 1, duration: beats(1), ease: EASE.out });
+    tl.to('#twin-three-wrapper', { opacity: 0, duration: beats(1) }, 'twin-show');
   }, []);
 
   useEffect(() => {

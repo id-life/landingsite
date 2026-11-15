@@ -4,6 +4,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
@@ -96,38 +97,38 @@ function Engagement() {
     //   setEnableUpJudge(true);
     // });
     // 入场动画序列
-    const entranceDuration = 2 * factor;
+    const entranceDuration = beats(2) * factor;
     tl.to('.world-map-img', {
       y: 0,
       opacity: 1,
-      ease: 'none',
+      ease: EASE.linear,
       duration: entranceDuration,
     });
     tl.to(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 1,
       scale: 1,
-      ease: 'power2.out',
+      ease: EASE.out,
       stagger: entranceDuration * 0.05,
       duration: entranceDuration,
     });
 
     // 停留一阵子
-    tl.to(() => {}, { duration: 2 * factor });
+    tl.to(() => {}, { duration: beats(2) * factor });
     // tl.add(() => {
     //   setEnableDownJudge(true);
     // });
     // 出场动画序列
-    const exitDuration = 2 * factor;
+    const exitDuration = beats(2) * factor;
     tl.to(
       ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'],
       {
         opacity: 0,
         // y: -10,
-        ease: 'power2.out',
+        ease: EASE.out,
         stagger: exitDuration * 0.1,
         duration: exitDuration,
       },
-      '+=105',
+      `+=${beats(105)}`,
     );
 
     // tl.to(
@@ -135,7 +136,7 @@ function Engagement() {
     //   {
     //     y: -50,
     //     opacity: 0,
-    //     ease: 'power2.out',
+    //     ease: EASE.out,
     //     duration: exitDuration * 5,
     //   },
     //   '<',

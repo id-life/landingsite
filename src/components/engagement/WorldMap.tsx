@@ -2,6 +2,7 @@
 
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
+import { DURATION, EASE } from '@/motion/tokens';
 // import DottedMap from 'dotted-map';
 import { currentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
@@ -211,8 +212,8 @@ export const WorldMap = memo(function WorldMapComponent({
         y: moveY,
         rotateX: rotateX,
         rotateY: rotateY,
-        duration: 1.5,
-        ease: 'power2.out',
+        duration: DURATION.camera,
+        ease: EASE.out,
         overwrite: 'auto',
       });
     },

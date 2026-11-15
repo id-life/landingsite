@@ -9,6 +9,7 @@ import { NAV_LIST } from '../nav/nav';
 import MobileCenterLogo from './model/vision/MobileCenterLogo';
 import MobileDragonModel from './model/vision/MobileDragonModel';
 import { fitHeroScale, PHONE_LOGO, svgInkSize } from './model/vision/heroFit';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export default function MobileVisionGL() {
   const size = useThree((state) => state.size);
@@ -45,15 +46,15 @@ export default function MobileVisionGL() {
         timelineRef.current
           .to(modelRef.current.position, {
             z: 0,
-            duration: 1.2,
-            ease: 'power3.out',
+            duration: DURATION.camera,
+            ease: EASE.out,
           })
           .to(
             modelRef.current.rotation,
             {
               y: 0,
-              duration: 1.2,
-              ease: 'power2.out',
+              duration: DURATION.camera,
+              ease: EASE.out,
             },
             '<',
           )
@@ -63,8 +64,8 @@ export default function MobileVisionGL() {
               x: 1,
               y: 1,
               z: 1,
-              duration: 1,
-              ease: 'power2.out',
+              duration: DURATION.camera,
+              ease: EASE.out,
             },
             '<0.1',
           );
@@ -84,11 +85,11 @@ export default function MobileVisionGL() {
           .to(modelRef.current.position, {
             y: 10,
             z: 10,
-            duration: 1,
-            ease: 'power2.in',
+            duration: DURATION.camera,
+            ease: EASE.in,
           })
-          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: 1, ease: 'power2.in' }, '<')
-          .to(modelRef.current, { opacity: 0, duration: 0.5 }, '<');
+          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: DURATION.camera, ease: EASE.in }, '<')
+          .to(modelRef.current, { opacity: 0, duration: DURATION.moderate }, '<');
       }
     }
 

@@ -12,6 +12,7 @@ import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { VideoWithPoster } from './VideoWithPoster';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
+import { DURATION, EASE } from '@/motion/tokens';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -308,8 +309,8 @@ const SponsorItem = memo(
         }}
         transition={{
           staggerChildren: 0.05,
-          duration: 0.3,
-          ease: 'easeInOut',
+          duration: DURATION.base,
+          ease: EASE.inOut,
         }}
       >
         <VideoWithPoster

@@ -9,6 +9,7 @@ import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { INTRO, shouldSkipIntro } from './intro';
+import { EASE } from '@/motion/tokens';
 
 const POINTER_DAMPING = 2.5;
 
@@ -65,7 +66,7 @@ export default function CenterLogo() {
         gsap.to([logoMaterial, descMaterial], {
           opacity: 1,
           duration: shouldSkipIntro() ? INTRO.skippedFadeSeconds : INTRO.wordmarkFadeSeconds,
-          ease: 'power2.out',
+          ease: EASE.out,
         });
       }
     }

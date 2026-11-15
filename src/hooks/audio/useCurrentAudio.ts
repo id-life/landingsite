@@ -192,7 +192,8 @@ export default function useCurrentAudio() {
 
     audio.ontimeupdate = () => {
       setCurrentTime(audio.currentTime);
-      setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+      const total = audio.duration;
+      setProgress(total ? audio.currentTime / total : 0);
 
       if (audio.duration && audio.currentTime >= audio.duration - 20 && !isPreloadingRef.current) {
         preloadNextTrack();

@@ -6,6 +6,7 @@ import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import LongevitySection from '@/app/insights/_components/LongevitySection';
+import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -89,23 +90,23 @@ export default function Insights() {
     tl.set('.insights-content', { y: 50, opacity: 0 });
 
     // 入场动画（向下滚动时渐入）
-    const entranceDuration = 2 * factor;
+    const entranceDuration = beats(2) * factor;
     tl.to('.insights-content', {
       y: 0,
       opacity: 1,
-      ease: 'power2.out',
+      ease: EASE.out,
       duration: entranceDuration,
     });
 
     // 停留阶段（缩短停留时间，方便快速翻页）
-    tl.to({}, { duration: 0.5 * factor });
+    tl.to({}, { duration: beats(0.5) * factor });
 
     // 出场动画（向下滚动时淡出）
-    const exitDuration = 2 * factor;
+    const exitDuration = beats(2) * factor;
     tl.to('.insights-content', {
       y: -50,
       opacity: 0,
-      ease: 'power2.in',
+      ease: EASE.in,
       duration: exitDuration,
     });
   }, []);

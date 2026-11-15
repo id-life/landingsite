@@ -6,6 +6,7 @@ import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-con
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
+import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -102,6 +103,8 @@ function Spectrum() {
 
   useGSAP(() => {
     const tl = gsap.timeline({
+      // Scrubbed: lengths are beats (shares of the section's scroll), not seconds.
+      defaults: { duration: beats(0.5) },
       scrollTrigger: {
         trigger: `#${PAGE_ID}`,
         start: 'top top',
@@ -129,14 +132,9 @@ function Spectrum() {
     // tl.add(() => {
     //   setEnableUpJudge(true);
     // });
-    tl.from('.spectrum-title', {
-      delay: 1,
-      y: (_, target) => target.offsetHeight,
-      rotateX: 45,
-      rotateY: 15,
-      opacity: 0,
-    });
-    tl.from('.spectrum-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
+    // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
+    tl.from('.spectrum-title', { delay: beats(1), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.from('.spectrum-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
 
     // tl.to(() => {}, { duration: 5 });
     tl.to('.fixed-top', { opacity: 0 });

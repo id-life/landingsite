@@ -6,6 +6,7 @@ import SingaporeSVG from '@/../public/svgs/engagement/singapore.svg?component';
 import ThailandSVG from '@/../public/svgs/engagement/thailand.svg?component';
 import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
 import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
+import { DURATION } from '@/motion/tokens';
 
 // pulse animate config
 export type PulseConfig = {
@@ -30,12 +31,12 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
   pulse1: {
     fromRadius: 4,
     toRadius: 12,
-    duration: 1.5,
+    duration: DURATION.camera,
   },
   pulse2: {
     fromRadius: 12,
     toRadius: 24,
-    duration: 1.5,
+    duration: DURATION.camera,
   },
   color: '#C11111',
 };
