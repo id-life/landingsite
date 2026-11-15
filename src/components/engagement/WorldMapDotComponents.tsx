@@ -294,7 +294,8 @@ export function ExtraSponsorSection({
       <VideoWithPoster
         coverUrl={extraSponsor.coverUrl}
         videoUrl={extraSponsor.videoUrl}
-        title={extraSponsor.alt}
+        // The heading above names the sponsor in the same link, so the logo is decorative (axe image-redundant-alt).
+        title=""
         containerClass="-mt-5"
         videoClass="size-[15.5rem]"
         coverClass="size-[15.5rem]"
@@ -586,7 +587,8 @@ export function MobileExtraSponsorSection({
       <VideoWithPoster
         coverUrl={extraSponsor.coverUrl}
         videoUrl={extraSponsor.videoUrl}
-        title={extraSponsor.alt}
+        // The heading above names the sponsor in the same link, so the logo is decorative (axe image-redundant-alt).
+        title=""
         containerClass={MOBILE_MAP_SCALE.extraSponsorMarginTop}
         videoClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
         coverClass={MOBILE_MAP_SCALE.extraSponsorLogoSize}
