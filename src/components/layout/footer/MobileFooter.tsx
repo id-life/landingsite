@@ -69,7 +69,7 @@ export default function MobileFooter() {
               type="button"
               aria-label="Close"
               onClick={closeWithX}
-              className="absolute right-2 top-2 z-10 flex size-11 items-center justify-center transition-opacity hover:opacity-70"
+              className="absolute right-2 top-2 z-10 flex size-[44px] items-center justify-center transition-opacity hover:opacity-70"
             >
               <CloseSVG aria-hidden="true" className="size-5 fill-[var(--foreground)] stroke-2" />
             </button>
