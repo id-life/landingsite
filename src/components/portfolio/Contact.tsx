@@ -26,13 +26,13 @@ export default function Contact({ onCopy }: ContactProps) {
 
   return (
     // Phones: the chip sizes to its content and must end left of the 44 px section arrows (bottom centre).
-    <div className="group relative w-52 bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 mobile:w-auto mobile:px-1 mobile:text-xs/5 notMobile:hover:text-accent">
+    <div className="group relative w-auto min-w-52 bg-white/10 px-4 py-3.5 text-center text-body-sm font-semibold backdrop-blur duration-300 mobile:w-auto mobile:px-1 mobile:text-caption notMobile:hover:text-accent">
       <SubscribeBorderSVG
         preserveAspectRatio="none"
         className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 notMobile:group-hover:stroke-accent"
       />
       <div className="flex-center relative h-full w-full gap-4 mobile:gap-1">
-        <a href={ORG_MAILTO} data-track-placement="portfolio" className="relative w-36 tap-area mobile:w-auto">
+        <a href={ORG_MAILTO} data-track-placement="portfolio" className="relative whitespace-nowrap tap-area">
           {ORG_EMAIL}
         </a>
         <button
