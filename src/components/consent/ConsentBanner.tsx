@@ -18,7 +18,8 @@ const BUTTON =
 
 /**
  * The consent banner (DATA-01): a compact bottom sheet, bilingual, with Accept and Reject of equal weight. It opens by
- * itself only for visitors in opt-in regions without an answer, and from any "Privacy choices" link. It steps aside
+ * itself only for visitors in opt-in regions without an answer, and from any "Privacy choices" link. It sits above the
+ * 3D loader (z-index 500), so a visitor can answer while the experience loads. It steps aside
  * while the newsletter popup is open, so the two are never stacked. Production renders nothing while its text is a
  * draft (./consent-copy.ts).
  */
@@ -42,7 +43,7 @@ export default function ConsentBanner() {
       aria-modal="false"
       aria-labelledby={titleId}
       data-consent-banner=""
-      className="fixed inset-x-0 bottom-0 z-[56] border-t-2 border-white bg-black/85 px-5 py-4 text-white backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-[510] border-t-2 border-white bg-black/85 px-5 py-4 text-white backdrop-blur-md"
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-3 notMobile:flex-row notMobile:items-center notMobile:gap-6">
         <div className="flex-1 text-xs/5">
