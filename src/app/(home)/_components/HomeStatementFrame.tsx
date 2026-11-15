@@ -73,7 +73,7 @@ export function StatementDoors({ className }: { className?: string }) {
           <a
             href={door.href}
             onClick={(event) => onClick(event, door.section)}
-            className="group relative inline-flex items-center gap-1.5 py-1 font-display text-label font-bold uppercase transition-colors duration-300 tap hover:text-accent"
+            className="group relative inline-flex items-center gap-1.5 py-1 font-display text-label font-bold transition-colors duration-300 tap hover:text-accent"
           >
             {door.label}
             <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5">

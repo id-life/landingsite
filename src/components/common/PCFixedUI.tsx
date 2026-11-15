@@ -109,7 +109,9 @@ export function CarouselItem({
   }, [cnText, text, textClass]);
 
   return (
-    <div className="flex items-center gap-1 text-body-sm font-bold uppercase text-foreground mobile:justify-center">
+    // As typed, not in capitals (RWD-01: at most 25 % uppercase Latin per screen; the carousel's running lines were
+    // most of the hero's share outside the header).
+    <div className="flex items-center gap-1 text-body-sm font-bold text-foreground mobile:justify-center">
       {icon}
       {content}
     </div>
