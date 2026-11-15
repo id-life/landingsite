@@ -180,7 +180,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
-      {/* Type roles (RWD-01): heading title, inputs body (16 px, so iOS does not zoom on focus), small print caption. */}
+      {/* Type roles (RWD-01): heading title, inputs body (16 px, so iOS does not zoom on focus), the source note body
+          (running text: the 16 px bar), the success message caption. */}
       <div className="font-display text-title font-bold tracking-normal">BE PART OF IT</div>
 
       {/* submit msg */}
@@ -253,7 +254,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         </div>
 
         <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
-          <div className="font-text text-caption font-medium tracking-normal text-ink-muted mobile:mt-3">
+          <div className="font-text text-body font-medium leading-snug tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"

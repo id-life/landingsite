@@ -16,7 +16,7 @@ import { useDeviceProfile } from '@/hooks/useDeviceProfile';
  * the device profile without a flash).
  *
  * Type roles (RWD-01): title lead (body on a phone), counts title-sm, the CSV link and See More label, table text
- * body-sm (caption on a phone).
+ * cells body (their introductions are running text: RWD-01's 16 px bar), headers body-sm (caption on a phone).
  */
 export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({
   img,
@@ -57,24 +57,24 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
           columns={columns}
           data={rows}
           className="w-full"
-          tableClassName="text-caption border-none"
+          tableClassName="text-body border-none"
           headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
           headerRowClass="border-none bg-white/10 backdrop-blur top-0 [&_th]:text-caption truncate max-w-[30svw]"
           bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-25 [&_td:first-child]:truncate [&_td:first-child]:pl-5 pt-1"
           rowClass="border-none bg-transparent hover:bg-white/5"
-          cellClass="font-normal text-caption font-light truncate pr-5 py-2.5 max-w-[30svw]"
+          cellClass="font-normal text-body font-light truncate pr-5 py-2.5 max-w-[30svw]"
         />
       ) : (
         <DataTable
           columns={columns}
           data={rows}
           className="w-full table-fixed overflow-visible"
-          tableClassName="text-body-sm border-none"
+          tableClassName="text-body border-none"
           headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th]:text-body-sm [&_th:last-child]:text-left"
           headerRowClass="border-none bg-white/10 top-0 backdrop-blur"
           bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-[10rem] [&_td:first-child]:pl-[1.25rem] [&_td:last-child]:max-w-[20rem] pt-1"
           rowClass="border-none bg-transparent hover:bg-white/5"
-          cellClass="font-normal text-body-sm pr-5 truncate"
+          cellClass="font-normal text-body pr-5 truncate"
         />
       )}
       {phone && showAmount < data.length && (

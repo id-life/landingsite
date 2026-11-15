@@ -82,7 +82,8 @@ const CharacterRelation = () => {
     };
   }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer]);
 
-  const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
+  // Sentence case for the button label (RWD-01: at most 25 % of a screen's Latin text in capitals; labels go first).
+  const showBePartOfItBtnText = isMobile ? 'Join +' : 'Be part of it +';
 
   const handleBePartOfItClose = () => {
     setIsBePartOfItShow(false);
