@@ -4,11 +4,11 @@ import type { Metadata } from 'next';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm';
+import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import { NewsArticle, WithContext } from 'schema-dts';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
+import JsonLd from '@/components/seo/JsonLd';
 
 const articleTitle = '不朽真龙公司资讯';
 const articleDescription = '不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。';
@@ -64,7 +64,7 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">
@@ -82,7 +82,7 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
           <div className="markdown-body mobile:[&_p]:text-sm mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
-            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+            <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {articleContent}
             </Markdown>
           </div>

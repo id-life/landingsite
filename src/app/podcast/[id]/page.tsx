@@ -1,5 +1,6 @@
 import React, { cache } from 'react';
 import { fetchPodcastDetail } from '@/apis';
+import { isApiNotFound } from '@/apis/request';
 import PodcastContentTab from '@/app/podcast/[id]/_components/PodcastContentTab';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
@@ -8,15 +9,30 @@ import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/json
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
 export const dynamic = 'force-static';
 
+// Episode ids are numbers. Anything else (/podcast/abc, /podcast/56abc, /podcast/1.5, /podcast/rss) is a 404
+// without asking the API, which answers those with HTTP 400 (that used to surface as a 500).
+const EPISODE_ID = /^\d+$/;
+
 const getCachePodcastDetail = cache(async (id: string) => {
-  const res = await fetchPodcastDetail(id);
-  return res.data;
+  if (!EPISODE_ID.test(id)) return null;
+  try {
+    const res = await fetchPodcastDetail(id);
+    return res.data ?? null;
+  } catch (error) {
+    // 400/404: no such episode. Anything else (API down) still throws, so ISR keeps the last good page.
+    if (isApiNotFound(error)) return null;
+    throw error;
+  }
 });
+
+/** /podcast/056 and /podcast/56 are the same episode; the canonical URL has no leading zeros. */
+const canonicalId = (id: string) => id.replace(/^0+(?=\d)/, '');
 
 type Params = { id: string };
 type PodcastPlayerProps = {
@@ -48,7 +64,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
     title: { absolute: `${data.title} | Immortal Dragons` },
     description: data.description,
     keywords: data.keywords,
-    alternates: { canonical: `/podcast/${id}` },
+    alternates: { canonical: `/podcast/${canonicalId(id)}` },
     openGraph: {
       title: `${data.title} | Immortal Dragons`,
       siteName: 'Immortal Dragons',
@@ -74,13 +90,13 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
     { '@context': 'https://schema.org', ...podcastEpisodeJsonLd(data), publisher: ORG_REF },
     breadcrumbJsonLd([
       { name: `${PODCAST_COVER[category].title} ${PODCAST_COVER[category].enTitle}`, path: nav.link },
-      { name: data.title, path: `/podcast/${id}` },
+      { name: data.title, path: `/podcast/${canonicalId(id)}` },
     ]),
   ];
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">

@@ -2,6 +2,7 @@
 
 import FixedConnect from '@/app/connect/FixedConnect';
 import { mobileCurrentPageAtom } from '@/atoms';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import { useAtomValue } from 'jotai';
 import MobileAudioPlayer from '../audio/MobileAudioPlayer';
@@ -11,9 +12,11 @@ import MobileScrollButton from './MobileScrollButton';
 
 export default function MobileFixedUI() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  // Visible from state (see MobileNav); the intro tween only animates it on a first visit.
+  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
 
   return (
-    <div id="mobile-fixed-ui" className="opacity-0">
+    <div id="mobile-fixed-ui" className={uiVisible ? 'opacity-100' : 'opacity-0'}>
       {currentPage.id === NAV_LIST[0].id ? (
         <MobileScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (

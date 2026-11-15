@@ -3,15 +3,17 @@ import { absoluteUrl } from '@/constants/site';
 import React, { cache } from 'react';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
+import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent } from '@/apis';
-import rehypeRaw from 'rehype-raw';
+import { isApiNotFound } from '@/apis/request';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
 import { formatKeywords } from '@/utils';
+import JsonLd from '@/components/seo/JsonLd';
 
 dayjs.extend(relativeTime);
 
@@ -26,8 +28,7 @@ const getCacheNewsContent = cache(async (id: string) => {
   } catch (error) {
     // The API rejects a malformed or unknown id with 400/404: render the not-found page, not a 500.
     // Anything else (API down) still throws, so ISR keeps serving the last good version.
-    const code = (error as { code?: number } | undefined)?.code;
-    if (code === 400 || code === 404) return undefined;
+    if (isApiNotFound(error)) return undefined;
     throw error;
   }
 });
@@ -86,7 +87,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">
@@ -102,7 +103,9 @@ export default async function ArticlePage({ params }: { params: { id: string } }
           <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg">{data.title}</h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
           <div className="markdown-body mobile:[&_p]:text-sm">
-            <Markdown rehypePlugins={[rehypeRaw]}>{data.content}</Markdown>
+            <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
+              {data.content}
+            </Markdown>
           </div>
         </div>
       </div>

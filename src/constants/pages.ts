@@ -1,4 +1,4 @@
-import { NAV_LIST } from '@/components/nav/nav';
+import { NAV } from '@/components/nav/nav';
 
 export interface ScrollTriggerConfig {
   trigger: string;
@@ -17,13 +17,13 @@ export interface PageConfig {
 
 // 页面ID常量，提供类型安全 (新顺序: Mission, Portfolio, Insights, Spectrum, Presence, Twin, Connect)
 export const PAGE_IDS = {
-  VISION: NAV_LIST[0].id,
-  PORTFOLIO: NAV_LIST[1].id,
-  INSIGHTS: NAV_LIST[2].id,
-  SPECTRUM: NAV_LIST[3].id,
-  ENGAGEMENT: NAV_LIST[4].id,
-  TWIN: NAV_LIST[5].id,
-  VALUE: NAV_LIST[6].id,
+  VISION: NAV.vision_page.id,
+  PORTFOLIO: NAV.portfolio_page.id,
+  INSIGHTS: NAV.insights_page.id,
+  SPECTRUM: NAV.spectrum_page.id,
+  ENGAGEMENT: NAV.engagement_page.id,
+  TWIN: NAV.twin_page.id,
+  VALUE: NAV.connect_page.id,
 } as const;
 
 export type PageId = (typeof PAGE_IDS)[keyof typeof PAGE_IDS];

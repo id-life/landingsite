@@ -6,6 +6,7 @@ import ConnectSummary from '@/app/connect/_components/ConnectSummary';
 import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
 import { ORG_EMAIL, ORG_ID, ORG_PRESS, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'CONNECT 联结';
 const PAGE_DESCRIPTION =
@@ -79,7 +80,7 @@ export default function ConnectLayout({ children }: { children: ReactNode }) {
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />
       <ConnectSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />

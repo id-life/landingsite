@@ -5,6 +5,19 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_ANIMATION_CONFIG } from '@/constants/scroll-config';
 import { SECTION_STEP_EVENT, SectionStepDetail } from '@/utils/section-step';
 
+// One physical gesture = one section step. Trackpads and free-spinning wheels deliver a stream of wheel events
+// (inertia) that can outlast a 0.9 s transition, so the end of the transition alone let one long gesture step
+// two or more sections. After a step, the next step needs GESTURE_GAP_MS of wheel silence first.
+// Shared by all twelve hook instances (one per section and direction); updated from EVERY wheel event in the
+// capture phase, including the events the throttled handlers below never see.
+const GESTURE_GAP_MS = 200;
+let lastWheelAt = -Infinity;
+let gestureHasStepped = false;
+function trackWheelGesture(e: WheelEvent) {
+  if (e.timeStamp - lastWheelAt >= GESTURE_GAP_MS) gestureHasStepped = false; // a new gesture began
+  lastWheelAt = e.timeStamp;
+}
+
 /**
  * One direction of section stepping for one section: while `enableJudge` is true (the section is
  * current), a wheel flick, an arrow / page key or a vertical swipe in this direction runs scrollFn.
@@ -42,7 +55,11 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
       const deltaY = e?.deltaY ?? 0;
       if (Math.abs(deltaY) < SCROLL_ANIMATION_CONFIG.MIN_VELOCITY) return;
 
-      if ((isUp && deltaY < 0) || (!isUp && deltaY > 0)) throttleScrollFn();
+      if (gestureHasStepped) return; // the rest of a gesture that already moved one section
+      if ((isUp && deltaY < 0) || (!isUp && deltaY > 0)) {
+        gestureHasStepped = true;
+        throttleScrollFn();
+      }
     }, SCROLL_ANIMATION_CONFIG.THROTTLE_TIME);
 
     const handleStep = (event: Event) => {
@@ -57,6 +74,8 @@ export const useScrollSmootherAction = ({ scrollFn, isUp }: { scrollFn: () => vo
       throttleScrollFn();
     };
 
+    // Same function and options from every instance: the browser registers it once.
+    window.addEventListener('wheel', trackWheelGesture, { passive: true, capture: true });
     window.addEventListener('wheel', handleWheel, { passive: true });
     window.addEventListener(SECTION_STEP_EVENT, handleStep);
     return () => {

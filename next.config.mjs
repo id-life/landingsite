@@ -26,6 +26,12 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_DEPLOY_ENV: deployEnv,
     NEXT_PUBLIC_ANALYTICS_ENABLED: analyticsEnabled ? '1' : '0',
+    // Public, non-secret defaults (they ship in the HTML and the client bundle anyway). They used to come from a
+    // committed .env; an environment variable of the same name (Vercel project settings, a local .env) wins.
+    NEXT_PUBLIC_API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX || 'https://id-platform.id.life',
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || 'G-QZFDSGKKYC',
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE || 'false',
+    NEXT_PUBLIC_CLARITY_ID: process.env.NEXT_PUBLIC_CLARITY_ID || 'uazy1ve9js',
   },
   images: {
     // CMS covers are uploaded at full camera resolution (single files up to 11 MB); serve them

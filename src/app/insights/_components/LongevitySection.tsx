@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { safeHref } from '@/utils/safe-href';
 
 type LongevityItem = {
   id: number;
@@ -36,8 +37,9 @@ const ZHIHU_LINK = 'https://www.zhihu.com/column/c_2021919119344150153';
 
 function LongevityCard({ item }: { item: LongevityItem }) {
   const handleClick = () => {
-    if (!item.link) return;
-    window.open(item.link, '_blank', 'noopener,noreferrer');
+    const href = safeHref(item.link);
+    if (!href) return;
+    window.open(href, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -119,7 +121,8 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     setCurrentPage(index);
   };
 
-  // Phones open the WeChat page in the same tab (Back restores Insights from sessionStorage), desktops in a new tab.
+  // The VIEW ALL link opens the WeChat album (same tab on the phone, a new tab on desktop, as before); this
+  // only marks the return page so Back restores Insights on the phone.
   const handleViewAllClick = () => {
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
   };
@@ -259,7 +262,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
               </a>
             </div>
           </div>
-          <ViewAllButton href={WECHAT_LINK} onClick={handleViewAllClick} isMobile={isMobile} newTab={!isMobile} />
+          <ViewAllButton href={WECHAT_LINK} external={!isMobile} onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         <div className={cn('relative mt-3', !isMobile && 'pr-0')}>

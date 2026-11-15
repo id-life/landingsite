@@ -5,6 +5,7 @@ import { clsx } from 'clsx';
 import { useEffect, useMemo } from 'react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { safeHref } from '@/utils/safe-href';
 
 type PodcastLinkProps = {
   data: PodcastItem;
@@ -14,7 +15,8 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
   const { trackEvent } = useGA();
   const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
 
-  const handleLinkClick = (type: string, url: string) => {
+  const handleLinkClick = (type: string, link: string) => {
+    const url = safeHref(link);
     if (!url) return;
     trackEvent({ name: GA_EVENT_NAMES.SUBSCRIBE_VIEW, label: type, podcast_episode: episode });
     window.open(url, '_blank');

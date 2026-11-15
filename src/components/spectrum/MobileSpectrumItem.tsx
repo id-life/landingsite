@@ -5,7 +5,8 @@ import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
 import { ArrowSVG } from '../svg';
-import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { spectrumLinkProps } from './spectrumLinkProps';
 
 /** Particle configuration for position offset and scale */
 export interface ParticleConfig {
@@ -36,8 +37,6 @@ const MobileSpectrumLink = memo(
   ({
     item,
     executeSpectrumRoute,
-    updateUrlAndExecute,
-    routeConfigs,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
@@ -46,64 +45,36 @@ const MobileSpectrumLink = memo(
   }) => {
     const { trackEvent } = useGA();
 
-    const { key, label, link, isComingSoon, onClick, labelClassName, routeKey } = item;
+    const { key, label, link, isComingSoon, labelClassName, routeKey } = item;
     const hasLink = Boolean(link);
+    const anchorProps = spectrumLinkProps({
+      link,
+      routeKey,
+      executeSpectrumRoute,
+      onTrack: () => trackEvent({ name: GA_EVENT_NAMES.SPECTRUM_CLICK, label: key ?? label }),
+    });
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!hasLink) return;
-        trackEvent({
-          name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-          label: key ?? label,
-        });
-
-        if (link) {
-          window.open(link, '_blank');
-          return;
-        }
-
-        if (routeKey) {
-          // Normal click - update URL and execute action in current page
-          if (updateUrlAndExecute) {
-            updateUrlAndExecute(routeKey);
-          } else if (executeSpectrumRoute) {
-            executeSpectrumRoute(routeKey);
-          }
-          return;
-        }
-
-        onClick?.();
-      },
-      [hasLink, trackEvent, key, label, onClick, link, routeKey, executeSpectrumRoute, updateUrlAndExecute],
-    );
-
-    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
-    const { pathname, useHash } = routeConfig ?? {};
-
-    return (
-      <a href={link || undefined} target="_blank">
-        <div className="relative flex items-center gap-1">
-          <p
-            onClick={handleClick}
-            className={cn(
-              'spectrum-link-text group relative font-poppins text-[10px]/4 font-medium capitalize',
-              hasLink &&
-                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
-              labelClassName,
-            )}
-          >
-            {label}
-          </p>
-          {isComingSoon && (
-            <span className="flex-center inline-block h-3 rounded-sm bg-white/20 font-oxanium text-[.5rem]/3 capitalize text-white/50 backdrop-blur-2xl">
-              coming soon
-            </span>
+    const content = (
+      <div className="relative flex items-center gap-1">
+        <p
+          className={cn(
+            'spectrum-link-text group relative font-poppins text-[10px]/4 font-medium capitalize',
+            hasLink &&
+              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+            labelClassName,
           )}
-        </div>
-      </a>
+        >
+          {label}
+        </p>
+        {isComingSoon && (
+          <span className="flex-center inline-block h-3 rounded-sm bg-white/20 font-oxanium text-[.5rem]/3 capitalize text-white/50 backdrop-blur-2xl">
+            coming soon
+          </span>
+        )}
+      </div>
     );
+
+    return anchorProps ? <a {...anchorProps}>{content}</a> : content;
   },
 );
 

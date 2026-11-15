@@ -4,12 +4,17 @@ import '@/styles/components/disease-management-page.css';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
 import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
+import PageSEOContent from '@/components/seo/PageSEOContent';
 import { MedicalWebPage, WithContext } from 'schema-dts';
+import JsonLd from '@/components/seo/JsonLd';
+
+const PAGE_TITLE = 'Disease Management & Cure Status';
+const PAGE_DESCRIPTION = '可治疗与可控制疾病列表 A list of curable and manageable diseases';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum/disease-management' },
-  title: 'Disease Management & Cure Status',
-  description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   keywords: [
     'curable diseases',
     'manageable diseases',
@@ -23,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Disease Management & Cure Status | Immortal Dragons',
     siteName: 'Immortal Dragons',
-    description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+    description: PAGE_DESCRIPTION,
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -35,9 +40,9 @@ export const metadata: Metadata = {
 const jsonLd: WithContext<MedicalWebPage> = {
   '@context': 'https://schema.org',
   '@type': 'MedicalWebPage',
-  name: 'Disease Management & Cure Status',
+  name: PAGE_TITLE,
   url: 'https://www.id.life/spectrum/disease-management',
-  description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+  description: PAGE_DESCRIPTION,
   medicalAudience: {
     '@type': 'MedicalAudience',
     audienceType: 'Patient',
@@ -53,9 +58,11 @@ const breadcrumb = breadcrumbJsonLd([
 export default function DiseaseManagementLayout({ children }: { children: ReactNode }) {
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
+      {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
+      <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <DMStyle />
-      <SpectrumHeader className="animate-fade-in" />
+      <SpectrumHeader />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">
         {children}
       </div>

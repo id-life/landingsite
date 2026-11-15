@@ -92,6 +92,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     setCurrentPage(index);
   };
 
+  // The VIEW ALL link navigates; this only marks the return page so Back restores Insights on the phone.
   const handleViewAllClick = () => {
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
   };

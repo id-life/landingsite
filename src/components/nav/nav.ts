@@ -3,6 +3,17 @@ export type NavItem = {
   title: string;
   href: string;
 };
+
+/** The seven sections of the experience, by the id of their element. */
+export type SectionId =
+  | 'vision_page'
+  | 'portfolio_page'
+  | 'insights_page'
+  | 'spectrum_page'
+  | 'engagement_page'
+  | 'twin_page'
+  | 'connect_page';
+
 export const NAV_LIST: NavItem[] = [
   {
     id: 'vision_page',
@@ -40,6 +51,14 @@ export const NAV_LIST: NavItem[] = [
     href: '/connect',
   },
 ];
+
+/**
+ * The sections by id. Use NAV.engagement_page, never NAV_LIST[4]: positions change when the sections are
+ * reordered. Insights moved to index 2 on 2026-01-08 and every positional lookup written before that
+ * pointed one section too early (Presence deep links landed on Spectrum). An ESLint rule bans
+ * NAV_LIST[<number>] outside this file.
+ */
+export const NAV = Object.fromEntries(NAV_LIST.map((item) => [item.id, item])) as Record<SectionId, NavItem>;
 
 // 有小进度条的 (Portfolio, Spectrum, Insights) - 使用 ID 字符串避免索引依赖
 export const HAS_INNER_PAGE_LIST = ['portfolio_page', 'spectrum_page', 'insights_page'] as const;

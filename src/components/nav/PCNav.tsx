@@ -2,6 +2,7 @@
 
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
@@ -16,6 +17,8 @@ import { NAV_LIST } from './nav';
 
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
+  // Visible from state, so a remount (Back from /news) shows the nav at once instead of waiting for the intro tween.
+  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
   const { handleNavClick } = useNavigation();
   const { isSubscribeShow, onSubscribeClick, handleScroll } = useSubscribeAction();
 
@@ -53,7 +56,8 @@ export default function PCNav() {
     <div
       id="nav"
       className={cn(
-        'pointer-events-none fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground opacity-0 transition-opacity duration-300 mobile:hidden',
+        'pointer-events-none fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground transition-opacity duration-300 mobile:hidden',
+        uiVisible ? 'opacity-100' : 'opacity-0',
       )}
     >
       <div className="pointer-events-auto">
@@ -64,6 +68,8 @@ export default function PCNav() {
           <Link
             href={item.href}
             onClick={(event) => {
+              // Cmd/Ctrl/Shift/Alt-click and non-left buttons are the browser's (new tab, new window).
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
               event.preventDefault();
               handleNavClick(item);
             }}

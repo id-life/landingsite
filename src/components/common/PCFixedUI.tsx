@@ -20,9 +20,11 @@ import VerticalCarousel from './VerticalCarousel';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
+  // Visible from state (see PCNav); the intro tween only animates it on a first visit.
+  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
 
   return (
-    <div id="pc-fixed-ui" className="opacity-0">
+    <div id="pc-fixed-ui" className={uiVisible ? 'opacity-100' : 'opacity-0'}>
       {currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (

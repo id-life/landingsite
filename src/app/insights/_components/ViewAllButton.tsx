@@ -1,22 +1,19 @@
-import { cn } from '@/utils';
 import Link from 'next/link';
+import { cn } from '@/utils';
 
 interface ViewAllButtonProps {
   href: string;
-  /** Runs before the link navigates (it must not prevent it). */
+  /** Opens href in a new tab (an external site). */
+  external?: boolean;
+  /** Side effects only (analytics, the return-page marker); the link itself navigates. */
   onClick?: () => void;
   isMobile?: boolean;
-  /** Open in a new tab (external pages on desktop). */
-  newTab?: boolean;
 }
 
-/**
- * A real link (it was a div with a click handler): keyboard reachable, announced as a link, opens in a new tab
- * on middle click. The 32 px pill has a 44 px tall touch target through its ::before pseudo-element.
- */
-export default function ViewAllButton({ href, onClick, isMobile = false, newTab = false }: ViewAllButtonProps) {
-  const external = /^https?:\/\//.test(href);
+// A real link: it can be previewed, copied, middle-clicked and Cmd-clicked into a new tab.
+export default function ViewAllButton({ href, external = false, onClick, isMobile = false }: ViewAllButtonProps) {
   const className = cn(
+    // The 32 px pill has a 44 px tall touch target through its ::before pseudo-element (NAV-09).
     'group relative flex h-8 cursor-pointer items-center justify-center gap-1 py-0.5 pl-2 pr-1 font-poppins text-base/5 font-semibold before:absolute before:inset-x-0 before:-inset-y-1.5 before:content-[""] hover:opacity-80',
     isMobile && 'h-8 w-24 text-sm',
   );
@@ -33,19 +30,12 @@ export default function ViewAllButton({ href, onClick, isMobile = false, newTab 
       </svg>
     </>
   );
-  if (external) {
-    return (
-      <a
-        href={href}
-        onClick={onClick}
-        className={className}
-        {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      >
-        {content}
-      </a>
-    );
-  }
-  return (
+
+  return external ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick} className={className}>
+      {content}
+    </a>
+  ) : (
     <Link href={href} onClick={onClick} className={className}>
       {content}
     </Link>

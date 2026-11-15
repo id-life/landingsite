@@ -7,6 +7,7 @@ import dayjsDuration from 'dayjs/plugin/duration';
 import { audioControlsAtom } from '@/atoms/audio-player';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { safeHref } from '@/utils/safe-href';
 
 dayjs.extend(dayjsDuration);
 
@@ -31,7 +32,8 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
     onSeekTo?.(seekTo);
   };
 
-  const handleOpenLink = (url?: string) => {
+  const handleOpenLink = (link?: string) => {
+    const url = safeHref(link);
     if (!url) return;
     window.open(url, '_blank');
   };

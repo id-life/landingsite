@@ -9,7 +9,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from 'react';
 import { useMeasure } from 'react-use';
-import { NAV_LIST } from '../nav/nav';
+import { NAV } from '../nav/nav';
 import { WorldMapSVG } from '../svg';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
@@ -190,7 +190,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   // 确保在组件卸载时重置状态
   useEffect(() => {
     if (!globalLoaded) return;
-    if (currentPage?.id !== NAV_LIST[3].id) {
+    if (currentPage?.id !== NAV.engagement_page.id) {
       setActiveBookDot(null);
       setActiveSponsorDot(null);
       setActiveMeetingDot(null);

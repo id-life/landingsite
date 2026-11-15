@@ -5,7 +5,6 @@ import { Analytics } from '@vercel/analytics/next';
 import Background from '@/components/common/Background';
 import { WebVitals } from '@/app/_components/web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import ScrollBehavior from '@/components/common/ScrollBehavior';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
 import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
@@ -101,7 +100,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         {ANALYTICS_ENABLED && <SubscribePopupStorageReporter />}
         <Providers>
-          <ScrollBehavior />
           <HashRouter />
           <main id="main-content" tabIndex={-1} className="outline-none">
             {children}
