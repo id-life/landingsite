@@ -116,7 +116,8 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         <Popover.Trigger asChild>
           <button
             type="button"
-            aria-label="Playlist"
+            // The name contains the visible title (WCAG 2.5.3 label in name).
+            aria-label={`${title || 'Music'}, playlist`}
             className="mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px]"
           >
             <AudioTitle width={148} title={title || 'Music'} />

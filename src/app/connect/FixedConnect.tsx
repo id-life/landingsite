@@ -14,6 +14,10 @@ const MobileConnectSinglePage = () => {
     // it does not (justify-content: center would push the overflow above the scroll origin).
     <div
       id="mobile-connect-content"
+      // Focusable, so keyboard users can scroll it too (axe scrollable-region-focusable).
+      tabIndex={0}
+      role="region"
+      aria-label="Connect"
       className={cn(
         // invisible until Connect is entered (MobileConnectGL sets visibility), so this scroll box never catches
         // taps meant for the other sections.
