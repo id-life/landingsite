@@ -72,7 +72,7 @@ export default function ReportDrawer({
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-label font-semibold uppercase text-accent">
+                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-label font-semibold text-accent">
                       <img src="/svgs/twin/time.svg" alt="" />
                       {isChinese ? period.zh : period.en}
                     </div>

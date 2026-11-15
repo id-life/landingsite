@@ -115,11 +115,10 @@ function PhonePresence() {
       })}
     >
       {/* A phone in landscape (compact height) gets a compact title, so the map strip keeps its height. */}
-      <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center shortScreen:top-[4.5rem]">
+      <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">
         <h2 className="font-title text-title capitalize text-white shortScreen:text-title-sm">Presence</h2>
-        <p className="mt-2 font-display text-label font-bold uppercase text-white shortScreen:mt-0.5">
-          GLOBAL REACH. EAST &amp; WEST
-        </p>
+        {/* Sentence case, not capitals (RWD-01: at most 25 % uppercase Latin per screen); the words are unchanged. */}
+        <p className="mt-2 font-display text-label font-bold text-white shortScreen:mt-0.5">Global reach. East &amp; West</p>
       </div>
       <WorldMap deck="phone" {...MAP_DATA} />
       <MobileScrollProgressBar />

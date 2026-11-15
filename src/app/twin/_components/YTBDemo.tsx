@@ -9,7 +9,8 @@ import type { TwinDeck } from '@/app/twin/twin-deck';
 /**
  * The DEMO link to the Digital Twin video, one component for both decks (RWD-02; it was YTBDemo and its mobile twin).
  * By deck: a framed 196 px button at the bottom left (desktop), or a text link under the headline (phone). The label
- * is the label role (RWD-01); the link is at least 44 px tall on coarse pointers (RWD-06).
+ * is the label role, in title case rather than capitals (RWD-01's 25 % uppercase bar; same word); the link is at least
+ * 44 px tall on coarse pointers (RWD-06).
  */
 export default function YTBDemo({ deck }: { deck: TwinDeck }) {
   const handleClick = (e: MouseEvent) => {
@@ -29,7 +30,7 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
         >
           <div className="flex-center gap-2 text-label font-medium">
             <YoutubeSVG className="w-4 fill-black" />
-            DEMO
+            Demo
           </div>
           <img src="/imgs/twin/arrow.webp" alt="" className="ml-1 h-2 w-3" />
         </a>
@@ -50,7 +51,7 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
         <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-accent" />
         <div className="flex-center gap-2 text-label font-semibold group-hover:text-accent">
           <YoutubeSVG key="ytb-demo" className="w-[max(1.25rem,15px)] fill-black group-hover:fill-accent" />
-          DEMO
+          Demo
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-accent group-hover:stroke-accent" />
       </a>

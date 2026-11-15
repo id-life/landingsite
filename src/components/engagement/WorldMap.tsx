@@ -294,7 +294,7 @@ export const WorldMap = memo(function WorldMapComponent({
     return (
       // The strip's height is --map-h: 55 % of the window, or on a phone in landscape (compact height) what is left
       // between the compact title and the arrows.
-      <div className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[124px] shortScreen:[--map-h:calc(100svh_-_188px)]">
+      <div className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]">
         <div
           ref={mapContainerRef}
           className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"

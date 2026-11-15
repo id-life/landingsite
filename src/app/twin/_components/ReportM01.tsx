@@ -8,7 +8,7 @@ export default function ReportM01({ deck }: { deck: TwinDeck }) {
       deck={deck}
       code="C01"
       title="Unhealthy habits me"
-      period={{ en: '30 YEARS', zh: '30年后' }}
+      period={{ en: '30 Years', zh: '30年后' }}
       tags={['30 Years', 'Sedentary', 'High-Sugar']}
     >
       {(isChinese) =>
