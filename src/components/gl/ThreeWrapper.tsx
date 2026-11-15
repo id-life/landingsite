@@ -1,12 +1,9 @@
-import { isCNAtom } from '@/atoms/geo';
 import ConnectGL from '@/components/gl/ConnectGL';
 import VisionGL from '@/components/gl/VisionGL';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useThrottle } from '@/hooks/useThrottle';
 import { PerspectiveCamera, Preload, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { useSetAtom } from 'jotai';
 import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -15,7 +12,6 @@ import PrefHook from '@/components/gl/PrefHook';
 
 export default function ThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
-  const setIsCN = useSetAtom(isCNAtom);
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
 
@@ -23,11 +19,6 @@ export default function ThreeWrapper() {
     if (!isMounted) return 1;
     return typeof window !== 'undefined' ? window.devicePixelRatio : 1;
   }, [isMounted]);
-
-  const handleClick = useThrottle(() => {
-    if (!isMobile) return;
-    setIsCN((prev) => !prev);
-  }, 200);
 
   return (
     <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
@@ -41,7 +32,6 @@ export default function ThreeWrapper() {
           pixelRatio: Math.min(devicePixelRatio, isMobile ? 1.5 : 2),
         }}
         dpr={Math.min(devicePixelRatio, isMobile ? 1.5 : 2)}
-        onClick={handleClick}
         fallback={<div>Sorry no WebGL supported!</div>}
       >
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />

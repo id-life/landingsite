@@ -1,13 +1,12 @@
 import { LogoType } from '@/components/nav/Logo';
 import { useLogoTextures } from '@/hooks/useLogoTextures';
-import { useThrottle } from '@/hooks/useThrottle';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { Center } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 const POINTER_DAMPING = 2.5;
@@ -18,7 +17,8 @@ export default function CenterLogo() {
   const smootherRef = useRef(ScrollSmoother.get());
   const logoMeshRef = useRef<THREE.Mesh>(null);
   const descMeshRef = useRef<THREE.Mesh>(null);
-  const [currentLogo, setCurrentLogo] = useState<LogoType>(LogoType.EN);
+  // English at rest; a click used to swap the logo and tagline textures to Chinese (CON-12).
+  const currentLogo: LogoType = LogoType.EN;
   const [globalLoaded] = useAtom(globalLoadedAtom);
   const hasAnimatedRef = useRef(false);
 
@@ -96,79 +96,10 @@ export default function CenterLogo() {
     }
   });
 
-  const handleClick = useThrottle(() => {
-    const newLogo = currentLogo === LogoType.EN ? LogoType.CN : LogoType.EN;
-    setCurrentLogo(newLogo);
-
-    // Calculate new dimensions for the new language
-    const newLogoAspectRatio = newLogo === LogoType.EN ? logoEnAspectRatio : logoCnAspectRatio;
-    const newDescAspectRatio = newLogo === LogoType.EN ? descEnAspectRatio : descCnAspectRatio;
-    const newLogoWidth = logoScale * newLogoAspectRatio;
-    const newDescWidth = descScale * newDescAspectRatio;
-
-    // Animate logo transition
-    if (logoMeshRef.current) {
-      const logoMaterial = logoMeshRef.current.material as THREE.MeshBasicMaterial;
-      gsap.to(logoMaterial, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          // Switch texture and update geometry
-          if (logoMeshRef.current) {
-            const material = logoMeshRef.current.material as THREE.MeshBasicMaterial;
-            const newTexture = newLogo === LogoType.EN ? logoEnTexture : logoCnTexture;
-
-            // Ensure texture is properly configured
-            newTexture.needsUpdate = true;
-            material.map = newTexture;
-            material.needsUpdate = true;
-
-            // Update geometry with new aspect ratio
-            logoMeshRef.current.geometry.dispose(); // Clean up old geometry
-            logoMeshRef.current.geometry = new THREE.PlaneGeometry(newLogoWidth, logoHeight);
-
-            // Ensure opacity is fully restored
-            gsap.set(material, { opacity: 1 });
-            gsap.fromTo(material, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-          }
-        },
-      });
-    }
-
-    // Animate description transition
-    if (descMeshRef.current) {
-      const descMaterial = descMeshRef.current.material as THREE.MeshBasicMaterial;
-      gsap.to(descMaterial, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          // Switch texture and update geometry
-          if (descMeshRef.current) {
-            const material = descMeshRef.current.material as THREE.MeshBasicMaterial;
-            const newTexture = newLogo === LogoType.EN ? descEnTexture : descCnTexture;
-
-            // Ensure texture is properly configured
-            newTexture.needsUpdate = true;
-            material.map = newTexture;
-            material.needsUpdate = true;
-
-            // Update geometry with new aspect ratio
-            descMeshRef.current.geometry.dispose(); // Clean up old geometry
-            descMeshRef.current.geometry = new THREE.PlaneGeometry(newDescWidth, descHeight);
-
-            // Ensure opacity is fully restored
-            gsap.set(material, { opacity: 1 });
-            gsap.fromTo(material, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-          }
-        },
-      });
-    }
-  }, 800);
-
   return (
     <group ref={groupRef} position={[0, 0, -5]}>
       {/* Logo Plane - Use correct aspect ratio */}
-      <Center onClick={handleClick}>
+      <Center>
         <mesh ref={logoMeshRef}>
           <planeGeometry args={[logoWidth, logoHeight]} />
           <meshBasicMaterial

@@ -9,7 +9,7 @@ import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { memo, RefObject, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -33,12 +33,9 @@ function ConnectGL() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
 
-  const currentPage = useAtomValue(currentPageAtom);
-  const footerAnimDelayRef = useRef<gsap.core.Tween | null>(null);
-  const currentPageRef = useRef(currentPage);
-  currentPageRef.current = currentPage;
-
-  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim, playEnToCnAnim } = useConnectCrossAnimations({
+  // The headlines stay in English: they used to turn into Chinese word by word 1 s after Connect
+  // appeared (playEnToCnAnim), so a reader lost the sentence being read (CON-12).
+  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({
     modelRef,
   });
 
@@ -79,19 +76,6 @@ function ConnectGL() {
             setEnableUpJudge(true);
             // 立即显示底栏
             playFooterEnterAnim();
-            // 取消之前的延迟调用
-            if (footerAnimDelayRef.current) {
-              footerAnimDelayRef.current.kill();
-              footerAnimDelayRef.current = null;
-            }
-            // 延迟1秒后播放 EN→CN 动画，让英文有时间停留
-            footerAnimDelayRef.current = gsap.delayedCall(1, () => {
-              const pageId = currentPageRef.current?.id;
-              if (pageId === 'connect_page') {
-                playEnToCnAnim();
-              }
-              footerAnimDelayRef.current = null;
-            });
             if (window.isNavScrolling || window.isSmootherScrolling) return;
             const smoother = ScrollSmoother.get();
             if (!smoother || !tl1.scrollTrigger) return;
@@ -111,12 +95,7 @@ function ConnectGL() {
           },
           onEnterBack: () => {
             if (window.isResizing) return;
-            console.log('[ConnectGL] onEnterBack - 取消延迟调用并隐藏footer');
-            // 取消之前的延迟调用
-            if (footerAnimDelayRef.current) {
-              footerAnimDelayRef.current.kill();
-              footerAnimDelayRef.current = null;
-            }
+            console.log('[ConnectGL] onEnterBack - 隐藏footer');
             setEnableUpJudge(true);
             playFooterLeaveAnim();
           },
@@ -126,32 +105,10 @@ function ConnectGL() {
             console.log('[ConnectGL] onLeave - 显示footer', { isNavScrolling: window.isNavScrolling });
             // 立即显示底栏
             playFooterEnterAnim();
-            // 取消之前的延迟调用
-            if (footerAnimDelayRef.current) {
-              footerAnimDelayRef.current.kill();
-              footerAnimDelayRef.current = null;
-            }
-            // 延迟1秒后播放 EN→CN 动画，让英文有时间停留
-            footerAnimDelayRef.current = gsap.delayedCall(1, () => {
-              const pageId = currentPageRef.current?.id;
-              console.log('[ConnectGL] 延迟调用执行', { currentPageId: pageId });
-              if (pageId === 'connect_page') {
-                console.log('[ConnectGL] 确认在Connect页面 - 播放EN→CN动画');
-                playEnToCnAnim();
-              } else {
-                console.log('[ConnectGL] 已离开Connect页面 - 取消EN→CN动画');
-              }
-              footerAnimDelayRef.current = null;
-            });
           },
           onLeaveBack: () => {
             if (window.isResizing) return;
-            console.log('[ConnectGL] onLeaveBack - 取消延迟调用并隐藏footer');
-            // 取消之前的延迟调用
-            if (footerAnimDelayRef.current) {
-              footerAnimDelayRef.current.kill();
-              footerAnimDelayRef.current = null;
-            }
+            console.log('[ConnectGL] onLeaveBack - 隐藏footer');
             setEnableUpJudge(false);
             playFooterLeaveAnim();
           },

@@ -1,10 +1,8 @@
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { shuffle } from 'lodash-es';
 import { ReactNode, useEffect, useMemo, useRef } from 'react';
 import { NAV_LIST } from '../nav/nav';
 
@@ -28,19 +26,14 @@ export default function VerticalCarousel({
   itemClassName,
 }: VerticalCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isMounted = useIsMounted();
   const itemClass = useMemo(() => {
     return cn('mobile:flex mobile:flex-col mobile:items-center mobile:justify-center', itemClassName);
   }, [itemClassName]);
   const isMobile = useIsMobile();
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
 
-  const items = useMemo(() => {
-    if (!isMounted) return children;
-    let result = [...children];
-    result = shuffle(result);
-    return result;
-  }, [children, isMounted]);
+  // Fixed order (it used to shuffle on every mount, so each visit read the slogans in a new order).
+  const items = children;
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const isActiveRef = useRef<boolean>(true); // 跟踪当前页面是否激活

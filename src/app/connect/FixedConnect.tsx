@@ -2,8 +2,8 @@ import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import { isCNAtom } from '@/atoms/geo';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
-import { useAtom, useAtomValue } from 'jotai';
-import { Fragment, useEffect } from 'react';
+import { useAtomValue } from 'jotai';
+import { Fragment } from 'react';
 import { CONNECT_TEXT, END_CONTENT_1, END_CONTENT_2 } from './content';
 
 // New: Single-page mobile layout component
@@ -200,15 +200,8 @@ const CONNECT_CONTENT = CONNECT_TEXT.map((item) => ({ ...item, mobileSVGElement:
 
 export default function FixedConnect() {
   const isMobile = useIsMobile();
-  const [isCN, setIsCN] = useAtom(isCNAtom);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIsCN((prev) => !prev);
-    }, 8000);
-
-    return () => clearInterval(timer);
-  }, [setIsCN]);
+  // No timer: the criteria and values used to switch between English and Chinese every 8 s (CON-12).
+  const isCN = useAtomValue(isCNAtom);
 
   return (
     <>
