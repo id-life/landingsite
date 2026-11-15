@@ -20,6 +20,10 @@ export const ReactQueryProvider = ({ children }: PropsWithChildren) => {
         }),
         defaultOptions: {
           queries: {
+            // ENG-08: one retry a second later, then the error state with its retry control. The default (three
+            // retries, backing off to 4 s) kept a failed section in its loading or empty state for about 7 s.
+            retry: 1,
+            retryDelay: 1000,
             staleTime: 1000 * 60 * 5, // 5 minutes
             refetchOnWindowFocus: false,
             refetchIntervalInBackground: false,
