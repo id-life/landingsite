@@ -16,7 +16,9 @@ export default function HomeStatement() {
 
   return (
     <HomeStatementFrame>
-      <h1 className="text-[max(1.375rem,17px)]/[1.35] font-semibold mobile:text-base/6">{FUND.statement.text.en}</h1>
+      <h1 className="text-[max(1.375rem,17px)]/[1.35] font-semibold mobile:text-base/6 [@media(max-height:740px)]:mobile:text-[0.9375rem]/5">
+        {FUND.statement.text.en}
+      </h1>
       <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[max(1rem,13px)]/[1.45] font-medium mobile:mt-2 mobile:justify-center mobile:text-xs/5">
         {facts.map((fact) => (
           <div key={fact.label} className="flex gap-1.5">
@@ -29,7 +31,7 @@ export default function HomeStatement() {
           <dd className="inline">{THEMES.map((theme) => theme.name.en).join(' · ')}</dd>
         </div>
       </dl>
-      <StatementDoors className="mt-3 mobile:mt-2" />
+      <StatementDoors className="mt-3 mobile:mt-2 [@media(max-height:740px)]:mobile:mt-1" />
     </HomeStatementFrame>
   );
 }

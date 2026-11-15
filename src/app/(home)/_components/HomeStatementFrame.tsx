@@ -31,7 +31,7 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
         // 0.8333vw root (RWD-01) cannot shrink them below a readable size on tablets.
         'left-10 top-[max(7.5rem,92px)] w-[max(42rem,460px)]',
         // Phone tree: under the header, above the wordmark.
-        'mobile:inset-x-5 mobile:top-[5.5rem] mobile:w-auto mobile:text-center',
+        'mobile:inset-x-5 mobile:top-[5.5rem] mobile:w-auto mobile:text-center [@media(max-height:740px)]:mobile:top-[4.75rem]',
         onHero ? 'visible opacity-100' : 'invisible opacity-0',
       )}
     >
