@@ -79,8 +79,9 @@ export function securityHeaders() {
 /**
  * Headers for documents: the Content-Security-Policy (about 900 bytes) and, on Vercel, its reporting endpoint. A
  * policy only governs the document (or worker) it arrives with, so next.config.mjs keeps it off the hashed
- * /_next/static chunks, optimised images and 3D models, where it added about 21 kB to a content page's first
- * visit (PERF-09 budget) and protected nothing. Workers the site starts from blob: URLs inherit the page's policy.
+ * /_next/static chunks, optimised images and the static files in public/: on every response it added about 21 kB to
+ * a content page's first visit and about 160 kB to the experience's (PERF-09 budget), and protected nothing. Workers
+ * the site starts from blob: URLs inherit the page's policy. The SVGs in public/ are first-party files.
  */
 export function documentSecurityHeaders({ deployEnv, cspMode, turnstile }) {
   const mode = cspMode || (deployEnv === 'production' ? 'report-only' : 'enforce');

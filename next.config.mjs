@@ -158,8 +158,9 @@ const nextConfig = {
         ],
       },
       {
-        // ENG-11: the Content-Security-Policy on documents only: not on hashed chunks, optimised images or models.
-        source: '/:path((?!_next/static/|_next/image|models/).*)',
+        // ENG-11: the Content-Security-Policy on documents only: not on hashed chunks, optimised images, or the
+        // first-party static files in public/ (models, textures, images, SVGs), about 200 of which a first visit loads.
+        source: '/:path((?!_next/static/|_next/image|models/|textures/|imgs/|svgs/|assets/).*)',
         headers: documentSecurityHeaders({
           deployEnv,
           cspMode: process.env.CSP_MODE,
