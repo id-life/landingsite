@@ -10,8 +10,6 @@ import PodcastSiriWave from '@/app/podcast/[id]/_components/PodcastSiriWave';
 import { track } from '@/lib/analytics/track';
 import { formatPlaybackTime } from '@/utils/podcast';
 
-import { color } from '@/styles/tokens';
-
 type PodcastPlayerProps = {
   data: PodcastItem;
 };
@@ -107,7 +105,8 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
             <div
               style={{
                 left: `${progress * 100}%`,
-                background: `linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, ${color.accent} 50%, rgba(193, 17, 17, 0) 100%)`,
+                background:
+                  'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
               }}
               className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2"
             />

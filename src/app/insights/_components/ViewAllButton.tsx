@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/utils';
 
-import { color } from '@/styles/tokens';
-
 interface ViewAllButtonProps {
   href: string;
   /** Opens href in a new tab (an external site). */
@@ -23,12 +21,12 @@ export default function ViewAllButton({ href, external = false, onClick, isMobil
     <>
       {/* Border SVG with top-left cut corner */}
       <svg aria-hidden="true" className="absolute inset-0" viewBox="0 0 111 36" fill="none" preserveAspectRatio="none">
-        <path d="M10 1H110V35H1V10L10 1Z" stroke={color.accent} strokeWidth="2" />
+        <path d="M10 1H110V35H1V10L10 1Z" stroke="var(--color-accent)" strokeWidth="2" />
       </svg>
       <span className="relative text-sm/5 text-accent">VIEW ALL</span>
       {/* Right chevron arrow */}
       <svg aria-hidden="true" className={cn('relative -mt-px size-4', isMobile && 'size-3')} viewBox="0 0 16 16" fill="none">
-        <path d="M6 4L10 8L6 12" stroke={color.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M6 4L10 8L6 12" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </>
   );

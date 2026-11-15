@@ -7,7 +7,8 @@
 //   - palette utilities (text-red-600, hover:bg-gray-800/50, fill-orange ...) to token utilities (text-accent ...)
 //   - arbitrary colour utilities (bg-[#F6F8FB], text-[#222], bg-[#121212CC]) to token utilities
 //   - hex literals in CSS to var(--color-<token>) (8-digit ones to color-mix with the same alpha)
-//   - hex string literals in TS/TSX ('#C11111', fill="#BB1212") to color.<token>, adding the import
+//   - hex in JSX attributes and inside CSS strings (fill="#BB1212", 'linear-gradient(#fff ...)') to var(--color-<token>)
+//   - bare hex string literals in TS/TSX ('#C11111', read by JS) to color.<token>, adding the import
 // Anything it cannot map is listed and left alone: add the colour to tokens.ts (or map it to an existing token
 // here), then run it again. Files that only hold tokens (src/styles/tokens.*) are skipped.
 import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -181,34 +182,29 @@ function rewriteTs(text, where) {
   const spec = hasOwnColor ? 'color as colorToken' : 'color';
   let out = rewriteClasses(text, where);
   let used = false;
-  // JSX attribute: fill="#BB1212" -> fill={color.accent}
+  // JSX attribute (fill, stroke, stopColor ...): a CSS value, so the CSS variable, with no JS import.
   out = out.replace(/(\s[\w-]+)="#([0-9a-fA-F]{6})"/g, (m, attr, hex) => {
     const t = tokenFor(hex, where);
-    if (!t) return m;
-    used = true;
-    return `${attr}={${key(t)}}`;
+    return t ? `${attr}="var(--color-${t})"` : m;
   });
-  // Whole string literal: '#C11111' or "#c11111" -> color.accent
+  // Inside a longer string ('linear-gradient(..., #FF1717 50%, ...)'): a CSS value too.
+  out = out.replace(/'([^'\n]*#[0-9a-fA-F]{6}\b[^'\n]*)'/g, (m, body) => {
+    if (/^#[0-9a-fA-F]{6}$/.test(body)) return m; // a bare colour: handled below
+    let ok = true;
+    const css = body.replace(/#([0-9a-fA-F]{6})\b/g, (mm, hex) => {
+      const t = tokenFor(hex, where);
+      if (!t) ok = false;
+      return t ? `var(--color-${t})` : mm;
+    });
+    return ok ? `'${css}'` : m;
+  });
+  // A bare string literal ('#C11111'): JavaScript reads it (three.js, GSAP, canvases), so the JS token. Where it is
+  // really a CSS value (a style object), prefer 'var(--color-<name>)' by hand: it keeps tokens.ts out of the bundle.
   out = out.replace(/(['"])#([0-9a-fA-F]{6})\1/g, (m, _q, hex) => {
     const t = tokenFor(hex, where);
     if (!t) return m;
     used = true;
     return key(t);
-  });
-  // Inside a longer string ('linear-gradient(..., #FF1717 50%, ...)'): turn the literal into a template.
-  out = out.replace(/'([^'\n]*#[0-9a-fA-F]{6}\b[^'\n]*)'/g, (m, body) => {
-    let ok = true;
-    const tpl = body.replace(/#([0-9a-fA-F]{6})\b/g, (mm, hex) => {
-      const t = tokenFor(hex, where);
-      if (!t) {
-        ok = false;
-        return mm;
-      }
-      return `\${${key(t)}}`;
-    });
-    if (!ok) return m;
-    used = true;
-    return `\`${tpl}\``;
   });
   if (used && !/from '@\/styles\/tokens'/.test(out)) {
     // After the last import statement (multi-line imports included).

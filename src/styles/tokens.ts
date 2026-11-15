@@ -1,8 +1,8 @@
 /**
  * Design tokens (VIS-02): the one source of every colour, type role, font role and grid value on the site.
  *
- * - `src/styles/tokens.css` is GENERATED from this file (`node scripts/build-tokens.mjs`) and imported first by
- *   `globals.css`; `test/tokens.test.mjs` fails when the two differ.
+ * - `src/styles/tokens.css` is GENERATED from this file (`node scripts/build-tokens.mjs`) and imported before
+ *   `globals.css` by the root layout (and global-error); `test/tokens.test.mjs` fails when the two differ.
  * - `tailwind.config.ts` builds `theme.colors`, `fontSize`, `fontFamily` and the grid utilities from it, so a
  *   colour that is not here has no utility class.
  * - Code that cannot read CSS custom properties (three.js materials, GSAP theme tweens, canvas sketches) imports
@@ -128,7 +128,11 @@ const markdown = {
   'md-attention-deep': '#3b2300',
 } as const;
 
-export const color = { ...house, ...base, ...tone, ...data, ...scene, ...markdown } as const;
+/**
+ * The colours JavaScript can read (three.js, GSAP theme tweens, canvases). The markdown palette is CSS-only, so it is
+ * not here and does not ship to the browser in JS. In CSS, SVG attributes and inline styles use var(--color-<name>).
+ */
+export const color = { ...house, ...base, ...tone, ...data, ...scene } as const;
 
 /** `#rrggbb` plus an alpha in 0..1, as `#rrggbbaa` (what GSAP tweens between and three.js reads). */
 const withAlpha = (hex: string, alpha: number): string =>
@@ -321,7 +325,7 @@ export function bodyVariables(): [string, string][] {
 /** Every :root custom property of tokens.css, in order (scripts/build-tokens.mjs writes them, the test compares). */
 export function cssVariables(): [string, string][] {
   return [
-    ...Object.entries(color).map(([k, v]) => [`--color-${k}`, v] as [string, string]),
+    ...Object.entries({ ...color, ...markdown }).map(([k, v]) => [`--color-${k}`, v] as [string, string]),
     ['--color-accent-tint', accentTint],
     ['--read-body', readBody],
     ...Object.entries(typeRoles).flatMap(([k, [size, lh]]) => [

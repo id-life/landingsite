@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
 
-import { color as colorToken } from '@/styles/tokens';
-
 function CornerBorder({
   color,
   size,
@@ -21,7 +19,7 @@ function CornerBorder({
           '--corner-border-color': color || '#666',
           '--corner-border-size': size || '6px',
           '--corner-border-width': width || '2px',
-          '--corner-border-hover-color': hoverColor || colorToken.accent,
+          '--corner-border-hover-color': hoverColor || 'var(--color-accent)',
         } as React.CSSProperties
       }
     >

@@ -8,8 +8,6 @@ import { audioControlsAtom } from '@/atoms/audio-player';
 import OutboundLink from '@/lib/analytics/outbound';
 import { safeHref } from '@/utils/safe-href';
 
-import { color } from '@/styles/tokens';
-
 dayjs.extend(dayjsDuration);
 
 type DesktopPodcastItemProps = {
@@ -59,7 +57,8 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   <div
                     style={{
                       left: `${controls.progress * 100}%`,
-                      background: `linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, ${color.accent} 50%, rgba(193, 17, 17, 0) 100%)`,
+                      background:
+                        'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
                     }}
                     className="absolute top-1/2 h-[16px] w-[2px] -translate-y-1/2"
                   />

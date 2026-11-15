@@ -1,7 +1,7 @@
 # Design tokens: colours, type, fonts, grid
 
 The one source is `src/styles/tokens.ts` (VIS-02). `src/styles/tokens.css` is generated from it
-(`node scripts/build-tokens.mjs`; `npm test` fails if the two differ) and is imported first by `globals.css`.
+(`node scripts/build-tokens.mjs`; `npm test` fails if the two differ) and is imported before `globals.css` by the root layout.
 `tailwind.config.ts` builds `theme.colors`, the type-role sizes, the font roles and the grid utilities from the same
 file. Code that cannot read CSS variables (three.js, GSAP theme tweens, canvases) imports `color` from it.
 

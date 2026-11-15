@@ -5,8 +5,6 @@ import { color, accentTint, typeRoles, grid } from './src/styles/tokens';
 // Colours, font roles, type roles and the grid come from src/styles/tokens.ts (VIS-02). theme.colors REPLACES
 // Tailwind's palette (theme.extend would keep it: red-600 would silently fall back to #dc2626), so a colour that is
 // not a token has no utility. The markdown palette (md-*) is CSS-only.
-const tokenColors = Object.fromEntries(Object.entries(color).filter(([k]) => !k.startsWith('md-')));
-
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -20,7 +18,7 @@ const config: Config = {
       transparent: 'transparent',
       current: 'currentColor',
       inherit: 'inherit',
-      ...tokenColors,
+      ...color,
       'accent-tint': accentTint,
       // The section theme, tweened per section (tokens.ts themes).
       background: 'var(--background)',
