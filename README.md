@@ -1,44 +1,47 @@
-## Getting Started
+# www.id.life
 
-Use Node.js 24 for local development and builds:
+The website of Immortal Dragons 不朽真龙, a purpose-driven longevity fund: a scroll-driven 3D experience (seven
+sections) plus server-rendered news, podcast and Spectrum tool pages.
+
+## Stack
+
+Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS 3, three.js with React Three Fiber, GSAP 3.15
+(ScrollTrigger, ScrollSmoother, SplitText), p5, jotai, TanStack Query, Sentry, deployed on Vercel.
+
+## Getting started
 
 ```bash
-nvm install
-nvm use
 npm ci
+npm run dev        # http://localhost:3000
 ```
 
-The `.nvmrc` file selects Node 24 locally. `engines.node` in `package.json` pins Vercel builds and Node.js functions to `24.x`, overriding the project dashboard default.
+No environment variables are required: public defaults for every `NEXT_PUBLIC_*` value are in `next.config.mjs`.
+Override them per environment (Vercel project settings, or a local `.env` copied from `.env.example`).
 
-First, run the development server:
+| Script                        | What it does                |
+| ----------------------------- | --------------------------- |
+| `npm run dev`                 | development server          |
+| `npm run build` / `npm start` | production build and server |
+| `npm run lint`                | ESLint (next lint)          |
+| `npm test`                    | vitest unit tests           |
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Architecture
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+See [CLAUDE.md](CLAUDE.md) for the route list, the two component trees (phone at <= 768 px, desktop above), the
+loader gate, section stepping, URL and history handling, the API layer and the SEO rules.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Unit tests: `npm test`.
+- End to end: a Playwright suite (laptop, phone, tablet and WebKit profiles; guards that protect working behaviour
+  and targets that encode known defects) runs against a local production build or a Vercel preview. Never submit
+  the newsletter or Influence Network forms from a test: they write to production services.
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
+Vercel builds a preview for every pushed branch and deploys `main` to production. Analytics run only in production
+builds; Sentry reports only from production and preview.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Licence
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All rights reserved; see [LICENSE](LICENSE). Third-party fonts and models: [docs/licences.md](docs/licences.md).

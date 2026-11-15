@@ -1,227 +1,90 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 14 App Router site with a
+scroll-driven 3D experience and server-rendered content pages. Read this before changing anything; update it in the
+same commit as any change to the architecture it describes.
 
-## Development Commands
-
-**Development Server**
-
-```bash
-npm run dev  # Start Next.js development server on localhost:3000
-```
-
-**Build & Production**
+## Commands
 
 ```bash
-npm run build  # Create production build
-npm start      # Start production server
+npm ci            # install exactly what package-lock.json pins
+npm run dev       # dev server on http://localhost:3000
+npm run build     # production build (also type-checks app routes)
+npm start         # serve the production build
+npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax rules)
+npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
+npx tsc --noEmit -p .                     # full type check
+npx prettier --write --ignore-unknown .   # format
 ```
 
-**Code Quality**
+The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on staged files.
 
-```bash
-npm run lint                              # Run ESLint
-npm run lint --fix .                      # Fix linting issues
-npx prettier --write --ignore-unknown .   # Format code
-```
-
-**Git Hooks**
-
-- Pre-commit hooks automatically run linting and formatting via `lint-staged`
-- Uses `simple-git-hooks` for git hook management
-
-## Architecture Overview
-
-This is a **Next.js 14 App Router** landing site for Immortal Dragons, a longevity fund. The codebase features:
-
-### Tech Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Styling**: Tailwind CSS with custom configuration
-- **3D Graphics**: Three.js with React Three Fiber (@react-three/fiber, @react-three/drei)
-- **Animations**: GSAP (business license) with ScrollTrigger, ScrollSmoother, SplitText, DrawSVGPlugin, MotionPathPlugin
-- **State Management**: Jotai atoms
-- **Data Fetching**: TanStack Query
-- **Monitoring**: Sentry error tracking
-
-### Project Structure
-
-**Core Directories:**
-
-- `src/app/` - Next.js App Router pages and layouts
-- `src/components/` - Reusable UI components organized by feature
-- `src/atoms/` - Jotai state management atoms
-- `src/hooks/` - React hooks, including animation and data fetching
-- `src/constants/` - Configuration and static data
-- `src/providers/` - React context providers
-- `src/styles/` - Global styles and custom fonts
-
-**Key Features:**
-
-- **3D Models & WebGL**: Complex 3D visualizations using Three.js (`src/components/gl/`), including fluid simulations, particle effects, and animated dragon/animal models
-- **Multi-language Support**: English/Chinese content switching
-- **Responsive Design**: Mobile-first with custom breakpoints; separate mobile GL components (`MobileVisionGL`, `MobileConnectGL`)
-- **Audio Player**: Custom audio player with waveform visualization (wavesurfer.js)
-- **Interactive Animations**: GSAP-powered scroll-triggered animations with ScrollSmoother
+## Routes
 
 **Pages:**
 
-- Home (`/`), About, Digital Twin, Spectrum (with sub-pages: disease-management, influence-network), Portfolio, Presence, News (with `[id]` dynamic route), Podcast (with `[id]` dynamic route), Insights, Connect
+- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast
 
-### Important Configuration
+- `/` and the six section URLs render the same client-only experience (`src/app/(home)/_components/HomeEntry.tsx`);
+  the URL selects the section. Section layouts carry metadata, JSON-LD and the server-rendered summary.
+- `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
+  `influence-network` are standalone tool pages with their own layout (no experience nav).
+- `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
+- Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
+  `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
+- Not routable (no page.tsx; dead code to delete): `src/app/partners`, `processes`, `tracking`. `src/app/twin` and
+  `src/app/vision` hold section components, not routes.
 
-**Next.js Config (`next.config.mjs`):**
+## Architecture of the experience
 
-- React Strict Mode disabled (`reactStrictMode: false`) - intentional for GSAP/Three.js compatibility
-- SVG handling with `@svgr/webpack` for component imports (`*.svg?component`)
-- GLSL shader file processing (`*.glsl`, `*.vert`, `*.frag`) via raw-loader + glslify-loader
-- Three.js transpilation
-- Custom cache handler (`cache-handler.mjs`)
-- Sentry integration with source map uploads
+- **Two trees.** `HomeEntry` renders `MobileHome` at <= 768 px (`src/hooks/useIsMobile.tsx`) and `Home` above. They are
+  separate component trees with separate sections (`Mobile*` components); a change usually needs both.
+- **Loader gate.** `src/components/gl/ProgressLoader.tsx` gates on the hero assets only and sets `globalLoadedAtom`
+  (`src/atoms/geo.ts`); later-section 3D mounts on approach. A 15 s fail-open reveals the UI if loading stalls.
+  `HeroPreloads` (in each section layout) preloads the hero model and wordmark textures.
+- **Fixed UI** (nav, arrows, player) is revealed from `fadeInAnimCompletedAtom`, not by imperative tweens; the intro
+  tween in `DragonModel` only runs on a first visit.
+- **Desktop scrolling.** GSAP ScrollSmoother (created in `src/hooks/anim/useHomeAnimations.tsx`) with one
+  ScrollTrigger timeline per section. Section stepping: `useScrollSmootherAction` (wheel; one gesture = one step,
+  200 ms of wheel silence between steps), `useSectionInput` (keyboard and tablet touch), both dispatching through
+  `src/utils/section-step.ts`. Window flags `isNavScrolling`, `isSmootherScrolling`, `isResizing` are declared in
+  `global.d.ts`; respect them instead of adding new ones.
+- **Phone.** No document scroll: sections switch through `useMobileNavigation`, the arrows
+  (`MobilePageArrows.tsx`), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
+- **URL and history.** `HashRouter` (root layout, never unmounts) applies the URL once per mount of the experience
+  (`useExperienceLifecycle` bumps `experienceMountIdAtom`); `useSectionUrlSync` replaces the URL and title as the
+  visitor scrolls; nav clicks push. Scroll restoration is 'manual' only while the experience is mounted.
+- **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
+  `test/spectrum-routes.test.mjs`); deep links replace the history entry.
+- **Section ids**: use `NAV.<id>` from `src/components/nav/nav.ts`, never `NAV_LIST[<number>]` (lint rule).
 
-**Tailwind Config:**
+## Content, data and SEO
 
-- Custom breakpoints: `mobile` (max: 768px), `tablet` (768px-1540px)
-- Extended spacing, colors, and typography
-- Custom font variables for multiple typefaces
+- API layer: `src/apis/request.ts` (axios, `ApiError`, `isApiNotFound`) and `src/apis/index.ts`. The base URL is
+  `NEXT_PUBLIC_API_PREFIX`; public defaults for every `NEXT_PUBLIC_*` value live in `next.config.mjs`
+  (see `.env.example`). Never commit `.env`.
+- Markdown from the CMS goes through `src/utils/markdown.ts` (sanitised; no raw HTML from JSX). Structured data
+  goes through `src/components/seo/JsonLd.tsx`; links from API data through `src/utils/safe-href.ts`.
+- Server-rendered summaries for crawlers and assistive tech: `PageSEOContent`. Never hide text from people while
+  serving it to crawlers (no `aria-hidden` text, no zero-height wrappers).
+- Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
+  production and preview, with no Replay or profiling in the shared runtime.
+- Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.
 
-### Development Notes
+## Testing safely
 
-**SVG Usage:**
+- **Never submit the newsletter or Influence Network forms** against any build, local ones included: they write
+  to the real Mailchimp list and the production API. Mock them (Playwright `route.fulfill`).
+- Run browser checks against a local production build (`npm run build && npm start`) or a Vercel preview. Do not
+  point automated browsers at www.id.life: Vercel's firewall challenges them, and it skews analytics.
+- The end-to-end suite (Playwright, laptop / phone / tablet / WebKit, guards and targets) lives outside this repo
+  in `idlife-audit/tests` of the maintainers' scripts repository; run it with `AUDIT_SITE=<build URL>` and
+  `SITE_REPO=<this checkout>`.
 
-- Import as components: `import Icon from './icon.svg?component'`
-- Regular imports for assets: `import iconUrl from './icon.svg'`
+## Definition of done
 
-**3D Development:**
-
-- Models stored in `public/models/` (GLB format)
-- Shaders in `src/components/gl/fluid/glsl/`
-- Performance monitoring available via `r3f-perf`
-
-**State Management:**
-
-- Jotai atoms organized by feature in `src/atoms/`
-- Key atoms: `nav`, `audio-player`, `twin`, `theme`, `podcast`, `engagement`, `geo`
-- Providers wrapped in `src/providers/root.tsx` using a ProviderComposer pattern
-
-**Styling:**
-
-- Uses CSS custom properties for theme switching
-- Component-specific styles in `src/styles/components/`
-- Font files in `src/styles/fonts/`
-
-## Code Style
-
-- Avoid code duplication - extract common types and components.
-- Keep components focused - use hooks and component composition.
-- Follow React best practices - proper Context usage, state management.
-- Use TypeScript strictly - leverage type safety throughout.
-- Build React features out of small, atomic components. Push data fetching, stores, and providers down to the feature or tab that actually needs them so switching views unmounts unused logic and prevents runaway updates instead of centralizing everything in a mega component.
-
-### React Best Practices
-
-#### Avoid useCallback Overuse
-
-Only use `useCallback` when:
-
-- The callback is passed to a memoized child component
-- The callback has dependencies that genuinely need to be tracked
-
-**DON'T** wrap callbacks with empty dependencies or callbacks that aren't passed to memoized components:
-
-```typescript
-// ❌ Bad: Unnecessary useCallback
-const handleClose = useCallback(() => {
-  window.api.mainPanel.close();
-}, []);
-
-// ✅ Good: Regular function
-const handleClose = () => {
-  window.api.mainPanel.close();
-};
-```
-
-#### Fix Circular Dependencies in useEffect
-
-When event handlers need to access latest state without re-subscribing, use refs:
-
-```typescript
-// ❌ Bad: Circular dependency causes re-subscription every state change
-const handleMouseMove = useCallback(
-  (e: MouseEvent) => {
-    if (!isDragging) return;
-    // ... logic
-  },
-  [isDragging],
-);
-
-useEffect(() => {
-  if (isDragging) {
-    window.addEventListener('mousemove', handleMouseMove);
-  }
-  return () => window.removeEventListener('mousemove', handleMouseMove);
-}, [isDragging, handleMouseMove]); // Circular dependency!
-
-// ✅ Good: Use ref and define handler inside effect
-const isDraggingRef = useRef(isDragging);
-isDraggingRef.current = isDragging;
-
-useEffect(() => {
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDraggingRef.current) return;
-    // ... logic
-  };
-
-  if (isDragging) {
-    window.addEventListener('mousemove', handleMouseMove);
-  }
-  return () => window.removeEventListener('mousemove', handleMouseMove);
-}, [isDragging]); // No circular dependency
-```
-
-#### IPC Subscriptions Should Subscribe Once
-
-IPC listeners should subscribe once on mount, not re-subscribe on state changes:
-
-```typescript
-// ❌ Bad: Re-subscribes every time isHovering changes
-useEffect(() => {
-  const cleanup = window.api.menu.onCheckMousePosition(() => {
-    if (!isHovering) {
-      window.api.menu.hide();
-    }
-  });
-  return cleanup;
-}, [isHovering]); // Re-subscribes unnecessarily
-
-// ✅ Good: Subscribe once, access state via ref
-const isHoveringRef = useRef(isHovering);
-isHoveringRef.current = isHovering;
-
-useEffect(() => {
-  const cleanup = window.api.menu.onCheckMousePosition(() => {
-    if (!isHoveringRef.current) {
-      window.api.menu.hide();
-    }
-  });
-  return cleanup;
-}, []); // Subscribe once
-```
-
-#### Avoid useState for Static Values
-
-Don't use `useState` for values that never change:
-
-```typescript
-// ❌ Bad: useState for static value
-const [versions] = useState(window.electron.process.versions);
-
-// ✅ Good: Direct constant
-const versions = window.electron.process.versions;
-```
-
-## IMPORTANT
-
-- **Backward Compatibility**: When adding new features or fixing bugs, pay special attention to maintaining compatibility with existing functionality. Test affected areas thoroughly.
-- **Documentation**: When you need to check official documentation, use Context7 to get the latest information, or search for it if unavailable.
-- **CLAUDE.md Updates**: When making major changes involving architectural alterations, request an update to CLAUDE.md at the end of the task.
+1. `npx tsc --noEmit -p .`, `npm run lint` and `npm test` pass.
+2. `npm run build` succeeds.
+3. The e2e suite shows no guard regression against the baseline, and the targets of the item you worked on are green.
+4. Checked on a preview or local build on phone, tablet and laptop; screenshots or a recording for visible changes.
+5. This file is updated if the architecture changed.
