@@ -12,7 +12,8 @@
     "lint": "next lint",
     "test": "vitest run",
     "prepare": "simple-git-hooks",
-    "knip": "knip"
+    "knip": "knip",
+    "perf:budget": "node scripts/perf-budget.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.24",

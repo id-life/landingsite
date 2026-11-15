@@ -1,0 +1,110 @@
+{
+  "_about": "Recorded performance numbers checked by scripts/perf-budget.mjs (PERF-09). A pull request fails when a number grows past recorded x (1 + tolerance). Units: kB = 1024 bytes. Re-record with `node scripts/perf-budget.mjs --record` only when a change is meant to move a number, and say why in the PR. The targets block is the plan's budget (docs/performance-budget.md): reported as warnings, never failed, until the items that reach it have shipped.",
+  "tolerance": {
+    "js": 0.03,
+    "visit": 0.05,
+    "requests": 0.1
+  },
+  "routes": {
+    "/": {
+      "kind": "experience",
+      "jsInitialGzipKB": 324.4
+    },
+    "/news": {
+      "kind": "content",
+      "jsInitialGzipKB": 456.3
+    },
+    "/news/immortal-dragons-news-and-updates": {
+      "kind": "content",
+      "jsInitialGzipKB": 445.9
+    },
+    "/podcast": {
+      "kind": "content",
+      "jsInitialGzipKB": 442.7
+    },
+    "/podcast/56": {
+      "kind": "content",
+      "jsInitialGzipKB": 577
+    },
+    "/spectrum/disease-management": {
+      "kind": "content",
+      "jsInitialGzipKB": 309.3
+    },
+    "/spectrum/influence-network": {
+      "kind": "content",
+      "jsInitialGzipKB": 291.3
+    }
+  },
+  "firstVisit": {
+    "phone": {
+      "/": {
+        "kB": 3116.9,
+        "jsKB": 1457.4,
+        "requests": 219
+      },
+      "/news": {
+        "kB": 731.9,
+        "jsKB": 476.4,
+        "requests": 48
+      },
+      "/podcast/56": {
+        "kB": 751.5,
+        "jsKB": 597.9,
+        "requests": 50
+      }
+    },
+    "tablet": {
+      "/": {
+        "kB": 6201.5,
+        "jsKB": 1468.6,
+        "requests": 185
+      },
+      "/news": {
+        "kB": 731.9,
+        "jsKB": 476.4,
+        "requests": 48
+      },
+      "/podcast/56": {
+        "kB": 771.8,
+        "jsKB": 597.9,
+        "requests": 51
+      }
+    },
+    "laptop": {
+      "/": {
+        "kB": 6201.5,
+        "jsKB": 1468.6,
+        "requests": 185
+      },
+      "/news": {
+        "kB": 731.9,
+        "jsKB": 476.4,
+        "requests": 48
+      },
+      "/podcast/56": {
+        "kB": 771.8,
+        "jsKB": 597.9,
+        "requests": 51
+      }
+    }
+  },
+  "targets": {
+    "experience": {
+      "phone": {
+        "firstVisitKB": 1229
+      },
+      "laptopTablet": {
+        "firstVisitKB": 1536
+      }
+    },
+    "content": {
+      "phone": {
+        "firstVisitKB": 391
+      },
+      "laptopTablet": {
+        "firstVisitKB": 391
+      }
+    }
+  },
+  "recordedAt": "2026-11-15T06:51:43.661Z"
+}

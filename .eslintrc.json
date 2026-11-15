@@ -84,6 +84,13 @@
       }
     },
     {
+      // Command-line scripts report on stdout.
+      "files": ["scripts/**"],
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
       // Structured data is the one place raw HTML is allowed: JsonLd escapes every '<'.
       "files": ["src/components/seo/JsonLd.tsx"],
       "rules": {

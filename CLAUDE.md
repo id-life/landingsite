@@ -14,6 +14,7 @@ npm start         # serve the production build
 npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax rules)
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
 npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
+npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
 npx tsc --noEmit -p .                     # full type check
 npx prettier --write --ignore-unknown .   # format
 ```
