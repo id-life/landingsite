@@ -10,25 +10,25 @@ there and the rules that keep it so. Lint (`no-restricted-syntax` in `eslint.con
 
 ## The tokens
 
-| token | value | used for |
-|---|---|---|
-| `DURATION.instant` | 0 | reduced motion, state that must not animate |
-| `DURATION.micro` | 0.12 s | per-glyph and per-icon changes |
-| `DURATION.fast` | 0.2 s | hover and press feedback, small fades, the fixed UI reveal |
-| `DURATION.base` | 0.3 s | default for UI tweens (`gsap.defaults`) |
-| `DURATION.moderate` | 0.45 s | panels, dialogs, menus, footers |
-| `DURATION.section` | 0.8 s | one section of the experience to the next |
-| `DURATION.camera` | 1 s | camera moves, first-visit intros, map zooms |
-| `PAGE_STEP` | 0.25 s, out | the phone inner-page step (Portfolio, Spectrum) |
-| `EASE.out` | cubic-bezier(0.22, 1, 0.36, 1) | entrances, settles, most UI |
-| `EASE.inOut` | cubic-bezier(0.65, 0, 0.35, 1) | movement from one place to another |
-| `EASE.in` | cubic-bezier(0.64, 0, 0.78, 0) | exits |
-| `EASE.linear` | linear | progress bars, loops, scrubbed camera paths |
-| `STAGGER` | glyph 0.02, item 0.04, block 0.1 s | |
-| `DISTANCE` | 8 / 16 / 24 / 48 px | entrance travel |
-| `MAX_TILT` | 8 degrees | entrance rotation on X or Y |
-| `LOOP.ripple` | 2 s | the SCROLL / START ripple loop |
-| `beats(n)` | n | lengths inside a scrubbed timeline (shares of the section's scroll, not seconds) |
+| token               | value                              | used for                                                                         |
+| ------------------- | ---------------------------------- | -------------------------------------------------------------------------------- |
+| `DURATION.instant`  | 0                                  | reduced motion, state that must not animate                                      |
+| `DURATION.micro`    | 0.12 s                             | per-glyph and per-icon changes                                                   |
+| `DURATION.fast`     | 0.2 s                              | hover and press feedback, small fades, the fixed UI reveal                       |
+| `DURATION.base`     | 0.3 s                              | default for UI tweens (`gsap.defaults`)                                          |
+| `DURATION.moderate` | 0.45 s                             | panels, dialogs, menus, footers                                                  |
+| `DURATION.section`  | 0.8 s                              | one section of the experience to the next                                        |
+| `DURATION.camera`   | 1 s                                | camera moves, first-visit intros, map zooms                                      |
+| `PAGE_STEP`         | 0.25 s, out                        | the phone inner-page step (Portfolio, Spectrum)                                  |
+| `EASE.out`          | cubic-bezier(0.22, 1, 0.36, 1)     | entrances, settles, most UI                                                      |
+| `EASE.inOut`        | cubic-bezier(0.65, 0, 0.35, 1)     | movement from one place to another                                               |
+| `EASE.in`           | cubic-bezier(0.64, 0, 0.78, 0)     | exits                                                                            |
+| `EASE.linear`       | linear                             | progress bars, loops, scrubbed camera paths                                      |
+| `STAGGER`           | glyph 0.02, item 0.04, block 0.1 s |                                                                                  |
+| `DISTANCE`          | 8 / 16 / 24 / 48 px                | entrance travel                                                                  |
+| `MAX_TILT`          | 8 degrees                          | entrance rotation on X or Y                                                      |
+| `LOOP.ripple`       | 2 s                                | the SCROLL / START ripple loop                                                   |
+| `beats(n)`          | n                                  | lengths inside a scrubbed timeline (shares of the section's scroll, not seconds) |
 
 The same values reach CSS as `--dur-*` / `--ease-*` on `:root` (Tailwind `duration-<token>`, `ease-token-<name>`) and
 motion as `MOTION.*` (`src/motion/presets.ts`). GSAP plays the eases under their token names (`gsap.registerEase` in
@@ -46,9 +46,9 @@ scroll each tween takes is unchanged; those timelines set `defaults: { duration:
 GSAP's old 0.5 s default.
 
 Files changed by the codemod (116 duration literals in 41 files, 79 ease literals in 37 files at the start):
-src/app/insights/Insights.tsx, src/app/portfolio/_components/{Portfolio,MobilePortfolio}.tsx,
-src/app/news/_components/NewsNavDialog.tsx, src/app/podcast/_components/PodcastNavDialog.tsx,
-src/app/twin/{Twin.tsx,_components/SwitchModel.tsx,_components/mobile/SwitchModel.tsx}, src/constants/engagement.tsx,
+src/app/insights/Insights.tsx, src/app/portfolio/\_components/{Portfolio,MobilePortfolio}.tsx,
+src/app/news/\_components/NewsNavDialog.tsx, src/app/podcast/\_components/PodcastNavDialog.tsx,
+src/app/twin/{Twin.tsx,\_components/SwitchModel.tsx,\_components/mobile/SwitchModel.tsx}, src/constants/engagement.tsx,
 src/constants/scroll-config.ts, src/utils/gsap-config.ts, src/components/engagement/{Engagement,WorldMap,WorldMapBookDot,
 WorldMapSponsorDot,MobileWorldMapBookDot,MobileWorldMapSponsorDot,WorldMapDotComponents,VideoWithPoster}.tsx,
 src/components/gl/{MobileConnectGL,MobileVisionGL,ProgressLoader,ConnectGL}.tsx,
