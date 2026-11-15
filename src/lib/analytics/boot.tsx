@@ -111,10 +111,11 @@ async function loadTag(layout: string | undefined) {
     gtag('set', { layout });
   }
   gtag('js', new Date());
+  // No page_title here: values given to config stick to every later hit of the stream, and a fixed title would be
+  // reported on every section's page_view (seen in the analytics-build probes). GA4 reads document.title instead.
   gtag('config', GA_ID, {
     page_location: landing.href,
     page_referrer: landing.referrer,
-    page_title: landing.title,
     ...internal,
     ...(GA_DEBUG_MODE ? { debug_mode: true } : {}),
   });
