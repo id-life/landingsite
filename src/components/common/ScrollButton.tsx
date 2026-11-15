@@ -6,6 +6,7 @@ import { NAV_LIST } from '../nav/nav';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { EASE, LOOP } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 interface ScrollButtonProps {
   className?: string;
@@ -13,6 +14,7 @@ interface ScrollButtonProps {
 
 export default function ScrollButton({ className }: ScrollButtonProps) {
   const setNavigateTo = useSetAtom(navigateToAtom);
+  const reduced = useReducedMotionPref();
   const rippleRef1 = useRef<HTMLDivElement>(null);
   const rippleRef2 = useRef<HTMLDivElement>(null);
   const rippleRef3 = useRef<HTMLDivElement>(null);
@@ -22,7 +24,8 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
     const ripple2 = rippleRef2.current;
     const ripple3 = rippleRef3.current;
 
-    if (!ripple1 || !ripple2 || !ripple3) return;
+    // Reduced motion (MOT-02): the button without its ripple loop.
+    if (!ripple1 || !ripple2 || !ripple3 || reduced) return;
 
     // 创建循环动画
     const createRippleAnim = (el: HTMLElement, delay: number) => {
@@ -47,8 +50,9 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
 
     return () => {
       gsap.killTweensOf([ripple1, ripple2, ripple3]);
+      gsap.set([ripple1, ripple2, ripple3], { clearProps: 'all' });
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <div className={cn('pointer-events-auto z-10 cursor-pointer', className)} onClick={() => setNavigateTo(NAV_LIST[1])}>

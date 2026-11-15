@@ -3,6 +3,7 @@ import P5 from 'p5';
 import { useMemo } from 'react';
 import { StaticParticle } from './static-particle';
 import { loadParticlePoints, ParticlePoints, samplePixels } from './particle-points';
+import { isReducedMotion } from '@/motion/preference';
 
 export const fundLogoLength = 2;
 
@@ -147,6 +148,8 @@ const StaticParticleGL = ({
         for (let i = newPositions.length; i < particles.length; i++) {
           particles[i].kill();
         }
+        // Reduced motion: P5Canvas does not loop; draw the settled logo once.
+        if (isReducedMotion()) p5.redraw();
       }
 
       p5.draw = () => {
@@ -154,6 +157,16 @@ const StaticParticleGL = ({
         if (!isAnimActive || !particles?.length) return;
         p5.clear();
         p5.background(255, 0); // transparent background
+
+        // Reduced motion (MOT-02): one still frame of the finished logo, no flight, no fade.
+        if (isReducedMotion()) {
+          particles = particles.filter((particle) => !particle.isKilled);
+          for (const particle of particles) {
+            particle.settle(particleSize);
+            particle.draw(particleSize);
+          }
+          return;
+        }
 
         // move and draw all particles
         const len = particles.length;

@@ -83,9 +83,21 @@ function Portfolio() {
     });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: beats(2) });
     // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
-    tl.from('.page2-title', { delay: beats(0.5), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
-    tl.from('.page2-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
-    tl.from('.page2-contact', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.fromTo(
+      '.page2-title',
+      { y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { delay: beats(0.5), y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
+    tl.fromTo(
+      '.page2-fund',
+      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
+    tl.fromTo(
+      '.page2-contact',
+      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
     // Every arrival lands here (MOT-01): the entrance complete, contact fully shown. A short hold follows, so the
     // rest pose sits inside the pin rather than on its last pixel.
     tl.addLabel('rest');

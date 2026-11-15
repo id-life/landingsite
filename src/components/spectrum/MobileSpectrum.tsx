@@ -4,7 +4,8 @@ import { innerPageIndexAtom, innerPageNavigateToAtom, innerPageTotalAtom, mobile
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useReducedMotionPref } from '@/motion/preference';
 import { memo, useEffect, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
@@ -23,7 +24,7 @@ function MobileSpectrum() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const [pageIndex, setPageIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPref();
   const { spectrumMainItems, spectrumSponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const totalPages = INITIATIVE_PAGES.length + Math.ceil(spectrumSponsorItem.links.length / SPONSORS_PER_PAGE);
   const active = currentPage.id === PAGE_ID;

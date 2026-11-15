@@ -1,6 +1,7 @@
 import P5 from 'p5';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { isMotionPaused, onMotionPause } from '@/motion/runtime';
+import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 
 // Mounts a p5 sketch. It replaces @p5-wrapper/react 4, which bundles React 18's JSX runtime (it reads React
 // internals that React 19 removed, so the experience never got past its loader) and its own second copy of p5
@@ -30,6 +31,12 @@ function P5CanvasComponent({ sketch, ...props }: P5CanvasProps) {
     const instance = instanceRef.current;
     if (!instance) return;
     const { active: isActive, inView } = loopState.current;
+    if (isReducedMotion()) {
+      // Reduced motion (MOT-02): no loop; the sketch draws its settled still frame once per change.
+      instance.noLoop();
+      if (isActive && inView) instance.redraw();
+      return;
+    }
     if (isActive && inView && !isMotionPaused()) instance.loop();
     else instance.noLoop();
   }, []);
@@ -61,6 +68,7 @@ function P5CanvasComponent({ sketch, ...props }: P5CanvasProps) {
   }, [targetId, syncLoop]);
 
   useEffect(() => onMotionPause(syncLoop), [syncLoop]);
+  useEffect(() => onReducedMotionChange(syncLoop), [syncLoop]);
 
   useEffect(
     () => () => {

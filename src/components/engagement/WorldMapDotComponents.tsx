@@ -10,6 +10,7 @@ import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import FeatherImg from './FeatherImg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { DURATION, EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
@@ -44,6 +45,8 @@ export function PulseDot({
   containerClassName?: string;
   svgClassName?: string;
 }) {
+  // Reduced motion (MOT-02): the pulse rings hold still.
+  const reduced = useReducedMotionPref();
   return (
     <div
       className={cn(
@@ -58,22 +61,26 @@ export function PulseDot({
           <>
             {/* 使用SVG animate元素来创建平滑的波纹效果 */}
             <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-              <animate
-                attributeName="r"
-                from={pulse1.fromRadius}
-                to={pulse1.toRadius}
-                dur={`${pulse1.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                from="0.5"
-                to="0"
-                dur={`${pulse1.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
+              {!reduced && (
+                <animate
+                  attributeName="r"
+                  from={pulse1.fromRadius}
+                  to={pulse1.toRadius}
+                  dur={`${pulse1.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
+              {!reduced && (
+                <animate
+                  attributeName="opacity"
+                  from="0.5"
+                  to="0"
+                  dur={`${pulse1.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
             </circle>
             <circle
               cx={centerPoint}
@@ -84,22 +91,26 @@ export function PulseDot({
               fill="none"
               opacity="0.5"
             >
-              <animate
-                attributeName="r"
-                from={pulse2.fromRadius}
-                to={pulse2.toRadius}
-                dur={`${pulse2.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                from="0.5"
-                to="0"
-                dur={`${pulse2.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
+              {!reduced && (
+                <animate
+                  attributeName="r"
+                  from={pulse2.fromRadius}
+                  to={pulse2.toRadius}
+                  dur={`${pulse2.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
+              {!reduced && (
+                <animate
+                  attributeName="opacity"
+                  from="0.5"
+                  to="0"
+                  dur={`${pulse2.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
             </circle>
           </>
         )}

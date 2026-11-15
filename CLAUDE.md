@@ -105,6 +105,15 @@ Each job is its own status check. Run the same commands locally before pushing.
   same frame). `src/motion/runtime.ts` pauses everything (ticker, p5, held animation frames) after 60 s without input
   and in a hidden tab; `onMotionPause` / `useMotionPaused` for any new loop. p5 sketches loop only while active and on
   screen (`P5Canvas`).
+- **Reduced motion (MOT-02, `src/motion/preference.ts`)**: the only reader of `prefers-reduced-motion` (plus the CSS
+  guard in `globals.css`). The on-page `MotionSwitch` (`src/components/common/MotionSwitch.tsx`, in both headers, early
+  in the tab order) stores a choice in localStorage that wins over the OS setting either way. Read `isReducedMotion()` /
+  `useReducedMotionPref()` when starting a movement and `onReducedMotionChange` for loops; every `DURATION` token reads 0
+  while reduced, `<html>` gets `.motion-reduced` / `.motion-full`, motion components follow `MotionPreferenceConfig`.
+  Reduced mode is designed: section changes are 0.2 s crossfades (at least 400 ms apart), canvases render a settled
+  still frame and stop (`FrameDriver`), particle logos draw at their targets once (`P5Canvas` never loops), and the
+  ripples, carousel, marquee, map pulses, map auto-cards, Twin attention loops and visualiser stay still. Any new loop
+  must stop when reduced. Scrubbed entrances are `fromTo` with explicit end values, not `from`.
 - **Quality tiers (MOT-06).** `src/motion/gpuTier.ts` (low / mid / high) sets DPR cap, composer MSAA, glass samples and
   fluid grid; `AdaptiveDpr` steps DPR down on sustained drops; canvases expose `data-tier` / `data-dpr`. The hero glass
   is one preset (`HERO_GLASS` in `config/visionGLConfig.ts`, owner's choice pending; `?hero-glass=0-5` outside

@@ -133,6 +133,17 @@ export class StaticParticle {
     }
   }
 
+  /** Reduced motion (MOT-02): the particle as it rests at its target, without the flight there. */
+  settle(drawParticleSize?: number) {
+    this.pos.x = this.target.x;
+    this.pos.y = this.target.y;
+    this.vel.mult(0);
+    this.distToTarget = 0;
+    this.isStable = true;
+    this.currentColor = this.endColor;
+    this.currentSize = drawParticleSize ?? this.config.particleSize;
+  }
+
   updateTarget(x: number, y: number, color: P5.Color) {
     // when target position change, set particle to non-stable status
     if (this.target.x !== x || this.target.y !== y) {
