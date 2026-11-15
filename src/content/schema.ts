@@ -185,6 +185,22 @@ export const CopyList = z.object({ id: slug, title: Text, items: z.array(Text).m
 export type CopyList = z.infer<typeof CopyList>;
 
 /**
+ * A draft for the owner (CON-10): text written from published sources only, with every source and the questions only
+ * the owner can answer. Lives in src/content/drafts/ and is never rendered by a production build.
+ */
+export const DraftRecord = z.object({
+  id: slug,
+  /** The plan item that needs it (CON-01, CON-15, ...). */
+  item: z.string().regex(/^[A-Z]{2,4}-\d{2}$/),
+  /** What it is, for the review page ("About: founder section"). */
+  title: z.string().min(1),
+  /** The text as it would ship. Lines starting with "- " render as a list on the review page. */
+  body: Text,
+  approval: DraftApproval,
+});
+export type DraftRecord = z.infer<typeof DraftRecord>;
+
+/**
  * Parse a record or a collection when its module loads, so `next build` fails on invalid content
  * (every route that renders it imports the module while it prerenders). The message names the file and field.
  */

@@ -68,6 +68,11 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   a fund fact (contact@id.life, US$40 million, 15+, the Biopolis address) outside `src/content`; `entity.ts`,
   llms.txt and the About page derive from it (`test/content-layer.test.mjs` fails otherwise). The feed fields the
   site needs from id-platform are specified in `docs/id-platform-content-api.md`.
+- **Approval** (CON-10, `docs/content-approval.md`): every record carries `approval` (`legacy` = live at the 6a90671
+  baseline, `approved` = approvedBy + approvedAt). Agent-written copy is a `draft` in `src/content/drafts/`, which only
+  the review page may import (ESLint) and which throws in a production build. A legacy fact with `pendingRuling` keeps
+  rendering where it was but no new placement shows it (`isConfirmed`). Never ship new wording without the owner's
+  approval; write a draft instead. `docs/content-inventory.md` lists every copy deliverable and its status.
 - API layer: `src/apis/request.ts` (axios, `ApiError`, `isApiNotFound`) and `src/apis/index.ts`. The base URL is
   `NEXT_PUBLIC_API_PREFIX`; public defaults for every `NEXT_PUBLIC_*` value live in `next.config.mjs`
   (see `.env.example`). Never commit `.env`.

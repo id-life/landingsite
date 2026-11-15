@@ -5,6 +5,17 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/content/drafts", "@/content/drafts/*", "**/content/drafts", "**/content/drafts/*"],
+            "message": "Drafts never ship (CON-10): only the preview review page may import them. Approve a draft by moving it into src/content with approvedBy and approvedAt (docs/content-approval.md)."
+          }
+        ]
+      }
+    ],
     "no-restricted-syntax": [
       "error",
       {
@@ -82,6 +93,13 @@
             "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
           }
         ]
+      }
+    },
+    {
+      // The draft review page (preview builds only) and the drafts themselves may import drafts.
+      "files": ["src/app/content-review/**", "src/content/drafts/**"],
+      "rules": {
+        "no-restricted-imports": "off"
       }
     },
     {
