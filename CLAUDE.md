@@ -11,6 +11,8 @@ npm ci            # install exactly what package-lock.json pins
 npm run dev       # dev server on http://localhost:3000 (Turbopack; writes to .next/dev, so it can run beside a build)
 npm run build     # production build with webpack (next build --webpack; also type-checks). Not `npx next build`:
                   # Next 16 defaults to Turbopack, which reaches the first screen about 270 ms later here on fast 4G
+                  # npm run build clears .next/cache/webpack first and checks next/font classes after (scripts/next-font-guard.mjs,
+                  # docs/design-tokens.md "Fonts and the build"); a Vercel build command must stay `npm run build`.
 npm run build:turbopack   # the same build on Turbopack, to re-measure before switching
 npm start         # serve the production build
 npm run lint      # ESLint CLI with the flat config in eslint.config.mjs (next lint no longer exists in Next 16)

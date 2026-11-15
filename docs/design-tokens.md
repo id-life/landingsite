@@ -92,3 +92,20 @@ to `calc(var(--u) * n)` first, then the root becomes 16 px and only `--u` is red
 Durations, easings, staggers and distances are motion tokens, not described here: their source is
 `src/motion/tokens.ts` (MOT-08; CSS `--dur-*` / `--ease-*`, Tailwind `duration-<token>` / `ease-token-<name>`), and
 `docs/motion-inventory.md` is their guide.
+
+## Fonts and the build
+
+next/font names each font's class after a hash of its CSS, which for next/font/google includes the font files
+downloaded from Google during the build. Google does not always serve the same bytes (two Oxanium latin files of
+12,336 and 12,340 bytes were served minutes apart on 2026-11-15), and webpack's persistent cache keeps the client and
+the server compiler's font results separately without treating the download as an input. When one compiler reuses
+its cached result and the other downloads again, the server HTML names a class (for example `__variable_75844e`)
+that the client stylesheet does not define, and every font role falls back. Restoring only `.next/cache`, as Vercel
+does, is enough to cause it. `npm run build` therefore clears `.next/cache/webpack` first and fails afterwards if any
+prerendered page uses an undefined font class (`scripts/next-font-guard.mjs`). Self-hosting Oxanium and Poppins with
+next/font/local (both SIL OFL 1.1) would remove the download, and with it the cause.
+
+On a first paint, each role must resolve to its face: `font-display` and `.bilingual-font` to Oxanium,
+`font-text` and `body` to Poppins, `font-title` to xirod, `font-button` to migrena, `font-menu` to ttLakes (with
+`FONT_PALETTE = 'current'`). A computed `font-family` starting with `ui-sans-serif`, `-apple-system` or the parent's
+face on those elements means the classes did not match.
