@@ -43,6 +43,9 @@ const KEY_STEPS: Record<string, -1 | 1> = { ArrowDown: 1, PageDown: 1, ArrowUp: 
 
 const restOf = (index: number) => getRestScroll(NAV_LIST[index].id as SectionId);
 
+/** A modal dialog (the SUBSCRIBE popup) is open: the deck behind it takes no input. */
+const modalOpen = () => document.querySelector('[aria-modal="true"]') !== null;
+
 /** The section whose rest pose is nearest the current scroll position. */
 function viewIndex() {
   const y = window.scrollY;
@@ -188,7 +191,7 @@ export function useDesktopSections() {
       if (event.defaultPrevented || event.ctrlKey) return; // ctrl + wheel is a trackpad pinch (zoom)
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.deltaY === 0) return; // horizontal swipes
       const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest(MODAL) || scrollsInside(target, event.deltaY)) return;
+      if (modalOpen() || target?.closest(MODAL) || scrollsInside(target, event.deltaY)) return;
       const sign = Math.sign(event.deltaY);
       // The event's own timestamp, not the time the handler runs: on a busy main thread a continuous stream can
       // reach the handler in bursts with long gaps that are not in the gesture.
@@ -213,7 +216,7 @@ export function useDesktopSections() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
       const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest(EDITABLE) || target?.closest(MODAL)) return;
+      if (modalOpen() || target?.closest(EDITABLE) || target?.closest(MODAL)) return;
       let handled = false;
       if (event.key === 'Home') handled = goToSection(0, 'key');
       else if (event.key === 'End') handled = goToSection(NAV_LIST.length - 1, 'key');
@@ -245,6 +248,10 @@ export function useDesktopSections() {
       startY = touch.clientY;
       tracking = true;
       const target = event.target instanceof Element ? event.target : null;
+      if (modalOpen() || target?.closest(MODAL)) {
+        tracking = false;
+        return;
+      }
       nativeScroll = inVerticalScroller(target) || Boolean(target?.closest('[data-native-touch]'));
     };
     const onTouchMove = (event: TouchEvent) => {
@@ -256,7 +263,7 @@ export function useDesktopSections() {
     const onTouchEnd = (event: TouchEvent) => {
       if (!tracking) return;
       tracking = false;
-      if (nativeScroll) return;
+      if (nativeScroll || modalOpen()) return;
       const touch = event.changedTouches[0];
       if (!touch) return;
       const dx = touch.clientX - startX;
