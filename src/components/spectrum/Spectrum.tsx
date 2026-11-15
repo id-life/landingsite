@@ -8,7 +8,8 @@ import {
   mobileCurrentPageAtom,
 } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { isLayoutRefreshing } from '@/motion/sectionController';
+import { useSectionNear } from '@/hooks/useDeferredAssets';
+import { isLayoutRefreshing, sectionStateAtom } from '@/motion/sectionController';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { cn } from '@/utils';
@@ -27,6 +28,19 @@ import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
+const SPECTRUM_INDEX = NAV_LIST.findIndex((item) => item.id === PAGE_ID);
+
+/**
+ * The institutions' logos (about 250 kB of PNG on the desktop deck) load on approach, not with the hero: once the
+ * visitor is within one section of Spectrum (useSectionNear: Insights reached, or a deep link to Spectrum or beyond),
+ * or as soon as a section change towards it starts (a nav jump from the hero), so they arrive while the previous
+ * section settles. Until then each logo keeps its box (fixed height, no request), so nothing shifts when they come.
+ */
+function useLogosWanted() {
+  const near = useSectionNear(SPECTRUM_INDEX);
+  const { target } = useAtomValue(sectionStateAtom);
+  return near || target >= SPECTRUM_INDEX - 1;
+}
 
 /**
  * Spectrum, one component for both decks (RWD-02; it was Spectrum and MobileSpectrum). Both decks show the same
@@ -51,6 +65,7 @@ function DeckSpectrum() {
   const [imageIdx, setImageIdx] = useState(1);
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
+  const logosWanted = useLogosWanted();
   const initiativeItems = spectrumData.slice(0, 3);
   const publicationItem = spectrumData[3];
   const sponsorItem = spectrumData[spectrumData.length - 1];
@@ -154,6 +169,7 @@ function DeckSpectrum() {
                 key={sponsorItem.title}
                 item={sponsorItem}
                 isSponsor
+                loadImages={logosWanted}
                 className="!p-0"
                 executeSpectrumRoute={executeSpectrumRoute}
                 updateUrlAndExecute={updateUrlAndExecute}

@@ -18,17 +18,24 @@ interface SpectrumItemProps {
   updateUrlAndExecute?: (key: string) => void;
   routeConfigs?: SpectrumRouteConfig[];
   isSponsor?: boolean;
+  /** False until the section is approached: logo images keep their boxes but fetch nothing yet (PERF). */
+  loadImages?: boolean;
 }
+
+// A 1x1 transparent GIF: an image box that is laid out at its final height but makes no request.
+const NO_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 export const SpectrumLink = memo(
   ({
     item,
     executeSpectrumRoute,
+    loadImage = true,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
+    loadImage?: boolean;
   }) => {
     const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link);
@@ -41,7 +48,7 @@ export const SpectrumLink = memo(
 
     const content = icon ? (
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
-        <img src={icon} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
+        <img src={loadImage ? icon : NO_IMAGE} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
       </div>
     ) : (
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
@@ -78,7 +85,20 @@ SpectrumLink.displayName = 'SpectrumLink';
 
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, onHover, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
+    (
+      {
+        item,
+        onClick,
+        onHover,
+        className,
+        executeSpectrumRoute,
+        updateUrlAndExecute,
+        routeConfigs,
+        isSponsor,
+        loadImages = true,
+      },
+      ref,
+    ) => {
       const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
       const linksPerPage = 21;
@@ -142,10 +162,11 @@ const SpectrumItem = memo(
               executeSpectrumRoute={executeSpectrumRoute}
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
+              loadImage={loadImages}
             />
           </motion.div>
         ));
-      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, loadImages]);
 
       // Keep the supporting institutions visible together in three rows.
       const sponsorFirstRowLinks = useMemo(() => {
@@ -166,10 +187,11 @@ const SpectrumItem = memo(
               executeSpectrumRoute={executeSpectrumRoute}
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
+              loadImage={loadImages}
             />
           </motion.div>
         ));
-      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, loadImages]);
 
       return (
         <div
