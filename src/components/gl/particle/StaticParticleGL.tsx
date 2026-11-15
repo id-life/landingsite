@@ -1,4 +1,4 @@
-import { P5CanvasInstance, ReactP5Wrapper, SketchProps } from '@p5-wrapper/react';
+import { P5Canvas, P5CanvasInstance, SketchProps } from './P5Canvas';
 import P5 from 'p5';
 import { useMemo } from 'react';
 import { StaticParticle } from './static-particle';
@@ -188,7 +188,7 @@ const StaticParticleGL = ({
     };
   }, [getSourceImgInfos]);
 
-  return <ReactP5Wrapper sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
+  return <P5Canvas sketch={wrappedSketch} activeAnim={activeAnim} imageIdx={imageIdx} id={id} />;
 };
 
 export default StaticParticleGL;

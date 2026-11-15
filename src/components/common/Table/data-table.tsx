@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import * as React from 'react';
-import { Fragment, useState, useRef, useCallback } from 'react';
+import { Fragment, useState, useRef, useCallback, type JSX } from 'react';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.';
 import { cn } from '@/utils';

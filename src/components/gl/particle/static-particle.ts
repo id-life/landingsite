@@ -1,4 +1,4 @@
-import { P5CanvasInstance } from '@p5-wrapper/react';
+import type { P5CanvasInstance } from './P5Canvas';
 import P5 from 'p5';
 import { StaticSketchProps } from './StaticParticleGL';
 import { generateRandomPos } from './particle-stuct';

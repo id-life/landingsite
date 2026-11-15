@@ -9,11 +9,17 @@ import AudioTitle from '@/components/audio/AudioTitle';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
-import useCurrentMusicControl, { getAudioContext, requestPlayWhenReady } from '@/hooks/audio/useCurrentAudio';
+import useCurrentMusicControl, {
+  cancelPlayWhenReady,
+  getAudioContext,
+  isPlayWhenReadyPending,
+  requestPlayWhenReady,
+} from '@/hooks/audio/useCurrentAudio';
 import {
   AUDIO_DISPATCH,
   audioListRequestedAtom,
   currentAudioAtom,
+  currentPlayStatusAtom,
   hasInteractedAtom,
   musicListAtom,
   playlistAtom,
@@ -52,6 +58,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   // The player list is fetched on intent: pointing at, focusing or pressing the player (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
   const onIntent = () => requestAudioList(true);
@@ -72,9 +79,12 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    // Pressed before the list has arrived: start the first track as soon as it is in.
-    if (!data) requestPlayWhenReady();
-    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    // Pressed before the list has arrived: the control shows the press at once, and a second press cancels it.
+    if (!data) {
+      if (isPlayWhenReadyPending()) cancelPlayWhenReady();
+      else requestPlayWhenReady();
+      setPlayStatus(isPlayWhenReadyPending());
+    } else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 

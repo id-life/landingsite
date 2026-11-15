@@ -8,6 +8,8 @@ import { SPECTRUM_GRANTS } from '@/content/grants';
 import { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS, bySlug } from '@/content/initiatives';
 import { CollectionPage, WithContext } from 'schema-dts';
 
+import type { JSX } from 'react';
+
 export type SpectrumLinkData = {
   label: string;
   link?: string;

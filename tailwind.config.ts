@@ -1,4 +1,3 @@
-import { DEFAULT } from '@react-three/fiber/dist/declarations/src/core/utils';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {

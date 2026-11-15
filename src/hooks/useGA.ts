@@ -21,7 +21,6 @@ export interface TrackEventOptions {
 export function trackEvent(options: TrackEventOptions) {
   const { name, label, ...rest } = options;
   const payload = { event_label: label, ...rest };
-  // console.log('[GA]', name, payload);
   sendGAEvent('event', name, payload);
 }
 
@@ -29,7 +28,6 @@ export function useGA() {
   const track = useCallback((options: TrackEventOptions) => {
     const { name, label, ...rest } = options;
     const payload = { event_label: label, ...rest };
-    // console.log('[GA]', name, payload);
     sendGAEvent('event', name, payload);
   }, []);
 

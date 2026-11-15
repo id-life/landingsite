@@ -11,9 +11,10 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { ErrorBoundary } from 'react-error-boundary';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useGLTF } from '@react-three/drei';
-import { HeroReady } from './heroAssets';
+import { HeroAssetsGate, HeroReady, preloadHeroAssets } from './heroAssets';
 
 export default function MobileThreeWrapper() {
+  preloadHeroAssets('phone');
   useGLTF.setDecoderPath('/assets/draco/');
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   // Vision 和 Connect 页面显示 Canvas
@@ -39,8 +40,10 @@ export default function MobileThreeWrapper() {
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
         <Suspense fallback={null}>
-          <MobileVisionGL />
-          <HeroReady />
+          <HeroAssetsGate variant="phone">
+            <MobileVisionGL />
+            <HeroReady />
+          </HeroAssetsGate>
         </Suspense>
         <Suspense fallback={null}>
           <MobileConnectGL />

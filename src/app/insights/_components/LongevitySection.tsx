@@ -67,8 +67,8 @@ export default function LongevitySection({ isMobile = false, compact = false, is
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
   const [isCompactEnd, setIsCompactEnd] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const swiperRef = useRef<SwiperType>();
-  const compactSwiperRef = useRef<SwiperType>();
+  const swiperRef = useRef<SwiperType>(undefined);
+  const compactSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
   const pageSize = Math.max(1, itemsPerPage);

@@ -7,13 +7,15 @@ import VideoModal from '@/app/insights/_components/VideoModal';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import { youtubeWatchUrl } from '@/utils/youtube';
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isYouTube = !!data.videoId;
 
   // Articles are real links (crawlable, middle-click and keyboard work): external press opens in a
-  // new tab, our own articles in the same tab. Videos open the modal.
+  // new tab, our own articles in the same tab. Videos open the modal on a plain click and are still real links
+  // to their YouTube page (crawlers, middle-click, no JavaScript).
   const isExternal = Boolean(data.isExternal && data.url);
   const href = isYouTube ? undefined : isExternal ? safeHref(data.url) : `/news/${data.id}`;
   const openVideo = () => setIsModalOpen(true);
@@ -22,7 +24,13 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
 
   return (
     <>
-      <CardShell href={href} external={isExternal} onActivate={openVideo} className={cardClassName}>
+      <CardShell
+        href={href}
+        external={isExternal}
+        onActivate={openVideo}
+        linkFallback={isYouTube ? youtubeWatchUrl(data.videoId!) : undefined}
+        className={cardClassName}
+      >
         <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
           <YouTubeThumbnail
             pic={data.cover || '/imgs/news/insights-bg.webp'}

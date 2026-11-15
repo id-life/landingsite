@@ -6,6 +6,8 @@ export { COMPANIES, PORTFOLIO_COUNT } from './companies';
 export { CONNECT_CRITERIA, CONNECT_STRENGTHS, CONNECT_VALUES } from './connect';
 export { FUND, FUND_ADDRESS_LINE } from './fund';
 export { GRANTS, PROFILE_GRANTS, SPECTRUM_GRANTS } from './grants';
+// Typed overrides for id-platform feed items (empty until CON-09; docs/id-platform-content-api.md).
+export { FEED_OVERRIDES } from './overrides';
 export { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS } from './initiatives';
 export { PEOPLE, personBySlug } from './people';
 export { FUND_PRESS, PORTFOLIO_PRESS, PRESS } from './press';

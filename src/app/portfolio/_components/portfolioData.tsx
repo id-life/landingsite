@@ -3,6 +3,8 @@ import { absoluteUrl } from '@/constants/site';
 import { COMPANIES } from '@/content/companies';
 import { ItemList, WithContext } from 'schema-dts';
 
+import type { JSX } from 'react';
+
 // The portfolio tiles. Companies are records in the content layer (src/content/companies.ts); this file adds their
 // presentation, keyed by slug: the logo's size on a tile and the particle image shown when a tile is active.
 
