@@ -309,12 +309,20 @@ export const grid = {
  */
 const SPACE_UNIT_PX = 4;
 
-/** Every custom property of tokens.css, in order (scripts/build-tokens.mjs writes them, the test compares). */
+/**
+ * The font roles, declared on <body>: they reference the next/font variables (--font-oxanium ...), which next/font
+ * sets on <body> (src/app/layout.tsx). A custom property resolves its var() where it is declared, so declared on
+ * :root they would resolve to nothing and every role would fall back to the browser default.
+ */
+export function bodyVariables(): [string, string][] {
+  return Object.entries(fontRoles).map(([k, v]) => [`--font-role-${k}`, v] as [string, string]);
+}
+
+/** Every :root custom property of tokens.css, in order (scripts/build-tokens.mjs writes them, the test compares). */
 export function cssVariables(): [string, string][] {
   return [
     ...Object.entries(color).map(([k, v]) => [`--color-${k}`, v] as [string, string]),
     ['--color-accent-tint', accentTint],
-    ...Object.entries(fontRoles).map(([k, v]) => [`--font-role-${k}`, v] as [string, string]),
     ['--read-body', readBody],
     ...Object.entries(typeRoles).flatMap(([k, [size, lh]]) => [
       [`--type-${k}`, size] as [string, string],

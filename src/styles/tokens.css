@@ -78,13 +78,6 @@
   --color-md-string: #0a3069;
   --color-md-attention-deep: #3b2300;
   --color-accent-tint: rgb(193 17 17 / 0.08);
-  --font-role-display: var(--font-oxanium), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-text: var(--font-poppins), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-brand: var(--font-oxanium), var(--font-source-han-sans-cn), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-brand-text: var(--font-poppins), var(--font-source-han-sans-cn), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-title: var(--font-xirod), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-button: var(--font-migrena), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
-  --font-role-menu: var(--font-tt), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
   --read-body: clamp(1rem, 0.44vw + 0.625rem, 1.375rem);
   --type-caption: calc(var(--read-body) * 0.75);
   --type-caption-lh: 1.5;
@@ -120,4 +113,14 @@
   --subscribe-bg: #ffffff33;
   --gradient-via-percent: 50%;
   --gradient-rotate: 90deg;
+}
+/* Font roles: on body, where next/font declares the face variables they reference. */
+body {
+  --font-role-display: var(--font-oxanium), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-text: var(--font-poppins), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-brand: var(--font-oxanium), var(--font-source-han-sans-cn), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-brand-text: var(--font-poppins), var(--font-source-han-sans-cn), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-title: var(--font-xirod), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-button: var(--font-migrena), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+  --font-role-menu: var(--font-tt), 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
 }

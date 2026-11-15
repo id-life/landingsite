@@ -5,7 +5,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
-import { color, cssVariables, typeRoles } from '@/styles/tokens';
+import { bodyVariables, color, cssVariables, typeRoles } from '@/styles/tokens';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const css = readFileSync(join(ROOT, 'src/styles/tokens.css'), 'utf8');
@@ -25,12 +25,12 @@ const contrast = (a, b) => {
 describe('tokens.css mirrors tokens.ts', () => {
   test('every custom property of tokens.ts is in tokens.css with the same value, and nothing else is', () => {
     const declared = [...css.matchAll(/^\s*(--[\w-]+):\s*(.+);$/gm)].map((m) => [m[1], m[2]]);
-    expect(declared).toEqual(cssVariables());
+    expect(declared).toEqual([...cssVariables(), ...bodyVariables()]);
   });
 
   test('the committed tokens.css is what scripts/build-tokens.mjs writes (run it after editing tokens.ts)', async () => {
     const { renderTokensCss } = await import('../scripts/build-tokens.mjs');
-    expect(css).toBe(renderTokensCss(cssVariables()));
+    expect(css).toBe(renderTokensCss(cssVariables(), bodyVariables()));
   });
 });
 
@@ -55,6 +55,14 @@ describe('no colour literal outside the token files', () => {
     const hits = files.filter((f) => re.test(readFileSync(f, 'utf8'))).map((f) => relative(ROOT, f));
     expect(hits).toEqual([]);
   });
+});
+
+test('the font roles are declared on body, where next/font sets the face variables they use', () => {
+  const body = css.slice(css.indexOf('body {'));
+  expect(body).toContain('--font-role-text: var(--font-poppins)');
+  expect(css.slice(0, css.indexOf('body {'))).not.toContain('--font-role-');
+  const layout = readFileSync(join(ROOT, 'src/app/layout.tsx'), 'utf8');
+  expect(layout).toMatch(/<body[\s\S]*?poppins\.variable/);
 });
 
 describe('the promises in the token comments hold', () => {
