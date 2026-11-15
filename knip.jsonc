@@ -7,8 +7,6 @@
   "ignore": [
     // Runtime assets fetched by URL (the Draco decoder), not imported.
     "public/**",
-    // The Chinese lockup is kept for the /zh locale and the bilingual favicon (see src/components/nav/Logo.tsx).
-    "src/components/svg/LogoSVGcn.tsx",
   ],
   "ignoreDependencies": [
     // Webpack loaders named as strings in next.config.mjs.

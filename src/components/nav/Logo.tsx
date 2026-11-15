@@ -10,8 +10,8 @@ export enum LogoType {
 /**
  * The header logo: one static wordmark. It used to swap between the English wordmark and the
  * Chinese lockup every 8 s (and on click), so the corner changed language while the page was read.
- * The Chinese lockup (LogoSVGcn) stays in src/components/svg for the /zh locale and the bilingual
- * lockup system (VIS-11).
+ * The Chinese lockup (LogoSVGcn) was deleted as unreachable (ENG-16); for the /zh locale and the bilingual
+ * lockup system (VIS-11) restore it with `git show 2e2c2cd:src/components/svg/LogoSVGcn.tsx`.
  */
 export default function Logo() {
   return (
