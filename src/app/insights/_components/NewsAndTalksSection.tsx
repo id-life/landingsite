@@ -73,8 +73,8 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
-            <h3 className="line-clamp-1 font-poppins text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-poppins text-[10px]/3 text-black/60">
+            <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
+            <div className="flex w-full flex-col text-left font-text text-[10px]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
@@ -110,8 +110,8 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         </div>
         {/* Card content */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
-          <h3 className="line-clamp-2 font-poppins text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
-          <div className="flex items-center gap-1.5 font-poppins text-sm/5 font-medium text-black/60">
+          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
+          <div className="flex items-center gap-1.5 font-text text-sm/5 font-medium text-black/60">
             {item.publisher && <span>{item.publisher}</span>}
             {item.publisher && item.publishDate && <span>·</span>}
             {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
@@ -234,10 +234,10 @@ export default function NewsAndTalksSection({
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: skeletonCount }).map((_, index) => (
               <div key={index} className="flex flex-col overflow-hidden">
-                <div className="h-[68px] w-full animate-pulse bg-gray-800/50" />
+                <div className="h-[68px] w-full animate-pulse bg-tone-800/50" />
                 <div className="space-y-1 bg-white p-3">
-                  <div className="h-4 w-3/4 animate-pulse bg-gray-800/30" />
-                  <div className="h-3 w-1/2 animate-pulse bg-gray-800/20" />
+                  <div className="h-4 w-3/4 animate-pulse bg-tone-800/30" />
+                  <div className="h-3 w-1/2 animate-pulse bg-tone-800/20" />
                 </div>
               </div>
             ))}
@@ -249,10 +249,10 @@ export default function NewsAndTalksSection({
         <div className="grid grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, index) => (
             <div key={index} className="flex flex-col">
-              <div className="h-[148px] animate-pulse bg-gray-800/50" />
+              <div className="h-[148px] animate-pulse bg-tone-800/50" />
               <div className="mt-0 space-y-2 border-2 border-white bg-white/50 p-3">
-                <div className="h-12 animate-pulse bg-gray-800/30" />
-                <div className="h-4 w-2/3 animate-pulse bg-gray-800/20" />
+                <div className="h-12 animate-pulse bg-tone-800/30" />
+                <div className="h-4 w-2/3 animate-pulse bg-tone-800/20" />
               </div>
             </div>
           ))}
@@ -324,7 +324,7 @@ export default function NewsAndTalksSection({
       <div className={cn(isMobile ? 'flex flex-col' : 'flex flex-1 flex-col')}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+          <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
             NEWS & TALKS
           </h2>
           <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />

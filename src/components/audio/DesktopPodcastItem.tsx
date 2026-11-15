@@ -42,35 +42,36 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
           <div
             onClick={onClick}
             className={clsx(
-              'w-full cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-800',
-              isCurrent && 'text-red-800',
+              'w-full cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-accent',
+              isCurrent && 'text-accent',
             )}
           >
             {data.title}
           </div>
-          <div className="mt-[2px] line-clamp-2 text-[10px]/[14px] text-gray-350">{data.description}</div>
+          <div className="mt-[2px] line-clamp-2 text-[10px]/[14px] text-tone-350">{data.description}</div>
           {isCurrent ? (
             <>
               <div onClick={handleProgressChange} className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start">
-                <div className="relative h-[2px] w-full bg-[#57595C]">
-                  <div style={{ width: `${controls.progress * 100}%` }} className="absolute left-0 top-0 h-[2px] bg-red-800" />
+                <div className="relative h-[2px] w-full bg-tone-650">
+                  <div style={{ width: `${controls.progress * 100}%` }} className="absolute left-0 top-0 h-[2px] bg-accent" />
                   <div
                     style={{
                       left: `${controls.progress * 100}%`,
-                      background: 'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, #FF1717 50%, rgba(193, 17, 17, 0) 100%)',
+                      background:
+                        'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
                     }}
                     className="absolute top-1/2 h-[16px] w-[2px] -translate-y-1/2"
                   />
                 </div>
               </div>
-              <div className="mt-[4px] flex items-center justify-between text-[10px]/[14px] font-medium text-gray-350">
+              <div className="mt-[4px] flex items-center justify-between text-[10px]/[14px] font-medium text-tone-350">
                 <p>{dayjs.duration(controls.currentTime, 'seconds').format('mm:ss')}</p>
                 <p>{dayjs.duration(controls.duration, 'seconds').format('mm:ss')}</p>
               </div>
             </>
           ) : null}
           <div className="mt-[8px] flex items-center justify-between">
-            <div className="flex-center gap-[4px] text-[10px]/[14px] font-medium text-gray-500">
+            <div className="flex-center gap-[4px] text-[10px]/[14px] font-medium text-tone-500">
               <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>
               <span>·</span>
               <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>

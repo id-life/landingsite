@@ -7,6 +7,7 @@ import { loadSlim } from '@tsparticles/slim';
 import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
 import { DURATION } from '@/motion/tokens';
+import { color } from '@/styles/tokens';
 
 type ParticlesProps = {
   id?: string;
@@ -53,7 +54,7 @@ export const SparklesCore = (props: ParticlesProps) => {
           options={{
             background: {
               color: {
-                value: background || '#0d47a1',
+                value: background || color['sparkle-blue'],
               },
             },
             fullScreen: {
@@ -114,7 +115,7 @@ export const SparklesCore = (props: ParticlesProps) => {
                 },
               },
               color: {
-                value: particleColor || '#ffffff',
+                value: particleColor || color.white,
                 animation: {
                   h: {
                     count: 0,

@@ -4,7 +4,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 0.7px solid #2e2f31;
+  border: 0.7px solid var(--color-tone-750);
   border-radius: 9999px;
   width: 6.375rem;
   height: 2.5rem;
@@ -54,7 +54,7 @@
     calc(0.40625rem - (var(--sqrt2) * var(--border-width-half))) 0,
     0 calc(0.40625rem - (var(--sqrt2) * var(--border-width-half)))
   );
-  @apply bg-red-600;
+  @apply bg-accent;
 }
 
 .be-part-of-it-tag-inactive-clip {
@@ -77,7 +77,7 @@
     calc(0.40625rem - (var(--sqrt2) * var(--border-width-half))) 0,
     0 calc(0.40625rem - (var(--sqrt2) * var(--border-width-half)))
   );
-  @apply bg-gray-800;
+  @apply bg-tone-800;
 }
 
 .legend-button {
@@ -90,7 +90,7 @@
     content: '';
     display: block;
     border-width: var(--border-width);
-    @apply absolute size-3 border-red-600;
+    @apply absolute size-3 border-accent;
   }
   &::before {
     @apply left-0 top-0 -translate-x-[calc(var(--border-width)/2)] border-b-0 border-r-0;

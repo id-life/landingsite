@@ -1,11 +1,11 @@
 .disease-management-page {
-  --background: #000000;
-  --foreground: #f0f0f0;
-  --gradient-from: #000000;
-  --gradient-via: #c1111111;
-  --gradient-to: #c111114c;
+  --background: var(--color-black);
+  --foreground: var(--color-tone-100);
+  --gradient-from: var(--color-black);
+  --gradient-via: color-mix(in srgb, var(--color-accent) 6.7%, transparent);
+  --gradient-to: color-mix(in srgb, var(--color-accent) 29.8%, transparent);
   --gradient-via-percent: 80%;
   --gradient-rotate: 300deg;
-  --subscribe-border: #57595c80;
-  --subscribe-bg: #00000033;
+  --subscribe-border: color-mix(in srgb, var(--color-tone-650) 50.2%, transparent);
+  --subscribe-bg: color-mix(in srgb, var(--color-black) 20%, transparent);
 }

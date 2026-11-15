@@ -113,10 +113,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
             <div key={index} className="w-full space-y-3 bg-white/50 p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1 space-y-2">
-                  <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/50" />
-                  <div className="h-4 w-1/2 animate-pulse rounded bg-gray-800/50" />
+                  <div className="h-6 w-3/4 animate-pulse rounded bg-tone-800/50" />
+                  <div className="h-4 w-1/2 animate-pulse rounded bg-tone-800/50" />
                 </div>
-                <div className="h-11 w-11 animate-pulse rounded bg-gray-800/50" />
+                <div className="h-11 w-11 animate-pulse rounded bg-tone-800/50" />
               </div>
             </div>
           ))}
@@ -208,7 +208,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+            <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
               PODCAST
             </h2>
             {/* Platform logos */}

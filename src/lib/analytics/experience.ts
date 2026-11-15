@@ -3,7 +3,7 @@ import { HERO_MODEL_URL } from '@/components/gl/heroAssetUrls';
 import type { EXPERIENCE_ERROR_KINDS } from './events';
 import { advanceStage } from './stage';
 import { track } from './track';
-import { detectGpuTier } from '@/motion/gpuTier';
+import { detectGpuTier, gpuReportTags } from '@/motion/gpuTier';
 
 /**
  * Health of the 3D experience (DATA-06): one experience_ready per document with numeric timings, and one
@@ -54,7 +54,7 @@ export function reportExperienceError(kind: Kind, detail?: string, error?: unkno
   track('experience_error', detail ? { kind, detail } : { kind }, { once: `experience_error:${kind}` });
   if (WEBGL_KINDS.includes(kind) && !sentToSentry.has(kind)) {
     sentToSentry.add(kind);
-    reportError(error ?? new Error(`WebGL: ${kind}`), { area: 'webgl', kind, canvas: detail });
+    reportError(error ?? new Error(`WebGL: ${kind}`), { area: 'webgl', kind, canvas: detail, ...gpuReportTags() });
   }
 }
 

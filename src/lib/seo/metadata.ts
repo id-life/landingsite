@@ -20,6 +20,14 @@ const CJK = /[㐀-鿿豈-﫿]/;
 /** The language a piece of text is written in, by script: Chinese when it contains any CJK character. */
 export const localeOf = (text: string): Locale => (CJK.test(text) ? 'zh' : 'en');
 
+/**
+ * The language a description is cut by: Chinese when CJK characters are at least a third of it. A bilingual show
+ * description ("解码长寿革命。... Decoding the longevity revolution. ...") is cut by the Latin limit, so its English
+ * half is not cut off mid-word at 80 characters.
+ */
+const descriptionLocale = (text: string): Locale =>
+  (text.match(new RegExp(CJK.source, 'g'))?.length ?? 0) * 3 >= [...text].length ? 'zh' : 'en';
+
 /** "<topic> | <brand in the topic's language>", or the topic alone when it already names that brand. */
 export function brandTitle(topic: string, locale: Locale = localeOf(topic)): string {
   return topic.includes(BRAND[locale]) ? topic : `${topic} | ${BRAND[locale]}`;
@@ -28,6 +36,7 @@ export function brandTitle(topic: string, locale: Locale = localeOf(topic)): str
 // Longest description kept whole, and the shortest cut accepted, per language: 110-160 Latin or 70-80 CJK
 // characters (the plan's bounds; Google shows about 155 Latin characters).
 const LIMITS = { en: { max: 160, min: 110 }, zh: { max: 80, min: 70 } } as const;
+const ZH_FLOOR = 35;
 const SENTENCE_END = /[.!?。！？](?=\s|$)|[。！？]/g;
 const CLAUSE_END = /[,;:，；：、]/g;
 
@@ -43,7 +52,7 @@ function lastMatchEnd(text: string, re: RegExp, from: number): number {
  * A description of at most about 160 Latin or 80 CJK characters: the text itself when it fits, else cut at the
  * last sentence end that keeps enough of it, else at the last clause end or word with an ellipsis.
  */
-export function snippet(text: string, locale: Locale = localeOf(text)): string {
+export function snippet(text: string, locale: Locale = descriptionLocale(text)): string {
   const clean = text.replace(/\s+/g, ' ').trim();
   const { max, min } = LIMITS[locale];
   if (clean.length <= max) return clean;
@@ -52,6 +61,9 @@ export function snippet(text: string, locale: Locale = localeOf(text)): string {
   if (sentence > 0) return head.slice(0, sentence).trim();
   const clause = lastMatchEnd(head.slice(0, max - 1), CLAUSE_END, min);
   if (clause > 0) return `${head.slice(0, clause - 1).trim()}…`;
+  // Chinese has no spaces to cut at, so an earlier clause end (down to the 35-character floor) beats a cut inside a word.
+  const early = locale === 'zh' ? lastMatchEnd(head.slice(0, max - 1), CLAUSE_END, ZH_FLOOR) : -1;
+  if (early > 0) return `${head.slice(0, early - 1).trim()}…`;
   const space = locale === 'en' ? head.lastIndexOf(' ', max - 1) : -1;
   return `${head.slice(0, space > min ? space : max - 1).trim()}…`;
 }

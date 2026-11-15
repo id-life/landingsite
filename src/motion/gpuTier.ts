@@ -1,6 +1,5 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
 import { atom, useAtomValue } from 'jotai';
 
 /**
@@ -76,8 +75,17 @@ export function classifyGpu(
 }
 
 let detected: GpuTier | null = null;
+let caveat: boolean | undefined;
 
-/** This device's tier: computed once, then reported once (Sentry tag; GA4 experience_ready carries it too). */
+/**
+ * Tags for WebGL error reports (reportError, area=webgl): the tier and failIfMajorPerformanceCaveat. Passed with each
+ * report rather than set globally, so the lazily loaded Sentry SDK (src/lib/sentry-client.ts) is never loaded early.
+ */
+export function gpuReportTags() {
+  return detected ? { gpu_tier: detected, webgl_caveat: caveat } : {};
+}
+
+/** This device's tier: computed once; GA4's experience_ready carries it, WebGL error reports tag it. */
 export function detectGpuTier(): GpuTier {
   if (detected) return detected;
   if (typeof window === 'undefined') return 'mid';
@@ -88,12 +96,11 @@ export function detectGpuTier(): GpuTier {
     cores: nav.hardwareConcurrency || undefined,
     finePointer: window.matchMedia('(pointer: fine)').matches,
   });
-  Sentry.setTag('gpu_tier', detected);
   // failIfMajorPerformanceCaveat is recorded, never acted on: sending software-rendered devices to the static mode
   // would remove the 3D from devices that run it today (a PERF and owner decision).
   try {
     const gl = document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true });
-    Sentry.setTag('webgl_caveat', !gl);
+    caveat = !gl;
     gl?.getExtension('WEBGL_lose_context')?.loseContext();
   } catch {
     // Tag only.

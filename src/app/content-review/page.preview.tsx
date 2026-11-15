@@ -55,7 +55,7 @@ function Draft({ draft }: { draft: DraftRecord }) {
   const { approval } = draft;
   return (
     <li id={draft.id} className="border-t border-black/10 py-6">
-      <p className="text-xs font-bold uppercase text-red-600">
+      <p className="text-xs font-bold uppercase text-accent">
         {draft.item} · draft · {draft.id}
       </p>
       <h3 className="mt-1 text-lg font-semibold">{draft.title}</h3>
@@ -64,7 +64,7 @@ function Draft({ draft }: { draft: DraftRecord }) {
           <span className="font-semibold">Replaces:</span> {approval.replaces}
         </p>
       )}
-      <div className="mt-3 border-l-4 border-red-600/60 pl-4 text-base/7">
+      <div className="mt-3 border-l-4 border-accent/60 pl-4 text-base/7">
         <Lines text={draft.body.en} />
         {draft.body.zh && (
           <div className="mt-2">

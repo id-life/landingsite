@@ -47,7 +47,7 @@ function keyFactRows(): Row[] {
                 <>
                   {' '}
                   (
-                  <a href={launchRelease.url} className="underline underline-offset-2 hover:text-red-600">
+                  <a href={launchRelease.url} className="underline underline-offset-2 hover:text-accent">
                     {launchRelease.source}
                   </a>
                   )
@@ -63,7 +63,7 @@ function keyFactRows(): Row[] {
       label: FUND.statedInvestments.label.en,
       // The count is computed from the portfolio records (the plan's recommendation for CON-11 #6), never typed.
       value: (
-        <a href="/portfolio" className="underline underline-offset-2 hover:text-red-600">
+        <a href="/portfolio" className="underline underline-offset-2 hover:text-accent">
           {PORTFOLIO_COUNT} companies in the portfolio
         </a>
       ),
@@ -77,7 +77,7 @@ function keyFactRows(): Row[] {
     {
       label: 'Website',
       value: (
-        <a href={FUND.website} className="underline underline-offset-2 hover:text-red-600">
+        <a href={FUND.website} className="underline underline-offset-2 hover:text-accent">
           {FUND.website.replace(/^https:\/\//, '')}
         </a>
       ),
@@ -89,7 +89,7 @@ function keyFactRows(): Row[] {
         <a
           href={`mailto:${FUND.email}`}
           data-track-placement="about"
-          className="underline underline-offset-2 hover:text-red-600"
+          className="underline underline-offset-2 hover:text-accent"
         >
           {FUND.email}
         </a>
@@ -116,7 +116,7 @@ function Section({ title, children, className }: { title: string; children: Reac
     >
       <h2
         id={`about-${title.replace(/\W+/g, '-').toLowerCase()}`}
-        className="font-oxanium text-2xl/8 font-bold uppercase mobile:text-lg/6"
+        className="font-display text-2xl/8 font-bold uppercase mobile:text-lg/6"
       >
         {title}
       </h2>
@@ -129,8 +129,8 @@ function Section({ title, children, className }: { title: string; children: Reac
 function DraftBlock({ draft }: { draft: DraftRecord }) {
   const lines = draft.body.en.split('\n');
   return (
-    <div className="relative mt-10 border-2 border-dashed border-red-600/70 p-6 mobile:p-4" data-draft={draft.id}>
-      <p className="absolute -top-3 left-4 bg-white px-2 text-xs font-bold uppercase tracking-wide text-red-600">
+    <div className="relative mt-10 border-2 border-dashed border-accent/70 p-6 mobile:p-4" data-draft={draft.id}>
+      <p className="absolute -top-3 left-4 bg-white px-2 text-xs font-bold uppercase tracking-wide text-accent">
         Draft, not in production: {draft.title}
       </p>
       {lines.some((line) => line.startsWith('- ')) ? (
@@ -160,7 +160,7 @@ export default function AboutView({ drafts = [] }: { drafts?: DraftRecord[] }) {
 
   return (
     <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-5">
-      <h1 className="font-oxanium text-[2.375rem]/[3rem] font-bold uppercase mobile:text-2xl/8">{ABOUT_TITLE}</h1>
+      <h1 className="font-display text-[2.375rem]/[3rem] font-bold uppercase mobile:text-2xl/8">{ABOUT_TITLE}</h1>
       <p className="mt-6 max-w-[52rem] text-xl/8 font-medium mobile:text-base/7">{profileText('about-summary').en}</p>
       {show('about-intro-full')}
 
@@ -208,7 +208,7 @@ export default function AboutView({ drafts = [] }: { drafts?: DraftRecord[] }) {
         <ul className="list-disc pl-6">
           {FUND_PRESS.map((item) => (
             <li key={item.url}>
-              <a href={item.url} className="underline underline-offset-2 hover:text-red-600">
+              <a href={item.url} className="underline underline-offset-2 hover:text-accent">
                 {item.title}
               </a>{' '}
               <span className="text-black/60">
@@ -228,7 +228,7 @@ export default function AboutView({ drafts = [] }: { drafts?: DraftRecord[] }) {
         <ul className="flex flex-col gap-2">
           {READ_MORE.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="font-semibold underline underline-offset-2 hover:text-red-600">
+              <a href={link.href} className="font-semibold underline underline-offset-2 hover:text-accent">
                 {link.label}
               </a>
             </li>

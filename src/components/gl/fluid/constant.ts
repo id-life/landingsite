@@ -1,3 +1,4 @@
+import { color } from '@/styles/tokens';
 export const OPTS = {
   // 混合系数 - 值越大，新的流体颜色与现有颜色混合得越多
   blend: 0.5,
@@ -22,9 +23,9 @@ export const OPTS = {
   velocityDissipation: 1,
 
   // 流体颜色 - 定义流体的基础颜色
-  fluidColor: '#3300ff',
+  fluidColor: color['fluid-ink'],
   // 背景颜色
-  backgroundColor: '#070410',
+  backgroundColor: color['fluid-night'],
 
   // 是否显示背景
   showBackground: false,

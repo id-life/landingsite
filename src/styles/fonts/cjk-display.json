@@ -1,0 +1,24 @@
+{
+  "generatedBy": "scripts/build-cjk-subset.mjs",
+  "sources": {
+    "500": {
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/6c709ca72d3d7c46ab42ebecc1a26e7d69595a37/SubsetOTF/CN/SourceHanSansCN-Medium.otf",
+      "sha256": "a94e558a2fe972bee4f46bce0843abff37063fd68c33f1e7d9058f6f09432b01"
+    },
+    "700": {
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/6c709ca72d3d7c46ab42ebecc1a26e7d69595a37/SubsetOTF/CN/SourceHanSansCN-Bold.otf",
+      "sha256": "62383707c086a32f3afd5e293f34c7eff64c7fea31f579fdc6cbe34d920519a6"
+    }
+  },
+  "characters": "不与人使全出创加助印命塑字学孪密寿布恒技投持接支数文新本术机朽极构桥梁永洞版球生界真码破科突类系结络综网翻老者联衰见解论译谱资赞边连述迹速道重长门阵限革龙",
+  "files": {
+    "500": {
+      "bytes": 16596,
+      "sha256": "1a20ade3319f086e022476d92884327709e591bac8ef10287ed7b7b197cb0f50"
+    },
+    "700": {
+      "bytes": 16796,
+      "sha256": "1346365cd608889d28822f7b10c251c441ac542c3324fdf007c0863b8f7d2333"
+    }
+  }
+}

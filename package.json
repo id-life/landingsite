@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/next-font-guard.mjs --before && next build --webpack && node scripts/next-font-guard.mjs --after",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
@@ -61,7 +61,6 @@
     "rehype-sanitize": "^6.0.0",
     "relation-graph-react": "2.2.11",
     "remark-gfm": "^4.0.1",
-    "rxjs": "^7.8.2",
     "siriwave": "^2.4.0",
     "suspend-react": "^0.1.3",
     "swiper": "^12.2.0",
@@ -98,7 +97,7 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vite": "7.3.7",
-    "vitest": "^3.2.4"
+    "vitest": "5.1.0"
   },
   "simple-git-hooks": {
     "pre-commit": "npm exec lint-staged"

@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { isNull } from 'lodash-es';
 import ClientChunkBoundary from '@/components/common/ClientChunkBoundary';
+import { ReactQueryProvider } from '@/providers/react-query-provider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
 import HeroPoster from '@/components/gl/HeroPoster';
@@ -19,7 +20,11 @@ export default function HomeEntry() {
     <>
       {/* Server-rendered: the hero's first paint, and the hero itself without WebGL (ENG-02, VIS-03). */}
       <HeroPoster />
-      {!isNull(isMobile) && <ClientChunkBoundary>{isMobile ? <MobileHome /> : <Home />}</ClientChunkBoundary>}
+      {!isNull(isMobile) && (
+        <ReactQueryProvider>
+          <ClientChunkBoundary>{isMobile ? <MobileHome /> : <Home />}</ClientChunkBoundary>
+        </ReactQueryProvider>
+      )}
     </>
   );
 }

@@ -48,18 +48,10 @@ export const COMMENTS_TYPE = {
 } as const;
 
 /**
- * Title (the show, in the page's language, without the brand) and description of each show page. Built into the
- * page metadata by podcastShowMetadata (PodcastShowPage.tsx); the description is also read by llms.txt and JSON-LD.
+ * The content-layer page of each show (src/content/pages.ts): its title (the show, in the page's language, without the
+ * brand) and description, which the page metadata, the JSON-LD and llms.txt's Pages list all read from there.
  */
-export const PODCAST_METADATA: Record<PodcastCategory, { title: string; description: string }> = {
-  [PODCAST_NAV_LIST[0].id]: {
-    title: '播客',
-    description:
-      '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
-  },
-  [PODCAST_NAV_LIST[1].id]: {
-    title: '龙门阵',
-    description:
-      '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
-  },
+export const PODCAST_PAGE_ID: Record<PodcastCategory, string> = {
+  [PODCAST_NAV_LIST[0].id]: 'podcast',
+  [PODCAST_NAV_LIST[1].id]: 'podcast-long-talk',
 };

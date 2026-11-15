@@ -88,7 +88,7 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
 
   return (
     <div className="fixed bottom-7.5 left-1/2 w-full max-w-136 -translate-x-1/2 px-3 mobile:bottom-3">
-      <div className="flex-center h-10 rounded-full bg-gray-750">
+      <div className="flex-center h-10 rounded-full bg-tone-750">
         <audio autoPlay={false} className="hidden" ref={audioRef}>
           <source src={data.url} />
         </audio>
@@ -100,18 +100,19 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
           onClick={handleProgressChange}
           className="mx-3 flex h-4 w-full max-w-75 flex-1 cursor-pointer items-center justify-start mobile:h-3"
         >
-          <div className="relative h-0.5 w-full bg-[#57595C]">
-            <div style={{ width: `${progress * 100}%` }} className="absolute left-0 top-0 h-0.5 bg-red-800" />
+          <div className="relative h-0.5 w-full bg-tone-650">
+            <div style={{ width: `${progress * 100}%` }} className="absolute left-0 top-0 h-0.5 bg-accent" />
             <div
               style={{
                 left: `${progress * 100}%`,
-                background: 'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, #FF1717 50%, rgba(193, 17, 17, 0) 100%)',
+                background:
+                  'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
               }}
               className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2"
             />
           </div>
         </div>
-        <div className="mr-3 flex items-center justify-between text-xs/3.5 font-medium text-gray-350">
+        <div className="mr-3 flex items-center justify-between text-xs/3.5 font-medium text-tone-350">
           <p className="w-12 text-white">{formatPlaybackTime(audioRef.current?.currentTime ?? 0)}</p>
           <p>/&nbsp;{formatPlaybackTime(data.duration)}</p>
         </div>

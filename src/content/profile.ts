@@ -6,7 +6,7 @@
 import { live } from './approval';
 import { FUND, FUND_ADDRESS_LINE } from './fund';
 import { PROFILE_GRANTS } from './grants';
-import { PAGES } from './pages';
+import { PAGES, metaDescription } from './pages';
 import { personBySlug } from './people';
 import type { Copy } from './schema';
 import { THEMES } from './themes';
@@ -75,15 +75,6 @@ export const PROFILE_TEXT: Copy[] = [
     },
     approval: live(),
   },
-  {
-    // The Pages list's podcast line: both shows, each at its own path (/podcast?c=lt became /podcast/long-talk). The
-    // other lines are generated from ./pages.ts.
-    id: 'pages-podcast',
-    text: {
-      en: '- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast/long-talk)',
-    },
-    approval: live(),
-  },
 ];
 
 /** One profile text by id. */
@@ -115,13 +106,14 @@ export const keyFactLines = () => [
   `Contact: ${FUND.email}`,
 ];
 
-/** llms.txt's Pages list: every route with an llms label, in ./pages.ts order, with the two podcast shows after News. */
+/**
+ * llms.txt's Pages list: every route with an llms label, in ./pages.ts order, each followed by that page's meta
+ * description exactly (metaDescription), so the list and the pages say the same thing.
+ */
 function llmsPageLines() {
-  return PAGES.flatMap((page) => {
-    if (!page.llmsLabel) return [];
-    const line = `- [${page.llmsLabel}](${FUND.website}${page.path}): ${page.description}`;
-    return page.id === 'news' ? [line, profileText('pages-podcast').en] : [line];
-  });
+  return PAGES.filter((page) => page.llmsLabel).map(
+    (page) => `- [${page.llmsLabel}](${FUND.website}${page.path}): ${metaDescription(page)}`,
+  );
 }
 
 const bullets = (lines: string[]) => lines.map((line) => `- ${line}`).join('\n');

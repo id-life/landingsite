@@ -1,6 +1,7 @@
 import { fetchNewsList, fetchPodcastList } from '@/apis';
 import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioData';
-import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastNavItem } from '@/app/podcast/_components/constant';
+import { PODCAST_COVER, PODCAST_NAV_LIST, PODCAST_PAGE_ID, type PodcastNavItem } from '@/app/podcast/_components/constant';
+import { pageMeta } from '@/content/pages';
 import { FUND_PRESS, PORTFOLIO_PRESS, pressMarkdownLines } from '@/constants/press';
 import { absoluteUrl } from '@/constants/site';
 import { LLMS_CHINESE_SUMMARY, LLMS_HEADER } from './content';
@@ -27,10 +28,10 @@ async function newsLines() {
 }
 
 // The two shows restart their episode numbering (both have an E01), so each gets its own heading.
-// Titles, descriptions and links come from the podcast page's own constants — no separate copy.
+// Titles, descriptions and links come from the podcast page's own constants and the content layer: no separate copy.
 async function podcastSeriesBlock({ id, link }: PodcastNavItem) {
   const { title, enTitle } = PODCAST_COVER[id];
-  const description = PODCAST_METADATA[id].description ?? '';
+  const { description } = pageMeta(PODCAST_PAGE_ID[id]);
   try {
     const res = await fetchPodcastList(`podcast_${id}`);
     if (res.code !== 200 || !Array.isArray(res.data) || !res.data.length) return '';

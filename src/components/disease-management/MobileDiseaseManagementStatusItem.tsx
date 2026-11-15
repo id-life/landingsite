@@ -23,8 +23,8 @@ export const MobileDiseaseManagementStatusItem: FC<DiseaseManagementStatusItemTy
       </div>
       <span className="mb-3 text-center text-base leading-5">{title}</span>
       <div className="mb-7 flex space-x-8 text-xl leading-5">
-        <DotCount className="h-[3px] w-[3px] bg-green-500">{counts[0]}</DotCount>
-        <DotCount className="h-[3px] w-[3px] bg-red-500">{counts[1]}</DotCount>
+        <DotCount className="h-[3px] w-[3px] bg-data-ok">{counts[0]}</DotCount>
+        <DotCount className="h-[3px] w-[3px] bg-accent">{counts[1]}</DotCount>
       </div>
       <a
         href={pdf}
@@ -49,7 +49,10 @@ export const MobileDiseaseManagementStatusItem: FC<DiseaseManagementStatusItemTy
       />
       {showAmount < data.length && (
         <div className="p-2.5 text-center">
-          <span className="cursor-pointer text-xs font-normal text-blue" onClick={() => setShowAmount((amount) => amount + 4)}>
+          <span
+            className="cursor-pointer text-xs font-normal text-data-sky"
+            onClick={() => setShowAmount((amount) => amount + 4)}
+          >
             See More
           </span>
         </div>

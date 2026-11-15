@@ -3,15 +3,8 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { isSubscribeShowAtom } from '@/atoms/footer';
-import { ANALYTICS_ENABLED } from '@/lib/analytics/config';
 import { canRenderConsentCopy, CONSENT_COPY, isDraftCopy } from '@/lib/analytics/consent-copy';
-import {
-  chooseConsent,
-  closePrivacyChoices,
-  getConsentState,
-  openPrivacyChoices,
-  subscribeConsent,
-} from '@/lib/analytics/consent';
+import { chooseConsent, closePrivacyChoices, getConsentState, subscribeConsent } from '@/lib/analytics/consent';
 
 // Sizes are in px: the experience scales its rem with the viewport (a rem-based 14 px rendered at 6 px on an 820 px
 // tablet), and the choice must stay legible and at least 44 px tall everywhere. Accept and Reject share one class,
@@ -52,10 +45,10 @@ export default function ConsentBanner() {
     >
       <div className="flex flex-col gap-3 notMobile:flex-row notMobile:items-center notMobile:gap-6">
         <div className="flex-1 text-[12px]/[18px]">
-          <h2 id={titleId} className="font-oxanium text-[14px]/[20px] font-bold">
+          <h2 id={titleId} className="font-display text-[14px]/[20px] font-bold">
             {en.title} · {zh.title}
             {isDraftCopy() && (
-              <span className="ml-2 border border-yellow-300 px-1 align-middle text-[10px] font-semibold text-yellow-300">
+              <span className="ml-2 border border-data-draft px-1 align-middle text-[10px] font-semibold text-data-draft">
                 {CONSENT_COPY.draftMarker}
               </span>
             )}
@@ -85,15 +78,5 @@ export default function ConsentBanner() {
         )}
       </div>
     </section>
-  );
-}
-
-/** "Privacy choices" link for the footers: reopens the banner. Renders nothing while its text may not be shown. */
-export function PrivacyChoicesLink({ className }: { className?: string }) {
-  if (!ANALYTICS_ENABLED || !canRenderConsentCopy()) return null;
-  return (
-    <button type="button" className={className ?? 'underline opacity-70 hover:opacity-100'} onClick={openPrivacyChoices}>
-      {CONSENT_COPY.en.link} · {CONSENT_COPY.zh.link}
-    </button>
   );
 }

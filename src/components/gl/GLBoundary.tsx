@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import type { RootState } from '@react-three/fiber';
 import { probeWebGL, reportExperienceError, watchWebGLContext } from '@/lib/analytics/experience';
 import { reportError } from '@/lib/report';
+import { gpuReportTags } from '@/motion/gpuTier';
 import { markHeroSceneFailed, setContextLost } from '@/hooks/useExperienceMode';
 
 /**
@@ -44,7 +45,7 @@ export function ModelBoundary({
     <ErrorBoundary
       fallback={null}
       onError={(error) => {
-        reportError(error, { area: 'webgl', kind: 'model_failed', canvas, model });
+        reportError(error, { area: 'webgl', kind: 'model_failed', canvas, model, ...gpuReportTags() });
         onError?.();
       }}
     >

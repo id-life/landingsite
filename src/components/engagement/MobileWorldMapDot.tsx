@@ -72,7 +72,7 @@ export function MobileWorldMapDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
         {/* 中心红点和波纹 */}
         <PulseDot
           svgSize={svgSize}
@@ -87,7 +87,7 @@ export function MobileWorldMapDotPoint({
         {/* 标签 */}
         <motion.div
           className={cn(
-            'flex flex-col items-start whitespace-nowrap font-oxanium',
+            'flex flex-col items-start whitespace-nowrap font-display',
             MOBILE_MAP_SCALE.labelTextClass,
             'font-semibold capitalize text-white',
           )}

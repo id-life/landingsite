@@ -20,8 +20,8 @@ an iPad Air with the same capabilities get the same tier.
 below 1) when about 75 % of 2.5 s of samples are under 40 fps (60 Hz screens), and back up on recovery; it stops after
 three direction changes. The canvas wrapper exposes `data-tier` and `data-dpr`.
 
-**Reporting.** The tier is a Sentry tag (`gpu_tier`, with `webgl_caveat` = failIfMajorPerformanceCaveat, recorded
-only) and a parameter of GA4's `experience_ready` (`gpu_tier`: low / mid / high, or none without WebGL).
+**Reporting.** The tier is a parameter of GA4's `experience_ready` (once per document) (`gpu_tier`: low / mid / high, or none without WebGL), and every WebGL error report to Sentry carries `gpu_tier` and
+`webgl_caveat` (failIfMajorPerformanceCaveat, recorded only) as tags.
 
 ## Measured (local production build, 2026-11-15, Chrome with Metal ANGLE, hero at rest)
 

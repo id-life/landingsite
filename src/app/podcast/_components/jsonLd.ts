@@ -1,8 +1,9 @@
 import type { PodcastEpisode, PodcastSeries } from 'schema-dts';
 import type { PodcastItem } from '@/apis/types';
-import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastCategory } from '@/app/podcast/_components/constant';
+import { PODCAST_COVER, PODCAST_NAV_LIST, PODCAST_PAGE_ID, type PodcastCategory } from '@/app/podcast/_components/constant';
 import { ORG_REF } from '@/constants/entity';
 import { absoluteUrl } from '@/constants/site';
+import { pageMeta } from '@/content/pages';
 
 // Seconds → ISO 8601 duration (PT{H}H{M}M{S}S).
 function formatDuration(seconds: number): string {
@@ -56,7 +57,7 @@ export function podcastEpisodeJsonLd(item: PodcastItem): PodcastEpisode {
 
 export function podcastSeriesJsonLd(category: PodcastCategory, episodes: PodcastItem[]): PodcastSeries {
   const { cover, xyzLink, podcastLink, spotifyLink } = PODCAST_COVER[category];
-  const description = PODCAST_METADATA[category].description;
+  const { description } = pageMeta(PODCAST_PAGE_ID[category]);
   const sameAs = [xyzLink, podcastLink, spotifyLink].filter((link): link is string => Boolean(link));
   return {
     ...seriesRef(category),

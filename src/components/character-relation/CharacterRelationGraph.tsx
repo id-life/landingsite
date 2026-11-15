@@ -15,6 +15,8 @@ import { CharacterRelationTransformedData } from './CharacterRelation';
 import { cn } from '@/utils';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
 
+import { color } from '@/styles/tokens';
+
 const BASE_NODE_SIZE = 8;
 const BASE_NODE_SIZE_DELTA = 0;
 
@@ -137,7 +139,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
         const isSelfRelation = curr.from === curr.to;
 
         if (existedLine) {
-          existedLine.color = '#c11111';
+          existedLine.color = color.accent;
         }
         // if the line is self-relation, skip adding it
         else if (isSelfRelation) {
@@ -151,7 +153,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
             text: '',
             isHideArrow: true,
             styleClass: 'z-10',
-            color: isImpressionGood ? '#c11111' : '#00329a',
+            color: isImpressionGood ? color.accent : color['data-navy'],
             data: {
               impression: curr.impression,
             },
@@ -238,15 +240,15 @@ function CustomNode(props: RGNodeSlotProps) {
   const isVisitorOnly = node.data?.type === 'visitor';
 
   return !!node.data?.isSpecialNode && !isVisitorOnly ? (
-    <div className="relative flex h-full w-full items-center justify-center rounded-full bg-[#d9b8be]">
-      <div className="h-[76px] w-[76px] rounded-full bg-red-600/20"></div>
-      <div className="absolute left-1/2 top-1/2 h-[40px] w-max -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600 px-[12px] font-poppins text-[28px] font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
+    <div className="relative flex h-full w-full items-center justify-center rounded-full bg-data-rose">
+      <div className="h-[76px] w-[76px] rounded-full bg-accent/20"></div>
+      <div className="absolute left-1/2 top-1/2 h-[40px] w-max -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent px-[12px] font-text text-[28px] font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
         {node.text}
       </div>
     </div>
   ) : (
-    <div className={cn('relative h-full w-full rounded-full', isVisitorOnly ? 'bg-[#00329a]' : 'bg-red-600')}>
-      <div className="absolute right-0 top-1/2 -z-10 h-[28px] w-max -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-poppins text-[16px] font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
+    <div className={cn('relative h-full w-full rounded-full', isVisitorOnly ? 'bg-data-navy' : 'bg-accent')}>
+      <div className="absolute right-0 top-1/2 -z-10 h-[28px] w-max -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-text text-[16px] font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
         {node.text}
       </div>
     </div>

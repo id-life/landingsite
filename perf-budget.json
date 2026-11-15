@@ -8,35 +8,35 @@
   "routes": {
     "/": {
       "kind": "experience",
-      "jsInitialGzipKB": 353.4
+      "jsInitialGzipKB": 284.5
     },
     "/news": {
       "kind": "content",
-      "jsInitialGzipKB": 271.6
+      "jsInitialGzipKB": 189.6
     },
     "/news/immortal-dragons-news-and-updates": {
       "kind": "content",
-      "jsInitialGzipKB": 262.9
+      "jsInitialGzipKB": 182.6
     },
     "/podcast": {
       "kind": "content",
-      "jsInitialGzipKB": 243.4
+      "jsInitialGzipKB": 166.4
     },
     "/podcast/long-talk": {
       "kind": "content",
-      "jsInitialGzipKB": 243.4
+      "jsInitialGzipKB": 166.4
     },
     "/podcast/56": {
       "kind": "content",
-      "jsInitialGzipKB": 260.6
+      "jsInitialGzipKB": 172.9
     },
     "/spectrum/disease-management": {
       "kind": "content",
-      "jsInitialGzipKB": 264.1
+      "jsInitialGzipKB": 185.3
     },
     "/spectrum/influence-network": {
       "kind": "content",
-      "jsInitialGzipKB": 246.5
+      "jsInitialGzipKB": 177.5
     }
   },
   "firstVisit": {
@@ -47,14 +47,14 @@
         "requests": 95
       },
       "/news": {
-        "kB": 514.5,
-        "jsKB": 284.8,
-        "requests": 37
+        "kB": 437.4,
+        "jsKB": 203.1,
+        "requests": 33
       },
       "/podcast/56": {
-        "kB": 422.7,
-        "jsKB": 273.2,
-        "requests": 37
+        "kB": 344.4,
+        "jsKB": 184.2,
+        "requests": 33
       }
     },
     "tablet": {
@@ -64,14 +64,14 @@
         "requests": 153
       },
       "/news": {
-        "kB": 514.5,
-        "jsKB": 284.8,
-        "requests": 37
+        "kB": 437.4,
+        "jsKB": 203.1,
+        "requests": 33
       },
       "/podcast/56": {
-        "kB": 443,
-        "jsKB": 273.2,
-        "requests": 38
+        "kB": 364.8,
+        "jsKB": 184.2,
+        "requests": 34
       }
     },
     "laptop": {
@@ -81,14 +81,14 @@
         "requests": 153
       },
       "/news": {
-        "kB": 514.5,
-        "jsKB": 284.8,
-        "requests": 37
+        "kB": 437.4,
+        "jsKB": 203.1,
+        "requests": 33
       },
       "/podcast/56": {
-        "kB": 443,
-        "jsKB": 273.2,
-        "requests": 38
+        "kB": 364.8,
+        "jsKB": 184.2,
+        "requests": 34
       }
     }
   },
@@ -110,5 +110,5 @@
       }
     }
   },
-  "recordedAt": "2026-11-15T11:12:22.505Z"
+  "recordedAt": "2026-11-15T16:51:47.224Z"
 }

@@ -70,7 +70,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     <div
       onPointerDown={onIntent}
       onFocus={onIntent}
-      className={clsx('z-[101] flex h-8 items-center gap-1 rounded-full bg-gray-750 px-1.5 transition duration-300', className)}
+      className={clsx('z-[101] flex h-8 items-center gap-1 rounded-full bg-tone-750 px-1.5 transition duration-300', className)}
     >
       <button
         type="button"
@@ -85,7 +85,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
         </span>
       </button>
-      <span aria-hidden="true" className="mx-0.5 h-4 w-px bg-[#57595C]" />
+      <span aria-hidden="true" className="mx-0.5 h-4 w-px bg-tone-650" />
       <Dialog
         open={isOpen}
         onOpenChange={(open) => {
@@ -100,7 +100,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         isDismiss={true}
         anim="fade"
         render={() => (
-          <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-[#121212CC] p-4.5 before:absolute before:inset-0 before:bottom-[4.75rem] before:-z-10 before:block before:backdrop-blur">
+          <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-tone-950/80 p-4.5 before:absolute before:inset-0 before:bottom-[4.75rem] before:-z-10 before:block before:backdrop-blur">
             <DesktopMusicContent isPlaying={isPlaying} />
           </div>
         )}

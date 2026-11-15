@@ -207,10 +207,10 @@ const ProgressLoader = forwardRef<ProgressLoaderHandle>((_, ref) => {
           />
           <defs>
             <linearGradient id="paint_linear" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#C11111" />
-              <stop ref={redStopRef} offset="0%" stopColor="#C11111" />
-              <stop ref={greyStopRef} offset="0%" stopColor="#CCCCCC" />
-              <stop offset="100%" stopColor="#CCCCCC" />
+              <stop offset="0%" stopColor="var(--color-accent)" />
+              <stop ref={redStopRef} offset="0%" stopColor="var(--color-accent)" />
+              <stop ref={greyStopRef} offset="0%" stopColor="var(--color-tone-300)" />
+              <stop offset="100%" stopColor="var(--color-tone-300)" />
             </linearGradient>
           </defs>
         </svg>

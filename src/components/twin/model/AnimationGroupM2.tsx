@@ -3,6 +3,8 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import * as THREE from 'three';
 import { useAnimations, useGLTF } from '@react-three/drei';
 
+import { color } from '@/styles/tokens';
+
 export type AnimationGroupProps = {
   modelRef: React.MutableRefObject<THREE.Group | null>;
 };
@@ -279,7 +281,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
           receiveShadow
         />
         <skinnedMesh
@@ -292,7 +294,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           castShadow
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
           receiveShadow
         />
         <skinnedMesh
@@ -305,7 +307,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           castShadow
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
           receiveShadow
         />
         <skinnedMesh
@@ -318,7 +320,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           castShadow
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
           receiveShadow
         />
         <skinnedMesh
@@ -331,7 +333,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           castShadow
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
           receiveShadow
         />
         <skinnedMesh

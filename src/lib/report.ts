@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/nextjs';
+import { withSentry } from '@/lib/sentry-client';
 
 export type ReportContext = { area: string } & Record<string, string | number | boolean | undefined | null>;
 
@@ -16,7 +16,10 @@ export function reportError(error: unknown, context: ReportContext) {
   for (const [key, value] of Object.entries(context)) {
     if (value !== undefined && value !== null) tags[key] = String(value).slice(0, 200);
   }
-  Sentry.captureException(err, { tags });
+  // In the browser the SDK loads lazily (./sentry-client.ts: queued until then, PERF-10); on the server it is imported
+  // on demand, so the browser bundle never includes it statically.
+  if (typeof window === 'undefined') void import('@sentry/nextjs').then((Sentry) => Sentry.captureException(err, { tags }));
+  else withSentry((Sentry) => Sentry.captureException(err, { tags }));
   if (process.env.NODE_ENV === 'development') console.error(`[${context.area}]`, err);
 }
 

@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 // Convert TTF/OTF font files to WOFF2 (Google's woff2 compression: lossless, typically 40-60 % of the
-// TTF size), writing <name>.woff2 next to each input. Used for the Source Han Sans CN subsets that
-// next/font serves and for their full-font sources in src/styles/fonts/font-min/.
-//   node scripts/build-fonts.mjs src/styles/fonts/SourceHanSansCN-Bold-min.ttf [...more files]
+// TTF size), writing <name>.woff2 next to each input.
+//   node scripts/build-fonts.mjs <font>.ttf [...more files]
 // The converter (ttf2woff2, pinned) runs through npx, so the site gets no new dependency.
 //
-// Re-subsetting the Chinese face (when the strings in font-min/index.md change) needs a subsetter that
-// reads WOFF2 and writes WOFF2, e.g. `pyftsubset <font-min source>.woff2 --text-file=index.md
-// --flavor=woff2 --output-file=<name>-min.woff2` (fonttools with brotli) or the subset-font package.
+// The Chinese display face is subset by scripts/build-cjk-subset.mjs (VIS-07), not here.
 //
 // Xirod, Migrena and TT Lakes are deliberately not converted here: whether those faces stay is the
 // owner's decision (Oxanium + Poppins palette, see the master plan's ENG-repo-exposure / VIS-font-palette).

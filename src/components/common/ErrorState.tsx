@@ -36,17 +36,17 @@ export default function ErrorState({ code, title, message, links, action }: Erro
       <Link href="/" aria-label="Immortal Dragons home" className="mb-10 block">
         <Image src="/imgs/id-logo-large.png" alt="Immortal Dragons 不朽真龙" width={108} height={100} unoptimized />
       </Link>
-      <p className="font-oxanium text-sm font-bold uppercase tracking-widest text-red-600">{code}</p>
-      <h1 className="mt-3 font-oxanium text-3xl font-bold uppercase mobile:text-2xl">{title}</h1>
-      <p className="mt-2 font-poppins text-base text-black/60">{message}</p>
+      <p className="font-display text-sm font-bold uppercase tracking-widest text-accent">{code}</p>
+      <h1 className="mt-3 font-display text-3xl font-bold uppercase mobile:text-2xl">{title}</h1>
+      <p className="mt-2 font-text text-base text-black/60">{message}</p>
       {action ? <div className="mt-8">{action}</div> : null}
       <nav aria-label="Site sections" className="mt-10 w-full max-w-xl">
-        <ul className="grid grid-cols-2 gap-3 font-poppins text-sm font-semibold uppercase mobile:grid-cols-1">
+        <ul className="grid grid-cols-2 gap-3 font-text text-sm font-semibold uppercase mobile:grid-cols-1">
           {links.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="block border border-black/15 bg-white/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-red-600 hover:text-red-600"
+                className="block border border-black/15 bg-white/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
               >
                 {link.label}
               </Link>
@@ -64,7 +64,7 @@ export function TryAgainButton({ onClick, label = 'Try again 重试' }: { onClic
     <button
       type="button"
       onClick={onClick}
-      className="rounded-full border border-current px-6 py-2 font-poppins text-sm font-semibold uppercase transition-colors hover:border-red-600 hover:text-red-600"
+      className="rounded-full border border-current px-6 py-2 font-text text-sm font-semibold uppercase transition-colors hover:border-accent hover:text-accent"
     >
       {label}
     </button>

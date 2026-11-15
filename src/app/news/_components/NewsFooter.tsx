@@ -13,7 +13,7 @@ import { trackChannelLink } from '@/lib/analytics/social';
 import { submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FormEvent, useState } from 'react';
-import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/PrivacyChoicesLink';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 
@@ -59,7 +59,7 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <YoutubeSVG className="size-6 fill-black" />
-              <span className="font-oxanium text-base font-bold uppercase">Youtube</span>
+              <span className="font-display text-base font-bold uppercase">Youtube</span>
             </a>
             <a
               href={Links[MediaLinkType.Linkedin]}
@@ -70,7 +70,7 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <LinkedinSVG className="size-6 fill-black" />
-              <span className="font-oxanium text-base font-bold uppercase">LinkedIn</span>
+              <span className="font-display text-base font-bold uppercase">LinkedIn</span>
             </a>
             <a
               href={Links[MediaLinkType.Media]}
@@ -81,39 +81,39 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <MediaSVG className="size-6 fill-black" />
-              <span className="font-oxanium text-base font-bold uppercase">MediaKit</span>
+              <span className="font-display text-base font-bold uppercase">MediaKit</span>
             </a>
           </div>
         </div>
-        <div className="font-oxanium text-base/5 font-bold">
+        <div className="font-display text-base/5 font-bold">
           {/* Only the label is set in capitals: the address and the email read as written (CON-20), and the email
               is a mailto link, as in the Connect footer. */}
           <div className="flex items-baseline justify-between gap-6">
-            <p className="uppercase opacity-50">Contact</p>
+            <p className="uppercase text-ink-muted">Contact</p>
             <div className="flex flex-col items-end gap-1">
-              <a href="/about" className="font-poppins font-semibold hover:text-red-600">
+              <a href="/about" className="font-text font-semibold hover:text-accent">
                 About Immortal Dragons <span aria-hidden="true">→</span>
               </a>
-              <PrivacyChoicesLink className="font-poppins text-xs font-semibold underline opacity-60 hover:opacity-100" />
+              <PrivacyChoicesLink className="font-text text-xs font-semibold underline opacity-60 hover:opacity-100" />
             </div>
           </div>
           <address className="not-italic">
-            <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
+            <div className="mt-7 flex items-center justify-start gap-1.5 font-text font-semibold">
               <img className="size-5" src="/svgs/home.svg" alt="" />
               {ORG_ADDRESS_TEXT}
             </div>
             <a
               href={ORG_MAILTO}
               data-track-placement="footer"
-              className="mt-3 flex w-fit items-center justify-start gap-1.5 font-poppins font-semibold hover:text-red-600"
+              className="mt-3 flex w-fit items-center justify-start gap-1.5 font-text font-semibold hover:text-accent"
             >
               <img className="size-5" src="/svgs/contact-email.svg" alt="" />
               {ORG_EMAIL}
             </a>
           </address>
         </div>
-        <div className="font-oxanium text-base/5">
-          <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
+        <div className="font-display text-base/5">
+          <p className="font-bold uppercase text-ink-muted">SUBSCRIBE</p>
           <form id="subscribe-form" className="relative mt-7 flex flex-col" onSubmit={onFormSubmit}>
             <HoneypotField />
             <label htmlFor="news-subscribe-email" className="sr-only">
@@ -122,7 +122,7 @@ export default function NewsFooter() {
             <div className="border-2 border-black p-3">
               <input
                 id="news-subscribe-email"
-                className="w-[min(25rem,30vw)] bg-transparent font-poppins text-xs font-semibold"
+                className="w-[min(25rem,30vw)] bg-transparent font-text text-xs font-semibold"
                 placeholder="Please enter email"
                 type="email"
                 inputMode="email"
@@ -135,26 +135,26 @@ export default function NewsFooter() {
               />
             </div>
             {submitError && (
-              <p id="news-subscribe-error" role="alert" className="mt-2 font-poppins text-xs font-semibold text-red-600">
+              <p id="news-subscribe-error" role="alert" className="mt-2 font-text text-xs font-semibold text-accent">
                 {submitError}
               </p>
             )}
-            <div className="mt-3 flex items-start gap-1.5 font-poppins text-xs font-semibold">
+            <div className="mt-3 flex items-start gap-1.5 font-text text-xs font-semibold">
               <InfoSVG className="size-4 shrink-0" />
               {SUBSCRIBE_PROMISE.priorityAccess}
             </div>
-            <div className="footer-submit-clip relative mt-3 h-11 w-[10.5rem] self-end bg-red-600 text-white">
+            <div className="footer-submit-clip relative mt-3 h-11 w-[10.5rem] self-end bg-accent text-white">
               {isSubmitting ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent">
                   <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                 </div>
               ) : null}
               {isSubmitted ? (
-                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent font-bold">
                   <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                 </div>
               ) : null}
-              <input className="h-full w-full cursor-pointer font-poppins text-base/5 font-bold" type="submit" value="Submit" />
+              <input className="h-full w-full cursor-pointer font-text text-base/5 font-bold" type="submit" value="Submit" />
             </div>
           </form>
         </div>
