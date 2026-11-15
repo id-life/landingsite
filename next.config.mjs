@@ -160,7 +160,7 @@ const nextConfig = {
       {
         // ENG-11: the Content-Security-Policy on documents only: not on hashed chunks, optimised images, or the
         // first-party static files in public/ (models, textures, images, SVGs), about 200 of which a first visit loads.
-        source: '/:path((?!_next/static/|_next/image|models/|textures/|imgs/|svgs/|assets/).*)',
+        source: '/:path((?!_next/static/|_next/image|models/|particles/|textures/|imgs/|svgs/|assets/).*)',
         headers: documentSecurityHeaders({
           deployEnv,
           cspMode: process.env.CSP_MODE,
@@ -169,7 +169,7 @@ const nextConfig = {
       },
       {
         // Unhashed public assets: cache for a day, serve stale while revalidating for a week.
-        // (Hashed /_next/static files are already immutable; /models and /assets are set in vercel.json.)
+        // (Hashed /_next/static files are already immutable; /models, /particles and /assets are set in vercel.json.)
         source: '/:dir(imgs|svgs|textures)/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
       },
