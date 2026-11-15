@@ -3,33 +3,26 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileNavOpenAtom } from '@/atoms';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { globalLoadedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import MobileNavDialog from '../dialog/MobileNavDialog';
 import MenuOpenSVG from '../svg/MenuOpenSVG';
 import { cn } from '@/utils';
-import { useGA } from '@/hooks/useGA';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 
 export default function MobileNav() {
   const isMobile = useIsMobile();
-  const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
+  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const subscribePopup = useSetAtom(subscribePopupAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
 
-  const { trackEvent } = useGA();
-
-  const onSubscribeClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setIsSubscribeShow((pre) => !pre);
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
-      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FOOTER,
-    });
-  };
+  // Opens and closes the popup cleanly: the popup ignores presses on SUBSCRIBE triggers as "outside" presses.
+  // (It used to close on mousedown and reopen on click, logging a close and a view each time.)
+  const onSubscribeClick = () => subscribePopup({ type: 'toggle', placement: 'nav' });
 
   if (!globalLoaded || !isMobile) return null;
 
@@ -42,7 +35,11 @@ export default function MobileNav() {
     >
       <Logo />
       <div className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
-        <div
+        <button
+          type="button"
+          {...SUBSCRIBE_TRIGGER}
+          aria-haspopup="dialog"
+          aria-expanded={isSubscribeShow}
           onClick={onSubscribeClick}
           className={cn(
             'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
@@ -55,7 +52,7 @@ export default function MobileNav() {
             })}
           />
           Subscribe
-        </div>
+        </button>
         <div className="ml-5 hidden mobile:block" onClick={() => setMenuOpen((pre) => !pre)}>
           {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
         </div>

@@ -1,20 +1,22 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { isSubscribeShowAtom } from '@/atoms/footer';
+import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import gsap from 'gsap';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
-  const [subsOpen, setSubsOpen] = useAtom(isSubscribeShowAtom);
+  const subsOpen = useAtomValue(isSubscribeShowAtom);
+  const subscribePopup = useSetAtom(subscribePopupAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const isMobile = useIsMobile();
   const startAnim = useCallback(
@@ -64,9 +66,14 @@ function MobileNavDialog() {
       render={({ close }) => (
         <div className="flex w-full flex-col">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
-            <div
+            <button
+              type="button"
+              {...SUBSCRIBE_TRIGGER}
+              aria-haspopup="dialog"
               onClick={() => {
-                setSubsOpen(!subsOpen);
+                // One modal at a time: the menu closes, then the SUBSCRIBE dialog opens.
+                close();
+                subscribePopup({ type: 'open', placement: 'nav' });
               }}
               className={cn(
                 'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
@@ -81,7 +88,7 @@ function MobileNavDialog() {
                 })}
               />
               Subscribe
-            </div>
+            </button>
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
           <div className="mt-16 font-tt">

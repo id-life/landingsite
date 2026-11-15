@@ -15,7 +15,7 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import { subscribeNewsletter } from '@/utils/subscribe';
+import { submitNewsletter } from '@/utils/newsletter';
 import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
@@ -43,18 +43,13 @@ export default function FooterContact() {
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await subscribeNewsletter(formData);
+    const result = await submitNewsletter(formData, 'connect');
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
       return;
     }
     setIsSubmitted(true);
-    // Counted only when Mailchimp confirms, so the event measures subscriptions, not attempts.
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
-    });
   };
 
   const handleLinkClick = (type: MediaLinkTypeKey) => {

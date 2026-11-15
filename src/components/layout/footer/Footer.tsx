@@ -3,17 +3,15 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
-import { eventBus } from '@/components/event-bus/eventBus';
-import { MessageType } from '@/components/event-bus/messageType';
+import { subscribeTypeAtom } from '@/atoms/footer';
 import { InfoSVG } from '@/components/svg';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
+import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
 import { cn } from '@/utils';
-import { subscribeNewsletter } from '@/utils/subscribe';
-import { FloatingPortal } from '@floating-ui/react';
+import { submitNewsletter } from '@/utils/newsletter';
+import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
+import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -23,11 +21,20 @@ type Inputs = {
   'amp;f_id': string;
 };
 
+/**
+ * The desktop SUBSCRIBE popup. It opens only when the visitor asks (subscribePopupAtom) and is a modal
+ * dialog: role="dialog" labelled by its heading, focus moves to the email field and stays inside, Escape,
+ * the X or a click outside close it, and focus returns to the button that opened it.
+ */
 export default function Footer() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const subscribeType = useAtomValue(subscribeTypeAtom);
+  const placement = useAtomValue(subscribeTypeAtom);
+  const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  const footerRef = useRef<HTMLDivElement>(null);
+  const boxRef = useRef<HTMLDivElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   const {
     register,
@@ -37,8 +44,48 @@ export default function Footer() {
     reset,
     setError,
   } = useForm<Inputs>();
+  const { ref: emailFieldRef, ...emailField } = register('EMAIL', {
+    required: 'Please fill in this field',
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: 'Please enter email address',
+    },
+  });
 
-  const { trackEvent } = useGA();
+  const boxMergedRef = useMergeRefs([refs.setFloating, boxRef]);
+  const emailMergedRef = useMergeRefs([emailFieldRef, emailRef]);
+
+  // Built on first open: the popup lives in a portal that mounts after this component, so its elements
+  // do not exist yet when this component's effects first run.
+  const getTimeline = () => {
+    if (!timelineRef.current && footerRef.current && boxRef.current) {
+      const tl = gsap.timeline({ paused: true });
+      tl.to(footerRef.current, { bottom: '2.25rem', duration: 0.3 });
+      tl.to(boxRef.current, { width: '40rem', height: '13rem', duration: 0.3 }, '<');
+      timelineRef.current = tl;
+    }
+    return timelineRef.current;
+  };
+  useEffect(() => () => void timelineRef.current?.kill(), []);
+
+  useEffect(() => {
+    if (!isSubscribeShow) {
+      timelineRef.current?.reverse();
+      return;
+    }
+    getTimeline()?.play();
+    // Focus the email field once the popup is on screen, without scrolling: a plain focus() on the
+    // still-offscreen field scrolled the page, and on the experience a scroll changes the section. (The
+    // focus manager's own initial focus is off, initialFocus -1; it still traps Tab and returns focus.)
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => emailRef.current?.focus({ preventScroll: true }));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, [isSubscribeShow]);
 
   useEffect(() => {
     if (isSubscribeShow) {
@@ -50,93 +97,102 @@ export default function Footer() {
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await subscribeNewsletter(formData);
+    const result = await submitNewsletter(formData, placement ?? 'nav');
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
       return;
     }
     setIsSubmitted(true);
-    // Counted only when Mailchimp confirms, so the event measures subscriptions, not attempts.
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
-    });
   };
 
   return (
     <>
       <FloatingPortal>
-        <div className="page-footer fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
-          <div className="footer-box-clip relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5">
-            <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
-            <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
-            <button
-              onClick={(e) => {
-                e?.stopPropagation();
-                eventBus.next({ type: MessageType.CLOSE_SUBSCRIBE });
-              }}
-              className="absolute right-6 top-6 z-10 transition-opacity hover:opacity-70"
+        <div
+          ref={footerRef}
+          className="page-footer pointer-events-none fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
+        >
+          <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={-1}>
+            <div
+              {...getFloatingProps({ ref: boxMergedRef })}
+              aria-labelledby={titleId}
+              aria-modal={isSubscribeShow ? 'true' : undefined}
+              {...closedProps}
+              className="footer-box-clip pointer-events-auto relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5"
             >
-              <CloseSVG className="size-5 stroke-[var(--foreground)] stroke-2" />
-            </button>
-            <h3 className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">SUBSCRIBE</h3>
-            <form
-              id="subscribe-form"
-              className="relative mt-7.5 flex items-center gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
-              onSubmit={handleSubmit(onFormSubmit)}
-            >
-              {errors.EMAIL && (
-                <span className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600">
-                  {errors.EMAIL?.message}
-                </span>
-              )}
-              <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-              <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-              <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
-              <div className="relative flex h-11 flex-1 justify-center p-2">
-                <div
-                  className={cn(
-                    'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
-                    errors.EMAIL && 'border-red-600 opacity-100',
-                  )}
-                />
-                <input
-                  className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374]"
-                  placeholder="Please enter email"
-                  defaultValue=""
-                  {...register('EMAIL', {
-                    required: 'Please fill in this field',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Please enter email address',
-                    },
-                  })}
-                />
+              <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
+              <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
+              <button
+                type="button"
+                aria-label="Close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  closeWithX();
+                }}
+                className="absolute right-4 top-4 z-10 p-2 transition-opacity hover:opacity-70"
+              >
+                <CloseSVG aria-hidden="true" className="size-5 stroke-[var(--foreground)] stroke-2" />
+              </button>
+              <h3 id={titleId} className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">
+                SUBSCRIBE
+              </h3>
+              <form
+                id="subscribe-form"
+                noValidate
+                className="relative mt-7.5 flex items-center gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
+                onSubmit={handleSubmit(onFormSubmit)}
+              >
+                {errors.EMAIL && (
+                  <span role="alert" className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600">
+                    {errors.EMAIL?.message}
+                  </span>
+                )}
+                <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
+                <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
+                <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+                <div className="relative flex h-11 flex-1 justify-center p-2">
+                  <div
+                    className={cn(
+                      'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
+                      errors.EMAIL && 'border-red-600 opacity-100',
+                    )}
+                  />
+                  <input
+                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374]"
+                    placeholder="Please enter email"
+                    aria-label="Email"
+                    type="email"
+                    autoComplete="email"
+                    defaultValue=""
+                    {...emailField}
+                    ref={emailMergedRef}
+                  />
+                </div>
+                <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
+                  {isSubmitting ? (
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                      <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
+                    </div>
+                  ) : null}
+                  {isSubmitted ? (
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                      <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
+                    </div>
+                  ) : null}
+                  <input
+                    className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
+                    type="submit"
+                    value="Submit"
+                  />
+                </div>
+              </form>
+              <div className="mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
+                <InfoSVG className="size-4 shrink-0" />
+                Join our Longevity Circle and receive the latest insights & research
               </div>
-              <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
-                {isSubmitting ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
-                    <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
-                  </div>
-                ) : null}
-                {isSubmitted ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
-                    <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
-                  </div>
-                ) : null}
-                <input
-                  className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
-                  type="submit"
-                  value="Submit"
-                />
-              </div>
-            </form>
-            <div className="mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
-              <InfoSVG className="size-4 shrink-0" />
-              Join our Longevity Circle and receive the latest insights & research
             </div>
-          </div>
+          </FloatingFocusManager>
         </div>
       </FloatingPortal>
     </>

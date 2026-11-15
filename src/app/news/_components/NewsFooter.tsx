@@ -11,7 +11,7 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import { subscribeNewsletter } from '@/utils/subscribe';
+import { submitNewsletter } from '@/utils/newsletter';
 import { FormEvent, useState } from 'react';
 
 export default function NewsFooter() {
@@ -30,17 +30,13 @@ export default function NewsFooter() {
     });
     setSubmitError(null);
     setIsSubmitting(true);
-    const result = await subscribeNewsletter(fields);
+    const result = await submitNewsletter(fields, 'footer');
     setIsSubmitting(false);
     if (!result.ok) {
       setSubmitError(result.message);
       return;
     }
     setIsSubmitted(true);
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
-    });
   };
 
   const handleLinkClick = (type: MediaLinkTypeKey) => {
@@ -148,7 +144,7 @@ export default function NewsFooter() {
 
       {/* Mobile Layout - reuse FooterContactContent */}
       <div className="hidden mobile:block">
-        <FooterContactContent />
+        <FooterContactContent placement="footer" />
       </div>
     </div>
   );
