@@ -31,7 +31,9 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   `influence-network` are standalone tool pages with their own layout (no experience nav).
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
   `/podcast?c=lt` answers 308 from `src/middleware.ts`) and `/podcast/[id]`. Unknown ids return 404.
-- Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
+- Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
+  `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
+  `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
 - Not routable (no page.tsx; dead code to delete): `src/app/partners`, `processes`, `tracking`. `src/app/twin` and
   `src/app/vision` hold section components, not routes.
