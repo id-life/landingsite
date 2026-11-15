@@ -66,14 +66,18 @@ export default function SiteHeader({
       className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? // The experience: one row from 1700 px; below, the navigation takes a second row (it scrolls sideways
-            // where nine items do not fit), because labels are 14 px or more at every width (RWD-01).
-            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 p-10 transition-opacity duration-300 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap'
+          ? // The experience: one row from 1700 px; below, the navigation takes its own row (wrapping on tablets),
+            // because labels are 14 px or more at every width (RWD-01).
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 p-10 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap'
           : // Content pages: the logo and the actions on the first row, the navigation on its own row below.
             'flex-wrap gap-x-6 gap-y-4',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
         // On phones the bar lets taps through to the page (its controls take them).
-        overlay && (shown ? 'pointer-events-auto opacity-100 mobile:pointer-events-none' : 'pointer-events-none opacity-0'),
+        // It fades in; it hides at once (a fade-out from the server-painted bar would read as "visible" for 300 ms).
+        overlay &&
+          (shown
+            ? 'pointer-events-auto opacity-100 transition-opacity duration-300 mobile:pointer-events-none'
+            : 'pointer-events-none opacity-0'),
         className,
       )}
     >
@@ -87,7 +91,8 @@ export default function SiteHeader({
           'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
           overlay
             ? clsx(
-                'hide-scrollbar order-last -mx-10 w-[calc(100%_+_5rem)] overflow-x-auto px-10 pb-3 navRow:order-none navRow:mx-0 navRow:w-auto navRow:overflow-visible navRow:px-0 navRow:pb-0',
+                // Below 1700 px a row of its own that wraps (never a sideways scroller: its items would be cut by the window).
+                'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap',
                 live,
               )
             : 'order-last w-full flex-wrap gap-y-3',

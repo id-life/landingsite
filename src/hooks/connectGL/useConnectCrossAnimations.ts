@@ -95,7 +95,13 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.scroll-title');
 
-    gsap.to('.page-footer-contact', { bottom: u(-20), duration: DURATION.moderate, ease: EASE.out });
+    // Hidden by its own height (RWD-01: with the 12 px text floor the panel is taller than the old fixed offset, and
+    // peeked over the hero on tablets).
+    gsap.to('.page-footer-contact', {
+      bottom: (_: number, el: HTMLElement) => -(el.offsetHeight + 16),
+      duration: DURATION.moderate,
+      ease: EASE.out,
+    });
     gsap.to('.scroll-title', { opacity: 1, duration: DURATION.moderate });
 
     // 中文标题一个一个消失，然后英文标题一个一个出现

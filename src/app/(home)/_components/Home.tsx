@@ -11,7 +11,6 @@ import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
-import ThreeWrapper from '@/components/gl/ThreeWrapper';
 import Footer from '@/components/layout/footer/Footer';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import Spectrum from '@/components/spectrum/Spectrum';
@@ -86,7 +85,6 @@ export default function Home() {
       <ScrollSmootherRoot />
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
-      {webgl && <ThreeWrapper />}
       {webgl && <TwinThreeWrapper />}
       <PCAudioPlayer />
       <div id="wrapper">

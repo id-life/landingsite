@@ -9,6 +9,12 @@
  * so layout written in rem draws exactly as before while the type roles, in real rem, hold their 12/14/16 px floors.
  * Sections move their text from the scaled sizes to the roles one at a time (docs/design-tokens.md).
  *
+ * Text has a floor (RWD-01): in font-size and line-height, rem becomes the type unit --t = max(var(--u), 0.75rem)
+ * (globals.css), and a font size never resolves under 0.75rem (12 px at the default setting):
+ * `0.875rem` -> `max(calc(var(--t) * 0.875), 0.75rem)`. Where --u is at least 12 px (content pages, phones, the
+ * desktop experience from 1440 px) --t equals --u; narrower desktop windows keep text and line spacing at their
+ * 1440 px size while the layout keeps scaling, which the sections' tablet layouts absorb.
+ *
  * Inline styles and GSAP values are not CSS: they use u() from src/utils/layout-unit.ts.
  */
 const REM = /(-?(?:\d+\.?\d*|\.\d+))rem\b/g;
@@ -17,7 +23,12 @@ const layoutUnit = () => ({
   postcssPlugin: 'layout-unit',
   Declaration(decl) {
     if (decl.prop.startsWith('--') || !decl.value.includes('rem')) return;
-    const next = decl.value.replace(REM, (_, n) => `calc(var(--u) * ${n})`);
+    // PostCSS visits a declaration again after it changes; a converted value (it keeps 0.75rem as its floor) is done.
+    if (decl.value.includes('var(--t)') || decl.value.includes('var(--u)')) return;
+    let next;
+    if (decl.prop === 'font-size') next = decl.value.replace(REM, (_, n) => `max(calc(var(--t) * ${n}), 0.75rem)`);
+    else if (decl.prop === 'line-height') next = decl.value.replace(REM, (_, n) => `calc(var(--t) * ${n})`);
+    else next = decl.value.replace(REM, (_, n) => `calc(var(--u) * ${n})`);
     if (next !== decl.value) decl.value = next;
   },
 });

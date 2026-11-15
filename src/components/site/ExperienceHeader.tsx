@@ -49,10 +49,10 @@ export default function ExperienceHeader() {
     goToSection(item.id, 'nav');
   };
 
-  // The ids the experience and its tests know: #nav on the desktop deck, #mobile-nav on the phone deck. Only once
-  // mounted: the intro tweens and the suite read that id's opacity as "the experience is ready", which the
+  // The ids the experience and its tests know: #nav on the desktop deck, #mobile-nav on the phone deck. Only once a
+  // deck has mounted: the intro tweens and the suite read that id's opacity as "the experience is ready", which the
   // server-painted bar is not.
-  const id = mounted && isMobile !== null ? (isMobile ? 'mobile-nav' : 'nav') : undefined;
+  const id = experienceMounted && isMobile !== null ? (isMobile ? 'mobile-nav' : 'nav') : undefined;
 
   return (
     <SiteHeader

@@ -65,11 +65,11 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
                 href={Links[type]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-center relative h-[25px] w-[77px] cursor-pointer gap-1"
+                className="flex-center relative h-[25px] min-w-[77px] cursor-pointer gap-1 px-1"
               >
                 <CornerBorder hoverColor="#000" size="4px" color="#666" />
                 <Icon className={clsx(iconClassName, 'fill-black')} />
-                <span className="font-display text-[10px]/3 font-bold">{label}</span>
+                <span className="whitespace-nowrap font-display text-xs/3 font-bold">{label}</span>
               </a>
             ))}
           </div>

@@ -57,8 +57,22 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 ## Architecture of the experience
 
-- **Two trees.** `HomeEntry` renders `MobileHome` at <= 768 px (`src/hooks/useIsMobile.tsx`) and `Home` above. They are
-  separate component trees with separate sections (`Mobile*` components); a change usually needs both.
+- **Device profile and the two trees (RWD-02, in progress).** `src/styles/device-classes.ts` is the one definition of the
+  width classes (compact < 600, medium 600-839, expanded 840-1199, large >= 1200), compact height (< 480), pointer and
+  the tree query: the phone experience for `(max-width: 768px), (max-height: 479.98px)` (so phones in landscape and a
+  laptop at 200 % zoom get it too), the desktop experience otherwise. Tailwind `mobile:` / `notMobile:` and the
+  `compact: medium: expanded: large: shortScreen: coarse: navRow:` screens are built from it; JavaScript reads
+  `useDeviceProfile()` (one matchMedia store, tree debounced 200 ms, mirrored as `<html data-tree data-width-class
+data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` again (`test/device-classes.test.mjs`).
+  `HomeEntry` still renders `MobileHome` or `Home`, separate trees with `Mobile*` sections; they are being merged
+  section by section, so a change usually still needs both.
+- **Site header and footer (NAV-04).** One `SiteHeader` (`src/components/site`) on every route: hook-free, so content
+  pages render it on the server; client islands are `SubscribeTrigger` (an `idl:subscribe` DOM event,
+  `subscribe-events.ts`; `SubscribePopup` / `useSubscribeBridge` connect it to the popup), `MenuToggle` (+ `SiteMenu`
+  on first open) and `LinkTracker` (delegated clicks on `data-nav-id` / `data-channel`). The experience renders it as
+  the fixed overlay through `ExperienceHeader` (section controller, ids `#nav` / `#mobile-nav` assigned once mounted;
+  the suite reads their opacity as "ready"). Exactly one item has aria-current. Keep jotai, tailwind-merge and
+  prefetching links out of the content pages' header and footer (PERF-10: <= 180 kB first-party JS).
 - **Loader gate.** `src/components/gl/ProgressLoader.tsx` gates on the hero assets only and sets `globalLoadedAtom`
   (`src/atoms/geo.ts`); later-section 3D mounts on approach. A 15 s fail-open reveals the UI if loading stalls.
   `HeroPreloads` (in each section layout) preloads the hero model and wordmark textures.
@@ -134,9 +148,13 @@ Each job is its own status check. Run the same commands locally before pushing.
   `font-brand`), never a face; `FONT_PALETTE` in tokens.ts is the owner's open font choice. Chinese display strings
   are the closed list in `src/constants/display-strings.ts`, set from a generated Source Han subset
   (`UPDATE_CJK_SUBSET=1 npx vitest run test/cjk-display.test.mjs`); all other Chinese uses the system faces.
-- The nine type roles are rem-bounded: on the experience and Spectrum tool routes the root is still 0.8333vw above
-  768 px, so a role shrinks with the window there. Guide, sizes per viewport and the rule: `docs/design-tokens.md`.
-  Device tiers: `docs/support-matrix.md`.
+- The root is a fixed 100 % (16 px) on every route (RWD-01). `--u`, the layout unit, is 0.8333vw on the desktop
+  experience (what the root used to be) and 1rem elsewhere; `scripts/postcss-layout-unit.js` turns every rem in the
+  compiled CSS into `--u` (layout) or `--t` = max(--u, 12 px) (font-size and line-height, with a 12 px floor), so rem
+  in a class draws as before and text never falls under 12 px. GSAP and inline styles use `u(n)` from
+  `src/utils/layout-unit.ts`. The nine type roles are custom properties, so they stay real rem. Touch targets: the
+  `tap` / `tap-area` utilities (RWD-06, 44 px on coarse pointers). Guide: `docs/design-tokens.md`; device tiers:
+  `docs/support-matrix.md`.
 
 ## Content pages
 

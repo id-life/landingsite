@@ -16,15 +16,15 @@ export const WIDTH_CLASS_QUERY = {
 export const COMPACT_HEIGHT_QUERY = '(max-height: 479.98px)';
 
 /**
- * The phone experience (the paged deck with no document scroll) is mounted for phones in either orientation: a
- * narrow window, or a short one (a phone in landscape gets the phone layout, never the laptop layout at a 7 px
- * root). The width bound is 768 px while the desktop sections have no medium (tablet) layout; it moves to the
- * compact class (599.98 px) once they do. Everything else gets the desktop experience.
+ * The phone experience (the paged deck with no document scroll) is mounted for phones in either orientation: the
+ * compact width class, or a short window (a phone in landscape gets the phone layout, never the laptop layout at a
+ * 7 px root). Every tablet from 600 px (iPad mini portrait included) and every laptop gets the desktop experience,
+ * whose text has a 12 px floor (RWD-01). It was max-width 768 px until the type floor landed.
  */
-export const PHONE_TREE_MAX_WIDTH = 768;
+export const PHONE_TREE_MAX_WIDTH = 599.98;
 export const PHONE_TREE_QUERY = `(max-width: ${PHONE_TREE_MAX_WIDTH}px), ${COMPACT_HEIGHT_QUERY}`;
 /** The complement of PHONE_TREE_QUERY (a media query list cannot be negated as a whole). */
-export const DESKTOP_TREE_QUERY = `(min-width: ${PHONE_TREE_MAX_WIDTH + 1}px) and (min-height: 480px)`;
+export const DESKTOP_TREE_QUERY = '(min-width: 600px) and (min-height: 480px)';
 
 export const COARSE_POINTER_QUERY = '(pointer: coarse)';
 export const HOVER_QUERY = '(hover: hover)';

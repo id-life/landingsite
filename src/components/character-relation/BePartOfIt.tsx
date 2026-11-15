@@ -174,7 +174,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
-        '-bottom-full mobile:w-full mobile:p-8 mobile:py-5',
+        // Never wider than the window (RWD-01: the tool pages are drawn at the 16 px root at every width).
+        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >

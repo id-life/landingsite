@@ -43,7 +43,7 @@ export default function Contact({ onCopy }: ContactProps) {
           // mailto link (and can be long-pressed to copy).
           // tap-area: a 44 px hit area on touch screens (RWD-06). On phones the icon sits before the address, so its
           // hit area stays clear of the section arrows' (both are 44 px; they overlapped by 6 px at 390 px).
-          className="relative flex cursor-pointer tap-area mobile:order-first [@media(max-width:385px)]:hidden"
+          className="relative z-10 flex cursor-pointer tap-area mobile:order-first [@media(max-width:385px)]:hidden"
         >
           {state.value ? (
             <CheckmarkSVG

@@ -55,6 +55,8 @@ describe('device classes', () => {
     ])
       expect(matches(PHONE_TREE_QUERY, vp), `${vp.width}x${vp.height}`).toBe(true);
     for (const vp of [
+      { width: 744, height: 1133 },
+      { width: 768, height: 1024 },
       { width: 820, height: 1180 },
       { width: 1180, height: 820 },
       { width: 1366, height: 641 },
@@ -70,8 +72,8 @@ describe('device classes', () => {
       if (!/\.(tsx?|css|mjs)$/.test(file) || file.endsWith('device-classes.ts')) continue;
       const text = readFileSync(file, 'utf8');
       // A media query on the tree width must carry the compact-height clause (the phone tree query).
-      for (const m of text.matchAll(/max-width:\s*768px\)([^{`'"]*)/g)) {
-        if (!m[1].includes('max-height: 479.98px')) offenders.push(`${relative(ROOT, file)}: ${m[0].trim()}`);
+      for (const m of text.matchAll(/max-width:\s*(768|599\.98)px\)([^{`'"]*)/g)) {
+        if (m[1] === '768' || !m[2].includes('max-height: 479.98px')) offenders.push(`${relative(ROOT, file)}: ${m[0].trim()}`);
       }
       if (/maxWidth:\s*768\b|innerWidth\s*<=\s*768/.test(text)) offenders.push(`${relative(ROOT, file)}: JS width test`);
     }

@@ -64,7 +64,7 @@
   }
 
   /* The phone tree query (PHONE_TREE_QUERY in src/styles/device-classes.ts; test/device-classes.test.mjs). */
-  @media (max-width: 768px), (max-height: 479.98px) {
+  @media (max-width: 599.98px), (max-height: 479.98px) {
     *::-webkit-scrollbar {
       width: 2px;
     }
@@ -78,10 +78,15 @@
     background-color: color-mix(in srgb, var(--color-white) 56.5%, transparent);
   }
 
+  :root {
+    /* The type unit (RWD-01, scripts/postcss-layout-unit.js): the layout unit, but never under 12 px. */
+    --t: max(var(--u), 0.75rem);
+  }
+
   body {
     color: var(--color-tone-800);
-    /* Unsized text inherits the layout unit, as it inherited the viewport-scaled root before RWD-01. */
-    font-size: var(--u);
+    /* Unsized text inherits the type unit, as it inherited the viewport-scaled root before RWD-01. */
+    font-size: var(--t);
     @apply font-text;
   }
 
@@ -436,7 +441,7 @@
     clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
   }
   /* The phone tree query (PHONE_TREE_QUERY in src/styles/device-classes.ts; test/device-classes.test.mjs). */
-  @media (max-width: 768px), (max-height: 479.98px) {
+  @media (max-width: 599.98px), (max-height: 479.98px) {
     .podcast-card-clip {
       --corner-size: 16px;
       --border-width: 1px;

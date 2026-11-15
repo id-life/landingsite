@@ -66,14 +66,16 @@ Nine roles, each a Tailwind `text-<role>` utility with its line height: `caption
 `text-read-xs`, `text-read-sm`, `text-read` and `text-read-lg` (kept as aliases). Every fluid role tops out at no more
 than 2.5x its floor, so zoom still enlarges text.
 
-**The viewport-scaled rem.** The experience routes (`/` and the six sections) and the two Spectrum tool pages set the
-root font size to `0.8333vw` above 768 px (`Style.tsx`, `DMStyle.tsx`, `INStyle.tsx`): 1rem is 6.8 px at 820, 12 px at
-1440, 16 px at 1920. The roles are rem-bounded clamps, so on those routes they shrink with the window (a 12 px caption
-becomes 5.1 px on an 820 px iPad). Rule: **use a type role on an experience section only in the same change that moves
-that route to the fixed 16 px root (RWD-01)**. Until then, a section that must keep today's look keeps its rem sizes.
-The content pages (`/news`, `/podcast`, `/about`) and phones (<= 768 px) already have a 16 px root: roles are safe
-there today. `--u` (`1rem` today) is the layout unit for that switch: spacing that should keep tracking the window moves
-to `calc(var(--u) * n)` first, then the root becomes 16 px and only `--u` is redefined on those routes.
+**The fixed root and the layout unit (RWD-01).** Every route has a fixed root of 100 % (16 px, or the visitor's
+setting). The desktop experience was drawn in rem under a 0.8333vw root; that rem is now `--u`: 0.8333vw on the desktop
+experience (`Style.tsx`), 1rem everywhere else (tokens.css). `scripts/postcss-layout-unit.js` rewrites every rem length
+in the compiled CSS: in `font-size` to `max(calc(var(--t) * n), 0.75rem)`, in `line-height` to `calc(var(--t) * n)`,
+elsewhere to `calc(var(--u) * n)`, where `--t` = `max(var(--u), 0.75rem)` (globals.css). So layout written in rem scales
+with the window as before, text never resolves under 12 px, and from 1440 px up (where `--u` >= 12 px) nothing moved
+except 9-10.5 px text rising to 12 px. Below 1440 px text keeps its 1440 size while boxes keep scaling: a section's
+tablet layout (RWD-02) absorbs that. Custom properties are not rewritten, so the nine roles stay real rem. Values CSS
+never sees (GSAP tweens, inline styles) use `u(n)` from `src/utils/layout-unit.ts`. The Spectrum tool pages have no
+viewport unit: they draw at 16 px at every width.
 
 ## Space and grid
 
@@ -82,7 +84,7 @@ to `calc(var(--u) * n)` first, then the root becomes 16 px and only `--u` is red
 - `.container`: 1280 px max content width, outer margins `clamp(16px, 4vw, 80px)`, centred.
 - `.grid-12`: 12 columns, 24 px gutters. Place content with `col-span-*` / `col-start-*`.
 - `max-w-measure` (680 px) for reading text; `max-w-grid` (1280 px).
-- The grid is in px and vw, so it holds under the viewport-scaled rem. Content left edge: 16 px at 390, 32.8 at 820,
+- The grid is in px and vw, so it is independent of `--u`. Content left edge: 16 px at 390, 32.8 at 820,
   47.2 at 1180, 80 at 1440 (57.6 px margin plus 22.4 px of centring), 320 at 1920. Every route's first text column and
   header logo should sit on that edge (VIS-02 acceptance 3); moving them is a layout change for the single tree
   (w1-tree, NAV-04), not done here.

@@ -48,7 +48,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
           >
             {data.title}
           </div>
-          <div className="mt-[2px] line-clamp-2 text-[10px]/[14px] text-tone-350">{data.description}</div>
+          <div className="mt-[2px] line-clamp-2 text-xs/[16px] text-tone-350">{data.description}</div>
           {isCurrent ? (
             <>
               <div onClick={handleProgressChange} className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start">
@@ -64,14 +64,14 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   />
                 </div>
               </div>
-              <div className="mt-[4px] flex items-center justify-between text-[10px]/[14px] font-medium text-tone-350">
+              <div className="mt-[4px] flex items-center justify-between text-xs/[16px] font-medium text-tone-350">
                 <p>{dayjs.duration(controls.currentTime, 'seconds').format('mm:ss')}</p>
                 <p>{dayjs.duration(controls.duration, 'seconds').format('mm:ss')}</p>
               </div>
             </>
           ) : null}
           <div className="mt-[8px] flex items-center justify-between">
-            <div className="flex-center gap-[4px] text-[10px]/[14px] font-medium text-tone-500">
+            <div className="flex-center gap-[4px] text-xs/[16px] font-medium text-tone-500">
               <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>
               <span>·</span>
               <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
