@@ -16,16 +16,22 @@ const PortfolioItem = memo(
   forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onItemClick, className, isHover, onMouseEnter, isGridMode }, ref) => {
     const { title, subTitle, description, image } = item;
 
+    // Tiles without a company link (R3 Bio, Kangaroo Biomedical, Vitalia) are not interactive: no pointer cursor
+    // and no click handler (they looked clickable and did nothing). The hover analytics event stays.
+    const hasLink = Boolean(item.link);
     const handleClick = () => {
       onItemClick?.(item);
     };
     return (
       <div
         ref={ref}
-        onClick={handleClick}
+        onClick={hasLink ? handleClick : undefined}
         onMouseEnter={onMouseEnter}
         className={cn(
-          'mobile:flex-center relative h-[15.5rem] w-[23.75rem] cursor-pointer pt-3 text-foreground mobile:flex-col mobile:pt-0',
+          // min-height, not height: with the 12 px tagline floor a tile on a tablet grows instead of spilling
+          // its one-liner over the next row and the contact chip. At laptop sizes the tiles keep 15.5rem.
+          'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem]',
+          hasLink && 'cursor-pointer',
           isGridMode ? 'mobile:h-full mobile:w-full mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
           className,
         )}
@@ -67,12 +73,14 @@ const PortfolioItem = memo(
               alt=""
             />
           </h4>
+          {/* At least 12 px on every device: the phone grid used 10 px, and the desktop tree's text-xs scales with
+              the viewport-width root font (9 px at 1440, 5.1 px at 820). */}
           <p
             className={cn(
               'fund-desc mx-auto text-xs/5 notMobile:max-w-full notMobile:px-3',
               isGridMode
-                ? 'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium'
-                : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5',
+                ? 'mt-3 line-clamp-3 min-h-8 w-full px-2 text-xs/4 font-medium'
+                : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5 notMobile:text-[length:max(12px,0.75rem)] notMobile:leading-[max(15px,1.25rem)]',
             )}
           >
             {description}
