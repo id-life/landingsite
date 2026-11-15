@@ -89,3 +89,11 @@ describe('snippet', () => {
     expect(out.endsWith('…')).toBe(true);
   });
 });
+
+describe('snippet, bilingual text', () => {
+  test('a mostly-Latin bilingual description is cut by the Latin limit, so it is kept whole here', () => {
+    const show =
+      '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.';
+    expect(snippet(show)).toBe(show);
+  });
+});

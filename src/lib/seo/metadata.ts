@@ -20,6 +20,14 @@ const CJK = /[㐀-鿿豈-﫿]/;
 /** The language a piece of text is written in, by script: Chinese when it contains any CJK character. */
 export const localeOf = (text: string): Locale => (CJK.test(text) ? 'zh' : 'en');
 
+/**
+ * The language a description is cut by: Chinese when CJK characters are at least a third of it. A bilingual show
+ * description ("解码长寿革命。... Decoding the longevity revolution. ...") is cut by the Latin limit, so its English
+ * half is not cut off mid-word at 80 characters.
+ */
+const descriptionLocale = (text: string): Locale =>
+  (text.match(new RegExp(CJK.source, 'g'))?.length ?? 0) * 3 >= [...text].length ? 'zh' : 'en';
+
 /** "<topic> | <brand in the topic's language>", or the topic alone when it already names that brand. */
 export function brandTitle(topic: string, locale: Locale = localeOf(topic)): string {
   return topic.includes(BRAND[locale]) ? topic : `${topic} | ${BRAND[locale]}`;
@@ -43,7 +51,7 @@ function lastMatchEnd(text: string, re: RegExp, from: number): number {
  * A description of at most about 160 Latin or 80 CJK characters: the text itself when it fits, else cut at the
  * last sentence end that keeps enough of it, else at the last clause end or word with an ellipsis.
  */
-export function snippet(text: string, locale: Locale = localeOf(text)): string {
+export function snippet(text: string, locale: Locale = descriptionLocale(text)): string {
   const clean = text.replace(/\s+/g, ' ').trim();
   const { max, min } = LIMITS[locale];
   if (clean.length <= max) return clean;

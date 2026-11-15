@@ -1,11 +1,13 @@
 // Each route's metadata topic and meta description (SEO-06 rules in src/lib/seo/metadata.ts). The layouts pass these
-// to buildMetadata and their JSON-LD, and llms.txt's Pages list quotes the same descriptions, so the copies cannot
-// drift. Every description is the page's live meta description at the baseline, with two punctuation corrections
-// (CON-20): the fund's possessive on Spectrum (the apostrophe sat before the s) and the comma on Presence (it read
-// "presence --bridging"). The podcast shows keep their own metadata (src/app/podcast/_components/constant.ts).
+// to buildMetadata and their JSON-LD, and llms.txt's Pages list quotes the same descriptions through metaDescription(),
+// the cut buildMetadata applies, so the two cannot drift (CON-16). Every description is the page's live meta
+// description at the baseline, with two punctuation corrections (CON-20): the fund's possessive on Spectrum (the
+// apostrophe sat before the s) and the comma on Presence (it read
+// "presence --bridging").
 import { live } from './approval';
 import { FUND } from './fund';
 import type { PageMeta } from './schema';
+import { snippet } from '@/lib/seo/metadata';
 
 export const PAGES: PageMeta[] = [
   {
@@ -22,6 +24,7 @@ export const PAGES: PageMeta[] = [
     path: '/about',
     title: 'About',
     description: FUND.statement.text.en,
+    llmsLabel: 'About',
     approval: live(),
   },
   {
@@ -95,6 +98,25 @@ export const PAGES: PageMeta[] = [
     approval: live(),
   },
   {
+    // The two podcast shows (they used to keep their own metadata in src/app/podcast/_components/constant.ts).
+    id: 'podcast',
+    path: '/podcast',
+    title: '播客',
+    description:
+      '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
+    llmsLabel: 'Podcast',
+    approval: live(),
+  },
+  {
+    id: 'podcast-long-talk',
+    path: '/podcast/long-talk',
+    title: '龙门阵',
+    description:
+      '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
+    llmsLabel: 'Long Talk Podcast',
+    approval: live(),
+  },
+  {
     id: 'connect',
     path: '/connect',
     title: 'Connect',
@@ -121,6 +143,9 @@ export const PAGES: PageMeta[] = [
     approval: live(),
   },
 ];
+
+/** The meta description a page carries: its description as buildMetadata cuts it. llms.txt quotes this. */
+export const metaDescription = (page: Pick<PageMeta, 'description'>) => snippet(page.description);
 
 /** One route's path, title topic and description, ready for buildMetadata. */
 export function pageMeta(id: string) {

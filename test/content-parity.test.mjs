@@ -93,3 +93,17 @@ describe('sponsored bodies', () => {
     expect(diff(llms, spectrum)).toEqual(PENDING_OWNER_RULING.sponsorsOnlyInProfile);
   });
 });
+
+// CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description, and a description continued with a
+// page's own text quotes that text word for word.
+describe('page descriptions', async () => {
+  const { PAGES, metaDescription } = await import('@/content/pages');
+
+  test("every Pages line of llms.txt is that page's meta description", () => {
+    const lines = [...llmsSection('Pages').matchAll(/^- \[([^\]]+)\]\(https:\/\/www\.id\.life([^)]*)\): (.*)$/gm)];
+    const listed = PAGES.filter((page) => page.llmsLabel);
+    expect(lines.map((m) => m[2])).toEqual(listed.map((page) => page.path));
+    for (const [, , path, line] of lines) expect(line).toBe(metaDescription(PAGES.find((page) => page.path === path)));
+    expect(lines.map((m) => m[2])).toContain('/about');
+  });
+});
