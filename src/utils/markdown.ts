@@ -34,8 +34,22 @@ export const markdownSchema: Schema = {
   },
 };
 
+type HastNode = { type: string; tagName?: string; properties?: Record<string, unknown>; children?: HastNode[] };
+
+/** The sanitiser keeps an <iframe> whose src it refused as an empty frame; drop those frames entirely. */
+function rehypeDropEmptyFrames() {
+  const prune = (node: HastNode) => {
+    if (!node.children) return;
+    node.children = node.children.filter(
+      (child) => !(child.type === 'element' && child.tagName === 'iframe' && !child.properties?.src),
+    );
+    node.children.forEach(prune);
+  };
+  return (tree: HastNode) => prune(tree);
+}
+
 export const markdownRemarkPlugins: RemarkPlugins = [remarkGfm];
-export const markdownRehypePlugins: RehypePlugins = [rehypeRaw, [rehypeSanitize, markdownSchema]];
+export const markdownRehypePlugins: RehypePlugins = [rehypeRaw, [rehypeSanitize, markdownSchema], rehypeDropEmptyFrames];
 
 type MdNode = {
   type: string;

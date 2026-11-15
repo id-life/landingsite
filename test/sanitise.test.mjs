@@ -74,6 +74,8 @@ describe('markdown pipeline', () => {
   test('keeps YouTube embeds and nothing else framed', () => {
     expect(html).toContain('src="https://www.youtube.com/embed/abc123"');
     expect(html).not.toContain('evil.example');
+    // The refused frame is dropped, not left as an empty box.
+    expect(html.match(/<iframe/g)).toHaveLength(1);
   });
 
   test('keeps ordinary markdown: headings, emphasis, links, aligned tables, line breaks', () => {
