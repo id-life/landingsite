@@ -71,7 +71,8 @@ function MobileNavDialog() {
       onOpenChange={setOpen}
       contentClassName="absolute left-0 top-0 w-full"
       render={({ close }) => (
-        <div id="mobile-nav-menu" className="flex w-full flex-col">
+        // Scrolls when nine items do not fit (short phones); items are tighter below 740 px of height.
+        <div id="mobile-nav-menu" className="flex max-h-[100svh] w-full flex-col overflow-y-auto">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <button
               type="button"
@@ -109,7 +110,7 @@ function MobileNavDialog() {
                   event.preventDefault();
                   handleNavClick(item);
                 }}
-                className={cn('flex-center mobile-nav-item relative py-6 text-white opacity-0')}
+                className={cn('flex-center mobile-nav-item relative py-6 text-white opacity-0 [@media(max-height:740px)]:py-4')}
                 key={item.id}
               >
                 <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
@@ -133,7 +134,7 @@ function MobileNavDialog() {
                   setOpen(false);
                   router.push(link.href);
                 }}
-                className="flex-center mobile-nav-item relative py-6 text-white opacity-0"
+                className="flex-center mobile-nav-item relative py-6 text-white opacity-0 [@media(max-height:740px)]:py-4"
               >
                 <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">{link.title}</span>
               </a>
