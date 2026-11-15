@@ -67,9 +67,35 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   goes through `src/components/seo/JsonLd.tsx`; links from API data through `src/utils/safe-href.ts`.
 - Server-rendered summaries for crawlers and assistive tech: `PageSEOContent`. Never hide text from people while
   serving it to crawlers (no `aria-hidden` text, no zero-height wrappers).
-- Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
-  production and preview, with no Replay or profiling in the shared runtime.
-- Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.
+- **Analytics** (`src/lib/analytics`) run only in analytics builds (`ANALYTICS_ENABLED`: production by default,
+  `NEXT_PUBLIC_ANALYTICS_ENABLED=1` to force). One Google tag, gtag, owned in code: `HeadScript` (first in <head>:
+  Consent Mode v2 defaults, landing URL, load stage) and `AnalyticsBoot` (consent, then gtag/js after
+  experience_ready or the first input, at least 2 s in). Never add GTM, `@next/third-parties/google` or a second
+  loader (lint rules). Send events only with `track()`; names and parameters are typed by the catalog in
+  `events.ts` (`EVENTS.md` and `events.json` beside it are generated from it; `UPDATE_ANALYTICS_DOCS=1 npm test` refreshes it).
+  Section views are GA4's own page_view on pushState/replaceState: set `document.title` before changing the URL and
+  never send a manual page_view. Consent (`consent.ts`): opt-in in the EEA, UK, CH, CN and unknown regions, opt-out
+  elsewhere, GPC and automated browsers (navigator.webdriver, headless UA) are refusals; `/api/geo` gives the
+  country (`idl_region` cookie overrides it outside production). Banner text is a draft in `consent-copy.ts` and is
+  not rendered by production builds until approved. Vercel Analytics and Speed Insights render only with
+  `NEXT_PUBLIC_VERCEL_INSIGHTS=1` (paid beyond quota). Sentry only on Vercel production and preview, errors only
+  (`src/lib/sentry-options.ts`, tunnel `/monitoring`); report caught errors with `reportError` (`src/lib/report.ts`).
+- Newsletter: every form posts to `POST /api/subscribe` (`src/app/api/subscribe`: validation, honeypot, rate limit,
+  optional Turnstile, Mailchimp upstream with double opt-in) through `submitNewsletter` (`src/utils/newsletter.ts`);
+  the browser never contacts Mailchimp. Typed result codes in `src/lib/newsletter/result.ts`, 6 s browser timeout.
+  The popup opens only on request.
+- Security headers (CSP, HSTS, COOP, CORP) come from `security-headers.mjs`; a new third-party host must be added
+  there (CSP is enforced outside production, report-only in production until `CSP_MODE=enforce`).
+- Incidents, rollback and uptime checks: `RUNBOOK.md`.
+
+## Analytics build (for the e2e suite)
+
+`DEPLOY_ENV=preview NEXT_PUBLIC_ANALYTICS_ENABLED=1 NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=<QA stream id> npm run build`,
+then `npm start`. Use the production stream only when every beacon is answered locally (the suite's safety fixture
+does); never browse such a build outside the harness. Set `idl_region=DE` (opt-in) or `idl_region=SG` (opt-out) as a
+cookie to pick the consent path, and mask `navigator.webdriver` and the headless user agent, or the site treats the
+browser as automation and loads no analytics. The QA stream's enhanced measurement must match production (page views
+on history changes on, Scrolls off).
 
 ## Testing safely
 
