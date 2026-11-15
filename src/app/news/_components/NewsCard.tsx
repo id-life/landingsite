@@ -6,6 +6,7 @@ import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import CardShell from '@/components/common/CardShell';
+import { safeHref } from '@/utils/safe-href';
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
   // Articles are real links (crawlable, middle-click and keyboard work): external press opens in a
   // new tab, our own articles in the same tab. Videos open the modal.
   const isExternal = Boolean(data.isExternal && data.url);
-  const href = isYouTube ? undefined : isExternal ? (data.url ?? undefined) : `/news/${data.id}`;
+  const href = isYouTube ? undefined : isExternal ? safeHref(data.url) : `/news/${data.id}`;
   const openVideo = () => setIsModalOpen(true);
   const cardClassName =
     'group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg';

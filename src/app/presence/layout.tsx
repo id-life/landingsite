@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import PresenceSummary from '@/app/presence/_components/PresenceSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { WebPage, WithContext } from 'schema-dts';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'Presence 印记';
 const PAGE_DESCRIPTION =
@@ -51,7 +52,7 @@ export default function PresenceLayout({ children }: { children: ReactNode }) {
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />
       <PresenceSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />

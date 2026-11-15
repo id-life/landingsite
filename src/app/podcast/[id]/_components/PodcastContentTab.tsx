@@ -4,8 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
 import PodcastComments from '@/app/podcast/[id]/_components/PodcastComments';
 import Markdown, { Components } from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm';
+import { markdownRehypePlugins, markdownRemarkPlugins, remarkTimeline } from '@/utils/markdown';
 import '@/styles/components/markdown-timeline.css';
 import { PodcastItem } from '@/apis/types';
 import { eventBus } from '@/components/event-bus/eventBus';
@@ -14,6 +13,9 @@ import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 
 const TABS = ['时间轴', '评论'] as const;
+// @[timeline](mm:ss) markers become clickable spans as syntax-tree nodes (remarkTimeline), then the shared
+// sanitiser runs: transcript markup can no longer add script, handlers or attributes.
+const transcriptRemarkPlugins = [...markdownRemarkPlugins, remarkTimeline];
 
 type PodcastContentTabProps = {
   data: PodcastItem;
@@ -23,10 +25,6 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
   const { trackEvent } = useGA();
   const [activeTab, setActiveTab] = useState<number>(0);
   const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
-
-  const processedContent = data.transcript?.replace(/@\[(\w+)]\(([^)]+)\)/g, (match, type, param) => {
-    return `<span data-custom-type="${type}" data-custom-param="${param}" class="custom-timeline">${param}</span>`;
-  });
 
   const handleCustomElementClick = (type: string, param: string) => {
     if (type === 'timeline') {
@@ -74,8 +72,8 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
       <div className="mt-7.5">
         <div className={clsx(activeTab === 0 ? 'block' : 'hidden')}>
           <div className="markdown-body">
-            <Markdown components={components} rehypePlugins={[rehypeRaw, remarkGfm]}>
-              {processedContent}
+            <Markdown components={components} remarkPlugins={transcriptRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
+              {data.transcript}
             </Markdown>
           </div>
         </div>

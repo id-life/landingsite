@@ -21,11 +21,6 @@ export const generateSpectrumUrl = (key: string, pathname: string = '/presence',
   }
 };
 
-export const openSpectrumInNewTab = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
-  const url = generateSpectrumUrl(key, pathname, useHash);
-  window.open(url, '_blank');
-};
-
 export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pendingHashRef = useRef<string | null>(null);
@@ -38,6 +33,14 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
       if (consumedKeysRef.current.has(key)) return;
       const config = routeConfigs.find((c) => c.key === key);
       if (config) {
+        // A deep link replaces the current history entry instead of pushing one. When the address is not
+        // already the key's own (an old /spectrum#<key> share), put it there first, so the section change
+        // below finds the address in place and pushes nothing.
+        const path = config.pathname ?? '/presence';
+        const ownHash = (config.useHash ?? true) ? `#${key}` : '';
+        if (window.location.pathname !== path || window.location.hash !== ownHash) {
+          window.history.replaceState(window.history.state, '', `${path}${window.location.search}${ownHash}`);
+        }
         config.action();
         // mark consumed to prevent re-triggering while keeping hash in URL for sharing
         consumedKeysRef.current.add(key);
@@ -109,7 +112,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
 
   return {
     generateSpectrumUrl,
-    openSpectrumInNewTab,
     handleHashNavigation,
     executeSpectrumRoute,
     updateUrlAndExecute,

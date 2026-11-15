@@ -4,6 +4,7 @@ import { PODCAST_COVER, PodcastCategory } from '@/app/podcast/_components/consta
 import { useEffect, useMemo } from 'react';
 import { useGA } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
+import { safeHref } from '@/utils/safe-href';
 
 type PodcastCoverProps = {
   category: PodcastCategory;
@@ -13,7 +14,8 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
   const { trackEvent } = useGA();
   const data = useMemo(() => PODCAST_COVER[category], [category]);
 
-  const handleLinkClick = (type: string, url?: string) => {
+  const handleLinkClick = (type: string, link?: string) => {
+    const url = safeHref(link);
     if (!url) return;
     trackEvent({ name: GA_EVENT_NAMES.SUBSCRIBE_VIEW, label: type, podcast_episode: `${category}_home` });
     window.open(url, '_blank');

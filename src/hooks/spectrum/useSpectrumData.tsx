@@ -1,12 +1,13 @@
 import { spectrumBaseData, SpectrumItemData, SpectrumLinkData } from '@/app/spectrum/_components/spectrumData';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
-import { NAV_LIST } from '@/components/nav/nav';
+import { NAV, SectionId } from '@/components/nav/nav';
 import { HTMLAttributes, useCallback, useMemo } from 'react';
 import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
+import { SPECTRUM_HASH_ROUTES, SpectrumHashRoute } from './spectrum-routes';
 import { SpectrumRouteConfig, useSpectrumRouter } from './useSpectrumRouter';
 
 export type SpectrumLinkItem = SpectrumLinkData & {
@@ -25,18 +26,17 @@ export const useSpectrumData = () => {
   const { mobileNavChange } = useMobileNavigation();
   const { handleClickPoint } = useEngagementClickPoint(false);
 
-  const handleClickDigitalTwin = useCallback(() => {
-    isMobile ? mobileNavChange(NAV_LIST[4]) : handleNavClick(NAV_LIST[4]);
-  }, [isMobile, mobileNavChange, handleNavClick]);
-
-  const handleClickDot = useCallback(
-    (type: 'book' | 'sponsor' | 'meeting', index: number) => {
+  // Opens a section by id (never by position in NAV_LIST) and, after the move, the dot the link names.
+  const openRoute = useCallback(
+    (section: SectionId, dot?: SpectrumHashRoute['dot']) => {
       return () => {
         if (isMobile) {
-          mobileNavChange(NAV_LIST[3]);
+          mobileNavChange(NAV[section]);
         } else {
-          handleNavClick(NAV_LIST[3]);
+          handleNavClick(NAV[section]);
         }
+        if (!dot) return;
+        const { type, index } = dot;
         setTimeout(() => {
           handleClickPoint(type, index, true);
           if (isMobile) {
@@ -52,32 +52,14 @@ export const useSpectrumData = () => {
   );
 
   const routeConfigs: SpectrumRouteConfig[] = useMemo(
-    () => [
-      // meeting
-      { key: 'founders-forum-global', action: handleClickDot('meeting', 5) },
-      { key: 'founders-longevity-forum-london', action: handleClickDot('meeting', 5) },
-      { key: 'founders-longevity-forum-singapore', action: handleClickDot('meeting', 2) },
-      { key: 'vitalist-bay-summit', action: handleClickDot('meeting', 4) },
-      { key: 'timepie-longevity-forum', action: handleClickDot('meeting', 0) },
-      { key: 'edge-city-lanna', action: handleClickDot('meeting', 1) },
-      { key: 'oxford-future-innovation-forum', action: handleClickDot('sponsor', 1) },
-      // book
-      { key: 'the-network-state', action: handleClickDot('book', 0) },
-      { key: 'better-with-age', action: handleClickDot('book', 1) },
-      // sponsor
-      { key: 'vitalist-bay-summit-grant', action: handleClickDot('meeting', 4) },
-      { key: 'ardd-2025', action: handleClickDot('meeting', 6) },
-      { key: '2060-longevity-forum', action: handleClickDot('meeting', 7) },
-      { key: 'lifespan-research-institute', action: handleClickDot('sponsor', 3) },
-      { key: 'public-longevity-group', action: handleClickDot('sponsor', 3) },
-      { key: 'biohacker-dao', action: handleClickDot('sponsor', 2) },
-      { key: 'eth-panda', action: handleClickDot('sponsor', 0) },
-      { key: 'revive-me-2025', action: handleClickDot('sponsor', 2) },
-      { key: 'healthy-longevity-medicine-conference', action: handleClickDot('meeting', 2) },
-      // digital twin
-      { key: 'digital-twin', action: handleClickDigitalTwin, pathname: '/digitaltwin', useHash: false },
-    ],
-    [handleClickDot, handleClickDigitalTwin],
+    () =>
+      SPECTRUM_HASH_ROUTES.map(({ key, section, dot, pathname, useHash }) => ({
+        key,
+        action: openRoute(section, dot),
+        pathname: pathname ?? NAV[section].href,
+        useHash,
+      })),
+    [openRoute],
   );
 
   const { executeSpectrumRoute, updateUrlAndExecute } = useSpectrumRouter(routeConfigs);

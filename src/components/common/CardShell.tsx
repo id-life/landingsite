@@ -21,6 +21,8 @@ export default function CardShell({ href, external = false, onActivate, classNam
       </a>
     );
   }
+  // Nowhere to go and nothing to do (e.g. a feed item without a usable URL): not interactive at all.
+  if (!onActivate) return <div className={className}>{children}</div>;
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();

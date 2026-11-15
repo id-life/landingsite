@@ -1,12 +1,95 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript"
-  ],
+  "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
     "@next/next/no-img-element": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
-    "@typescript-eslint/no-unused-vars": "off"
-  }
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "MemberExpression[object.name='NAV_LIST'][computed=true][property.type='Literal']",
+        "message": "Look a section up by id (NAV.engagement_page from '@/components/nav/nav'), not by its position in NAV_LIST: positions change when sections are reordered."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > Literal:first-child[value=/^\\//]",
+        "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > TemplateLiteral:first-child[quasis.0.value.raw=/^\\//]",
+        "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+      },
+      {
+        "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'][value.value=/^\\//])",
+        "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+      },
+      {
+        "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
+        "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+      },
+      {
+        "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+        "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      // Positional NAV_LIST[<number>] lookups that predate the ban (2026-11-15). They point at the right
+      // sections today; convert each to NAV.<id> and remove the file from this list.
+      "files": [
+        "src/app/connect/Connect.tsx",
+        "src/app/portfolio/_components/Portfolio.tsx",
+        "src/app/processes/Processes.tsx",
+        "src/app/tracking/Tracking.tsx",
+        "src/app/vision/_components/MobileVision.tsx",
+        "src/atoms/nav.ts",
+        "src/components/common/MobileFixedUI.tsx",
+        "src/components/common/MobileScrollButton.tsx",
+        "src/components/common/PCFixedUI.tsx",
+        "src/components/common/ScrollButton.tsx",
+        "src/components/common/VerticalCarousel.tsx",
+        "src/components/gl/ConnectGL.tsx",
+        "src/components/gl/MobileThreeWrapper.tsx",
+        "src/components/gl/MobileVisionGL.tsx",
+        "src/components/gl/VisionGL.tsx",
+        "src/components/gl/model/vision/DragonModel.tsx",
+        "src/hooks/anim/useHomeAnimations.tsx",
+        "src/hooks/useMobileNavigation.tsx"
+      ],
+      // Every rule above except the NAV_LIST one (an override replaces the whole rule).
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > Literal:first-child[value=/^\\//]",
+            "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+          },
+          {
+            "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > TemplateLiteral:first-child[quasis.0.value.raw=/^\\//]",
+            "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+          },
+          {
+            "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'][value.value=/^\\//])",
+            "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+          },
+          {
+            "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
+            "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+          },
+          {
+            "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+            "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
+          }
+        ]
+      }
+    },
+    {
+      // Structured data is the one place raw HTML is allowed: JsonLd escapes every '<'.
+      "files": ["src/components/seo/JsonLd.tsx"],
+      "rules": {
+        "no-restricted-syntax": "off"
+      }
+    }
+  ]
 }

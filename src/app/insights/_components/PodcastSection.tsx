@@ -12,7 +12,6 @@ import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDot
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
-import { useRouter } from 'next/navigation';
 
 export type PodcastItem = {
   id: number;
@@ -71,7 +70,6 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
 
   const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
   const totalCompactPages = Math.ceil(podcastData.length / COMPACT_ITEMS_PER_PAGE);
-  const router = useRouter();
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
@@ -94,9 +92,9 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     setCurrentPage(index);
   };
 
+  // The VIEW ALL link navigates; this only marks the return page so Back restores Insights on the phone.
   const handleViewAllClick = () => {
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push('/podcast');
   };
 
   const renderContent = () => {
@@ -234,7 +232,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
               </a>
             </div>
           </div>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href="/podcast" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content */}
