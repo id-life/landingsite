@@ -25,7 +25,8 @@ export default function ViewAllButton({ href, external = false, onClick, isMobil
       <svg aria-hidden="true" className="absolute inset-0" viewBox="0 0 111 36" fill="none" preserveAspectRatio="none">
         <path d="M10 1H110V35H1V10L10 1Z" fill="var(--color-white)" stroke="var(--color-accent)" strokeWidth="2" />
       </svg>
-      <span className="relative text-accent">VIEW ALL</span>
+      {/* Sentence case (RWD-01: at most 25 % of a screen's Latin text in capitals; labels go first). */}
+      <span className="relative text-accent">View all</span>
       {/* Right chevron arrow */}
       <svg
         aria-hidden="true"

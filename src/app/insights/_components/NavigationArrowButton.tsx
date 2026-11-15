@@ -13,6 +13,7 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
     <button
       onClick={onClick}
       disabled={disabled}
+      aria-label={direction === 'prev' ? 'Previous' : 'Next'}
       className={cn(
         // A 44 px box on coarse pointers (RWD-06); the mouse layout keeps its scaled size.
         'absolute top-1/2 z-10 flex size-7.5 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity tap hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
@@ -43,6 +44,7 @@ export function MobileNavigationArrowButton({ onClick, disabled, direction, clas
     <button
       onClick={onClick}
       disabled={disabled}
+      aria-label={direction === 'prev' ? 'Previous' : 'Next'}
       className={cn(
         'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white tap disabled:bg-tone-50 disabled:fill-tone-350',
         direction === 'prev' ? '-left-5' : '-right-5',

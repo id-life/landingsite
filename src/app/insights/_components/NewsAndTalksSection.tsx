@@ -77,7 +77,8 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
-            <h3 className="line-clamp-1 font-text text-body-sm font-medium text-black">{item.title}</h3>
+            {/* Body, as on the desktop deck: titles run to 60 characters and more (RWD-01's 16 px bar for running text). */}
+            <h3 className="line-clamp-1 font-text text-body font-medium leading-snug text-black">{item.title}</h3>
             <div className="flex w-full flex-col text-left font-text text-caption text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
@@ -145,9 +146,9 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
 // Constants for dynamic calculation (in pixels)
 const NEWS_HEADER_HEIGHT = 44; // Header text height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 148; // Header (44px) + gap (12px) + 1 row of cards (92px)
+const PODCAST_SECTION_HEIGHT = 156; // Header (44px) + gap (12px) + 1 row of cards (100px)
 const SECTION_GAP = 24; // gap-6 between News and Podcast sections
-const NEWS_CARD_ROW_HEIGHT = 130; // Card: image (68px) + content padding + text (62px: a body-sm title, two caption lines)
+const NEWS_CARD_ROW_HEIGHT = 130; // Card: image (68px) + content padding + text (62px: a body title, two caption lines)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
 function calculateMobileItemCount(containerHeight: number, columns: number): number {

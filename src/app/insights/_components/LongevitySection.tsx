@@ -69,7 +69,7 @@ function LongevityCard({ item }: { item: LongevityItem }) {
             alt="Open"
           />
         </div>
-        <p className="line-clamp-1 text-body-sm font-medium mobile:text-caption">{item.description}</p>
+        <p className="line-clamp-1 text-body font-medium">{item.description}</p>
       </div>
     </Root>
   );
@@ -258,6 +258,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
             <div className="flex items-center gap-1.5">
               <a
                 href={WECHAT_LINK}
+                aria-label="WeChat"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
@@ -266,6 +267,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
               </a>
               <a
                 href={REDBOOK_LINK}
+                aria-label="Xiaohongshu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
@@ -274,6 +276,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
               </a>
               <a
                 href={ZHIHU_LINK}
+                aria-label="Zhihu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"

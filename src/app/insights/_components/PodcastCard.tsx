@@ -22,7 +22,8 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
     <div className="podcast-card-clip relative bg-white p-0.5">
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          {/* Type roles (RWD-01): title body (body-sm on the phone deck's two-up cards), description body-sm (caption). */}
+          {/* Type roles (RWD-01): title body (body-sm on the phone deck's two-up cards); the description is running text, so
+              body on every deck (RWD-01's 16 px bar for runs of 60 characters or more). */}
           <h3 className="line-clamp-1 flex-1 font-text text-body font-bold leading-snug mobile:line-clamp-2 mobile:text-body-sm mobile:leading-snug">
             {item.title}
           </h3>
@@ -33,7 +34,7 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
             onClick={handlePlay}
           />
         </div>
-        <p className="line-clamp-1 text-body-sm font-medium mobile:text-caption">{item.description}</p>
+        <p className="line-clamp-1 text-body font-medium">{item.description}</p>
       </div>
     </div>
   );
