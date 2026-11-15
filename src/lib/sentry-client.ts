@@ -9,7 +9,7 @@ import { sentryBaseOptions } from '@/lib/sentry-options';
  *
  * Server code keeps importing '@sentry/nextjs' directly; this module is for client code only.
  */
-type SentrySDK = typeof import('@sentry/nextjs');
+type SentrySDK = typeof import('./sentry-init').Sentry;
 
 let sdk: SentrySDK | null = null;
 let loading: Promise<SentrySDK | null> | null = null;
