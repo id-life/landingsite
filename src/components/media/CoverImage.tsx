@@ -27,8 +27,10 @@ type CoverImageProps = {
 };
 
 /**
- * A cover image that fills its (positioned) parent: resized, modern format, lazy by default.
- * CMS covers are stored at camera resolution; served raw they cost up to 11 MB each.
+ * A cover image that fills its (positioned) parent: lazy by default, with sizes for the browser. Who resizes it is
+ * NEXT_PUBLIC_IMAGE_OPTIMIZER (next.config.mjs, PERF-01): the Next optimizer on self-hosted builds, nothing on Vercel
+ * until the owner approves Vercel Image Optimization or a CMS derivative URL (the cdn loader, src/lib/image-loader.ts).
+ * CMS covers are stored at full upload resolution; served raw they cost up to 11 MB each.
  */
 export default function CoverImage({ src, alt, sizes, className, priority = false }: CoverImageProps) {
   const classes = cn('size-full object-cover', className);

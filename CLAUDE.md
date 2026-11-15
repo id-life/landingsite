@@ -84,6 +84,9 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 - Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
   production and preview, with no Replay or profiling in the shared runtime.
 - Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.
+- Images: `NEXT_PUBLIC_IMAGE_OPTIMIZER` (next.config.mjs) decides who resizes next/image images: `off` on Vercel by
+  default (Vercel Image Optimization is metered and not approved), `next` on self-hosted builds, `cdn` for the CMS
+  cover loader in `src/lib/image-loader.ts`. Never turn the Vercel optimizer on in code; it is the owner's switch.
 
 ## Testing safely
 

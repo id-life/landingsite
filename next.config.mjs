@@ -14,6 +14,17 @@ const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED
   ? process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === '1'
   : deployEnv === 'production';
 
+// PERF-01: who resizes next/image images. Vercel Image Optimization is metered and the owner has not approved it for
+// production, so a Vercel build defaults to 'off' (images served as stored: nothing new is billed). A self-hosted
+// build (UAT, local) defaults to 'next': the Next server resizes images itself, at no cost.
+//   off   images.unoptimized: every next/image serves its source URL, still lazy and sized
+//   next  the built-in optimizer (/_next/image); on Vercel this is Vercel Image Optimization (metered)
+//   cdn   custom loader (src/lib/image-loader.ts): CMS covers through NEXT_PUBLIC_COVER_LOADER_TEMPLATE, the rest as stored
+const imageOptimizer = process.env.NEXT_PUBLIC_IMAGE_OPTIMIZER || (process.env.VERCEL ? 'off' : 'next');
+if (!['off', 'next', 'cdn'].includes(imageOptimizer)) {
+  throw new Error(`NEXT_PUBLIC_IMAGE_OPTIMIZER must be off, next or cdn (got ${imageOptimizer})`);
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -31,6 +42,8 @@ const nextConfig = {
     NEXT_PUBLIC_API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX || 'https://id-platform.id.life',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || 'G-QZFDSGKKYC',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE || 'false',
+    NEXT_PUBLIC_IMAGE_OPTIMIZER: imageOptimizer,
+    NEXT_PUBLIC_COVER_LOADER_TEMPLATE: process.env.NEXT_PUBLIC_COVER_LOADER_TEMPLATE || '',
   },
   images: {
     // CMS covers are uploaded at full camera resolution (single files up to 11 MB); serve them
@@ -45,6 +58,8 @@ const nextConfig = {
     deviceSizes: [390, 640, 828, 1080, 1440, 1920, 2560],
     imageSizes: [64, 128, 256, 384],
     minimumCacheTTL: 2678400,
+    ...(imageOptimizer === 'off' && { unoptimized: true }),
+    ...(imageOptimizer === 'cdn' && { loader: 'custom', loaderFile: './src/lib/image-loader.ts' }),
   },
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));
