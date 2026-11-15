@@ -3,6 +3,7 @@ import { HERO_MODEL_URL } from '@/components/gl/heroAssetUrls';
 import type { EXPERIENCE_ERROR_KINDS } from './events';
 import { advanceStage } from './stage';
 import { track } from './track';
+import { detectGpuTier } from '@/motion/gpuTier';
 
 /**
  * Health of the 3D experience (DATA-06): one experience_ready per document with numeric timings, and one
@@ -33,6 +34,7 @@ export function reportExperienceReady({ failOpen, mountedAt }: { failOpen: boole
       layout: window.matchMedia('(max-width: 768px)').matches ? 'mobile' : 'desktop',
       cache_state: heroCacheState(),
       fail_open: failOpen ? 1 : 0,
+      gpu_tier: probeWebGL() ? detectGpuTier() : 'none',
     },
     { once: 'experience_ready' },
   );

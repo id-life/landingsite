@@ -16,6 +16,18 @@ export default function Model0Out() {
   const { actions } = useAnimations(animations, scene);
   const [resetAnimation, setResetAnimation] = useState<number>(0);
 
+  // MOT-06: hair and lashes are transparent and double-sided, which three.js draws in two passes (back faces, then
+  // front); one pass looks the same on strands this thin and halves their draw calls.
+  useEffect(() => {
+    scene.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        if (/毛发|睫毛/.test(material.name)) material.forceSinglePass = true;
+      }
+    });
+  }, [scene]);
+
   useEffect(() => {
     const startAnimationLoop = () => {
       if (animationLoopRef.current) {

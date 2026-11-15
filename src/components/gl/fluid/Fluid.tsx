@@ -46,7 +46,8 @@ export const Fluid = ({
   densityDissipation = OPTS.densityDissipation,
   velocityDissipation = OPTS.velocityDissipation,
   blendFunction = BlendFunction.NORMAL,
-}: Props) => {
+  simRes = OPTS.simRes,
+}: Props & { simRes?: number }) => {
   const size = useThree((three) => three.size);
   const gl = useThree((three) => three.gl);
 
@@ -56,7 +57,7 @@ export const Fluid = ({
   const meshRef = useRef<Mesh>(null);
   const postRef = useRef<ShaderPass>(null);
 
-  const FBOs = useFBOs();
+  const FBOs = useFBOs(simRes);
   const materials = useMaterials();
   const { splatStack } = usePointer({ force });
 

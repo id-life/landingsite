@@ -29,6 +29,7 @@ import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import FrameDriver from '@/components/gl/FrameDriver';
+import { useGpuTier } from '@/motion/gpuTier';
 import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
@@ -36,6 +37,9 @@ export default function TwinThreeWrapper() {
   // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
   // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
   const deferredReady = useDeferredAssets('twin');
+  // MOT-06: the twin renders its models straight to the screen (no composer), so it keeps its depth buffer; the tier
+  // caps its pixel ratio and gives antialiasing to the high tier only.
+  const { tier, budget } = useGpuTier();
   const warm = useDeferredWarm('twin');
   useEffect(() => {
     if (!warm) return;
@@ -231,8 +235,10 @@ export default function TwinThreeWrapper() {
             id="model-canvas"
             frameloop="never"
             onCreated={onCanvasCreated('twin')}
-            dpr={[1, 2]}
-            gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+            dpr={[1, budget.dprCap]}
+            data-tier={tier}
+            data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
+            gl={{ alpha: true, antialias: tier === 'high', powerPreference: budget.powerPreference }}
             style={{
               pointerEvents: 'none',
               position: 'absolute',

@@ -1,17 +1,16 @@
 import ConnectGL from '@/components/gl/ConnectGL';
 import VisionGL from '@/components/gl/VisionGL';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { PerspectiveCamera, Preload, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
 import { markHeroSceneFailed } from '@/hooks/useExperienceMode';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { HeroAssetsGate, HeroReady, preloadHeroAssets } from '@/components/gl/heroAssets';
 import dynamic from 'next/dynamic';
 import FrameDriver from '@/components/gl/FrameDriver';
+import { AdaptiveDprMonitor, useAdaptiveDpr } from '@/components/gl/AdaptiveDpr';
+import { useGpuTier } from '@/motion/gpuTier';
 
 // The performance overlay is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
 // production build drops this branch and the overlay never reaches the bundle.
@@ -21,13 +20,11 @@ const PrefHook =
 export default function ThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
   preloadHeroAssets('desktop');
-  const isMobile = useIsMobile();
-  const isMounted = useIsMounted();
-
-  const devicePixelRatio = useMemo(() => {
-    if (!isMounted) return 1;
-    return typeof window !== 'undefined' ? window.devicePixelRatio : 1;
-  }, [isMounted]);
+  // MOT-06: the tier sets the pixel ratio cap, MSAA, glass samples and fluid grid; PerformanceMonitor steps the pixel
+  // ratio down when the canvas cannot hold its frame rate. The composer does the antialiasing, so the canvas itself
+  // has no antialias, stencil or depth buffer (the composer's render target has its own depth).
+  const { tier, budget } = useGpuTier();
+  const { dpr, decline, incline } = useAdaptiveDpr(budget);
 
   return (
     <GLBoundary canvas="vision">
@@ -36,15 +33,13 @@ export default function ThreeWrapper() {
         frameloop="never"
         onCreated={onCanvasCreated('vision')}
         style={{ position: 'fixed', zIndex: 1 }}
-        gl={{
-          alpha: true,
-          antialias: !isMobile,
-          powerPreference: 'high-performance',
-          pixelRatio: Math.min(devicePixelRatio, isMobile ? 1.5 : 2),
-        }}
-        dpr={Math.min(devicePixelRatio, isMobile ? 1.5 : 2)}
+        data-tier={tier}
+        data-dpr={dpr}
+        gl={{ alpha: true, antialias: false, stencil: false, depth: false, powerPreference: budget.powerPreference }}
+        dpr={dpr}
       >
         <FrameDriver />
+        <AdaptiveDprMonitor decline={decline} incline={incline} />
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
@@ -61,8 +56,8 @@ export default function ThreeWrapper() {
         <ModelBoundary canvas="vision" model="connect">
           <ConnectGL />
         </ModelBoundary>
-        <EffectComposer>
-          <Fluid />
+        <EffectComposer multisampling={budget.multisampling} stencilBuffer={false}>
+          <>{budget.fluidSimRes !== null && <Fluid simRes={budget.fluidSimRes} />}</>
         </EffectComposer>
       </Canvas>
     </GLBoundary>

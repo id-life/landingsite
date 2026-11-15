@@ -13,12 +13,7 @@ export const HERO_TEXTURE_URLS = [
 ] as const;
 
 /** Wordmark SVGs of the phone tree (must match the src props in MobileCenterLogo.tsx). */
-export const HERO_PHONE_SVG_URLS = [
-  '/svgs/logo-en.svg',
-  '/svgs/logo-cn.svg',
-  '/svgs/main-description.svg',
-  '/svgs/main-description-cn.svg',
-] as const;
+export const HERO_PHONE_SVG_URLS = ['/svgs/logo-en.svg', '/svgs/main-description.svg'] as const;
 
 /** Same breakpoint as HomeEntry (useMediaQuery maxWidth 768): which tree, so which assets. */
 export const PHONE_MEDIA = '(max-width: 768px)';

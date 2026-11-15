@@ -1,5 +1,6 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
-import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { HERO_GLASS } from '@/components/gl/config/visionGLConfig';
+import { TRANSMISSION_RESOLUTION, useGpuTier } from '@/motion/gpuTier';
 import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
 import { getElementOffsetTop } from '@/utils';
@@ -34,7 +35,10 @@ export function useOptimizedGLTF() {
 }
 
 export default function DragonModel() {
-  const { events, size, clock } = useThree();
+  const { events, size } = useThree();
+  const { budget } = useGpuTier();
+  // Phase of the idle swing: it advances only while the dragon swings, so a drag pauses it (clock.stop() used to).
+  const swingPhaseRef = useRef(0);
   const { geometry } = useOptimizedGLTF();
   const modelRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
@@ -51,7 +55,16 @@ export default function DragonModel() {
   uiAlreadyShownRef.current = uiAlreadyShown;
   const fixedUIHasTriggered = useRef(false);
   const offsetYRef = useRef<number>(0);
-  const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
+  // One fixed glass look; samples from the tier (MOT-06), one buffer size on both trees.
+  const materialConfig = useMemo(
+    () => ({
+      resolution: TRANSMISSION_RESOLUTION,
+      samples: budget.transmissionSamples,
+      background: backgroundRef.current,
+      ...HERO_GLASS,
+    }),
+    [budget.transmissionSamples],
+  );
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
   const { contextSafe } = useGSAP();
   const pathname = usePathname();
@@ -73,13 +86,14 @@ export default function DragonModel() {
   });
 
   // Frame update loop
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
     if (!modelRef.current || !smootherRef.current) return;
     const time = clock.elapsedTime;
 
     // Auto swing animation
     if (autoSwingRef.current) {
-      modelRef.current.rotation.y = rotationRef.current.y + Math.sin(clock.elapsedTime) * AUTO_SWING_AMPLITUDE;
+      swingPhaseRef.current += delta;
+      modelRef.current.rotation.y = rotationRef.current.y + Math.sin(swingPhaseRef.current) * AUTO_SWING_AMPLITUDE;
     }
 
     // Background color based on scroll
@@ -114,7 +128,6 @@ export default function DragonModel() {
           events.connected.style.cursor = 'grabbing';
           modelRef.current.rotation.y = rotationRef.current.y + x / DRAG_SENSITIVITY;
           modelRef.current.rotation.x = rotationRef.current.x + y / DRAG_SENSITIVITY;
-          clock.stop();
         } else {
           // End dragging - recover to normal position
           autoSwingRef.current = false;
@@ -134,7 +147,6 @@ export default function DragonModel() {
             onComplete: () => {
               autoSwingRef.current = true;
               isRecoveringRef.current = false;
-              clock.start();
             },
           });
         }
