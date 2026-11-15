@@ -103,7 +103,7 @@ export function WorldMapDotPoint({
           isActive={isActive}
         />
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-oxanium text-base/6 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex flex-col items-start whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white">
           {label ? `${label}, ` : ''}
           {country}
           <AnimatePresence>
@@ -223,7 +223,7 @@ export function WorldMapDotContent({
           {/* 移出判断热区 */}
           <div
             className={cn(
-              'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium',
+              'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[20.25rem] origin-top-left flex-col items-center gap-4 font-display',
               contentTransformClass,
             )}
             onMouseLeave={handleContentMouseLeave}

@@ -74,7 +74,7 @@ const MobileSpectrumSponsorPage = memo(
         {/* Header */}
         <div className="mb-8 flex items-center gap-2">
           {cloneElement(icon, { className: 'size-6 shrink-0 fill-white' })}
-          <h4 className="font-oxanium text-base font-semibold">Proudly Supporting</h4>
+          <h4 className="font-display text-base font-semibold">Proudly Supporting</h4>
           <span className="bilingual-font text-sm font-bold">本机构赞助支持</span>
         </div>
 

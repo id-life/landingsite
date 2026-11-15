@@ -32,7 +32,7 @@ export default function YouTubeThumbnail({
         sizes={sizes}
         className="transition-all duration-300 hover:scale-105"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue/10 to-purple/10" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-data-sky/10 to-data-purple/10" />
     </div>
   );
 }

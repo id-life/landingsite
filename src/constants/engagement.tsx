@@ -7,6 +7,8 @@ import ThailandSVG from '@/../public/svgs/engagement/thailand.svg?component';
 import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
 import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
 
+import { color } from '@/styles/tokens';
+
 // pulse animate config
 export type PulseConfig = {
   svgSize: number; // SVG view size
@@ -37,7 +39,7 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
     toRadius: 24,
     duration: 1.5,
   },
-  color: '#C11111',
+  color: color.accent,
 };
 
 // ============================================================================

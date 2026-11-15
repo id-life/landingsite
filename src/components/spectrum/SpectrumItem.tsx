@@ -46,7 +46,7 @@ export const SpectrumLink = memo(
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
         <p
           className={cn(
-            'spectrum-link-text group relative whitespace-nowrap font-poppins text-xs/5 font-medium capitalize',
+            'spectrum-link-text group relative whitespace-nowrap font-text text-xs/5 font-medium capitalize',
             hasLink &&
               'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
             labelClassName,
@@ -55,7 +55,7 @@ export const SpectrumLink = memo(
           {label}
         </p>
         {isComingSoon && (
-          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-xs capitalize text-white/50 backdrop-blur-2xl">
             coming soon
           </span>
         )}
@@ -229,7 +229,7 @@ const SpectrumItem = memo(
                   <motion.button
                     onClick={handleMoreClick}
                     className={cn(
-                      'mt-1 flex items-center gap-1 font-poppins text-xs/5 font-medium text-blue opacity-90 transition-colors hover:text-blue/80 hover:opacity-100',
+                      'mt-1 flex items-center gap-1 font-text text-xs/5 font-medium text-data-sky opacity-90 transition-colors hover:text-data-sky/80 hover:opacity-100',
                       isSponsor && 'mt-4 self-center',
                     )}
                   >

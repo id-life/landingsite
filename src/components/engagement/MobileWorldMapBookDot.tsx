@@ -86,7 +86,7 @@ export function MobileWorldMapBookDotPoint({
         {/* 标签 */}
         <motion.p
           className={cn(
-            'flex items-center whitespace-nowrap font-oxanium',
+            'flex items-center whitespace-nowrap font-display',
             MOBILE_MAP_SCALE.labelTextClass,
             'font-semibold capitalize text-white',
           )}
@@ -102,11 +102,11 @@ export function MobileWorldMapBookDotPoint({
                   'relative flex items-center gap-0.5 rounded',
                   MOBILE_MAP_SCALE.badgePaddingClass,
                   MOBILE_MAP_SCALE.badgeTextClass,
-                  'font-semibold text-blue',
+                  'font-semibold text-data-sky',
                 )}
               >
-                <BadgeBlurBg className="bg-blue/20" />
-                <BookSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-cyan')} />
+                <BadgeBlurBg className="bg-data-sky/20" />
+                <BookSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-cyan')} />
                 Translation
               </motion.span>
             )}
@@ -160,7 +160,7 @@ export function MobileWorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-0 top-0 flex w-[9rem] flex-col items-center overflow-hidden pt-4 font-oxanium')}
+              className={cn('absolute left-0 top-0 flex w-[9rem] flex-col items-center overflow-hidden pt-4 font-display')}
             >
               <VideoWithPoster
                 coverUrl={coverUrl}
@@ -187,11 +187,13 @@ export function MobileWorldMapBookDotContent({
               >
                 <h4 className="text-xs/4 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
-                  <LinkSVG className={cn('size-2 fill-blue', { 'fill-gray-400': !link })} />
-                  <p className={cn('ml-1 whitespace-nowrap text-[8px]/3 font-medium text-blue', { 'text-gray-400': !link })}>
+                  <LinkSVG className={cn('size-2 fill-data-sky', { 'fill-tone-400': !link })} />
+                  <p
+                    className={cn('ml-1 whitespace-nowrap text-[8px]/3 font-medium text-data-sky', { 'text-tone-400': !link })}
+                  >
                     {desc}
                   </p>
-                  <ArrowSVG className={cn('size-2 -rotate-90 fill-blue', { 'fill-gray-400': !link })} />
+                  <ArrowSVG className={cn('size-2 -rotate-90 fill-data-sky', { 'fill-tone-400': !link })} />
                 </div>
               </motion.div>
             </motion.div>

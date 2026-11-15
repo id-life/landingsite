@@ -191,13 +191,13 @@ export default function SwitchModel() {
           className={cn(
             'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:8px] [--corner-border-width:2.5px]',
             {
-              'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
+              'before:border-accent after:border-accent': currentModel === PredictionModel.M0,
             },
           )}
         >
           <span
             className={cn('absolute inset-0 -z-10', {
-              'before:!border-red-600 after:!border-red-600': currentModel === PredictionModel.M0,
+              'before:!border-accent after:!border-accent': currentModel === PredictionModel.M0,
             })}
           ></span>
         </motion.div>
@@ -206,7 +206,7 @@ export default function SwitchModel() {
         )}
         <div className="relative size-[56px]">
           <img src="/imgs/twin/avatar-model0.png" className="size-full object-contain" alt="" />
-          <div className="flex-center absolute inset-0 size-[56px] bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+          <div className="flex-center absolute inset-0 size-[56px] bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             ORG
           </div>
         </div>
@@ -224,28 +224,28 @@ export default function SwitchModel() {
           className={cn(
             'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:8px] [--corner-border-width:2.5px]',
             {
-              'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
+              'before:border-accent after:border-accent': currentModel !== PredictionModel.M0,
             },
           )}
         >
           <span
             className={cn('absolute inset-0 -z-10', {
-              'before:!border-red-600 after:!border-red-600': currentModel !== PredictionModel.M0,
+              'before:!border-accent after:!border-accent': currentModel !== PredictionModel.M0,
             })}
           ></span>
         </motion.div>
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M1 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M1)}
           initial={{ scale: 1 }}
           animate={avatar1Controls}
         >
           <img src="/imgs/twin/avatar-model1.png" alt="" className="size-[56px] object-contain" />
-          {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
-          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+          {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C01
           </div>
           {currentModel === PredictionModel.M1 && (
@@ -255,15 +255,15 @@ export default function SwitchModel() {
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M2 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M2 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M2)}
           initial={{ scale: 1 }}
           animate={avatar2Controls}
         >
           <img src="/imgs/twin/avatar-model2.png" alt="" className="size-[56px] object-contain" />
-          {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
-          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+          {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C02
           </div>
           {currentModel === PredictionModel.M2 && (
@@ -273,15 +273,15 @@ export default function SwitchModel() {
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M3 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M3 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M3)}
           initial={{ scale: 1 }}
           animate={avatar3Controls}
         >
           <img src="/imgs/twin/avatar-model3.png" alt="" className="size-[56px] object-contain" />
-          {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
-          <div className="flex-center absolute inset-0 left-0 top-0 bg-red-600/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
+          {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
+          <div className="flex-center absolute inset-0 left-0 top-0 bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100">
             C03
           </div>
           {currentModel === PredictionModel.M3 && (

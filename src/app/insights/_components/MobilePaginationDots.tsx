@@ -17,7 +17,7 @@ export default function MobilePaginationDots({ totalPages, currentPage, onPageCh
           onClick={() => onPageChange(index)}
           className={cn('h-0.5 w-6 transition-all duration-300', {
             'bg-foreground': index === currentPage,
-            'bg-gray-250': index !== currentPage,
+            'bg-tone-250': index !== currentPage,
           })}
         />
       ))}

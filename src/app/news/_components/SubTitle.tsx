@@ -19,9 +19,9 @@ export default function SubTitle() {
         src="/imgs/news/news-logo.webp"
         alt=""
       />
-      <h2 className="relative z-10 text-4xl font-bold uppercase text-red-600 mobile:text-lg/8">Join our longevity circle</h2>
+      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8">Join our longevity circle</h2>
       <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5">
-        For <span className="text-red-600">priority</span> access to pioneer research
+        For <span className="text-accent">priority</span> access to pioneer research
       </p>
       <button
         type="button"
@@ -32,12 +32,12 @@ export default function SubTitle() {
         onClick={handleSubscribeClick}
       >
         <span className="group relative flex h-[3.125rem] w-[12.25rem] items-center justify-between px-5 mobile:h-10 mobile:w-[9.25rem] mobile:px-3">
-          <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-red-600" />
-          <span className="flex-center gap-2 text-base font-semibold text-red-600 mobile:gap-1.5 mobile:text-sm/4">
-            <SubscribeSVG className="w-5 fill-red-600 mobile:w-4" />
+          <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-accent" />
+          <span className="flex-center gap-2 text-base font-semibold text-accent mobile:gap-1.5 mobile:text-sm/4">
+            <SubscribeSVG className="w-5 fill-accent mobile:w-4" />
             SUBSCRIBE
           </span>
-          <RightSVG className="fill-red-600 stroke-red-600" />
+          <RightSVG className="fill-accent stroke-accent" />
         </span>
       </button>
     </div>

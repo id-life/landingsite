@@ -48,12 +48,12 @@ export default function MobileNav() {
           onClick={onSubscribeClick}
           className={cn(
             'group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
-            { 'stroke-red-600 text-red-600': isSubscribeShow },
+            { 'stroke-accent text-accent': isSubscribeShow },
           )}
         >
           <SubscribeBorderSVG
             className={cn('absolute left-0 top-0 size-full stroke-foreground duration-300', {
-              'stroke-red-600': isSubscribeShow,
+              'stroke-accent': isSubscribeShow,
             })}
           />
           Subscribe

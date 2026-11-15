@@ -34,7 +34,7 @@ export default function SwitchSkin() {
           <SkinSVG
             className={clsx(
               'h-[42px] w-[42px] animate-scale',
-              currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+              currentModelType === ModelType.Skin ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
             )}
           />
         </div>
@@ -42,7 +42,7 @@ export default function SwitchSkin() {
           <AnatomySVG
             className={clsx(
               'h-[42px] w-[42px] animate-scale',
-              currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+              currentModelType === ModelType.Anatomy ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
             )}
           />
         </div>

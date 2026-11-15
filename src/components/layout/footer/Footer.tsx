@@ -140,7 +140,7 @@ export default function Footer() {
               >
                 <CloseSVG aria-hidden="true" className="size-5 stroke-[var(--foreground)] stroke-2" />
               </button>
-              <h3 id={titleId} className="flex items-center justify-between pr-8 font-oxanium text-3xl font-bold">
+              <h3 id={titleId} className="flex items-center justify-between pr-8 font-display text-3xl font-bold">
                 SUBSCRIBE
               </h3>
               <form
@@ -153,7 +153,7 @@ export default function Footer() {
                   <span
                     id="popup-subscribe-error"
                     role="alert"
-                    className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600"
+                    className="absolute -top-6 font-text text-xs/5 font-semibold text-accent"
                   >
                     {errors.EMAIL?.message}
                   </span>
@@ -163,14 +163,14 @@ export default function Footer() {
                   <div
                     className={cn(
                       'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
-                      errors.EMAIL && 'border-red-600 opacity-100',
+                      errors.EMAIL && 'border-accent opacity-100',
                     )}
                   />
                   <label htmlFor={emailId} className="mr-2 shrink-0 text-xs/5 font-semibold opacity-70">
                     Email
                   </label>
                   <input
-                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374]"
+                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600"
                     id={emailId}
                     placeholder="Please enter email"
                     type="email"
@@ -184,14 +184,14 @@ export default function Footer() {
                     ref={emailMergedRef}
                   />
                 </div>
-                <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
+                <div className="footer-submit-clip relative w-[10.5rem] bg-accent text-white mobile:w-[5.625rem]">
                   {isSubmitting ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent">
                       <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                     </div>
                   ) : null}
                   {isSubmitted ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent font-bold">
                       <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                     </div>
                   ) : null}

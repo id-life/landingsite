@@ -177,13 +177,13 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
-      <div className="font-oxanium text-3xl font-bold tracking-normal">BE PART OF IT</div>
+      <div className="font-display text-3xl font-bold tracking-normal">BE PART OF IT</div>
 
       {/* submit msg */}
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-[#148D02] px-5 py-1 text-center font-poppins text-xs/5 font-semibold tracking-normal text-white opacity-0',
+          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-data-leaf px-5 py-1 text-center font-text text-xs/5 font-semibold tracking-normal text-white opacity-0',
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2',
         )}
       >
@@ -243,15 +243,15 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         </div>
 
         <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
-          <div className="font-poppins text-xs font-medium tracking-normal text-black/50 mobile:mt-3">
+          <div className="font-text text-xs font-medium tracking-normal text-black/50 mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"
               target="_blank"
               onClick={handleLinkClick}
               className={cn(
-                'relative text-red-600',
-                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-red-600 after:transition after:duration-300 hover:after:scale-x-100',
+                'relative text-accent',
+                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition after:duration-300 hover:after:scale-x-100',
               )}
             >
               https://agingbiotech.info/people/
@@ -261,18 +261,18 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
           <div
             className={cn(
-              'footer-submit-clip relative mt-1.5 w-[10.5rem] flex-shrink-0 bg-red-600 text-white mobile:w-[5.625rem]',
+              'footer-submit-clip relative mt-1.5 w-[10.5rem] flex-shrink-0 bg-accent text-white mobile:w-[5.625rem]',
               'mobile:mt-3.5 mobile:w-full',
             )}
             onPointerDown={() => (isSubmittingRef.current = true)}
           >
             {isMutationPending ? (
-              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent">
                 <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
               </div>
             ) : null}
             {isMutationSuccess ? (
-              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+              <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent font-bold">
                 <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
               </div>
             ) : null}

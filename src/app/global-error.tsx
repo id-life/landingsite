@@ -3,6 +3,8 @@
 import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
 import ErrorState, { ERROR_LINKS, ERROR_MESSAGE, TryAgainButton } from '@/components/common/ErrorState';
+import { color } from '@/styles/tokens';
+
 import '@/styles/globals.css';
 
 // Replaces the root layout when that fails, so it brings its own <html lang>, the site stylesheet and the
@@ -18,8 +20,8 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
         style={{
           margin: 0,
           minHeight: '100vh',
-          background: 'linear-gradient(90deg, #ffffff 0%, #e5ebf5 50%, #cbd6ea 100%)',
-          color: '#000000',
+          background: `linear-gradient(90deg, ${color.white} 0%, ${color['scene-sky']} 50%, ${color['scene-haze']} 100%)`,
+          color: color.black,
           fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif',
         }}

@@ -5,6 +5,8 @@ import WaveSurfer from 'wavesurfer.js';
 import { AudioDataItem } from '@/apis/types';
 import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
 
+import { color } from '@/styles/tokens';
+
 type DesktopMusicItemProps = {
   onClick?: () => void;
   data: AudioDataItem;
@@ -26,8 +28,8 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
     const wavesurfer = WaveSurfer.create({
       container: containerRef.current,
       height: 'auto',
-      waveColor: '#57595C',
-      progressColor: '#FF1717',
+      waveColor: color['tone-650'],
+      progressColor: color.accent,
       cursorWidth: 0,
       barWidth: 2,
       barGap: 2,
@@ -64,8 +66,8 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
         <div
           onClick={onClick}
           className={clsx(
-            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-red-800',
-            isCurrent && 'text-red-800',
+            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-accent',
+            isCurrent && 'text-accent',
           )}
         >
           {data.title} - {data.artist}

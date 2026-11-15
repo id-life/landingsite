@@ -72,7 +72,7 @@ export default function SwitchSkin() {
           <SkinSVG
             className={clsx(
               'w-7',
-              currentModelType === ModelType.Skin ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+              currentModelType === ModelType.Skin ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
             )}
           />
         </div>
@@ -80,7 +80,7 @@ export default function SwitchSkin() {
           <AnatomySVG
             className={clsx(
               'w-7',
-              currentModelType === ModelType.Anatomy ? 'fill-red-600 stroke-red-600' : 'fill-black stroke-black',
+              currentModelType === ModelType.Anatomy ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
             )}
           />
         </div>

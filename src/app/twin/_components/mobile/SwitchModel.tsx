@@ -208,13 +208,13 @@ export default function SwitchModel() {
           className={cn(
             'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1.5px]',
             {
-              'before:border-red-600 after:border-red-600': currentModel === PredictionModel.M0,
+              'before:border-accent after:border-accent': currentModel === PredictionModel.M0,
             },
           )}
         >
           <span
             className={cn('absolute inset-0 -z-10', {
-              'before:!border-red-600 after:!border-red-600': currentModel === PredictionModel.M0,
+              'before:!border-accent after:!border-accent': currentModel === PredictionModel.M0,
             })}
           ></span>
         </motion.div>
@@ -231,27 +231,27 @@ export default function SwitchModel() {
           className={cn(
             'corner-button absolute inset-0 -z-10 [--corner-border-color:#000] [--corner-border-size:6px] [--corner-border-width:1.5px]',
             {
-              'before:border-red-600 after:border-red-600': currentModel !== PredictionModel.M0,
+              'before:border-accent after:border-accent': currentModel !== PredictionModel.M0,
             },
           )}
         >
           <span
             className={cn('absolute inset-0 -z-10', {
-              'before:!border-red-600 after:!border-red-600': currentModel !== PredictionModel.M0,
+              'before:!border-accent after:!border-accent': currentModel !== PredictionModel.M0,
             })}
           ></span>
         </motion.div>
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M1 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M1 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M1)}
           initial={{ scale: 1 }}
           animate={avatar1Controls}
         >
           <img src="/imgs/twin/avatar-model1.png" alt="" />
-          {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M1 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
           {currentModel === PredictionModel.M1 && (
             <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
           )}
@@ -259,14 +259,14 @@ export default function SwitchModel() {
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M2 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M2 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M2)}
           initial={{ scale: 1 }}
           animate={avatar2Controls}
         >
           <img src="/imgs/twin/avatar-model2.png" alt="" />
-          {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M2 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
           {currentModel === PredictionModel.M2 && (
             <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
           )}
@@ -274,14 +274,14 @@ export default function SwitchModel() {
         <motion.div
           className={clsx(
             'relative origin-center cursor-pointer',
-            currentModel === PredictionModel.M3 ? 'bg-[#D7BAC4]' : 'bg-[#B0B6C1]',
+            currentModel === PredictionModel.M3 ? 'bg-twin-rose' : 'bg-twin-steel',
           )}
           onClick={() => handleSwitchModel(PredictionModel.M3)}
           initial={{ scale: 1 }}
           animate={avatar3Controls}
         >
           <img src="/imgs/twin/avatar-model3.png" alt="" />
-          {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-red-600" />}
+          {currentModel === PredictionModel.M3 && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
           {currentModel === PredictionModel.M3 && (
             <SelectSVG className="absolute -right-6 bottom-0 top-0 my-auto animate-move-right" />
           )}

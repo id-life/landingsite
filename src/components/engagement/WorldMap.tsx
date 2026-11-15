@@ -17,6 +17,8 @@ import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot'
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 
+import { color } from '@/styles/tokens';
+
 const svgViewBox = {
   w: 756,
   h: 360,
@@ -35,7 +37,7 @@ export const WorldMap = memo(function WorldMapComponent({
   regionDots,
   bookDots,
   sponsorDots,
-  lineColor = '#C11111',
+  lineColor = color.accent,
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);

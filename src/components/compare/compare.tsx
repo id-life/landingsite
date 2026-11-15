@@ -8,6 +8,8 @@ import gsap from 'gsap';
 import Image from 'next/image';
 import { reportMediaError } from '@/lib/report';
 
+import { color } from '@/styles/tokens';
+
 interface CompareProps {
   firstImage?: string;
   secondImage?: string;
@@ -291,7 +293,7 @@ export const Compare = ({
       {isLoading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center">
           <div className="relative h-12 w-44">
-            <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-red-600">
+            <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-accent">
               Loading...
             </div>
             <div
@@ -301,7 +303,7 @@ export const Compare = ({
             >
               Loading...
             </div>
-            <div ref={fillRef} className="absolute z-20 h-full w-0 bg-red-600"></div>
+            <div ref={fillRef} className="absolute z-20 h-full w-0 bg-accent"></div>
           </div>
         </div>
       )}
@@ -309,7 +311,7 @@ export const Compare = ({
       {!isLoading && (
         <AnimatePresence initial={false}>
           <motion.div
-            className="absolute top-0 z-30 m-auto h-full w-[2px] bg-gradient-to-b from-transparent from-[15%] via-[#c11111] to-transparent to-[95%]"
+            className="absolute top-0 z-30 m-auto h-full w-[2px] bg-gradient-to-b from-transparent from-[15%] via-accent to-transparent to-[95%]"
             style={{
               left: `${sliderXPercent}%`,
               top: '0',
@@ -317,8 +319,8 @@ export const Compare = ({
             }}
             transition={{ duration: 0 }}
           >
-            <div className="absolute left-0 top-[43%] z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
-            <div className="absolute left-0 top-[43%] z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-[#c11111] via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
+            <div className="absolute left-0 top-[43%] z-20 h-full w-36 -translate-y-1/2 bg-gradient-to-r from-accent via-transparent to-transparent opacity-50 [mask-image:radial-gradient(100px_at_left,white,transparent)]" />
+            <div className="absolute left-0 top-[43%] z-10 h-1/2 w-10 -translate-y-1/2 bg-gradient-to-r from-accent via-transparent to-transparent opacity-100 [mask-image:radial-gradient(50px_at_left,white,transparent)]" />
             <div className="absolute -right-10 top-[43%] h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]">
               <MemoizedSparklesCore
                 background="transparent"
@@ -326,7 +328,7 @@ export const Compare = ({
                 maxSize={1}
                 particleDensity={1200}
                 className="h-full w-full"
-                particleColor="#c11111"
+                particleColor={color.accent}
               />
             </div>
             {showHandlebar && (

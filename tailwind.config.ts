@@ -1,4 +1,11 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
+import { color, accentTint, typeRoles, grid } from './src/styles/tokens';
+
+// Colours, font roles, type roles and the grid come from src/styles/tokens.ts (VIS-02). theme.colors REPLACES
+// Tailwind's palette (theme.extend would keep it: red-600 would silently fall back to #dc2626), so a colour that is
+// not a token has no utility. The markdown palette (md-*) is CSS-only.
+const tokenColors = Object.fromEntries(Object.entries(color).filter(([k]) => !k.startsWith('md-')));
 
 const config: Config = {
   content: [
@@ -9,6 +16,16 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      inherit: 'inherit',
+      ...tokenColors,
+      'accent-tint': accentTint,
+      // The section theme, tweened per section (tokens.ts themes).
+      background: 'var(--background)',
+      foreground: 'var(--foreground)',
+    },
     extend: {
       screens: {
         mobile: { max: '768px' },
@@ -19,13 +36,19 @@ const config: Config = {
         desktop2k: { min: '1920px' },
         ipad: { min: '500px', max: '768px' },
       },
+      // Font roles (tokens.ts fontRoles): components name a role, never a typeface. FONT_PALETTE picks the faces.
       fontFamily: {
-        xirod: ['var(--font-xirod)'],
-        poppins: ['var(--font-poppins)'],
-        migrena: ['var(--font-migrena)'],
-        tt: ['var(--font-tt)'],
-        oxanium: ['var(--font-oxanium)'],
-        'source-han-sans-cn': ['var(--font-source-han-sans-cn)'],
+        display: ['var(--font-role-display)'],
+        text: ['var(--font-role-text)'],
+        brand: ['var(--font-role-brand)'],
+        'brand-text': ['var(--font-role-brand-text)'],
+        title: ['var(--font-role-title)'],
+        button: ['var(--font-role-button)'],
+        menu: ['var(--font-role-menu)'],
+      },
+      maxWidth: {
+        measure: grid.measure,
+        grid: grid.maxWidth,
       },
       spacing: {
         0.75: '0.1875rem',
@@ -77,57 +100,6 @@ const config: Config = {
         136: '34rem',
         205: '51.25rem',
       },
-      colors: {
-        gray: {
-          200: '#D4D4D4',
-          250: '#B8B8B8',
-          350: '#999999',
-          400: '#9C979D',
-          450: '#797A7D',
-          500: '#7b7b7d',
-          550: '#666666',
-          700: '#444444',
-          750: '#2E2F31',
-          760: '#2F2F2F',
-          770: '#2b2b2b',
-          800: '#222222',
-          900: '#1c1c1c',
-          950: '#121212',
-        },
-        orange: {
-          DEFAULT: '#FFE500',
-          600: '#FF613A',
-        },
-        red: {
-          500: '#BB1212',
-          600: '#C11111',
-          800: '#FF1717',
-        },
-        green: {
-          DEFAULT: '#1EDB8C',
-          600: '#318135',
-        },
-        yellow: {
-          800: '#FFD12C',
-        },
-        cyan: {
-          DEFAULT: '#00DDFF',
-        },
-        blue: {
-          DEFAULT: '#43BBFF',
-          600: '#3A51FF',
-        },
-        purple: {
-          DEFAULT: '#CE3AFF',
-        },
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        'audio-player': 'var(--audio-player)',
-        'audio-content': 'var(--audio-content)',
-        'audio-border': 'var(--audio-border)',
-        'audio-order': 'var(--audio-order)',
-        'audio-desc': 'var(--audio-desc)',
-      },
       lineHeight: {
         3.5: '0.875rem',
         4.5: '1.125rem',
@@ -160,6 +132,10 @@ const config: Config = {
       },
       fontSize: {
         ss: '0.625rem',
+        // The nine type roles (tokens.ts typeRoles; guide: docs/design-tokens.md).
+        ...Object.fromEntries(
+          Object.keys(typeRoles).map((k) => [k, [`var(--type-${k})`, { lineHeight: `var(--type-${k}-lh)` }]]),
+        ),
         // Reading sizes of the content pages (news, podcast), all derived from --read-body (globals.css): 16 px body
         // on phones, growing about 1.3x from 1440 to 2560 px. Captions stay at 12 px or more.
         read: ['var(--read-body)', { lineHeight: '1.7' }],
@@ -169,6 +145,26 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  // Tailwind's own .container (breakpoint max-widths) is replaced by the grid container below.
+  corePlugins: { container: false },
+  plugins: [
+    // The page grid (tokens.ts grid): .container = 1280 px max content width with fluid margins; .grid-12 = 12
+    // columns with 24 px gutters. Both in px and vw, so they hold under the experience's viewport-scaled rem.
+    plugin(({ addComponents }) => {
+      addComponents({
+        '.container': {
+          width: '100%',
+          maxWidth: `calc(var(--grid-max) + 2 * var(--grid-margin))`,
+          marginInline: 'auto',
+          paddingInline: 'var(--grid-margin)',
+        },
+        '.grid-12': {
+          display: 'grid',
+          gridTemplateColumns: 'repeat(var(--grid-columns), minmax(0, 1fr))',
+          columnGap: 'var(--grid-gutter)',
+        },
+      });
+    }),
+  ],
 };
 export default config;

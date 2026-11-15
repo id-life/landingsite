@@ -89,13 +89,13 @@ function MobileNavDialog() {
               className={cn(
                 'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
                 {
-                  'text-red-600': subsOpen,
+                  'text-accent': subsOpen,
                 },
               )}
             >
               <SubscribeBorderSVG
                 className={cn('absolute left-0 top-0 size-full stroke-white duration-300', {
-                  'stroke-red-600': subsOpen,
+                  'stroke-accent': subsOpen,
                 })}
               />
               Subscribe
@@ -104,7 +104,7 @@ function MobileNavDialog() {
               <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
             </button>
           </div>
-          <nav aria-label="Sections" className="mt-16 font-tt">
+          <nav aria-label="Sections" className="mt-16 font-menu">
             {NAV_LIST.map((item) => (
               <a
                 href={item.href}

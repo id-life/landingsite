@@ -127,9 +127,9 @@ export function ConferenceBadges({
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 0.83 }}
         exit={{ opacity: 0, scale: 0.5 }}
-        className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
+        className="flex items-center gap-1 rounded-lg bg-data-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-purple backdrop-blur-2xl"
       >
-        <MeetingSVG className="size-5 fill-purple" />
+        <MeetingSVG className="size-5 fill-data-purple" />
         Conference
       </motion.div>
       {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
@@ -137,9 +137,9 @@ export function ConferenceBadges({
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
+          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-data-yellow/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-yellow backdrop-blur-2xl"
         >
-          <SponsorSVG className="size-5 fill-orange" />
+          <SponsorSVG className="size-5 fill-data-yellow" />
           Sponsorship
         </motion.div>
       )}
@@ -148,9 +148,9 @@ export function ConferenceBadges({
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-orange-600/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange-600 backdrop-blur-2xl"
+          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-data-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-orange backdrop-blur-2xl"
         >
-          <ResearchSVG className="size-5 fill-orange-600" />
+          <ResearchSVG className="size-5 fill-data-orange" />
           Research
         </motion.div>
       )}
@@ -171,7 +171,7 @@ export function VideoTalkButton({ videoUrl, onClick }: { videoUrl: string; onCli
       className="pointer-events-auto absolute -left-[calc(100%_-_3.75rem)] top-[calc(22dvh_+_5rem)] z-10 flex cursor-pointer flex-col items-center"
     >
       <div className="clip-talk-content bg-white p-0.5">
-        <div className="clip-talk-content flex items-center gap-1 bg-[#0F0F0F] px-3.5 py-2.5 [--clip-offset:.75rem]">
+        <div className="clip-talk-content flex items-center gap-1 bg-tone-970 px-3.5 py-2.5 [--clip-offset:.75rem]">
           <YoutubeSVG className="size-5 fill-white" />
           <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
           <ArrowSVG className="size-4 -rotate-90 fill-white" />
@@ -217,7 +217,7 @@ export function ContentSection({
         duration: 0.3,
         ease: 'easeInOut',
       }}
-      className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-oxanium')}
+      className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-display')}
     >
       {title && (
         <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
@@ -269,7 +269,7 @@ export function ExtraSponsorSection({
       initial="hidden"
       animate="visible"
       exit="hidden"
-      className="flex w-[17rem] origin-top-left flex-col items-center overflow-visible font-oxanium"
+      className="flex w-[17rem] origin-top-left flex-col items-center overflow-visible font-display"
       variants={{
         hidden: {
           opacity: 0,
@@ -394,11 +394,11 @@ export function MobileConferenceBadgesWithVideo({
           'relative flex items-center gap-0.5 rounded',
           MOBILE_MAP_SCALE.badgePaddingClass,
           MOBILE_MAP_SCALE.badgeTextClass,
-          'font-semibold text-purple',
+          'font-semibold text-data-purple',
         )}
       >
-        <BadgeBlurBg className="bg-purple/20" />
-        <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
+        <BadgeBlurBg className="bg-data-purple/20" />
+        <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-purple')} />
         Conference
       </div>
       {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
@@ -407,11 +407,11 @@ export function MobileConferenceBadgesWithVideo({
             'relative flex items-center gap-0.5 rounded',
             MOBILE_MAP_SCALE.badgePaddingClass,
             MOBILE_MAP_SCALE.badgeTextClass,
-            'font-semibold text-orange',
+            'font-semibold text-data-yellow',
           )}
         >
-          <BadgeBlurBg className="bg-orange/20" />
-          <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
+          <BadgeBlurBg className="bg-data-yellow/20" />
+          <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-yellow')} />
           Sponsorship
         </div>
       )}
@@ -421,11 +421,11 @@ export function MobileConferenceBadgesWithVideo({
             'relative flex items-center gap-0.5 rounded',
             MOBILE_MAP_SCALE.badgePaddingClass,
             MOBILE_MAP_SCALE.badgeTextClass,
-            'font-semibold text-orange-600',
+            'font-semibold text-data-orange',
           )}
         >
-          <BadgeBlurBg className="bg-orange-600/20" />
-          <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange-600')} />
+          <BadgeBlurBg className="bg-data-orange/20" />
+          <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-orange')} />
           Research
         </div>
       )}
@@ -440,7 +440,7 @@ export function MobileConferenceBadgesWithVideo({
           className="pointer-events-auto flex cursor-pointer flex-col"
         >
           <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
-            <div className="clip-talk-content flex items-center gap-0.5 bg-[#0F0F0F] px-1.5 py-1 [--clip-offset:6px]">
+            <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
               <YoutubeSVG className="size-3 fill-white" />
               <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
@@ -499,7 +499,7 @@ export function MobileContentSection({
         duration: 0.3,
         ease: 'easeInOut',
       }}
-      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-oxanium')}
+      className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-display')}
     >
       {title && (
         <h3
@@ -554,7 +554,7 @@ export function MobileExtraSponsorSection({
       animate="visible"
       exit="hidden"
       className={cn(
-        'flex origin-top-left flex-col items-center overflow-visible font-oxanium',
+        'flex origin-top-left flex-col items-center overflow-visible font-display',
         MOBILE_MAP_SCALE.extraSponsorWidth,
       )}
       variants={{

@@ -59,7 +59,7 @@ export default function NewsNavDialog() {
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
-          <div className="mt-16 font-tt">
+          <div className="mt-16 font-menu">
             {NAV_LIST.map((item) => (
               <div
                 onClick={() => handleNavClick(item)}

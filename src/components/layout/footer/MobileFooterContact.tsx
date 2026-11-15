@@ -8,6 +8,8 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef } from 'react';
 import FooterContactContent from './FooterContactContent';
 
+import { color } from '@/styles/tokens';
+
 export default function MobileFooterContact() {
   const subscribeRef = useRef<HTMLDivElement | null>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
@@ -71,16 +73,16 @@ export default function MobileFooterContact() {
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={() => setIsSubscribeShow(true)}
-            className="group fixed bottom-6.5 left-5 z-[90] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-poppins text-base/5 font-semibold hover:opacity-80"
+            className="group fixed bottom-6.5 left-5 z-[90] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-text text-base/5 font-semibold hover:opacity-80"
           >
             {/* Border SVG with top-left cut corner */}
             <svg className="absolute inset-0" viewBox="0 0 100 36" fill="none" preserveAspectRatio="none">
-              <path d="M10 1H99V35H1V10L10 1Z" stroke="#C11111" strokeWidth="2" />
+              <path d="M10 1H99V35H1V10L10 1Z" stroke={color.accent} strokeWidth="2" />
             </svg>
-            <span className="relative text-sm/5 text-red-600">Connect</span>
+            <span className="relative text-sm/5 text-accent">Connect</span>
             {/* Right chevron arrow */}
             <svg className="relative -mt-px size-4" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4L10 8L6 12" stroke="#C11111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M6 4L10 8L6 12" stroke={color.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </motion.div>
         ) : null}

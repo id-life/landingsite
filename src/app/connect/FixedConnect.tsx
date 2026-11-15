@@ -25,11 +25,11 @@ const MobileConnectSinglePage = () => {
         isContactShow ? 'bottom-[calc(var(--connect-panel-h,310px)+0.5rem)]' : 'bottom-[80px]',
       )}
     >
-      <div className="my-auto font-oxanium font-semibold uppercase tracking-[-4%]">
+      <div className="my-auto font-display font-semibold uppercase tracking-[-4%]">
         {/* Section 1: EVANGELISM */}
         <div className="relative text-left">
-          <span className="connect-text-en whitespace-nowrap text-[28px]/[28px] text-red-500">Evangelism</span>
-          <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[40px]/[60px] font-bold text-red-500 opacity-0">
+          <span className="connect-text-en whitespace-nowrap text-[28px]/[28px] text-accent">Evangelism</span>
+          <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[40px]/[60px] font-bold text-accent opacity-0">
             布道者
           </span>
           <div className="connect-text-en text-[1.75rem]/[1.75rem]">
@@ -42,8 +42,8 @@ const MobileConnectSinglePage = () => {
         {/* Section 2: EAST & WEST ACCESS */}
         <div className="relative mt-4 text-left">
           <span className="connect-text-en whitespace-nowrap text-[28px]/[46px]">East & West</span>{' '}
-          <span className="connect-text-en whitespace-pre-wrap text-[28px]/[46px] text-red-500">Access</span>
-          <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-red-500 opacity-0">
+          <span className="connect-text-en whitespace-pre-wrap text-[28px]/[46px] text-accent">Access</span>
+          <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-accent opacity-0">
             桥梁
           </span>
           <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">
@@ -55,7 +55,7 @@ const MobileConnectSinglePage = () => {
 
         {/* Section 3: MOONSHOT VENTURES */}
         <div className="relative mt-4 text-left">
-          <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-red-500">
+          <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-accent">
             MOONSHOT
           </span>
           <span className="connect-text-cn absolute left-0 top-0 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal opacity-0">
@@ -72,12 +72,12 @@ const MobileConnectSinglePage = () => {
         <ConnectCriteria
           className="mt-8 normal-case tracking-normal"
           titleClassName="text-base/5"
-          listClassName="mt-2 gap-1.5 font-poppins text-xs/4.5 font-semibold"
+          listClassName="mt-2 gap-1.5 font-text text-xs/4.5 font-semibold"
         />
         <ConnectValues
           className="mt-6 flex flex-col gap-4 pb-2 normal-case tracking-normal"
           titleClassName="text-sm/5"
-          textClassName="mt-0.5 font-poppins text-xs/4.5 font-medium"
+          textClassName="mt-0.5 font-text text-xs/4.5 font-medium"
         />
       </div>
     </div>

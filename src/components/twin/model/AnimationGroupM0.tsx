@@ -3,6 +3,8 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import * as THREE from 'three';
 import { useAnimations, useGLTF } from '@react-three/drei';
 
+import { color } from '@/styles/tokens';
+
 export type AnimationGroupProps = {
   modelRef: React.MutableRefObject<THREE.Group | null>;
 };
@@ -267,7 +269,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
         <skinnedMesh
           name="CC_Base_Body001_1"
@@ -278,7 +280,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001_1.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
         <skinnedMesh
           name="CC_Base_Body001_2"
@@ -289,7 +291,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001_2.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
         <skinnedMesh
           name="CC_Base_Body001_3"
@@ -300,7 +302,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001_3.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
         <skinnedMesh
           name="CC_Base_Body001_4"
@@ -311,7 +313,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001_4.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
         <skinnedMesh
           name="CC_Base_Body001_5"
@@ -322,7 +324,7 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           morphTargetInfluences={nodes.CC_Base_Body001_5.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
-          material-color={'#ffeaea'}
+          material-color={color['twin-blush']}
         />
       </group>
       <group name="CC_Base_Eye002">

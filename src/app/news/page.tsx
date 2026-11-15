@@ -77,7 +77,7 @@ export default async function NewsPage() {
       <JsonLd data={jsonLd} />
       <h1 className="my-5 text-xl/5 font-medium mobile:my-3.5 mobile:text-base/5">News</h1>
       {insightsItems === null ? (
-        <p role="status" className="py-24 text-center font-poppins text-base font-medium text-black/60 mobile:py-16">
+        <p role="status" className="py-24 text-center font-text text-base font-medium text-black/60 mobile:py-16">
           新闻暂时无法加载，请稍后再来。The news could not be loaded right now; please check back soon.
         </p>
       ) : (

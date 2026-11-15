@@ -87,7 +87,7 @@ export function MobileWorldMapDotPoint({
         {/* 标签 */}
         <motion.div
           className={cn(
-            'flex flex-col items-start whitespace-nowrap font-oxanium',
+            'flex flex-col items-start whitespace-nowrap font-display',
             MOBILE_MAP_SCALE.labelTextClass,
             'font-semibold capitalize text-white',
           )}

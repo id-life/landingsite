@@ -49,7 +49,7 @@ export default function Loader() {
   return (
     <Html center>
       <div className="relative h-12 w-44">
-        <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-red-600">
+        <div className="loading-text absolute flex h-full w-full items-center justify-center text-[2rem]/[2.5rem] font-semibold text-accent">
           Loading...
         </div>
         <div
@@ -59,7 +59,7 @@ export default function Loader() {
         >
           Loading...
         </div>
-        <div ref={fillRef} className="absolute z-20 h-full w-0 bg-red-600"></div>
+        <div ref={fillRef} className="absolute z-20 h-full w-0 bg-accent"></div>
       </div>
     </Html>
   );

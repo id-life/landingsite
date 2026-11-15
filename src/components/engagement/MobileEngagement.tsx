@@ -59,8 +59,8 @@ function MobileEngagement() {
     >
       {/* Title Section */}
       <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">
-        <h2 className="font-xirod text-[26px] capitalize leading-[30px] text-white">Presence</h2>
-        <p className="mt-2 font-oxanium text-[14px] font-bold uppercase leading-[20px] text-white">
+        <h2 className="font-title text-[26px] capitalize leading-[30px] text-white">Presence</h2>
+        <p className="mt-2 font-display text-[14px] font-bold uppercase leading-[20px] text-white">
           GLOBAL REACH. EAST &amp; WEST
         </p>
       </div>

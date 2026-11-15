@@ -57,9 +57,9 @@ function LongevityCard({ item }: { item: LongevityItem }) {
 
   return (
     <Root {...linkProps} className={cn('podcast-card-clip relative block bg-white p-0.5', href && 'cursor-pointer')}>
-      <div className="podcast-card-clip-inner bg-[#F6F8FB] p-4 mobile:p-3">
+      <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          <h3 className="line-clamp-1 flex-1 font-poppins text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
             {item.title}
           </h3>
           <img
@@ -152,9 +152,9 @@ export default function LongevitySection({ isMobile = false, compact = false, is
         <div className={cn('flex gap-6', (isMobile || compact) && 'grid grid-cols-2 gap-3')}>
           {Array.from({ length: skeletonCount }).map((_, index) => (
             <div key={index} className="podcast-card-clip relative bg-white p-0.5">
-              <div className="podcast-card-clip-inner space-y-3 bg-[#F6F8FB] p-4 mobile:p-3">
-                <div className="h-6 w-3/4 animate-pulse rounded bg-gray-800/20 mobile:h-4" />
-                <div className="h-4 w-full animate-pulse rounded bg-gray-800/15 mobile:h-3" />
+              <div className="podcast-card-clip-inner space-y-3 bg-tone-50 p-4 mobile:p-3">
+                <div className="h-6 w-3/4 animate-pulse rounded bg-tone-800/20 mobile:h-4" />
+                <div className="h-4 w-full animate-pulse rounded bg-tone-800/15 mobile:h-3" />
               </div>
             </div>
           ))}
@@ -167,7 +167,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     if (!longevityData.length) {
       return (
         <div className="podcast-card-clip relative bg-white p-0.5">
-          <div className="podcast-card-clip-inner bg-[#F6F8FB] p-4 text-sm text-black/50">No longevity weekly data yet.</div>
+          <div className="podcast-card-clip-inner bg-tone-50 p-4 text-sm text-black/50">No longevity weekly data yet.</div>
         </div>
       );
     }
@@ -252,7 +252,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
       <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
+            <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
               长生周报
             </h2>
             <div className="flex items-center gap-1.5">

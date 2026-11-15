@@ -1,3 +1,6 @@
+/* Design tokens first (VIS-02): every colour, font role, type role and grid value. Generated from tokens.ts. */
+@import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,7 +11,7 @@
 }
 
 :focus-visible {
-  outline: 2px solid #c11111;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -18,8 +21,8 @@
   top: -100px;
   z-index: 1000;
   padding: 0.5rem 1rem;
-  background: #1f1e1b;
-  color: #ffffff;
+  background: var(--color-ink);
+  color: var(--color-white);
   font:
     600 14px/1.4 -apple-system,
     BlinkMacSystemFont,
@@ -47,25 +50,9 @@
 
 @layer base {
   :root {
-    --background: #f0f0f0;
-    --foreground: #000000;
-    --nav: #f0f0f0;
-    --gradient-from: #ffffff;
-    --gradient-via: #e5ebf5;
-    --gradient-via-percent: 50%;
-    --gradient-to: #cbd6ea;
-    --gradient-rotate: 90deg;
-    --audio-player: #2e2f31;
-    --audio-content: #e2e8f4;
-    --audio-border: #eef4ff;
-    --audio-order: #ffffff;
-    --audio-desc: #222222;
-    --subscribe-border: #ffffff;
-    --subscribe-bg: #ffffff33;
+    /* The section theme (--background, --foreground, --gradient-*, --subscribe-*) and the reading size
+       (--read-body, RWD-09) are tokens: tokens.css. */
     --sqrt2: 1.4142135623730951;
-    /* Body size of long-form reading (RWD-09): 16 px up to about 1440 px, then about 1.3x by 2560 (16.3 -> 21.3 px),
-       capped at 22 px. The text-read* sizes (tailwind.config.ts) and the reading measure derive from it. */
-    --read-body: clamp(1rem, 0.44vw + 0.625rem, 1.375rem);
   }
 
   *::-webkit-scrollbar {
@@ -78,17 +65,24 @@
     }
   }
   *::-webkit-scrollbar-thumb {
-    background-color: #ffffff66;
+    background-color: color-mix(in srgb, var(--color-white) 40%, transparent);
     backdrop-filter: blur(40px);
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background-color: #ffffff90;
+    background-color: color-mix(in srgb, var(--color-white) 56.5%, transparent);
   }
 
   body {
-    color: #222222;
-    @apply font-poppins;
+    color: var(--color-tone-800);
+    @apply font-text;
+  }
+
+  /* Chinese runs (lang="zh-Hans"): CJK punctuation spacing on, Latin-only letter-spacing and case transforms off. */
+  :lang(zh) {
+    text-autospace: normal;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   .base-background1 {
@@ -101,7 +95,7 @@
   }
 
   .base-background2 {
-    background-image: radial-gradient(#ffffff7f 2px, transparent 0px);
+    background-image: radial-gradient(color-mix(in srgb, var(--color-white) 49.8%, transparent) 2px, transparent 0px);
     background-size: 8px 8px;
   }
 }
@@ -145,7 +139,7 @@
       width: 0;
       transform: translateX(-50%);
       transition: width 0.3s;
-      background: #ffffff;
+      background: var(--color-white);
     }
 
     &.audio-tab-active,
@@ -166,7 +160,7 @@
       width: 0;
       transform: translateX(-50%);
       transition: width 0.3s;
-      background: #222;
+      background: var(--color-tone-800);
     }
 
     &.podcast-tab-active,
@@ -197,34 +191,34 @@
   }
 
   .list-mark-red-disc li {
-    @apply list-inside list-disc marker:text-2xl/5 marker:text-red-600 marker:content-['->_'] mobile:marker:text-xs/3.5;
+    @apply list-inside list-disc marker:text-2xl/5 marker:text-accent marker:content-['->_'] mobile:marker:text-xs/3.5;
   }
 
   .vision-title {
-    @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-xirod text-3xl/12;
+    @apply absolute left-1/2 top-20 w-3/4 -translate-x-1/2 text-center font-title text-3xl/12;
     @apply mobile:top-12 mobile:w-[calc(100%-2.5rem)] mobile:p-3 mobile:text-sm/5;
   }
 
   .svg-border {
-    @apply transition-all duration-300 ease-in group-hover:fill-red-600 group-hover:stroke-red-600;
+    @apply transition-all duration-300 ease-in group-hover:fill-accent group-hover:stroke-accent;
   }
 
   .svg-text {
-    @apply transition-all duration-300 ease-in group-hover:fill-red-600;
+    @apply transition-all duration-300 ease-in group-hover:fill-accent;
   }
 
   .svg-icon {
-    @apply transition-all duration-300 ease-in group-hover:stroke-red-600;
+    @apply transition-all duration-300 ease-in group-hover:stroke-accent;
   }
 
+  /* Display strings (nav, section titles, slogans, Connect and Spectrum labels: src/styles/display-strings.ts) in
+     the display face, their Chinese in the Source Han subset, then the system CJK faces (VIS-07). */
   .bilingual-font {
-    /* 设置字体优先级：先尝试 Oxanium (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
-    font-family: var(--font-oxanium), var(--font-source-han-sans-cn), sans-serif;
+    font-family: var(--font-role-brand);
   }
 
   .bilingual-font-poppins {
-    /* 设置字体优先级：先尝试 poppins (英文)，然后是思源黑体 (中文)，最后是系统默认字体 */
-    font-family: var(--font-poppins), var(--font-source-han-sans-cn), sans-serif;
+    font-family: var(--font-role-brand-text);
   }
 
   .corner-button::before,
@@ -233,7 +227,7 @@
   .corner-button span::after {
     content: '';
     display: block;
-    border-color: var(--corner-border-color, #979797);
+    border-color: var(--corner-border-color, var(--color-tone-380));
     height: var(--corner-border-size, 0.75rem);
     width: var(--corner-border-size, 0.75rem);
     border-width: var(--corner-border-width, 0.125rem);
@@ -260,7 +254,7 @@
   .corner-button:hover::after,
   .corner-button:hover span::before,
   .corner-button:hover span::after {
-    border-color: var(--corner-border-hover-color, #ffffff);
+    border-color: var(--corner-border-hover-color, var(--color-white));
   }
 
   .corner-button-top {
@@ -280,14 +274,14 @@
   }
 
   .corner-button-top:hover {
-    @apply fill-[#b41010] text-[#b41010];
+    @apply fill-accent-hover text-accent-hover;
   }
 
   .corner-button-top:hover::before,
   .corner-button-top:hover::after,
   .corner-button-top:hover span::before,
   .corner-button-top:hover span::after {
-    @apply border-[#b41010];
+    @apply border-accent-hover;
   }
 }
 
@@ -301,7 +295,7 @@
   }
 
   .page-title {
-    @apply font-xirod text-[2.5rem]/[4.5rem] uppercase;
+    @apply font-title text-[2.5rem]/[4.5rem] uppercase;
     @apply whitespace-pre-wrap mobile:-mr-3 mobile:text-xl/7.5;
   }
 
@@ -310,7 +304,7 @@
   }
 
   .processes-clip {
-    background: #222222;
+    background: var(--color-tone-800);
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
   }
 
@@ -328,7 +322,7 @@
 
   .submit-btn {
     clip-path: polygon(0.875rem 0, 100% 0, 100% 100%, 0 100%, 0 0.875rem);
-    @apply relative w-full cursor-pointer bg-red-600 py-3 text-base/5 font-semibold text-white;
+    @apply relative w-full cursor-pointer bg-accent py-3 text-base/5 font-semibold text-white;
     @apply hover:after:opacity-20;
 
     &::after {
@@ -342,7 +336,7 @@
 
   .clip-box {
     position: relative;
-    background: #22222299;
+    background: color-mix(in srgb, var(--color-tone-800) 60%, transparent);
     cursor: pointer;
     transform: rotateY(-5deg) rotateX(8deg);
 
