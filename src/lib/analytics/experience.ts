@@ -1,6 +1,6 @@
 import { reportError } from '@/lib/report';
 import { HERO_MODEL_URL } from '@/components/gl/heroAssetUrls';
-import { EXPERIENCE_ERROR_KINDS } from './events';
+import type { EXPERIENCE_ERROR_KINDS } from './events';
 import { advanceStage } from './stage';
 import { track } from './track';
 
@@ -70,7 +70,10 @@ export function probeWebGL() {
   if (probed !== null || typeof document === 'undefined') return probed ?? true;
   try {
     const canvas = document.createElement('canvas');
-    probed = Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+    const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as WebGLRenderingContext | null;
+    probed = Boolean(gl);
+    // Give the probe context back at once: browsers cap live WebGL contexts and the site needs its own.
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
   } catch {
     probed = false;
   }

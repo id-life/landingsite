@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 import { EVENTS, KEY_EVENTS } from '@/lib/analytics/events';
+import { KEY_EVENT_NAMES } from '@/lib/analytics/track';
 import { catalogJson, catalogMarkdown } from './helpers/analytics-catalog-docs';
 
 const MD = new URL('../src/lib/analytics/EVENTS.md', import.meta.url);
@@ -23,6 +24,7 @@ describe('analytics event catalog', () => {
 
   test('exactly the four planned key events', () => {
     expect([...KEY_EVENTS].sort()).toEqual(['contact_intent', 'newsletter_subscribe', 'portfolio_outbound_click'].sort());
+    expect([...KEY_EVENT_NAMES].sort()).toEqual([...KEY_EVENTS].sort());
   });
 
   test('EVENTS.md and events.json are generated from the catalog', () => {

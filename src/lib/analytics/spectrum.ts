@@ -1,6 +1,6 @@
 import { spectrumBaseData } from '@/app/spectrum/_components/spectrumData';
 import { isInternalHref } from '@/constants/site';
-import { OUTBOUND_LINK_TYPES } from './events';
+import type { OUTBOUND_LINK_TYPES } from './events';
 import { trackOutbound } from './outbound';
 import { slugId } from './track';
 

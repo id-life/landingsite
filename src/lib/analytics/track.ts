@@ -1,6 +1,10 @@
 import { NAV_LIST } from '@/components/nav/nav';
 import { ANALYTICS_ENABLED, INTERNAL_FLAG_KEY, VERCEL_EVENTS_ENABLED } from './config';
-import { EventName, EventParams, KEY_EVENTS, Layout } from './events';
+// Types only: the catalog itself (with its documentation strings) stays out of the browser bundle.
+import type { EventName, EventParams, Layout } from './events';
+
+/** The key events (mirrored to Vercel custom events when enabled); test/analytics-events.test.mjs checks the list. */
+export const KEY_EVENT_NAMES: readonly EventName[] = ['newsletter_subscribe', 'contact_intent', 'portfolio_outbound_click'];
 
 /**
  * The one way to send an analytics event (DATA-11). Names and parameters are checked against the catalog in
@@ -60,7 +64,7 @@ function clean(params: Record<string, unknown>): Payload {
 
 function send(name: EventName, payload: Payload) {
   window.gtag?.('event', name, payload);
-  if (VERCEL_EVENTS_ENABLED && (KEY_EVENTS as string[]).includes(name)) {
+  if (VERCEL_EVENTS_ENABLED && KEY_EVENT_NAMES.includes(name)) {
     (window as Window & { va?: (...a: unknown[]) => void }).va?.('event', { name, data: payload });
   }
 }
