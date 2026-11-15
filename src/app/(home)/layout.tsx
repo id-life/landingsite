@@ -7,7 +7,6 @@ import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
-import HomeProfile from '@/app/(home)/_components/HomeProfile';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 import HomeStatement from '@/app/(home)/_components/HomeStatement';
@@ -39,7 +38,6 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
         titleAs="h2"
         intro={[...HOME_INTRO_CN.map((text) => ({ text, lang: 'zh-CN' })), { text: ORG_DESCRIPTION, lang: 'en' }]}
       />
-      <HomeProfile />
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
