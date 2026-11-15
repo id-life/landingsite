@@ -175,17 +175,19 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
         // Never wider than the window (RWD-01: the tool pages are drawn at the 16 px root at every width).
-        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
+        // Medium windows: the panel takes the window's width less 1 rem a side, and its two inputs share it.
+        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5 medium:w-[calc(100vw_-_2rem)]',
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
-      <div className="font-display text-3xl font-bold tracking-normal">BE PART OF IT</div>
+      {/* Type roles (RWD-01): heading title, inputs body (16 px, so iOS does not zoom on focus), small print caption. */}
+      <div className="font-display text-title font-bold tracking-normal">BE PART OF IT</div>
 
       {/* submit msg */}
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-data-leaf px-5 py-1 text-center font-text text-xs/5 font-semibold tracking-normal text-white opacity-0',
+          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-data-leaf px-5 py-1 text-center font-text text-caption font-semibold tracking-normal text-white opacity-0',
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2',
         )}
       >
@@ -198,7 +200,11 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
       {/* close */}
       <div
-        className={cn('absolute right-6 top-6 flex cursor-pointer fill-black', isMutationPending && 'cursor-not-allowed')}
+        // A 44 px box on a touch screen (RWD-06).
+        className={cn(
+          'absolute right-6 top-6 flex cursor-pointer items-center justify-center fill-black tap',
+          isMutationPending && 'cursor-not-allowed',
+        )}
         onClick={handleClose}
         onPointerDown={() => (isSubmittingRef.current = true)}
       >
@@ -207,21 +213,23 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
 
       <Form control={form.control} className="relative mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
         <HoneypotField {...form.register('website')} />
-        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col')}>
+        {/* Medium windows (600-839 px): the two inputs share the panel's width instead of keeping 409 px each, which
+            pushed the second one out of the window at 820 px. */}
+        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col medium:gap-x-6')}>
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
             placeholder="Enter your name"
             value={character}
             disabled={isMutationPending || isMutationSuccess}
-            wrapperClassName={form.formState.errors.visitor && 'mobile:mt-5'}
+            wrapperClassName={cn('medium:min-w-0 medium:flex-1', form.formState.errors.visitor && 'mobile:mt-5')}
             error={form.formState.errors.visitor}
             {...form.register('visitor', {
               required: REQUIRED_ERROR_MESSAGE,
               onChange: (e) => setCharacter(e.target.value),
             })}
           />
-          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col')}>
+          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col medium:min-w-0 medium:flex-1')}>
             {relation.map((rel, i) => (
               <BePartOfItInput
                 key={`introducer-input-${i}`}
@@ -245,7 +253,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         </div>
 
         <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
-          <div className="font-text text-xs font-medium tracking-normal text-ink-muted mobile:mt-3">
+          <div className="font-text text-caption font-medium tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"
@@ -280,7 +288,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               </div>
             ) : null}
             <input
-              className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
+              className="w-full cursor-pointer py-3 text-body font-bold leading-5 mobile:font-semibold"
               type="submit"
               value="Confirm"
             />
