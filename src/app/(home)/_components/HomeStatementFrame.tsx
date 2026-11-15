@@ -26,7 +26,7 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
       id="home-statement"
       aria-label="Immortal Dragons"
       className={cn(
-        'fixed z-[29] text-foreground transition-[opacity,visibility] duration-300',
+        'fixed z-[29] text-foreground transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
         // Desktop tree: top left, under the logo, clear of the wordmark and the dragon. Sizes have a px floor so the
         // 0.8333vw root (RWD-01) cannot shrink them below a readable size on tablets.
         'left-10 top-[max(7.5rem,92px)] w-[max(42rem,460px)]',
