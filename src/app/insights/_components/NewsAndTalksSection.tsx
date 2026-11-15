@@ -55,7 +55,8 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
             <h3 className="line-clamp-1 font-poppins text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-poppins text-[10px]/3 text-black/40">
+            {/* #666 on white (5.7:1). At black/40 (#999, 2.8:1) the row failed contrast once NAV-09 brought it on screen. */}
+            <div className="flex w-full flex-col text-left font-poppins text-[10px]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
