@@ -227,7 +227,12 @@ const SpectrumItem = memo(
               <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-body font-bold capitalize', isSponsor && 'hidden')}>
                 {titleCn}
               </h4>
-              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-6 w-full' : 'mt-5')}>
+              <div
+                className={cn(
+                  'spectrum-links-container flex flex-col',
+                  isSponsor ? 'mt-6 w-full [@media(max-height:1100px)]:mt-4' : 'mt-5',
+                )}
+              >
                 <AnimatePresence mode="wait">
                   {isSponsor ? (
                     <motion.div
