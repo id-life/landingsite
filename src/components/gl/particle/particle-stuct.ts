@@ -181,6 +181,16 @@ export class Particle {
     p5.point(this.pos.x, this.pos.y);
   }
 
+  /** Reduced motion (MOT-02): the particle as it rests at its target, without the flight there or the wander. */
+  public settle() {
+    this.pos.x = this.target.x;
+    this.pos.y = this.target.y;
+    this.vel.mult(0);
+    this.distToTarget = 0;
+    this.currentColor = this.endColor;
+    this.currentSize = this.config.particleSize;
+  }
+
   public kill() {
     const p5 = this.p5;
     if (!this.isKilled) {

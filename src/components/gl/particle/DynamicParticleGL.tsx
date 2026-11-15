@@ -3,6 +3,7 @@ import P5 from 'p5';
 import { useMemo } from 'react';
 import { Particle } from './particle-stuct';
 import { loadParticlePoints, ParticlePoints, samplePixels } from './particle-points';
+import { isReducedMotion } from '@/motion/preference';
 
 export const fundLogoLength = 2;
 
@@ -155,11 +156,26 @@ const DynamicParticleGL = ({
             allParticles[index].endColor = p5.color(0);
           }
         }
+        // Reduced motion: P5Canvas does not loop; draw the settled logo once.
+        if (isReducedMotion()) p5.redraw();
       }
       p5.draw = () => {
         if (canvas && canvas.elt.parentElement?.id !== id) moveToContainer();
         if (!activeAnim || !allParticles?.length) return;
         p5.clear();
+
+        // Reduced motion (MOT-02): one still frame of the finished logo, no flight, wander or fade.
+        if (isReducedMotion()) {
+          let kept = 0;
+          for (const particle of allParticles) {
+            if (particle.isKilled) continue;
+            particle.settle();
+            particle.draw();
+            allParticles[kept++] = particle;
+          }
+          allParticles.length = kept;
+          return;
+        }
 
         let writeIndex = 0;
 

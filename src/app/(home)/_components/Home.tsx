@@ -29,6 +29,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
 import { reportError } from '@/lib/report';
 import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
+import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
 // ENG-16: the ScrollSmoother exists before any section creates its ScrollTrigger (GSAP's ScrollSmoother docs: "create
 // the scrollSmoother before your scrollTriggers"). Rendered first, its layout effect runs before the sections'
@@ -81,7 +82,8 @@ export default function Home() {
   });
 
   return (
-    <>
+    // motion components follow the Motion preference (MOT-02)
+    <MotionPreferenceConfig>
       <ScrollSmootherRoot />
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
@@ -101,6 +103,6 @@ export default function Home() {
         </div>
       </div>
       <PCFixedUI />
-    </>
+    </MotionPreferenceConfig>
   );
 }

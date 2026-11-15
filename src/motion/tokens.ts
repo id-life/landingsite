@@ -7,7 +7,7 @@
  * Durations in seconds. The ladder follows Material 3's duration tokens and NN/g's 100-500 ms band for UI motion;
  * only the section transition and camera moves are longer.
  */
-export const DURATION = {
+const BASE_DURATION = {
   instant: 0,
   /** Per-glyph and per-icon changes. */
   micro: 0.12,
@@ -22,6 +22,28 @@ export const DURATION = {
   /** Camera moves through a 3D scene and first-visit intros. */
   camera: 1,
 } as const;
+
+let tokensReduced = false;
+
+/** Set by src/motion/preference.ts: while motion is reduced every duration token reads 0 (changes happen at once). */
+export function setTokensReduced(value: boolean) {
+  tokensReduced = value;
+}
+
+/**
+ * Durations in seconds, read when a tween is created. While motion is reduced (MOT-02) each reads 0, so every
+ * token-timed change of state lands at once; scrubbed lengths (beats) and the reduced-mode fades below are not
+ * durations of this kind and are unaffected.
+ */
+export const DURATION = Object.defineProperties(
+  {} as { readonly [K in keyof typeof BASE_DURATION]: number },
+  Object.fromEntries(
+    Object.entries(BASE_DURATION).map(([name, seconds]) => [
+      name,
+      { enumerable: true, get: () => (tokensReduced ? 0 : seconds) },
+    ]),
+  ),
+);
 
 /**
  * Eases as cubic-bezier control points, defined once. GSAP plays them through CustomEase under the same names,
@@ -127,6 +149,9 @@ export const PAGE_STEP = { duration: 0.25, ease: 'out' } as const satisfies { du
  */
 export const SECTION_COVER = { fade: 0.25 } as const;
 
+/** With reduced motion a section change is a short crossfade through the cover instead of a move (MOT-02). */
+export const REDUCED_FADE = 0.1;
+
 /** CSS cubic-bezier() for an ease token. */
 const cssEase = (name: EaseName) => (name === 'linear' ? 'linear' : `cubic-bezier(${EASE_POINTS[name].join(', ')})`);
 
@@ -136,7 +161,7 @@ const cssEase = (name: EaseName) => (name === 'linear' ? 'linear' : `cubic-bezie
  */
 export function motionCssVariables(): Record<string, string> {
   const vars: Record<string, string> = {};
-  for (const [name, seconds] of Object.entries(DURATION)) vars[`--dur-${name}`] = `${Math.round(seconds * 1000)}ms`;
+  for (const [name, seconds] of Object.entries(BASE_DURATION)) vars[`--dur-${name}`] = `${Math.round(seconds * 1000)}ms`;
   vars['--dur-page'] = `${Math.round(PAGE_STEP.duration * 1000)}ms`;
   for (const name of [...(Object.keys(EASE_POINTS) as (keyof typeof EASE_POINTS)[]), 'linear' as const])
     vars[`--ease-${name}`] = cssEase(name);

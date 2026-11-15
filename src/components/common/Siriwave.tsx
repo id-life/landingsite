@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import type * as SiriWave from 'siriwave';
 import { onMotionPause } from '@/motion/runtime';
+import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 
 declare type CurveStyle = 'ios' | 'ios9';
 
@@ -47,7 +48,17 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
         curveDefinition: props.curveDefinition,
         ratio: 2,
       });
+      // Reduced motion (MOT-02): the visualiser holds still; start() does nothing until motion is back.
+      const wave = siriwave;
+      const start = wave.start.bind(wave);
+      wave.start = () => {
+        if (!isReducedMotion()) start();
+      };
+      if (isReducedMotion()) wave.stop();
       if (typeof props.onInit === 'function') props.onInit(siriwave);
+    });
+    const offReduced = onReducedMotionChange((reduced) => {
+      if (reduced && siriwave?.run) siriwave.stop();
     });
 
     // MOT-03: the visualiser stops with the rest of the experience (60 s idle, hidden tab) and resumes as it was.
@@ -63,6 +74,7 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
     return () => {
       disposed = true;
       offPause();
+      offReduced();
       siriwave?.dispose();
     };
   }, [

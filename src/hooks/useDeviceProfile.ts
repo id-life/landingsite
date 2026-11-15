@@ -6,7 +6,6 @@ import {
   COMPACT_HEIGHT_QUERY,
   HOVER_QUERY,
   PHONE_TREE_QUERY,
-  REDUCED_MOTION_QUERY,
   WIDTH_CLASS_QUERY,
 } from '@/styles/device-classes';
 
@@ -17,7 +16,6 @@ export type DeviceProfile = {
   height: 'compact' | 'regular';
   pointer: 'coarse' | 'fine';
   hover: boolean;
-  reducedMotion: boolean;
   /** Which experience is mounted: the phone deck or the desktop deck (PHONE_TREE_QUERY). */
   tree: 'phone' | 'desktop';
   /**
@@ -28,7 +26,9 @@ export type DeviceProfile = {
 };
 
 /**
- * One set of matchMedia listeners for the whole app (RWD-02). Everything that used to ask `max-width: 768px` on its
+ * One set of matchMedia listeners for the whole app (RWD-02). Reduced motion is not here: it is the visitor's Motion
+ * switch or system setting, read only through src/motion/preference.ts (MOT-02).
+ * Everything that used to ask `max-width: 768px` on its
  * own (21 useIsMobile calls, three more matchMedia calls and a user-agent sniff) reads this profile instead.
  *
  * The tree flips only after its query has been stable for TREE_SETTLE_MS, so a Split View drag, a toolbar that
@@ -55,7 +55,6 @@ function read(tree: DeviceProfile['tree']): DeviceProfile {
     height: match(COMPACT_HEIGHT_QUERY) ? 'compact' : 'regular',
     pointer,
     hover: match(HOVER_QUERY),
-    reducedMotion: match(REDUCED_MOTION_QUERY),
     tree,
     tier3d: tree === 'phone' ? 'low' : pointer === 'coarse' || width !== 'large' ? 'mid' : 'high',
   };
@@ -100,7 +99,6 @@ function start() {
     PHONE_TREE_QUERY,
     COARSE_POINTER_QUERY,
     HOVER_QUERY,
-    REDUCED_MOTION_QUERY,
   ];
   for (const query of queries) window.matchMedia(query).addEventListener('change', onChange);
 }

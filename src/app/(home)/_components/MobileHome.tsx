@@ -23,6 +23,7 @@ import { usePhoneSectionDriver } from '@/hooks/useMobileNavigation';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
 import LinkTracker from '@/components/site/LinkTracker';
+import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
@@ -43,7 +44,8 @@ export default function MobileHome() {
   useSectionUrlSync(mobileCurrentPage, initialRouteHandled, { replaceUrl: false });
 
   return (
-    <>
+    // motion components follow the Motion preference (MOT-02)
+    <MotionPreferenceConfig>
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
       <div id="wrapper" className="">
@@ -60,6 +62,6 @@ export default function MobileHome() {
       <MobileFixedUI />
       {/* Channel links of the contact panel are tracked by one delegated listener (data-channel). */}
       <LinkTracker />
-    </>
+    </MotionPreferenceConfig>
   );
 }

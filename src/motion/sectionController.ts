@@ -4,6 +4,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { sectionTitle } from '@/constants/section-titles';
 import { SPECTRUM_HASH_ROUTES } from '@/hooks/spectrum/spectrum-routes';
 import { noteSectionView } from '@/lib/analytics/section-view';
+import { isReducedMotion } from './preference';
 
 /**
  * The one section controller of the experience (MOT-01). Every way of changing section (wheel, keys, touch,
@@ -91,6 +92,8 @@ const PUSH_SOURCES = new Set<SectionSource>(['nav', 'arrow', 'menu', 'swipe', 'l
 let driver: SectionDriver | null = null;
 let running: { transition: SectionTransition; reversible: boolean } | null = null;
 let refreshing = false;
+let lastStepAt = -Infinity;
+const REDUCED_STEP_GAP_MS = 400;
 
 const read = () => jotaiStore.get(sectionStateAtom);
 const write = (next: SectionState) => {
@@ -222,6 +225,9 @@ export function goToSection(target: number | string, source: SectionSource): boo
 export function stepSection(dir: -1 | 1, source: SectionSource): boolean {
   if (!driver) return false;
   const state = read();
+  // Reduced motion (MOT-02): a change is a 0.2 s crossfade, so the lock must not end with it: at least
+  // REDUCED_STEP_GAP_MS between two steps, whatever the gesture rules of the input let through.
+  if (isReducedMotion() && performance.now() - lastStepAt < REDUCED_STEP_GAP_MS) return true;
   if (state.phase === 'moving') {
     // The same direction while moving: the step is already happening. The opposite one turns it around.
     if (state.direction === dir || state.direction === 0) return true;
@@ -229,6 +235,7 @@ export function stepSection(dir: -1 | 1, source: SectionSource): boolean {
   }
   const target = driver.stepTarget(dir);
   if (target === null) return false;
+  lastStepAt = performance.now();
   return goToSection(target, source);
 }
 

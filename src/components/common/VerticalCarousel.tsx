@@ -6,6 +6,7 @@ import { useAtomValue } from 'jotai';
 import { ReactNode, useEffect, useMemo, useRef } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 interface VerticalCarouselProps {
   children: ReactNode[];
@@ -36,6 +37,7 @@ export default function VerticalCarousel({
   // Fixed order (it used to shuffle on every mount, so each visit read the slogans in a new order).
   const items = children;
 
+  const reduced = useReducedMotionPref();
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const isActiveRef = useRef<boolean>(true); // 跟踪当前页面是否激活
 
@@ -54,6 +56,9 @@ export default function VerticalCarousel({
     Array.from(elements).forEach((el) => {
       gsap.set(el, { opacity: 1 });
     });
+
+    // Reduced motion (MOT-02): the first slogan stays; nothing cycles by itself.
+    if (reduced) return;
 
     tlRef.current = gsap.timeline({
       repeat: -1,
@@ -167,7 +172,7 @@ export default function VerticalCarousel({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, itemHeight, duration, transition, slideDown]);
+  }, [items, itemHeight, duration, transition, slideDown, reduced]);
 
   // 监听页面变化，控制动画
   useEffect(() => {

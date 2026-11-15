@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 type MusicTitleProps = {
   width?: number;
@@ -12,6 +13,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Timeline | null>(null);
+  const reduced = useReducedMotionPref();
 
   useEffect(() => {
     if (animationRef.current) {
@@ -32,7 +34,8 @@ function AudioTitle({ width, title }: MusicTitleProps) {
       }
     });
 
-    if (titleWidth > width) {
+    // Reduced motion (MOT-02): a long title is clipped instead of scrolling by itself.
+    if (titleWidth > width && !reduced) {
       container.style.setProperty('width', `${width}px`);
       const clone = title.cloneNode(true);
       wrapper.appendChild(clone);
@@ -68,7 +71,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
         animationRef.current.kill();
       }
     };
-  }, [title, width]);
+  }, [title, width, reduced]);
 
   return (
     <div

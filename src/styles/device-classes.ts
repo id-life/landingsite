@@ -28,4 +28,3 @@ export const DESKTOP_TREE_QUERY = '(min-width: 600px) and (min-height: 480px)';
 
 export const COARSE_POINTER_QUERY = '(pointer: coarse)';
 export const HOVER_QUERY = '(hover: hover)';
-export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';

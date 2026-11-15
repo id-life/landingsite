@@ -10,6 +10,7 @@ import { goToSection, sectionStateAtom } from '@/motion/sectionController';
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
 import type { MouseEvent } from 'react';
+import MotionSwitch from '@/components/common/MotionSwitch';
 import SiteHeader from './SiteHeader';
 import { isPlainClick, isSection, type SiteNavItem } from './site-nav';
 
@@ -63,6 +64,8 @@ export default function ExperienceHeader() {
       inExperience={experienceMounted}
       onLogoClick={onLogoClick}
       onItemClick={onItemClick}
+      // MOT-02: in the bar on both decks, visible on every section (as in the old PCNav and MobileNav).
+      motionSwitch={<MotionSwitch className={shown ? 'pointer-events-auto mobile:mr-2' : 'mobile:mr-2'} />}
     />
   );
 }

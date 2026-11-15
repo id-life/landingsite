@@ -6,7 +6,7 @@ import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import type { MouseEvent } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import LinkTracker from './LinkTracker';
 import MenuToggle from './MenuToggle';
 import { ABOUT_LINK, isSection, SITE_NAV, type SiteNavItem } from './site-nav';
@@ -31,6 +31,8 @@ export type SiteHeaderProps = {
   inExperience?: boolean;
   onLogoClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   onItemClick?: (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => void;
+  /** The experience's Motion switch (MOT-02), right after the logo so it is among the first Tab stops. */
+  motionSwitch?: ReactNode;
 };
 
 /**
@@ -53,6 +55,7 @@ export default function SiteHeader({
   inExperience = false,
   onLogoClick,
   onItemClick,
+  motionSwitch,
 }: SiteHeaderProps) {
   const overlay = variant === 'overlay';
   // Without handlers (server-rendered pages) the tracker reads these attributes; with them the caller tracks.
@@ -85,6 +88,7 @@ export default function SiteHeader({
       <div className={live}>
         <Logo onClick={onLogoClick} {...trackNav(NAV.vision_page.id, 'logo')} />
       </div>
+      {motionSwitch}
       <nav
         aria-label="Main"
         className={clsx(
@@ -140,7 +144,6 @@ export default function SiteHeader({
         >
           About
         </Link>
-        {/* MOT-02: the Motion switch (<button aria-pressed>) goes here, before SUBSCRIBE, so it is an early Tab stop. */}
         {action === 'exit' ? (
           <Link
             prefetch={false}
