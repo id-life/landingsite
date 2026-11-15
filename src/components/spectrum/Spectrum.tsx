@@ -2,15 +2,14 @@
 
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { isLayoutRefreshing } from '@/motion/sectionController';
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
+import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom } from 'jotai';
-import { memo, useEffect, useState } from 'react';
+import { useSetAtom } from 'jotai';
+import { memo, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
@@ -19,7 +18,7 @@ const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
 
 function Spectrum() {
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
   const [imageIdx, setImageIdx] = useState(1);
 
@@ -32,76 +31,10 @@ function Spectrum() {
     setImageIdx(index + 1);
   };
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // spectrum auto scroll to insights
-    scrollFn: () => {
-      if (
-        !enableUpJudge ||
-        currentPage.id !== PAGE_ID ||
-        window.isNavScrolling ||
-        window.isSmootherScrolling ||
-        window.isResizing
-      )
-        return;
-      const st = ScrollTrigger.getById('insights-scroll-trigger');
-      if (!st) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: true,
-  });
-
-  const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollSmootherAction({
-    // profile auto scroll to engagement
-    scrollFn: () => {
-      if (
-        !enableJudge ||
-        currentPage.id !== PAGE_ID ||
-        window.isNavScrolling ||
-        window.isSmootherScrolling ||
-        window.isResizing
-      )
-        return;
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) {
-        return;
-      }
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false; // TODO: Trick to prevent the scroll animation from being triggered again, Please fix while you have time.
-        },
-      });
-    },
-    isUp: false,
-  });
-
-  useEffect(() => {
-    if (currentPage.id === PAGE_ID) {
-      setEnableUpJudge(true);
-      setEnableDownJudge(true);
-    } else {
-      setEnableUpJudge(false);
-      setEnableDownJudge(false);
-    }
-  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
-
   useGSAP(() => {
     const tl = gsap.timeline({
+      // Scrubbed: lengths are beats (shares of the section's scroll), not seconds.
+      defaults: { duration: beats(0.5) },
       scrollTrigger: {
         trigger: `#${PAGE_ID}`,
         start: 'top top',
@@ -111,39 +44,28 @@ function Spectrum() {
         // markers: true,
         id: 'spectrum-trigger', // add an ID for later reference
         onEnter: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(spectrumNavItem);
           setActive(true);
         },
         onEnterBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(spectrumNavItem);
           setActive(true);
         },
         onLeaveBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setActive(false);
         },
       },
     });
-    // tl.add(() => {
-    //   setEnableUpJudge(true);
-    // });
-    tl.from('.spectrum-title', {
-      delay: 1,
-      y: (_, target) => target.offsetHeight,
-      rotateX: 45,
-      rotateY: 15,
-      opacity: 0,
-    });
-    tl.from('.spectrum-fund', { y: (_, target) => target.offsetHeight / 3, rotateX: 45, rotateY: 15, opacity: 0 });
+    // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
+    tl.from('.spectrum-title', { delay: beats(1), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.from('.spectrum-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
 
-    // tl.to(() => {}, { duration: 5 });
-    tl.to('.fixed-top', { opacity: 0 });
-    tl.to('.fixed-bottom', { opacity: 0 }, '<');
-    // tl.add(() => {
-    //   setEnableDownJudge(true);
-    // });
+    // Every arrival lands here (MOT-01), then a short hold inside the pin.
+    tl.addLabel('rest');
+    tl.to({}, { duration: beats(0.25) });
   }, []);
 
   return (

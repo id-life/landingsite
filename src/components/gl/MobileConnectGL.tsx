@@ -10,6 +10,7 @@ import gsap from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { DURATION, EASE } from '@/motion/tokens';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
@@ -33,12 +34,12 @@ function MobileConnectGL() {
 
     // Canvas and camera animation
     tl.set('#vision-canvas', { zIndex: 1, opacity: 1 }, 0);
-    tl.to(camera.position, { ...page1Config.to.camera.position, duration: 0.8 }, 0);
+    tl.to(camera.position, { ...page1Config.to.camera.position, duration: DURATION.section }, 0);
     tl.to(
       camera.rotation,
       {
         ...page1Config.to.camera.rotation,
-        duration: 0.8,
+        duration: DURATION.section,
         onComplete: () => {
           camera.lookAt(centerPoint);
         },
@@ -52,8 +53,8 @@ function MobileConnectGL() {
       { ...page1Config.from.model.position },
       {
         ...page1Config.to.model.position,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: DURATION.section,
+        ease: EASE.out,
       },
       0.5,
     );
@@ -62,14 +63,14 @@ function MobileConnectGL() {
       { ...page1Config.from.model.rotation },
       {
         ...page1Config.to.model.rotation,
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: DURATION.section,
+        ease: EASE.out,
       },
       '<',
     );
 
     // Fade in content
-    tl.to('#mobile-connect-content', { opacity: 1, duration: 0.5 }, 0.2);
+    tl.to('#mobile-connect-content', { opacity: 1, duration: DURATION.moderate }, 0.2);
 
     startAnimTLRef.current = tl;
     return () => {

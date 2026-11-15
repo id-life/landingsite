@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { NAV_LIST } from '../nav/nav';
+import { EASE, LOOP } from '@/motion/tokens';
 
 interface ScrollButtonProps {
   className?: string;
@@ -41,10 +42,10 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
         width: '9.875rem',
         height: '4.75rem',
         opacity: 0,
-        duration: 2,
+        duration: LOOP.ripple,
         delay,
         repeat: -1,
-        ease: 'none',
+        ease: EASE.linear,
         onStart: () => {
           gsap.set(el, { width: 0, height: 0, opacity: 1 });
         },

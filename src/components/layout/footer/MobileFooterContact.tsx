@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef } from 'react';
 import FooterContactContent from './FooterContactContent';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export default function MobileFooterContact() {
   const subscribeRef = useRef<HTMLDivElement | null>(null);
@@ -58,7 +59,7 @@ export default function MobileFooterContact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            transition={{ duration: DURATION.fast, ease: EASE.out }}
             className="page-footer fixed inset-x-0 bottom-0 z-[102] border-2 border-white bg-white/20 p-5 backdrop-blur-xl"
           >
             <FooterContactContent />
@@ -69,7 +70,7 @@ export default function MobileFooterContact() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{ duration: DURATION.fast, ease: EASE.out }}
             onClick={() => setIsSubscribeShow(true)}
             className="group fixed bottom-6.5 left-5 z-[90] flex h-9 cursor-pointer items-center justify-center gap-1 py-0.5 pl-3 pr-1.5 font-text text-base/5 font-semibold hover:opacity-80"
           >

@@ -25,31 +25,9 @@ export default function PCNav() {
   const { isSubscribeShow, onSubscribeClick, handleScroll } = useSubscribeAction();
 
   useEffect(() => {
-    window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
-  }, []);
-
-  useEffect(() => {
-    const navElement = document.getElementById('nav');
-    if (!navElement) return;
-
-    let _isSmootherScrolling = window.isSmootherScrolling || false;
-
-    Object.defineProperty(window, 'isSmootherScrolling', {
-      get() {
-        return _isSmootherScrolling;
-      },
-      set(newValue) {
-        _isSmootherScrolling = newValue;
-        if (newValue) {
-          navElement.style.opacity = '0.5';
-          navElement.style.pointerEvents = 'none';
-        } else {
-          navElement.style.opacity = '1';
-          navElement.style.pointerEvents = 'auto';
-        }
-      },
-      configurable: true,
-    });
+    const toTop = () => window.scrollTo({ top: 0 });
+    window.addEventListener('beforeunload', toTop);
+    return () => window.removeEventListener('beforeunload', toTop);
   }, []);
 
   useEvent('scroll', handleScroll);
@@ -58,8 +36,10 @@ export default function PCNav() {
     <div
       id="nav"
       className={cn(
-        'pointer-events-none fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground transition-opacity duration-300 mobile:hidden',
-        uiVisible ? 'opacity-100' : 'opacity-0',
+        'fixed left-0 top-0 z-50 flex w-full items-center gap-15 p-10 text-foreground transition-opacity duration-300 mobile:hidden',
+        // Never dimmed or disabled during a section transition (MOT-01). Before the UI is revealed it takes no
+        // input; after, the bar is clickable, as it always became after the first transition.
+        uiVisible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
       )}
     >
       <div className="pointer-events-auto">

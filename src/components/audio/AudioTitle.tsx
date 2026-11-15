@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { EASE } from '@/motion/tokens';
 
 type MusicTitleProps = {
   width?: number;
@@ -43,7 +44,7 @@ function AudioTitle({ width, title }: MusicTitleProps) {
         {
           x: -offsetX,
           duration: offsetX / 30,
-          ease: 'linear',
+          ease: EASE.linear,
           delay: 1.5,
         },
       );

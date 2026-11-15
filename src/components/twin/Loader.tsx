@@ -8,6 +8,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { isLoadingUIAtom } from '@/atoms/geo';
 import { modelLoadingItemAtom } from '@/atoms/twin';
 import { track } from '@/lib/analytics/track';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export default function Loader() {
   const { progress, item, active } = useProgress();
@@ -36,13 +37,13 @@ export default function Loader() {
     if (!fillRef.current || !inverseTextRef.current) return;
     gsap.to(fillRef.current, {
       width: `${maxProgress}%`,
-      duration: 1,
-      ease: 'none',
+      duration: DURATION.camera,
+      ease: EASE.linear,
     });
     gsap.to(inverseTextRef.current, {
       clipPath: `inset(0 ${100 - maxProgress}% 0 0)`,
-      duration: 1,
-      ease: 'none',
+      duration: DURATION.camera,
+      ease: EASE.linear,
     });
   }, [progress]);
 

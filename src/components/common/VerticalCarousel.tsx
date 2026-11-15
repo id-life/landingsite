@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
 import { ReactNode, useEffect, useMemo, useRef } from 'react';
 import { NAV_LIST } from '../nav/nav';
+import { EASE } from '@/motion/tokens';
 
 interface VerticalCarouselProps {
   children: ReactNode[];
@@ -71,7 +72,7 @@ export default function VerticalCarousel({
             {
               opacity: 0,
               duration: transition / 2,
-              ease: 'power2.inOut',
+              ease: EASE.inOut,
             },
             `item${index}-start`,
           );
@@ -83,7 +84,7 @@ export default function VerticalCarousel({
           {
             y: `-${index * itemHeight}px`,
             duration: transition,
-            ease: 'power2.inOut',
+            ease: EASE.inOut,
           },
           index > 0 ? `item${index}-start` : undefined,
         )
@@ -100,7 +101,7 @@ export default function VerticalCarousel({
         {
           opacity: 0,
           duration: transition / 2,
-          ease: 'power2.inOut',
+          ease: EASE.inOut,
         },
         'loop-start',
       );
@@ -111,7 +112,7 @@ export default function VerticalCarousel({
         {
           y: `-${totalItems * itemHeight}px`,
           duration: transition,
-          ease: 'power2.inOut',
+          ease: EASE.inOut,
           onComplete: () => {
             // 动画完成后立即重置位置到顶部，但不显示这个过程
             if (containerRef.current) {
@@ -131,7 +132,7 @@ export default function VerticalCarousel({
         tl.to(containerRef.current, {
           y: `-${index * itemHeight}px`,
           duration: transition,
-          ease: 'power2.inOut',
+          ease: EASE.inOut,
         }).to(containerRef.current, {
           duration: duration,
         });
@@ -141,7 +142,7 @@ export default function VerticalCarousel({
       tl.to(containerRef.current, {
         y: `-${totalItems * itemHeight}px`,
         duration: transition,
-        ease: 'power2.inOut',
+        ease: EASE.inOut,
         onComplete: () => {
           // 动画完成后立即重置位置到顶部，但不显示这个过程
           if (containerRef.current) {

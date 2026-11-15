@@ -14,6 +14,7 @@ import { currentPageAtom } from '@/atoms';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { reportError } from '@/lib/report';
+import { DURATION, EASE } from '@/motion/tokens';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -53,7 +54,7 @@ export default function SwitchModel() {
       scale: 1.03,
       transition: {
         duration: ANIMATION_CONFIG.scaleDuration * 0.8,
-        ease: 'easeOut',
+        ease: EASE.out,
       },
     });
 
@@ -69,7 +70,7 @@ export default function SwitchModel() {
             marginTop: 4,
             transition: {
               duration: ANIMATION_CONFIG.scaleDuration,
-              ease: 'easeOut',
+              ease: EASE.out,
             },
           });
 
@@ -80,7 +81,7 @@ export default function SwitchModel() {
             marginTop: 0,
             transition: {
               duration: ANIMATION_CONFIG.scaleDuration,
-              ease: 'easeOut',
+              ease: EASE.out,
             },
           });
         } catch (error) {
@@ -97,7 +98,7 @@ export default function SwitchModel() {
         scale: 1,
         transition: {
           duration: ANIMATION_CONFIG.scaleDuration,
-          ease: 'easeOut',
+          ease: EASE.out,
         },
       });
     }, totalAnimationTime);
@@ -167,7 +168,7 @@ export default function SwitchModel() {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.killTweensOf(list);
     if (currentModelType === ModelType.Skin) {
-      gsap.to(list, { left: '-80rem', duration: 0.5 }).then(() => {
+      gsap.to(list, { left: '-80rem', duration: DURATION.moderate }).then(() => {
         gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
       });
       setCurrentModel(model);
@@ -175,7 +176,7 @@ export default function SwitchModel() {
       eventBus.next({ type: MessageType.RESET_ANIMATION });
     }
     if (currentModelType === ModelType.Anatomy) {
-      gsap.to(list, { left: '-80rem', delay: 0.5, duration: 0.5 }).then(() => {
+      gsap.to(list, { left: '-80rem', delay: 0.5, duration: DURATION.moderate }).then(() => {
         gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
       });
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });

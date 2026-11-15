@@ -13,6 +13,7 @@ import { useEffect, useId } from 'react';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
+import { DURATION, EASE } from '@/motion/tokens';
 
 type Inputs = {
   EMAIL: string;
@@ -58,8 +59,8 @@ export default function MobileFooter() {
               close: { scale: 0, bottom: '-10rem' },
             }}
             transition={{
-              duration: 0.5,
-              ease: 'easeInOut',
+              duration: DURATION.moderate,
+              ease: EASE.inOut,
             }}
             // 比导航遮罩层级高
             className="page-footer footer-box-clip fixed inset-x-4 bottom-3 z-[101] origin-center border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-4 py-7.5 text-[var(--foreground)] backdrop-blur-md"

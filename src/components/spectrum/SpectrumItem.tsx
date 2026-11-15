@@ -6,6 +6,7 @@ import { spectrumLinkProps } from './spectrumLinkProps';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { trackSpectrumLink } from '@/lib/analytics/spectrum';
+import { DURATION, EASE } from '@/motion/tokens';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
@@ -124,9 +125,9 @@ const SpectrumItem = memo(
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.3,
+              duration: DURATION.base,
               delay: index * 0.05,
-              ease: 'easeOut',
+              ease: EASE.out,
             }}
           >
             <SpectrumLink
@@ -148,9 +149,9 @@ const SpectrumItem = memo(
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.3,
+              duration: DURATION.base,
               delay: index * 0.05,
-              ease: 'easeOut',
+              ease: EASE.out,
             }}
           >
             <SpectrumLink
@@ -205,7 +206,7 @@ const SpectrumItem = memo(
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: DURATION.fast }}
                       className="flex w-full flex-col"
                     >
                       <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain">
@@ -218,7 +219,7 @@ const SpectrumItem = memo(
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: DURATION.fast }}
                       className={linksClassName || 'flex flex-col'}
                     >
                       {spectrumLinks}

@@ -6,7 +6,7 @@ import type { Container, SingleOrMultiple } from '@tsparticles/engine';
 import { loadSlim } from '@tsparticles/slim';
 import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
-
+import { DURATION } from '@/motion/tokens';
 import { color } from '@/styles/tokens';
 
 type ParticlesProps = {
@@ -37,7 +37,7 @@ export const SparklesCore = (props: ParticlesProps) => {
       controls.start({
         opacity: 1,
         transition: {
-          duration: 1,
+          duration: DURATION.camera,
         },
       });
     }
@@ -81,7 +81,7 @@ export const SparklesCore = (props: ParticlesProps) => {
                 },
                 repulse: {
                   distance: 200,
-                  duration: 0.4,
+                  duration: DURATION.moderate,
                 },
               },
             },
@@ -413,7 +413,7 @@ export const SparklesCore = (props: ParticlesProps) => {
                 value: 0,
                 enabled: false,
                 distance: 1,
-                duration: 1,
+                duration: DURATION.camera,
                 factor: 1,
                 speed: 1,
               },

@@ -1,6 +1,12 @@
 import type { Config } from 'tailwindcss';
 import plugin from 'tailwindcss/plugin';
 import { color, accentTint, typeRoles, grid } from './src/styles/tokens';
+import { DURATION, EASE_POINTS, motionCssVariables } from './src/motion/tokens';
+
+// Motion tokens (MOT-08, src/motion/tokens.ts): --dur-* / --ease-* on :root, and duration-<token> / ease-<token>
+// utilities that read them, so CSS transitions play the same durations and curves as GSAP and motion.
+const motionDurations = Object.fromEntries([...Object.keys(DURATION), 'page'].map((n) => [n, `var(--dur-${n})`]));
+const motionEases = Object.fromEntries([...Object.keys(EASE_POINTS), 'linear'].map((n) => [`token-${n}`, `var(--ease-${n})`]));
 
 // Colours, font roles, type roles and the grid come from src/styles/tokens.ts (VIS-02). theme.colors REPLACES
 // Tailwind's palette (theme.extend would keep it: red-600 would silently fall back to #dc2626), so a colour that is
@@ -128,6 +134,8 @@ const config: Config = {
         'move-right': 'move-right 3s linear infinite',
         'fade-in': 'fade-in 1s ease-in-out forwards',
       },
+      transitionDuration: motionDurations,
+      transitionTimingFunction: motionEases,
       fontSize: {
         ss: '0.625rem',
         // The nine type roles (tokens.ts typeRoles; guide: docs/design-tokens.md).
@@ -146,6 +154,8 @@ const config: Config = {
   // Tailwind's own .container (breakpoint max-widths) is replaced by the grid container below.
   corePlugins: { container: false },
   plugins: [
+    // Motion tokens (MOT-08) on :root.
+    plugin(({ addBase }) => addBase({ ':root': motionCssVariables() })),
     // The page grid (tokens.ts grid): .container = 1280 px max content width with fluid margins; .grid-12 = 12
     // columns with 24 px gutters. Both in px and vw, so they hold under the experience's viewport-scaled rem.
     plugin(({ addComponents }) => {

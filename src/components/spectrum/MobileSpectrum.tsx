@@ -9,6 +9,7 @@ import { memo, useEffect, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
+import { MOTION } from '@/motion/presets';
 
 const PAGE_ID = 'spectrum_page';
 // Keep each initiative together, pairing the two shorter sections.
@@ -79,7 +80,7 @@ function MobileSpectrum() {
               initial="enter"
               animate="visible"
               exit="exit"
-              transition={{ duration: reduceMotion ? 0 : 0.2 }}
+              transition={reduceMotion ? MOTION.instant : MOTION.pageStep}
               className="absolute inset-0 flex flex-col justify-center"
             >
               {isSponsor ? (

@@ -4,7 +4,7 @@ import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
-import gsap from 'gsap';
+import { playMenuItems } from '@/motion/menu';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 import Dialog from '.';
@@ -32,20 +32,7 @@ function MobileNavDialog() {
   const startAnim = useCallback(
     (isOpen: boolean) => {
       if (!isMobile) return;
-      if (isOpen) {
-        gsap.set('.mobile-nav-item', { y: 50, opacity: 0 });
-        gsap.to('.mobile-nav-item', {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power4.out',
-          delay: -0.06,
-        });
-      } else {
-        gsap.set('.mobile-nav-item', { y: 0 });
-        gsap.to('.mobile-nav-item', { y: 50, opacity: 0, duration: 0.3, stagger: 0.1, ease: 'power4.in', delay: -0.2 });
-      }
+      playMenuItems('.mobile-nav-item', isOpen);
     },
     [isMobile],
   );

@@ -9,6 +9,7 @@ import { useMobileNavigation } from '../useMobileNavigation';
 import { useNavigation } from '../useNavigation';
 import { SPECTRUM_HASH_ROUTES, SpectrumHashRoute } from './spectrum-routes';
 import { SpectrumRouteConfig, useSpectrumRouter } from './useSpectrumRouter';
+import { afterSectionSettles } from '@/motion/sectionController';
 
 export type SpectrumLinkItem = SpectrumLinkData & {
   key?: string;
@@ -37,7 +38,8 @@ export const useSpectrumData = () => {
         }
         if (!dot) return;
         const { type, index } = dot;
-        setTimeout(() => {
+        // The dot opens once the section transition has landed (it used to be a fixed 300 ms after an instant jump).
+        afterSectionSettles(() => {
           handleClickPoint(type, index, true);
           if (isMobile) {
             eventBus.next({
@@ -45,7 +47,7 @@ export const useSpectrumData = () => {
               payload: { type, index },
             });
           }
-        }, 300);
+        });
       };
     },
     [isMobile, mobileNavChange, handleNavClick, handleClickPoint],

@@ -9,6 +9,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 import { useRetimer } from '@/hooks/useRetimer';
+import { DURATION, EASE } from '@/motion/tokens';
 
 const PAGE_ID = 'portfolio_page';
 const FIRST_PAGE_COUNT = 6;
@@ -68,13 +69,28 @@ function MobilePortfolio() {
     const tl = gsap.timeline();
     timelineRef.current = tl;
 
-    tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' });
+    tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: DURATION.camera, ease: EASE.out });
 
-    tl.fromTo('.page2-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+    tl.fromTo(
+      '.page2-title',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
+      `<${DURATION.moderate}`,
+    );
 
-    tl.fromTo('.page2-fund', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+    tl.fromTo(
+      '.page2-fund',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
+      `<${DURATION.fast}`,
+    );
 
-    tl.fromTo('.page2-contact', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+    tl.fromTo(
+      '.page2-contact',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
+      `<${DURATION.fast}`,
+    );
 
     return tl;
   }, []);
@@ -92,8 +108,8 @@ function MobilePortfolio() {
     tl.to(wrapperRef.current, {
       opacity: 0,
       y: -50,
-      duration: 0.8,
-      ease: 'power2.inOut',
+      duration: DURATION.section,
+      ease: EASE.inOut,
     });
 
     return tl;
@@ -171,7 +187,8 @@ function MobilePortfolio() {
             <div
               key={pageIdx}
               className={cn(
-                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out',
+                // The phone inner-page step (MOT-08): the same 0.25 s ease-out as Spectrum's pages.
+                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-page ease-token-out',
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
                 pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32',
                 innerPageIndex === pageIdx

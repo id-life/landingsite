@@ -13,6 +13,7 @@ import { VideoWithPoster } from './VideoWithPoster';
 import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
+import { DURATION, EASE } from '@/motion/tokens';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -179,8 +180,8 @@ export function MobileWorldMapBookDotContent({
                   },
                 }}
                 transition={{
-                  duration: 0.3,
-                  ease: 'easeInOut',
+                  duration: DURATION.base,
+                  ease: EASE.inOut,
                   delay: 0.2,
                 }}
                 className="-mt-3 flex cursor-pointer flex-col items-center gap-2"

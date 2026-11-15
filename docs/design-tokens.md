@@ -86,3 +86,9 @@ to `calc(var(--u) * n)` first, then the root becomes 16 px and only `--u` is red
   47.2 at 1180, 80 at 1440 (57.6 px margin plus 22.4 px of centring), 320 at 1920. Every route's first text column and
   header logo should sit on that edge (VIS-02 acceptance 3); moving them is a layout change for the single tree
   (w1-tree, NAV-04), not done here.
+
+## Motion
+
+Durations, easings, staggers and distances are motion tokens, not described here: their source is
+`src/motion/tokens.ts` (MOT-08; CSS `--dur-*` / `--ease-*`, Tailwind `duration-<token>` / `ease-token-<name>`), and
+`docs/motion-inventory.md` is their guide.

@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
 import { INTRO, markIntroSeen, shouldSkipIntro, whenElementMounted } from './intro';
+import { DURATION } from '@/motion/tokens';
 
 const InitRotation = Math.PI / 2;
 
@@ -38,14 +39,14 @@ export default function MobileDragonModel(props: {}) {
   const triggerFadeInAnimation = contextSafe(() => {
     const element = document.querySelector('#mobile-fixed-ui');
     const nav = document.querySelector('#mobile-nav');
-    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.21 });
+    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: DURATION.fast });
     if (element)
       gsap.fromTo(
         element,
         { opacity: 0 },
         {
           opacity: 1,
-          duration: 0.21,
+          duration: DURATION.fast,
           onComplete: () => {
             setFadeInAnimCompleted(true);
           },
@@ -84,7 +85,7 @@ export default function MobileDragonModel(props: {}) {
           gsap.to(modelRef.current.rotation, {
             y: rY,
             x: rX,
-            duration: 1.5,
+            duration: DURATION.camera,
             onComplete: () => {
               autoSwingRef.current = true;
               isRecoveringRef.current = false;

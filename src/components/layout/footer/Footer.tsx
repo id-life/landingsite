@@ -15,6 +15,7 @@ import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
+import { DURATION } from '@/motion/tokens';
 
 type Inputs = {
   EMAIL: string;
@@ -66,8 +67,8 @@ export default function Footer() {
   const getTimeline = () => {
     if (!timelineRef.current && footerRef.current && boxRef.current) {
       const tl = gsap.timeline({ paused: true });
-      tl.to(footerRef.current, { bottom: '2.25rem', duration: 0.3 });
-      tl.to(boxRef.current, { width: '40rem', height: '13rem', duration: 0.3 }, '<');
+      tl.to(footerRef.current, { bottom: '2.25rem', duration: DURATION.base });
+      tl.to(boxRef.current, { width: '40rem', height: '13rem', duration: DURATION.base }, '<');
       timelineRef.current = tl;
     }
     return timelineRef.current;

@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
+import { DURATION, EASE } from '@/motion/tokens';
 
 // 自动播放配置
 const AUTO_PLAY_CONFIG = {
@@ -197,15 +198,15 @@ export function useMobileEngagementAnim() {
 
     enterTL.to('.world-map-container', {
       opacity: 1,
-      duration: 0.3,
+      duration: DURATION.base,
     });
     enterTL.to(
       '.world-map-img',
       {
         y: 0,
         opacity: 1,
-        duration: 0.3,
-        ease: 'none',
+        duration: DURATION.base,
+        ease: EASE.linear,
       },
       '<',
     );
@@ -213,8 +214,8 @@ export function useMobileEngagementAnim() {
     enterTL.to(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 1,
       scale: 1,
-      duration: 0.3,
-      ease: 'power2.out',
+      duration: DURATION.base,
+      ease: EASE.out,
       stagger: 0.02,
     });
 

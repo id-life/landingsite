@@ -3,6 +3,7 @@ import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { CustomView } from 'react-device-detect';
+import { DURATION, EASE } from '@/motion/tokens';
 
 interface VideoWithPosterProps {
   coverUrl?: string;
@@ -34,8 +35,8 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
         },
       }}
       transition={{
-        duration: 0.3,
-        ease: 'easeInOut',
+        duration: DURATION.base,
+        ease: EASE.inOut,
       }}
       // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >

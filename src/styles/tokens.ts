@@ -8,8 +8,8 @@
  * - Code that cannot read CSS custom properties (three.js materials, GSAP theme tweens, canvas sketches) imports
  *   the values from here. No six-digit hex literal may appear anywhere else in src (suite static target).
  *
- * Guide for new code: docs/design-tokens.md. Motion tokens (durations, easings) are not defined here: they belong
- * to the motion token source (src/hooks/anim, MOT-08).
+ * Guide for new code: docs/design-tokens.md. Motion tokens (durations, easings, staggers) are not defined here:
+ * src/motion/tokens.ts (MOT-08), documented in docs/motion-inventory.md.
  */
 
 /* ----------------------------------------------------------------------------------------------------------------
