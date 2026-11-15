@@ -10,7 +10,7 @@ import { useProgress } from '@react-three/drei';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -27,7 +27,9 @@ const isTrackedItem = (url: string) => /\.(glb|png)(\?|$)/.test(url);
  * (the dragon model and the wordmark textures) and it leaves once the hero's Suspense boundary has
  * committed (heroReadyAtom). Later-section 3D assets load on approach and never hold it.
  */
-export function OuterLoader() {
+// memo: the loader takes no props, so the experience's own re-renders (section and atom changes in
+// Home / MobileHome) do not re-render it; it renders on mount, when the hero is ready and on exit.
+export const OuterLoader = memo(function OuterLoader() {
   const heroReady = useAtomValue(heroReadyAtom);
   const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
@@ -123,7 +125,7 @@ export function OuterLoader() {
   if (!show) return null;
 
   return <ProgressLoader ref={loaderRef} />;
-}
+});
 
 type ProgressLoaderHandle = {
   /** The full-screen overlay (fades out on exit). */
