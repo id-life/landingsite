@@ -52,7 +52,9 @@ export async function subscribeNewsletter(fields: Record<string, string>): Promi
     if (key.startsWith('amp;')) params.append(key.slice(4), value);
   });
   try {
-    const response = await jsonp(`${MAILCHIMP_ENDPOINT}?${params.toString()}`, undefined, 10000);
+    // 6 s: Mailchimp's JSONP endpoint normally answers in well under a second; past this, a visitor should see
+    // that it failed instead of watching a spinner (it was 10 s).
+    const response = await jsonp(`${MAILCHIMP_ENDPOINT}?${params.toString()}`, undefined, 6000);
     return classifyMailchimpResponse(response);
   } catch (error) {
     if (error === 'JSONP request timeout') {
