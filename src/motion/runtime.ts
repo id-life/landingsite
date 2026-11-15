@@ -1,6 +1,5 @@
 'use client';
 
-import gsap from 'gsap';
 import { useSyncExternalStore } from 'react';
 
 /**
@@ -13,7 +12,9 @@ import { useSyncExternalStore } from 'react';
  * - The next input (or the tab becoming visible again) resumes everything where it was.
  *
  * The browser already stops requestAnimationFrame in a background tab; the hidden-tab pause is for timers and audio
- * visualisers. Code that runs its own loop registers it with onMotionPause.
+ * visualisers. Code that runs its own loop registers it with onMotionPause. This module imports nothing heavy (the
+ * podcast player's visualiser uses it): the GSAP ticker is put to sleep by MotionRuntime, which only the experience
+ * mounts.
  */
 const IDLE_MS = 60_000;
 const INPUT_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart'] as const;
@@ -70,13 +71,8 @@ function releaseFrames() {
 function setPaused(next: boolean) {
   if (paused === next) return;
   paused = next;
-  if (next) {
-    gsap.ticker.sleep();
-    holdFrames();
-  } else {
-    releaseFrames();
-    gsap.ticker.wake();
-  }
+  if (next) holdFrames();
+  else releaseFrames();
   listeners.forEach((listener) => listener(next));
 }
 
