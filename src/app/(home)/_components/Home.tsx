@@ -8,7 +8,8 @@ import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
 import PCFixedUI, { PCAudioPlayer } from '@/components/common/PCFixedUI';
 import Engagement from '@/components/engagement/Engagement';
-import { OuterLoader } from '@/components/gl/ProgressLoader';
+import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
+import { useExperienceMode } from '@/hooks/useExperienceMode';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
 import Footer from '@/components/layout/footer/Footer';
 import FooterContact from '@/components/layout/footer/FooterContact';
@@ -25,6 +26,8 @@ import { useAtom, useAtomValue } from 'jotai';
 
 export default function Home() {
   const [currentPage] = useAtom(currentPageAtom);
+  // ENG-02: without WebGL no canvas, loader or model mounts; the server-rendered poster is the hero.
+  const webgl = useExperienceMode() !== 'static';
 
   const { initializeAnimations } = useHomeAnimations();
 
@@ -48,9 +51,9 @@ export default function Home() {
 
   return (
     <>
-      <OuterLoader />
-      <ThreeWrapper />
-      <TwinThreeWrapper />
+      {webgl ? <OuterLoader /> : <StaticReveal />}
+      {webgl && <ThreeWrapper />}
+      {webgl && <TwinThreeWrapper />}
       <PCAudioPlayer />
       <div id="wrapper">
         <div id="content">

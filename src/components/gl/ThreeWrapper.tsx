@@ -4,10 +4,10 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { PerspectiveCamera, Preload, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
-import GLBoundary from '@/components/gl/GLBoundary';
-import { watchWebGLContext } from '@/lib/analytics/experience';
+import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
+import { markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { HeroAssetsGate, HeroReady, preloadHeroAssets } from '@/components/gl/heroAssets';
 import dynamic from 'next/dynamic';
@@ -32,7 +32,7 @@ export default function ThreeWrapper() {
     <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
-        onCreated={watchWebGLContext('vision')}
+        onCreated={onCanvasCreated('vision')}
         style={{ position: 'fixed', zIndex: 1 }}
         gl={{
           alpha: true,
@@ -41,7 +41,6 @@ export default function ThreeWrapper() {
           pixelRatio: Math.min(devicePixelRatio, isMobile ? 1.5 : 2),
         }}
         dpr={Math.min(devicePixelRatio, isMobile ? 1.5 : 2)}
-        fallback={<div>Sorry no WebGL supported!</div>}
       >
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
@@ -49,16 +48,16 @@ export default function ThreeWrapper() {
         {/* Performance monitoring - development only */}
         {PrefHook && process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
-        <Suspense fallback={null}>
+        <ModelBoundary canvas="vision" model="hero" onError={markHeroSceneFailed}>
           <HeroAssetsGate variant="desktop">
             <VisionGL />
             <Preload all />
             <HeroReady />
           </HeroAssetsGate>
-        </Suspense>
-        <Suspense fallback={null}>
+        </ModelBoundary>
+        <ModelBoundary canvas="vision" model="connect">
           <ConnectGL />
-        </Suspense>
+        </ModelBoundary>
         <EffectComposer>
           <Fluid />
         </EffectComposer>

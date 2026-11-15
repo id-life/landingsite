@@ -28,8 +28,7 @@ import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
-import GLBoundary from '@/components/gl/GLBoundary';
-import { watchWebGLContext } from '@/lib/analytics/experience';
+import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
 export default function TwinThreeWrapper() {
@@ -229,7 +228,7 @@ export default function TwinThreeWrapper() {
         <GLBoundary canvas="twin">
           <Canvas
             id="model-canvas"
-            onCreated={watchWebGLContext('twin')}
+            onCreated={onCanvasCreated('twin')}
             dpr={[1, 2]}
             gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
             style={{
@@ -238,7 +237,6 @@ export default function TwinThreeWrapper() {
               top: '0px',
               height: '100vh',
             }}
-            fallback={<div>Sorry no WebGL supported!</div>}
           >
             <Suspense fallback={<Loader />}>
               <View.Port />
@@ -250,9 +248,19 @@ export default function TwinThreeWrapper() {
               {currentModel && (
                 <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
                   <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-                  {modelType === ModelType.Skin && <Model0Out />}
-                  {modelType === ModelType.Anatomy && <Model0In ref={modelRefs[0]} />}
-                  <EnvironmentGroup />
+                  {modelType === ModelType.Skin && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model0Out">
+                      <Model0Out />
+                    </ModelBoundary>
+                  )}
+                  {modelType === ModelType.Anatomy && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model0In">
+                      <Model0In ref={modelRefs[0]} />
+                    </ModelBoundary>
+                  )}
+                  <ModelBoundary suspense={false} canvas="twin" model="environment">
+                    <EnvironmentGroup />
+                  </ModelBoundary>
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[0]} />
                   <DeferredSettled group="twin" />
@@ -261,9 +269,19 @@ export default function TwinThreeWrapper() {
               {currentModel === PredictionModel.M1 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
                   <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-                  {modelType === ModelType.Skin && <Model1Out />}
-                  {modelType === ModelType.Anatomy && <Model1In ref={modelRefs[1]} />}
-                  <EnvironmentGroup />
+                  {modelType === ModelType.Skin && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model1Out">
+                      <Model1Out />
+                    </ModelBoundary>
+                  )}
+                  {modelType === ModelType.Anatomy && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model1In">
+                      <Model1In ref={modelRefs[1]} />
+                    </ModelBoundary>
+                  )}
+                  <ModelBoundary suspense={false} canvas="twin" model="environment">
+                    <EnvironmentGroup />
+                  </ModelBoundary>
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[1]} />
                 </View>
@@ -271,9 +289,19 @@ export default function TwinThreeWrapper() {
               {currentModel === PredictionModel.M2 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
                   <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-                  {modelType === ModelType.Skin && <Model2Out />}
-                  {modelType === ModelType.Anatomy && <Model2In ref={modelRefs[1]} />}
-                  <EnvironmentGroup />
+                  {modelType === ModelType.Skin && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model2Out">
+                      <Model2Out />
+                    </ModelBoundary>
+                  )}
+                  {modelType === ModelType.Anatomy && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model2In">
+                      <Model2In ref={modelRefs[1]} />
+                    </ModelBoundary>
+                  )}
+                  <ModelBoundary suspense={false} canvas="twin" model="environment">
+                    <EnvironmentGroup />
+                  </ModelBoundary>
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[1]} />
                 </View>
@@ -281,9 +309,19 @@ export default function TwinThreeWrapper() {
               {currentModel === PredictionModel.M3 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
                   <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
-                  {modelType === ModelType.Skin && <Model3Out />}
-                  {modelType === ModelType.Anatomy && <Model3In ref={modelRefs[1]} />}
-                  <EnvironmentGroup />
+                  {modelType === ModelType.Skin && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model3Out">
+                      <Model3Out />
+                    </ModelBoundary>
+                  )}
+                  {modelType === ModelType.Anatomy && (
+                    <ModelBoundary suspense={false} canvas="twin" model="Model3In">
+                      <Model3In ref={modelRefs[1]} />
+                    </ModelBoundary>
+                  )}
+                  <ModelBoundary suspense={false} canvas="twin" model="environment">
+                    <EnvironmentGroup />
+                  </ModelBoundary>
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[1]} />
                 </View>

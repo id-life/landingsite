@@ -144,9 +144,10 @@ export default defineConfig([
     rules: { 'no-console': ['warn', { allow: ['warn', 'error', 'info'] }] },
   },
   {
-    // Raw HTML is allowed in two places only: structured data (JsonLd escapes every '<') and the analytics head
-    // script, a constant built from code that must run during HTML parsing (DATA-08).
-    files: ['src/components/seo/JsonLd.tsx', 'src/lib/analytics/HeadScript.tsx'],
+    // Raw HTML is allowed in three places only: structured data (JsonLd escapes every '<'), the analytics head
+    // script (DATA-08) and the WebGL probe that gates the hero model preload (ENG-02), both constants built from
+    // code that must run during HTML parsing.
+    files: ['src/components/seo/JsonLd.tsx', 'src/lib/analytics/HeadScript.tsx', 'src/components/gl/HeroPreloads.tsx'],
     rules: { 'no-restricted-syntax': 'off' },
   },
 ]);

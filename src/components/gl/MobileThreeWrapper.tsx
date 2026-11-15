@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import { Fluid } from './fluid/Fluid';
@@ -8,8 +8,8 @@ import MobileConnectGL from './MobileConnectGL';
 import MobileVisionGL from './MobileVisionGL';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import GLBoundary from '@/components/gl/GLBoundary';
-import { watchWebGLContext } from '@/lib/analytics/experience';
+import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
+import { markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useGLTF } from '@react-three/drei';
 import { HeroAssetsGate, HeroReady, preloadHeroAssets } from './heroAssets';
@@ -27,7 +27,7 @@ export default function MobileThreeWrapper() {
     <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
-        onCreated={watchWebGLContext('vision')}
+        onCreated={onCanvasCreated('vision')}
         className={cn('pointer-events-none', !showCanvas && 'invisible opacity-0')}
         style={{ position: 'fixed', zIndex: 1 }}
         camera={{ position: [0, 0, 10], fov: 40 }}
@@ -36,20 +36,19 @@ export default function MobileThreeWrapper() {
           antialias: true,
           powerPreference: 'high-performance',
         }}
-        fallback={<div>Sorry no WebGL supported!</div>}
       >
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
-        <Suspense fallback={null}>
+        <ModelBoundary canvas="vision" model="hero" onError={markHeroSceneFailed}>
           <HeroAssetsGate variant="phone">
             <MobileVisionGL />
             <HeroReady />
           </HeroAssetsGate>
-        </Suspense>
-        <Suspense fallback={null}>
+        </ModelBoundary>
+        <ModelBoundary canvas="vision" model="connect">
           <MobileConnectGL />
-        </Suspense>
+        </ModelBoundary>
         <EffectComposer>
           <Fluid />
         </EffectComposer>

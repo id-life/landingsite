@@ -5,6 +5,8 @@ import { peek } from 'suspend-react';
 import * as THREE from 'three';
 import { GLTF, GLTFLoader, MeshoptDecoder, SVGLoader } from 'three-stdlib';
 import { heroReadyAtom } from '@/atoms/loading';
+import { jotaiStore } from '@/atoms/store';
+import { heroSceneFailedAtom } from '@/hooks/useExperienceMode';
 import { HERO_MODEL_URL, HERO_PHONE_SVG_URLS, HERO_TEXTURE_URLS } from './heroAssetUrls';
 
 /**
@@ -92,6 +94,8 @@ export function HeroAssetsGate({ variant, children }: PropsWithChildren<{ varian
     preloadHeroAssets(variant);
     let frame = 0;
     const check = () => {
+      // A hero file that failed never reaches the cache: stop polling (the poster stands in, ENG-02).
+      if (jotaiStore.get(heroSceneFailedAtom)) return;
       if (heroAssetsCached(variant)) setCached(true);
       else frame = requestAnimationFrame(check);
     };

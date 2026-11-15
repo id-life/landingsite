@@ -68,6 +68,13 @@ let probed: boolean | null = null;
 /** Whether this browser can create a WebGL context; a failure is reported once (webgl_unavailable). */
 export function probeWebGL() {
   if (probed !== null || typeof document === 'undefined') return probed ?? true;
+  // HeroPreloads probed while the HTML was parsed (a client-side navigation skips that script).
+  const early = (window as Window & { __idlWebGL?: boolean }).__idlWebGL;
+  if (typeof early === 'boolean') {
+    probed = early;
+    if (!probed) reportExperienceError('webgl_unavailable');
+    return probed;
+  }
   try {
     const canvas = document.createElement('canvas');
     const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as WebGLRenderingContext | null;

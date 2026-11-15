@@ -1,4 +1,5 @@
-import React, { forwardRef, Ref, Suspense } from 'react';
+import React, { forwardRef, Ref } from 'react';
+import { ModelBoundary } from '@/components/gl/GLBoundary';
 import * as THREE from 'three';
 
 import Animal2Model from '@/components/gl/model/connect/Animal2Model';
@@ -12,10 +13,11 @@ const AnimalModel = forwardRef((props, ref: Ref<THREE.Group>) => {
   return (
     <group ref={ref} {...props}>
       {deferredReady && (
-        <Suspense fallback={null}>
+        // Its own boundary (ENG-02): a jellyfish that fails to load removes only the jellyfish.
+        <ModelBoundary canvas="vision" model="jellyfish">
           <Animal2Model />
           <DeferredSettled group="jellyfish" />
-        </Suspense>
+        </ModelBoundary>
       )}
     </group>
   );
