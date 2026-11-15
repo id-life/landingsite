@@ -4,17 +4,18 @@ import JsonLd from '@/components/seo/JsonLd';
 import { ORG_ADDRESS, ORG_COVER, ORG_ID, ORG_LOGO, WEBSITE_ID, breadcrumbJsonLd } from '@/constants/entity';
 import { absoluteUrl } from '@/constants/site';
 import { FUND } from '@/content/fund';
-import { profileText } from '@/content/profile';
 import { THEMES } from '@/content/themes';
 import AboutView, { ABOUT_TITLE } from './_components/AboutView';
 
-const description = profileText('about-summary').en;
+// The one-sentence statement (76 characters) suits a search snippet; the page itself opens with the two-sentence summary.
+const description = FUND.statement.text.en;
 
 export const metadata: Metadata = {
   alternates: { canonical: '/about' },
   title: 'About',
   description,
   openGraph: {
+    type: 'website',
     title: ABOUT_TITLE,
     siteName: 'Immortal Dragons',
     description,
