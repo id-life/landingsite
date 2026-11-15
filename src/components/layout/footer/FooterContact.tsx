@@ -21,7 +21,7 @@ import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { trackChannelLink } from '@/lib/analytics/social';
-import { PrivacyChoicesLink } from '@/lib/analytics/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
 
 type Inputs = {
   EMAIL: string;

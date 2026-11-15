@@ -17,7 +17,7 @@ export function analyticsHeadScript() {
   const optIn = JSON.stringify(OPT_IN_COUNTRIES);
   const cookie = JSON.stringify(CONSENT_COOKIE);
   return `(function(){var w=window,d=document,n=navigator;
-w.dataLayer=w.dataLayer||[];function gtag(){w.dataLayer.push(arguments);}w.gtag=gtag;
+if(!w.dataLayer)w.dataLayer=[];function gtag(){w.dataLayer.push(arguments);}w.gtag=gtag;
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
 gtag('set','allow_google_signals',false);gtag('set','allow_ad_personalization_signals',false);gtag('set','ads_data_redaction',true);
 w.__landing={href:location.href,referrer:d.referrer,title:d.title,t0:Math.round(performance.now())};

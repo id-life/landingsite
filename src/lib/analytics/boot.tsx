@@ -4,7 +4,7 @@ import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { GA_DEBUG_MODE, GA_ID, INTERNAL_FLAG_KEY, TRACKING_PARAMS, VERCEL_INSIGHTS_ENABLED } from './config';
 import { getConsentState, startConsent, subscribeConsent } from './consent';
-import ConsentBanner from './ConsentBanner';
+import ConsentBanner from '@/components/consent/ConsentBanner';
 import { advanceStage } from './stage';
 import { isInternalTraffic, setTrackLayout, setTrackMode, track } from './track';
 

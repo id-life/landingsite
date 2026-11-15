@@ -3,9 +3,15 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { isSubscribeShowAtom } from '@/atoms/footer';
-import { ANALYTICS_ENABLED } from './config';
-import { canRenderConsentCopy, CONSENT_COPY, isDraftCopy } from './consent-copy';
-import { chooseConsent, closePrivacyChoices, getConsentState, openPrivacyChoices, subscribeConsent } from './consent';
+import { ANALYTICS_ENABLED } from '@/lib/analytics/config';
+import { canRenderConsentCopy, CONSENT_COPY, isDraftCopy } from '@/lib/analytics/consent-copy';
+import {
+  chooseConsent,
+  closePrivacyChoices,
+  getConsentState,
+  openPrivacyChoices,
+  subscribeConsent,
+} from '@/lib/analytics/consent';
 
 const BUTTON =
   'min-h-11 flex-1 border-2 border-white px-4 py-2 text-sm font-semibold transition-colors hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
@@ -38,7 +44,7 @@ export default function ConsentBanner() {
       data-consent-banner=""
       className="fixed inset-x-0 bottom-0 z-[56] border-t-2 border-white bg-black/85 px-5 py-4 text-white backdrop-blur-md"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 md:flex-row md:items-center md:gap-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-3 notMobile:flex-row notMobile:items-center notMobile:gap-6">
         <div className="flex-1 text-xs/5">
           <h2 id={titleId} className="font-oxanium text-sm font-bold">
             {en.title} · {zh.title}
@@ -58,7 +64,7 @@ export default function ConsentBanner() {
             </a>
           )}
         </div>
-        <div className="flex gap-3 md:w-80">
+        <div className="flex gap-3 notMobile:w-80">
           <button ref={firstButton} type="button" className={BUTTON} onClick={() => chooseConsent('granted')}>
             {en.accept} · {zh.accept}
           </button>

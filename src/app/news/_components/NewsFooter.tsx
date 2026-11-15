@@ -14,7 +14,7 @@ import { submitNewsletter } from '@/utils/newsletter';
 import { ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FormEvent, useState } from 'react';
-import { PrivacyChoicesLink } from '@/lib/analytics/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
