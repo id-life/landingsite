@@ -6,6 +6,7 @@ import { GA_DEBUG_MODE, GA_ID, INTERNAL_FLAG_KEY, TRACKING_PARAMS, VERCEL_INSIGH
 import { getConsentState, startConsent, subscribeConsent } from './consent';
 import ConsentBanner from '@/components/consent/ConsentBanner';
 import { advanceStage } from './stage';
+import { startStream } from './stream';
 import { isInternalTraffic, setTrackLayout, setTrackMode, track } from './track';
 
 const GTAG_SRC = 'https://www.googletagmanager.com/gtag/js?id=';
@@ -104,27 +105,8 @@ async function loadTag(layout: string | undefined) {
   const script = document.createElement('script');
   script.async = true;
   script.src = `${GTAG_SRC}${encodeURIComponent(GA_ID)}`;
+  script.onload = startStream(landing, { layout, internal: isInternalTraffic(), debug: GA_DEBUG_MODE, gaId: GA_ID });
   document.head.appendChild(script);
-  const internal = isInternalTraffic() ? { traffic_type: 'internal' } : {};
-  if (layout) {
-    gtag('set', 'user_properties', { layout });
-    gtag('set', { layout });
-  }
-  gtag('js', new Date());
-  // No page_title here: values given to config stick to every later hit of the stream, and a fixed title would be
-  // reported on every section's page_view (seen in the analytics-build probes). GA4 reads document.title instead.
-  gtag('config', GA_ID, {
-    page_location: landing.href,
-    page_referrer: landing.referrer,
-    ...internal,
-    ...(GA_DEBUG_MODE ? { debug_mode: true } : {}),
-  });
-  // The visitor changed section before the tag existed: count where they are now, once. Later changes are
-  // counted by the tag's own history listener (enhanced measurement, page changes on history events).
-  const landedPath = new URL(landing.href).pathname;
-  if (window.location.pathname !== landedPath) {
-    gtag('event', 'page_view', { page_location: window.location.href, page_title: document.title, ...internal });
-  }
   tagConfigured = true;
   setTrackMode('on');
 }
