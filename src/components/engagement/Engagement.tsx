@@ -2,64 +2,18 @@ import { currentPageAtom } from '@/atoms';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import { NAV_LIST } from '@/components/nav/nav';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS, WORLD_MAP_REGION_DOTS } from '@/constants/engagement';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { isLayoutRefreshing } from '@/motion/sectionController';
+import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAtom } from 'jotai';
-import { memo, useEffect } from 'react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useSetAtom } from 'jotai';
+import { memo } from 'react';
 
 const PAGE_ID = 'engagement_page';
 const engagementNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
 
 function Engagement() {
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // engagement auto scroll to portfolio
-    scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('spectrum-trigger');
-      if (!st) {
-        return;
-      }
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-      });
-    },
-    isUp: true,
-  });
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // engagement auto scroll to twin
-    scrollFn: () => {
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('twin-scroll-trigger');
-      if (!st) {
-        return;
-      }
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('SLOW'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT, // was the only section transition with no ease
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: false,
-  });
+  const setCurrentPage = useSetAtom(currentPageAtom);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -71,11 +25,11 @@ function Engagement() {
         pin: true,
         scrub: true,
         onEnter: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(engagementNavItem);
         },
         onEnterBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(engagementNavItem);
         },
       },
@@ -83,10 +37,6 @@ function Engagement() {
     tl.set('.world-map-img', { y: 50, opacity: 0 });
     tl.set(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 0,
-    });
-    tl.set('.world-map-dot-content', {
-      opacity: 0,
-      height: 0,
     });
 
     // 使用进度位置控制动画时机
@@ -96,38 +46,40 @@ function Engagement() {
     //   setEnableUpJudge(true);
     // });
     // 入场动画序列
-    const entranceDuration = 2 * factor;
+    const entranceDuration = beats(2) * factor;
     tl.to('.world-map-img', {
       y: 0,
       opacity: 1,
-      ease: 'none',
+      ease: EASE.linear,
       duration: entranceDuration,
     });
     tl.to(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 1,
       scale: 1,
-      ease: 'power2.out',
+      ease: EASE.out,
       stagger: entranceDuration * 0.05,
       duration: entranceDuration,
     });
 
+    // Every arrival lands here (MOT-01): the map and its dots fully in, no meeting card open.
+    tl.addLabel('rest');
     // 停留一阵子
-    tl.to(() => {}, { duration: 2 * factor });
+    tl.to(() => {}, { duration: beats(2) * factor });
     // tl.add(() => {
     //   setEnableDownJudge(true);
     // });
     // 出场动画序列
-    const exitDuration = 2 * factor;
+    const exitDuration = beats(2) * factor;
     tl.to(
       ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'],
       {
         opacity: 0,
         // y: -10,
-        ease: 'power2.out',
+        ease: EASE.out,
         stagger: exitDuration * 0.1,
         duration: exitDuration,
       },
-      '+=105',
+      `+=${beats(105)}`,
     );
 
     // tl.to(
@@ -135,22 +87,12 @@ function Engagement() {
     //   {
     //     y: -50,
     //     opacity: 0,
-    //     ease: 'power2.out',
+    //     ease: EASE.out,
     //     duration: exitDuration * 5,
     //   },
     //   '<',
     // );
   }, []);
-
-  useEffect(() => {
-    if (currentPage.id === PAGE_ID) {
-      setEnableUpJudge(true);
-      setEnableDownJudge(true);
-    } else {
-      setEnableUpJudge(false);
-      setEnableDownJudge(false);
-    }
-  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   return (
     <div id={PAGE_ID} className="page-container engagement">

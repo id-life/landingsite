@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import { RefObject } from 'react';
 import { useThrottle } from '../useThrottle';
+import { DURATION, EASE } from '@/motion/tokens';
 
 export interface PortfolioItemAnimationConfig {
   /** 缁勪欢鏄惁鍚敤 */
@@ -32,7 +33,7 @@ export function usePortfolioItemAnimation(
   const createItemHoverAnimation = contextSafe((div: HTMLDivElement) => {
     const tl = gsap.timeline({
       paused: true,
-      defaults: { ease: 'power2.out', duration: 0.3 },
+      defaults: { ease: EASE.out, duration: DURATION.base },
     });
 
     // 涓昏缂╂斁鍔ㄧ敾
@@ -91,6 +92,11 @@ export function usePortfolioItemAnimation(
 
       wrapper.addEventListener('mouseenter', handleWrapperMouseEnter);
       wrapper.addEventListener('mouseleave', handleWrapperMouseLeave);
+      // revertOnUpdate reverts the tweens, not DOM listeners: each one is removed here (MOT-14).
+      const removers: (() => void)[] = [
+        () => wrapper.removeEventListener('mouseenter', handleWrapperMouseEnter),
+        () => wrapper.removeEventListener('mouseleave', handleWrapperMouseLeave),
+      ];
 
       // 涓烘瘡涓」鐩垱寤哄姩鐢诲拰浜嬩欢鐩戝惉
       const itemAnimations: gsap.core.Timeline[] = [];
@@ -116,7 +122,12 @@ export function usePortfolioItemAnimation(
 
         div.addEventListener('mouseenter', handleMouseEnter);
         div.addEventListener('mouseleave', handleMouseLeave);
+        removers.push(() => {
+          div.removeEventListener('mouseenter', handleMouseEnter);
+          div.removeEventListener('mouseleave', handleMouseLeave);
+        });
       });
+      return () => removers.forEach((remove) => remove());
     },
     {
       scope: wrapperRef,

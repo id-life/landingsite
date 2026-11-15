@@ -39,7 +39,25 @@ const restrictedSyntax = [
     message:
       'No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use).',
   },
+  // Motion tokens (MOT-08): durations, eases and staggers come from src/motion/tokens.ts, so the feel is retuned in
+  // one place. src/motion itself is exempt (below).
+  {
+    selector: "Property[key.name='duration'] > Literal[raw=/^\\.?\\d/]",
+    message:
+      "No numeric duration: use DURATION.<token> (or beats(n) inside a scrubbed timeline) from '@/motion/tokens' (MOT-08).",
+  },
+  {
+    selector: "Property[key.name='ease'] > Literal[raw=/^['\"]/]",
+    message: "No ease name: use EASE.<token> from '@/motion/tokens', the same curve CSS and motion play (MOT-08).",
+  },
+  {
+    selector:
+      "CallExpression[callee.property.name='timeline'] > ObjectExpression > Property[key.name=/^(duration|ease|stagger)$/]",
+    message: "GSAP ignores duration, ease and stagger among a timeline's own vars: put them in { defaults: { ... } } (MOT-08).",
+  },
 ];
+
+const isMotionRule = (rule) => /MOT-08/.test(rule.message);
 
 // Every rule above except the NAV_LIST one (a later config replaces the whole rule).
 const restrictedSyntaxWithoutNavList = restrictedSyntax.filter(
@@ -131,6 +149,11 @@ export default defineConfig([
       'src/hooks/useMobileNavigation.tsx',
     ],
     rules: { 'no-restricted-syntax': ['error', ...restrictedSyntaxWithoutNavList] },
+  },
+  {
+    // The motion token module defines the literals everyone else uses.
+    files: ['src/motion/**'],
+    rules: { 'no-restricted-syntax': ['error', ...restrictedSyntax.filter((rule) => !isMotionRule(rule))] },
   },
   {
     // Command-line scripts report on stdout.

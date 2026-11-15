@@ -4,6 +4,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { debounce } from 'lodash-es';
 import { useEffect, useRef } from 'react';
+import { currentSection, resnapSection, setLayoutRefreshing } from '@/motion/sectionController';
 
 /**
  * Hook to refresh ScrollTrigger and ScrollSmoother on window resize.
@@ -14,15 +15,15 @@ export function useResizeRefresh() {
   const isRefreshingRef = useRef(false);
 
   useEffect(() => {
-    // Initialize the resize flag
-    window.isResizing = false;
+    setLayoutRefreshing(false);
 
     const handleResize = debounce(() => {
       if (isRefreshingRef.current) return;
       isRefreshingRef.current = true;
 
       // 1. Set resize flag to prevent ScrollTrigger callbacks from executing
-      window.isResizing = true;
+      const section = currentSection();
+      setLayoutRefreshing(true);
 
       // 2. Refresh ScrollSmoother
       const smoother = ScrollSmoother.get();
@@ -34,8 +35,10 @@ export function useResizeRefresh() {
       // 4. Delay reset of resize flag to ensure callbacks have finished
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          window.isResizing = false;
+          setLayoutRefreshing(false);
           isRefreshingRef.current = false;
+          // The pins changed length: put the view back on the rest pose of the section it was on.
+          resnapSection(section);
         });
       });
     }, 200);

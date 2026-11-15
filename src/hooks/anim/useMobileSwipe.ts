@@ -80,7 +80,7 @@ export function useMobileSwipe() {
         Math.abs(window.scrollY - pageY) > 2 || (scroller !== null && Math.abs(scroller.scrollTop - scrollerTop) > 2);
       if (scrolled) return;
       if (pageRef.current.id === 'connect_page' && dir === 'down') return; // last section
-      stepRef.current(dir === 'up');
+      stepRef.current(dir === 'up', 'swipe');
     };
 
     window.addEventListener('touchstart', onStart, { passive: true });

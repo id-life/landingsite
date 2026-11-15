@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { NavItem } from '@/components/nav/nav';
 import { sectionTitle } from '@/constants/section-titles';
 import { noteSectionView } from '@/lib/analytics/section-view';
+import { isSectionMoving } from '@/motion/sectionController';
 
 /**
  * Keep the address bar and the tab title on the section the visitor is looking at, so reload,
@@ -20,7 +21,8 @@ export function useSectionUrlSync(currentPage: NavItem, ready: boolean, { replac
     let attempts = 0;
     const sync = () => {
       if (cancelled) return;
-      if (window.isNavScrolling || window.isSmootherScrolling) {
+      // The section controller writes the URL when its own transitions end; this catches the rest (the scrollbar).
+      if (isSectionMoving()) {
         if (++attempts < 40) setTimeout(sync, 150);
         return;
       }

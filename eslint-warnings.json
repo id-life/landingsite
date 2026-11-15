@@ -1,5 +1,5 @@
 {
-  "total": 154,
+  "total": 151,
   "byRule": {
     "@next/next/no-location-assign-relative-destination": 1,
     "@typescript-eslint/no-unused-expressions": 3,
@@ -12,7 +12,7 @@
     "react-hooks/immutability": 18,
     "react-hooks/incompatible-library": 1,
     "react-hooks/preserve-manual-memoization": 1,
-    "react-hooks/refs": 31,
+    "react-hooks/refs": 28,
     "react-hooks/set-state-in-effect": 12
   }
 }

@@ -1,62 +1,91 @@
 import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
-import { NAV_LIST, NavItem } from '@/components/nav/nav';
-import { useMobileThemeTransition } from '@/hooks/useMobileThemeTransition';
+import { jotaiStore } from '@/atoms/store';
+import { mobileThemeTransitioningAtom } from '@/atoms/theme';
+import { NAV, NAV_LIST, NavItem } from '@/components/nav/nav';
+import {
+  goToSection,
+  registerSectionDriver,
+  sectionIndex,
+  type SectionDriver,
+  type SectionSource,
+  type SectionTransition,
+} from '@/motion/sectionController';
+import { DURATION } from '@/motion/tokens';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef } from 'react';
-import { sectionTitle } from '@/constants/section-titles';
-import { noteSectionView } from '@/lib/analytics/section-view';
+import { useCallback, useEffect } from 'react';
 
+/** Show a section on the phone tree (the visible change; the URL is the controller's). */
+function show(item: NavItem) {
+  jotaiStore.set(mobileCurrentPageAtom, item);
+  jotaiStore.set(innerPageIndexAtom, 0); // 切换页面时重置内页索引
+  if (item.id !== NAV.connect_page.id) {
+    // Connect is the one section that scrolls: leaving it returns the page to the top.
+    gsap.to(window, { scrollTo: 0, duration: DURATION.base });
+    jotaiStore.set(innerPageTotalAtom, 0);
+  }
+}
+
+/**
+ * A section change asked for while the background theme still transitions waits for it (the latest request
+ * wins). To the controller it is a transition that ends when the section is shown, so a step or a nav tap in
+ * the meantime retargets it instead of being dropped.
+ */
+function afterThemeTransition(item: NavItem): SectionTransition {
+  let onComplete: (() => void) | null = null;
+  let unsubscribe: (() => void) | null = null;
+  const done = () => {
+    unsubscribe?.();
+    unsubscribe = null;
+    show(item);
+    onComplete?.();
+  };
+  return {
+    play: () => {
+      if (!jotaiStore.get(mobileThemeTransitioningAtom)) return done();
+      unsubscribe = jotaiStore.sub(mobileThemeTransitioningAtom, () => {
+        if (!jotaiStore.get(mobileThemeTransitioningAtom)) done();
+      });
+    },
+    reverse: () => undefined,
+    kill: () => {
+      unsubscribe?.();
+      unsubscribe = null;
+    },
+    eventCallback: (type, callback) => {
+      if (type === 'onComplete') onComplete = callback;
+    },
+  };
+}
+
+const phoneDriver: SectionDriver = {
+  tree: 'phone',
+  current: () => Math.max(0, sectionIndex(jotaiStore.get(mobileCurrentPageAtom).id)),
+  stepTarget(dir) {
+    const next = phoneDriver.current() + dir;
+    return next >= 0 && next < NAV_LIST.length ? next : null;
+  },
+  move(to) {
+    const item = NAV_LIST[to];
+    if (!jotaiStore.get(mobileThemeTransitioningAtom)) {
+      show(item);
+      return null;
+    }
+    return { transition: afterThemeTransition(item), reversible: false };
+  },
+};
+
+/** The phone tree's driver for the section controller (MOT-01). Mounted once, in MobileHome. */
+export function usePhoneSectionDriver() {
+  useEffect(() => registerSectionDriver(phoneDriver), []);
+}
+
+/**
+ * Phone section changes go through the section controller, like the desktop deck's. Kept as a hook so the
+ * menu, arrows, START, swipes and Spectrum links keep one call; new code can call goToSection() directly.
+ */
 export function useMobileNavigation() {
-  const setCurrentPage = useSetAtom(mobileCurrentPageAtom);
-  const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
-  const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
-  const { isTransitioning } = useMobileThemeTransition();
-  const isTransitioningRef = useRef(isTransitioning);
-  isTransitioningRef.current = isTransitioning;
-  // One section change asked for during a background theme transition waits for it (the latest wins).
-  // It used to be dropped silently, so a menu tap or an arrow tap at the wrong moment did nothing.
-  const pendingRef = useRef<NavItem | null>(null);
-
-  const go = useCallback(
-    (item: NavItem) => {
-      setCurrentPage(item);
-      setInnerPageIndex(0); // 切换页面时重置内页索引
-      if (item?.id === NAV_LIST[6].id) {
-        // connect 页面不需要额外处理
-      } else {
-        gsap.to(window, { scrollTo: 0 }); // 从 connect 切换页面时，回到顶部，因为目前就他一个可以滚动的
-        setInnerPageTotal(0);
-      }
-
-      if (item.href !== window.location.pathname) {
-        // Keep the query string (campaign parameters) across section changes. Title first: GA4's page_view for
-        // this pushState reads it (DATA-05).
-        document.title = sectionTitle(item);
-        window.history.pushState({}, '', `${item.href}${window.location.search}`);
-        noteSectionView(document.title);
-      }
-    },
-    [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
-  );
-
-  const mobileNavChange = useCallback(
-    (item: NavItem) => {
-      if (isTransitioningRef.current) {
-        pendingRef.current = item;
-        return;
-      }
-      go(item);
-    },
-    [go],
-  );
-
-  useEffect(() => {
-    if (isTransitioning || !pendingRef.current) return;
-    const item = pendingRef.current;
-    pendingRef.current = null;
-    go(item);
-  }, [isTransitioning, go]);
-
+  const mobileNavChange = useCallback((item: NavItem, source: SectionSource = 'menu') => {
+    goToSection(item.id, source);
+  }, []);
   return { mobileNavChange };
 }
