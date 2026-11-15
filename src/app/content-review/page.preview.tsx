@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import AboutView from '@/app/about/_components/AboutView';
 import NewsStyle from '@/app/news/_components/NewsStyle';
 import { PENDING_RULINGS } from '@/content/approval';
-import { COMPANIES, GRANTS, FUND } from '@/content';
+import * as content from '@/content';
 import { ABOUT_DRAFTS, DRAFT_GROUPS } from '@/content/drafts';
 import type { DraftRecord } from '@/content/schema';
 
@@ -14,19 +14,22 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Which shipped records each pending ruling holds back from new placements. */
+/** Which shipped records each pending ruling holds back from new placements (any record in the content index). */
 function heldBack(ruling: string) {
-  const fund = Object.entries(FUND)
-    .filter(([, value]) => typeof value === 'object' && value && 'approval' in value)
-    .filter(([, value]) => (value as { approval: { pendingRuling?: string } }).approval.pendingRuling === ruling)
-    .map(([key]) => `fund.${key}`);
-  const companies = COMPANIES.filter((c) => c.approval.status === 'legacy' && c.approval.pendingRuling === ruling).map(
-    (c) => `company ${c.name}`,
-  );
-  const grants = GRANTS.filter((g) => g.approval.status === 'legacy' && g.approval.pendingRuling === ruling).map(
-    (g) => `grant ${g.name}`,
-  );
-  return [...fund, ...companies, ...grants];
+  const found: string[] = [];
+  const seen = new Set<unknown>();
+  const walk = (value: unknown, path: string) => {
+    if (!value || typeof value !== 'object' || seen.has(value)) return;
+    seen.add(value);
+    const record = value as { approval?: { pendingRuling?: string }; name?: unknown; slug?: string; id?: string };
+    if (record.approval?.pendingRuling === ruling) {
+      const name = typeof record.name === 'string' ? record.name : (record.slug ?? record.id);
+      found.push(name ? `${path.split('.')[0]} ${name}` : path);
+    }
+    for (const [key, child] of Object.entries(value)) if (key !== 'approval') walk(child, path ? `${path}.${key}` : key);
+  };
+  walk(content, '');
+  return found;
 }
 
 function Lines({ text, lang }: { text: string; lang?: string }) {
