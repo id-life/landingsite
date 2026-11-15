@@ -1,6 +1,7 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { securityHeaders } from './security-headers.mjs';
 
 // 获取当前文件的目录
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,8 @@ const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  // ENG-11: no x-powered-by: Next.js on any route.
+  poweredByHeader: false,
   transpilePackages: ['three'],
   // src has ~59 debugging console.log calls (one fired on every wheel event). Strip console.log/info/debug
   // from production bundles; keep warn and error so real problems still reach the console and Sentry.
@@ -26,10 +29,15 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_DEPLOY_ENV: deployEnv,
     NEXT_PUBLIC_ANALYTICS_ENABLED: analyticsEnabled ? '1' : '0',
+    // ENG-08: Sentry events carry the deployed commit as their release.
+    NEXT_PUBLIC_SENTRY_RELEASE: process.env.VERCEL_GIT_COMMIT_SHA || '',
     // Public, non-secret defaults (they ship in the HTML and the client bundle anyway). They used to come from a
     // committed .env; an environment variable of the same name (Vercel project settings, a local .env) wins.
     NEXT_PUBLIC_API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX || 'https://id-platform.id.life',
-    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || 'G-QZFDSGKKYC',
+    // DATA-15: the production GA4 stream is the default of production builds only. Previews and QA builds send to
+    // their own stream (set NEXT_PUBLIC_GOOGLE_ANALYTICS_ID per Vercel environment) or, without one, load no tag.
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID:
+      process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || (deployEnv === 'production' ? 'G-QZFDSGKKYC' : ''),
     NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE || 'false',
   },
   images: {
@@ -77,6 +85,21 @@ const nextConfig = {
     return config;
   },
   cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
+  async redirects() {
+    return [
+      // ENG-11: when the apex is attached to this project, its redirect carries the headers above (HSTS with
+      // includeSubDomains must come from id.life itself to cover the other id.life hosts).
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'id.life' }],
+        destination: 'https://www.id.life/:path*',
+        permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    return [{ source: '/.well-known/security.txt', destination: '/api/security-txt' }];
+  },
   async headers() {
     return [
       {
@@ -90,6 +113,12 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           // 限制不需要的浏览器功能
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          // ENG-11: CSP, HSTS with includeSubDomains, COOP and CORP (security-headers.mjs).
+          ...securityHeaders({
+            deployEnv,
+            cspMode: process.env.CSP_MODE,
+            turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+          }),
         ],
       },
       {
@@ -112,6 +141,8 @@ export default withSentryConfig(nextConfig, {
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
   widenClientFileUpload: true,
+  // ENG-08: send browser events through this site (/monitoring) so content blockers do not drop them.
+  tunnelRoute: '/monitoring',
   // Replay is not used in the browser (src/instrumentation-client.ts): keep its optional parts out
   // of the bundle even if something pulls the integration in.
   bundleSizeOptimizations: {
