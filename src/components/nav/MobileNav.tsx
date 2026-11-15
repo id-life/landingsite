@@ -42,7 +42,7 @@ export default function MobileNav() {
       <Logo />
       <div className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
         {/* MOT-02: the Motion switch is in the bar, visible on every section. */}
-        <MotionSwitch className="mr-4" />
+        <MotionSwitch className="mr-2" />
         <button
           type="button"
           {...SUBSCRIBE_TRIGGER}

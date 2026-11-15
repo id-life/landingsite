@@ -18,20 +18,21 @@ export default function MotionSwitch({ className }: { className?: string }) {
       aria-pressed={!reduced}
       onClick={() => setMotionEnabled(reduced)}
       className={cn(
-        'pointer-events-auto flex h-10 items-center gap-2 whitespace-nowrap text-sm font-bold uppercase transition-colors duration-base hover:text-accent mobile:h-8 mobile:text-xs/5',
+        'pointer-events-auto flex h-10 shrink-0 items-center gap-2 whitespace-nowrap text-sm font-bold uppercase transition-colors duration-base hover:text-accent mobile:h-8 mobile:gap-1 mobile:text-xs/5',
         className,
       )}
     >
       {/* The state, drawn: a track with its knob right (on) or left (off). */}
-      <span aria-hidden="true" className="relative h-3.5 w-7 rounded-full border border-current">
+      <span aria-hidden="true" className="relative h-3.5 w-7 rounded-full border border-current mobile:h-3 mobile:w-5">
         <span
           className={cn(
-            'absolute top-1/2 size-2 -translate-y-1/2 rounded-full bg-current transition-[left] duration-fast',
-            reduced ? 'left-0.5' : 'left-[0.9375rem]',
+            'absolute top-1/2 size-2 -translate-y-1/2 rounded-full bg-current transition-[left] duration-fast mobile:size-1.5',
+            reduced ? 'left-0.5' : 'left-[0.9375rem] mobile:left-[0.6875rem]',
           )}
         />
       </span>
-      Motion
+      {/* Narrow phones keep the track and give the word to assistive tech only, so the bar fits beside the logo. */}
+      <span className="[@media(max-width:379px)]:sr-only">Motion</span>
     </button>
   );
 }
