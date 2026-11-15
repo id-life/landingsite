@@ -6,8 +6,10 @@ import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 // podcast layout renders it into the HTML, unlike the SUBSCRIBE popup, which loads on first use.
 export default function ContentPageContact() {
   return (
-    // The same side padding as the podcast layout, so the row lines up with the episode column above it.
-    <footer className="mt-15 px-10 pb-15 font-oxanium text-base/5 font-bold mobile:mt-10 mobile:px-5 mobile:pb-10 mobile:text-xs/[15px]">
+    // The same side padding as the podcast layout, so the row lines up with the episode column above it. The bottom
+    // padding clears the episode player, fixed 30 px (phone 12 px) above the bottom edge and 40 px tall, which
+    // otherwise covers the address and the email when the page is scrolled to its end.
+    <footer className="mt-15 px-10 pb-28 font-oxanium text-base/5 font-bold mobile:mt-10 mobile:px-5 mobile:pb-20 mobile:text-xs/[15px]">
       <div className="reading-column mx-auto border-t border-black/10 pt-8">
         <div className="flex items-baseline justify-between gap-6">
           {/* 70%: at 60% the label measured 4.29:1 on white (axe color-contrast, WCAG AA needs 4.5:1 at this size). */}
