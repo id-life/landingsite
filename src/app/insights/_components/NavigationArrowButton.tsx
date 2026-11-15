@@ -20,7 +20,7 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
       )}
     >
       <ArrowDownSVG
-        className={cn('size-5 fill-black', direction === 'prev' ? 'rotate-90' : '-rotate-90', { 'fill-[#999999]': disabled })}
+        className={cn('size-5 fill-black', direction === 'prev' ? 'rotate-90' : '-rotate-90', { 'fill-tone-350': disabled })}
       />
     </button>
   );
@@ -32,13 +32,13 @@ export function MobileNavigationArrowButton({ onClick, disabled, direction, clas
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white disabled:bg-[#F7F8FB] disabled:fill-[#999999]',
+        'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white disabled:bg-tone-50 disabled:fill-tone-350',
         direction === 'prev' ? '-left-5' : '-right-5',
         className,
       )}
     >
       <ArrowDownSVG
-        className={cn('size-4 fill-current', direction === 'prev' ? 'rotate-90' : '-rotate-90', { 'fill-[#999999]': disabled })}
+        className={cn('size-4 fill-current', direction === 'prev' ? 'rotate-90' : '-rotate-90', { 'fill-tone-350': disabled })}
       />
     </button>
   );

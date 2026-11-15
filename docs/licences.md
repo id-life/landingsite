@@ -6,25 +6,25 @@ Commercial font files must not stay publicly downloadable from this repository; 
 
 ## Fonts
 
-| Font | File / source | Licence | Status |
-|---|---|---|---|
-| Poppins | `next/font/google` (self-hosted at build) | SIL Open Font License 1.1 | ok |
-| Oxanium | `next/font/google` (self-hosted at build) | SIL Open Font License 1.1 | ok |
-| Source Han Sans CN (Bold, Medium; subsets) | `src/styles/fonts/SourceHanSansCN-*`, `font-min/` | SIL Open Font License 1.1 (Adobe) | ok |
-| Xirod | `src/styles/fonts/Xirod.ttf` | Typodermic; the file references an agreement that is not in the repository | **owner to confirm** (the plan recommends Typodermic's current free release) |
-| Migrena Grotesque | `src/styles/fonts/Migrena_Grotesque.ttf` | commercial, from a MyFonts webfont kit; a web licence does not allow a public file download | **owner to confirm**, then remove the file from git |
-| TT Lakes DemiBold | `src/styles/fonts/TTLakes-DemiBold.otf` | commercial desktop font (TypeType); the web EULA forbids publicly available font files | **owner to confirm**, then remove the file from git |
+| Font                                       | File / source                                                                                                                                     | Licence                                                                                     | Status                                                                                                                                                                                              |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Poppins                                    | `next/font/google` (self-hosted at build)                                                                                                         | SIL Open Font License 1.1                                                                   | ok                                                                                                                                                                                                  |
+| Oxanium                                    | `next/font/google` (self-hosted at build)                                                                                                         | SIL Open Font License 1.1                                                                   | ok                                                                                                                                                                                                  |
+| Source Han Sans CN (Bold, Medium; subsets) | `src/styles/fonts/cjk-display-*.woff2`, cut by `scripts/build-cjk-subset.mjs` from Adobe's OTFs at a pinned commit (not stored in the repository) | SIL Open Font License 1.1 (Adobe), Reserved Font Name "Source"                              | ok; **owner to confirm** that serving a subset under the original font name is acceptable (OFL section 3 reserves the name for modified versions; the site has shipped subsets since before wave 0) |
+| Xirod                                      | `src/styles/fonts/Xirod.ttf`                                                                                                                      | Typodermic; the file references an agreement that is not in the repository                  | **owner to confirm** (the plan recommends Typodermic's current free release)                                                                                                                        |
+| Migrena Grotesque                          | `src/styles/fonts/Migrena_Grotesque.ttf`                                                                                                          | commercial, from a MyFonts webfont kit; a web licence does not allow a public file download | **owner to confirm**, then remove the file from git                                                                                                                                                 |
+| TT Lakes DemiBold                          | `src/styles/fonts/TTLakes-DemiBold.otf`                                                                                                           | commercial desktop font (TypeType); the web EULA forbids publicly available font files      | **owner to confirm**, then remove the file from git                                                                                                                                                 |
 
 ## 3D models and media
 
-| Asset | Where | Source / licence | Status |
-|---|---|---|---|
-| `logo.glb`, `logo_v1.glb` | `public/models/` | commissioned brand mark (assumed) | **owner to confirm** |
-| `animal2_v2.glb`, `test-v3.glb`, `geo.min.glb` | `public/models/` | unknown | **owner to confirm** |
-| `animal4.glb` | resources.id.life | root node `Sketchfab_model`: a Sketchfab download, and the site shows no credit; most Sketchfab licences (CC BY) require attribution | **owner to confirm** licence and credit line |
+| Asset                                          | Where             | Source / licence                                                                                                                     | Status                                       |
+| ---------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `logo.glb`, `logo_v1.glb`                      | `public/models/`  | commissioned brand mark (assumed)                                                                                                    | **owner to confirm**                         |
+| `animal2_v2.glb`, `test-v3.glb`, `geo.min.glb` | `public/models/`  | unknown                                                                                                                              | **owner to confirm**                         |
+| `animal4.glb`                                  | resources.id.life | root node `Sketchfab_model`: a Sketchfab download, and the site shows no credit; most Sketchfab licences (CC BY) require attribution | **owner to confirm** licence and credit line |
 
 ## Code libraries with notable licences
 
-| Library | Licence |
-|---|---|
+| Library                                                                         | Licence                                                                                                                                                            |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | GSAP 3.15 and @gsap/react (all plugins, including SplitText and ScrollSmoother) | GSAP Standard "no charge" licence, https://gsap.com/standard-license (public npm since 3.13; replaces the members-only tarball that was committed under packages/) |

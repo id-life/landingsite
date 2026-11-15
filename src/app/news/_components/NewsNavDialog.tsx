@@ -11,6 +11,7 @@ import { isNewsNavOpenAtom } from '@/atoms/news';
 import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 
+import BilingualText from '@/components/common/BilingualText';
 export default function NewsNavDialog() {
   const router = useRouter();
   const pathname = usePathname();
@@ -46,7 +47,7 @@ export default function NewsNavDialog() {
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
           </div>
-          <div className="mt-16 font-tt">
+          <div className="mt-16 font-menu">
             {NAV_LIST.map((item) => (
               <div
                 onClick={() => handleNavClick(item)}
@@ -54,7 +55,7 @@ export default function NewsNavDialog() {
                 key={item.id}
               >
                 <div className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
-                  {item.title}
+                  <BilingualText text={item.title} />
                   {pathname === item.href && (
                     <div className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
                   )}

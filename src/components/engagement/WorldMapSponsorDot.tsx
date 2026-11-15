@@ -93,7 +93,7 @@ export function WorldMapSponsorDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center gap-1', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
         {/* 中心红点和波纹 */}
         <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
@@ -155,7 +155,7 @@ export function WorldMapSponsorDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/6 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive ? (
@@ -165,9 +165,9 @@ export function WorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-purple backdrop-blur-2xl"
+                    className="flex items-center gap-1 rounded-lg bg-data-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-purple backdrop-blur-2xl"
                   >
-                    <MeetingSVG className="size-5 fill-purple" />
+                    <MeetingSVG className="size-5 fill-data-purple" />
                     {conferenceText ?? 'Conference'}
                   </motion.div>
                 ) : null}
@@ -176,9 +176,9 @@ export function WorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange backdrop-blur-2xl"
+                    className="flex items-center gap-1 rounded-lg bg-data-yellow/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-yellow backdrop-blur-2xl"
                   >
-                    <SponsorSVG className="size-5 fill-orange" />
+                    <SponsorSVG className="size-5 fill-data-yellow" />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
                 ) : null}
@@ -187,9 +187,9 @@ export function WorldMapSponsorDotPoint({
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.83 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-orange-600/20 p-1 px-2 py-1 text-base/5 font-semibold text-orange-600 backdrop-blur-2xl"
+                    className="flex items-center gap-1 rounded-lg bg-data-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-orange backdrop-blur-2xl"
                   >
-                    <ResearchSVG className="size-5 fill-orange-600" />
+                    <ResearchSVG className="size-5 fill-data-orange" />
                     {researchText ?? 'Research'}
                   </motion.span>
                 )}
@@ -293,7 +293,7 @@ const SponsorItem = memo(
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-oxanium"
+        className="clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-display"
         onMouseLeave={onMouseLeave}
         variants={{
           hidden: {

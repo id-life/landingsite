@@ -95,7 +95,7 @@ function DataTableInner<TData>(
                 key={headerGroup.id}
                 className={cn(
                   {
-                    'sticky top-px z-10 border bg-gray-100': stickyHeader,
+                    'sticky top-px z-10 border bg-tone-75': stickyHeader,
                   },
                   headerRowClass,
                 )}

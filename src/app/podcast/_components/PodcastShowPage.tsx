@@ -45,7 +45,7 @@ export default async function PodcastShowPage({ category }: { category: PodcastC
       <JsonLd data={jsonLd} />
       <div className="mt-2">
         <PodcastCover category={category} />
-        <div className="mt-8.5 h-px bg-gray-950/20 mobile:mt-7.5" />
+        <div className="mt-8.5 h-px bg-tone-950/20 mobile:mt-7.5" />
         <div className="my-15 mobile:my-9">
           <PodcastList category={category} />
         </div>

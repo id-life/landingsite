@@ -21,8 +21,8 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
       </div>
       <span className="mb-4 text-center text-xl leading-6">{title}</span>
       <div className="mb-1 flex space-x-8 text-2xl leading-7">
-        <DotCount className="bg-green-500">{counts[0]}</DotCount>
-        <DotCount className="bg-red-500">{counts[1]}</DotCount>
+        <DotCount className="bg-data-ok">{counts[0]}</DotCount>
+        <DotCount className="bg-accent">{counts[1]}</DotCount>
       </div>
       <a
         href={pdf}

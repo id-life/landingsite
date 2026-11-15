@@ -53,7 +53,7 @@ const PortfolioItem = memo(
         <div className={cn('text-center font-semibold', isGridMode ? 'mt-2 mobile:mt-3' : 'mt-7 mobile:mt-3')}>
           <h3
             className={cn(
-              'fund-title flex-center gap-2.5 font-oxanium tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
+              'fund-title flex-center gap-2.5 font-display tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
               isGridMode ? 'text-sm/5 font-semibold' : 'text-xl/6',
             )}
           >
@@ -92,7 +92,7 @@ const PortfolioItem = memo(
             {description}
           </p>
           {subTitle && !isGridMode && (
-            <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-gray-350 mobile:mt-3">{subTitle}</div>
+            <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-tone-350 mobile:mt-3">{subTitle}</div>
           )}
         </div>
       </>

@@ -84,8 +84,8 @@ export default function FooterContact() {
             aria-label="Contact and subscribe"
             className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4"
           >
-            <div className="mb-7.5 font-oxanium font-bold uppercase">
-              <p className="opacity-50">Media</p>
+            <div className="mb-7.5 font-display font-bold uppercase">
+              <p className="text-tone-650">Media</p>
               <div className="mt-7">
                 {mediaRows.map((row, rowIndex) => (
                   <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
@@ -96,24 +96,24 @@ export default function FooterContact() {
                         href={Links[type]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 hover:text-red-600"
+                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 hover:text-accent"
                       >
                         <CornerBorder />
-                        <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-red-600')} />
-                        <span className="font-oxanium text-base/5 font-bold uppercase">{label}</span>
+                        <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-accent')} />
+                        <span className="font-display text-base/5 font-bold uppercase">{label}</span>
                       </a>
                     ))}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-oxanium text-base/5 font-bold">
+            <div className="font-display text-base/5 font-bold">
               {/* The About link shares the label's row: a line of its own made the panel taller and put it under
                   the section arrows at the bottom of the screen. */}
               <div className="flex items-baseline justify-between gap-6">
-                <p className="uppercase opacity-50">Contact</p>
+                <p className="uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
-                  <a href="/about" className="transition duration-300 hover:text-red-600">
+                  <a href="/about" className="transition duration-300 hover:text-accent">
                     About Immortal Dragons <span aria-hidden="true">→</span>
                   </a>
                   {/* Beside About (DATA-01), not on a line of its own, for the same reason. */}
@@ -130,15 +130,15 @@ export default function FooterContact() {
                 <a
                   href={ORG_MAILTO}
                   data-track-placement="connect"
-                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 hover:text-red-600"
+                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 hover:text-accent"
                 >
                   <img src="/svgs/contact-email.svg" alt="" />
                   {ORG_EMAIL}
                 </a>
               </address>
             </div>
-            <div className="font-oxanium text-base/5 font-bold">
-              <p className="uppercase opacity-50">SUBSCRIBE</p>
+            <div className="font-display text-base/5 font-bold">
+              <p className="uppercase text-tone-650">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
                 noValidate
@@ -149,7 +149,7 @@ export default function FooterContact() {
                   <span
                     id="connect-subscribe-error"
                     role="alert"
-                    className="absolute -top-6 font-poppins text-xs font-semibold text-red-600"
+                    className="absolute -top-6 font-text text-xs font-semibold text-accent"
                   >
                     {errors.EMAIL.message}
                   </span>
@@ -158,7 +158,7 @@ export default function FooterContact() {
                 <label htmlFor="connect-subscribe-email" className="sr-only">
                   Email
                 </label>
-                <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-red-600' : 'border-black')}>
+                <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-accent' : 'border-black')}>
                   <input
                     id="connect-subscribe-email"
                     className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
@@ -179,14 +179,14 @@ export default function FooterContact() {
                     })}
                   />
                 </div>
-                <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
+                <div className="footer-submit-clip relative w-[10.5rem] bg-accent text-white mobile:w-[5.625rem]">
                   {isSubmitting ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent">
                       <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                     </div>
                   ) : null}
                   {isSubmitted ? (
-                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                    <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent font-bold">
                       <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
                     </div>
                   ) : null}
@@ -197,7 +197,7 @@ export default function FooterContact() {
                   />
                 </div>
               </form>
-              <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
+              <div className="mt-3.5 flex gap-1.5 font-text text-xs font-semibold">
                 <InfoSVG className="size-4" />
                 {SUBSCRIBE_PROMISE.priorityAccess}
               </div>

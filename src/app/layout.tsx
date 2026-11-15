@@ -12,6 +12,9 @@ import { AnalyticsBootLazy, VercelInsightsLazy } from '@/lib/analytics/lazy';
 import { VERCEL_INSIGHTS_ENABLED } from '@/lib/analytics/config';
 import { ORG_DESCRIPTION } from '@/constants/entity';
 
+// Design tokens first (VIS-02): every colour, font role, type role and grid value, generated from tokens.ts. Imported
+// here rather than with @import in globals.css, which made it a separate stylesheet request.
+import '@/styles/tokens.css';
 import '@/styles/globals.css';
 // CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
 import '@/content/validate';

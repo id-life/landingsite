@@ -90,7 +90,7 @@ function MobileConnectGL() {
       gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'visible' });
 
       // English visible, Chinese hidden
-      gsap.set('#mobile-connect-content .connect-text-en.text-red-500', { opacity: 1 });
+      gsap.set('#mobile-connect-content .connect-text-en.text-accent', { opacity: 1 });
       gsap.set('#mobile-connect-content .connect-text-cn', { opacity: 0 });
 
       // Reset and play entry animation

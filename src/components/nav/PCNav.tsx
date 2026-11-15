@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { useEvent } from 'react-use';
 import { NAV_LIST } from './nav';
 
+import BilingualText from '@/components/common/BilingualText';
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   // Visible from state, so a remount (Back from /news) shows the nav at once instead of waiting for the intro tween.
@@ -61,7 +62,7 @@ export default function PCNav() {
             )}
             key={item.id}
           >
-            {item.title}
+            <BilingualText text={item.title} />
           </Link>
         ))}
       </div>
@@ -69,7 +70,7 @@ export default function PCNav() {
         {/* The About page (CON-01): a separate page, so a plain link, not a section of the experience. */}
         <Link
           href="/about"
-          className="pointer-events-auto flex h-10 items-center whitespace-nowrap text-sm font-bold uppercase transition-colors duration-300 hover:text-red-600"
+          className="pointer-events-auto flex h-10 items-center whitespace-nowrap text-sm font-bold uppercase transition-colors duration-300 hover:text-accent"
         >
           About
         </Link>
@@ -79,9 +80,9 @@ export default function PCNav() {
           aria-haspopup="dialog"
           aria-expanded={isSubscribeShow}
           onClick={onSubscribeClick}
-          className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
+          className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
         >
-          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
+          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
           Subscribe
         </button>
       </div>

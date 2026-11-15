@@ -33,7 +33,7 @@ export default function PodcastNavTabs() {
             <div
               className={clsx(
                 'relative cursor-pointer text-center font-semibold uppercase',
-                isActive ? 'text-[#c11111]' : 'text-[#222]',
+                isActive ? 'text-accent' : 'text-tone-800',
               )}
             >
               {item.id === 'lt' ? (
@@ -46,7 +46,7 @@ export default function PodcastNavTabs() {
                   <p className="text-sm/4">{chinese}</p>
                 </>
               )}
-              {isActive && <div className="mx-auto mt-1.5 h-0.5 w-5 bg-[#c11111]" />}
+              {isActive && <div className="mx-auto mt-1.5 h-0.5 w-5 bg-accent" />}
             </div>
           </Link>
         );

@@ -18,10 +18,10 @@ const BePartOfItTag = (props: BePartOfItTagProps) => {
   return (
     <div
       className={cn(
-        'h-5 w-[3.3125rem] cursor-pointer border text-center font-poppins text-xs/5 font-semibold tracking-normal',
+        'h-5 w-[3.3125rem] cursor-pointer border text-center font-text text-xs/5 font-semibold tracking-normal',
         isActive
-          ? 'be-part-of-it-tag-active-clip border-red-600 bg-red-600 text-white'
-          : 'be-part-of-it-tag-inactive-clip border-gray-800',
+          ? 'be-part-of-it-tag-active-clip border-accent bg-accent text-white'
+          : 'be-part-of-it-tag-inactive-clip border-tone-800',
         className,
       )}
       onClick={onClick}

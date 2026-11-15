@@ -98,11 +98,11 @@ function Dialog({
       <FloatingPortal>
         {isMounted && (
           <>
-            <FloatingOverlay className={cn('z-[100] bg-gray-400/50 backdrop-blur', overlayClassName)} style={styles} />
+            <FloatingOverlay className={cn('z-[100] bg-tone-400/50 backdrop-blur', overlayClassName)} style={styles} />
             <FloatingFocusManager context={context}>
               <div className={cn('fixed inset-0 z-[100] grid place-items-center', fixClassName)} style={styles}>
                 <div
-                  className={cn('overflow-visible border border-gray-800 bg-white', className)}
+                  className={cn('overflow-visible border border-tone-800 bg-white', className)}
                   {...getFloatingProps({ ref: setFloating })}
                 >
                   <div className={cn('relative min-h-28 min-w-56 mobile:min-w-[18.25rem]', contentClassName)}>

@@ -8,12 +8,12 @@
 
 #loader-container svg polyline#back {
   fill: none;
-  stroke: #ff4d5033;
+  stroke: color-mix(in srgb, var(--color-loader-red) 20%, transparent);
 }
 
 #loader-container svg polyline#front {
   fill: none;
-  stroke: #ff4d4f;
+  stroke: var(--color-loader-red);
   stroke-dasharray: 48, 144;
   stroke-dashoffset: 192;
   animation: dash_682 1.4s linear infinite;

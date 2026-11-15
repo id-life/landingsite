@@ -63,8 +63,8 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           type={type}
           ref={inputRef}
           className={cn(
-            'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-poppins text-xs/5 font-semibold tracking-normal',
-            'disabled:cursor-not-allowed data-[error=true]:border-red-600',
+            'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-text text-xs/5 font-semibold tracking-normal',
+            'disabled:cursor-not-allowed data-[error=true]:border-accent',
             'mobile:w-full',
             className,
           )}
@@ -83,7 +83,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             isActive
           />
         )}
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-text select-none font-poppins text-xs/5 font-semibold tracking-normal">
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-text select-none font-text text-xs/5 font-semibold tracking-normal">
           {value.length}/{maxLength}
         </span>
       </label>
@@ -91,7 +91,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
       {error && (
         <div
           className={cn(
-            'font-poppins text-xs/5 font-semibold tracking-normal text-red-600',
+            'font-text text-xs/5 font-semibold tracking-normal text-accent',
             'absolute -top-6 left-0',
             'mobile:left-2',
           )}
@@ -113,7 +113,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           {/* {error && (
             <span
               className={cn(
-                'font-poppins text-xs/3 font-semibold tracking-normal text-red-600',
+                'font-text text-xs/3 font-semibold tracking-normal text-accent',
                 'absolute bottom-1 right-0',
                 'mobile:bottom-4 mobile:left-0 mobile:pl-3',
               )}
@@ -131,7 +131,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           )}
         >
           <div className="relative flex items-center gap-2">
-            <span className="font-poppins text-xs/5 font-semibold tracking-normal">First Impression?</span>
+            <span className="font-text text-xs/5 font-semibold tracking-normal">First Impression?</span>
             <BePartOfItTag
               impression={CHARACTER_RELATION_IMPRESSION.GOOD}
               isActive={isTagActive}
@@ -145,7 +145,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           </div>
           {/* error msg v1 */}
           {/* {error && (
-            <span className={cn('font-poppins text-xs/3 font-semibold tracking-normal text-red-600', 'mobile:mt-2')}>
+            <span className={cn('font-text text-xs/3 font-semibold tracking-normal text-accent', 'mobile:mt-2')}>
               {error.message}
             </span>
           )} */}

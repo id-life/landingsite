@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/next-font-guard.mjs --before && next build --webpack && node scripts/next-font-guard.mjs --after",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",

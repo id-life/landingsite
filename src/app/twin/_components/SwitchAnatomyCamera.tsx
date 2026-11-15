@@ -39,35 +39,35 @@ export default function SwitchAnatomyCamera() {
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA0)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM02
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA1)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA1 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA1 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM03
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA2)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA2 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA2 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM04
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA3)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA3 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA3 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM05
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA4)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA4 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA4 ? 'fill-accent' : 'fill-black',
                 )}
               />
             </>
@@ -78,21 +78,21 @@ export default function SwitchAnatomyCamera() {
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA0)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA0 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM12
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA5)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA5 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA5 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM13
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA6)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA6 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA6 ? 'fill-accent' : 'fill-black',
                 )}
               />
             </>
@@ -103,21 +103,21 @@ export default function SwitchAnatomyCamera() {
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA7)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA7 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA7 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM22
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA8)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA8 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA8 ? 'fill-accent' : 'fill-black',
                 )}
               />
               <AnatomyM23
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA9)}
                 className={clsx(
                   'h-[32px] w-[32px] cursor-pointer',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA9 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA9 ? 'fill-accent' : 'fill-black',
                 )}
               />
             </>
@@ -128,7 +128,7 @@ export default function SwitchAnatomyCamera() {
                 onClick={() => handleSwitchAnatomyCamera(AnatomyCamera.CAMERA10)}
                 className={clsx(
                   'cursor-pointer w-[32px] h-[32px]',
-                  currentAnatomyCamera === AnatomyCamera.CAMERA10 ? 'fill-red-600' : 'fill-black',
+                  currentAnatomyCamera === AnatomyCamera.CAMERA10 ? 'fill-accent' : 'fill-black',
                 )}
               />
             </>

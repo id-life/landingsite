@@ -8,6 +8,8 @@ import DenmarkSVG from '@/../public/svgs/engagement/denmark.svg?component';
 import FranceSVG from '@/../public/svgs/engagement/france.svg?component';
 import { DURATION } from '@/motion/tokens';
 
+import { color } from '@/styles/tokens';
+
 // pulse animate config
 export type PulseConfig = {
   svgSize: number; // SVG view size
@@ -38,7 +40,7 @@ export const DEFAULT_PULSE_CONFIG: PulseConfig = {
     toRadius: 24,
     duration: DURATION.camera,
   },
-  color: '#C11111',
+  color: color.accent,
 };
 
 // ============================================================================

@@ -86,7 +86,7 @@ export function MobileWorldMapSponsorDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
         {/* 中心红点和波纹 */}
         <PulseDot
           svgSize={svgSize}
@@ -102,7 +102,7 @@ export function MobileWorldMapSponsorDotPoint({
         {/* 标签 */}
         <motion.p
           className={cn(
-            'flex items-center whitespace-nowrap font-oxanium',
+            'flex items-center whitespace-nowrap font-display',
             MOBILE_MAP_SCALE.labelTextClass,
             'font-semibold capitalize text-white',
           )}
@@ -120,11 +120,11 @@ export function MobileWorldMapSponsorDotPoint({
                       'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-purple',
+                      'font-semibold text-data-purple',
                     )}
                   >
-                    <BadgeBlurBg className="bg-purple/20" />
-                    <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-purple')} />
+                    <BadgeBlurBg className="bg-data-purple/20" />
+                    <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-purple')} />
                     {conferenceText ?? 'Conference'}
                   </motion.div>
                 ) : null}
@@ -137,11 +137,11 @@ export function MobileWorldMapSponsorDotPoint({
                       'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-orange',
+                      'font-semibold text-data-yellow',
                     )}
                   >
-                    <BadgeBlurBg className="bg-orange/20" />
-                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange')} />
+                    <BadgeBlurBg className="bg-data-yellow/20" />
+                    <SponsorSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-yellow')} />
                     {sponsorText ?? 'Sponsorship'}
                   </motion.span>
                 ) : null}
@@ -154,11 +154,11 @@ export function MobileWorldMapSponsorDotPoint({
                       'relative flex items-center gap-0.5 rounded',
                       MOBILE_MAP_SCALE.badgePaddingClass,
                       MOBILE_MAP_SCALE.badgeTextClass,
-                      'font-semibold text-orange-600',
+                      'font-semibold text-data-orange',
                     )}
                   >
-                    <BadgeBlurBg className="bg-orange-600/20" />
-                    <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-orange-600')} />
+                    <BadgeBlurBg className="bg-data-orange/20" />
+                    <ResearchSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-orange')} />
                     {researchText ?? 'Research'}
                   </motion.span>
                 )}
@@ -264,7 +264,7 @@ const MobileSponsorItem = memo(
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className={cn('clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-oxanium')}
+        className={cn('clip-sponsor-content flex w-[10rem] origin-top-left flex-col items-center overflow-hidden font-display')}
         onMouseLeave={onMouseLeave}
         variants={{
           hidden: {

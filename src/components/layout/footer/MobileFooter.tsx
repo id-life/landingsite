@@ -75,7 +75,7 @@ export default function MobileFooter() {
             >
               <CloseSVG aria-hidden="true" className="size-5 fill-[var(--foreground)] stroke-2" />
             </button>
-            <h3 id={titleId} className="flex items-center justify-between font-oxanium text-2xl/7.5 font-bold">
+            <h3 id={titleId} className="flex items-center justify-between font-display text-2xl/7.5 font-bold">
               SUBSCRIBE
             </h3>
             <form
@@ -88,7 +88,7 @@ export default function MobileFooter() {
                 <span
                   id="mobile-subscribe-error"
                   role="alert"
-                  className="absolute -top-5 font-poppins text-xs font-semibold text-red-600"
+                  className="absolute -top-5 font-text text-xs font-semibold text-accent"
                 >
                   {errors.EMAIL?.message ?? submitError}
                 </span>
@@ -98,14 +98,14 @@ export default function MobileFooter() {
                 <div
                   className={cn(
                     'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
-                    errors.EMAIL && 'border-red-600 opacity-100',
+                    errors.EMAIL && 'border-accent opacity-100',
                   )}
                 />
                 <label htmlFor={emailId} className="mr-2 shrink-0 text-xs/5 font-semibold opacity-70">
                   Email
                 </label>
                 <input
-                  className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-[16px]/5"
+                  className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600 mobile:text-[16px]/5"
                   id={emailId}
                   placeholder="Please enter email"
                   type="email"
@@ -124,14 +124,14 @@ export default function MobileFooter() {
                   })}
                 />
               </div>
-              <div className="footer-submit-clip relative w-[10.5rem] bg-red-600 text-white mobile:w-[5.625rem]">
+              <div className="footer-submit-clip relative w-[10.5rem] bg-accent text-white mobile:w-[5.625rem]">
                 {isSubmitting ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600">
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent">
                     <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />
                   </div>
                 ) : null}
                 {isSubmitted ? (
-                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-red-600 font-bold">
+                  <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center bg-accent font-bold">
                     <CheckedSVG className="w-6 stroke-white stroke-[3]" />
                   </div>
                 ) : null}

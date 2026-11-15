@@ -6,6 +6,7 @@ import VisionDecorationLogo_5 from '@/../public/svgs/vision/vision-decoration-lo
 import VisionDecorationLogo_6 from '@/../public/svgs/vision/vision-decoration-logo-6.svg?component';
 import { NAV_LIST } from '@/components/nav/nav';
 import { SLOGANS } from '@/content/slogans';
+import { themes } from '@/styles/tokens';
 import { ReactNode } from 'react';
 
 type CarouselItemData = { text?: string; cnText?: string; icon: ReactNode; textClass?: string };
@@ -81,65 +82,8 @@ export type ValueOf<T> = T[keyof T];
 export type BackgroundTheme = ValueOf<typeof BACKGROUND_THEME>;
 
 export const BACKGROUND_COLORS = {
-  [BACKGROUND_THEME.LIGHT]: {
-    '--gradient-from': '#FFFFFF',
-    '--gradient-to': '#CBD6EA',
-    '--background': '#F0F0F0',
-    '--foreground': '#000000',
-    '--gradient-via': '#e5ebf5',
-    '--gradient-via-percent': '50%',
-    '--audio-player': '#2E2F31',
-    '--audio-content': '#E2E8F4',
-    '--audio-border': '#EEF4FF',
-    '--audio-order': '#ffffff',
-    '--audio-desc': '#222222',
-    '--subscribe-border': '#ffffff',
-    '--subscribe-bg': '#ffffff33',
-  },
-  [BACKGROUND_THEME.BLACK]: {
-    '--gradient-from': '#000000',
-    '--gradient-to': '#000000',
-    '--background': '#000000',
-    '--foreground': '#FFFFFF',
-    '--gradient-via': '#000000',
-    '--gradient-via-percent': '50%',
-    '--audio-player': '#F0F0F0',
-    '--audio-content': '#101010',
-    '--audio-border': '#1C1C1C',
-    '--audio-order': '#222222',
-    '--audio-desc': '#999999',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-  },
-  [BACKGROUND_THEME.BLACK_RED]: {
-    '--gradient-from': '#000000',
-    '--gradient-to': '#C111114C',
-    '--background': '#000000',
-    '--foreground': '#F0F0F0',
-    '--gradient-via': '#1E0000',
-    '--gradient-via-percent': '50%',
-    '--audio-player': '#F0F0F0',
-    '--audio-content': '#101010',
-    '--audio-border': '#1C1C1C',
-    '--audio-order': '#222222',
-    '--audio-desc': '#999999',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-  },
-  [BACKGROUND_THEME.BLACK_RED_2]: {
-    '--gradient-from': '#000000',
-    '--gradient-to': '#C111114C',
-    '--background': '#000000',
-    '--foreground': '#F0F0F0',
-    '--gradient-via': '#C1111111',
-    '--gradient-via-percent': '80%',
-    '--gradient-rotate': '300deg',
-    '--audio-player': '#F0F0F0',
-    '--audio-content': '#101010',
-    '--audio-border': '#1C1C1C',
-    '--audio-order': '#222222',
-    '--audio-desc': '#999999',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-  },
+  [BACKGROUND_THEME.LIGHT]: { ...themes.light, '--gradient-via-percent': '50%' },
+  [BACKGROUND_THEME.BLACK]: { ...themes.black, '--gradient-via-percent': '50%' },
+  [BACKGROUND_THEME.BLACK_RED]: { ...themes.blackRed, '--gradient-via-percent': '50%' },
+  [BACKGROUND_THEME.BLACK_RED_2]: { ...themes.blackRed2, '--gradient-via-percent': '80%', '--gradient-rotate': '300deg' },
 } as const;

@@ -15,6 +15,8 @@ import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './Mobi
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
 import { MobileWorldMapSponsorDotContent, MobileWorldMapSponsorDotPoint } from './MobileWorldMapSponsorDot';
 
+import { color } from '@/styles/tokens';
+
 const svgViewBox = {
   w: 756,
   h: 360,
@@ -32,7 +34,7 @@ export const MobileWorldMap = memo(function WorldMapComponent({
   regionDots,
   bookDots,
   sponsorDots,
-  lineColor = '#C11111',
+  lineColor = color.accent,
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);

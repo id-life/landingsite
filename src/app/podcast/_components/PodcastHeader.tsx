@@ -16,6 +16,7 @@ import { track } from '@/lib/analytics/track';
 import { subscribePopupAtom } from '@/atoms/footer';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 
+import BilingualText from '@/components/common/BilingualText';
 // The phone menu (GSAP stagger) loads on its first open, not with the page.
 const PodcastNavDialog = dynamic(() => import('@/app/podcast/_components/PodcastNavDialog'), { ssr: false });
 
@@ -56,7 +57,7 @@ export default function PodcastHeader() {
                   search === item.id && 'nav-active',
                 )}
               >
-                {item.title}
+                <BilingualText text={item.title} />
               </div>
             </Link>
           ))}
@@ -69,9 +70,9 @@ export default function PodcastHeader() {
           {...SUBSCRIBE_TRIGGER}
           aria-haspopup="dialog"
           onClick={handleSubscribeClick}
-          className="group relative flex h-10 w-34 cursor-pointer items-center justify-center text-sm font-semibold uppercase tracking-[0.1em] duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5 mobile:tracking-normal"
+          className="group relative flex h-10 w-34 cursor-pointer items-center justify-center text-sm font-semibold uppercase tracking-[0.1em] duration-300 hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5 mobile:tracking-normal"
         >
-          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
+          <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
           Subscribe
         </button>
         <div className="hidden mobile:block" onClick={() => setMenuOpen(!menuOpen)}>

@@ -8,7 +8,7 @@ import { cn } from '@/utils';
  */
 export default function SectionLoadError({ onRetry, className }: { onRetry: () => void; className?: string }) {
   return (
-    <div role="alert" className={cn('flex flex-col items-center gap-3 py-6 text-center font-poppins', className)}>
+    <div role="alert" className={cn('flex flex-col items-center gap-3 py-6 text-center font-text', className)}>
       <p className="text-sm font-medium">加载失败。Could not load this content.</p>
       <TryAgainButton onClick={onRetry} />
     </div>

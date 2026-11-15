@@ -92,7 +92,7 @@ export function WorldMapBookDotPoint({
         top: `${top}px`,
       }}
     >
-      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center gap-1', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
         {/* 中心红点和波纹 */}
         <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
           <svg
@@ -154,7 +154,7 @@ export function WorldMapBookDotPoint({
           </svg>
         </div>
         {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-oxanium text-base/6 font-semibold capitalize text-white">
+        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white">
           {title}
           <AnimatePresence>
             {isActive && (
@@ -162,9 +162,9 @@ export function WorldMapBookDotPoint({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="flex items-center gap-1 rounded-lg bg-blue/20 p-1 px-2 py-1 text-base/5 font-semibold text-blue backdrop-blur-2xl"
+                className="flex items-center gap-1 rounded-lg bg-data-sky/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-sky backdrop-blur-2xl"
               >
-                <BookSVG className="size-5 fill-cyan" />
+                <BookSVG className="size-5 fill-data-cyan" />
                 Translation
               </motion.span>
             )}
@@ -229,7 +229,7 @@ export function WorldMapBookDotContent({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-2 top-5 flex w-[15.5rem] flex-col items-center overflow-hidden pt-6 font-oxanium')}
+              className={cn('absolute left-2 top-5 flex w-[15.5rem] flex-col items-center overflow-hidden pt-6 font-display')}
               onMouseLeave={handleContentMouseLeave}
             >
               <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} containerClass={containerClass} />
@@ -250,9 +250,9 @@ export function WorldMapBookDotContent({
               >
                 <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
-                  <LinkSVG className={cn('size-4 fill-blue', { 'fill-gray-400': !link })} />
-                  <p className={cn('ml-1 text-xs/3 font-medium text-blue', { 'text-gray-400': !link })}>{desc} </p>
-                  <ArrowSVG className={cn('size-4 -rotate-90 fill-blue', { 'fill-gray-400': !link })} />
+                  <LinkSVG className={cn('size-4 fill-data-sky', { 'fill-tone-400': !link })} />
+                  <p className={cn('ml-1 text-xs/3 font-medium text-data-sky', { 'text-tone-400': !link })}>{desc} </p>
+                  <ArrowSVG className={cn('size-4 -rotate-90 fill-data-sky', { 'fill-tone-400': !link })} />
                 </div>
               </motion.div>
             </motion.div>

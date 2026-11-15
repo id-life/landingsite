@@ -1,5 +1,6 @@
 import { PAGE_IDS } from '@/constants/pages';
 import { beats, EASE } from '@/motion/tokens';
+import { themes } from '@/styles/tokens';
 
 // 主题过渡默认配置
 // Inside the scrubbed section timelines, so the length is in beats (a share of the section's scroll).
@@ -11,97 +12,18 @@ export const THEME_TRANSITION_DEFAULTS = {
 // 主题色彩变换配置
 export const THEME_TRANSITIONS = {
   // Vision: LIGHT theme (default CSS values)
-  [PAGE_IDS.VISION]: {
-    '--gradient-from': '#FFFFFF',
-    '--gradient-via': '#e5ebf5',
-    '--gradient-via-percent': '50%',
-    '--gradient-to': '#CBD6EA',
-    '--background': '#F0F0F0',
-    '--foreground': '#000000',
-    '--audio-player': '#2E2F31',
-    '--audio-content': '#E2E8F4',
-    '--audio-border': '#EEF4FF',
-    '--audio-order': '#ffffff',
-    '--audio-desc': '#222222',
-    '--subscribe-border': '#ffffff',
-    '--subscribe-bg': '#ffffff33',
-    '--gradient-rotate': '90deg',
-  },
+  [PAGE_IDS.VISION]: { ...themes.light, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
   // Portfolio: BLACK_RED theme
-  [PAGE_IDS.PORTFOLIO]: {
-    '--gradient-from': '#000000',
-    '--gradient-via': '#1E0000',
-    '--gradient-via-percent': '50%',
-    '--gradient-to': '#C111114C',
-    '--background': '#000000',
-    '--foreground': '#F0F0F0',
-    '--audio-player': '#F0F0F0',
-    '--audio-content': '#101010',
-    '--audio-border': '#1C1C1C',
-    '--audio-order': '#222222',
-    '--audio-desc': '#999999',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-    '--gradient-rotate': '90deg',
-  },
+  [PAGE_IDS.PORTFOLIO]: { ...themes.blackRed, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
   // Spectrum: BLACK_RED_2 theme
-  [PAGE_IDS.SPECTRUM]: {
-    '--gradient-from': '#000000',
-    '--gradient-via': '#C1111111',
-    '--gradient-via-percent': '80%',
-    '--gradient-to': '#C111114C',
-    '--background': '#000000',
-    '--foreground': '#F0F0F0',
-    '--gradient-rotate': '300deg',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-  },
+  [PAGE_IDS.SPECTRUM]: { ...themes.blackRed2, '--gradient-via-percent': '80%', '--gradient-rotate': '300deg' },
   // Engagement: BLACK theme
-  [PAGE_IDS.ENGAGEMENT]: {
-    '--gradient-from': '#000000',
-    '--gradient-via': '#000000',
-    '--gradient-via-percent': '80%', // 与 Spectrum 保持一致，避免跳变
-    '--gradient-to': '#000000',
-    '--background': '#000000',
-    '--foreground': '#FFFFFF',
-    '--gradient-rotate': '300deg',
-    '--subscribe-border': '#57595C80',
-    '--subscribe-bg': '#00000033',
-  },
+  // '--gradient-via-percent' matches Spectrum's 80% so the gradient does not jump.
+  [PAGE_IDS.ENGAGEMENT]: { ...themes.black, '--gradient-via-percent': '80%', '--gradient-rotate': '300deg' },
   // Twin: LIGHT theme
-  [PAGE_IDS.TWIN]: {
-    '--gradient-from': '#FFFFFF',
-    '--gradient-via': '#e5ebf5',
-    '--gradient-via-percent': '50%',
-    '--gradient-to': '#CBD6EA',
-    '--background': '#F0F0F0',
-    '--foreground': '#000000',
-    '--audio-player': '#2E2F31',
-    '--audio-content': '#E2E8F4',
-    '--audio-border': '#EEF4FF',
-    '--audio-order': '#ffffff',
-    '--audio-desc': '#222222',
-    '--subscribe-border': '#ffffff',
-    '--subscribe-bg': '#ffffff33',
-    '--gradient-rotate': '90deg',
-  },
+  [PAGE_IDS.TWIN]: { ...themes.light, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
   // Insights: LIGHT theme
-  [PAGE_IDS.INSIGHTS]: {
-    '--gradient-from': '#FFFFFF',
-    '--gradient-via': '#e5ebf5',
-    '--gradient-via-percent': '50%',
-    '--gradient-to': '#CBD6EA',
-    '--background': '#F0F0F0',
-    '--foreground': '#000000',
-    '--audio-player': '#2E2F31',
-    '--audio-content': '#E2E8F4',
-    '--audio-border': '#EEF4FF',
-    '--audio-order': '#ffffff',
-    '--audio-desc': '#222222',
-    '--subscribe-border': '#ffffff',
-    '--subscribe-bg': '#ffffff33',
-    '--gradient-rotate': '90deg',
-  },
+  [PAGE_IDS.INSIGHTS]: { ...themes.light, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
 } as const;
 
 // ScrollSmoother 默认配置

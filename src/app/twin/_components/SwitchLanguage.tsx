@@ -27,7 +27,7 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
       <div
         className={clsx(
           'absolute left-0 flex h-full w-[55%] items-center justify-center text-sm/3.5 font-semibold [clip-path:polygon(0_0,80%_0,100%_100%,0_100%)]',
-          isChinese ? 'bg-white text-gray-800' : 'bg-red-700 text-white',
+          isChinese ? 'bg-white text-tone-800' : 'bg-accent-hover text-white',
         )}
       >
         A
@@ -36,7 +36,7 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
       <div
         className={clsx(
           'absolute right-0 z-10 flex h-full w-[55%] items-center justify-center text-sm/3.5 font-semibold [clip-path:polygon(0_0,100%_0,100%_100%,20%_100%)]',
-          isChinese ? 'bg-red-700 text-white' : 'bg-white text-black',
+          isChinese ? 'bg-accent-hover text-white' : 'bg-white text-black',
         )}
       >
         文

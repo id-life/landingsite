@@ -7,19 +7,19 @@ const CharacterRelationLegend = () => {
     label: string;
   }[] = [
     {
-      example: <div className="h-1.5 w-1.5 rounded-full bg-[#00329a]" />,
+      example: <div className="h-1.5 w-1.5 rounded-full bg-data-navy" />,
       label: 'User',
     },
     {
-      example: <div className="h-1.5 w-1.5 rounded-full bg-red-600" />,
+      example: <div className="h-1.5 w-1.5 rounded-full bg-accent" />,
       label: 'Person who inspired them',
     },
     {
-      example: <div className="h-0.5 w-full -translate-y-1/2 rounded-full bg-[#00329a]" />,
+      example: <div className="h-0.5 w-full -translate-y-1/2 rounded-full bg-data-navy" />,
       label: 'First impression is mixed',
     },
     {
-      example: <div className="h-0.5 w-full -translate-y-1/2 rounded-full bg-red-600" />,
+      example: <div className="h-0.5 w-full -translate-y-1/2 rounded-full bg-accent" />,
       label: 'First impression is good',
     },
   ];
@@ -35,7 +35,7 @@ const CharacterRelationLegend = () => {
         {legends.map((legend) => (
           <div key={legend.label} className="flex items-center gap-x-1">
             <div className="flex h-4 w-4 items-center mobile:h-3.5">{legend.example}</div>
-            <div className="font-poppins text-sm/4 font-medium tracking-normal mobile:text-xs/3.5">{legend.label}</div>
+            <div className="font-text text-sm/4 font-medium tracking-normal mobile:text-xs/3.5">{legend.label}</div>
           </div>
         ))}
       </section>

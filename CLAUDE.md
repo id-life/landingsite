@@ -11,6 +11,8 @@ npm ci            # install exactly what package-lock.json pins
 npm run dev       # dev server on http://localhost:3000 (Turbopack; writes to .next/dev, so it can run beside a build)
 npm run build     # production build with webpack (next build --webpack; also type-checks). Not `npx next build`:
                   # Next 16 defaults to Turbopack, which reaches the first screen about 270 ms later here on fast 4G
+                  # npm run build clears .next/cache/webpack first and checks next/font classes after (scripts/next-font-guard.mjs,
+                  # docs/design-tokens.md "Fonts and the build"); a Vercel build command must stay `npm run build`.
 npm run build:turbopack   # the same build on Turbopack, to re-measure before switching
 npm start         # serve the production build
 npm run lint      # ESLint CLI with the flat config in eslint.config.mjs (next lint no longer exists in Next 16)
@@ -100,6 +102,20 @@ Each job is its own status check. Run the same commands locally before pushing.
 - **GSAP stays in the experience.** Plugins are registered in `src/utils/gsap-plugins.ts`, imported by the experience's
   entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
   `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.
+
+## Design tokens and type (VIS-02, VIS-07)
+
+- `src/styles/tokens.ts` is the one source of colours, font roles, type roles and the grid; `tokens.css` is generated
+  from it (`node scripts/build-tokens.mjs`, checked by `test/tokens.test.mjs`). `theme.colors` in tailwind.config.ts
+  REPLACES Tailwind's palette: a palette utility (`text-red-600`) renders nothing, and no six-digit hex may appear in
+  src outside the token files (unit test and suite). After merging new colours run `node scripts/codemod-color-tokens.mjs`.
+- Components name a font role (`font-display`, `font-text`, `font-title`, `font-button`, `font-menu`,
+  `font-brand`), never a face; `FONT_PALETTE` in tokens.ts is the owner's open font choice. Chinese display strings
+  are the closed list in `src/constants/display-strings.ts`, set from a generated Source Han subset
+  (`UPDATE_CJK_SUBSET=1 npx vitest run test/cjk-display.test.mjs`); all other Chinese uses the system faces.
+- The nine type roles are rem-bounded: on the experience and Spectrum tool routes the root is still 0.8333vw above
+  768 px, so a role shrinks with the window there. Guide, sizes per viewport and the rule: `docs/design-tokens.md`.
+  Device tiers: `docs/support-matrix.md`.
 
 ## Content pages
 

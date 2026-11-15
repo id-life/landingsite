@@ -104,7 +104,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
         onPointerEnter={onIntent}
         onPointerDown={onIntent}
         onFocus={onIntent}
-        className={clsx('flex items-center rounded-full bg-gray-750', className)}
+        className={clsx('flex items-center rounded-full bg-tone-750', className)}
       >
         <button
           type="button"
@@ -127,7 +127,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             className="mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px]"
           >
             <AudioTitle width={148} title={title || 'Music'} />
-            <span aria-hidden="true" className="h-[14px] w-px bg-[#57595C]" />
+            <span aria-hidden="true" className="h-[14px] w-px bg-tone-650" />
             <PlayListSVG aria-hidden="true" className="size-[16px] fill-white" />
           </button>
         </Popover.Trigger>
@@ -147,7 +147,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
                 animate="visible"
                 exit="hidden"
                 style={{ originX: 1, originY: 1 }}
-                className="z-[51] w-[400px] overflow-hidden rounded-lg bg-[#121212CC] p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
+                className="z-[51] w-[400px] overflow-hidden rounded-lg bg-tone-950/80 p-[20px] before:absolute before:inset-0 before:-z-10 before:backdrop-blur"
               >
                 <DesktopMusicContent isPlaying={isPlaying} />
               </motion.div>
