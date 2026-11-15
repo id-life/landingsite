@@ -5,6 +5,7 @@ import { NewsPageItem } from '@/apis/types';
 import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import { youtubeWatchUrl } from '@/utils/youtube';
 import dynamic from 'next/dynamic';
 
 // The video modal (Floating UI) loads when a video card is first opened, not with the page.
@@ -31,6 +32,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
           setModalLoaded(true);
           setIsModalOpen(true);
         }}
+        linkFallback={isYouTube ? youtubeWatchUrl(data.videoId!) : undefined}
         className="group block cursor-pointer"
       >
         {/* On a short screen (a phone held sideways) the hero takes about a third of the height, so the headline and

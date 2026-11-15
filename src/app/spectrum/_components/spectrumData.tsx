@@ -7,6 +7,8 @@ import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { CollectionPage, WithContext } from 'schema-dts';
 
+import type { JSX } from 'react';
+
 export type SpectrumLinkData = {
   label: string;
   link?: string;

@@ -1,22 +1,44 @@
-import type { KeyboardEvent, ReactNode } from 'react';
+import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 type CardShellProps = {
   /** Destination; without it the card is a button that calls onActivate (e.g. opens a video). */
   href?: string;
   external?: boolean;
   onActivate?: () => void;
+  /**
+   * For a card that opens in place (a video modal): the same content's own URL. The card is then a real link
+   * (crawlable, middle-click and Cmd/Ctrl-click open it in a new tab, works without JavaScript), and a plain
+   * click or Enter calls onActivate instead of leaving the page.
+   */
+  linkFallback?: string;
   className?: string;
   children: ReactNode;
 };
+
+/** A plain primary click: anything else (modifier keys, middle button) keeps the browser's link behaviour. */
+const isPlainClick = (event: MouseEvent) =>
+  !event.defaultPrevented && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 
 /**
  * Outer element of a clickable card: a real <a> when it navigates (so crawlers, middle-click,
  * keyboard and screen readers all work), otherwise a keyboard-operable button.
  */
-export default function CardShell({ href, external = false, onActivate, className, children }: CardShellProps) {
+export default function CardShell({ href, external = false, onActivate, linkFallback, className, children }: CardShellProps) {
   if (href) {
     return (
       <a href={href} className={className} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        {children}
+      </a>
+    );
+  }
+  if (onActivate && linkFallback) {
+    const onClick = (event: MouseEvent<HTMLAnchorElement>) => {
+      if (!isPlainClick(event)) return;
+      event.preventDefault();
+      onActivate();
+    };
+    return (
+      <a href={linkFallback} target="_blank" rel="noopener noreferrer" onClick={onClick} className={className}>
         {children}
       </a>
     );

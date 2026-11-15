@@ -50,8 +50,9 @@ next-env.d.ts
 # Local reference documents (not for the repo)
 *.docx
 
-# Local planning docs (not for the repo)
-docs/
+# Local planning docs (not for the repo); the performance budget is the one committed doc (PERF-09)
+docs/*
+!docs/performance-budget.md
 
 # Local configuration (ENG-10)
 .env

@@ -1,9 +1,4 @@
-import { withSentryConfig } from '@sentry/nextjs';
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-// 获取当前文件的目录
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { withSentryConfig } from '@sentry/nextjs/config';
 
 // Which deployment this build is for. Vercel sets VERCEL_ENV (production | preview | development);
 // anything else (a local build, the self-hosted UAT server) is 'local'.
@@ -27,8 +22,10 @@ if (!['off', 'next', 'cdn'].includes(imageOptimizer)) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Strict Mode stays off until the section effects are idempotent. Under Strict Mode (development only) the five
+  // pinned sections get nested pin spacers (the page shrinks from 22,590 to 9,090 px, the URL desyncs and wheel-up
+  // stalls) and the particle sketch mounts a second p5 canvas. Turn it on once the section controller replaces them.
   reactStrictMode: false,
-  transpilePackages: ['three'],
   // src has ~59 debugging console.log calls (one fired on every wheel event). Strip console.log/info/debug
   // from production bundles; keep warn and error so real problems still reach the console and Sentry.
   compiler: {
@@ -61,6 +58,22 @@ const nextConfig = {
     ...(imageOptimizer === 'off' && { unoptimized: true }),
     ...(imageOptimizer === 'cdn' && { loader: 'custom', loaderFile: './src/lib/image-loader.ts' }),
   },
+  // Turbopack (Next 16's default; used by `next dev` and `npm run build:turbopack`). Same two rules as the webpack
+  // config below: `*.svg?component` imports become React components through SVGR (.svgrrc applies), and GLSL sources
+  // import as strings (no shader uses a glslify pragma, so raw text is what glslify-loader produced).
+  turbopack: {
+    rules: {
+      '*.svg': {
+        condition: { query: /[?&]component(?=&|$)/ },
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+      '*.{glsl,vert,frag}': { type: 'raw' },
+    },
+  },
+  // Production bundler (`npm run build` = `next build --webpack`, the opt-out in the Next 16 upgrade guide): with
+  // Turbopack 16.4 the first screen appeared about 270 ms later on fast 4G (one 1.8 MB lazy chunk holds three, swiper
+  // and the GL code). Re-measure with `npm run build:turbopack` before switching.
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));
     config.module.rules = [
@@ -88,10 +101,13 @@ const nextConfig = {
         test: /\.(glsl|vert|frag)$/,
         use: ['raw-loader', 'glslify-loader'],
       },
+      // n8ao comes in through @react-three/postprocessing 3's index for its <N8AO> effect, which the site does not use.
+      // The package declares no sideEffects flag, so webpack kept all of it (about 70 kB, mostly an inlined noise
+      // texture) on the path to the first canvas.
+      { test: /[\\/]node_modules[\\/]n8ao[\\/]/, sideEffects: false },
     ];
     return config;
   },
-  cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
   async headers() {
     return [
       {
@@ -124,11 +140,9 @@ export default withSentryConfig(nextConfig, {
   // Only print logs for uploading source maps in CI
   // Set to `true` to suppress logs
   silent: !process.env.CI,
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
   widenClientFileUpload: true,
-  // Replay is not used in the browser (src/instrumentation-client.ts): keep its optional parts out
-  // of the bundle even if something pulls the integration in.
+  // Tree-shake the SDK's debug logging, and keep Replay's optional parts out of the bundle (Replay is not used in the
+  // browser, src/instrumentation-client.ts). Applies to webpack and Turbopack builds.
   bundleSizeOptimizations: {
     excludeDebugStatements: true,
     excludeReplayIframe: true,

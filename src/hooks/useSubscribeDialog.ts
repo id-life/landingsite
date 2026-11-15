@@ -33,9 +33,9 @@ export function useSubscribeDialog() {
   const closeWithX = () => dispatch({ type: 'close', method: 'x' });
 
   // A closed popup stays mounted for its closing animation; `inert` keeps it out of the Tab order and away
-  // from assistive technology. Set as a render attribute (React 18 has no inert prop) so it is gone before
-  // the focus manager moves focus in.
-  const closedProps = (open ? {} : { inert: '', 'aria-hidden': 'true' }) as Record<string, string>;
+  // from assistive technology. Set as a render attribute so it is gone before the focus manager moves focus in.
+  // React 19 types inert as a boolean and treats the empty string React 18 needed as false.
+  const closedProps: { inert?: boolean; 'aria-hidden'?: 'true' } = open ? {} : { inert: true, 'aria-hidden': 'true' };
 
   return { open, refs, context, getFloatingProps, titleId, closeWithX, closedProps };
 }

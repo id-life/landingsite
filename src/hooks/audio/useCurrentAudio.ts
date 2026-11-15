@@ -47,6 +47,11 @@ export function requestPlayWhenReady() {
   audio.load();
   primedAudio = audio;
 }
+/** Pressed again before the list arrived: the visitor changed their mind, so nothing starts when it does. */
+export function cancelPlayWhenReady() {
+  playWhenReady = false;
+}
+export const isPlayWhenReadyPending = () => playWhenReady;
 
 const RA = (f: number) =>
   (12194 ** 2 * f ** 4) /
@@ -111,6 +116,9 @@ export default function useCurrentAudio() {
       audioRef.oncanplay = null;
       audioRef.ontimeupdate = null;
       audioRef.ondurationchange = null;
+      // Its pause event arrives after the next track is current and would pause that one.
+      audioRef.onpause = null;
+      audioRef.onplay = null;
     }
 
     if (!currentAudio) return;
@@ -140,6 +148,9 @@ export default function useCurrentAudio() {
     }
 
     audio.volume = 0.3;
+    // Set when the visitor pauses this track; the start-on-ready below must not undo it. (A pause between
+    // pressing play and the metadata arriving used to be overridden when the metadata came in.)
+    let pausedByVisitor = false;
     setAudioRef(audio);
     if (playWhenReady) {
       playWhenReady = false;
@@ -167,7 +178,7 @@ export default function useCurrentAudio() {
         source.connect(analyser);
         analyser.connect(audioContext.destination);
       }
-      dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
+      if (!pausedByVisitor) dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
     };
 
     if (isPreloaded && audio.readyState >= 1) {
@@ -228,7 +239,13 @@ export default function useCurrentAudio() {
       playNextTrack();
     };
 
+    audio.onplay = () => {
+      pausedByVisitor = false;
+    };
+
     audio.onpause = () => {
+      // The pause that precedes 'ended' is the track finishing, not the visitor.
+      if (!audio.ended) pausedByVisitor = true;
       dispatch({ type: AUDIO_DISPATCH.PAUSE });
     };
 
@@ -239,6 +256,8 @@ export default function useCurrentAudio() {
         audio.oncanplay = null;
         audio.ontimeupdate = null;
         audio.ondurationchange = null;
+        audio.onpause = null;
+        audio.onplay = null;
       }
     };
 

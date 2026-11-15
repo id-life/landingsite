@@ -5,6 +5,7 @@ import {
   AUDIO_DISPATCH,
   audioListRequestedAtom,
   currentAudioAtom,
+  currentPlayStatusAtom,
   hasInteractedAtom,
   musicListAtom,
   playlistAtom,
@@ -12,7 +13,12 @@ import {
 import Dialog from '@/components/dialog';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
-import useCurrentMusicControl, { getAudioContext, requestPlayWhenReady } from '@/hooks/audio/useCurrentAudio';
+import useCurrentMusicControl, {
+  cancelPlayWhenReady,
+  getAudioContext,
+  isPlayWhenReadyPending,
+  requestPlayWhenReady,
+} from '@/hooks/audio/useCurrentAudio';
 import { useGA } from '@/hooks/useGA';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -31,6 +37,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   // The player list is fetched on intent: touching or focusing the player, or opening its playlist (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
   const onIntent = () => requestAudioList(true);
@@ -51,9 +58,12 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    // Pressed before the list has arrived: start the first track as soon as it is in.
-    if (!data) requestPlayWhenReady();
-    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    // Pressed before the list has arrived: the control shows the press at once, and a second press cancels it.
+    if (!data) {
+      if (isPlayWhenReadyPending()) cancelPlayWhenReady();
+      else requestPlayWhenReady();
+      setPlayStatus(isPlayWhenReadyPending());
+    } else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 

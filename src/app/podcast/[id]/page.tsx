@@ -44,10 +44,11 @@ const canonicalId = (id: string) => id.replace(/^0+(?=\d)/, '');
 
 type Params = { id: string };
 type PodcastPlayerProps = {
-  params: Params;
+  params: Promise<Params>;
 };
 
-export async function generateMetadata({ params }: PodcastPlayerProps): Promise<Metadata> {
+export async function generateMetadata(props: PodcastPlayerProps): Promise<Metadata> {
+  const params = await props.params;
   const { id } = params;
   const data = await getCachePodcastDetail(id);
   if (!data) {
@@ -67,7 +68,8 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
   });
 }
 
-export default async function PodcastContentPage({ params }: PodcastPlayerProps) {
+export default async function PodcastContentPage(props: PodcastPlayerProps) {
+  const params = await props.params;
   const { id } = params;
   const data = await getCachePodcastDetail(id);
   // The API answers an unknown id with code 200 and data null; that is a 404, not a server error.
