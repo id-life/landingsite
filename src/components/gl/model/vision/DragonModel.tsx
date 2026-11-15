@@ -1,11 +1,13 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { trackEvent } from '@/hooks/useGA';
 import { getElementOffsetTop } from '@/utils';
+import { INTRO, markIntroSeen, shouldSkipIntro } from './intro';
 import { useGSAP } from '@gsap/react';
-import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
@@ -20,12 +22,10 @@ const INIT_ROTATION = Math.PI / 2;
 const DESKTOP_SCALE = 0.13;
 const DRAG_SENSITIVITY = 150;
 const RECOVERY_DURATION = 1.5;
-const ANIMATION_DURATION = 2.1;
-const ANIMATION_DELAY = 0.21;
 const AUTO_SWING_AMPLITUDE = 0.1;
 
 export function useOptimizedGLTF() {
-  const { nodes } = useGLTF('/models/logo_v1.glb');
+  const { nodes } = useHeroGLTF();
 
   const logoGeometry = useMemo(() => {
     const logoNode = nodes.logo as THREE.Mesh;
@@ -156,13 +156,22 @@ export default function DragonModel() {
 
       offsetYRef.current = getElementOffsetTop(document.querySelector(`#${NAV_LIST[1].id}`));
 
+      // Repeat visit or reduced motion: the dragon is already at its resting pose; show the UI now.
+      if (shouldSkipIntro()) {
+        autoSwingRef.current = true;
+        if (!fixedUIHasTriggered.current) {
+          fixedUIHasTriggered.current = true;
+          triggerFadeInAnimation();
+        }
+        return;
+      }
+
       gsap.from(modelRef.current.position, {
         x: 0,
         y: 0,
         z: 10,
-        ease: 'power3.out',
-        duration: ANIMATION_DURATION,
-        delay: ANIMATION_DELAY,
+        ease: INTRO.flyInEase,
+        duration: INTRO.flyInSeconds,
         onStart: () => {
           trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.MODEL_ANIMATION });
         },
@@ -180,11 +189,11 @@ export default function DragonModel() {
         x: Math.PI,
         y: (Math.PI * 3) / 2,
         z: Math.PI,
-        ease: 'power3.out',
-        duration: ANIMATION_DURATION,
-        delay: ANIMATION_DELAY,
+        ease: INTRO.flyInEase,
+        duration: INTRO.flyInSeconds,
         onComplete: () => {
           autoSwingRef.current = true;
+          markIntroSeen();
         },
       });
     },

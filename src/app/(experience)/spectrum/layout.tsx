@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { getSpectrumJsonLd, spectrumBaseData } from '@/app/spectrum/_components/spectrumData';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'Spectrum 谱系';
 const PAGE_DESCRIPTION =
@@ -45,8 +46,7 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <JsonLd data={jsonLd} />
       {/* Same summary as the other section routes: one h1, the page description, the section's five headings
           and the item names it shows, with no links. The hidden link list that stood here (31 links, 28 of

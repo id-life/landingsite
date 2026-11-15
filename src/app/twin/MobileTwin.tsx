@@ -11,14 +11,20 @@ import { Model } from './_components/mobile/Model';
 import SwitchAnatomyCamera from './_components/mobile/SwitchAnatomyCamera';
 import { ModelType } from '@/components/twin/model/type';
 import YTBDemo from './_components/mobile/YTBDemo';
+import { NAV_LIST } from '@/components/nav/nav';
+import { useSectionNear } from '@/hooks/useDeferredAssets';
 
 const PAGE_ID = 'twin_page';
+const PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === PAGE_ID);
 
 export default function MobileTwin() {
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [, setCurrentModel] = useAtom(currentModelAtom);
   const [, setCurrentModelType] = useAtom(currentModelTypeAtom);
+  // The avatar media (a 20 MB clip on Android, a 430 KB still on iPhone) mounts only once the
+  // visitor is on this page or the one before it; the wrapper and the GSAP targets stay mounted.
+  const mediaNear = useSectionNear(PAGE_INDEX);
   const resetModel = useCallback(() => {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to(list, { left: '-80rem' });
@@ -72,7 +78,7 @@ export default function MobileTwin() {
         <SwitchSkin />
         <Description />
         <SwitchAnatomyCamera />
-        <Model />
+        {mediaNear && <Model active={currentPage.id === PAGE_ID} />}
       </div>
     </div>
   );

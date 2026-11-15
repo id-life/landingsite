@@ -11,6 +11,7 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { ErrorBoundary } from 'react-error-boundary';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useGLTF } from '@react-three/drei';
+import { HeroReady } from './heroAssets';
 
 export default function MobileThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
@@ -36,8 +37,12 @@ export default function MobileThreeWrapper() {
       >
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
+        {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
         <Suspense fallback={null}>
           <MobileVisionGL />
+          <HeroReady />
+        </Suspense>
+        <Suspense fallback={null}>
           <MobileConnectGL />
         </Suspense>
         <EffectComposer>

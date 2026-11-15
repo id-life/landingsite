@@ -83,8 +83,6 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: [
-          // 性能分析
-          { key: 'Document-Policy', value: 'js-profiling' },
           // 防止点击劫持
           { key: 'X-Frame-Options', value: 'DENY' },
           // 防止 MIME 类型嗅探
@@ -115,4 +113,12 @@ export default withSentryConfig(nextConfig, {
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
   widenClientFileUpload: true,
+  // Replay is not used in the browser (src/instrumentation-client.ts): keep its optional parts out
+  // of the bundle even if something pulls the integration in.
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayIframe: true,
+    excludeReplayShadowDom: true,
+    excludeReplayWorker: true,
+  },
 });

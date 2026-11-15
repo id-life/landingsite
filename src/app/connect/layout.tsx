@@ -7,6 +7,7 @@ import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
 import { ORG_EMAIL, ORG_ID, ORG_PRESS, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'CONNECT 联结';
 const PAGE_DESCRIPTION =
@@ -78,8 +79,7 @@ const jsonLd: Graph = {
 export default function ConnectLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />

@@ -11,9 +11,20 @@ export function useMobileThemeTransition() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const { contextSafe } = useGSAP();
 
-  const transitionToTheme = contextSafe((theme: BackgroundTheme) => {
+  // instant: apply the theme without a transition (and without isTransitioning, which makes
+  // mobileNavChange ignore requests), e.g. on mount, while the loader still covers the page.
+  const transitionToTheme = contextSafe((theme: BackgroundTheme, { instant = false }: { instant?: boolean } = {}) => {
     const root = document.documentElement;
     if (!root) return;
+
+    if (instant) {
+      timelineRef.current?.kill();
+      timelineRef.current = null;
+      gsap.set('.base-background2', { opacity: 0 });
+      gsap.set(root, BACKGROUND_COLORS[theme]);
+      setCurrentTheme(theme);
+      return;
+    }
 
     // 如果有正在进行的动画，先清除它
     if (timelineRef.current) {

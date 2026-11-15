@@ -6,6 +6,7 @@ import InsightsSummary from '@/app/insights/_components/InsightsSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { CollectionPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'Insights 洞见';
 const PAGE_DESCRIPTION =
@@ -52,8 +53,7 @@ const jsonLd: WithContext<CollectionPage> = {
 export default function InsightsLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />

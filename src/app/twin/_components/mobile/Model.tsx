@@ -4,9 +4,26 @@ import { ModelType } from '@/components/twin/model/type';
 import { useSupportsWebm } from '@/hooks/useSupportsWebm';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
-import React, { useMemo } from 'react';
+import Image, { getImageProps } from 'next/image';
+import React, { useEffect, useMemo, useRef } from 'react';
 
-export function Model() {
+// Intrinsic sizes of the anatomy stills shown on their own (they render at their natural size).
+const BODY_SIZE: Record<string, [number, number]> = {
+  '/imgs/twin/model/body/04.png': [392, 617],
+  '/imgs/twin/model/body/05.png': [468, 413],
+};
+const bodySize = (src: string) => BODY_SIZE[src] ?? [396, 990];
+
+// First frame of M0-1.webm, served through the image optimizer (AVIF or WebP, alpha kept): shown
+// at once while the clip has not started.
+const M0_POSTER = getImageProps({ src: '/imgs/twin/model/poster/M0-1.png', alt: '', width: 480, height: 1060 }).props.src;
+
+/**
+ * `active`: the twin page is the current page. The clip loads nothing until then (preload none,
+ * no autoplay) and pauses when the visitor leaves.
+ */
+export function Model({ active }: { active: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const currentModel = useAtomValue(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const currentAnatomyCamera = useAtomValue(currentAnatomyCameraAtom);
@@ -83,6 +100,13 @@ export function Model() {
     }
   }, [currentAnatomyCamera, currentModel, currentModelType, supportsWebm]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (active) video.play().catch(() => {});
+    else video.pause();
+  }, [active, imgUrl]);
+
   return (
     <div
       className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ${
@@ -91,9 +115,11 @@ export function Model() {
     >
       {currentModelType === ModelType.Anatomy ? (
         currentModel === PredictionModel.M0 ? (
-          <img
-            src={imgUrl?.[0]}
+          <Image
+            src={imgUrl?.[0] ?? ''}
             alt=""
+            width={bodySize(imgUrl?.[0] ?? '')[0]}
+            height={bodySize(imgUrl?.[0] ?? '')[1]}
             className={`object-cover object-center ${
               currentAnatomyCamera === AnatomyCamera.CAMERA3
                 ? 'transform-center'
@@ -115,11 +141,20 @@ export function Model() {
       ) : currentModel === PredictionModel.M0 ? (
         !supportsWebm ? (
           <div className="relative h-[500px] w-[200px]">
-            <img src={imgUrl?.[0]} alt="" className="h-full w-full object-contain object-center" />
+            <Image src={imgUrl?.[0] ?? ''} alt="" fill sizes="200px" className="object-contain object-center" />
           </div>
         ) : (
           <div className="relative h-[500px] w-[220px]">
-            <video src={imgUrl?.[0]} autoPlay muted loop playsInline className="h-full w-full object-cover object-center" />
+            <video
+              ref={videoRef}
+              src={imgUrl?.[0]}
+              poster={M0_POSTER}
+              preload="none"
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover object-center"
+            />
           </div>
         )
       ) : (
