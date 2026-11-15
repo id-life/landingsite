@@ -12,7 +12,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
-import { INTRO, markIntroSeen, shouldSkipIntro } from './intro';
+import { INTRO, markIntroSeen, shouldSkipIntro, whenElementMounted } from './intro';
 
 const InitRotation = Math.PI / 2;
 
@@ -107,7 +107,8 @@ export default function MobileDragonModel(props: {}) {
         autoSwingRef.current = true;
         if (!fixedUIHasTriggered.current) {
           fixedUIHasTriggered.current = true;
-          triggerFadeInAnimation();
+          // #mobile-nav renders only once globalLoaded is set; wait for it before revealing.
+          whenElementMounted('#mobile-nav', () => triggerFadeInAnimation());
         }
         return;
       }

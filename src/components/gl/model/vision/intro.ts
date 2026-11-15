@@ -33,3 +33,12 @@ export function markIntroSeen() {
     // Storage blocked: the intro simply plays again next time.
   }
 }
+
+/**
+ * Run `callback` once `selector` is in the DOM (checked every frame, at most ~2 s, then run anyway).
+ * The phone nav mounts in the same update that ends the loader, possibly after the scene's effect.
+ */
+export function whenElementMounted(selector: string, callback: () => void, framesLeft = 120) {
+  if (document.querySelector(selector) || framesLeft <= 0) callback();
+  else requestAnimationFrame(() => whenElementMounted(selector, callback, framesLeft - 1));
+}
