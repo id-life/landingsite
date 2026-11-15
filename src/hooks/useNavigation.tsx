@@ -1,6 +1,7 @@
 import { currentPageAtom, innerPageIndexAtom, innerPageTotalAtom, navigateToAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { sectionTitle } from '@/constants/section-titles';
+import { noteSectionView } from '@/lib/analytics/section-view';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -22,6 +23,7 @@ function pushSectionUrl(path: string, hash = '') {
   const item = NAV_LIST.find((nav) => nav.href === path);
   if (item) document.title = sectionTitle(item);
   window.history.pushState({}, '', `${path}${window.location.search}${hash}`);
+  noteSectionView(document.title);
 }
 
 export function useNavigation() {

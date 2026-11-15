@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { NavItem } from '@/components/nav/nav';
 import { sectionTitle } from '@/constants/section-titles';
+import { noteSectionView } from '@/lib/analytics/section-view';
 
 /**
  * Keep the address bar and the tab title on the section the visitor is looking at, so reload,
@@ -27,6 +28,7 @@ export function useSectionUrlSync(currentPage: NavItem, ready: boolean, { replac
       if (window.location.pathname === path) return;
       const hash = currentPage.id === 'spectrum_page' ? window.location.hash : '';
       window.history.replaceState(window.history.state, '', `${path}${window.location.search}${hash}`);
+      noteSectionView(sectionTitle(currentPage));
     };
     const timer = setTimeout(sync, 300);
     return () => {

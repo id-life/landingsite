@@ -3,6 +3,8 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { noteSectionView } from '@/lib/analytics/section-view';
+import { sectionTitle } from '@/constants/section-titles';
 import { NAV_LIST } from '@/components/nav/nav';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -112,6 +114,7 @@ export default function HashRouter() {
     const handlePopState = () => {
       const item = NAV_LIST.find((navItem) => navItem.href === window.location.pathname);
       if (!item) return;
+      noteSectionView(sectionTitle(item));
       if (phoneTree()) mobileNavChange(item);
       else handleNavClick(item);
     };

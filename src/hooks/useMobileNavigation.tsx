@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
 import { sectionTitle } from '@/constants/section-titles';
+import { noteSectionView } from '@/lib/analytics/section-view';
 
 export function useMobileNavigation() {
   const setCurrentPage = useSetAtom(mobileCurrentPageAtom);
@@ -33,6 +34,7 @@ export function useMobileNavigation() {
         // this pushState reads it (DATA-05).
         document.title = sectionTitle(item);
         window.history.pushState({}, '', `${item.href}${window.location.search}`);
+        noteSectionView(document.title);
       }
     },
     [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
