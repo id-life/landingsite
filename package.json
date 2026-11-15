@@ -13,6 +13,7 @@
     "test": "vitest run",
     "prepare": "simple-git-hooks",
     "knip": "knip",
+    "typecheck": "tsc --noEmit --incremental false",
     "perf:budget": "node scripts/perf-budget.mjs"
   },
   "dependencies": {
@@ -98,9 +99,12 @@
     "pre-commit": "npm exec lint-staged"
   },
   "lint-staged": {
-    "*": [
-      "npm run lint --fix .",
-      "prettier --write --ignore-unknown"
+    "*.{js,jsx,mjs,cjs,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md,json,jsonc,yml,yaml}": [
+      "prettier --write"
     ]
   }
 }

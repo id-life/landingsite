@@ -15,11 +15,15 @@ npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
 npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
 npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
-npx tsc --noEmit -p .                     # full type check
+npm run typecheck                         # full type check (tsc --noEmit)
 npx prettier --write --ignore-unknown .   # format
 ```
 
-The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on staged files.
+The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and prettier on staged files only.
+
+CI (`.github/workflows/ci.yml`, on every pull request and on pushes to main) runs typecheck, lint + knip, unit
+tests, `npm audit --omit=dev --audit-level=high`, and a production build followed by `npm run perf:budget`. Each job
+is its own status check. Run the same commands locally before pushing.
 
 ## Routes
 
