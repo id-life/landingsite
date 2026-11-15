@@ -1,27 +1,20 @@
-'use client';
-
-import React, { ReactNode, Suspense } from 'react';
+import React, { ReactNode } from 'react';
 import PodcastHeader from '@/app/podcast/_components/PodcastHeader';
 import PodcastNavTabs from '@/app/podcast/_components/PodcastNavTabs';
-import PodcastSubscribeFooter from '@/app/podcast/_components/PodcastSubscribeFooter';
-import MobileFooter from '@/components/layout/footer/MobileFooter';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 
+// A server component: it was a client layout (useIsMobile), which made every podcast page client code.
 export default function PodcastLayout({ children }: { children: ReactNode }) {
-  const isMobile = useIsMobile();
-
   return (
     <div className="min-h-screen">
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
-        <div className="w-full max-w-[50rem]">
-          <Suspense>
-            <PodcastHeader />
-            <PodcastNavTabs />
-          </Suspense>
+        <div className="reading-column">
+          <PodcastHeader />
+          <PodcastNavTabs />
           {children}
         </div>
       </div>
-      {isMobile ? <MobileFooter /> : <PodcastSubscribeFooter />}
+      <SubscribePopup />
     </div>
   );
 }

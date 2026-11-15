@@ -1,6 +1,10 @@
 // Shared spectrum data - used by the useSpectrumData hook and the Spectrum JSON-LD
 
-import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
+import BookSVG from '@/../public/svgs/engagement/book.svg?component';
+import DigitalTwinSVG from '@/../public/svgs/spectrum/digital-twin.svg?component';
+import RelationSVG from '@/../public/svgs/spectrum/relation.svg?component';
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
+import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 import type { JSX } from 'react';
@@ -261,7 +265,7 @@ export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',
   url: 'https://id.life/spectrum',
   description:
-    "Immortal Dragon's variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
+    "Immortal Dragons' variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
   hasPart: spectrumBaseData.map((item) => ({
     '@type': 'WebPageElement',
     name: `${item.title} (${item.titleCn})`,

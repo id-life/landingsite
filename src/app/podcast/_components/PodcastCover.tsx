@@ -22,7 +22,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
   return (
     <div>
       <div className="flex gap-8.5 mobile:gap-4">
-        <img className="w-45 rounded-xl mobile:w-30" src={data.cover} alt="" />
+        <img className="aspect-square w-45 shrink-0 self-start rounded-xl object-cover mobile:w-30" src={data.cover} alt="" />
         <div className="flex flex-1 flex-col justify-between">
           <div>
             <h1 className="whitespace-nowrap text-[1.625rem]/[2.5rem] font-semibold mobile:text-xl/6">
@@ -31,7 +31,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
             </h1>
-            <p className="mt-4 text-sm font-medium mobile:hidden">{data.description}</p>
+            <p className="mt-4 text-read-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
             {platforms.map(({ id, name, link, icon }) => {
@@ -52,7 +52,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
           </div>
         </div>
       </div>
-      <div className="mt-7.5 hidden text-xs/5 font-medium mobile:block">{data.description}</div>
+      <div className="mt-7.5 hidden text-read-sm font-medium mobile:block">{data.description}</div>
     </div>
   );
 }

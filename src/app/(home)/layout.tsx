@@ -4,6 +4,7 @@ import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import HomeProfile from '@/app/(home)/_components/HomeProfile';
 import JsonLd from '@/components/seo/JsonLd';
@@ -16,32 +17,13 @@ const HOME_INTRO_CN = [
   '除投资之外，不朽真龙也翻译出版书籍、资助行业会议与学术机构、制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念与信仰。',
 ];
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/' },
-  title: { absolute: 'Immortal Dragons 不朽真龙' },
-  description: ORG_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'Immortal Dragons 不朽真龙',
-    siteName: 'Immortal Dragons',
-    description: ORG_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+// The home title is the brand alone (one language); the description is the first sentence of ORG_DESCRIPTION,
+// which stays whole in the page summary and JSON-LD (SEO-06).
+export const metadata: Metadata = buildMetadata({
+  path: '/',
+  title: 'Immortal Dragons',
+  description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
+});
 
 const jsonLd: Graph = {
   '@context': 'https://schema.org',

@@ -60,7 +60,7 @@ function MobileSpectrum() {
         />
       )}
       <div className="relative flex h-[100svh] flex-col overflow-hidden px-5 pb-24 pt-20">
-        <h1 className="mb-6 shrink-0 text-center font-xirod text-[26px]/[30px] font-bold uppercase">Spectrum</h1>
+        <h2 className="mb-6 shrink-0 text-center font-xirod text-[26px]/[30px] font-bold uppercase">Spectrum</h2>
         <div
           id="spectrum-particle-container-mobile-pages"
           className="pointer-events-none absolute inset-0 overflow-hidden opacity-20 [&_canvas]:absolute [&_canvas]:left-1/2 [&_canvas]:top-1/2 [&_canvas]:-translate-x-1/2 [&_canvas]:-translate-y-1/2 [&_canvas]:scale-[0.56]"

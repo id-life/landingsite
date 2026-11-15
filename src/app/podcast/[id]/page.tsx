@@ -2,12 +2,16 @@ import React, { cache } from 'react';
 import { fetchPodcastDetail } from '@/apis';
 import { isApiNotFound } from '@/apis/request';
 import PodcastContentTab from '@/app/podcast/[id]/_components/PodcastContentTab';
+import Markdown from 'react-markdown';
+import { markdownRehypePlugins, markdownRemarkPlugins, remarkTimeline } from '@/utils/markdown';
+import '@/styles/components/markdown-timeline.css';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
 import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
@@ -19,6 +23,10 @@ export const dynamic = 'force-static';
 // Episode ids are numbers. Anything else (/podcast/abc, /podcast/56abc, /podcast/1.5, /podcast/rss) is a 404
 // without asking the API, which answers those with HTTP 400 (that used to surface as a 500).
 const EPISODE_ID = /^\d+$/;
+
+// @[timeline](mm:ss) markers become clickable spans as syntax-tree nodes (remarkTimeline), then the shared
+// sanitiser runs: transcript markup can no longer add script, handlers or attributes.
+const transcriptRemarkPlugins = [...markdownRemarkPlugins, remarkTimeline];
 
 const getCachePodcastDetail = cache(async (id: string) => {
   if (!EPISODE_ID.test(id)) return null;
@@ -46,38 +54,19 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: { absolute: 'Episode not found | Immortal Dragons 不朽真龙' },
+      title: { absolute: 'Episode not found | Immortal Dragons' },
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
-      keywords: [
-        'Longevity',
-        'anti-aging',
-        'life extension',
-        'investment fund',
-        'innovation',
-        'biotech',
-        'pharmaceutical',
-        'healthcare',
-        'Immortal Dragons',
-      ],
     };
   }
 
-  return {
-    title: { absolute: `${data.title} | Immortal Dragons` },
+  // The full show notes stay on the page; the meta description is cut at a sentence end (SEO-06).
+  return buildMetadata({
+    path: `/podcast/${canonicalId(id)}`,
+    title: data.title,
     description: data.description,
-    keywords: data.keywords,
-    alternates: { canonical: `/podcast/${canonicalId(id)}` },
-    openGraph: {
-      title: `${data.title} | Immortal Dragons`,
-      siteName: 'Immortal Dragons',
-      description: data.description,
-      images: [
-        {
-          url: data.detailMedia,
-        },
-      ],
-    },
-  };
+    image: data.detailMedia || data.album,
+    type: 'article',
+  });
 }
 
 export default async function PodcastContentPage(props: PodcastPlayerProps) {
@@ -102,14 +91,18 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <JsonLd data={jsonLd} />
       <ReadDepth itemId={String(params.id)} />
       <div className="pb-24 mobile:pb-16">
-        <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
+        <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
-          <h1 className="text-center text-xl font-semibold mobile:text-base">{data.title}</h1>
+          <h1 className="text-center text-read-lg font-semibold">{data.title}</h1>
           <PodcastLinks data={data} />
         </div>
         {data?.detailMedia ? <img className="mx-auto h-75 object-cover mobile:h-45" alt="" src={data.detailMedia} /> : null}
-        <div className="my-9 mt-7.5 text-sm font-medium mobile:mb-7.5 mobile:mt-6 mobile:text-xs/4.5">{data.description}</div>
-        <PodcastContentTab data={data} />
+        <div className="my-9 mt-7.5 text-read font-medium mobile:mb-7.5 mobile:mt-6">{data.description}</div>
+        <PodcastContentTab id={data.id.toString()}>
+          <Markdown remarkPlugins={transcriptRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
+            {data.transcript}
+          </Markdown>
+        </PodcastContentTab>
         <PodcastPlayer data={data} />
       </div>
     </>

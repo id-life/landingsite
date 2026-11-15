@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -16,23 +17,14 @@ const articleUrl = 'https://www.id.life/news/immortal-dragons-news-and-updates';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/news/immortal-dragons-news-and-updates' },
-  title: 'Immortal Dragons News and Updates',
+// The title is the article's own heading, in its language; it names the brand, so it is not suffixed twice
+// (it read "Immortal Dragons ... | Immortal Dragons 不朽真龙").
+export const metadata: Metadata = buildMetadata({
+  path: '/news/immortal-dragons-news-and-updates',
+  title: articleTitle,
   description: articleDescription,
-  openGraph: {
-    title: 'Immortal Dragons News and Updates',
-    siteName: 'Immortal Dragons',
-    description: articleDescription,
-    url: articleUrl,
-    type: 'article',
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+  type: 'article',
+});
 
 const jsonLd: WithContext<NewsArticle> = {
   '@context': 'https://schema.org',
@@ -74,7 +66,7 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
             {articleTitle}
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
-          <div className="markdown-body mobile:[&_p]:text-sm mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
+          <div className="article-body markdown-body mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
             <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {articleContent}
             </Markdown>

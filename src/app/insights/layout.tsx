@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import InsightsSummary from '@/app/insights/_components/InsightsSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { CollectionPage, WithContext } from 'schema-dts';
@@ -14,32 +15,12 @@ const PAGE_DESCRIPTION =
 
 export const revalidate = 300; // 5min, same as /news
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/insights' },
-  title: 'Insights 洞见',
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata({
+  path: '/insights',
+  title: 'Insights',
   description: PAGE_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'Insights 洞见',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+});
 
 const jsonLd: WithContext<CollectionPage> = {
   '@context': 'https://schema.org',

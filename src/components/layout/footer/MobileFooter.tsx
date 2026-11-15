@@ -3,7 +3,7 @@
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
-import { InfoSVG } from '@/components/svg';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
 import { cn } from '@/utils';

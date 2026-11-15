@@ -134,6 +134,8 @@ export type NewsPageItem = {
   cover: string | null;
   source: string | null;
   publishDate: string | null;
+  /** publishDate as shown on the card ("Oct 01, 2026"), formatted on the server. */
+  publishLabel: string | null;
   url: string | null;
   videoId: string | null;
   isExternal: boolean;

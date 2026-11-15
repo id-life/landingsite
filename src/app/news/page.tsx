@@ -6,6 +6,7 @@ import { transformToNewsPageItems } from '@/app/news/_lib/newsItems';
 import NewsCard from './_components/NewsCard';
 import { ItemList, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import React from 'react';
 import SubTitle from '@/app/news/_components/SubTitle';
 import Topic from '@/app/news/_components/Topic';
@@ -13,34 +14,12 @@ import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/news' },
-  title: 'News 新闻',
+export const metadata: Metadata = buildMetadata({
+  path: '/news',
+  title: 'News',
   description:
     "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'News 新闻 | Immortal Dragons',
-    siteName: 'Immortal Dragons',
-    description:
-      "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+});
 
 // Generate JSON-LD dynamically from news data
 function generateNewsJsonLd(news: NewsPageItem[]): WithContext<ItemList> {
@@ -99,7 +78,7 @@ export default async function NewsPage() {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <h1 className="sr-only">News 新闻</h1>
+      <h1 className="my-5 text-xl/5 font-medium mobile:my-3.5 mobile:text-base/5">News</h1>
       {insightsItems === null ? (
         <p role="status" className="py-24 text-center font-poppins text-base font-medium text-black/60 mobile:py-16">
           新闻暂时无法加载，请稍后再来。The news could not be loaded right now; please check back soon.

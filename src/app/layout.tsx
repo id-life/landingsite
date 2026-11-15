@@ -2,7 +2,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
-import HashRouter from '@/components/common/HashRouter';
+import ExperienceRouter from '@/components/common/ExperienceRouter';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
@@ -11,6 +11,7 @@ import HeadScript from '@/lib/analytics/HeadScript';
 import AnalyticsBoot from '@/lib/analytics/boot';
 import VercelInsights from '@/lib/analytics/VercelInsights';
 import { VERCEL_INSIGHTS_ENABLED } from '@/lib/analytics/config';
+import { ORG_DESCRIPTION } from '@/constants/entity';
 
 import '@/styles/globals.css';
 
@@ -21,25 +22,14 @@ export const metadata: Metadata = {
       'baidu-site-verification': 'codeva-3t6o5pvEVk',
     },
   },
-  title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons 不朽真龙' },
-  description:
-    'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
+  // Defaults for pages without their own metadata (error pages). Routes build theirs with src/lib/seo/metadata.ts:
+  // one language per title, no keywords (SEO-06).
+  title: { default: 'Immortal Dragons', template: '%s | Immortal Dragons' },
+  description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
   openGraph: {
-    title: 'Immortal Dragons 不朽真龙',
+    title: 'Immortal Dragons',
     siteName: 'Immortal Dragons',
-    description:
-      'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
+    description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',
@@ -82,7 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Providers>
           {ANALYTICS_ENABLED && <AnalyticsBoot />}
-          <HashRouter />
+          <ExperienceRouter />
           <main id="main-content" tabIndex={-1} className="outline-none">
             {children}
           </main>

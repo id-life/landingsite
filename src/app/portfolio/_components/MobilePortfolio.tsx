@@ -139,9 +139,9 @@ function MobilePortfolio() {
         />
       ))}
       <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21">
-        <div className="page2-title relative top-10 font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
+        <h2 className="page2-title relative top-10 font-xirod text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
           Portfolio
-        </div>
+        </h2>
         <div className="page2-fund relative top-10 flex-1 overflow-hidden px-4 mobile:w-full">
           {/* Background layer: particle grid - absolute positioned behind portfolio items */}
           <div

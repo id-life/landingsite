@@ -3,6 +3,7 @@ import DMStyle from '@/app/spectrum/_components/DMStyle';
 import '@/styles/components/disease-management-page.css';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { MedicalWebPage, WithContext } from 'schema-dts';
@@ -11,31 +12,12 @@ import JsonLd from '@/components/seo/JsonLd';
 const PAGE_TITLE = 'Disease Management & Cure Status';
 const PAGE_DESCRIPTION = '可治疗与可控制疾病列表 A list of curable and manageable diseases';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/spectrum/disease-management' },
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata({
+  path: '/spectrum/disease-management',
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  keywords: [
-    'curable diseases',
-    'manageable diseases',
-    'disease management status',
-    'disease cure status',
-    'disease wikipedia',
-    '疾病百科',
-    '可治愈疾病列表',
-    '可控制疾病列表',
-  ],
-  openGraph: {
-    title: 'Disease Management & Cure Status | Immortal Dragons',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+});
 
 const jsonLd: WithContext<MedicalWebPage> = {
   '@context': 'https://schema.org',

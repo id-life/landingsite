@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { track } from '@/lib/analytics/track';
 import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating, useTransitionStyles } from '@floating-ui/react';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { pauseSmoother } from '@/utils/smoother';
 
 type VideoModalProps = {
   isOpen: boolean;
@@ -92,10 +92,7 @@ export default function VideoModal({ isOpen, onClose, videoId, title, placement 
 
   // Pause ScrollSmoother when modal is open
   useEffect(() => {
-    const smoother = ScrollSmoother.get();
-    if (smoother) {
-      smoother.paused(isOpen);
-    }
+    pauseSmoother(isOpen);
   }, [isOpen]);
 
   if (!isMounted) return null;

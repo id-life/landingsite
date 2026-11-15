@@ -7,3 +7,12 @@
     list-style-type: disc;
   }
 }
+
+/* News articles (RWD-09): body at the reading size on every width (it was 14 px on phones) and a column of about
+   42 characters of that size, centred in the card, so lines stay readable on wide screens and grow with the type. */
+.markdown-body.article-body {
+  font-size: var(--read-body);
+  line-height: 1.7;
+  max-width: 42em;
+  margin-inline: auto;
+}

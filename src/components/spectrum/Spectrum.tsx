@@ -158,7 +158,7 @@ function Spectrum() {
       <div className="relative flex h-[100svh] flex-col overflow-y-auto px-10 pb-20 pt-28 xl:px-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
         <header className="spectrum-title relative z-10 pb-5 text-center">
-          <h1 className="font-xirod text-[2.75rem]/none uppercase text-white">Spectrum</h1>
+          <h2 className="font-xirod text-[2.75rem]/none uppercase text-white">Spectrum</h2>
         </header>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>

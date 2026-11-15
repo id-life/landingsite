@@ -3,17 +3,14 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { clsx } from 'clsx';
-import { useSearchParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 
 export default function PodcastNavTabs() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const search = useMemo(
-    () => (pathname === '/podcast' ? (searchParams.get('c') ?? PODCAST_NAV_LIST[0].id) : null),
-    [pathname, searchParams],
-  );
+  // Each show has its own path; an episode page highlights no tab.
+  const search = useMemo(() => PODCAST_NAV_LIST.find((item) => item.link === pathname)?.id ?? null, [pathname]);
 
   return (
     <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center mobile:pb-5">

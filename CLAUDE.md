@@ -38,8 +38,11 @@ Each job is its own status check. Run the same commands locally before pushing.
   the URL selects the section. Section layouts carry metadata, JSON-LD and the server-rendered summary.
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
-- `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
-- Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
+- `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
+  `/podcast?c=lt` answers 308 from `src/proxy.ts`) and `/podcast/[id]`. Unknown ids return 404.
+- Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
+  `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
+  `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
 - `src/app/twin` and `src/app/vision` hold section components, not routes. Unreachable modules are deleted rather
   than kept: `npm run knip` fails on an unused file or dependency.
@@ -60,7 +63,8 @@ Each job is its own status check. Run the same commands locally before pushing.
   `global.d.ts`; respect them instead of adding new ones.
 - **Phone.** No document scroll: sections switch through `useMobileNavigation`, the arrows
   (`MobilePageArrows.tsx`), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
-- **URL and history.** `HashRouter` (root layout, never unmounts) applies the URL once per mount of the experience
+- **URL and history.** `HashRouter` (loaded by `ExperienceRouter` in the root layout on the first experience URL, then
+  never unmounted) applies the URL once per mount of the experience
   (`useExperienceLifecycle` bumps `experienceMountIdAtom`); `useSectionUrlSync` replaces the URL and title as the
   visitor scrolls; nav clicks push. Scroll restoration is 'manual' only while the experience is mounted.
 - **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
@@ -73,6 +77,18 @@ Each job is its own status check. Run the same commands locally before pushing.
 - **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
   R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
   300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
+- **GSAP stays in the experience.** Plugins are registered in `src/utils/gsap-plugins.ts`, imported by the experience's
+  entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
+  `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.
+
+## Content pages
+
+- `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
+  footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
+  (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+- Episode transcripts are rendered to HTML on the server (`podcast/[id]/page.tsx`); do not move react-markdown back
+  into a client component. SVG icons are imported per file (there is no `src/components/svg` barrel: it pulled the
+  3,085-circle world map into every page that used one icon).
 
 ## Content, data and SEO
 
@@ -96,8 +112,11 @@ Each job is its own status check. Run the same commands locally before pushing.
   experience_ready or the first input, at least 2 s in). Never add GTM, `@next/third-parties/google` or a second
   loader (lint rules). Send events only with `track()`; names and parameters are typed by the catalog in
   `events.ts` (`EVENTS.md` and `events.json` beside it are generated from it; `UPDATE_ANALYTICS_DOCS=1 npm test` refreshes it).
-  Section views are GA4's own page_view on pushState/replaceState: set `document.title` before changing the URL and
-  never send a manual page_view. Consent (`consent.ts`): opt-in in the EEA, UK, CH, CN and unknown regions, opt-out
+  Section views: the landing page_view is sent explicitly and a section change made before gtag/js ran is counted
+  on its load event (`stream.ts`); every later change is GA4's own page_view on history events, so set
+  `document.title` before changing the URL and never send a manual page_view for it. Config holds nothing
+  page-specific (config values stick to every hit). GA4 queues hits after the first and sends them in batches
+  (about 5 s, or at once when the page is hidden): a test reading the wire must hide the page first. Consent (`consent.ts`): opt-in in the EEA, UK, CH, CN and unknown regions, opt-out
   elsewhere, GPC and automated browsers (navigator.webdriver, headless UA) are refusals; `/api/geo` gives the
   country (`idl_region` cookie overrides it outside production). Banner text is a draft in `consent-copy.ts` and is
   not rendered by production builds until approved. The banner itself is `src/components/consent/ConsentBanner.tsx`: Tailwind scans
@@ -114,6 +133,9 @@ Each job is its own status check. Run the same commands locally before pushing.
 - Security headers (CSP, HSTS, COOP, CORP) come from `security-headers.mjs`; a new third-party host must be added
   there (CSP is enforced outside production, report-only in production until `CSP_MODE=enforce`).
 - Incidents, rollback and uptime checks: `RUNBOOK.md`.
+- Images: `NEXT_PUBLIC_IMAGE_OPTIMIZER` (next.config.mjs) decides who resizes next/image images: `off` on Vercel by
+  default (Vercel Image Optimization is metered and not approved), `next` on self-hosted builds, `cdn` for the CMS
+  cover loader in `src/lib/image-loader.ts`. Never turn the Vercel optimizer on in code; it is the owner's switch.
 
 ## Analytics build (for the e2e suite)
 

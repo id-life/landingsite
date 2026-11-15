@@ -1,59 +1,13 @@
 import React from 'react';
-import PodcastList from '@/app/podcast/_components/PodcastList';
-import PodcastCover from '@/app/podcast/_components/PodcastCover';
-import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
-import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
-import { podcastSeriesJsonLd } from '@/app/podcast/_components/jsonLd';
-import { breadcrumbJsonLd } from '@/constants/entity';
-import type { Metadata } from 'next';
-import JsonLd from '@/components/seo/JsonLd';
+import PodcastShowPage, { podcastShowMetadata } from '@/app/podcast/_components/PodcastShowPage';
+import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 
+// Static, regenerated at most every 5 minutes. The page reads no searchParams, so it is cached at the edge:
+// the Long Talk show moved from /podcast?c=lt to /podcast/long-talk (src/proxy.ts answers the old URL 308).
 export const revalidate = 300; // 5min
 
-export async function generateMetadata(props: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
-  const searchParams = await props.searchParams;
-  const { c } = searchParams;
-  const nav = PODCAST_NAV_LIST.find((item) => item.id === c) ?? PODCAST_NAV_LIST[0];
-  return { ...PODCAST_METADATA[nav.id], alternates: { canonical: nav.link } };
-}
+export const metadata = podcastShowMetadata(PODCAST_NAV_LIST[0].id);
 
-type SearchParams = { [key: string]: PodcastCategory | undefined };
-
-async function seriesJsonLd(category: PodcastCategory) {
-  const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
-  const episodes = (await getPodcastEpisodes(nav.id)) ?? [];
-  return [
-    { '@context': 'https://schema.org', ...podcastSeriesJsonLd(nav.id, episodes) },
-    // The main show shares the company's name, so its crumb is labelled by what the page is.
-    breadcrumbJsonLd([
-      {
-        name:
-          nav.id === PODCAST_NAV_LIST[0].id
-            ? 'Podcast 播客'
-            : `${PODCAST_COVER[nav.id].title} ${PODCAST_COVER[nav.id].enTitle}`,
-        path: nav.link,
-      },
-    ]),
-  ];
-}
-
-export default async function PodcastPage(props: { searchParams: Promise<SearchParams> }) {
-  const searchParams = await props.searchParams;
-  const { c } = searchParams;
-  // An unknown ?c= value used to crash the page; fall back to the main show.
-  const category = PODCAST_NAV_LIST.find((item) => item.id === c)?.id ?? PODCAST_NAV_LIST[0].id;
-  const jsonLd = await seriesJsonLd(category);
-
-  return (
-    <>
-      <JsonLd data={jsonLd} />
-      <div className="mt-2">
-        <PodcastCover category={category} />
-        <div className="mt-8.5 h-px bg-gray-950/20 mobile:mt-7.5" />
-        <div className="my-15 mobile:my-9">
-          <PodcastList category={category} />
-        </div>
-      </div>
-    </>
-  );
+export default function PodcastPage() {
+  return <PodcastShowPage category={PODCAST_NAV_LIST[0].id} />;
 }
