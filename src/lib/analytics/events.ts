@@ -243,7 +243,10 @@ export const EVENTS = {
     metric_rating: oneOf(['good', 'needs-improvement', 'poor'], 'Rating'),
     metric_id: str('web-vitals id of this metric instance, to sum deltas'),
     navigation_type: str('navigate, reload, back-forward, ...'),
-    debug_target: str('Selector of the LCP element, INP target or largest CLS shift', { optional: true }),
+    debug_target: str('Selector of the LCP element, INP target or largest CLS shift; (none) when nothing to attribute', {
+      optional: true,
+    }),
+    page_location: str('The landing URL of the document the vital belongs to'),
     interaction_type: str('INP only: pointer or keyboard', { optional: true }),
     load_state: str('INP only: load state at the interaction', { optional: true }),
   }),

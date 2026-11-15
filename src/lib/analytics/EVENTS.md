@@ -297,7 +297,8 @@ A Core Web Vital is reported (web-vitals attribution build; skipped when Speed I
 | `metric_rating` | `good` \| `needs-improvement` \| `poor` | yes | Rating |
 | `metric_id` | string | yes | web-vitals id of this metric instance, to sum deltas |
 | `navigation_type` | string | yes | navigate, reload, back-forward, ... |
-| `debug_target` | string | no | Selector of the LCP element, INP target or largest CLS shift |
+| `debug_target` | string | no | Selector of the LCP element, INP target or largest CLS shift; (none) when nothing to attribute |
+| `page_location` | string | yes | The landing URL of the document the vital belongs to |
 | `interaction_type` | string | no | INP only: pointer or keyboard |
 | `load_state` | string | no | INP only: load state at the interaction |
 

@@ -9,10 +9,12 @@ import { advanceStage } from './stage';
 import { isInternalTraffic, setTrackLayout, setTrackMode, track } from './track';
 
 const GTAG_SRC = 'https://www.googletagmanager.com/gtag/js?id=';
-/** Earliest the tag may load: 2 s after navigation start, and after experience_ready or the first input. */
+/** Earliest the tag may load: 2 s after navigation start, after experience_ready or the first input, after load. */
 const MIN_DELAY_MS = 2000;
 /** Latest the gate waits for experience_ready or an input, from the boot module's mount. */
 const GATE_CAP_MS = 4000;
+/** Latest the gate then waits for the window load event (it can come late on the 3D routes). */
+const LOAD_CAP_MS = 4000;
 
 const gtag = (...args: unknown[]) => window.gtag?.(...args);
 
@@ -60,6 +62,21 @@ function waitForGate(): Promise<void> {
   });
 }
 
+/** The load event, or LOAD_CAP_MS, whichever comes first: no third-party request competes with the page's own load. */
+const whenLoaded = () =>
+  new Promise<void>((resolve) => {
+    if (document.readyState === 'complete') return resolve();
+    const timer = window.setTimeout(resolve, LOAD_CAP_MS);
+    window.addEventListener(
+      'load',
+      () => {
+        window.clearTimeout(timer);
+        resolve();
+      },
+      { once: true },
+    );
+  });
+
 const whenIdle = () =>
   new Promise<void>((resolve) => {
     if ('requestIdleCallback' in window) window.requestIdleCallback(() => resolve(), { timeout: 2000 });
@@ -74,6 +91,7 @@ async function loadTag(layout: string | undefined) {
   if (tagRequested || !GA_ID) return;
   tagRequested = true;
   await waitForGate();
+  await whenLoaded();
   await whenIdle();
   if (getConsentState().analytics !== 'granted') {
     tagRequested = false;

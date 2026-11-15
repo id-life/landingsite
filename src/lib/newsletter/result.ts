@@ -36,11 +36,10 @@ const ERR: readonly string[] = Object.keys(SUBSCRIBE_MESSAGES);
 
 /** Validate a JSON answer of POST /api/subscribe; anything unexpected becomes a generic error. */
 export function parseSubscribeAnswer(body: unknown): SubscribeResult {
-  const b = (body ?? {}) as { ok?: unknown; code?: unknown; message?: unknown };
-  if (b.ok === true && typeof b.code === 'string' && OK.includes(b.code)) {
-    return { ok: true, code: b.code as SubscribeOkCode };
-  }
-  const code = (typeof b.code === 'string' && ERR.includes(b.code) ? b.code : 'error') as SubscribeErrorCode;
+  const b = (body ?? {}) as { ok?: unknown; code?: unknown; status?: unknown; message?: unknown };
+  const raw = typeof b.code === 'string' ? b.code : typeof b.status === 'string' ? b.status : '';
+  if (b.ok === true) return { ok: true, code: (OK.includes(raw) ? raw : 'subscribed') as SubscribeOkCode };
+  const code = (ERR.includes(raw) ? raw : 'error') as SubscribeErrorCode;
   const message = typeof b.message === 'string' && b.message.trim() ? b.message.trim().slice(0, 300) : SUBSCRIBE_MESSAGES[code];
   return { ok: false, code, message };
 }

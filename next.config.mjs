@@ -15,6 +15,12 @@ const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED
   ? process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === '1'
   : deployEnv === 'production';
 
+if (analyticsEnabled && deployEnv !== 'production' && !process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID) {
+  console.warn(
+    `[analytics] ${deployEnv} build with analytics on and no NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: it uses the production GA4 stream. Set a QA stream unless every beacon is answered locally.`,
+  );
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -34,10 +40,10 @@ const nextConfig = {
     // Public, non-secret defaults (they ship in the HTML and the client bundle anyway). They used to come from a
     // committed .env; an environment variable of the same name (Vercel project settings, a local .env) wins.
     NEXT_PUBLIC_API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX || 'https://id-platform.id.life',
-    // DATA-15: the production GA4 stream is the default of production builds only. Previews and QA builds send to
-    // their own stream (set NEXT_PUBLIC_GOOGLE_ANALYTICS_ID per Vercel environment) or, without one, load no tag.
-    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID:
-      process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || (deployEnv === 'production' ? 'G-QZFDSGKKYC' : ''),
+    // DATA-15: previews and QA builds should send to their own stream (NEXT_PUBLIC_GOOGLE_ANALYTICS_ID per Vercel
+    // environment). Builds without analytics need no id; a build that forces analytics on without one falls back to
+    // the production stream (the e2e suite's analytics build answers every beacon locally) and warns below.
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || (analyticsEnabled ? 'G-QZFDSGKKYC' : ''),
     NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE || 'false',
   },
   images: {

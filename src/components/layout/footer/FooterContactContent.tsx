@@ -136,7 +136,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
         <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
           <input
             id={`${fieldId}-email`}
-            className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
+            className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-[16px]/5"
             placeholder="Please enter email"
             type="email"
             inputMode="email"

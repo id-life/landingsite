@@ -98,7 +98,7 @@ export default function MobileFooter() {
                   )}
                 />
                 <input
-                  className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-xs/5"
+                  className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374] mobile:text-[16px]/5"
                   placeholder="Please enter email"
                   aria-label="Email"
                   type="email"
