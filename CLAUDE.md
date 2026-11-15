@@ -79,8 +79,11 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   country (`idl_region` cookie overrides it outside production). Banner text is a draft in `consent-copy.ts` and is
   not rendered by production builds until approved. The banner itself is `src/components/consent/ConsentBanner.tsx`: Tailwind scans
   `src/{app,components,hooks,constants,pages}` only, so a component with classes must not live in `src/lib`. Vercel Analytics and Speed Insights render only with
-  `NEXT_PUBLIC_VERCEL_INSIGHTS=1` (paid beyond quota). Sentry only on Vercel production and preview, errors only
-  (`src/lib/sentry-options.ts`, tunnel `/monitoring`); report caught errors with `reportError` (`src/lib/report.ts`).
+  `NEXT_PUBLIC_VERCEL_INSIGHTS=1` (paid beyond quota); otherwise the one Core Web Vitals stream is `vitals.ts`
+  (web_vital with attribution, filed under the landing URL and section; `perf/vitals-p75.sql` reads it from the GA4
+  BigQuery export, `scripts/crux-weekly.mjs` adds CrUX). Sentry only on Vercel production and preview: errors plus
+  light tracing, no Replay or profiling (`src/lib/sentry-options.ts`, tunnel `/monitoring`); report caught errors
+  with `reportError` (`src/lib/report.ts`).
 - Newsletter: every form posts to `POST /api/subscribe` (`src/app/api/subscribe`: validation, honeypot, rate limit,
   optional Turnstile, Mailchimp upstream with double opt-in) through `submitNewsletter` (`src/utils/newsletter.ts`);
   the browser never contacts Mailchimp. Typed result codes in `src/lib/newsletter/result.ts`, 6 s browser timeout.
