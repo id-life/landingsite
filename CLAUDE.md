@@ -30,7 +30,8 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
 - `/about` (CON-01): the fund profile as visible server-rendered text from the content layer, in the content pages'
-  header and footer.
+  header and footer. `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
+  non-production builds (`pageExtensions` in `next.config.mjs`), noindex, linked from nowhere.
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
