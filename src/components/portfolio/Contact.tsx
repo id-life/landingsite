@@ -4,8 +4,7 @@ import { useCopyToClipboard } from 'react-use';
 import CopySVG from '@/../public/svgs/copy-btn.svg?component';
 import CheckmarkSVG from '@/../public/svgs/checkmark.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 import { ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 
 interface ContactProps {
@@ -19,13 +18,9 @@ interface ContactProps {
 export default function Contact({ onCopy }: ContactProps) {
   const [state, copyToClipboard] = useCopyToClipboard();
 
-  const { trackEvent } = useGA();
-
   const handleCopy = () => {
     copyToClipboard(ORG_EMAIL);
-    trackEvent({
-      name: GA_EVENT_NAMES.CONTACT_EMAIL,
-    });
+    track('contact_intent', { method: 'copy_email', placement: 'portfolio' });
     onCopy?.();
   };
 
@@ -37,7 +32,7 @@ export default function Contact({ onCopy }: ContactProps) {
         className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 notMobile:group-hover:stroke-red-600"
       />
       <div className="flex-center relative h-full w-full gap-4 mobile:gap-1">
-        <a href={ORG_MAILTO} className="w-36 mobile:w-auto">
+        <a href={ORG_MAILTO} data-track-placement="portfolio" className="w-36 mobile:w-auto">
           {ORG_EMAIL}
         </a>
         <button

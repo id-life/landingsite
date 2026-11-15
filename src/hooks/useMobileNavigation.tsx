@@ -4,6 +4,7 @@ import { useMobileThemeTransition } from '@/hooks/useMobileThemeTransition';
 import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useEffect, useRef } from 'react';
+import { sectionTitle } from '@/constants/section-titles';
 
 export function useMobileNavigation() {
   const setCurrentPage = useSetAtom(mobileCurrentPageAtom);
@@ -28,7 +29,9 @@ export function useMobileNavigation() {
       }
 
       if (item.href !== window.location.pathname) {
-        // Keep the query string (campaign parameters) across section changes.
+        // Keep the query string (campaign parameters) across section changes. Title first: GA4's page_view for
+        // this pushState reads it (DATA-05).
+        document.title = sectionTitle(item);
         window.history.pushState({}, '', `${item.href}${window.location.search}`);
       }
     },

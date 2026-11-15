@@ -10,6 +10,7 @@ import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
+import ReadDepth from '@/lib/analytics/ReadDepth';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
@@ -97,6 +98,7 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
   return (
     <>
       <JsonLd data={jsonLd} />
+      <ReadDepth itemId={String(params.id)} />
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">

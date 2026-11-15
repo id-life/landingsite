@@ -2,6 +2,7 @@
 
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { currentPageAtom } from '@/atoms';
+import { track } from '@/lib/analytics/track';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
@@ -68,6 +69,7 @@ export default function PCNav() {
           <Link
             href={item.href}
             onClick={(event) => {
+              track('nav_click', { target_section: item.id, source: 'nav' });
               // Cmd/Ctrl/Shift/Alt-click and non-left buttons are the browser's (new tab, new window).
               if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
               event.preventDefault();

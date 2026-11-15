@@ -6,10 +6,8 @@ import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
+import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useRetimer } from '@/hooks/useRetimer';
 
 const PAGE_ID = 'portfolio_page';
@@ -24,8 +22,6 @@ function MobilePortfolio() {
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [particleActive, setParticleActive] = useState(false);
-
-  const { trackEvent } = useGA();
   const retimer = useRetimer();
 
   const pageItemIndices = useMemo(() => {
@@ -54,18 +50,6 @@ function MobilePortfolio() {
   // Get opacity for each particle based on config
   const particleConfigs = useMemo(() => portfolioGetSourceImgInfos(true), []);
   const getParticleOpacity = (idx: number) => particleConfigs[particleIndices[idx]]?.opacity ?? 0.5;
-
-  const handleFundClick = useCallback(
-    (item: PortfolioItemInfo) => {
-      trackEvent({
-        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-        label: item.title,
-      });
-      if (!item.link) return;
-      window.open(item.link, '_blank');
-    },
-    [trackEvent],
-  );
 
   const handleCopy = useCallback(() => {
     setShowToast(true);
@@ -198,7 +182,7 @@ function MobilePortfolio() {
               )}
             >
               {pageItems[pageIdx].map((item) => (
-                <PortfolioItem key={item.title} item={item} onItemClick={handleFundClick} isGridMode />
+                <PortfolioItem key={item.title} item={item} isGridMode />
               ))}
             </div>
           ))}

@@ -1,9 +1,7 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
@@ -11,6 +9,8 @@ import { useMemo } from 'react';
 import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { slugId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -128,16 +128,13 @@ export function MobileWorldMapBookDotContent({
   const [activeBookDot] = useAtom(activeBookDotAtom);
   const isActive = activeBookDot === index;
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-
-  const { trackEvent } = useGA();
-
   const onClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (link) {
-      // window.open(link, '_blank');
-      trackEvent({
-        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
-        label: title,
+      trackOutbound(link, 'outbound_click', {
+        link_type: 'book',
+        item_id: slugId(title),
+        placement: 'presence_map',
       });
     }
   };

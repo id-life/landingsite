@@ -3,8 +3,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { PodcastItem } from '@/apis/types';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 import { formatDuration } from '@/utils/podcast';
 
 type PodcastListItemProps = {
@@ -12,9 +11,8 @@ type PodcastListItemProps = {
 };
 
 export default function PodcastListItem({ data }: PodcastListItemProps) {
-  const { trackEvent } = useGA();
   const handleItemClick = () => {
-    trackEvent({ name: GA_EVENT_NAMES.EPISODE_ITEM_CLICK, label: `${data.category.split('_')[1]}_${data.title}` });
+    track('episode_item_click', { episode_id: String(data.id), channel: data.category });
   };
 
   return (

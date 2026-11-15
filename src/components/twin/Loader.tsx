@@ -4,19 +4,17 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Html, useProgress } from '@react-three/drei';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { isLoadingUIAtom } from '@/atoms/geo';
 import { modelLoadingItemAtom } from '@/atoms/twin';
-import { useGA } from '@/hooks/useGA';
+import { track } from '@/lib/analytics/track';
 
 export default function Loader() {
   const { progress, item, active } = useProgress();
   const isLoadingUI = useAtomValue(isLoadingUIAtom);
-  const loadingItem = useAtomValue(modelLoadingItemAtom);
-  const timestampRef = useRef(Date.now());
+  const [loadingItem, setLoadingItem] = useAtom(modelLoadingItemAtom);
   const [maxProgress, setMaxProgress] = useState(0);
   const isLoaded = useMemo(() => progress === 100 && !active, [active, progress]);
-  const { trackEvent } = useGA();
 
   const fillRef = useRef(null);
   const inverseTextRef = useRef(null);
@@ -24,10 +22,11 @@ export default function Loader() {
   useEffect(() => {
     if (!isLoadingUI) return;
     if (!isLoaded) return;
-    if (!loadingItem[0] || !loadingItem[1]) return;
-    const diff = Date.now() - timestampRef.current;
-    trackEvent({ name: loadingItem[0], label: diff.toString(), twin_type: loadingItem[1] });
-  }, [isLoaded, isLoadingUI, loadingItem, trackEvent]);
+    if (!loadingItem) return;
+    const { view, model, at } = loadingItem;
+    track('twin_model_ready', { model, view, load_ms: Math.round(performance.now() - at) });
+    setLoadingItem(null);
+  }, [isLoaded, isLoadingUI, loadingItem, setLoadingItem]);
 
   useEffect(() => {
     setMaxProgress((state) => (state > progress ? state : progress));

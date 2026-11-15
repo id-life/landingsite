@@ -9,8 +9,8 @@ import { memo, useEffect, useMemo } from 'react';
 import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import { MeetingSVG, SponsorSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { slugId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -214,9 +214,6 @@ export function WorldMapSponsorDotContent({
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-
-  const { trackEvent } = useGA();
-
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
@@ -229,9 +226,10 @@ export function WorldMapSponsorDotContent({
   const handleLinkClick = (e: React.MouseEvent, link?: string) => {
     e.stopPropagation();
     if (link) {
-      trackEvent({
-        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
-        label: title,
+      trackOutbound(link, 'outbound_click', {
+        link_type: 'sponsor',
+        item_id: slugId(title),
+        placement: 'presence_map',
       });
     }
   };

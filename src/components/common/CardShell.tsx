@@ -5,6 +5,8 @@ type CardShellProps = {
   href?: string;
   external?: boolean;
   onActivate?: () => void;
+  /** Called when the link is followed (analytics); the browser still does the navigation. */
+  onNavigate?: () => void;
   className?: string;
   children: ReactNode;
 };
@@ -13,10 +15,15 @@ type CardShellProps = {
  * Outer element of a clickable card: a real <a> when it navigates (so crawlers, middle-click,
  * keyboard and screen readers all work), otherwise a keyboard-operable button.
  */
-export default function CardShell({ href, external = false, onActivate, className, children }: CardShellProps) {
+export default function CardShell({ href, external = false, onActivate, onNavigate, className, children }: CardShellProps) {
   if (href) {
     return (
-      <a href={href} className={className} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      <a
+        href={href}
+        className={className}
+        onClick={onNavigate}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
         {children}
       </a>
     );

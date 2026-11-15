@@ -7,8 +7,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import PodcastSiriWave from '@/app/podcast/[id]/_components/PodcastSiriWave';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 import { formatPlaybackTime } from '@/utils/podcast';
 
 type PodcastPlayerProps = {
@@ -16,11 +15,9 @@ type PodcastPlayerProps = {
 };
 
 export default function PodcastPlayer({ data }: PodcastPlayerProps) {
-  const { trackEvent } = useGA();
   const [playStatus, setPlayStatus] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [progress, setProgress] = useState(0);
-  const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -35,19 +32,11 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
     const audio = audioRef.current;
 
     if (audio.paused) {
-      trackEvent({
-        name: GA_EVENT_NAMES.EPISODE_PLAY,
-        label: GA_EVENT_LABELS.EPISODE_PLAY.START,
-        podcast_episode: episode,
-      });
+      track('episode_play', { episode_id: String(data.id), action: 'start' });
       audio.play().then();
       setPlayStatus(true);
     } else {
-      trackEvent({
-        name: GA_EVENT_NAMES.EPISODE_PLAY,
-        label: GA_EVENT_LABELS.EPISODE_PLAY.PAUSE,
-        podcast_episode: episode,
-      });
+      track('episode_play', { episode_id: String(data.id), action: 'pause' });
       audio.pause();
       setPlayStatus(false);
     }
@@ -62,12 +51,9 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
   }, []);
 
   const handlePlayEnd = useCallback(() => {
-    trackEvent({
-      name: GA_EVENT_NAMES.EPISODE_END,
-      label: episode,
-    });
+    track('episode_end', { episode_id: String(data.id) });
     setPlayStatus(false);
-  }, [episode, trackEvent]);
+  }, [data.id]);
 
   const handleSeekTo = (time: number) => {
     if (!audioRef.current) return;

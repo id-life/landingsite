@@ -6,8 +6,6 @@ import { isBePartOfItShowAtom } from '@/atoms/character-relation';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { CAROUSEL_ITEMS } from '@/constants/config';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, ReactNode, useEffect, useMemo } from 'react';

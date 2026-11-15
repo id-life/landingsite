@@ -9,8 +9,7 @@ import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
 import CharacterRelationLegend from './CharacterRelationLegend';
 import { cn } from '@/utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 import { motion } from 'motion/react';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
@@ -35,7 +34,6 @@ export interface CharacterRelationTransformedData {
 
 const CharacterRelation = () => {
   const isMobile = useIsMobile();
-  const { trackEvent } = useGA();
 
   const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
   const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
@@ -90,7 +88,7 @@ const CharacterRelation = () => {
 
   const handleBePartOfItOpen = () => {
     setIsBePartOfItShow(true);
-    trackEvent({ name: GA_EVENT_NAMES.IN_POPUP });
+    track('relation_form_open');
   };
 
   return (

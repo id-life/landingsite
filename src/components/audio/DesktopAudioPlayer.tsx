@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
-import { useGA } from '@/hooks/useGA';
 import * as Popover from '@radix-ui/react-popover';
 import { useAtomValue, useSetAtom } from 'jotai';
 import DesktopMusicContent from './DesktopAudioContent';
@@ -18,11 +17,11 @@ import {
   musicListAtom,
   playlistAtom,
 } from '@/atoms/audio-player';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { AnimatePresence, motion } from 'motion/react';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { PLAY_TRIGGER } from '@/atoms/audio-player';
 
 export const motionVariants = {
   visible: {
@@ -45,7 +44,6 @@ export const motionTransition = {
 
 function DesktopAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
-  const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
@@ -70,11 +68,9 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
-    const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
-    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
     // Pressed before the list has arrived: start the first track as soon as it is in.
     if (!data) requestPlayWhenReady();
-    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: PLAY_TRIGGER.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 

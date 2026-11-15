@@ -8,7 +8,8 @@ import MobileConnectGL from './MobileConnectGL';
 import MobileVisionGL from './MobileVisionGL';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import { ErrorBoundary } from 'react-error-boundary';
+import GLBoundary from '@/components/gl/GLBoundary';
+import { watchWebGLContext } from '@/lib/analytics/experience';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useGLTF } from '@react-three/drei';
 import { HeroReady } from './heroAssets';
@@ -22,9 +23,10 @@ export default function MobileThreeWrapper() {
   if (!isMounted) return null;
 
   return (
-    <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+    <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
+        onCreated={watchWebGLContext('vision')}
         className={cn('pointer-events-none', !showCanvas && 'invisible opacity-0')}
         style={{ position: 'fixed', zIndex: 1 }}
         camera={{ position: [0, 0, 10], fov: 40 }}
@@ -49,6 +51,6 @@ export default function MobileThreeWrapper() {
           <Fluid />
         </EffectComposer>
       </Canvas>
-    </ErrorBoundary>
+    </GLBoundary>
   );
 }

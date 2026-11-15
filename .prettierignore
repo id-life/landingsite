@@ -1,0 +1,3 @@
+# Generated from src/lib/analytics/events.ts by test/analytics-events.test.mjs (UPDATE_ANALYTICS_DOCS=1 npm test)
+src/lib/analytics/EVENTS.md
+src/lib/analytics/events.json

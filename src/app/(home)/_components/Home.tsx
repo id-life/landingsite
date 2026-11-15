@@ -14,10 +14,6 @@ import Footer from '@/components/layout/footer/Footer';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import Spectrum from '@/components/spectrum/Spectrum';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
 import { useResizeRefresh } from '@/hooks/useResizeRefresh';
 import { useSectionInput } from '@/hooks/anim/useSectionInput';
@@ -26,14 +22,10 @@ import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
 
 export default function Home() {
   const [currentPage] = useAtom(currentPageAtom);
-  const isMobile = useIsMobile();
-  const isMounted = useIsMounted();
 
-  const { trackEvent } = useGA();
   const { initializeAnimations } = useHomeAnimations();
 
   // Refresh ScrollTrigger and ScrollSmoother on window resize
@@ -46,14 +38,8 @@ export default function Home() {
   const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
   useSectionUrlSync(currentPage, initialRouteHandled);
 
-  useEffect(() => {
-    if (isMounted && !isMobile) {
-      trackEvent({
-        name: GA_EVENT_NAMES.ID_PAGE_VIEW,
-        label: currentPage.id,
-      });
-    }
-  }, [currentPage, isMobile, isMounted, trackEvent]);
+  // Section views are counted by GA4 from the URL (one page_view per pushState / replaceState, DATA-05); there is no
+  // parallel section event, so a deep link no longer reports a phantom Mission view.
 
   // 初始化所有主页动画
   useGSAP(() => {

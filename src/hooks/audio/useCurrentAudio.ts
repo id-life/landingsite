@@ -9,10 +9,9 @@ import {
   determineNextTrackAtom,
   durationAtom,
   playNextTrackAtom,
+  PLAY_TRIGGER,
   progressAtom,
 } from '@/atoms/audio-player';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
@@ -24,7 +23,10 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 let sharedAudioContext: AudioContext | null = null;
 let sharedAnalyser: AnalyserNode | null = null;
 export function getAudioContext() {
-  sharedAudioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+  // Safari before 14.1 only has the prefixed constructor.
+  const AudioContextClass =
+    window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext!;
+  sharedAudioContext ??= new AudioContextClass();
   return sharedAudioContext;
 }
 function getAnalyser() {
@@ -79,8 +81,6 @@ export default function useCurrentAudio() {
   const [controls, dispatch] = useAtom(audioControlsAtom);
   const playNextTrack = useSetAtom(playNextTrackAtom);
   const determineNextTrack = useSetAtom(determineNextTrackAtom);
-
-  const { trackEvent } = useGA();
 
   const preloadNextTrack = useCallback(() => {
     if (isPreloadingRef.current) return;
@@ -143,7 +143,7 @@ export default function useCurrentAudio() {
     setAudioRef(audio);
     if (playWhenReady) {
       playWhenReady = false;
-      dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+      dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.TOGGLE });
     }
 
     const setupAudio = () => {
@@ -167,7 +167,7 @@ export default function useCurrentAudio() {
         source.connect(analyser);
         analyser.connect(audioContext.destination);
       }
-      dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.AUTO });
+      dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.AUTO });
     };
 
     if (isPreloaded && audio.readyState >= 1) {
@@ -224,7 +224,6 @@ export default function useCurrentAudio() {
     };
 
     audio.onended = () => {
-      trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_END, label: currentAudio.title });
       playNextTrack();
     };
 
@@ -247,16 +246,7 @@ export default function useCurrentAudio() {
 
   // Sound is opt-in: music starts only from the player's own play control. (It used to start on
   // the visitor's first click anywhere on the page, which counts as autoplay under WCAG 1.4.2.)
-  // The first interaction is still reported for analytics.
-  useEffect(() => {
-    const reportInteraction = () => {
-      if (hasInteractedRef.current) return;
-      hasInteractedRef.current = true;
-      trackEvent({ name: GA_EVENT_NAMES.USER_INTERACT });
-    };
-    document.addEventListener('click', reportInteraction, { once: true });
-    return () => document.removeEventListener('click', reportInteraction);
-  }, [trackEvent]);
+  // The first-click user_interact event was noise and is gone (DATA-11).
 
   // Pause while the tab is hidden; resume on return only if it was playing.
   const audioRefRef = useRef(audioRef);

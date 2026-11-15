@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { recordSubscribeDismissal } from '@/atoms/auto-subscribe';
+import { recordSubscribeDismissal, wasSubscribePromptDismissed } from '@/atoms/auto-subscribe';
 import { NewsletterCloseMethod, NewsletterPlacement, trackNewsletter } from '@/utils/newsletter';
 
 /** Whether the SUBSCRIBE popup is open. Open and close it through subscribePopupAtom, not directly. */
@@ -28,7 +28,7 @@ export const subscribePopupAtom = atom(null, (get, set, action: SubscribePopupAc
     const placement = (action as { placement: NewsletterPlacement }).placement;
     set(subscribeTypeAtom, placement);
     set(isSubscribeShowAtom, true);
-    trackNewsletter('view', { placement });
+    trackNewsletter('view', { placement, previously_dismissed: wasSubscribePromptDismissed() ? 1 : 0 });
     return;
   }
   const method: NewsletterCloseMethod = action.type === 'close' ? action.method : 'toggle';

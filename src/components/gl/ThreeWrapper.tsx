@@ -6,7 +6,8 @@ import { Canvas } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
-import { ErrorBoundary } from 'react-error-boundary';
+import GLBoundary from '@/components/gl/GLBoundary';
+import { watchWebGLContext } from '@/lib/analytics/experience';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import PrefHook from '@/components/gl/PrefHook';
 import { HeroReady } from '@/components/gl/heroAssets';
@@ -22,9 +23,10 @@ export default function ThreeWrapper() {
   }, [isMounted]);
 
   return (
-    <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+    <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
+        onCreated={watchWebGLContext('vision')}
         style={{ position: 'fixed', zIndex: 1 }}
         gl={{
           alpha: true,
@@ -53,6 +55,6 @@ export default function ThreeWrapper() {
           <Fluid />
         </EffectComposer>
       </Canvas>
-    </ErrorBoundary>
+    </GLBoundary>
   );
 }

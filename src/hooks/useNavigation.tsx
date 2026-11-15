@@ -1,5 +1,6 @@
 import { currentPageAtom, innerPageIndexAtom, innerPageTotalAtom, navigateToAtom } from '@/atoms';
-import { NavItem } from '@/components/nav/nav';
+import { NAV_LIST, NavItem } from '@/components/nav/nav';
+import { sectionTitle } from '@/constants/section-titles';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,6 +17,10 @@ import { useGSAP } from '@gsap/react';
  */
 function pushSectionUrl(path: string, hash = '') {
   if (window.location.pathname === path && window.location.hash === hash) return;
+  // The title first: GA4 reads it when the tag's history listener sees the pushState (DATA-05), so a nav-click
+  // page_view carries the section's own title, not the previous one.
+  const item = NAV_LIST.find((nav) => nav.href === path);
+  if (item) document.title = sectionTitle(item);
   window.history.pushState({}, '', `${path}${window.location.search}${hash}`);
 }
 

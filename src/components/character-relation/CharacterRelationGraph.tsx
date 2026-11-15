@@ -6,8 +6,6 @@ import type { JsonLine, JsonNode, RGJsonData, RGNodeSlotProps, RGOptions, Relati
 import { CharacterRelationTransformedData } from './CharacterRelation';
 import { cn } from '@/utils';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 
 const BASE_NODE_SIZE = 8;
 const BASE_NODE_SIZE_DELTA = 0;
@@ -21,7 +19,6 @@ interface CharacterRelationGraphProps {
 // https://github.com/seeksdream/relation-graph/issues/317
 const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   const { data } = props;
-  const { trackEvent } = useGA();
   const graphRef = useRef<RelationGraphExpose | null>(null);
 
   const jsonData = useMemo<RGJsonData>(() => {
@@ -153,19 +150,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     },
   };
 
-  const handleDrag = () => {
-    trackEvent({ name: GA_EVENT_NAMES.IN_DRAG });
-  };
-
-  return (
-    <RelationGraph
-      onCanvasDragEnd={handleDrag}
-      onNodeDragEnd={handleDrag}
-      ref={graphRef}
-      options={options}
-      nodeSlot={CustomNode}
-    />
-  );
+  return <RelationGraph ref={graphRef} options={options} nodeSlot={CustomNode} />;
 };
 export default memo(CharacterRelationGraph);
 

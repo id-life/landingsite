@@ -3,8 +3,8 @@ import { STORAGE_KEY } from '@/constants/storage';
 /**
  * Explicit dismissals of the subscribe prompt (X, Escape or a successful submit), stored with their time.
  *
- * Nothing opens the prompt by itself any more, so nothing reads this today. It is kept so the visit report
- * (SubscribePopupStorageReporter) still knows a returning visitor dismissed it, and so a future
+ * Nothing opens the prompt by itself any more. It is kept so newsletter_view can report previously_dismissed
+ * (DATA-11 folded the old subscribe_popup_storage event into it), and so a future
  * engagement prompt can honour the rule: after an explicit dismissal, nothing unrequested for 30 days.
  * The key used to hold `true` (no time); such values count as expired.
  */
@@ -22,4 +22,13 @@ export function recordSubscribeDismissal(now: number = Date.now()) {
 export function isSubscribePromptSnoozed(stored: string | null, now: number = Date.now()) {
   const at = Number(stored);
   return Number.isFinite(at) && at > 0 && at <= now && now - at < SUBSCRIBE_PROMPT_SNOOZE_MS;
+}
+
+/** Whether this browser ever explicitly dismissed the prompt (any stored dismissal, expired or not). */
+export function wasSubscribePromptDismissed() {
+  try {
+    return Boolean(localStorage.getItem(STORAGE_KEY.SUBSCRIBE_POPUP_DISMISSED));
+  } catch {
+    return false;
+  }
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { track } from '@/lib/analytics/track';
 import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating, useTransitionStyles } from '@floating-ui/react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
@@ -9,7 +10,44 @@ type VideoModalProps = {
   onClose: () => void;
   videoId: string;
   title: string;
+  /** Where the video was opened from (analytics). */
+  placement?: string;
 };
+
+const YT_ORIGIN = 'https://www.youtube-nocookie.com';
+const PROGRESS_MARKS = [25, 50, 75, 100];
+
+/**
+ * video_progress without loading YouTube's IFrame API script: an embed with enablejsapi=1 posts its state to the
+ * parent once the parent says it is listening (the protocol the API script itself uses). Each mark is sent once.
+ */
+function useVideoProgress(isOpen: boolean, videoId: string, frame: React.RefObject<HTMLIFrameElement>) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const sent = new Set<number>();
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== YT_ORIGIN || event.source !== frame.current?.contentWindow) return;
+      let data: { event?: string; info?: { currentTime?: number; duration?: number; playerState?: number } };
+      try {
+        data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      } catch {
+        return;
+      }
+      const info = data?.info;
+      if (data?.event !== 'infoDelivery' || !info) return;
+      const { currentTime, duration, playerState } = info;
+      const percent = playerState === 0 ? 100 : duration && currentTime ? (currentTime / duration) * 100 : 0;
+      for (const mark of PROGRESS_MARKS) {
+        if (percent >= mark && !sent.has(mark)) {
+          sent.add(mark);
+          track('video_progress', { video_id: videoId, percent: mark });
+        }
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [isOpen, videoId, frame]);
+}
 
 function CloseIcon() {
   return (
@@ -20,7 +58,13 @@ function CloseIcon() {
   );
 }
 
-export default function VideoModal({ isOpen, onClose, videoId, title }: VideoModalProps) {
+export default function VideoModal({ isOpen, onClose, videoId, title, placement = 'insights' }: VideoModalProps) {
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  useVideoProgress(isOpen, videoId, frameRef);
+  useEffect(() => {
+    if (isOpen) track('video_open', { video_id: videoId, placement });
+  }, [isOpen, videoId, placement]);
+
   const { refs, context } = useFloating({ open: isOpen, onOpenChange: (open) => !open && onClose() });
 
   const { isMounted, styles } = useTransitionStyles(context, {
@@ -78,8 +122,16 @@ export default function VideoModal({ isOpen, onClose, videoId, title }: VideoMod
             <div ref={refs.setFloating} className="relative" onClick={(e) => e.stopPropagation()}>
               <div className="relative aspect-video w-[80vw] max-w-[960px] overflow-hidden rounded-lg bg-black shadow-2xl">
                 <iframe
+                  ref={frameRef}
                   className="absolute inset-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                  // Privacy-enhanced mode (no YouTube cookies until play) with the JS API for video_progress.
+                  src={`${YT_ORIGIN}/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(typeof window === 'undefined' ? '' : window.location.origin)}`}
+                  onLoad={(event) =>
+                    event.currentTarget.contentWindow?.postMessage(
+                      JSON.stringify({ event: 'listening', id: videoId, channel: 'widget' }),
+                      YT_ORIGIN,
+                    )
+                  }
                   title={title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

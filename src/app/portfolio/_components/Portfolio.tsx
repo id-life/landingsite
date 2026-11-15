@@ -3,20 +3,18 @@ import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
 import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { FreeMode } from 'swiper/modules';
-import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
+import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 
 SwiperType.use([FreeMode]);
@@ -105,33 +103,8 @@ function Portfolio() {
     isUp: false,
   });
 
-  const { trackEvent } = useGA();
-
   // 使用新的 Portfolio 动画 Hook
   usePortfolioItemAnimation(wrapperRef, portfolioRefs, setImageIdx);
-
-  const handleFundClick = useCallback(
-    (item: PortfolioItemInfo) => {
-      trackEvent({
-        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-        label: item.title,
-        landingsite_action: 'click',
-      });
-      if (!item.link) return;
-      window.open(item.link, '_blank');
-    },
-    [trackEvent],
-  );
-
-  const handleMouseEnter = useCallback(
-    (item: PortfolioItemInfo) => () =>
-      trackEvent({
-        name: GA_EVENT_NAMES.PORTFOLIO_VIEW,
-        label: item.title,
-        landingsite_action: 'hover',
-      }),
-    [trackEvent],
-  );
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -187,8 +160,6 @@ function Portfolio() {
         key={item.title}
         item={item}
         className="w-full min-w-0"
-        onItemClick={handleFundClick}
-        onMouseEnter={handleMouseEnter(item)}
         ref={(element) => {
           if (!element) return;
           portfolioRefs.current[index] = element;
@@ -200,7 +171,7 @@ function Portfolio() {
     const secondRow = items.slice(FIRST_ROW_COUNT);
 
     return { firstRow, secondRow };
-  }, [handleFundClick, handleMouseEnter]);
+  }, []);
 
   return (
     <div ref={wrapperRef} id={PAGE_ID} className="page-container text-white">

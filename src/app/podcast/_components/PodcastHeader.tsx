@@ -12,8 +12,7 @@ import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import PodcastNavDialog from '@/app/podcast/_components/PodcastNavDialog';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { trackEvent } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 import { subscribePopupAtom } from '@/atoms/footer';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 
@@ -29,7 +28,7 @@ export default function PodcastHeader() {
   );
 
   const handleLogoClick = () => {
-    trackEvent({ name: GA_EVENT_NAMES.ID_HOME_REDIRECT });
+    track('nav_click', { target_section: 'vision_page', source: 'logo' });
     window.location.href = '/';
   };
 

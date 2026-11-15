@@ -7,6 +7,7 @@ import VideoModal from '@/app/insights/_components/VideoModal';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import { track } from '@/lib/analytics/track';
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +23,13 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
 
   return (
     <>
-      <CardShell href={href} external={isExternal} onActivate={openVideo} className={cardClassName}>
+      <CardShell
+        href={href}
+        external={isExternal}
+        onActivate={openVideo}
+        onNavigate={() => track('news_item_click', { item_id: String(data.id), placement: 'news_list' })}
+        className={cardClassName}
+      >
         <div className="relative aspect-[335/157] overflow-hidden mobile:rounded-t-lg">
           <YouTubeThumbnail
             pic={data.cover || '/imgs/news/insights-bg.webp'}
@@ -49,7 +56,13 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
       </CardShell>
 
       {isYouTube && (
-        <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />
+        <VideoModal
+          placement="news_list"
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          videoId={data.videoId!}
+          title={data.title}
+        />
       )}
     </>
   );

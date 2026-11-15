@@ -1,8 +1,6 @@
 import { DEFAULT_PULSE_CONFIG, MapDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
@@ -12,6 +10,8 @@ import {
   MobileContentSection,
   PulseDot,
 } from './WorldMapDotComponents';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { track, slugId, youtubeId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -27,7 +27,6 @@ export function MobileWorldMapDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
-  const { trackEvent } = useGA();
   const { country, label, lat, lng, pulseConfig, isSponsor, isResearch, videoUrl, title, extraSponsor } = dot;
   const { handleClickPoint } = useEngagementClickPoint();
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
@@ -54,7 +53,7 @@ export function MobileWorldMapDotPoint({
 
   const handleVideoClick = (e: MouseEvent) => {
     e.stopPropagation();
-    trackEvent({ name: GA_EVENT_NAMES.PRESENCE_TALK_VIDEO, label: title });
+    track('video_open', { video_id: videoUrl ? youtubeId(videoUrl) : slugId(title), placement: 'presence_map' });
   };
 
   return (
@@ -137,9 +136,6 @@ export function MobileWorldMapDotContent({
   const { activeMeetingDot } = useEngagementClickPoint();
   const isActive = activeMeetingDot === index;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const { trackEvent } = useGA();
-
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
 
   // 打开时禁用弹窗内的滚动, overscroll-none 不顶用
@@ -170,9 +166,10 @@ export function MobileWorldMapDotContent({
   const handleLinkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (link) {
-      trackEvent({
-        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
-        label: `${label ? `${label}, ` : ''}${country}`,
+      trackOutbound(link, 'outbound_click', {
+        link_type: 'talk',
+        item_id: slugId(`${label ? `${label}, ` : ''}${country}`),
+        placement: 'presence_map',
       });
     }
   };

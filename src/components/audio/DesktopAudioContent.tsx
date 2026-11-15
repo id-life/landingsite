@@ -21,8 +21,6 @@ import {
   podcastLTAtom,
 } from '@/atoms/audio-player';
 import PodcastSelected from '@/components/audio/PodcastSelected';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 import clsx from 'clsx';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import React from 'react';
@@ -30,6 +28,8 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
 import { getAudioContext } from '@/hooks/audio/useCurrentAudio';
+import { PLAY_TRIGGER } from '@/atoms/audio-player';
+import { track } from '@/lib/analytics/track';
 
 export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean }) {
   const musicList = useAtomValue(musicListAtom);
@@ -41,24 +41,20 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
   const [playlist, setPlaylist] = useAtom(playlistAtom);
   const [currentMusic, setCurrentMusic] = useAtom(currentAudioAtom);
   const dispatch = useSetAtom(audioControlsAtom);
-  const { trackEvent } = useGA();
 
   const handleChangeList = (list: PlayListKey) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.PLAYER_MENU,
-      label: list === PlayList.MUSIC ? GA_EVENT_LABELS.PLAYER_MENU.MUSIC : GA_EVENT_LABELS.PLAYER_MENU.PODCAST,
-    });
+    track('player_control', { control: 'playlist', value: list === PlayList.MUSIC ? 'music' : 'podcast' });
     setCurrentList(list);
   };
 
   const handleChangePlayMode = () => {
     const nextMode = Object.values(PlayMode)[(Object.values(PlayMode).indexOf(playMode) + 1) % Object.values(PlayMode).length];
-    trackEvent({ name: GA_EVENT_NAMES.PLAYER_TYPE, label: nextMode });
+    track('player_control', { control: 'play_mode', value: nextMode });
     dispatch({ type: AUDIO_DISPATCH.SET_PLAY_MODE, value: nextMode });
   };
 
   const handleChangeAudio = (audio: AudioDataItem) => {
-    trackEvent({ name: GA_EVENT_NAMES.MUSIC_SWITCH, label: audio.title });
+    track('player_control', { control: 'track', value: String(audio.id) });
     setCurrentMusic(audio);
     if (audio.category === playlist[0].category) return;
     if (audio.category === PlayList.MUSIC) {
@@ -78,9 +74,7 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
-    const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
-    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: PLAY_TRIGGER.TOGGLE });
   };
   const handleSeekTo = (value: number) => {
     dispatch({ type: AUDIO_DISPATCH.SEEK_TO, value });

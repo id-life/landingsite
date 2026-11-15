@@ -8,8 +8,8 @@ import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { slugId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -187,16 +187,13 @@ export function WorldMapBookDotContent({
   const isActive = activeBookDot === index;
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-
-  const { trackEvent } = useGA();
-
   const onClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (link) {
-      window.open(link, '_blank');
-      trackEvent({
-        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
-        label: title,
+      trackOutbound(link, 'outbound_click', {
+        link_type: 'book',
+        item_id: slugId(title),
+        placement: 'presence_map',
       });
     }
   };

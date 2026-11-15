@@ -1,12 +1,11 @@
 'use client';
 
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { spectrumLinkProps } from './spectrumLinkProps';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { cloneElement, memo, useEffect, useState } from 'react';
+import { trackSpectrumLink } from '@/lib/analytics/spectrum';
 
 interface MobileSpectrumSponsorPageProps {
   sponsorItem: SpectrumItemInfo;
@@ -26,13 +25,12 @@ const SponsorLogoItem = memo(
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
   }) => {
-    const { trackEvent } = useGA();
     const { key, label, link, routeKey, icon, mobileSize } = item;
     const anchorProps = spectrumLinkProps({
       link,
       routeKey,
       executeSpectrumRoute,
-      onTrack: () => trackEvent({ name: GA_EVENT_NAMES.SPECTRUM_CLICK, label: key ?? label }),
+      onTrack: () => trackSpectrumLink({ key, label, link }, 'sponsor'),
     });
     const className = 'flex items-center justify-center transition-opacity hover:opacity-80';
     const logo = icon && (

@@ -1,15 +1,11 @@
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 
+/** Opening one of the Connect section's inner pages: one item_inspect per page per page load (DATA-11). */
 export function useConnectShowEvent() {
-  const { trackEvent } = useGA();
-
   const sendValueShowEvent = (index: number, action: 'click' | 'scroll') => {
-    trackEvent({
-      name: GA_EVENT_NAMES.CONNECT_VIEW,
-      label: index.toString(),
-      landingsite_action: 'click',
-    });
+    if (action !== 'click') return;
+    const itemId = `connect_${index}`;
+    track('item_inspect', { item_id: itemId, section_id: 'connect_page' }, { once: `inspect:connect_page:${itemId}` });
   };
 
   return { sendValueShowEvent };

@@ -13,6 +13,7 @@ import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useRouter } from 'next/navigation';
+import { track } from '@/lib/analytics/track';
 
 const CONTENT_LINKS = [
   { href: '/news', title: 'news 新闻' },
@@ -50,6 +51,7 @@ function MobileNavDialog() {
   // Navigation starts on the tap; the menu's exit animation runs at the same time. (It used to wait
   // 600 ms for the animation, and a tap during a theme transition was dropped.)
   const handleNavClick = (item: NavItem) => {
+    track('nav_click', { target_section: item.id, source: 'mobile_menu' });
     startAnim(false);
     setOpen(false);
     mobileNavChange(item);

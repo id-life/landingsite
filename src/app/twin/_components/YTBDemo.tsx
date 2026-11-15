@@ -1,28 +1,19 @@
-import { useCallback } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track, youtubeId } from '@/lib/analytics/track';
 import { DigitalTwinYoutubeLink } from '@/constants/links';
 import RightSVG from '@/../public/svgs/twin/right.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import ClipBorderSVG from '../../../../public/svgs/twin/clip-border.svg?component';
 
 export default function YTBDemo() {
-  const { trackEvent } = useGA();
-
-  const handleYTBLinkClick = useCallback(
-    (url: string) => () => {
-      window.open(url, '_blank');
-      trackEvent({
-        name: GA_EVENT_NAMES.DT_DEMO,
-      });
-    },
-    [trackEvent],
-  );
+  const handleClick = () => track('video_open', { video_id: youtubeId(DigitalTwinYoutubeLink), placement: 'digital_twin' });
 
   return (
     <div id="ytb-demo" className="absolute bottom-40 left-10 z-20 grid cursor-pointer gap-5">
-      <div
-        onClick={handleYTBLinkClick(DigitalTwinYoutubeLink)}
+      <a
+        href={DigitalTwinYoutubeLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={handleClick}
         className="group relative flex h-[3.125rem] w-[12.25rem] items-center justify-between px-5"
       >
         <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-red-600" />
@@ -31,7 +22,7 @@ export default function YTBDemo() {
           DEMO
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-red-600 group-hover:stroke-red-600" />
-      </div>
+      </a>
     </div>
   );
 }

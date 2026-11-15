@@ -3,8 +3,8 @@ import { heroReadyAtom } from '@/atoms/loading';
 import { ensureDesktopUIVisible, ensureMobileUIVisible } from '@/utils/ui';
 import Background from '@/components/common/Background';
 import { heroLoadingManager } from '@/components/gl/heroAssets';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
+import { reportAssetFailed, reportExperienceError, reportExperienceReady } from '@/lib/analytics/experience';
+import { advanceStage, markExperiencePage } from '@/lib/analytics/stage';
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react';
 import { useProgress } from '@react-three/drei';
 import gsap from 'gsap';
@@ -20,8 +20,6 @@ const LOADING_MAX = 95;
 const FILL_SECONDS = 0.2;
 const FADE_SECONDS = 0.3;
 
-const isTrackedItem = (url: string) => /\.(glb|png)(\?|$)/.test(url);
-
 /**
  * The first-visit loader. It follows the hero alone: its bar shows heroLoadingManager's progress
  * (the dragon model and the wordmark textures) and it leaves once the hero's Suspense boundary has
@@ -35,11 +33,11 @@ export const OuterLoader = memo(function OuterLoader() {
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const [show, setShow] = useState(true);
-  const timestampRef = useRef(Date.now());
-  const trackedItemsRef = useRef(new Set<string>());
+  const mountedAtRef = useRef(0);
   const exitingRef = useRef(false);
   const loaderRef = useRef<ProgressLoaderHandle>(null);
-  const { trackEvent } = useGA();
+  // Why the loader failed open: its timeout (reported as loader_timeout) or an asset error (asset_failed).
+  const failReasonRef = useRef<'timeout' | 'asset'>('timeout');
 
   // Fail open: an asset that errors, or a load that takes longer than LOADER_TIMEOUT_MS, no longer
   // leaves the visitor on an endless loader with no navigation. The UI is revealed and the scene
@@ -51,39 +49,34 @@ export const OuterLoader = memo(function OuterLoader() {
   }, []);
   useEffect(() => {
     if (!failOpen || !show) return;
-    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: 'fail_open' });
+    if (failReasonRef.current === 'timeout') reportExperienceError('loader_timeout');
+    reportExperienceReady({ failOpen: true, mountedAt: mountedAtRef.current });
     setIsLoadingUI(true);
     setGlobalLoaded(true);
     setShow(false);
     if (window.matchMedia('(max-width: 768px)').matches) ensureMobileUIVisible();
     else ensureDesktopUIVisible();
     setFadeInAnimCompleted(true);
-  }, [failOpen, show, setFadeInAnimCompleted, setGlobalLoaded, setIsLoadingUI, trackEvent]);
+  }, [failOpen, show, setFadeInAnimCompleted, setGlobalLoaded, setIsLoadingUI]);
 
   useEffect(() => {
-    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_START });
-  }, [trackEvent]);
+    mountedAtRef.current = performance.now();
+    markExperiencePage();
+    advanceStage('assets');
+  }, []);
 
-  // GA: every model and texture that finishes (hero and later sections) and every failure, read
-  // from the loading managers without re-rendering this component.
+  // Asset failures (hero and later sections), once per file, read from the loading managers without
+  // re-rendering this component. Successful loads are not reported (DATA-06: noise).
   useEffect(() => {
-    const trackItem = (url: string) => {
-      const name = url.split('/').pop();
-      if (!name || !isTrackedItem(url) || trackedItemsRef.current.has(name)) return;
-      trackedItemsRef.current.add(name);
-      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: 'Succeed', resource_name: name });
-    };
-    const trackError = (url: string) => trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_ITEM, label: 'Fail', resource_name: url });
     const unsubscribe = useProgress.subscribe((state, previous) => {
-      if (state.item !== previous.item) trackItem(state.item);
-      state.errors.slice(previous.errors.length).forEach(trackError);
+      state.errors.slice(previous.errors.length).forEach(reportAssetFailed);
     });
     heroLoadingManager.onProgress = (url, loaded, total) => {
-      trackItem(url);
       if (total > 0) loaderRef.current?.animateTo((LOADING_MAX * loaded) / total, 0.4);
     };
     heroLoadingManager.onError = (url) => {
-      trackError(url);
+      reportAssetFailed(url);
+      failReasonRef.current = 'asset';
       setFailOpen(true);
     };
     return () => {
@@ -91,14 +84,14 @@ export const OuterLoader = memo(function OuterLoader() {
       heroLoadingManager.onProgress = () => {};
       heroLoadingManager.onError = () => {};
     };
-  }, [trackEvent]);
+  }, []);
 
   // Exit once the hero is on screen: fill the bar, then start the scene's intro and fade the
   // overlay over it; the overlay lets input through while it fades.
   useEffect(() => {
     if (!heroReady || !show || exitingRef.current) return;
     exitingRef.current = true;
-    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_END, label: (Date.now() - timestampRef.current).toString() });
+    reportExperienceReady({ failOpen: false, mountedAt: mountedAtRef.current });
     loaderRef.current?.animateTo(100, FILL_SECONDS, () => {
       setIsLoadingUI(true);
       setGlobalLoaded(true);
@@ -110,7 +103,7 @@ export const OuterLoader = memo(function OuterLoader() {
       overlay.style.pointerEvents = 'none';
       gsap.to(overlay, { opacity: 0, duration: FADE_SECONDS, onComplete: () => setShow(false) });
     });
-  }, [heroReady, setGlobalLoaded, setIsLoadingUI, show, trackEvent]);
+  }, [heroReady, setGlobalLoaded, setIsLoadingUI, show]);
 
   useEffect(() => {
     // Only while the loader is on screen: models for later sections load after the reveal and must

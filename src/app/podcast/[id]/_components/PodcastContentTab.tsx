@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import PodcastComments from '@/app/podcast/[id]/_components/PodcastComments';
 import Markdown, { Components } from 'react-markdown';
@@ -9,8 +9,7 @@ import '@/styles/components/markdown-timeline.css';
 import { PodcastItem } from '@/apis/types';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { track } from '@/lib/analytics/track';
 
 const TABS = ['时间轴', '评论'] as const;
 // @[timeline](mm:ss) markers become clickable spans as syntax-tree nodes (remarkTimeline), then the shared
@@ -22,13 +21,14 @@ type PodcastContentTabProps = {
 };
 
 export default function PodcastContentTab({ data }: PodcastContentTabProps) {
-  const { trackEvent } = useGA();
   const [activeTab, setActiveTab] = useState<number>(0);
-  const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
 
   const handleCustomElementClick = (type: string, param: string) => {
     if (type === 'timeline') {
-      trackEvent({ name: GA_EVENT_NAMES.TIMELINE_JUMP, label: param, podcast_episode: episode });
+      const positionS = String(param)
+        .split(':')
+        .reduce((total, part) => total * 60 + (Number(part) || 0), 0);
+      track('timeline_jump', { episode_id: String(data.id), position_s: positionS });
       eventBus.next({ type: MessageType.PODCAST_DURATION, payload: param });
     }
   };
@@ -49,10 +49,11 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
     },
   };
 
-  useEffect(() => {
-    const label = activeTab === 0 ? GA_EVENT_LABELS.SECTION_VIEW.DETAIL : GA_EVENT_LABELS.SECTION_VIEW.COMMENT;
-    trackEvent({ name: GA_EVENT_NAMES.SECTION_VIEW, label, podcast_episode: episode });
-  }, [activeTab, episode, trackEvent]);
+  // tab_select only for a real switch (DATA-05: the load-time section_view is gone).
+  const selectTab = (index: number) => {
+    if (index !== activeTab) track('tab_select', { tab: index === 0 ? 'detail' : 'comment', item_id: String(data.id) });
+    setActiveTab(index);
+  };
 
   return (
     <div>
@@ -60,7 +61,7 @@ export default function PodcastContentTab({ data }: PodcastContentTabProps) {
         {TABS.map((tab, index) => (
           <div
             key={index}
-            onClick={() => setActiveTab(index)}
+            onClick={() => selectTab(index)}
             className={clsx('podcast-tab-item relative flex cursor-pointer text-sm/3.5 font-bold', {
               'podcast-tab-active': activeTab === index,
             })}

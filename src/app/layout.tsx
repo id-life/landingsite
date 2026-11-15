@@ -1,24 +1,18 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import Providers from '@/providers/root';
-import { Analytics } from '@vercel/analytics/next';
 import Background from '@/components/common/Background';
-import { WebVitals } from '@/app/_components/web-vitals';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import HashRouter from '@/components/common/HashRouter';
-import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
-import Script from 'next/script';
-import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
 import { ANALYTICS_ENABLED } from '@/constants/env';
+import HeadScript from '@/lib/analytics/HeadScript';
+import AnalyticsBoot from '@/lib/analytics/boot';
+import VercelInsights from '@/lib/analytics/VercelInsights';
+import { VERCEL_INSIGHTS_ENABLED } from '@/lib/analytics/config';
 
 import '@/styles/globals.css';
-import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
-
-const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
-const gaDebugMode = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_DEBUG_MODE === 'true';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -63,17 +57,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      {ANALYTICS_ENABLED && <GoogleTagManager gtmId="GTM-NZKZJ38H" />}
-      {/* DATA-07: Google signals and ad personalisation off before the tag's own config runs. Google documents that
-          this suppresses the join beacons and adds npa=1 to every hit. Production builds only, like the tags. */}
-      {ANALYTICS_ENABLED && gaId && (
-        <Script id="ga-privacy-defaults" strategy="beforeInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('set','allow_google_signals',false);gtag('set','allow_ad_personalization_signals',false);`}
-        </Script>
-      )}
-      {ANALYTICS_ENABLED && gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
-      {ANALYTICS_ENABLED && <WebVitals />}
-      {ANALYTICS_ENABLED && <SessionInvisibilityTracker />}
+      {/* DATA-08: one Google tag, owned by src/lib/analytics. The head script sets the Consent Mode defaults, Google
+          signals and ad personalisation off (DATA-07) and records the landing URL before anything can call gtag;
+          AnalyticsBoot loads gtag/js after consent, once the experience is ready. No GTM container, no preloads. */}
+      <head>{ANALYTICS_ENABLED && <HeadScript />}</head>
       <body
         className={clsx(
           xirod.variable,
@@ -93,16 +80,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
-        {ANALYTICS_ENABLED && <SubscribePopupStorageReporter />}
         <Providers>
+          {ANALYTICS_ENABLED && <AnalyticsBoot />}
           <HashRouter />
           <main id="main-content" tabIndex={-1} className="outline-none">
             {children}
           </main>
           <Background />
         </Providers>
-        {ANALYTICS_ENABLED && <Analytics />}
-        {ANALYTICS_ENABLED && <SpeedInsights />}
+        {VERCEL_INSIGHTS_ENABLED && <VercelInsights />}
       </body>
     </html>
   );

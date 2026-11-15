@@ -28,7 +28,8 @@ import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
-import { ErrorBoundary } from 'react-error-boundary';
+import GLBoundary from '@/components/gl/GLBoundary';
+import { watchWebGLContext } from '@/lib/analytics/experience';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
 export default function TwinThreeWrapper() {
@@ -225,9 +226,10 @@ export default function TwinThreeWrapper() {
           paddingRight: currentModel ? '10%' : '0%',
         }}
       >
-        <ErrorBoundary fallback={<div>Sorry WebGL loading error!</div>}>
+        <GLBoundary canvas="twin">
           <Canvas
             id="model-canvas"
+            onCreated={watchWebGLContext('twin')}
             dpr={[1, 2]}
             gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
             style={{
@@ -288,7 +290,7 @@ export default function TwinThreeWrapper() {
               )}
             </>
           )}
-        </ErrorBoundary>
+        </GLBoundary>
       </div>
     </div>
   );

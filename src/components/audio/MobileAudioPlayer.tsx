@@ -10,10 +10,8 @@ import {
   playlistAtom,
 } from '@/atoms/audio-player';
 import Dialog from '@/components/dialog';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
 import useCurrentMusicControl, { getAudioContext, requestPlayWhenReady } from '@/hooks/audio/useCurrentAudio';
-import { useGA } from '@/hooks/useGA';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
@@ -21,11 +19,11 @@ import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { PLAY_TRIGGER } from '@/atoms/audio-player';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   useFetchAudioData();
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
-  const { trackEvent } = useGA();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);
@@ -49,11 +47,9 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
-    const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
-    trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
     // Pressed before the list has arrived: start the first track as soon as it is in.
     if (!data) requestPlayWhenReady();
-    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: PLAY_TRIGGER.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 

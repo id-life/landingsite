@@ -1,0 +1,689 @@
+{
+  "generatedFrom": "src/lib/analytics/events.ts",
+  "contextParams": {
+    "layout": "desktop or mobile tree",
+    "section_id": "Section of the experience the URL points at (absent on content pages)",
+    "page_load_id": "Random id of this page load (joins the events of one load; not stored anywhere)",
+    "traffic_type": "\"internal\" while the ?internal=1 flag is set (GA4 internal-traffic filter)"
+  },
+  "keyEvents": [
+    "newsletter_subscribe",
+    "contact_intent",
+    "portfolio_outbound_click"
+  ],
+  "events": {
+    "newsletter_view": {
+      "when": "The subscribe popup is opened on request",
+      "key": false,
+      "params": {
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Which control opened it",
+          "values": [
+            "nav",
+            "content",
+            "connect",
+            "footer"
+          ]
+        },
+        "previously_dismissed": {
+          "type": "number",
+          "required": true,
+          "doc": "The visitor had explicitly dismissed the prompt before (1 = yes, 0 = no)"
+        }
+      }
+    },
+    "newsletter_close": {
+      "when": "The open popup is closed",
+      "key": false,
+      "params": {
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Which control had opened it",
+          "values": [
+            "nav",
+            "content",
+            "connect",
+            "footer"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "required": true,
+          "doc": "How it was closed",
+          "values": [
+            "x",
+            "escape",
+            "outside",
+            "scroll",
+            "toggle"
+          ]
+        }
+      }
+    },
+    "newsletter_submit": {
+      "when": "A subscribe form is submitted with a well-formed address",
+      "key": false,
+      "params": {
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Which form",
+          "values": [
+            "nav",
+            "content",
+            "connect",
+            "footer"
+          ]
+        }
+      }
+    },
+    "newsletter_subscribe": {
+      "when": "The subscribe route confirmed a new address (subscribed, or pending under double opt-in)",
+      "key": true,
+      "params": {
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Which form",
+          "values": [
+            "nav",
+            "content",
+            "connect",
+            "footer"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "required": true,
+          "doc": "Mailchimp status of the new member",
+          "values": [
+            "subscribed",
+            "pending"
+          ]
+        }
+      }
+    },
+    "newsletter_error": {
+      "when": "A submit did not add a new address",
+      "key": false,
+      "params": {
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Which form",
+          "values": [
+            "nav",
+            "content",
+            "connect",
+            "footer"
+          ]
+        },
+        "error_code": {
+          "type": "string",
+          "required": true,
+          "doc": "Typed result of the subscribe route",
+          "values": [
+            "already_subscribed",
+            "invalid_email",
+            "rate_limited",
+            "spam_check",
+            "upstream_error",
+            "timeout",
+            "error"
+          ]
+        }
+      }
+    },
+    "contact_intent": {
+      "when": "The visitor clicks the contact email link or copies the address",
+      "key": true,
+      "params": {
+        "method": {
+          "type": "string",
+          "required": true,
+          "doc": "Link or copy button",
+          "values": [
+            "mailto",
+            "copy_email"
+          ]
+        },
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        }
+      }
+    },
+    "portfolio_outbound_click": {
+      "when": "The visitor opens a portfolio company's website",
+      "key": true,
+      "params": {
+        "company_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Stable id of the company (slug of its name)"
+        },
+        "link_domain": {
+          "type": "string",
+          "required": true,
+          "doc": "Host of the destination"
+        },
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        }
+      }
+    },
+    "outbound_click": {
+      "when": "The visitor opens an external link (press, talk, sponsor, initiative, social, podcast)",
+      "key": false,
+      "params": {
+        "link_type": {
+          "type": "string",
+          "required": true,
+          "doc": "What kind of destination",
+          "values": [
+            "press",
+            "talk",
+            "sponsor",
+            "initiative",
+            "social",
+            "podcast_platform",
+            "book",
+            "research",
+            "video",
+            "other"
+          ]
+        },
+        "item_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Stable id of the item (slug, episode id or platform name)"
+        },
+        "link_domain": {
+          "type": "string",
+          "required": true,
+          "doc": "Host of the destination"
+        },
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        }
+      }
+    },
+    "nav_click": {
+      "when": "The visitor uses the section navigation",
+      "key": false,
+      "params": {
+        "target_section": {
+          "type": "string",
+          "required": true,
+          "doc": "Section id or route the control leads to"
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "doc": "Which control",
+          "values": [
+            "nav",
+            "mobile_menu",
+            "logo"
+          ]
+        }
+      }
+    },
+    "news_item_click": {
+      "when": "The visitor opens a news card",
+      "key": false,
+      "params": {
+        "item_id": {
+          "type": "string",
+          "required": true,
+          "doc": "News id or slug"
+        },
+        "lang": {
+          "type": "string",
+          "required": false,
+          "doc": "Language of the item when known"
+        },
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        }
+      }
+    },
+    "video_open": {
+      "when": "A video player opens (modal or new tab)",
+      "key": false,
+      "params": {
+        "video_id": {
+          "type": "string",
+          "required": true,
+          "doc": "YouTube id or slug of the video"
+        },
+        "placement": {
+          "type": "string",
+          "required": true,
+          "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        }
+      }
+    },
+    "video_progress": {
+      "when": "An embedded YouTube video passes 25, 50, 75 or 100 percent",
+      "key": false,
+      "params": {
+        "video_id": {
+          "type": "string",
+          "required": true,
+          "doc": "YouTube id"
+        },
+        "percent": {
+          "type": "number",
+          "required": true,
+          "doc": "Share of the video watched",
+          "unit": "percent"
+        }
+      }
+    },
+    "item_inspect": {
+      "when": "The visitor inspects an item: 600 ms of mouse dwell, or a tap that opens its detail",
+      "key": false,
+      "params": {
+        "item_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Stable id of the item"
+        },
+        "section_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Section the item belongs to"
+        }
+      }
+    },
+    "read_depth": {
+      "when": "A content page (news article, podcast episode) is scrolled to 50 or 90 percent",
+      "key": false,
+      "params": {
+        "percent": {
+          "type": "number",
+          "required": true,
+          "doc": "Depth reached",
+          "unit": "percent"
+        },
+        "item_id": {
+          "type": "string",
+          "required": true,
+          "doc": "News or episode id"
+        }
+      }
+    },
+    "tab_select": {
+      "when": "The visitor switches a content tab",
+      "key": false,
+      "params": {
+        "tab": {
+          "type": "string",
+          "required": true,
+          "doc": "Tab id"
+        },
+        "item_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode or item id"
+        }
+      }
+    },
+    "file_download": {
+      "when": "Not sent by code: GA4 enhanced measurement records clicks on PDF and CSV links",
+      "key": false,
+      "params": {}
+    },
+    "episode_play": {
+      "when": "Play or pause on the episode page player",
+      "key": false,
+      "params": {
+        "episode_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode id"
+        },
+        "action": {
+          "type": "string",
+          "required": true,
+          "doc": "Button pressed",
+          "values": [
+            "start",
+            "pause"
+          ]
+        }
+      }
+    },
+    "episode_end": {
+      "when": "The episode audio ends",
+      "key": false,
+      "params": {
+        "episode_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode id"
+        }
+      }
+    },
+    "timeline_jump": {
+      "when": "A timestamp in the show notes is clicked",
+      "key": false,
+      "params": {
+        "episode_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode id"
+        },
+        "position_s": {
+          "type": "number",
+          "required": true,
+          "doc": "Target position",
+          "unit": "seconds"
+        }
+      }
+    },
+    "episode_item_click": {
+      "when": "An episode is opened from the podcast list",
+      "key": false,
+      "params": {
+        "episode_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode id"
+        },
+        "channel": {
+          "type": "string",
+          "required": true,
+          "doc": "Podcast channel"
+        }
+      }
+    },
+    "music_play": {
+      "when": "The visitor starts the site player",
+      "key": false,
+      "params": {
+        "track_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Track id or title slug"
+        },
+        "trigger": {
+          "type": "string",
+          "required": true,
+          "doc": "Who started it",
+          "values": [
+            "user"
+          ]
+        }
+      }
+    },
+    "player_control": {
+      "when": "A control of the site player is used",
+      "key": false,
+      "params": {
+        "control": {
+          "type": "string",
+          "required": true,
+          "doc": "Which control",
+          "values": [
+            "playlist",
+            "podcast_channel",
+            "play_mode",
+            "track"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "required": true,
+          "doc": "New value (list, channel, mode or track id)"
+        }
+      }
+    },
+    "twin_interaction": {
+      "when": "A Digital Twin control is used",
+      "key": false,
+      "params": {
+        "control": {
+          "type": "string",
+          "required": true,
+          "doc": "Which control",
+          "values": [
+            "model",
+            "skin",
+            "anatomy_camera",
+            "report"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "required": true,
+          "doc": "New value"
+        },
+        "model": {
+          "type": "string",
+          "required": false,
+          "doc": "Prediction model shown"
+        }
+      }
+    },
+    "twin_model_ready": {
+      "when": "A Digital Twin model finished loading after a switch",
+      "key": false,
+      "params": {
+        "model": {
+          "type": "string",
+          "required": true,
+          "doc": "Model or view id"
+        },
+        "view": {
+          "type": "string",
+          "required": true,
+          "doc": "skin or anatomy"
+        },
+        "load_ms": {
+          "type": "number",
+          "required": true,
+          "doc": "Time from the switch to the loaded model",
+          "unit": "ms"
+        }
+      }
+    },
+    "relation_form_open": {
+      "when": "The influence-network form is opened",
+      "key": false,
+      "params": {}
+    },
+    "relation_submit": {
+      "when": "The influence-network API accepted a submission",
+      "key": false,
+      "params": {}
+    },
+    "experience_ready": {
+      "when": "The 3D experience loader hides (once per document)",
+      "key": false,
+      "params": {
+        "load_ms": {
+          "type": "number",
+          "required": true,
+          "doc": "Time from navigation start to the loader hiding",
+          "unit": "ms"
+        },
+        "assets_ms": {
+          "type": "number",
+          "required": true,
+          "doc": "Time the loader waited for the hero assets",
+          "unit": "ms"
+        },
+        "layout": {
+          "type": "string",
+          "required": true,
+          "doc": "Tree that was shown",
+          "values": [
+            "desktop",
+            "mobile"
+          ]
+        },
+        "cache_state": {
+          "type": "string",
+          "required": true,
+          "doc": "Hero model came from the HTTP cache (warm) or the network",
+          "values": [
+            "warm",
+            "cold",
+            "unknown"
+          ]
+        },
+        "fail_open": {
+          "type": "number",
+          "required": true,
+          "doc": "The loader gave up waiting (15 s or an asset error) and revealed the UI (1 = yes, 0 = no)"
+        }
+      }
+    },
+    "experience_error": {
+      "when": "A 3D failure, once per kind per document (asset_failed once per file)",
+      "key": false,
+      "params": {
+        "kind": {
+          "type": "string",
+          "required": true,
+          "doc": "What failed",
+          "values": [
+            "webgl_unavailable",
+            "webgl_context_lost",
+            "webgl_context_restored",
+            "webgl_render",
+            "asset_failed",
+            "loader_timeout"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "required": false,
+          "doc": "Canvas name or file name"
+        }
+      }
+    },
+    "layout_change": {
+      "when": "The page swapped between the desktop and the mobile tree (a resize across 768 px)",
+      "key": false,
+      "params": {
+        "from": {
+          "type": "string",
+          "required": true,
+          "doc": "Previous tree",
+          "values": [
+            "desktop",
+            "mobile"
+          ]
+        },
+        "to": {
+          "type": "string",
+          "required": true,
+          "doc": "New tree",
+          "values": [
+            "desktop",
+            "mobile"
+          ]
+        }
+      }
+    },
+    "visibility_summary": {
+      "when": "On pagehide, once per page load, when the tab was hidden at least once",
+      "key": false,
+      "params": {
+        "hidden_ms": {
+          "type": "number",
+          "required": true,
+          "doc": "Time hidden",
+          "unit": "ms"
+        },
+        "visible_ms": {
+          "type": "number",
+          "required": true,
+          "doc": "Time visible",
+          "unit": "ms"
+        },
+        "changes": {
+          "type": "number",
+          "required": true,
+          "doc": "Number of visibility changes"
+        }
+      }
+    },
+    "web_vital": {
+      "when": "A Core Web Vital is reported (web-vitals attribution build; skipped when Speed Insights is on)",
+      "key": false,
+      "params": {
+        "metric_name": {
+          "type": "string",
+          "required": true,
+          "doc": "Metric",
+          "values": [
+            "CLS",
+            "FCP",
+            "INP",
+            "LCP",
+            "TTFB"
+          ]
+        },
+        "metric_value": {
+          "type": "number",
+          "required": true,
+          "doc": "Value (CLS x 1000, others in ms)"
+        },
+        "metric_delta": {
+          "type": "number",
+          "required": true,
+          "doc": "Change since the last report of this metric (same units)"
+        },
+        "metric_rating": {
+          "type": "string",
+          "required": true,
+          "doc": "Rating",
+          "values": [
+            "good",
+            "needs-improvement",
+            "poor"
+          ]
+        },
+        "metric_id": {
+          "type": "string",
+          "required": true,
+          "doc": "web-vitals id of this metric instance, to sum deltas"
+        },
+        "navigation_type": {
+          "type": "string",
+          "required": true,
+          "doc": "navigate, reload, back-forward, ..."
+        },
+        "debug_target": {
+          "type": "string",
+          "required": false,
+          "doc": "Selector of the LCP element, INP target or largest CLS shift"
+        },
+        "interaction_type": {
+          "type": "string",
+          "required": false,
+          "doc": "INP only: pointer or keyboard"
+        },
+        "load_state": {
+          "type": "string",
+          "required": false,
+          "doc": "INP only: load state at the interaction"
+        }
+      }
+    }
+  }
+}

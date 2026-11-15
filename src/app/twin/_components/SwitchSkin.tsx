@@ -7,24 +7,16 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, modelLoadingItemAtom, PredictionModel } from '@/atoms/twin';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 
 export default function SwitchSkin() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
   const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
-
-  const { trackEvent } = useGA();
-
   const handleModelTypeChange = (type: ModelType) => {
-    const label = type === ModelType.Skin ? GA_EVENT_LABELS.MODEL_SWITCH.SKIN : GA_EVENT_LABELS.MODEL_SWITCH.ANATOMY;
-    trackEvent({
-      name: GA_EVENT_NAMES.MODEL_SWITCH,
-      label,
-      twin_type: currentModel ? GA_EVENT_LABELS.TWIN_SWITCH[currentModel] : '',
-    });
-    setModelLoadingItem([GA_EVENT_NAMES.MODEL_LOAD_DURATION, label]);
+    const label = type === ModelType.Skin ? 'skin' : 'anatomy';
+    trackTwin('skin', label, currentModel);
+    setModelLoadingItem({ view: label, model: twinModelId(currentModel) ?? '', at: performance.now() });
 
     if (currentModel === PredictionModel.M0) {
       gsap.to('.twin-title', { opacity: 0 });

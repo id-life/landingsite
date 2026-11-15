@@ -8,8 +8,7 @@ import { isSafari } from 'react-device-detect';
 import { useLocalStorage } from 'react-use';
 import { horizontalLoop } from '../../utils/gsap'; // 导入 horizontalLoop 函数
 import SoundLineSVG from '../svg/SoundLineSVG';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
+import { reportMediaError } from '@/lib/report';
 
 function SoundLineItem() {
   return (
@@ -32,12 +31,10 @@ export default function ToggleSoundButton({ className }: { className?: string })
   const audioRef = useRef<HTMLAudioElement>(null);
   const [canAutoPlay, setCanAutoPlay] = useState(true);
 
-  const { trackEvent } = useGA();
-
   const handleUserInteraction = useCallback(() => {
     if (!audioRef.current || canAutoPlay) return;
     audioRef.current.volume = 0.3;
-    audioRef.current?.play().catch((error) => console.error('autoplay error: ', error));
+    audioRef.current?.play().catch((error) => reportMediaError(error, { area: 'media', component: 'sound_toggle' }));
     window.removeEventListener('click', handleUserInteraction);
   }, [canAutoPlay]);
 
@@ -66,7 +63,7 @@ export default function ToggleSoundButton({ className }: { className?: string })
         ? audioRef.current.pause()
         : isSafari
           ? null
-          : audioRef.current?.play().catch((error) => console.error('autoplay error: ', error));
+          : audioRef.current?.play().catch((error) => reportMediaError(error, { area: 'media', component: 'sound_toggle' }));
     }
     if (soundOff) {
       tl1Ref?.current && tl1Ref.current?.pause();
@@ -97,10 +94,6 @@ export default function ToggleSoundButton({ className }: { className?: string })
 
   const onSoundButtonClick = () => {
     setSoundOff(!soundOff);
-    trackEvent({
-      name: GA_EVENT_NAMES.MUSIC_TOGGLE,
-      label: !soundOff ? GA_EVENT_LABELS.MUSIC_TOGGLE.OFF : GA_EVENT_LABELS.MUSIC_TOGGLE.ON,
-    });
   };
 
   return (

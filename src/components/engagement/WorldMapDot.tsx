@@ -6,8 +6,6 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { MouseEvent, useEffect, useMemo, useRef } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import {
   PulseDot,
   ConferenceBadges,
@@ -16,6 +14,8 @@ import {
   ExtraSponsorSection,
   ContentHotAreas,
 } from './WorldMapDotComponents';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { track, slugId, youtubeId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -145,9 +145,6 @@ export function WorldMapDotContent({
   const isActive = activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const { trackEvent } = useGA();
-
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   // 打开时禁用弹窗内的滚动, overscroll-none 不顶用
   useEffect(() => {
@@ -197,16 +194,17 @@ export function WorldMapDotContent({
   const handleLinkClick = (e: MouseEvent) => {
     e.stopPropagation();
     if (link) {
-      trackEvent({
-        name: GA_EVENT_NAMES.PRESENCE_DETAIL,
-        label: `${label ? `${label}, ` : ''}${country}`,
+      trackOutbound(link, 'outbound_click', {
+        link_type: 'talk',
+        item_id: slugId(`${label ? `${label}, ` : ''}${country}`),
+        placement: 'presence_map',
       });
     }
   };
 
   const handleVideoClick = (e: MouseEvent) => {
     e.stopPropagation();
-    trackEvent({ name: GA_EVENT_NAMES.PRESENCE_TALK_VIDEO, label: title });
+    track('video_open', { video_id: videoUrl ? youtubeId(videoUrl) : slugId(title), placement: 'presence_map' });
   };
 
   return (

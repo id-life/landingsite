@@ -13,31 +13,15 @@ import { OuterLoader } from '@/components/gl/ProgressLoader';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
-import { useGA } from '@/hooks/useGA';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAtomValue } from 'jotai';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
 import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
-import { useEffect } from 'react';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
-  const isMobile = useIsMobile();
-
-  const { trackEvent } = useGA();
-
-  useEffect(() => {
-    if (!isMobile) return;
-
-    trackEvent({
-      name: GA_EVENT_NAMES.ID_PAGE_VIEW,
-      label: mobileCurrentPage.id,
-    });
-  }, [mobileCurrentPage, isMobile, trackEvent]);
 
   useMobileHomeAnimateInit();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.

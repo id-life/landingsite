@@ -1,14 +1,12 @@
 import React from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { track, youtubeId } from '@/lib/analytics/track';
 import { DigitalTwinYoutubeLink } from '@/constants/links';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 
 export default function YTBDemo() {
-  const { trackEvent } = useGA();
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    trackEvent({ name: GA_EVENT_NAMES.DT_DEMO });
+    track('video_open', { video_id: youtubeId(DigitalTwinYoutubeLink), placement: 'digital_twin' });
   };
   return (
     <div id="ytb-demo" className="absolute left-5 top-[22rem] z-20 grid cursor-pointer gap-5">

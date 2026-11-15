@@ -1,12 +1,11 @@
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
 import { ArrowSVG } from '../svg';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { spectrumLinkProps } from './spectrumLinkProps';
+import { trackSpectrumLink } from '@/lib/analytics/spectrum';
 
 /** Particle configuration for position offset and scale */
 export interface ParticleConfig {
@@ -43,15 +42,13 @@ const MobileSpectrumLink = memo(
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
   }) => {
-    const { trackEvent } = useGA();
-
     const { key, label, link, isComingSoon, labelClassName, routeKey } = item;
     const hasLink = Boolean(link);
     const anchorProps = spectrumLinkProps({
       link,
       routeKey,
       executeSpectrumRoute,
-      onTrack: () => trackEvent({ name: GA_EVENT_NAMES.SPECTRUM_CLICK, label: key ?? label }),
+      onTrack: () => trackSpectrumLink({ key, label, link }),
     });
 
     const content = (
@@ -100,15 +97,7 @@ const MobileSpectrumItem = memo(
     ) => {
       const { title, titleCn, icon, links, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
-
-      const { trackEvent } = useGA();
-
-      const onMouseEnter = () => {
-        trackEvent({
-          name: GA_EVENT_NAMES.SPECTRUM_HOVER,
-          label: title,
-        });
-      };
+      const onMouseEnter = () => {};
 
       const totalLinks = links?.length ?? 0;
       const totalPages = totalLinks > 0 ? Math.ceil(totalLinks / linksPerPage) : 0;

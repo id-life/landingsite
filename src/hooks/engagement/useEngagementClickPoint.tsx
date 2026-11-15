@@ -2,8 +2,7 @@ import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, toggleDo
 import { useAtom } from 'jotai';
 import { useThrottle } from '../useThrottle';
 import { useCallback } from 'react';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { TrackEventOptions, useGA } from '../useGA';
+import { slugId, track } from '@/lib/analytics/track';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/engagement';
 
 export type EngagementClickPointType = 'meeting' | 'book' | 'sponsor';
@@ -18,35 +17,31 @@ export function useEngagementClickPoint(needTrack = true) {
   const [activeBookDot, setActiveBookDot] = useAtom(activeBookDotAtom);
   const [activeSponsorDot, setActiveSponsorDot] = useAtom(activeSponsorDotAtom);
 
-  const { trackEvent } = useGA();
-
+  // DATA-11: a click or tap that opens a dot is one item_inspect per dot per page; hovers are not reported
+  // (they were a stream of presence_view events from every mouse pass over the map).
   const trackEngagementEvent = useCallback(
     (type: EngagementClickPointType, activeDot: number, action: 'click' | 'hover') => {
-      if (!needTrack) return;
-
-      const options: TrackEventOptions = {
-        name: GA_EVENT_NAMES.PRESENCE_VIEW,
-        landingsite_action: action,
-      };
-
+      if (!needTrack || action !== 'click') return;
+      let title: string | undefined;
       switch (type) {
-        case 'meeting':
-          const label = WORLD_MAP_DOTS[activeDot].label;
-          options.label = `${label ? `${label}, ` : ''}${WORLD_MAP_DOTS[activeDot].country}`;
+        case 'meeting': {
+          const dot = WORLD_MAP_DOTS[activeDot];
+          title = `${dot.label ? `${dot.label}, ` : ''}${dot.country}`;
           break;
+        }
         case 'book':
-          options.label = MAP_BOOK_DOTS[activeDot].title;
+          title = MAP_BOOK_DOTS[activeDot].title;
           break;
         case 'sponsor':
-          options.label = MAP_SPONSOR_DOTS[activeDot].title;
+          title = MAP_SPONSOR_DOTS[activeDot].title;
           break;
         default:
           return;
       }
-
-      trackEvent(options);
+      const itemId = `${type}:${slugId(title)}`;
+      track('item_inspect', { item_id: itemId, section_id: 'engagement_page' }, { once: `inspect:${itemId}` });
     },
-    [needTrack, trackEvent],
+    [needTrack],
   );
 
   const handleClickPoint = useCallback(

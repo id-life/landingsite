@@ -7,13 +7,13 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { ModelType } from '@/components/twin/model/type';
 import { gsap } from 'gsap';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
 import { useCallback } from 'react';
 import { currentPageAtom } from '@/atoms';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
+import { trackTwin, twinModelId } from '@/lib/analytics/twin';
+import { reportError } from '@/lib/report';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -35,9 +35,6 @@ export default function SwitchModel() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
   const currentPage = useAtomValue(currentPageAtom);
-
-  const { trackEvent } = useGA();
-
   // Animation controls for each avatar
   const avatar1Controls = useAnimation();
   const avatar2Controls = useAnimation();
@@ -87,7 +84,7 @@ export default function SwitchModel() {
             },
           });
         } catch (error) {
-          console.warn('Avatar animation error:', error);
+          reportError(error, { area: 'animation', step: 'twin_avatar' });
         }
       }, i * ANIMATION_CONFIG.staggerDelay);
     }
@@ -140,7 +137,7 @@ export default function SwitchModel() {
         }),
       ]);
     } catch (error) {
-      console.warn('Border animation error:', error);
+      reportError(error, { area: 'animation', step: 'twin_border' });
     }
   }, [borderControls, cornerBorderControls]);
 
@@ -160,11 +157,8 @@ export default function SwitchModel() {
 
   const handleSwitchModel = (model: PredictionModel | null): void => {
     if (model) {
-      trackEvent({
-        name: GA_EVENT_NAMES.TWIN_SWITCH,
-        label: GA_EVENT_LABELS.TWIN_SWITCH[model],
-      });
-      setModelLoadingItem([GA_EVENT_NAMES.TWIN_LOAD_DURATION, GA_EVENT_LABELS.TWIN_SWITCH[model]]);
+      trackTwin('model', twinModelId(model) ?? String(model));
+      setModelLoadingItem({ view: 'model', model: twinModelId(model) ?? String(model), at: performance.now() });
     }
 
     gsap.to('.twin-title', { opacity: 0 });

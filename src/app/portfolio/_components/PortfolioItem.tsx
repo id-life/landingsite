@@ -1,5 +1,8 @@
 import { cn } from '@/utils';
-import { memo, forwardRef } from 'react';
+import { memo, forwardRef, Ref } from 'react';
+import OutboundLink from '@/lib/analytics/outbound';
+import { cancelInspect, inspectOnDwell } from '@/lib/analytics/inspect';
+import { slugId } from '@/lib/analytics/track';
 import { PortfolioItemInfo } from './portfolioData';
 
 interface PortfolioItemProps {
@@ -16,26 +19,29 @@ const PortfolioItem = memo(
   forwardRef<HTMLDivElement, PortfolioItemProps>(({ item, onItemClick, className, isHover, onMouseEnter, isGridMode }, ref) => {
     const { title, subTitle, description, image } = item;
 
-    // Tiles without a company link (R3 Bio, Kangaroo Biomedical, Vitalia) are not interactive: no pointer cursor
-    // and no click handler (they looked clickable and did nothing). The hover analytics event stays.
+    // Tiles with a company link are real links (DATA-03: <a target=_blank>, one portfolio_outbound_click per click);
+    // tiles without one (R3 Bio, Kangaroo Biomedical, Vitalia) are not interactive. A 600 ms mouse dwell is one
+    // item_inspect per tile per page (the old per-pass portfolio_view hover event is gone).
     const hasLink = Boolean(item.link);
-    const handleClick = () => {
-      onItemClick?.(item);
+    const companyId = slugId(title);
+    const shared = {
+      onPointerEnter: (event: { pointerType?: string }) => {
+        onMouseEnter?.();
+        inspectOnDwell(event, companyId, 'portfolio_page');
+      },
+      onPointerLeave: cancelInspect,
+      className: cn(
+        hasLink && 'block',
+        // min-height, not height: with the 12 px tagline floor a tile on a tablet grows instead of spilling
+        // its one-liner over the next row and the contact chip. At laptop sizes the tiles keep 15.5rem.
+        'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem]',
+        hasLink && 'cursor-pointer',
+        isGridMode ? 'mobile:h-full mobile:w-full mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
+        className,
+      ),
     };
-    return (
-      <div
-        ref={ref}
-        onClick={hasLink ? handleClick : undefined}
-        onMouseEnter={onMouseEnter}
-        className={cn(
-          // min-height, not height: with the 12 px tagline floor a tile on a tablet grows instead of spilling
-          // its one-liner over the next row and the contact chip. At laptop sizes the tiles keep 15.5rem.
-          'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem]',
-          hasLink && 'cursor-pointer',
-          isGridMode ? 'mobile:h-full mobile:w-full mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
-          className,
-        )}
-      >
+    const content = (
+      <>
         <div
           className={cn(
             'flex items-center justify-center notMobile:px-3 notMobile:[&>img]:max-h-full notMobile:[&>img]:max-w-full notMobile:[&>img]:object-contain',
@@ -89,6 +95,22 @@ const PortfolioItem = memo(
             <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-gray-350 mobile:mt-3">{subTitle}</div>
           )}
         </div>
+      </>
+    );
+    return hasLink && item.link ? (
+      <OutboundLink
+        ref={ref as unknown as Ref<HTMLAnchorElement>}
+        href={item.link}
+        event="portfolio_outbound_click"
+        params={{ company_id: companyId, placement: 'portfolio' }}
+        onClick={() => onItemClick?.(item)}
+        {...shared}
+      >
+        {content}
+      </OutboundLink>
+    ) : (
+      <div ref={ref} {...shared}>
+        {content}
       </div>
     );
   }),

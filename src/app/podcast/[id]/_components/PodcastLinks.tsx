@@ -2,9 +2,7 @@
 
 import { PodcastItem } from '@/apis/types';
 import { clsx } from 'clsx';
-import { useEffect, useMemo } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import OutboundLink from '@/lib/analytics/outbound';
 import { safeHref } from '@/utils/safe-href';
 
 type PodcastLinkProps = {
@@ -12,40 +10,38 @@ type PodcastLinkProps = {
 };
 
 export default function PodcastLinks({ data }: PodcastLinkProps) {
-  const { trackEvent } = useGA();
-  const episode = useMemo(() => `${data.category.split('_')[1]}_${data.title}`, [data]);
-
-  const handleLinkClick = (type: string, link: string) => {
-    const url = safeHref(link);
-    if (!url) return;
-    trackEvent({ name: GA_EVENT_NAMES.SUBSCRIBE_VIEW, label: type, podcast_episode: episode });
-    window.open(url, '_blank');
-  };
-
-  useEffect(() => {
-    trackEvent({ name: GA_EVENT_NAMES.EPISODE_PAGE_VIEW, label: episode });
-  }, [data, episode, trackEvent]);
+  // Episode page views are counted by GA4's own page_view; the platform icons are real links (DATA-03).
+  const platforms = [
+    { id: 'xiaoyuzhou', name: 'Xiaoyuzhou', link: data.xyzLink, icon: '/imgs/podcast/fm_xyz.png' },
+    { id: 'spotify', name: 'Spotify', link: data.spotifyLink, icon: '/imgs/podcast/fm_spotify.png' },
+    { id: 'apple_podcasts', name: 'Apple Podcasts', link: data.podcastLink, icon: '/imgs/podcast/fm_podcast.png' },
+  ];
 
   return (
     <div className="flex-center gap-2">
-      <img
-        onClick={() => handleLinkClick('xyz', data.xyzLink)}
-        className={clsx('w-7.5 mobile:w-6', data.xyzLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
-        src="/imgs/podcast/fm_xyz.png"
-        alt=""
-      />
-      <img
-        onClick={() => handleLinkClick('spotify', data.spotifyLink)}
-        className={clsx('w-7.5 mobile:w-6', data.spotifyLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
-        src="/imgs/podcast/fm_spotify.png"
-        alt=""
-      />
-      <img
-        onClick={() => handleLinkClick('podcast', data.podcastLink)}
-        className={clsx('w-7.5 mobile:w-6', data.podcastLink ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
-        src="/imgs/podcast/fm_podcast.png"
-        alt=""
-      />
+      {platforms.map(({ id, name, link, icon }) => {
+        const url = safeHref(link);
+        const img = (
+          <img
+            className={clsx('w-7.5 mobile:w-6', url ? 'cursor-pointer' : 'cursor-not-allowed grayscale')}
+            src={icon}
+            alt=""
+          />
+        );
+        return url ? (
+          <OutboundLink
+            key={id}
+            href={url}
+            aria-label={name}
+            event="outbound_click"
+            params={{ link_type: 'podcast_platform', item_id: id, placement: 'episode_page' }}
+          >
+            {img}
+          </OutboundLink>
+        ) : (
+          <span key={id}>{img}</span>
+        );
+      })}
     </div>
   );
 }

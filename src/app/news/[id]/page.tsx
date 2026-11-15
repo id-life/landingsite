@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
 import { formatKeywords } from '@/utils';
 import JsonLd from '@/components/seo/JsonLd';
+import ReadDepth from '@/lib/analytics/ReadDepth';
 
 dayjs.extend(relativeTime);
 
@@ -88,6 +89,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
   return (
     <>
       <JsonLd data={[jsonLd, breadcrumb]} />
+      <ReadDepth itemId={String(params.id)} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">

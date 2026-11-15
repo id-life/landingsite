@@ -5,6 +5,21 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@next/third-parties/google",
+            "message": "Analytics go through src/lib/analytics (track() and AnalyticsBoot), never a second tag loader (DATA-08)."
+          },
+          {
+            "name": "@/hooks/useGA",
+            "message": "Removed: send events with track() from '@/lib/analytics/track' (DATA-11)."
+          }
+        ]
+      }
+    ],
     "no-restricted-syntax": [
       "error",
       {
@@ -26,6 +41,10 @@
       {
         "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
         "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+      },
+      {
+        "selector": "Literal[value=/GTM-[A-Z0-9]+/]",
+        "message": "No Google Tag Manager container: the one Google tag is gtag, owned by src/lib/analytics (DATA-08)."
       },
       {
         "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
@@ -78,6 +97,10 @@
             "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
           },
           {
+            "selector": "Literal[value=/GTM-[A-Z0-9]+/]",
+            "message": "No Google Tag Manager container: the one Google tag is gtag, owned by src/lib/analytics (DATA-08)."
+          },
+          {
             "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
             "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
           }
@@ -85,8 +108,9 @@
       }
     },
     {
-      // Structured data is the one place raw HTML is allowed: JsonLd escapes every '<'.
-      "files": ["src/components/seo/JsonLd.tsx"],
+      // Raw HTML is allowed in two places only: structured data (JsonLd escapes every '<') and the analytics head
+      // script, a constant built from code that must run during HTML parsing (DATA-08).
+      "files": ["src/components/seo/JsonLd.tsx", "src/lib/analytics/HeadScript.tsx"],
       "rules": {
         "no-restricted-syntax": "off"
       }

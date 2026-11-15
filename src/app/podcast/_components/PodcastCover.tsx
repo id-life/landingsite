@@ -1,9 +1,8 @@
 'use client';
 
 import { PODCAST_COVER, PodcastCategory } from '@/app/podcast/_components/constant';
-import { useEffect, useMemo } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { useMemo } from 'react';
+import OutboundLink from '@/lib/analytics/outbound';
 import { safeHref } from '@/utils/safe-href';
 
 type PodcastCoverProps = {
@@ -11,19 +10,14 @@ type PodcastCoverProps = {
 };
 
 export default function PodcastCover({ category }: PodcastCoverProps) {
-  const { trackEvent } = useGA();
   const data = useMemo(() => PODCAST_COVER[category], [category]);
 
-  const handleLinkClick = (type: string, link?: string) => {
-    const url = safeHref(link);
-    if (!url) return;
-    trackEvent({ name: GA_EVENT_NAMES.SUBSCRIBE_VIEW, label: type, podcast_episode: `${category}_home` });
-    window.open(url, '_blank');
-  };
-
-  useEffect(() => {
-    trackEvent({ name: GA_EVENT_NAMES.PODCAST_PAGE_VIEW, label: `${category}_page` });
-  }, [category, trackEvent]);
+  // The /podcast page view is GA4's own page_view; the platform icons are real links (DATA-03).
+  const platforms = [
+    { id: 'xiaoyuzhou', name: 'Xiaoyuzhou', link: data.xyzLink, icon: '/imgs/podcast/fm_xyz.png' },
+    { id: 'spotify', name: 'Spotify', link: data.spotifyLink, icon: '/imgs/podcast/fm_spotify.png' },
+    { id: 'apple_podcasts', name: 'Apple Podcasts', link: data.podcastLink, icon: '/imgs/podcast/fm_podcast.png' },
+  ];
 
   return (
     <div>
@@ -40,24 +34,21 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
             <p className="mt-4 text-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
-            <img
-              onClick={() => handleLinkClick('xyz', data.xyzLink)}
-              className="w-7.5 cursor-pointer mobile:w-6"
-              src="/imgs/podcast/fm_xyz.png"
-              alt=""
-            />
-            <img
-              onClick={() => handleLinkClick('spotify', data.spotifyLink)}
-              className="w-7.5 cursor-pointer mobile:w-6"
-              src="/imgs/podcast/fm_spotify.png"
-              alt=""
-            />
-            <img
-              onClick={() => handleLinkClick('podcast', data.podcastLink)}
-              className="w-7.5 cursor-pointer mobile:w-6"
-              src="/imgs/podcast/fm_podcast.png"
-              alt=""
-            />
+            {platforms.map(({ id, name, link, icon }) => {
+              const url = safeHref(link);
+              if (!url) return null;
+              return (
+                <OutboundLink
+                  key={id}
+                  href={url}
+                  aria-label={name}
+                  event="outbound_click"
+                  params={{ link_type: 'podcast_platform', item_id: id, placement: 'podcast_page' }}
+                >
+                  <img className="w-7.5 cursor-pointer mobile:w-6" src={icon} alt="" />
+                </OutboundLink>
+              );
+            })}
           </div>
         </div>
       </div>

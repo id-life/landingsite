@@ -8,6 +8,7 @@ import 'github-markdown-css/github-markdown-light.css';
 import { getArticleContent } from './content';
 import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
+import ReadDepth from '@/lib/analytics/ReadDepth';
 
 const articleTitle = '不朽真龙介绍';
 const articleDescription = '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。';
@@ -56,6 +57,7 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
   return (
     <>
       <JsonLd data={[jsonLd, breadcrumb]} />
+      <ReadDepth itemId={'immortal-dragons-news-and-updates'} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">

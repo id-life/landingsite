@@ -5,8 +5,7 @@ import { useAtomValue } from 'jotai';
 import { AudioDataItem } from '@/apis/types';
 import dayjsDuration from 'dayjs/plugin/duration';
 import { audioControlsAtom } from '@/atoms/audio-player';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import OutboundLink from '@/lib/analytics/outbound';
 import { safeHref } from '@/utils/safe-href';
 
 dayjs.extend(dayjsDuration);
@@ -22,7 +21,6 @@ type DesktopPodcastItemProps = {
 function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className }: DesktopPodcastItemProps) {
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const controls = useAtomValue(audioControlsAtom);
-  const { trackEvent } = useGA();
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -32,11 +30,8 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
     onSeekTo?.(seekTo);
   };
 
-  const handleOpenLink = (link?: string) => {
-    const url = safeHref(link);
-    if (!url) return;
-    window.open(url, '_blank');
-  };
+  const xyzUrl = safeHref(data.xyzLink);
+  const appleUrl = safeHref(data.podcastLink);
 
   return (
     <div className={clsx('flex items-start gap-[10px] mobile:w-full mobile:overflow-hidden', className)}>
@@ -81,33 +76,25 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
               <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
             </div>
             <div className="flex items-center gap-[4px]">
-              {data.xyzLink && (
-                <img
-                  onClick={() => {
-                    trackEvent({
-                      name: GA_EVENT_NAMES.PODCAST_LINK_XYZ,
-                      label: data.title,
-                    });
-                    handleOpenLink(data.xyzLink);
-                  }}
-                  className="w-[16px] cursor-pointer"
-                  src="/imgs/player/fm_xiaoyuzhou.png"
-                  alt=""
-                />
+              {xyzUrl && (
+                <OutboundLink
+                  href={xyzUrl}
+                  aria-label="Xiaoyuzhou"
+                  event="outbound_click"
+                  params={{ link_type: 'podcast_platform', item_id: 'xiaoyuzhou', placement: 'site_player' }}
+                >
+                  <img className="w-[16px] cursor-pointer" src="/imgs/player/fm_xiaoyuzhou.png" alt="" />
+                </OutboundLink>
               )}
-              {data.podcastLink && (
-                <img
-                  onClick={() => {
-                    trackEvent({
-                      name: GA_EVENT_NAMES.PODCAST_LINK_APPLE,
-                      label: data.title,
-                    });
-                    handleOpenLink(data.podcastLink);
-                  }}
-                  className="w-[16px] cursor-pointer"
-                  src="/imgs/player/fm_podcast.png"
-                  alt=""
-                />
+              {appleUrl && (
+                <OutboundLink
+                  href={appleUrl}
+                  aria-label="Apple Podcasts"
+                  event="outbound_click"
+                  params={{ link_type: 'podcast_platform', item_id: 'apple_podcasts', placement: 'site_player' }}
+                >
+                  <img className="w-[16px] cursor-pointer" src="/imgs/player/fm_podcast.png" alt="" />
+                </OutboundLink>
               )}
             </div>
           </div>

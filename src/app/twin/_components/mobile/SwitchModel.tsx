@@ -7,8 +7,6 @@ import {
   currentModelAtom,
   PredictionModel,
 } from '@/atoms/twin';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { cn } from '@/utils';
 import clsx from 'clsx';
@@ -16,6 +14,8 @@ import { gsap } from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { motion, useAnimation } from 'motion/react';
 import { useCallback } from 'react';
+import { trackTwin, twinModelId } from '@/lib/analytics/twin';
+import { reportError } from '@/lib/report';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -35,9 +35,6 @@ export default function SwitchModel() {
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-
-  const { trackEvent } = useGA();
-
   // Animation controls for each avatar
   const avatar1Controls = useAnimation();
   const avatar2Controls = useAnimation();
@@ -84,7 +81,7 @@ export default function SwitchModel() {
             },
           });
         } catch (error) {
-          console.warn('Avatar animation error:', error);
+          reportError(error, { area: 'animation', step: 'twin_avatar' });
         }
       }, i * ANIMATION_CONFIG.staggerDelay);
     }
@@ -147,7 +144,7 @@ export default function SwitchModel() {
       // Reset to idle
       setBorderAnimationState('idle');
     } catch (error) {
-      console.warn('Border animation error:', error);
+      reportError(error, { area: 'animation', step: 'twin_border' });
     }
   }, [borderControls, cornerButtonControls, setBorderAnimationState]);
 
@@ -167,10 +164,7 @@ export default function SwitchModel() {
 
   const handleSwitchModel = (model: PredictionModel | null) => {
     if (model) {
-      trackEvent({
-        name: GA_EVENT_NAMES.TWIN_SWITCH,
-        label: GA_EVENT_LABELS.TWIN_SWITCH[model],
-      });
+      trackTwin('model', twinModelId(model) ?? String(model));
     }
 
     const list = gsap.utils.toArray('.twin-title-item');

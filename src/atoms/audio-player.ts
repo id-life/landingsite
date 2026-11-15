@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
 import { ValueOf } from '@/constants/config';
 import { AudioDataItem } from '@/apis/types';
-import { trackEvent } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { slugId, track } from '@/lib/analytics/track';
+import { reportMediaError } from '@/lib/report';
 
 export const PlayList = {
   MUSIC: 'music',
@@ -18,6 +18,13 @@ export const PlayMode = {
   SHUFFLE: 'shuffle', // 随机播放
 } as const;
 export type PlayModeKey = ValueOf<typeof PlayMode>;
+
+/** Who started playback: the player's own control (toggle), a first interaction, or the next track (auto). */
+export const PLAY_TRIGGER = { AUTO: 'auto', INTERACT: 'interact', TOGGLE: 'toggle' } as const;
+
+function trackMusicPlay(music: AudioDataItem | null | undefined) {
+  track('music_play', { track_id: music?.id != null ? String(music.id) : slugId(music?.title), trigger: 'user' });
+}
 
 export type PlayPodcastKey = Exclude<PlayListKey, 'music'>;
 
@@ -92,9 +99,8 @@ export const audioControlsAtom = atom(
         set(playModeAtom, value);
         break;
       case AUDIO_DISPATCH.TOGGLE_PLAY:
-        if (!isPlaying) {
-          trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
-        }
+        // The visitor pressed play (DATA-11: music_play only for visitor-started playback, not every PLAY).
+        if (!isPlaying) trackMusicPlay(currentMusic);
         set(togglePlayAtom);
         break;
       case AUDIO_DISPATCH.PLAY:
@@ -102,11 +108,11 @@ export const audioControlsAtom = atom(
           audioRef
             .play()
             .then(() => {
-              trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
+              if (value === PLAY_TRIGGER.TOGGLE) trackMusicPlay(currentMusic);
               set(currentPlayStatusAtom, true);
             })
             .catch((error) => {
-              console.log('error: ', error);
+              reportMediaError(error, { area: 'media', component: 'site_player' });
               set(currentPlayStatusAtom, false);
             });
         }
@@ -245,7 +251,7 @@ export const togglePlayAtom = atom(null, (get, set) => {
         set(currentPlayStatusAtom, true);
       })
       .catch((error) => {
-        console.log('error: ', error);
+        reportMediaError(error, { area: 'media', component: 'site_player' });
         set(currentPlayStatusAtom, false);
       });
   }

@@ -2,8 +2,6 @@ import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
 import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { trackEvent } from '@/hooks/useGA';
 import { getElementOffsetTop } from '@/utils';
 import { INTRO, markIntroSeen, shouldSkipIntro } from './intro';
 import { useGSAP } from '@gsap/react';
@@ -65,7 +63,6 @@ export default function DragonModel() {
       duration: 0.21,
       onComplete: () => {
         setFadeInAnimCompleted(true);
-        trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.UI_APPEAR });
       },
     });
     const element = document.querySelector('#pc-fixed-ui');
@@ -172,9 +169,6 @@ export default function DragonModel() {
         z: 10,
         ease: INTRO.flyInEase,
         duration: INTRO.flyInSeconds,
-        onStart: () => {
-          trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.MODEL_ANIMATION });
-        },
         onUpdate: function () {
           const progress = this.progress();
           if (progress >= 0.5 && !fixedUIHasTriggered.current) {

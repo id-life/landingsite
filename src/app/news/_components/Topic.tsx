@@ -7,6 +7,7 @@ import VideoModal from '@/app/insights/_components/VideoModal';
 import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import { track } from '@/lib/analytics/track';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         href={href}
         external={isExternal}
         onActivate={() => setIsModalOpen(true)}
+        onNavigate={() => track('news_item_click', { item_id: String(data.id), placement: 'news_featured' })}
         className="group block cursor-pointer"
       >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">
@@ -68,7 +70,13 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
       </CardShell>
 
       {isYouTube && (
-        <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />
+        <VideoModal
+          placement="news_featured"
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          videoId={data.videoId!}
+          title={data.title}
+        />
       )}
     </>
   );

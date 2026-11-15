@@ -1,0 +1,87 @@
+'use client';
+
+import { useAtomValue } from 'jotai';
+import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
+import { isSubscribeShowAtom } from '@/atoms/footer';
+import { ANALYTICS_ENABLED } from './config';
+import { canRenderConsentCopy, CONSENT_COPY, isDraftCopy } from './consent-copy';
+import { chooseConsent, closePrivacyChoices, getConsentState, openPrivacyChoices, subscribeConsent } from './consent';
+
+const BUTTON =
+  'min-h-11 flex-1 border-2 border-white px-4 py-2 text-sm font-semibold transition-colors hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+
+/**
+ * The consent banner (DATA-01): a compact bottom sheet, bilingual, with Accept and Reject of equal weight. It opens by
+ * itself only for visitors in opt-in regions without an answer, and from any "Privacy choices" link. It steps aside
+ * while the newsletter popup is open, so the two are never stacked. Production renders nothing while its text is a
+ * draft (./consent-copy.ts).
+ */
+export default function ConsentBanner() {
+  const consent = useSyncExternalStore(subscribeConsent, getConsentState, getConsentState);
+  const subscribeOpen = useAtomValue(isSubscribeShowAtom);
+  const titleId = useId();
+  const firstButton = useRef<HTMLButtonElement>(null);
+  const open = consent.bannerOpen && !subscribeOpen && canRenderConsentCopy();
+  const reopened = consent.reason === 'stored' || consent.analytics === 'granted';
+
+  useEffect(() => {
+    if (open && reopened) firstButton.current?.focus({ preventScroll: true });
+  }, [open, reopened]);
+
+  if (!open) return null;
+  const { en, zh } = CONSENT_COPY;
+  return (
+    <section
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby={titleId}
+      data-consent-banner=""
+      className="fixed inset-x-0 bottom-0 z-[56] border-t-2 border-white bg-black/85 px-5 py-4 text-white backdrop-blur-md"
+    >
+      <div className="mx-auto flex max-w-5xl flex-col gap-3 md:flex-row md:items-center md:gap-6">
+        <div className="flex-1 text-xs/5">
+          <h2 id={titleId} className="font-oxanium text-sm font-bold">
+            {en.title} · {zh.title}
+            {isDraftCopy() && (
+              <span className="ml-2 border border-yellow-300 px-1 align-middle text-[0.625rem] font-semibold text-yellow-300">
+                {CONSENT_COPY.draftMarker}
+              </span>
+            )}
+          </h2>
+          <p className="mt-1">{en.body}</p>
+          <p lang="zh-CN" className="mt-1">
+            {zh.body}
+          </p>
+          {CONSENT_COPY.privacyPath && (
+            <a href={CONSENT_COPY.privacyPath} className="mt-1 inline-block underline">
+              {en.notice} · {zh.notice}
+            </a>
+          )}
+        </div>
+        <div className="flex gap-3 md:w-80">
+          <button ref={firstButton} type="button" className={BUTTON} onClick={() => chooseConsent('granted')}>
+            {en.accept} · {zh.accept}
+          </button>
+          <button type="button" className={BUTTON} onClick={() => chooseConsent('denied')}>
+            {en.reject} · {zh.reject}
+          </button>
+        </div>
+        {reopened && (
+          <button type="button" className="sr-only focus:not-sr-only" onClick={closePrivacyChoices}>
+            Close
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** "Privacy choices" link for the footers: reopens the banner. Renders nothing while its text may not be shown. */
+export function PrivacyChoicesLink({ className }: { className?: string }) {
+  if (!ANALYTICS_ENABLED || !canRenderConsentCopy()) return null;
+  return (
+    <button type="button" className={className ?? 'underline opacity-70 hover:opacity-100'} onClick={openPrivacyChoices}>
+      {CONSENT_COPY.en.link} · {CONSENT_COPY.zh.link}
+    </button>
+  );
+}

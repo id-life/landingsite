@@ -1,6 +1,4 @@
 import { FC } from 'react';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import FileSVG from '@/../public/svgs/file.svg?component';
 import DotCount from '@/components/disease-management/DotCount';
 import { DataTable } from '@/components/common/Table/data-table';
@@ -14,13 +12,7 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
   columns,
   pdf,
 }) => {
-  const { trackEvent } = useGA();
-
-  const handleDownloadClick = () => {
-    const splitList = pdf.split('/');
-    const fileName = splitList[splitList.length - 1];
-    trackEvent({ name: GA_EVENT_NAMES.DMCS_DOWNLOAD, label: fileName });
-  };
+  // The PDF link is a plain <a download>: GA4 enhanced measurement records it as file_download (DATA-11).
 
   return (
     <div className="flex w-full flex-col items-center font-semibold text-white mobile:hidden">
@@ -34,7 +26,6 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
       </div>
       <a
         href={pdf}
-        onClick={handleDownloadClick}
         download
         target="_blank"
         rel="noopener noreferrer"

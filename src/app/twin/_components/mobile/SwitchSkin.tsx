@@ -2,12 +2,11 @@ import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import { mobileBorderAnimationStateAtom, currentModelAtom, currentModelTypeAtom } from '@/atoms/twin';
 import { ModelType } from '@/components/twin/model/type';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
 import clsx from 'clsx';
 import { useAtom, useAtomValue } from 'jotai';
 import { motion, useAnimation } from 'motion/react';
 import { useEffect } from 'react';
+import { trackTwin } from '@/lib/analytics/twin';
 
 // Border animation configuration - matches SwitchModel
 const BORDER_ANIMATION_CONFIG = {
@@ -20,9 +19,6 @@ export default function SwitchSkin() {
   const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
   const borderAnimationState = useAtomValue(mobileBorderAnimationStateAtom);
-
-  const { trackEvent } = useGA();
-
   // Border animation controls
   const borderControls = useAnimation();
   const selectBorderControls = useAnimation();
@@ -65,11 +61,7 @@ export default function SwitchSkin() {
   }, [borderAnimationState, borderControls, selectBorderControls]);
 
   const handleModelTypeChange = (type: ModelType) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.MODEL_SWITCH,
-      label: type === ModelType.Skin ? GA_EVENT_LABELS.MODEL_SWITCH.SKIN : GA_EVENT_LABELS.MODEL_SWITCH.ANATOMY,
-      twin_type: currentModel ? GA_EVENT_LABELS.TWIN_SWITCH[currentModel] : '',
-    });
+    trackTwin('skin', type === ModelType.Skin ? 'skin' : 'anatomy', currentModel);
     setCurrentModelType(type);
   };
 

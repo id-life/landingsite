@@ -2,19 +2,12 @@ import { Drawer } from 'vaul';
 import SwitchLanguage from '../SwitchLanguage';
 import { useState } from 'react';
 import Tag from './Tag';
-import { GA_EVENT_NAMES, GA_EVENT_LABELS } from '@/constants/ga';
-import { useGA } from '@/hooks/useGA';
+import { trackTwin } from '@/lib/analytics/twin';
 
 export default function ReportM02() {
   const [isChinese, setIsChinese] = useState(false);
-
-  const { trackEvent } = useGA();
-
   const handleClick = () => {
-    trackEvent({
-      name: GA_EVENT_NAMES.TWIN_DESCRIPTION,
-      label: GA_EVENT_LABELS.TWIN_DESCRIPTION.C02,
-    });
+    trackTwin('report', 'C02');
   };
 
   const handleLanguageChange = (isChinese: boolean) => {
