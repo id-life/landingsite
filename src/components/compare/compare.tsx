@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@/utils';
 import { IconDotsVertical } from '@tabler/icons-react';
 import gsap from 'gsap';
+import Image from 'next/image';
 
 interface CompareProps {
   firstImage?: string;
@@ -363,9 +364,11 @@ export const Compare = ({
                   x-webkit-airplay="allow"
                 />
               ) : (
-                <img
+                <Image
                   alt="first image"
                   src={firstImage}
+                  fill
+                  sizes="220px"
                   className={cn('absolute inset-0 z-20 h-full w-full shrink-0 select-none rounded-2xl', firstImageClassName)}
                   draggable={false}
                 />
@@ -398,9 +401,11 @@ export const Compare = ({
                 x-webkit-airplay="allow"
               />
             ) : (
-              <img
+              <Image
                 alt="second image"
                 src={secondImage}
+                fill
+                sizes="220px"
                 className={cn('absolute inset-0 h-full w-full shrink-0 select-none rounded-2xl', secondImageClassname)}
                 draggable={false}
               />

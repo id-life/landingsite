@@ -35,6 +35,9 @@ const saveData = () => {
   return Boolean(connection?.saveData) || /(^|-)2g$/.test(connection?.effectiveType ?? '');
 };
 
+// Before the reveal only a deep link's own section counts; after it, the next section too.
+const isNear = (section: number, furthest: number, revealed: boolean) => furthest >= section - (revealed ? 1 : 0);
+
 function useFurthestSection() {
   const desktopIndex = useAtomValue(currentPageIndexAtom);
   const mobileIndex = useAtomValue(mobileCurrentPageIndexAtom);
@@ -46,6 +49,16 @@ function useFurthestSection() {
   return furthest;
 }
 
+/**
+ * True once the visitor is within one section of `section` (a NAV_LIST index); before the reveal,
+ * only when a deep link landed on that section. Stays true when the visitor goes back.
+ */
+export function useSectionNear(section: number) {
+  const globalLoaded = useAtomValue(globalLoadedAtom);
+  const furthest = useFurthestSection();
+  return isNear(section, furthest, globalLoaded);
+}
+
 /** True once the assets of `group` may mount (and from then on). */
 export function useDeferredAssets(group: DeferredGroup) {
   const globalLoaded = useAtomValue(globalLoadedAtom);
@@ -54,7 +67,7 @@ export function useDeferredAssets(group: DeferredGroup) {
   const [waitedOut, setWaitedOut] = useState(false);
   const startedRef = useRef(false);
 
-  const near = (g: DeferredGroup) => (globalLoaded ? furthest >= SECTION[g] - 1 : furthest >= SECTION[g]);
+  const near = (g: DeferredGroup) => isNear(SECTION[g], furthest, globalLoaded);
   const other = OTHER[group];
   const otherPresent = other !== 'twin' || !inPhoneTree();
   const otherIsNearer = Math.abs(furthest - SECTION[other]) < Math.abs(furthest - SECTION[group]);
