@@ -1,23 +1,32 @@
 # CLAUDE.md
 
-Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 14 App Router site with a
-scroll-driven 3D experience and server-rendered content pages. Read this before changing anything; update it in the
-same commit as any change to the architecture it describes.
+Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 16 App Router site (React 19,
+React Three Fiber 9, drei 10) with a scroll-driven 3D experience and server-rendered content pages. Read
+this before changing anything; update it in the same commit as any change to the architecture it describes.
 
 ## Commands
 
 ```bash
 npm ci            # install exactly what package-lock.json pins
-npm run dev       # dev server on http://localhost:3000
-npm run build     # production build (also type-checks app routes)
+npm run dev       # dev server on http://localhost:3000 (Turbopack; writes to .next/dev, so it can run beside a build)
+npm run build     # production build with webpack (next build --webpack; also type-checks). Not `npx next build`:
+                  # Next 16 defaults to Turbopack, which reaches the first screen about 270 ms later here on fast 4G
+npm run build:turbopack   # the same build on Turbopack, to re-measure before switching
 npm start         # serve the production build
-npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax rules)
+npm run lint      # ESLint CLI with the flat config in eslint.config.mjs (next lint no longer exists in Next 16)
+npm run lint:ratchet   # fails if any rule has more warnings than eslint-warnings.json (re-record with --record)
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
-npx tsc --noEmit -p .                     # full type check
+npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
+npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
+npm run typecheck                         # full type check (next typegen, then tsc --noEmit; works on a fresh checkout)
 npx prettier --write --ignore-unknown .   # format
 ```
 
-The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on staged files.
+The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and prettier on staged files only.
+
+CI (`.github/workflows/ci.yml`, on every pull request and on pushes to main) runs typecheck, lint + warning ratchet +
+knip, unit tests, `npm audit --omit=dev --audit-level=high`, and a production build followed by `npm run perf:budget`.
+Each job is its own status check. Run the same commands locally before pushing.
 
 ## Routes
 
@@ -32,8 +41,8 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
-- Not routable (no page.tsx; dead code to delete): `src/app/partners`, `processes`, `tracking`. `src/app/twin` and
-  `src/app/vision` hold section components, not routes.
+- `src/app/twin` and `src/app/vision` hold section components, not routes. Unreachable modules are deleted rather
+  than kept: `npm run knip` fails on an unused file or dependency.
 
 ## Architecture of the experience
 
@@ -57,6 +66,13 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 - **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
   `test/spectrum-routes.test.mjs`); deep links replace the history entry.
 - **Section ids**: use `NAV.<id>` from `src/components/nav/nav.ts`, never `NAV_LIST[<number>]` (lint rule).
+- **Bundling.** SVGs import as React components with `?component` (SVGR) and shaders (`.glsl/.vert/.frag`) import as
+  strings, in both `webpack()` (production) and `turbopack.rules` (dev) in `next.config.mjs`. Production builds use
+  webpack: Turbopack 16.4 merges three, swiper and the GL code into one 1.8 MB lazy chunk on the path to the first
+  canvas. Request APIs are async (`await props.params`, `await props.searchParams`).
+- **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
+  R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
+  300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
 
 ## Content, data and SEO
 
@@ -67,6 +83,13 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   goes through `src/components/seo/JsonLd.tsx`; links from API data through `src/utils/safe-href.ts`.
 - Server-rendered summaries for crawlers and assistive tech: `PageSEOContent`. Never hide text from people while
   serving it to crawlers (no `aria-hidden` text, no zero-height wrappers).
+- p5 sketches mount through `src/components/gl/particle/P5Canvas.tsx` (one instance per sketch, props through
+  `updateWithProps`). Do not bring back `@p5-wrapper/react`: version 4 bundles React 18's JSX runtime and breaks on
+  React 19, version 5 needs p5 2.
+- No `console.log` in src (ESLint `no-console`; `console.warn` and `console.error` are allowed for real problems).
+  The drei `StatsGl` overlay loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
+- `reactStrictMode` is off on purpose: under Strict Mode (development only) the five pinned sections get nested pin
+  spacers and the particle sketch mounts a second p5 canvas. Make those effects idempotent before turning it on.
 - Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
   production and preview, with no Replay or profiling in the shared runtime.
 - Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.
@@ -83,7 +106,8 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 
 ## Definition of done
 
-1. `npx tsc --noEmit -p .`, `npm run lint` and `npm test` pass.
+1. `npm run typecheck`, `npm run lint` (errors fail; the React Compiler rules of eslint-plugin-react-hooks 7 warn),
+   `npm test` and `npm run knip` pass.
 2. `npm run build` succeeds.
 3. The e2e suite shows no guard regression against the baseline, and the targets of the item you worked on are green.
 4. Checked on a preview or local build on phone, tablet and laptop; screenshots or a recording for visible changes.

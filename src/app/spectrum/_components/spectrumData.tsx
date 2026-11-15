@@ -3,6 +3,8 @@
 import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
 import { CollectionPage, WithContext } from 'schema-dts';
 
+import type { JSX } from 'react';
+
 export type SpectrumLinkData = {
   label: string;
   link?: string;

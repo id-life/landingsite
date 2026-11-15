@@ -12,7 +12,7 @@ import { useEffect, useRef, RefObject } from 'react';
  * @param dependencies - Optional dependencies array to force re-observation when values change
  */
 export function useContainerResize(
-  containerRef: RefObject<HTMLElement>,
+  containerRef: RefObject<HTMLElement | null>,
   callback: (entry: ResizeObserverEntry) => void,
   selector?: string,
   dependencies: unknown[] = [],

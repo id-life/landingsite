@@ -135,8 +135,8 @@ export default function NewsAndTalksSection({
   const [isMobileBeginning, setIsMobileBeginning] = useState(true);
   const [isMobileEnd, setIsMobileEnd] = useState(false);
   const [mobileItemCount, setMobileItemCount] = useState(8); // Default to max
-  const swiperRef = useRef<SwiperType>();
-  const mobileSwiperRef = useRef<SwiperType>();
+  const swiperRef = useRef<SwiperType>(undefined);
+  const mobileSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);

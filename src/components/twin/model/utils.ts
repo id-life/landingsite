@@ -41,7 +41,7 @@ export const pollComponentMethod = <T extends ComponentWithMethods>(
       attempts++;
 
       if (attempts >= maxAttempts) {
-        console.log(`Failed to execute ${String(methodName)} after ${maxAttempts} attempts`);
+        console.warn(`Failed to execute ${String(methodName)} after ${maxAttempts} attempts`);
         return true;
       }
 

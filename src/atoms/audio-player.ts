@@ -106,7 +106,7 @@ export const audioControlsAtom = atom(
             .then(() => {
               trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
             })
-            .catch((error) => onPlayRejected(error, audioRef, set));
+            .catch(() => onPlayRejected(audioRef, set));
         }
         break;
       case AUDIO_DISPATCH.PAUSE:
@@ -227,15 +227,10 @@ export const determineNextTrackAtom = atom(null, (get, set) => {
 });
 
 /**
- * play() was refused (no gesture, decode error) or interrupted by a pause before it started. An interruption is
- * the visitor pausing, so it is not an error; either way the control follows the element.
+ * play() was refused (no gesture, decode error) or interrupted by a pause before it started (the visitor
+ * pausing). Either way the control follows the element.
  */
-function onPlayRejected(
-  error: unknown,
-  audio: HTMLAudioElement,
-  set: (atom: typeof currentPlayStatusAtom, value: boolean) => void,
-) {
-  if (!(error instanceof DOMException && error.name === 'AbortError')) console.log('error: ', error);
+function onPlayRejected(audio: HTMLAudioElement, set: (atom: typeof currentPlayStatusAtom, value: boolean) => void) {
   if (audio.paused) set(currentPlayStatusAtom, false);
 }
 
@@ -254,6 +249,6 @@ export const togglePlayAtom = atom(null, (get, set) => {
     set(currentPlayStatusAtom, false);
   } else {
     set(currentPlayStatusAtom, true);
-    audioRef.play().catch((error) => onPlayRejected(error, audioRef, set));
+    audioRef.play().catch(() => onPlayRejected(audioRef, set));
   }
 });

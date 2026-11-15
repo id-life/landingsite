@@ -10,7 +10,8 @@ import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 
-export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+export async function generateMetadata(props: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const { c } = searchParams;
   const nav = PODCAST_NAV_LIST.find((item) => item.id === c) ?? PODCAST_NAV_LIST[0];
   return { ...PODCAST_METADATA[nav.id], alternates: { canonical: nav.link } };
@@ -36,7 +37,8 @@ async function seriesJsonLd(category: PodcastCategory) {
   ];
 }
 
-export default async function PodcastPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function PodcastPage(props: { searchParams: Promise<SearchParams> }) {
+  const searchParams = await props.searchParams;
   const { c } = searchParams;
   // An unknown ?c= value used to crash the page; fall back to the main show.
   const category = PODCAST_NAV_LIST.find((item) => item.id === c)?.id ?? PODCAST_NAV_LIST[0].id;
