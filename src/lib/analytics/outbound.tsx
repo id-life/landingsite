@@ -24,14 +24,18 @@ export function trackOutbound(href: string, event: Props['event'], params: Outbo
  * click. Real links (instead of window.open) also give GA4's automatic outbound click, middle-click and copy-link.
  */
 const OutboundLink = forwardRef<HTMLAnchorElement, Props>(function OutboundLink(
-  { event, params, onClick, target = '_blank', rel = 'noopener noreferrer', ...rest },
+  { event, params, onClick, target = '_blank', rel = 'noopener noreferrer', children, ...rest },
   ref,
 ) {
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     trackOutbound(rest.href, event, params);
     onClick?.(e);
   };
-  return <a ref={ref} target={target} rel={rel} {...rest} onClick={handleClick} />;
+  return (
+    <a ref={ref} target={target} rel={rel} {...rest} onClick={handleClick}>
+      {children}
+    </a>
+  );
 });
 
 export default OutboundLink;

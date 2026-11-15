@@ -2,8 +2,9 @@
 // unused file or dependency; unused exports and types are reported as warnings until they are cleaned up.
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  // Maintenance scripts run by hand (node scripts/<name>.mjs).
-  "entry": ["scripts/*.mjs"],
+  // Maintenance scripts run by hand (node scripts/<name>.mjs), and type-only contract tests that nothing imports:
+  // npm run typecheck compiles them (tsconfig includes every .ts file) and fails when a @ts-expect-error goes unused.
+  "entry": ["scripts/*.mjs", "test/**/*.type-test.ts"],
   "ignore": [
     // Runtime assets fetched by URL (the Draco decoder), not imported.
     "public/**",

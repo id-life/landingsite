@@ -21,7 +21,7 @@ const PROGRESS_MARKS = [25, 50, 75, 100];
  * video_progress without loading YouTube's IFrame API script: an embed with enablejsapi=1 posts its state to the
  * parent once the parent says it is listening (the protocol the API script itself uses). Each mark is sent once.
  */
-function useVideoProgress(isOpen: boolean, videoId: string, frame: React.RefObject<HTMLIFrameElement>) {
+function useVideoProgress(isOpen: boolean, videoId: string, frame: React.RefObject<HTMLIFrameElement | null>) {
   useEffect(() => {
     if (!isOpen) return;
     const sent = new Set<number>();

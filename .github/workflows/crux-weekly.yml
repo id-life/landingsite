@@ -9,17 +9,18 @@ permissions:
   contents: write
 jobs:
   crux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
       CRUX_API_KEY: ${{ secrets.CRUX_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      # Credentials stay on the checkout: the job pushes its snapshot commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: env.CRUX_API_KEY != ''
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: env.CRUX_API_KEY != ''
         with:
-          node-version: 24
+          node-version-file: .nvmrc
       - if: env.CRUX_API_KEY != ''
         run: node scripts/crux-weekly.mjs
       - if: env.CRUX_API_KEY != ''

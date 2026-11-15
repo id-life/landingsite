@@ -1,4 +1,5 @@
-export const runtime = 'edge';
+// Node.js runtime (Next 16 deprecates the Edge Runtime; on Vercel it runs as a Fluid compute function).
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const STAGES = ['html', 'hydrated', 'assets'];

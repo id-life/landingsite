@@ -126,6 +126,12 @@ export default defineConfig([
     rules: { 'no-console': 'off' },
   },
   {
+    // Route handlers write one structured JSON line per request to the function log (console.info): consent
+    // records, subscribe outcomes and load_abandon beacons (DATA-01, ENG-09, DATA-06). Debug output stays banned.
+    files: ['src/app/api/**'],
+    rules: { 'no-console': ['warn', { allow: ['warn', 'error', 'info'] }] },
+  },
+  {
     // Raw HTML is allowed in two places only: structured data (JsonLd escapes every '<') and the analytics head
     // script, a constant built from code that must run during HTML parsing (DATA-08).
     files: ['src/components/seo/JsonLd.tsx', 'src/lib/analytics/HeadScript.tsx'],

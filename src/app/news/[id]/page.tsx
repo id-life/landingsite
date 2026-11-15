@@ -90,7 +90,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   return (
     <>
       <JsonLd data={[jsonLd, breadcrumb]} />
-      <ReadDepth itemId={String(params.id)} />
+      <ReadDepth itemId={String(id)} />
       <div>
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">
