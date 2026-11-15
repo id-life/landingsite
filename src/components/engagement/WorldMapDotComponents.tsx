@@ -4,7 +4,9 @@ import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { MouseEvent } from 'react';
-import { ArrowSVG, MeetingSVG, SponsorSVG } from '../svg';
+import ArrowSVG from '@/../public/svgs/arrow.svg?component';
+import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
+import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import FeatherImg from './FeatherImg';
 import { VideoWithPoster } from './VideoWithPoster';
 

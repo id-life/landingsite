@@ -52,12 +52,25 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   `global.d.ts`; respect them instead of adding new ones.
 - **Phone.** No document scroll: sections switch through `useMobileNavigation`, the arrows
   (`MobilePageArrows.tsx`), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
-- **URL and history.** `HashRouter` (root layout, never unmounts) applies the URL once per mount of the experience
+- **URL and history.** `HashRouter` (loaded by `ExperienceRouter` in the root layout on the first experience URL, then
+  never unmounted) applies the URL once per mount of the experience
   (`useExperienceLifecycle` bumps `experienceMountIdAtom`); `useSectionUrlSync` replaces the URL and title as the
   visitor scrolls; nav clicks push. Scroll restoration is 'manual' only while the experience is mounted.
 - **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
   `test/spectrum-routes.test.mjs`); deep links replace the history entry.
 - **Section ids**: use `NAV.<id>` from `src/components/nav/nav.ts`, never `NAV_LIST[<number>]` (lint rule).
+- **GSAP stays in the experience.** Plugins are registered in `src/utils/gsap-plugins.ts`, imported by the experience's
+  entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
+  `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.
+
+## Content pages
+
+- `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
+  footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
+  (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+- Episode transcripts are rendered to HTML on the server (`podcast/[id]/page.tsx`); do not move react-markdown back
+  into a client component. SVG icons are imported per file (there is no `src/components/svg` barrel: it pulled the
+  3,085-circle world map into every page that used one icon).
 
 ## Content, data and SEO
 

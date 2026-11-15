@@ -3,7 +3,7 @@
 import { useRef, useEffect, MouseEventHandler } from 'react';
 import gsap from 'gsap';
 import { cn } from '@/utils';
-import { ArrowSVG } from '../svg';
+import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 
 interface BackButtonProps {
   className?: string;

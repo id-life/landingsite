@@ -8,7 +8,9 @@ import { cn } from '@/utils';
 import { useAtom } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
 import { useMemo } from 'react';
-import { ArrowSVG, BookSVG, LinkSVG } from '../svg';
+import ArrowSVG from '@/../public/svgs/arrow.svg?component';
+import BookSVG from '@/../public/svgs/engagement/book.svg?component';
+import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
 import { VideoWithPoster } from './VideoWithPoster';
 import { BadgeBlurBg, PulseDot } from './WorldMapDotComponents';
 

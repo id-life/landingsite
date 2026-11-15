@@ -1,15 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
-import VideoModal from '@/app/insights/_components/VideoModal';
 import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import dynamic from 'next/dynamic';
+
+// The video modal (Floating UI) loads when a video card is first opened, not with the page.
+const VideoModal = dynamic(() => import('@/app/insights/_components/VideoModal'), { ssr: false });
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Stays true after the first open, so the modal can play its closing transition.
+  const [modalLoaded, setModalLoaded] = useState(false);
 
   if (!data) return null;
 
@@ -23,7 +27,10 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
       <CardShell
         href={href}
         external={isExternal}
-        onActivate={() => setIsModalOpen(true)}
+        onActivate={() => {
+          setModalLoaded(true);
+          setIsModalOpen(true);
+        }}
         className="group block cursor-pointer"
       >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">
@@ -46,9 +53,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
           )}
           <div className="absolute bottom-0 left-0 right-0 p-6 mobile:p-5">
             {data.publishDate && (
-              <div className="mb-2 font-medium text-white mobile:mb-1.5 mobile:text-xs">
-                {dayjs(data.publishDate).format('MMM DD, YYYY')}
-              </div>
+              <div className="mb-2 font-medium text-white mobile:mb-1.5 mobile:text-xs">{data.publishLabel}</div>
             )}
             <h2 className="flex items-center gap-3 font-semibold text-white">
               <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8">{data.title}</span>
@@ -67,7 +72,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         </div>
       </CardShell>
 
-      {isYouTube && (
+      {isYouTube && modalLoaded && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />
       )}
     </>

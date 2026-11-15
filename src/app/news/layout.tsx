@@ -1,26 +1,21 @@
-'use client';
-
 import { ReactNode } from 'react';
 import NewsFooter from './_components/NewsFooter';
 import NewsHeader from './_components/NewsHeader';
 import NewsStyle from './_components/NewsStyle';
-import NewsSubscribeFooter from './_components/NewsSubscribeFooter';
-import MobileFooter from '@/components/layout/footer/MobileFooter';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { cn } from '@/utils';
+import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 
+// A server component: the pages render on the server and only the header, the footer form, the cards and the
+// popup hydrate. It was a client layout (useIsMobile), which made the whole news tree client code.
 export default function NewsLayout({ children }: { children: ReactNode }) {
-  const isMobile = useIsMobile();
-
   return (
     <>
       <NewsStyle />
-      <div className={cn('mx-auto w-[80rem] mobile:w-auto mobile:px-5')}>
+      <div className="mx-auto w-[80rem] mobile:w-auto mobile:px-5">
         <NewsHeader />
         {children}
         <NewsFooter />
       </div>
-      {isMobile ? <MobileFooter /> : <NewsSubscribeFooter />}
+      <SubscribePopup />
     </>
   );
 }

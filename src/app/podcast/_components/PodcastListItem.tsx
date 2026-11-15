@@ -1,24 +1,18 @@
-'use client';
-
 import React from 'react';
 import dayjs from 'dayjs';
 import { PodcastItem } from '@/apis/types';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
 import { formatDuration } from '@/utils/podcast';
+import EpisodeClickTracker from '@/app/podcast/_components/EpisodeClickTracker';
 
 type PodcastListItemProps = {
   data: PodcastItem;
 };
 
+// A server component: dates and durations are formatted here, so the list ships no date library; the click
+// event is the only client code (EpisodeClickTracker).
 export default function PodcastListItem({ data }: PodcastListItemProps) {
-  const { trackEvent } = useGA();
-  const handleItemClick = () => {
-    trackEvent({ name: GA_EVENT_NAMES.EPISODE_ITEM_CLICK, label: `${data.category.split('_')[1]}_${data.title}` });
-  };
-
   return (
-    <div onClick={() => handleItemClick()} className="group flex cursor-pointer gap-4">
+    <EpisodeClickTracker label={`${data.category.split('_')[1]}_${data.title}`}>
       <img className="w-16 rounded mobile:w-21" src={data.album} alt="" />
       <div className="flex-1 overflow-hidden">
         <div className="flex items-center justify-between gap-2">
@@ -36,6 +30,6 @@ export default function PodcastListItem({ data }: PodcastListItemProps) {
           <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
         </div>
       </div>
-    </div>
+    </EpisodeClickTracker>
   );
 }

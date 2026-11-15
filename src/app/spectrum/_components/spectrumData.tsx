@@ -1,6 +1,10 @@
 // Shared spectrum data - used by the useSpectrumData hook and the Spectrum JSON-LD
 
-import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
+import BookSVG from '@/../public/svgs/engagement/book.svg?component';
+import DigitalTwinSVG from '@/../public/svgs/spectrum/digital-twin.svg?component';
+import RelationSVG from '@/../public/svgs/spectrum/relation.svg?component';
+import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
+import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export type SpectrumLinkData = {

@@ -7,7 +7,7 @@ import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import FooterContactContent from '@/components/layout/footer/FooterContactContent';
-import { InfoSVG } from '@/components/svg';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';

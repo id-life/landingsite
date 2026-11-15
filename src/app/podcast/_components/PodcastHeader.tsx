@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import { useAtom, useSetAtom } from 'jotai';
@@ -10,17 +11,24 @@ import { isPodcastNavOpenAtom } from '@/atoms/podcast';
 import { usePathname } from 'next/navigation';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
-import PodcastNavDialog from '@/app/podcast/_components/PodcastNavDialog';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { trackEvent } from '@/hooks/useGA';
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { subscribePopupAtom } from '@/atoms/footer';
-import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
+
+// The phone menu (GSAP stagger) loads on its first open, not with the page.
+const PodcastNavDialog = dynamic(() => import('@/app/podcast/_components/PodcastNavDialog'), { ssr: false });
 
 export default function PodcastHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useAtom(isPodcastNavOpenAtom);
   const subscribePopup = useSetAtom(subscribePopupAtom);
+  const [navWanted, setNavWanted] = useState(false);
+
+  useEffect(() => {
+    if (menuOpen) setNavWanted(true);
+  }, [menuOpen]);
 
   // Each show has its own path; an episode page highlights no tab.
   const search = useMemo(() => PODCAST_NAV_LIST.find((item) => item.link === pathname)?.id ?? null, [pathname]);
@@ -72,7 +80,7 @@ export default function PodcastHeader() {
           {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
         </div>
       </div>
-      <PodcastNavDialog />
+      {navWanted && <PodcastNavDialog />}
     </div>
   );
 }

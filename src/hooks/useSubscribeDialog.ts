@@ -2,9 +2,9 @@ import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { useDismiss, useFloating, useInteractions, useRole } from '@floating-ui/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useId } from 'react';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 
-/** Put this attribute on every control that opens the SUBSCRIBE popup, so pressing it is not an "outside" press. */
-export const SUBSCRIBE_TRIGGER = { 'data-subscribe-trigger': '' } as const;
+export { SUBSCRIBE_TRIGGER };
 
 /**
  * Dialog behaviour shared by the desktop and phone SUBSCRIBE popups (APG modal dialog): role="dialog"

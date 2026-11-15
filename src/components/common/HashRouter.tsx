@@ -11,6 +11,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
+import '@/utils/gsap-plugins';
 
 /**
  * Maps the URL to a section of the experience. Rendered once in the root layout, so it never unmounts;

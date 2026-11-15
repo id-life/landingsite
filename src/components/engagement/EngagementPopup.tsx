@@ -1,7 +1,7 @@
 import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useCallback } from 'react';
-import { BookSVG } from '../svg';
+import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 
 export interface PopupItem {
   name?: string;
@@ -55,7 +55,7 @@ export const EngagementPopup: React.FC<EngagementPopupProps> = ({ isOpen, title,
                     {item.link && item.linkDesc && (
                       <a
                         href={item.link}
-                        className="text-blue pointer-events-auto flex items-center gap-1.5 text-xs/5"
+                        className="pointer-events-auto flex items-center gap-1.5 text-xs/5 text-blue"
                         target="_blank"
                         rel="noopener noreferrer"
                       >

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import type { InsightsWithGeoItem, NewsPageItem } from '@/apis/types';
 
 function extractYouTubeVideoId(url: string): string | null {
@@ -23,6 +24,8 @@ export function transformToNewsPageItems(items: InsightsWithGeoItem[]): NewsPage
       cover: item.imageUrl,
       source: item.publisher,
       publishDate: item.publishDate,
+      // Formatted here, on the server, so the cards ship no date library.
+      publishLabel: item.publishDate ? dayjs(item.publishDate).format('MMM DD, YYYY') : null,
       url: item.url,
       videoId,
       isExternal: !!(item.url && !item.url.startsWith('/')),

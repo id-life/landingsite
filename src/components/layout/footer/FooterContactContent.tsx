@@ -13,7 +13,7 @@ import WechatSVG from '@/../public/svgs/wechat.svg?component';
 import XiaoyuzhouSVG from '@/../public/svgs/xiaoyuzhou.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
-import { InfoSVG } from '@/components/svg';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
