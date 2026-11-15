@@ -6,6 +6,7 @@ import { NAV_LIST } from '../nav/nav';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { EASE, LOOP } from '@/motion/tokens';
+import { u } from '@/utils/layout-unit';
 
 interface ScrollButtonProps {
   className?: string;
@@ -27,8 +28,8 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
     // 创建循环动画
     const createRippleAnim = (el: HTMLElement, delay: number) => {
       gsap.to(el, {
-        width: '9.875rem',
-        height: '4.75rem',
+        width: u(9.875),
+        height: u(4.75),
         opacity: 0,
         duration: LOOP.ripple,
         delay,

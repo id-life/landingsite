@@ -3,6 +3,7 @@ import { HERO_MODEL_URL } from '@/components/gl/heroAssetUrls';
 import type { EXPERIENCE_ERROR_KINDS } from './events';
 import { advanceStage } from './stage';
 import { track } from './track';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 /**
  * Health of the 3D experience (DATA-06): one experience_ready per document with numeric timings, and one
@@ -30,7 +31,7 @@ export function reportExperienceReady({ failOpen, mountedAt }: { failOpen: boole
     {
       load_ms: loadMs,
       assets_ms: Math.max(0, Math.round(loadMs - mountedAt)),
-      layout: window.matchMedia('(max-width: 768px)').matches ? 'mobile' : 'desktop',
+      layout: window.matchMedia(PHONE_TREE_QUERY).matches ? 'mobile' : 'desktop',
       cache_state: heroCacheState(),
       fail_open: failOpen ? 1 : 0,
     },

@@ -12,6 +12,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { EASE } from '@/motion/tokens';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -55,7 +56,7 @@ export const OuterLoader = memo(function OuterLoader() {
     setIsLoadingUI(true);
     setGlobalLoaded(true);
     setShow(false);
-    if (window.matchMedia('(max-width: 768px)').matches) ensureMobileUIVisible();
+    if (window.matchMedia(PHONE_TREE_QUERY).matches) ensureMobileUIVisible();
     else ensureDesktopUIVisible();
     setFadeInAnimCompleted(true);
   }, [failOpen, show, setFadeInAnimCompleted, setGlobalLoaded, setIsLoadingUI]);

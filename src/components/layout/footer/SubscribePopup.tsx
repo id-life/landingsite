@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { isSubscribeShowAtom } from '@/atoms/footer';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 // The popups carry the form library, Floating UI and their animation code (GSAP on desktop, motion on phones);
 // content pages load them only when the visitor first asks for the popup.
@@ -17,10 +18,10 @@ const MobileFooter = dynamic(() => import('@/components/layout/footer/MobileFoot
  */
 export default function SubscribePopup() {
   const open = useAtomValue(isSubscribeShowAtom);
-  // null until the first open; then which popup to load, by the layout breakpoint (Tailwind `mobile`, <= 768 px).
+  // null until the first open; then which popup to load, by the phone tree query (Tailwind `mobile`, RWD-02).
   const [variant, setVariant] = useState<'phone' | 'desktop' | null>(null);
   // Set while rendering on the first open (open is false on the server, so matchMedia only runs in the browser).
-  if (open && !variant) setVariant(window.matchMedia('(max-width: 768px)').matches ? 'phone' : 'desktop');
+  if (open && !variant) setVariant(window.matchMedia(PHONE_TREE_QUERY).matches ? 'phone' : 'desktop');
 
   if (!variant) return null;
   return variant === 'phone' ? <MobileFooter /> : <Footer />;

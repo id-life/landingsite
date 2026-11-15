@@ -20,6 +20,5 @@ export const HERO_PHONE_SVG_URLS = [
   '/svgs/main-description-cn.svg',
 ] as const;
 
-/** Same breakpoint as HomeEntry (useMediaQuery maxWidth 768): which tree, so which assets. */
-export const PHONE_MEDIA = '(max-width: 768px)';
-export const DESKTOP_MEDIA = '(min-width: 769px)';
+/** The device profile's tree query (RWD-02, src/styles/device-classes.ts): which tree, so which assets. */
+export { PHONE_TREE_QUERY as PHONE_MEDIA, DESKTOP_TREE_QUERY as DESKTOP_MEDIA } from '@/styles/device-classes';

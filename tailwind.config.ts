@@ -2,6 +2,13 @@ import type { Config } from 'tailwindcss';
 import plugin from 'tailwindcss/plugin';
 import { color, accentTint, typeRoles, grid } from './src/styles/tokens';
 import { DURATION, EASE_POINTS, motionCssVariables } from './src/motion/tokens';
+import {
+  COARSE_POINTER_QUERY,
+  COMPACT_HEIGHT_QUERY,
+  DESKTOP_TREE_QUERY,
+  PHONE_TREE_QUERY,
+  WIDTH_CLASS_QUERY,
+} from './src/styles/device-classes';
 
 // Motion tokens (MOT-08, src/motion/tokens.ts): --dur-* / --ease-* on :root, and duration-<token> / ease-<token>
 // utilities that read them, so CSS transitions play the same durations and curves as GSAP and motion.
@@ -32,8 +39,19 @@ const config: Config = {
     },
     extend: {
       screens: {
-        mobile: { max: '768px' },
-        notMobile: { min: '769px' },
+        // The two experiences (RWD-02, src/styles/device-classes.ts): `mobile` is the phone tree (a narrow window or a
+        // short one, so a phone in landscape too), `notMobile` the desktop tree. Same queries as useDeviceProfile.
+        mobile: { raw: PHONE_TREE_QUERY },
+        notMobile: { raw: DESKTOP_TREE_QUERY },
+        // Window size classes, without overlaps, and input (RWD-02, RWD-06).
+        compact: { raw: WIDTH_CLASS_QUERY.compact },
+        medium: { raw: WIDTH_CLASS_QUERY.medium },
+        expanded: { raw: WIDTH_CLASS_QUERY.expanded },
+        large: { raw: WIDTH_CLASS_QUERY.large },
+        shortScreen: { raw: COMPACT_HEIGHT_QUERY },
+        coarse: { raw: COARSE_POINTER_QUERY },
+        // The site header fits its logo, nine items and actions on one row from here (SiteHeader, NAV-04).
+        navRow: { raw: '(min-width: 1700px)' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },
@@ -170,6 +188,29 @@ const config: Config = {
           display: 'grid',
           gridTemplateColumns: 'repeat(var(--grid-columns), minmax(0, 1fr))',
           columnGap: 'var(--grid-gutter)',
+        },
+      });
+    }),
+    // Touch targets (RWD-06), in px so they never shrink with a scaled unit, and only on coarse pointers (the mouse
+    // layout is unchanged). `tap`: the box is at least 44x44 (pair it with flex or inline-flex and centring).
+    // `tap-area`: the box keeps its size and a centred ::before grows the hit area to at least 44x44, for icons and
+    // links whose box must not move; it takes ::before, so the element must not use it already.
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.tap': { [`@media ${COARSE_POINTER_QUERY}`]: { minHeight: '44px', minWidth: '44px' } },
+        '.tap-area': {
+          [`@media ${COARSE_POINTER_QUERY}`]: {
+            position: 'relative',
+            '&::before': {
+              content: "''",
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              width: 'max(100%, 44px)',
+              height: 'max(100%, 44px)',
+              transform: 'translate(-50%, -50%)',
+            },
+          },
         },
       });
     }),

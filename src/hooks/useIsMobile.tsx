@@ -1,10 +1,12 @@
 'use client';
 
-import { useMediaQuery } from 'react-responsive';
-import { useIsMounted } from './useIsMounted';
+import { useDeviceProfile } from './useDeviceProfile';
 
+/**
+ * True when the phone experience is mounted (the device profile's tree, RWD-02), null before hydration. Kept for the
+ * call sites that only ask "phone deck or not"; new code reads useDeviceProfile().
+ */
 export const useIsMobile = () => {
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-  const isMounted = useIsMounted();
-  return isMounted ? isMobile : null;
+  const profile = useDeviceProfile();
+  return profile ? profile.tree === 'phone' : null;
 };

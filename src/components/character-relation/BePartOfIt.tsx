@@ -17,6 +17,7 @@ import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { Form, FormSubmitHandler, useForm } from 'react-hook-form';
+import { u } from '@/utils/layout-unit';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = {
   character: '',
@@ -138,14 +139,14 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       submittedMsgTimelineRef.current.clear();
       if (isMobile) {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
-          bottom: '4.875rem',
+          bottom: u(4.875),
           translateY: '100%',
           opacity: 1,
           zIndex: 30,
         });
       } else {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
-          top: '2.5rem',
+          top: u(2.5),
           opacity: 1,
         });
       }

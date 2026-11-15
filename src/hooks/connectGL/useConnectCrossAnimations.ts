@@ -7,6 +7,7 @@ import { Group } from 'three';
 import gsap from 'gsap';
 import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
 import { isMobile } from 'react-device-detect';
+import { u } from '@/utils/layout-unit';
 
 export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group | null> }) => {
   const { camera } = useThree();
@@ -85,7 +86,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.scroll-title');
 
-    gsap.to('.page-footer-contact', { bottom: isMobile ? '5rem' : '0rem', duration: DURATION.moderate, ease: EASE.out });
+    gsap.to('.page-footer-contact', { bottom: isMobile ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 0, duration: DURATION.moderate });
   };
 
@@ -94,7 +95,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.scroll-title');
 
-    gsap.to('.page-footer-contact', { bottom: '-20rem', duration: DURATION.moderate, ease: EASE.out });
+    gsap.to('.page-footer-contact', { bottom: u(-20), duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 1, duration: DURATION.moderate });
 
     // 中文标题一个一个消失，然后英文标题一个一个出现

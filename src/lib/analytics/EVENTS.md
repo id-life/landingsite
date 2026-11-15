@@ -268,7 +268,7 @@ A 3D failure, once per kind per document (asset_failed once per file)
 
 ### `layout_change`
 
-The page swapped between the desktop and the mobile tree (a resize across 768 px)
+The page swapped between the desktop and the mobile tree (a resize or rotation across the phone tree query)
 
 | parameter | type | required | meaning |
 |---|---|---|---|

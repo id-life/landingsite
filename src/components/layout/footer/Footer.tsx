@@ -16,6 +16,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { DURATION } from '@/motion/tokens';
+import { u } from '@/utils/layout-unit';
 
 type Inputs = {
   EMAIL: string;
@@ -67,8 +68,8 @@ export default function Footer() {
   const getTimeline = () => {
     if (!timelineRef.current && footerRef.current && boxRef.current) {
       const tl = gsap.timeline({ paused: true });
-      tl.to(footerRef.current, { bottom: '2.25rem', duration: DURATION.base });
-      tl.to(boxRef.current, { width: '40rem', height: '13rem', duration: DURATION.base }, '<');
+      tl.to(footerRef.current, { bottom: u(2.25), duration: DURATION.base });
+      tl.to(boxRef.current, { width: u(40), height: u(13), duration: DURATION.base }, '<');
       timelineRef.current = tl;
     }
     return timelineRef.current;
