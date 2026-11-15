@@ -23,6 +23,7 @@ import clsx from 'clsx';
 import { useMemo, useState, useId } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { trackChannelLink } from '@/lib/analytics/social';
+import { PrivacyChoicesLink } from '@/lib/analytics/ConsentBanner';
 
 type Inputs = {
   EMAIL: string;
@@ -111,6 +112,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
+      <PrivacyChoicesLink className="mt-2 block font-oxanium text-xs font-bold underline opacity-60" />
       <div className="my-4 h-px w-full bg-black/20" />
       <form
         id="subscribe-form"

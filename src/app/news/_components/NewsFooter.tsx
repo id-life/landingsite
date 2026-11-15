@@ -14,6 +14,7 @@ import { submitNewsletter } from '@/utils/newsletter';
 import { ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FormEvent, useState } from 'react';
+import { PrivacyChoicesLink } from '@/lib/analytics/ConsentBanner';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -95,6 +96,7 @@ export default function NewsFooter() {
             <img className="size-5" src="/svgs/contact-email.svg" alt="" />
             {ORG_EMAIL}
           </a>
+          <PrivacyChoicesLink className="mt-3 block font-poppins text-xs font-semibold underline opacity-60 hover:opacity-100" />
         </div>
         <div className="font-oxanium text-base/5">
           <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
