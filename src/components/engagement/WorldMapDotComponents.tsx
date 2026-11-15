@@ -16,6 +16,37 @@ import { useReducedMotionPref } from '@/motion/preference';
 // Shared Components (Desktop & Mobile)
 // ============================================================================
 
+/** Which deck the map is drawn for (RWD-02): the scrolled mouse/tablet deck or the paged phone deck. */
+export type MapDeck = 'desktop' | 'phone';
+export type CalcPoint = (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
+
+/**
+ * Type roles of the map labels (RWD-01): label (14 px and up) on the scrolled deck, caption (12 px) on the phone map,
+ * which is a 55 % tall strip where neighbouring cities sit a label's height apart.
+ */
+export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
+  desktop: '-ml-1.5 whitespace-nowrap font-display text-label font-semibold capitalize text-white',
+  phone: 'whitespace-nowrap font-display text-caption leading-[14px] font-semibold capitalize text-white',
+};
+
+/**
+ * RWD-06: on coarse pointers a map point's box is at least 44x44. The box grows 12 px above the dot and the content is
+ * padded back down by the same amount, so the dot and its label stay exactly on their coordinate.
+ */
+export const MAP_POINT_TAP_CLASS = 'coarse:-mt-[12px] coarse:min-h-[44px] coarse:min-w-[44px] coarse:pt-[12px]';
+
+/** A badge under an open dot's label (Conference, Sponsorship, Research, Translation) on the scrolled deck. */
+export const BADGE_CLASS =
+  'flex items-center gap-1 whitespace-nowrap rounded-lg p-1 px-2 py-1 text-label font-semibold backdrop-blur-2xl';
+/**
+ * The text of an open card sits on the section background, so the card occludes the dimmed labels under it instead of
+ * mixing with them (the Oxford sponsor titles crossed "Abu Dhabi, UAE" at 2.9:1). Inline, so only the glyph lines are
+ * backed.
+ */
+export const CARD_TEXT_BACKING = 'bg-background box-decoration-clone px-1';
+/** Badge icons keep their 1440 px size on tablets, beside a label that has a floor. */
+export const BADGE_ICON_CLASS = 'size-[max(1.25rem,15px)]';
+
 // Badge blur background layer
 // Note: Parent elements must not have active CSS animations (e.g., animate-fade-in)
 // as they create stacking contexts that break backdrop-filter
@@ -139,9 +170,9 @@ export function ConferenceBadges({
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 0.83 }}
         exit={{ opacity: 0, scale: 0.5 }}
-        className="flex items-center gap-1 rounded-lg bg-data-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-purple backdrop-blur-2xl"
+        className={cn(BADGE_CLASS, 'bg-data-purple/20 text-data-purple')}
       >
-        <MeetingSVG className="size-5 fill-data-purple" />
+        <MeetingSVG className={cn(BADGE_ICON_CLASS, 'fill-data-purple')} />
         Conference
       </motion.div>
       {(isSponsor || (extraSponsor && extraSponsor.length > 0)) && (
@@ -149,9 +180,9 @@ export function ConferenceBadges({
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-data-yellow/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-yellow backdrop-blur-2xl"
+          className={cn(BADGE_CLASS, '-ml-1.5 bg-data-yellow/20 text-data-yellow')}
         >
-          <SponsorSVG className="size-5 fill-data-yellow" />
+          <SponsorSVG className={cn(BADGE_ICON_CLASS, 'fill-data-yellow')} />
           Sponsorship
         </motion.div>
       )}
@@ -160,9 +191,9 @@ export function ConferenceBadges({
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 0.83 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="-ml-1.5 flex items-center gap-1 rounded-lg bg-data-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-orange backdrop-blur-2xl"
+          className={cn(BADGE_CLASS, '-ml-1.5 bg-data-orange/20 text-data-orange')}
         >
-          <ResearchSVG className="size-5 fill-data-orange" />
+          <ResearchSVG className={cn(BADGE_ICON_CLASS, 'fill-data-orange')} />
           Research
         </motion.div>
       )}
@@ -184,9 +215,9 @@ export function VideoTalkButton({ videoUrl, onClick }: { videoUrl: string; onCli
     >
       <div className="clip-talk-content bg-white p-0.5">
         <div className="clip-talk-content flex items-center gap-1 bg-tone-970 px-3.5 py-2.5 [--clip-offset:.75rem]">
-          <YoutubeSVG className="size-5 fill-white" />
-          <span className="inline-block text-base/5 font-semibold text-white">Talk</span>
-          <ArrowSVG className="size-4 -rotate-90 fill-white" />
+          <YoutubeSVG className={cn(BADGE_ICON_CLASS, 'fill-white')} />
+          <span className="inline-block text-label font-semibold text-white">Talk</span>
+          <ArrowSVG className="size-[max(1rem,12px)] -rotate-90 fill-white" />
         </div>
       </div>
     </motion.a>
@@ -229,11 +260,11 @@ export function ContentSection({
         duration: DURATION.base,
         ease: EASE.inOut,
       }}
-      className={cn('flex h-full w-[20.25rem] origin-top-left flex-col items-center gap-4 font-display')}
+      className={cn('flex h-full w-[max(20.25rem,243px)] origin-top-left flex-col items-center gap-4 font-display')}
     >
       {title && (
-        <h3 className="whitespace-nowrap text-center text-xl/6 font-semibold capitalize text-white">
-          <span className="mr-2 whitespace-pre-wrap">{title}</span>
+        <h3 className="whitespace-nowrap text-center text-lead font-semibold capitalize text-white">
+          <span className={cn('mr-2 whitespace-pre-wrap', CARD_TEXT_BACKING)}>{title}</span>
           {/*{period}*/}
         </h3>
       )}
@@ -281,7 +312,7 @@ export function ExtraSponsorSection({
       initial="hidden"
       animate="visible"
       exit="hidden"
-      className="flex w-[17rem] origin-top-left flex-col items-center overflow-visible font-display"
+      className="flex w-[max(17rem,204px)] origin-top-left flex-col items-center overflow-visible font-display"
       variants={{
         hidden: {
           opacity: 0,
@@ -300,8 +331,8 @@ export function ExtraSponsorSection({
         ease: EASE.inOut,
       }}
     >
-      <h4 className="-mx-10 whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
-        {extraSponsor.alt}
+      <h4 className="-mx-10 whitespace-pre-wrap text-balance text-center text-lead font-semibold capitalize text-white">
+        <span className={CARD_TEXT_BACKING}>{extraSponsor.alt}</span>
       </h4>
       <VideoWithPoster
         coverUrl={extraSponsor.coverUrl}
@@ -309,8 +340,8 @@ export function ExtraSponsorSection({
         // The heading above names the sponsor in the same link, so the logo is decorative (axe image-redundant-alt).
         title=""
         containerClass="-mt-5"
-        videoClass="size-[15.5rem]"
-        coverClass="size-[15.5rem]"
+        videoClass="size-[max(15.5rem,186px)]"
+        coverClass="size-[max(15.5rem,186px)]"
       />
     </motion.div>
   );
@@ -368,7 +399,7 @@ export function ContentHotAreas({
             key={sponsor.link || `extra-sponsor-${sponsorIndex}`}
             href={sponsor.link}
             target="_blank"
-            className="pointer-events-auto absolute -right-[90%] top-0 h-[40dvh] w-[17rem] cursor-pointer"
+            className="pointer-events-auto absolute -right-[90%] top-0 h-[40dvh] w-[max(17rem,204px)] cursor-pointer"
           ></a>
         ) : null,
       )}
@@ -455,7 +486,7 @@ export function MobileConferenceBadgesWithVideo({
           <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
             <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
               <YoutubeSVG className="size-3 fill-white" />
-              <span className="inline-block text-xs/4 font-semibold text-white">Talk</span>
+              <span className="inline-block text-caption font-semibold leading-4 text-white">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>

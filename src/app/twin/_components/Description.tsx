@@ -1,6 +1,5 @@
 'use client';
 
-import Tag from './Tag';
 import { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { currentModelAtom, PredictionModel } from '@/atoms/twin';
@@ -8,6 +7,7 @@ import ReportM01 from './ReportM01';
 import ReportM02 from './ReportM02';
 import ReportM03 from './ReportM03';
 
+/** Phone deck (avatar 'media'): the chosen clone's habits as tags, and its report link, under the avatar. */
 export default function Description() {
   const [currentModel] = useAtom(currentModelAtom);
 
@@ -35,16 +35,16 @@ export default function Description() {
         <div className="flex-1 overflow-hidden">
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             {tags.map((tag, index) => (
-              <div key={tag} className="flex items-center justify-end gap-1 text-right text-xs/4 font-semibold">
+              <div key={tag} className="flex items-center justify-end gap-1 text-right text-caption font-semibold">
                 <div className="h-1 w-1 bg-black"></div>
                 {tag}
               </div>
             ))}
           </div>
         </div>
-        {currentModel === PredictionModel.M1 && <ReportM01 />}
-        {currentModel === PredictionModel.M2 && <ReportM02 />}
-        {currentModel === PredictionModel.M3 && <ReportM03 />}
+        {currentModel === PredictionModel.M1 && <ReportM01 deck="phone" />}
+        {currentModel === PredictionModel.M2 && <ReportM02 deck="phone" />}
+        {currentModel === PredictionModel.M3 && <ReportM03 deck="phone" />}
       </div>
     </div>
   );

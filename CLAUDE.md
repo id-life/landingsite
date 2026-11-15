@@ -66,6 +66,10 @@ Each job is its own status check. Run the same commands locally before pushing.
 data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` again (`test/device-classes.test.mjs`).
   `HomeEntry` still renders `MobileHome` or `Home`, separate trees with `Mobile*` sections; they are being merged
   section by section, so a change usually still needs both.
+  Merged so far (one component taking `deck`): Connect, Vision, Portfolio's type, Presence (`Engagement`, `WorldMap` and
+  its dots; portrait windows get a sideways-panning map) and Digital Twin (`Twin` plus its controls; `avatar` is
+  'canvas' on the desktop deck, 'media' on the phone deck, `src/app/twin/twin-deck.ts`). The twin canvas stage
+  (`TwinThreeWrapper`) is mounted once by the shell outside ScrollSmoother's `#content` (Home today).
 - **Site header and footer (NAV-04).** One `SiteHeader` (`src/components/site`) on every route: hook-free, so content
   pages render it on the server; client islands are `SubscribeTrigger` (an `idl:subscribe` DOM event,
   `subscribe-events.ts`; `SubscribePopup` / `useSubscribeBridge` connect it to the popup), `MenuToggle` (+ `SiteMenu`

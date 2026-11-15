@@ -1,25 +1,57 @@
+import type { MouseEvent } from 'react';
 import { track, youtubeId } from '@/lib/analytics/track';
 import { DigitalTwinYoutubeLink } from '@/constants/links';
 import RightSVG from '@/../public/svgs/twin/right.svg?component';
 import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
-import ClipBorderSVG from '../../../../public/svgs/twin/clip-border.svg?component';
+import ClipBorderSVG from '@/../public/svgs/twin/clip-border.svg?component';
+import type { TwinDeck } from '@/app/twin/twin-deck';
 
-export default function YTBDemo() {
-  const handleClick = () => track('video_open', { video_id: youtubeId(DigitalTwinYoutubeLink), placement: 'digital_twin' });
+/**
+ * The DEMO link to the Digital Twin video, one component for both decks (RWD-02; it was YTBDemo and its mobile twin).
+ * By deck: a framed 196 px button at the bottom left (desktop), or a text link under the headline (phone). The label
+ * is the label role, in title case rather than capitals (RWD-01's 25 % uppercase bar; same word); the link is at least
+ * 44 px tall on coarse pointers (RWD-06).
+ */
+export default function YTBDemo({ deck }: { deck: TwinDeck }) {
+  const handleClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    track('video_open', { video_id: youtubeId(DigitalTwinYoutubeLink), placement: 'digital_twin' });
+  };
+
+  if (deck === 'phone') {
+    return (
+      <div id="ytb-demo" className="absolute left-5 top-[22rem] z-20 grid cursor-pointer gap-5">
+        <a
+          href={DigitalTwinYoutubeLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex h-[28px] items-center tap"
+          onClick={handleClick}
+        >
+          <div className="flex-center gap-2 text-label font-medium">
+            <YoutubeSVG className="w-4 fill-black" />
+            Demo
+          </div>
+          <img src="/imgs/twin/arrow.webp" alt="" className="ml-1 h-2 w-3" />
+        </a>
+      </div>
+    );
+  }
 
   return (
-    <div id="ytb-demo" className="absolute bottom-40 left-10 z-20 grid cursor-pointer gap-5">
+    // Bottom left, above the fixed slogan; sizes never under their 1440 px values on tablets, where the label has a floor.
+    <div id="ytb-demo" className="absolute bottom-[max(10rem,120px)] left-10 z-20 grid cursor-pointer gap-5">
       <a
         href={DigitalTwinYoutubeLink}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="group relative flex h-[3.125rem] w-[12.25rem] items-center justify-between px-5"
+        className="group relative flex h-[max(3.125rem,37.5px)] w-[max(12.25rem,147px)] items-center justify-between px-5 tap"
       >
         <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-accent" />
-        <div className="flex-center gap-2 text-base font-semibold group-hover:text-accent">
-          <YoutubeSVG key="ytb-demo" className="w-5 fill-black group-hover:fill-accent" />
-          DEMO
+        <div className="flex-center gap-2 text-label font-semibold group-hover:text-accent">
+          <YoutubeSVG key="ytb-demo" className="w-[max(1.25rem,15px)] fill-black group-hover:fill-accent" />
+          Demo
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-accent group-hover:stroke-accent" />
       </a>

@@ -1,13 +1,13 @@
 'use client';
 
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
-import MobileTwin from '@/app/twin/MobileTwin';
+import Twin from '@/app/twin/Twin';
 import MobileInsights from '@/app/insights/MobileInsights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
 import MobileFixedUI from '@/components/common/MobileFixedUI';
-import MobileEngagement from '@/components/engagement/MobileEngagement';
+import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
@@ -53,8 +53,8 @@ export default function MobileHome() {
         <MobilePortfolio />
         <MobileInsights />
         <MobileSpectrum />
-        <MobileEngagement />
-        <MobileTwin />
+        <Engagement deck="phone" />
+        <Twin deck="phone" />
         <Connect />
         <MobileFooter />
         <MobileFooterContact />
