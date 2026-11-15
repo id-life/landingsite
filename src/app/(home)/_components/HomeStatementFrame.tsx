@@ -32,11 +32,12 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
         // It starts 12 px below the header, whose height (one, two or three rows) the header publishes as
         // --site-header-h, so the block never meets the navigation at any width.
         'left-10 top-[calc(var(--site-header-h,7.5rem)_+_12px)] w-[max(42rem,560px)]',
-        // Phone tree: under the header, above the wordmark.
-        'mobile:inset-x-5 mobile:top-[5.5rem] mobile:w-auto mobile:text-center [@media(max-height:740px)]:mobile:top-[4.75rem]',
+        // Phone tree: under the header (never above its published height), above the wordmark.
+        'mobile:inset-x-5 mobile:top-[max(5.5rem,calc(var(--site-header-h,0px)_+_4px))] mobile:w-auto mobile:text-center',
+        '[@media(max-height:740px)]:mobile:top-[max(4.75rem,calc(var(--site-header-h,0px)_+_4px))]',
         // A phone in landscape (compact height): the statement takes the left column, clear of the wordmark in the
         // middle of the screen.
-        'shortScreen:right-auto shortScreen:top-[4.25rem] shortScreen:w-[46%] shortScreen:text-left',
+        'shortScreen:right-auto shortScreen:w-[46%] shortScreen:text-left',
         onHero ? 'visible opacity-100' : 'invisible opacity-0',
       )}
     >

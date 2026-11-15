@@ -126,11 +126,13 @@ function Portfolio() {
   return (
     <div ref={wrapperRef} id={PAGE_ID} className="page-container text-white">
       <ParticleGLWrapper />
-      <div className="relative flex h-[100svh] flex-col items-center justify-center">
+      {/* On short windows the column is centred in the space under the header, which publishes its height (a
+          1366x641 or 1280x720 laptop put the heading under the two-row header). */}
+      <div className="relative flex h-[100svh] flex-col items-center justify-center [@media(max-height:760px)]:pt-[var(--site-header-h,0px)]">
         <ParticleGLContainer />
         <h2 className="page2-title font-title text-title font-bold uppercase">Portfolio</h2>
-        <div className="page2-fund mb-2.5 mt-12 w-full max-w-[152rem] px-12">
-          <div className="flex flex-col gap-8">
+        <div className="page2-fund mb-2.5 mt-12 w-full max-w-[152rem] px-12 [@media(max-height:760px)]:mt-6">
+          <div className="flex flex-col gap-8 [@media(max-height:760px)]:gap-4">
             {/* Eight columns from 840 px; four on a medium (portrait tablet) window, so names and one-liners at their
                 role sizes are not squeezed into 90 px columns (RWD-01, RWD-02). */}
             <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.firstRow}</div>

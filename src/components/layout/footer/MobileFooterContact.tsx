@@ -55,12 +55,14 @@ export default function MobileFooterContact() {
         {isSubscribeShow ? (
           <motion.div
             key="expanded"
+            // On a phone in landscape the panel is taller than the window: it stops at the header (whose height the
+            // header publishes) and scrolls, instead of running under it.
             ref={panelRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: DURATION.fast, ease: EASE.out }}
-            className="page-footer fixed inset-x-0 bottom-0 z-[102] border-2 border-white bg-white/20 p-5 backdrop-blur-xl"
+            className="page-footer fixed inset-x-0 bottom-0 z-[102] border-2 border-white bg-white/20 p-5 backdrop-blur-xl shortScreen:max-h-[calc(100svh_-_var(--site-header-h,4.5rem))] shortScreen:overflow-y-auto"
           >
             <FooterContactContent />
           </motion.div>
