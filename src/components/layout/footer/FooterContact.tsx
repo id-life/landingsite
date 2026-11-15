@@ -12,21 +12,19 @@ import XiaoyuzhouSVG from '@/../public/svgs/xiaoyuzhou.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
-import { useGA } from '@/hooks/useGA';
 import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import { submitNewsletter } from '@/utils/newsletter';
+import HoneypotField from '@/components/forms/HoneypotField';
 import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { trackChannelLink } from '@/lib/analytics/social';
 
 type Inputs = {
   EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
+  website: string;
 };
 
 export default function FooterContact() {
@@ -39,12 +37,9 @@ export default function FooterContact() {
     formState: { errors },
     setError,
   } = useForm<Inputs>();
-
-  const { trackEvent } = useGA();
-
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await submitNewsletter(formData, 'connect');
+    const result = await submitNewsletter({ email: formData.EMAIL, website: formData.website }, 'connect');
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
@@ -53,12 +48,7 @@ export default function FooterContact() {
     setIsSubmitted(true);
   };
 
-  const handleLinkClick = (type: MediaLinkTypeKey) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.MEDIUM_CLICK,
-      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<MediaLinkTypeKey>],
-    });
-  };
+  const handleLinkClick = (type: MediaLinkTypeKey) => trackChannelLink(type, Links[type], 'connect');
 
   const mediaRows = useMemo(
     () => [
@@ -122,6 +112,7 @@ export default function FooterContact() {
                 </div>
                 <a
                   href={ORG_MAILTO}
+                  data-track-placement="connect"
                   className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 hover:text-red-600"
                 >
                   <img src="/svgs/contact-email.svg" alt="" />
@@ -133,21 +124,34 @@ export default function FooterContact() {
               <p className="uppercase opacity-50">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
+                noValidate
                 className="relative mt-8 flex gap-4 mobile:mt-5 mobile:gap-3 mobile:px-0"
                 onSubmit={handleSubmit(onFormSubmit)}
               >
                 {errors.EMAIL && (
-                  <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">
+                  <span
+                    id="connect-subscribe-error"
+                    role="alert"
+                    className="absolute -top-6 font-poppins text-xs font-semibold text-red-600"
+                  >
                     {errors.EMAIL.message}
                   </span>
                 )}
-                <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-                <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-                <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+                <HoneypotField {...register('website')} />
+                <label htmlFor="connect-subscribe-email" className="sr-only">
+                  Email
+                </label>
                 <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-red-600' : 'border-black')}>
                   <input
+                    id="connect-subscribe-email"
                     className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5"
                     placeholder="Please enter email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    required
+                    aria-invalid={errors.EMAIL ? true : undefined}
+                    aria-describedby={errors.EMAIL ? 'connect-subscribe-error' : undefined}
                     defaultValue=""
                     {...register('EMAIL', {
                       required: 'Please fill in this field',

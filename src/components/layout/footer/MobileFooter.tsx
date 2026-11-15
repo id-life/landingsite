@@ -10,13 +10,12 @@ import { cn } from '@/utils';
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
+import HoneypotField from '@/components/forms/HoneypotField';
 import { useForm } from 'react-hook-form';
 
 type Inputs = {
   EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
+  website: string;
 };
 
 /**
@@ -82,13 +81,15 @@ export default function MobileFooter() {
               onSubmit={handleSubmit(onFormSubmit)}
             >
               {(errors.EMAIL || submitError) && (
-                <span role="alert" className="absolute -top-5 font-poppins text-xs font-semibold text-red-600">
+                <span
+                  id="mobile-subscribe-error"
+                  role="alert"
+                  className="absolute -top-5 font-poppins text-xs font-semibold text-red-600"
+                >
                   {errors.EMAIL?.message ?? submitError}
                 </span>
               )}
-              <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-              <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-              <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+              <HoneypotField {...register('website')} />
               <div className="relative flex h-11 flex-1 items-center justify-center p-2">
                 <div
                   className={cn(
@@ -101,7 +102,11 @@ export default function MobileFooter() {
                   placeholder="Please enter email"
                   aria-label="Email"
                   type="email"
+                  inputMode="email"
                   autoComplete="email"
+                  required
+                  aria-invalid={errors.EMAIL || submitError ? true : undefined}
+                  aria-describedby={errors.EMAIL || submitError ? 'mobile-subscribe-error' : undefined}
                   defaultValue=""
                   {...register('EMAIL', {
                     required: 'Please fill in this field',

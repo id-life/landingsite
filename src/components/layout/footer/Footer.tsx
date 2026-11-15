@@ -8,6 +8,7 @@ import { InfoSVG } from '@/components/svg';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
 import { cn } from '@/utils';
 import { submitNewsletter } from '@/utils/newsletter';
+import HoneypotField from '@/components/forms/HoneypotField';
 import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
@@ -16,9 +17,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
   EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
+  website: string;
 };
 
 /**
@@ -97,7 +96,7 @@ export default function Footer() {
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await submitNewsletter(formData, placement ?? 'nav');
+    const result = await submitNewsletter({ email: formData.EMAIL, website: formData.website }, placement ?? 'nav');
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
@@ -144,13 +143,15 @@ export default function Footer() {
                 onSubmit={handleSubmit(onFormSubmit)}
               >
                 {errors.EMAIL && (
-                  <span role="alert" className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600">
+                  <span
+                    id="popup-subscribe-error"
+                    role="alert"
+                    className="absolute -top-6 font-poppins text-xs/5 font-semibold text-red-600"
+                  >
                     {errors.EMAIL?.message}
                   </span>
                 )}
-                <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-                <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-                <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+                <HoneypotField {...register('website')} />
                 <div className="relative flex h-11 flex-1 justify-center p-2">
                   <div
                     className={cn(
@@ -163,7 +164,11 @@ export default function Footer() {
                     placeholder="Please enter email"
                     aria-label="Email"
                     type="email"
+                    inputMode="email"
                     autoComplete="email"
+                    required
+                    aria-invalid={errors.EMAIL ? true : undefined}
+                    aria-describedby={errors.EMAIL ? 'popup-subscribe-error' : undefined}
                     defaultValue=""
                     {...emailField}
                     ref={emailMergedRef}

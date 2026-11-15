@@ -7,9 +7,7 @@ import { useThrottle } from './useThrottle';
 
 type Inputs = {
   EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
+  website: string;
 };
 
 /**
@@ -43,7 +41,7 @@ export function useMobileSubscribeAction() {
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setSubmitError(null);
     setIsSubmitting(true);
-    const result = await submitNewsletter(formData, placement ?? 'nav');
+    const result = await submitNewsletter({ email: formData.EMAIL, website: formData.website }, placement ?? 'nav');
     setIsSubmitting(false);
     if (!result.ok) {
       setSubmitError(result.message);

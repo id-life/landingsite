@@ -1,7 +1,6 @@
 import { recordSubscribeDismissal } from '@/atoms/auto-subscribe';
-import { GA_EVENT_NAMES } from '@/constants/ga';
-import { trackEvent } from '@/hooks/useGA';
-import { subscribeNewsletter, SubscribeResult } from '@/utils/subscribe';
+import { track } from '@/lib/analytics/track';
+import { subscribeNewsletter, SubscribeFields, SubscribeResult } from '@/utils/subscribe';
 
 /**
  * Where a newsletter form or the popup was shown:
@@ -17,40 +16,32 @@ export type NewsletterPlacement = 'nav' | 'content' | 'connect' | 'footer';
 export type NewsletterCloseMethod = 'x' | 'escape' | 'outside' | 'scroll' | 'toggle';
 
 type NewsletterEvents = {
-  view: { placement: NewsletterPlacement };
+  view: { placement: NewsletterPlacement; previously_dismissed: 0 | 1 };
   close: { placement: NewsletterPlacement; method: NewsletterCloseMethod };
-  submit: { placement: NewsletterPlacement };
-  subscribe: { placement: NewsletterPlacement; status: 'subscribed' | 'pending' };
-  error: { placement: NewsletterPlacement; error_code: 'already_subscribed' | 'invalid_email' | 'timeout' | 'error' };
-};
-
-const EVENT_NAME: Record<keyof NewsletterEvents, string> = {
-  view: GA_EVENT_NAMES.NEWSLETTER_VIEW,
-  close: GA_EVENT_NAMES.NEWSLETTER_CLOSE,
-  submit: GA_EVENT_NAMES.NEWSLETTER_SUBMIT,
-  subscribe: GA_EVENT_NAMES.NEWSLETTER_SUBSCRIBE,
-  error: GA_EVENT_NAMES.NEWSLETTER_ERROR,
 };
 
 export function trackNewsletter<K extends keyof NewsletterEvents>(step: K, params: NewsletterEvents[K]) {
-  trackEvent({ name: EVENT_NAME[step], ...params });
+  if (step === 'view') track('newsletter_view', params as NewsletterEvents['view']);
+  else track('newsletter_close', params as NewsletterEvents['close']);
 }
 
 /**
  * Submit a newsletter form and report the funnel truthfully: newsletter_submit for the attempt, then exactly
  * one of newsletter_subscribe (a new address: subscribed, or pending under double opt-in) or newsletter_error
- * (already_subscribed, invalid_email, timeout, error). A successful submit also counts as an explicit dismissal.
+ * (already_subscribed, invalid_email, rate_limited, spam_check, upstream_error, timeout, error). A successful submit
+ * also counts as an explicit dismissal. This is the only caller of the subscribe route (every form goes through
+ * useNewsletterForm).
  */
 export async function submitNewsletter(
-  fields: Record<string, string>,
+  fields: Omit<SubscribeFields, 'placement'>,
   placement: NewsletterPlacement,
 ): Promise<SubscribeResult> {
-  trackNewsletter('submit', { placement });
-  const result = await subscribeNewsletter(fields);
+  track('newsletter_submit', { placement });
+  const result = await subscribeNewsletter({ ...fields, placement });
   if (result.code === 'subscribed' || result.code === 'pending') {
-    trackNewsletter('subscribe', { placement, status: result.code });
+    track('newsletter_subscribe', { placement, status: result.code });
   } else {
-    trackNewsletter('error', { placement, error_code: result.code });
+    track('newsletter_error', { placement, error_code: result.code });
   }
   if (result.ok) recordSubscribeDismissal();
   return result;

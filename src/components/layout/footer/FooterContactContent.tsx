@@ -14,27 +14,26 @@ import XiaoyuzhouSVG from '@/../public/svgs/xiaoyuzhou.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import { InfoSVG } from '@/components/svg';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
-import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import { NewsletterPlacement, submitNewsletter } from '@/utils/newsletter';
+import HoneypotField from '@/components/forms/HoneypotField';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useId } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { trackChannelLink } from '@/lib/analytics/social';
 
 type Inputs = {
   EMAIL: string;
-  u: string;
-  'amp;id': string;
-  'amp;f_id': string;
+  website: string;
 };
 
 /** placement: 'connect' in the phone Connect contact panel, 'footer' at the foot of the news pages. */
 export default function FooterContactContent({ placement = 'connect' }: { placement?: NewsletterPlacement }) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const fieldId = useId();
 
   const {
     register,
@@ -42,12 +41,9 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
     formState: { errors },
     setError,
   } = useForm<Inputs>();
-
-  const { trackEvent } = useGA();
-
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await submitNewsletter(formData, placement);
+    const result = await submitNewsletter({ email: formData.EMAIL, website: formData.website }, placement);
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
@@ -56,12 +52,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
     setIsSubmitted(true);
   };
 
-  const handleLinkClick = (type: MediaLinkTypeKey) => {
-    trackEvent({
-      name: GA_EVENT_NAMES.MEDIUM_CLICK,
-      label: GA_EVENT_LABELS.MEDIUM_CLICK[type.toUpperCase() as Uppercase<keyof typeof MediaLinkType>],
-    });
-  };
+  const handleLinkClick = (type: MediaLinkTypeKey) => trackChannelLink(type, Links[type], placement);
 
   const mediaRows = useMemo(
     () => [
@@ -115,23 +106,42 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           <HomeSVG aria-hidden="true" className="size-5" />
           <span>{ORG_ADDRESS_TEXT}</span>
         </div>
-        <a href={ORG_MAILTO} className="flex w-fit items-center gap-1 py-1">
+        <a href={ORG_MAILTO} data-track-placement={placement} className="flex w-fit items-center gap-1 py-1">
           <ContactEmailSVG aria-hidden="true" className="size-5" />
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
       <div className="my-4 h-px w-full bg-black/20" />
-      <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
+      <form
+        id="subscribe-form"
+        noValidate
+        className="relative flex justify-between gap-3"
+        onSubmit={handleSubmit(onFormSubmit)}
+      >
         {errors.EMAIL && (
-          <span className="absolute -top-6 font-poppins text-xs font-semibold text-red-600">{errors.EMAIL.message}</span>
+          <span
+            id={`${fieldId}-error`}
+            role="alert"
+            className="absolute -top-6 font-poppins text-xs font-semibold text-red-600"
+          >
+            {errors.EMAIL.message}
+          </span>
         )}
-        <input type="hidden" {...register('u')} value="e6f88de977cf62de3628d944e" />
-        <input type="hidden" {...register('amp;id')} value="af9154d6b5" />
-        <input type="hidden" {...register('amp;f_id')} value="00e418e1f0" />
+        <HoneypotField {...register('website')} />
+        <label htmlFor={`${fieldId}-email`} className="sr-only">
+          Email
+        </label>
         <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-red-600' : 'border-black')}>
           <input
+            id={`${fieldId}-email`}
             className="w-full bg-transparent font-poppins text-xs/5 font-semibold placeholder:text-[#747374]"
             placeholder="Please enter email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            required
+            aria-invalid={errors.EMAIL ? true : undefined}
+            aria-describedby={errors.EMAIL ? `${fieldId}-error` : undefined}
             defaultValue=""
             {...register('EMAIL', {
               required: 'Please fill in this field',

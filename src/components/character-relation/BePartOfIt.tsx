@@ -13,8 +13,9 @@ import { useMutationCharacterRelation } from '@/hooks/useMutationCharacterRelati
 import CloseSVG from '@/../public/svgs/close-3.svg?component';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom } from '@/atoms/character-relation';
-import { useGA } from '@/hooks/useGA';
-import { GA_EVENT_NAMES } from '@/constants/ga';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { track } from '@/lib/analytics/track';
+import HoneypotField from '@/components/forms/HoneypotField';
 import { Form, FormSubmitHandler, useForm } from 'react-hook-form';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = {
@@ -29,15 +30,19 @@ interface BePartOfItProps {
 
 interface BePartOfItFormValues {
   visitor: string;
+  /** Honeypot (ENG-09): people never fill it; a filled one means a bot, and nothing is sent. */
+  website?: string;
   [key: `introducer_${number}`]: string;
 }
 
 const REQUIRED_ERROR_MESSAGE = 'Please enter name';
+/** Names are trimmed and capped before they are sent (the API also feeds a public graph). */
+const MAX_NAME_LENGTH = 80;
+const cleanName = (name: string) => name.trim().replace(/\s+/g, ' ').slice(0, MAX_NAME_LENGTH);
 
 const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const { onCountdownEnd, onClose } = props;
 
-  const { trackEvent } = useGA();
   const isMobile = useIsMobile();
   const isBePartOfItShow = useAtomValue(isBePartOfItShowAtom);
   const setIsBePartOfItSubmitted = useSetAtom(isBePartOfItSubmittedAtom);
@@ -86,21 +91,27 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
   const onFormSubmit: FormSubmitHandler<BePartOfItFormValues> = ({ data, event }) => {
     event?.preventDefault();
     if (isMutationPending || isMutationSuccess) return;
+    if (data.website) return;
 
     const relationData: CharacterRelationData = {
-      character,
-      relation: relation.filter((rel) => !!rel.character),
+      character: cleanName(character),
+      relation: relation.map((rel) => ({ ...rel, character: cleanName(rel.character) })).filter((rel) => !!rel.character),
     };
-
-    trackEvent({ name: GA_EVENT_NAMES.IN_SUBMIT });
+    if (!relationData.character) return;
 
     addCharacterRelationData(relationData, {
+      // DATA-03: counted only once the API accepted it (it used to fire on every attempt).
+      onSuccess: () => track('relation_submit'),
       onSettled: () => (isSubmittingRef.current = false),
     });
   };
 
   const handleLinkClick = () => {
-    trackEvent({ name: GA_EVENT_NAMES.IN_LINK });
+    trackOutbound('https://agingbiotech.info/people/', 'outbound_click', {
+      link_type: 'other',
+      item_id: 'agingbiotech_people',
+      placement: 'influence_network',
+    });
   };
 
   const handleClose = () => {
@@ -192,7 +203,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <CloseSVG className="size-5" />
       </div>
 
-      <Form control={form.control} className="mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
+      <Form control={form.control} className="relative mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
+        <HoneypotField {...form.register('website')} />
         <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col')}>
           <BePartOfItInput
             key="visitor-input"
