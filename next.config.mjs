@@ -37,6 +37,9 @@ const nextConfig = {
   reactStrictMode: false,
   // ENG-11: no x-powered-by: Next.js on any route.
   poweredByHeader: false,
+  // CON-10: the owner's draft review page (src/app/content-review/page.preview.tsx) is a route only in builds that are
+  // not for production, so a production build has no such route and no chunk of it (docs/content-approval.md).
+  pageExtensions: deployEnv === 'production' ? ['tsx', 'ts', 'jsx', 'js'] : ['preview.tsx', 'tsx', 'ts', 'jsx', 'js'],
   // src has ~59 debugging console.log calls (one fired on every wheel event). Strip console.log/info/debug
   // from production bundles; keep warn and error so real problems still reach the console and Sentry.
   compiler: {

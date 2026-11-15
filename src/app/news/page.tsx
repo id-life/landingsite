@@ -7,6 +7,7 @@ import NewsCard from './_components/NewsCard';
 import { ItemList, WithContext } from 'schema-dts';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import React from 'react';
 import SubTitle from '@/app/news/_components/SubTitle';
 import Topic from '@/app/news/_components/Topic';
@@ -14,12 +15,8 @@ import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 
-export const metadata: Metadata = buildMetadata({
-  path: '/news',
-  title: 'News',
-  description:
-    "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
-});
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+export const metadata: Metadata = buildMetadata(pageMeta('news'));
 
 // Generate JSON-LD dynamically from news data
 function generateNewsJsonLd(news: NewsPageItem[]): WithContext<ItemList> {

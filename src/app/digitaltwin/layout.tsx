@@ -3,22 +3,20 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import DigitalTwinSummary from '@/app/digitaltwin/_components/DigitalTwinSummary';
 import { ORG_REF } from '@/constants/entity';
 import { SoftwareApplication, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('digitaltwin');
 const PAGE_TITLE = 'DigitalTwin 孪生';
-const PAGE_DESCRIPTION =
-  'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.';
+const PAGE_DESCRIPTION = PAGE.description;
 
 // Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
-export const metadata: Metadata = buildMetadata({
-  path: '/digitaltwin',
-  title: 'Digital Twin',
-  description: PAGE_DESCRIPTION,
-});
+export const metadata: Metadata = buildMetadata(PAGE);
 
 const jsonLd: WithContext<SoftwareApplication> = {
   '@context': 'https://schema.org',

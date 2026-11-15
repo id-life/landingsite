@@ -3,7 +3,7 @@ import path from 'node:path';
 
 // 不朽真龙介绍 (converted from the profile docx). Read at build time by the article page and by the
 // hidden crawler summaries on the homepage, /portfolio and /presence.
-const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-news-and-updates/article.md');
+const articlePath = path.join(process.cwd(), 'src/content/articles/immortal-dragons-news-and-updates.md');
 
 export const ARTICLE_PATH = '/news/immortal-dragons-news-and-updates';
 export const ARTICLE_TITLE = '不朽真龙介绍';

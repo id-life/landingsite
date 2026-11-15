@@ -93,9 +93,21 @@ export default defineConfig([
               message: "Removed: send events with track() from '@/lib/analytics/track' (DATA-11).",
             },
           ],
+          patterns: [
+            {
+              group: ['@/content/drafts', '@/content/drafts/*', '**/content/drafts', '**/content/drafts/*'],
+              message:
+                'Drafts never ship (CON-10): only the preview review page may import them. Approve a draft by moving it into src/content with approvedBy and approvedAt (docs/content-approval.md).',
+            },
+          ],
         },
       ],
     },
+  },
+  {
+    // The draft review page (preview builds only) and the drafts themselves may import drafts.
+    files: ['src/app/content-review/**', 'src/content/drafts/**'],
+    rules: { 'no-restricted-imports': 'off' },
   },
   {
     // Positional NAV_LIST[<number>] lookups that predate the ban (2026-11-15). They point at the right

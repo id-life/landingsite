@@ -3,21 +3,19 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { getSpectrumJsonLd, spectrumBaseData } from '@/app/spectrum/_components/spectrumData';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('spectrum');
 const PAGE_TITLE = 'Spectrum 谱系';
-const PAGE_DESCRIPTION =
-  "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.";
+const PAGE_DESCRIPTION = PAGE.description;
 
 // Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
-export const metadata: Metadata = buildMetadata({
-  path: '/spectrum',
-  title: 'Spectrum',
-  description: PAGE_DESCRIPTION,
-});
+export const metadata: Metadata = buildMetadata(PAGE);
 
 export default function SpectrumLayout({ children }: { children: ReactNode }) {
   const jsonLd = getSpectrumJsonLd();

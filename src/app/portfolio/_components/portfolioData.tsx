@@ -1,9 +1,15 @@
 import { cn } from '@/utils';
+import { absoluteUrl } from '@/constants/site';
+import { COMPANIES } from '@/content/companies';
 import { ItemList, WithContext } from 'schema-dts';
 
 import type { JSX } from 'react';
 
+// The portfolio tiles. Companies are records in the content layer (src/content/companies.ts); this file adds their
+// presentation, keyed by slug: the logo's size on a tile and the particle image shown when a tile is active.
+
 export type PortfolioItemInfo = {
+  slug: string;
   title: string;
   subTitle?: string;
   description: string;
@@ -13,227 +19,35 @@ export type PortfolioItemInfo = {
 };
 
 const mobileImageClassName = 'mobile:h-full mobile:w-auto mobile:object-contain';
-export const portfolio: PortfolioItemInfo[] = [
-  {
-    title: 'Healthspan Capital',
-    description: 'Active early stage LongBio fund',
-    image: (
-      <img
-        className={cn('w-19.5', mobileImageClassName)}
-        src="/imgs/investments/healthspan.webp"
-        alt="Healthspan Capital logo - Active early stage LongBio fund"
-      />
-    ),
-    link: 'https://www.healthspancapital.vc/',
-    logoUrl: '/imgs/investments/healthspan.webp',
-  },
-  {
-    title: 'Frontier Bio',
-    description: '3D Biofabrication',
-    image: (
-      <img
-        className={cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]')}
-        src="/imgs/investments/frontier-bio.webp"
-        alt="Frontier Bio logo - 3D Biofabrication"
-      />
-    ),
-    link: 'https://www.frontierbio.com/',
-    logoUrl: '/imgs/investments/frontier-bio.webp',
-  },
-  {
-    title: 'Unlimited Bio',
-    description: 'Combinatorial Gene Therapy',
-    image: (
-      <img
-        className={cn('w-19.5', mobileImageClassName)}
-        src="/imgs/investments/unlimited.webp"
-        alt="Unlimited Bio logo - Combinatorial Gene Therapy"
-      />
-    ),
-    link: 'https://www.unlimited.bio/',
-    logoUrl: '/imgs/investments/unlimited.webp',
-  },
-  {
-    title: 'R3 Bio',
-    description: 'Stealth mode biotech',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[8.75rem] mobile:w-[6.25rem]')}
-        src="/imgs/investments/r3.webp"
-        alt="R3 Bio logo - Stealth mode biotech"
-      />
-    ),
-    logoUrl: '/imgs/investments/r3.webp',
-  },
-  {
-    title: 'Immune Bridge',
-    description: 'Allogenic Cell Therapies Platform',
-    image: (
-      <img
-        className={cn('w-[12.5rem]', mobileImageClassName)}
-        src="/imgs/investments/immune-bridge.webp"
-        alt="Immune Bridge logo - Allogenic Cell Therapies Platform"
-      />
-    ),
-    link: 'https://www.immunebridge.com/',
-    logoUrl: '/imgs/investments/immune-bridge.webp',
-  },
-  // {
-  //   title: 'Retro Biosciences',
-  //   description: 'Cellular Partial Reprogramming',
-  //   image: (
-  //     <img
-  //       className={cn('w-[12.5rem]', mobileImageClassName)}
-  //       src="/imgs/investments/retro.webp"
-  //       alt="Retro Biosciences logo - Cellular Partial Reprogramming"
-  //     />
-  //   ),
-  //   link: 'https://www.retro.bio/',
-  //   logoUrl: '/imgs/investments/retro.webp',
-  // },
-  {
-    title: 'Cyclarity Therapeutics',
-    description: 'Small molecules atherosclerosis solution',
-    image: (
-      <img
-        className={cn('w-[12.5rem]', mobileImageClassName)}
-        src="/imgs/investments/cyclarity.webp"
-        alt="Cyclarity Therapeutics logo - Small molecules atherosclerosis solution"
-      />
-    ),
-    link: 'https://cyclaritytx.com/',
-    logoUrl: '/imgs/investments/cyclarity.webp',
-  },
-  {
-    title: 'KindBio',
-    description: 'Integrated Organ Network',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
-        src="/imgs/investments/kindbio.webp"
-        alt="KindBio logo - Integrated Organ Network"
-      />
-    ),
-    link: 'https://kindbiotechnology.com/',
-    logoUrl: '/imgs/investments/kindbio.webp',
-  },
-  {
-    title: 'Mito Health',
-    description: 'AI powered concierge doctor',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-36 mobile:w-[6rem]')}
-        src="/imgs/investments/mito.webp"
-        alt="Mito Health logo - AI powered concierge doctor"
-      />
-    ),
-    link: 'https://mitohealth.com/',
-    logoUrl: '/imgs/investments/mito.webp',
-  },
-  {
-    title: 'Kangaroo Biomedical',
-    description: 'Artificial Womb (AW) technology',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'h-12 mobile:-mt-3 mobile:h-10')}
-        src="/imgs/investments/kangaroo-biomedical.webp"
-        alt="Kangaroo Biomedical logo - Artificial Womb technology"
-      />
-    ),
-    logoUrl: '/imgs/investments/kangaroo-biomedical.webp',
-  },
-  {
-    title: 'Renewal Bio',
-    description: 'Ex Utero Synthetic Embryos',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[10.625rem] mobile:h-auto mobile:w-[7.5rem]')}
-        src="/imgs/investments/renewal-bio.webp"
-        alt="RenewalBio logo - Ex utero synthetic embryos"
-      />
-    ),
-    link: 'https://www.renewal.bio/',
-    logoUrl: '/imgs/investments/renewal-bio.webp',
-  },
-  {
-    title: 'DOMAYN',
-    description: 'Neural Modulation Device',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
-        src="/imgs/investments/domayn.webp"
-        alt="DOMAYN logo - Neural Modulation Device"
-      />
-    ),
-    link: 'https://domayn.com/',
-    logoUrl: '/imgs/investments/domayn.webp',
-  },
-  {
-    title: 'Oisin Biotechnologies',
-    description: 'Gene Therapy and Delivery Platform',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11')}
-        src="/imgs/investments/oisin.webp"
-        alt="Oisin Biotechnologies logo - Gene Therapy and Delivery Platform"
-      />
-    ),
-    link: 'https://www.oisinbio.com/',
-    logoUrl: '/imgs/investments/oisin.webp',
-  },
-  {
-    title: 'Etheros Pharmaceuticals',
-    description: 'Small Molecule Therapy for ALS',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[8.375rem] mobile:h-11')}
-        src="/imgs/investments/etheros.webp"
-        alt="Etheros Pharmaceuticals logo - Small Molecule Therapy for ALS"
-      />
-    ),
-    link: 'https://etherospharma.com/',
-    logoUrl: '/imgs/investments/etheros.webp',
-  },
-  {
-    title: 'Longevity.Technology',
-    description: 'The #1 destination for daily news and insights on the fast-growing longevity market',
-    image: (
-      <img
-        className={cn('w-19.5', mobileImageClassName)}
-        src="/imgs/investments/longevity.webp"
-        alt="Longevity.Technology logo - Daily news and insights on longevity market"
-      />
-    ),
-    link: 'https://longevity.technology/',
-    logoUrl: '/imgs/investments/longevity.webp',
-  },
-  {
-    title: 'Vitalia',
-    description: 'Accelerated longevity startups Special economic zone',
-    image: (
-      <img
-        className={cn('w-19.5', mobileImageClassName)}
-        src="/imgs/investments/vitalia.webp"
-        alt="Vitalia logo - Accelerated longevity startups special economic zone"
-      />
-    ),
-    // link: 'https://vitalia.city/',
-    logoUrl: '/imgs/investments/vitalia.webp',
-  },
-  {
-    title: 'EONARK',
-    description: 'AI-driven longevity drug discovery',
-    image: (
-      <img
-        className={cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]')}
-        src="/imgs/investments/eonark.svg"
-        alt="EONARK logo - AI-driven longevity drug discovery"
-      />
-    ),
-    link: 'https://eonark.ai/',
-    logoUrl: '/imgs/investments/eonark.svg',
-  },
-];
+
+/** Logo classes per company (presentation only). */
+const LOGO_CLASS: Record<string, string> = {
+  'healthspan-capital': cn('w-19.5', mobileImageClassName),
+  'frontier-bio': cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]'),
+  'unlimited-bio': cn('w-19.5', mobileImageClassName),
+  'r3-bio': cn(mobileImageClassName, 'w-[8.75rem] mobile:w-[6.25rem]'),
+  'immune-bridge': cn('w-[12.5rem]', mobileImageClassName),
+  'cyclarity-therapeutics': cn('w-[12.5rem]', mobileImageClassName),
+  kindbio: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
+  'mito-health': cn(mobileImageClassName, 'w-36 mobile:w-[6rem]'),
+  'kangaroo-biomedical': cn(mobileImageClassName, 'h-12 mobile:-mt-3 mobile:h-10'),
+  'renewal-bio': cn(mobileImageClassName, 'w-[10.625rem] mobile:h-auto mobile:w-[7.5rem]'),
+  domayn: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
+  'oisin-biotechnologies': cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11'),
+  'etheros-pharmaceuticals': cn(mobileImageClassName, 'w-[8.375rem] mobile:h-11'),
+  'longevity-technology': cn('w-19.5', mobileImageClassName),
+  vitalia: cn('w-19.5', mobileImageClassName),
+  eonark: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
+};
+
+export const portfolio: PortfolioItemInfo[] = COMPANIES.map((company) => ({
+  slug: company.slug,
+  title: company.name,
+  description: company.tagline.en,
+  image: <img className={LOGO_CLASS[company.slug]} src={company.logo} alt={company.logoAlt} />,
+  ...(company.url && { link: company.url }),
+  logoUrl: company.logo,
+}));
 
 /** Markdown list lines ("- [Name](link): description") for text renderings such as llms.txt and the homepage profile. */
 export const portfolioMarkdownLines = () =>
@@ -243,7 +57,7 @@ export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: 'IMMORTAL DRAGONS Portfolio',
-  url: 'https://id.life/portfolio',
+  url: absoluteUrl('/portfolio'),
   numberOfItems: portfolio.length,
   itemListElement: portfolio.map((item, index) => ({
     '@type': 'ListItem',
@@ -252,7 +66,7 @@ export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
       '@type': 'Organization',
       name: item.title,
       description: item.description,
-      logo: `https://id.life${item.logoUrl}`,
+      logo: absoluteUrl(item.logoUrl),
       ...(item.link && { url: item.link }),
     },
   })),
@@ -277,11 +91,17 @@ type ParticleConfig = {
 };
 
 export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
-  // Base scale values for each particle (desktop values)
-  const configs: ParticleConfig[] = [
-    { url: '/imgs/particle/0.png', resize: [512, 300], baseScale: 2.2 },
-    { url: '/imgs/particle/1.png', resize: [600, 600], baseScale: 0.8, loadPercentage: 0.005, mobileOpacity: 0.3 },
-    {
+  // The idle shape (index 0) and one image per company: tile i shows particle i + 1 (MobilePortfolio, usePortfolioItemAnimation).
+  const idle: ParticleConfig = { url: '/imgs/particle/0.png', resize: [512, 300], baseScale: 2.2 };
+  const bySlug: Record<string, ParticleConfig> = {
+    'healthspan-capital': {
+      url: '/imgs/particle/1.png',
+      resize: [600, 600],
+      baseScale: 0.8,
+      loadPercentage: 0.005,
+      mobileOpacity: 0.3,
+    },
+    'frontier-bio': {
       url: '/imgs/particle/5.png',
       resize: [300, 307],
       baseScale: 1,
@@ -289,9 +109,21 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.008,
       mobileLoadPercentage: 0.004,
     },
-    { url: '/imgs/particle/9.png', resize: [600, 600], baseScale: 1, loadPercentage: 0.0012, mobileLoadPercentage: 0.002 },
-    { url: '/imgs/particle/4.png', resize: [300, 300], baseScale: 1.4, mobileScaleMultiplier: 1.4, loadPercentage: 0.002 },
-    {
+    'unlimited-bio': {
+      url: '/imgs/particle/9.png',
+      resize: [600, 600],
+      baseScale: 1,
+      loadPercentage: 0.0012,
+      mobileLoadPercentage: 0.002,
+    },
+    'r3-bio': {
+      url: '/imgs/particle/4.png',
+      resize: [300, 300],
+      baseScale: 1.4,
+      mobileScaleMultiplier: 1.4,
+      loadPercentage: 0.002,
+    },
+    'immune-bridge': {
       url: '/imgs/particle/immune-bridge.png',
       resize: [584, 680],
       baseScale: 1,
@@ -299,27 +131,17 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.002,
       mobileOpacity: 0.3,
     },
-    // {
-    //   url: '/imgs/particle/retro.png',
-    //   resize: [568, 170],
-    //   baseScale: 1.2,
-    //   mobileScaleMultiplier: 1.5,
-    //   loadPercentage: 0.002,
-    //   mobileUrl: '/imgs/particle/retro-mobile.png',
-    //   mobileResize: [328, 328] as [number, number],
-    //   mobileOpacity: 0.3,
-    // },
-    {
+    'cyclarity-therapeutics': {
       url: '/imgs/particle/cyclarity.png',
       resize: [800, 115],
       baseScale: 1.2,
       mobileScaleMultiplier: 1.5,
       loadPercentage: 0.002,
       mobileUrl: '/imgs/particle/cyclarity-mobile.png',
-      mobileResize: [328, 328] as [number, number],
+      mobileResize: [328, 328],
       mobileOpacity: 0.3,
     },
-    {
+    kindbio: {
       url: '/imgs/particle/kindbio.png',
       resize: [450, 352],
       baseScale: 1.8,
@@ -329,7 +151,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       instantColor: true,
       mobileOpacity: 0.3,
     },
-    {
+    'mito-health': {
       url: '/imgs/particle/3.png',
       resize: [600, 576],
       baseScale: 1,
@@ -337,8 +159,14 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileScaleMultiplier: 0.95,
       mobileOpacity: 0.3,
     },
-    { url: '/imgs/particle/6.png', resize: [338, 340], baseScale: 1.4, loadPercentage: 0.004, mobileOpacity: 0.3 },
-    {
+    'kangaroo-biomedical': {
+      url: '/imgs/particle/6.png',
+      resize: [338, 340],
+      baseScale: 1.4,
+      loadPercentage: 0.004,
+      mobileOpacity: 0.3,
+    },
+    'renewal-bio': {
       url: '/imgs/particle/renewal-bio.png',
       resize: [860, 129],
       baseScale: 1.2,
@@ -347,7 +175,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileLoadPercentage: 0.008,
       mobileOpacity: 0.35,
     },
-    {
+    domayn: {
       url: '/imgs/particle/domayn.png',
       resize: [760, 115],
       baseScale: 1,
@@ -356,7 +184,7 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileLoadPercentage: 0.012,
       mobileOpacity: 0.35,
     },
-    {
+    'oisin-biotechnologies': {
       url: '/imgs/particle/oisin.png',
       resize: [600, 163],
       baseScale: 1.2,
@@ -364,10 +192,10 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       loadPercentage: 0.005,
       mobileLoadPercentage: 0.003,
       mobileUrl: '/imgs/particle/oisin-mobile.png',
-      mobileResize: [164, 164] as [number, number],
+      mobileResize: [164, 164],
       mobileOpacity: 0.3,
     },
-    {
+    'etheros-pharmaceuticals': {
       url: '/imgs/particle/etheros.png',
       resize: [600, 146],
       baseScale: 1.2,
@@ -376,20 +204,20 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileLoadPercentage: 0.0012,
       mobileUrl: '/imgs/particle/etheros-mobile.png',
       mobileOpacity: 0.3,
-      mobileResize: [328, 328] as [number, number],
+      mobileResize: [328, 328],
     },
-    { url: '/imgs/particle/2.png', resize: [600, 536], baseScale: 0.7, loadPercentage: 0.0012 },
-    {
+    'longevity-technology': { url: '/imgs/particle/2.png', resize: [600, 536], baseScale: 0.7, loadPercentage: 0.0012 },
+    vitalia: {
       url: '/imgs/particle/7.png',
       resize: [860, 82],
       baseScale: 1.2,
       mobileScaleMultiplier: 1.5,
       loadPercentage: 0.002,
       mobileUrl: '/imgs/particle/vitalia-mobile.png',
-      mobileResize: [328, 328] as [number, number],
+      mobileResize: [328, 328],
       mobileOpacity: 0.3,
     },
-    {
+    eonark: {
       url: '/imgs/investments/eonark.svg',
       resize: [830, 180],
       baseScale: 1,
@@ -398,7 +226,8 @@ export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
       mobileLoadPercentage: 0.008,
       mobileOpacity: 0.35,
     },
-  ];
+  };
+  const configs: ParticleConfig[] = [idle, ...COMPANIES.map(({ slug }) => bySlug[slug])];
 
   return configs.map(
     ({

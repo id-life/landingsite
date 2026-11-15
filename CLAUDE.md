@@ -20,6 +20,7 @@ npm run knip      # unused files and dependencies (fails); unused exports (warni
 npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
 npm run typecheck                         # full type check (next typegen, then tsc --noEmit; works on a fresh checkout)
 npx prettier --write --ignore-unknown .   # format
+npx --yes cspell@10.4.0 --no-progress "src/**/*.{ts,tsx,md}"   # spell-check (cspell.json; docs/content-style.md)
 ```
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and prettier on staged files only.
@@ -32,12 +33,15 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 **Pages:**
 
-- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast
+- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast, about
 
 - `/` and the six section URLs render the same client-only experience (`src/app/(home)/_components/HomeEntry.tsx`);
   the URL selects the section. Section layouts carry metadata, JSON-LD and the server-rendered summary.
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
+- `/about` (CON-01): the fund profile as visible server-rendered text from the content layer, in the content pages'
+  header and footer. `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
+  non-production builds (`pageExtensions` in `next.config.mjs`), noindex, linked from nowhere.
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
   `/podcast?c=lt` answers 308 from `src/proxy.ts`) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
@@ -92,6 +96,21 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 ## Content, data and SEO
 
+- **Content layer** (`src/content/`): fund facts, people, themes, companies, press, grants, books, papers, labs, the
+  profile behind llms.txt, slogans, Connect, Digital Twin and subscribe copy, each route's metadata topic and
+  description (`pages.ts`, passed to `buildMetadata` in `src/lib/seo/metadata.ts`), and the two long articles
+  (`src/content/articles/*.md`). Records are data only (`{ en, zh }` text, URLs, image paths, dates), typed with
+  `import type` from the zod schemas in `schema.ts` (so zod never ships to the browser) and validated by
+  `src/content/validate.ts`, which the root layout imports: `next build` fails on an invalid record. Presentation
+  (logo sizes, particle images, icons, Tailwind classes) stays in the component, keyed by the record's slug. Never type
+  a fund fact (contact@id.life, US$40 million, 15+, the Biopolis address) outside `src/content`; `entity.ts`,
+  llms.txt and the About page derive from it (`test/content-layer.test.mjs` fails otherwise). The feed fields the
+  site needs from id-platform are specified in `docs/id-platform-content-api.md`.
+- **Approval** (CON-10, `docs/content-approval.md`): every record carries `approval` (`legacy` = live at the 6a90671
+  baseline, `approved` = approvedBy + approvedAt). Agent-written copy is a `draft` in `src/content/drafts/`, which only
+  the review page may import (ESLint) and which throws in a production build. A legacy fact with `pendingRuling` keeps
+  rendering where it was but no new placement shows it (`isConfirmed`). Never ship new wording without the owner's
+  approval; write a draft instead. `docs/content-inventory.md` lists every copy deliverable and its status.
 - API layer: `src/apis/request.ts` (axios, `ApiError`, `isApiNotFound`) and `src/apis/index.ts`. The base URL is
   `NEXT_PUBLIC_API_PREFIX`; public defaults for every `NEXT_PUBLIC_*` value live in `next.config.mjs`
   (see `.env.example`). Never commit `.env`.

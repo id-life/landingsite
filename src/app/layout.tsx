@@ -14,6 +14,8 @@ import { VERCEL_INSIGHTS_ENABLED } from '@/lib/analytics/config';
 import { ORG_DESCRIPTION } from '@/constants/entity';
 
 import '@/styles/globals.css';
+// CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
+import '@/content/validate';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

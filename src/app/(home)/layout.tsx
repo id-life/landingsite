@@ -5,10 +5,11 @@ import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
-import HomeProfile from '@/app/(home)/_components/HomeProfile';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
+import HomeStatement from '@/app/(home)/_components/HomeStatement';
 
 // Chinese intro for crawlers, from the 不朽真龙介绍 profile (previously a hidden 0×0 block).
 const HOME_INTRO_CN = [
@@ -17,13 +18,10 @@ const HOME_INTRO_CN = [
   '除投资之外，不朽真龙也翻译出版书籍、资助行业会议与学术机构、制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念与信仰。',
 ];
 
-// The home title is the brand alone (one language); the description is the first sentence of ORG_DESCRIPTION,
-// which stays whole in the page summary and JSON-LD (SEO-06).
-export const metadata: Metadata = buildMetadata({
-  path: '/',
-  title: 'Immortal Dragons',
-  description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
-});
+// The home title is the brand alone (one language); the description is the fund's one-sentence statement, the first
+// sentence of ORG_DESCRIPTION, which stays whole in the page summary and JSON-LD (SEO-06). From the content layer
+// (src/content/pages.ts), shared with llms.txt.
+export const metadata: Metadata = buildMetadata(pageMeta('home'));
 
 const jsonLd: Graph = {
   '@context': 'https://schema.org',
@@ -33,11 +31,13 @@ const jsonLd: Graph = {
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      {/* CON-05: the visible h1 and statement come first; the crawler summary below now starts at h2. */}
+      <HomeStatement />
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
+        titleAs="h2"
         intro={[...HOME_INTRO_CN.map((text) => ({ text, lang: 'zh-CN' })), { text: ORG_DESCRIPTION, lang: 'en' }]}
       />
-      <HomeProfile />
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />

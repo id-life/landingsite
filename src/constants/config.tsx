@@ -5,65 +5,60 @@ import VisionDecorationLogo_4 from '@/../public/svgs/vision/vision-decoration-lo
 import VisionDecorationLogo_5 from '@/../public/svgs/vision/vision-decoration-logo-5.svg?component';
 import VisionDecorationLogo_6 from '@/../public/svgs/vision/vision-decoration-logo-6.svg?component';
 import { NAV_LIST } from '@/components/nav/nav';
+import { SLOGANS } from '@/content/slogans';
 import { ReactNode } from 'react';
 
 type CarouselItemData = { text?: string; cnText?: string; icon: ReactNode; textClass?: string };
 
-/** Every hero slogan, English and Chinese. The Chinese lines are kept for the /zh locale. */
-export const ALL_CAROUSEL_ITEMS: CarouselItemData[] = [
-  {
-    text: 'Immortal Dragons is a purpose-driven longevity fund',
+/** Slogan presentation (icon, width), keyed by the slogan id in src/content/slogans.ts. */
+const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
+  'purpose-driven-fund': {
     icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[16.25rem] w-[18.125rem]',
   },
-  {
-    cnText: '破解永生密码',
+  'crack-immortality-code': {
     icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    text: 'Igniting longevity revolution',
+  'igniting-revolution': {
     icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    cnText: '解码生命永恒密码',
+  'decode-eternal-life': {
     icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    text: 'Catalysing longevity revolution',
+  'catalysing-revolution': {
     icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    cnText: '突破衰老科学边界',
+  'break-aging-frontiers': {
     icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    text: 'Setting forth unlimited human healthy lifespan',
+  'setting-forth-lifespan': {
     icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[15.125rem] w-[17.25rem]',
   },
-  {
-    cnText: '重塑人类寿命极限',
+  'reshape-lifespan-limit': {
     icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    text: 'Bringing global awareness of longevity',
+  'global-awareness': {
     icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
     textClass: 'mobile:w-[13.625rem] w-[17.125rem]',
   },
-  {
-    cnText: '连接全球创新网络',
+  'connect-innovation-network': {
     icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-  {
-    text: 'Harnessing collective recognition of the significance of Longevity',
+  'collective-recognition': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[17.375rem w-[19.875rem]',
+    textClass: 'mobile:w-[17.375rem] w-[19.875rem]',
   },
-  {
-    cnText: '加速长寿技术革命',
+  'accelerate-longevity-tech': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
-];
+};
+
+/** Every hero slogan, English and Chinese. The Chinese lines are kept for the /zh locale. */
+export const ALL_CAROUSEL_ITEMS: CarouselItemData[] = SLOGANS.map(({ id, locale, text }) => ({
+  ...(locale === 'en' ? { text } : { cnText: text }),
+  ...SLOGAN_VIEW[id],
+}));
 
 /**
  * The hero carousel shows the English slogans only, in this fixed order. It used to alternate English

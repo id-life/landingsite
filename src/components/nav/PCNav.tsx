@@ -85,7 +85,14 @@ export default function PCNav() {
           </Link>
         ))}
       </div>
-      <div id="subscribe-btn" className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
+      <div id="subscribe-btn" className="flex h-12 flex-1 justify-end gap-8 mobile:h-auto mobile:items-center">
+        {/* The About page (CON-01): a separate page, so a plain link, not a section of the experience. */}
+        <Link
+          href="/about"
+          className="pointer-events-auto flex h-10 items-center whitespace-nowrap text-sm font-bold uppercase transition-colors duration-300 hover:text-red-600"
+        >
+          About
+        </Link>
         <button
           type="button"
           {...SUBSCRIBE_TRIGGER}

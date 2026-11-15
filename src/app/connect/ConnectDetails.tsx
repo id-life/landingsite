@@ -1,14 +1,9 @@
 import { cn } from '@/utils';
-import { CONNECT_TEXT, END_CONTENT_1 } from './content';
+import { CONNECT_CRITERIA, CONNECT_VALUES } from '@/content/connect';
 
 // The investment criteria and the four value statements of the Connect section, as visible live text in one
-// language (English; the Chinese strings stay in ./content for the /zh locale). They used to be mounted only on
-// phones, as fixed blocks at opacity 0.
-
-/** 'A New Dawn 曙光' -> 'A New Dawn'. */
-const englishTitle = (title: string) => title.replace(/\s*[㐀-鿿].*$/, '').trim();
-/** The English line of a bilingual "English\nChinese" text. */
-const englishText = (text: string) => text.split('\n')[0].trim();
+// language (English; the Chinese strings stay in src/content/connect.ts for the /zh locale). They used to be mounted
+// only on phones, as fixed blocks at opacity 0.
 
 /** Stage and valuation criteria: "Promising Early-Stage Ventures". */
 export function ConnectCriteria({
@@ -22,10 +17,10 @@ export function ConnectCriteria({
 }) {
   return (
     <div className={className}>
-      <p className={cn('font-oxanium font-bold uppercase', titleClassName)}>{END_CONTENT_1.en.title}</p>
+      <p className={cn('font-oxanium font-bold uppercase', titleClassName)}>{CONNECT_CRITERIA.title.en}</p>
       <ul className={cn('list-mark-red-disc flex flex-col', listClassName)}>
-        {END_CONTENT_1.en.items.map((item) => (
-          <li key={item}>{item}</li>
+        {CONNECT_CRITERIA.items.map((item) => (
+          <li key={item.en}>{item.en}</li>
         ))}
       </ul>
     </div>
@@ -44,10 +39,10 @@ export function ConnectValues({
 }) {
   return (
     <ul className={className}>
-      {CONNECT_TEXT.map((item) => (
+      {CONNECT_VALUES.map((item) => (
         <li key={item.id}>
-          <p className={cn('font-oxanium font-bold uppercase', titleClassName)}>{englishTitle(item.title)}</p>
-          <p className={textClassName}>{englishText(item.content)}</p>
+          <p className={cn('font-oxanium font-bold uppercase', titleClassName)}>{item.title?.en}</p>
+          <p className={textClassName}>{item.text.en}</p>
         </li>
       ))}
     </ul>

@@ -22,6 +22,7 @@ import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { trackChannelLink } from '@/lib/analytics/social';
 import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -103,7 +104,18 @@ export default function FooterContact() {
               </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
-              <p className="uppercase opacity-50">Contact</p>
+              {/* The About link shares the label's row: a line of its own made the panel taller and put it under
+                  the section arrows at the bottom of the screen. */}
+              <div className="flex items-baseline justify-between gap-6">
+                <p className="uppercase opacity-50">Contact</p>
+                <div className="flex items-baseline gap-4">
+                  <a href="/about" className="transition duration-300 hover:text-red-600">
+                    About Immortal Dragons <span aria-hidden="true">→</span>
+                  </a>
+                  {/* Beside About (DATA-01), not on a line of its own, for the same reason. */}
+                  <PrivacyChoicesLink className="text-sm underline opacity-60 hover:opacity-100" />
+                </div>
+              </div>
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
                   constants instead of repeated literals. */}
               <address className="not-italic">
@@ -120,7 +132,6 @@ export default function FooterContact() {
                   {ORG_EMAIL}
                 </a>
               </address>
-              <PrivacyChoicesLink className="mt-3 block text-sm underline opacity-60 hover:opacity-100" />
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>
@@ -184,7 +195,7 @@ export default function FooterContact() {
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
                 <InfoSVG className="size-4" />
-                Join our longevity circle for priority access to pioneer research
+                {SUBSCRIBE_PROMISE.priorityAccess}
               </div>
             </div>
           </div>

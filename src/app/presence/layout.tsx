@@ -3,22 +3,20 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import PresenceSummary from '@/app/presence/_components/PresenceSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { WebPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('presence');
 const PAGE_TITLE = 'Presence 印记';
-const PAGE_DESCRIPTION =
-  "A global map of Immortal Dragons' presence, bridging East and West to advance longevity through events, partnerships, and community.";
+const PAGE_DESCRIPTION = PAGE.description;
 
 // Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
-export const metadata: Metadata = buildMetadata({
-  path: '/presence',
-  title: 'Presence',
-  description: PAGE_DESCRIPTION,
-});
+export const metadata: Metadata = buildMetadata(PAGE);
 
 const jsonLd: WithContext<WebPage> = {
   '@context': 'https://schema.org',

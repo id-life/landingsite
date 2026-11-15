@@ -20,6 +20,8 @@ export type SEOSection = {
 
 type PageSEOContentProps = {
   title: string;
+  /** h1 by default; 'h2' where the page renders its own visible h1 (the home statement). */
+  titleAs?: 'h1' | 'h2';
   intro?: SEOText[];
   sections?: SEOSection[];
 };
@@ -45,10 +47,10 @@ function Paragraphs({ text }: { text?: SEOText[] }) {
   );
 }
 
-export default function PageSEOContent({ title, intro, sections }: PageSEOContentProps) {
+export default function PageSEOContent({ title, titleAs: Title = 'h1', intro, sections }: PageSEOContentProps) {
   return (
     <section className="sr-only" aria-label={title}>
-      <h1>{title}</h1>
+      <Title>{title}</Title>
       <Paragraphs text={intro} />
       {sections?.map((section) => (
         <section key={section.heading}>

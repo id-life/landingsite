@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { track } from '@/lib/analytics/track';
 
 const CONTENT_LINKS = [
+  { href: '/about', title: 'about 关于' },
   { href: '/news', title: 'news 新闻' },
   { href: '/podcast', title: 'podcast 播客' },
 ];
@@ -123,7 +124,7 @@ function MobileNavDialog() {
                 </span>
               </a>
             ))}
-            {/* The press list and the podcast, reachable from the phone (they were not in the menu). Same tab;
+            {/* The About page, the press list and the podcast, reachable from the phone (they were not in the menu). Same tab;
                 Back returns to the section the visitor left. */}
             <div className="mx-auto my-2 h-px w-12 bg-white/30" />
             {CONTENT_LINKS.map((link) => (

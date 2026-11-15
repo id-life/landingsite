@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -11,20 +12,17 @@ import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
 
-const articleTitle = '不朽真龙介绍';
-const articleDescription = '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。';
+// Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('article-profile');
+const articleTitle = PAGE.title;
+const articleDescription = PAGE.description;
 const articleUrl = 'https://www.id.life/news/immortal-dragons-news-and-updates';
 
 export const dynamic = 'force-static';
 
 // The title is the article's own heading, in its language; it names the brand, so it is not suffixed twice
 // (it read "Immortal Dragons ... | Immortal Dragons 不朽真龙").
-export const metadata: Metadata = buildMetadata({
-  path: '/news/immortal-dragons-news-and-updates',
-  title: articleTitle,
-  description: articleDescription,
-  type: 'article',
-});
+export const metadata: Metadata = buildMetadata({ ...PAGE, type: 'article' });
 
 const jsonLd: WithContext<NewsArticle> = {
   '@context': 'https://schema.org',

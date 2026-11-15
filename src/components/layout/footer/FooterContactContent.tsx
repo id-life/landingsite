@@ -24,6 +24,7 @@ import { useMemo, useState, useId } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { trackChannelLink } from '@/lib/analytics/social';
 import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -80,7 +81,15 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
 
   return (
     <div className="text-black">
-      <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+        <div className="flex flex-col items-end gap-1">
+          <a href="/about" className="font-oxanium text-xs/[15px] font-bold">
+            About Immortal Dragons <span aria-hidden="true">→</span>
+          </a>
+          <PrivacyChoicesLink className="font-oxanium text-xs/[15px] font-bold underline opacity-60" />
+        </div>
+      </div>
       <div className="mt-3">
         {mediaRows.map((row, rowIndex) => (
           <div key={rowIndex} className={cn('flex justify-between gap-2', rowIndex === 1 && 'mt-4')}>
@@ -112,7 +121,6 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
-      <PrivacyChoicesLink className="mt-2 block font-oxanium text-xs font-bold underline opacity-60" />
       <div className="my-4 h-px w-full bg-black/20" />
       <form
         id="subscribe-form"
@@ -176,7 +184,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       </form>
       <div className="mt-3 flex gap-1.5 font-poppins text-xs/5 font-semibold text-black/50">
         <InfoSVG className="size-4 shrink-0" />
-        Join our longevity circle for priority access to pioneer research
+        {SUBSCRIBE_PROMISE.priorityAccess}
       </div>
     </div>
   );
