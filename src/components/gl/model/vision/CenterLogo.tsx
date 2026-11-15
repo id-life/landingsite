@@ -1,4 +1,3 @@
-import { LogoType } from '@/components/nav/Logo';
 import { useLogoTextures } from '@/hooks/useLogoTextures';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { Center } from '@react-three/drei';
@@ -18,34 +17,20 @@ export default function CenterLogo() {
   const smootherRef = useRef(ScrollSmoother.get());
   const logoMeshRef = useRef<THREE.Mesh>(null);
   const descMeshRef = useRef<THREE.Mesh>(null);
-  // English at rest; a click used to swap the logo and tagline textures to Chinese (CON-12).
-  const currentLogo: LogoType = LogoType.EN;
+  // English only: a click used to swap the logo and tagline to Chinese (CON-12); the Chinese files are no longer loaded.
   const [globalLoaded] = useAtom(globalLoadedAtom);
   const hasAnimatedRef = useRef(false);
 
   // Use custom hook for texture management
-  const {
-    logoEnTexture,
-    logoCnTexture,
-    descEnTexture,
-    descCnTexture,
-    logoEnAspectRatio,
-    logoCnAspectRatio,
-    descEnAspectRatio,
-    descCnAspectRatio,
-  } = useLogoTextures();
+  const { logoEnTexture, descEnTexture, logoEnAspectRatio, descEnAspectRatio } = useLogoTextures();
 
   // Calculate optimal plane sizes based on current language aspect ratios
   const logoScale = 3.1; // Base scaling size
   const descScale = 0.25; // Description much smaller
 
-  // Use correct aspect ratio based on current language
-  const currentLogoAspectRatio = currentLogo === LogoType.EN ? logoEnAspectRatio : logoCnAspectRatio;
-  const currentDescAspectRatio = currentLogo === LogoType.EN ? descEnAspectRatio : descCnAspectRatio;
-
-  const logoWidth = logoScale * currentLogoAspectRatio;
+  const logoWidth = logoScale * logoEnAspectRatio;
   const logoHeight = logoScale;
-  const descWidth = descScale * currentDescAspectRatio;
+  const descWidth = descScale * descEnAspectRatio;
   const descHeight = descScale;
 
   // Fade in animation when globalLoaded becomes true
@@ -103,24 +88,14 @@ export default function CenterLogo() {
       <Center>
         <mesh ref={logoMeshRef}>
           <planeGeometry args={[logoWidth, logoHeight]} />
-          <meshBasicMaterial
-            map={currentLogo === LogoType.EN ? logoEnTexture : logoCnTexture}
-            transparent
-            opacity={0}
-            side={THREE.FrontSide}
-          />
+          <meshBasicMaterial map={logoEnTexture} transparent opacity={0} side={THREE.FrontSide} />
         </mesh>
       </Center>
       {/* Description Plane - Use correct aspect ratio */}
       <Center position={[0, -3.5, 0]}>
         <mesh ref={descMeshRef}>
           <planeGeometry args={[descWidth, descHeight]} />
-          <meshBasicMaterial
-            map={currentLogo === LogoType.EN ? descEnTexture : descCnTexture}
-            transparent
-            opacity={0}
-            side={THREE.FrontSide}
-          />
+          <meshBasicMaterial map={descEnTexture} transparent opacity={0} side={THREE.FrontSide} />
         </mesh>
       </Center>
     </group>

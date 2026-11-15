@@ -1,4 +1,4 @@
-import { DESKTOP_MEDIA, HERO_MODEL_URL, HERO_PHONE_SVG_URLS, HERO_TEXTURE_URLS, PHONE_MEDIA } from './heroAssetUrls';
+import { HERO_MODEL_URL, HERO_SVG_URLS } from './heroAssetUrls';
 
 /**
  * The WebGL capability probe (ENG-02) and the model preload it gates, as one inline script that runs while the HTML
@@ -13,33 +13,14 @@ const probeAndPreload = `(function(){var ok=false;try{var c=document.createEleme
  * Rendered by the experience layouts: the hero's own files start with the HTML, in parallel with
  * the JavaScript, instead of after it has run. crossOrigin matches three.js's requests (fetch for
  * the model and the phone SVGs, CORS images for the textures); without it the preloaded response
- * is not reused and the file downloads twice. Each tree only preloads what it draws.
+ * is not reused and the file downloads twice. Both trees draw the same two wordmark SVGs (VIS-03).
  */
 export default function HeroPreloads() {
   return (
     <>
       <script id="idl-webgl-probe" dangerouslySetInnerHTML={{ __html: probeAndPreload }} />
-      {HERO_TEXTURE_URLS.map((href) => (
-        <link
-          key={href}
-          rel="preload"
-          as="image"
-          href={href}
-          crossOrigin="anonymous"
-          fetchPriority="high"
-          media={DESKTOP_MEDIA}
-        />
-      ))}
-      {HERO_PHONE_SVG_URLS.map((href) => (
-        <link
-          key={href}
-          rel="preload"
-          as="fetch"
-          href={href}
-          crossOrigin="anonymous"
-          fetchPriority="high"
-          media={PHONE_MEDIA}
-        />
+      {HERO_SVG_URLS.map((href) => (
+        <link key={href} rel="preload" as="fetch" href={href} crossOrigin="anonymous" fetchPriority="high" />
       ))}
     </>
   );
