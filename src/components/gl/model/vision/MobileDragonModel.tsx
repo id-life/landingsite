@@ -29,6 +29,10 @@ export default function MobileDragonModel(props: {}) {
   const fixedUIHasTriggered = useRef(false);
   const { contextSafe } = useGSAP();
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  // The fixed UI is revealed from fadeInAnimCompletedAtom; the tween below only runs on a first visit.
+  const uiAlreadyShown = useAtomValue(fadeInAnimCompletedAtom);
+  const uiAlreadyShownRef = useRef(uiAlreadyShown);
+  uiAlreadyShownRef.current = uiAlreadyShown;
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pathname = usePathname();
   const hasFadeInAhead = useMemo(() => pathname !== '/', [pathname]);
@@ -101,7 +105,7 @@ export default function MobileDragonModel(props: {}) {
     () => {
       if (!modelRef.current) return;
       if (!globalLoaded) return;
-      if (hasFadeInAhead) fixedUIHasTriggered.current = true;
+      if (hasFadeInAhead || uiAlreadyShownRef.current) fixedUIHasTriggered.current = true;
 
       gsap.from(modelRef.current.position, {
         x: 0,

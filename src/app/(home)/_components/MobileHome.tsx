@@ -20,6 +20,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAtomValue } from 'jotai';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
 import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
+import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useEffect } from 'react';
 
@@ -39,6 +40,8 @@ export default function MobileHome() {
   }, [mobileCurrentPage, isMobile, trackEvent]);
 
   useMobileHomeAnimateInit();
+  // Scroll restoration and URL mapping are scoped to each mount of the experience.
+  useExperienceLifecycle();
   // Vertical swipes step through sections, like the arrow buttons.
   useMobileSwipe();
   // Mobile section changes push their own URL; keep the tab title in step.

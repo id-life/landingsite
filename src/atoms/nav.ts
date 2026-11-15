@@ -10,8 +10,11 @@ export const mobileNavOpenAtom = atom<boolean>(false);
 
 export const navigateToAtom = atom<NavItem | null>(null);
 
-/** True once HashRouter has applied the initial URL (deep link) after the experience loaded. */
+/** True once HashRouter has applied the URL (deep link) to the currently mounted experience. */
 export const initialRouteHandledAtom = atom<boolean>(false);
+
+/** Incremented each time the experience (Home or MobileHome) mounts; HashRouter maps the URL once per mount. */
+export const experienceMountIdAtom = atom<number>(0);
 
 // 移动端 portfolio 轮播页面进度条
 export const mobilePortfolioPageIndexAtom = atom<number>(0);

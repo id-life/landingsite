@@ -22,6 +22,7 @@ import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
 import { useResizeRefresh } from '@/hooks/useResizeRefresh';
 import { useSectionInput } from '@/hooks/anim/useSectionInput';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
+import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
@@ -37,6 +38,8 @@ export default function Home() {
 
   // Refresh ScrollTrigger and ScrollSmoother on window resize
   useResizeRefresh();
+  // Scroll restoration and URL mapping are scoped to each mount of the experience.
+  useExperienceLifecycle();
   // Keyboard and touch step through sections like the wheel does.
   useSectionInput();
   // Address bar and tab title follow the visible section (after the initial deep link is applied).

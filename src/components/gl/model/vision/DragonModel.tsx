@@ -47,6 +47,10 @@ export default function DragonModel() {
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  // The fixed UI is revealed from fadeInAnimCompletedAtom; the tween below only runs on a first visit.
+  const uiAlreadyShown = useAtomValue(fadeInAnimCompletedAtom);
+  const uiAlreadyShownRef = useRef(uiAlreadyShown);
+  uiAlreadyShownRef.current = uiAlreadyShown;
   const fixedUIHasTriggered = useRef(false);
   const offsetYRef = useRef<number>(0);
   const materialConfig = useMemo(() => ({ resolution: 128, background: backgroundRef.current, ...RANDOM_CONFIG }), []);
@@ -147,7 +151,7 @@ export default function DragonModel() {
     () => {
       if (!modelRef.current) return;
       if (!globalLoaded) return;
-      if (hasFadeInAhead) fixedUIHasTriggered.current = true;
+      if (hasFadeInAhead || uiAlreadyShownRef.current) fixedUIHasTriggered.current = true;
       if (!smootherRef.current) return;
 
       offsetYRef.current = getElementOffsetTop(document.querySelector(`#${NAV_LIST[1].id}`));

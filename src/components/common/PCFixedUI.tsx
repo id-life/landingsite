@@ -3,6 +3,7 @@
 import NewFixedConnect from '@/app/connect/NewFixedConnect';
 import { currentPageAtom } from '@/atoms';
 import { isBePartOfItShowAtom } from '@/atoms/character-relation';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { GA_EVENT_NAMES } from '@/constants/ga';
@@ -19,9 +20,11 @@ import VerticalCarousel from './VerticalCarousel';
 
 export default function PCFixedUI() {
   const currentPage = useAtomValue(currentPageAtom);
+  // Visible from state (see PCNav); the intro tween only animates it on a first visit.
+  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
 
   return (
-    <div id="pc-fixed-ui" className="opacity-0">
+    <div id="pc-fixed-ui" className={uiVisible ? 'opacity-100' : 'opacity-0'}>
       {currentPage.id === NAV_LIST[0].id ? (
         <ScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
@@ -47,7 +50,9 @@ const CarouselWrapper = memo(() => {
         transition={0.6}
         className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]')}
       >
-        {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
+        {CAROUSEL_ITEMS?.map((item) => (
+          <CarouselItem key={item.cnText ?? item.text} {...item} />
+        ))}
       </VerticalCarousel>
     )
   );

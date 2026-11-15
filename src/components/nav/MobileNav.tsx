@@ -4,7 +4,7 @@ import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import { mobileNavOpenAtom } from '@/atoms';
 import { isSubscribeShowAtom } from '@/atoms/footer';
-import { globalLoadedAtom } from '@/atoms/geo';
+import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
 import { useAtom, useAtomValue } from 'jotai';
 import MobileNavDialog from '../dialog/MobileNavDialog';
@@ -19,6 +19,8 @@ export default function MobileNav() {
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
   const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
   const globalLoaded = useAtomValue(globalLoadedAtom);
+  // Visible from state, so a remount (Back from a content page) shows the nav at once.
+  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
 
   const { trackEvent } = useGA();
 
@@ -37,7 +39,8 @@ export default function MobileNav() {
     <div
       id="mobile-nav"
       className={cn(
-        'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
+        'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground mobile:gap-0 mobile:p-5',
+        uiVisible ? 'opacity-100' : 'opacity-0',
       )}
     >
       <Logo />
