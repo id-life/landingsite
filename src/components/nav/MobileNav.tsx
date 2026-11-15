@@ -53,8 +53,18 @@ export default function MobileNav() {
           />
           Subscribe
         </button>
-        <div className="ml-5 hidden mobile:block" onClick={() => setMenuOpen((pre) => !pre)}>
-          {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
+        <div className="ml-5 hidden mobile:block">
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-menu"
+            onClick={() => setMenuOpen((pre) => !pre)}
+            // 40 px icon; the ::before pseudo-element extends the touch target to 48 px.
+            className="relative flex before:absolute before:-inset-1 before:content-['']"
+          >
+            {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
+          </button>
         </div>
       </div>
       <MobileNavDialog />

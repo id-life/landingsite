@@ -3,7 +3,6 @@ import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component'
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useThrottle } from '@/hooks/useThrottle';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -40,13 +39,13 @@ function MobileNavDialog() {
     [isMobile],
   );
   const { mobileNavChange } = useMobileNavigation();
-  const handleNavClick = useThrottle((item: NavItem) => {
+  // Navigation starts on the tap; the menu's exit animation runs at the same time. (It used to wait
+  // 600 ms for the animation, and a tap during a theme transition was dropped.)
+  const handleNavClick = (item: NavItem) => {
     startAnim(false);
-    setTimeout(() => {
-      setOpen(false);
-      mobileNavChange(item);
-    }, 600);
-  }, 1000);
+    setOpen(false);
+    mobileNavChange(item);
+  };
 
   useEffect(() => {
     if (!isMobile) return;
@@ -64,7 +63,7 @@ function MobileNavDialog() {
       onOpenChange={setOpen}
       contentClassName="absolute left-0 top-0 w-full"
       render={({ close }) => (
-        <div className="flex w-full flex-col">
+        <div id="mobile-nav-menu" className="flex w-full flex-col">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
             <button
               type="button"
@@ -89,24 +88,31 @@ function MobileNavDialog() {
               />
               Subscribe
             </button>
-            <MenuCloseSVG className="h-10 cursor-pointer" onClick={close} />
+            <button type="button" aria-label="Close menu" onClick={close} className="flex">
+              <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
+            </button>
           </div>
-          <div className="mt-16 font-tt">
+          <nav aria-label="Sections" className="mt-16 font-tt">
             {NAV_LIST.map((item) => (
-              <div
-                onClick={() => handleNavClick(item)}
+              <a
+                href={item.href}
+                aria-current={currentPage.id === item.id ? 'page' : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleNavClick(item);
+                }}
                 className={cn('flex-center mobile-nav-item relative py-6 text-white opacity-0')}
                 key={item.id}
               >
-                <div className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
+                <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
                   {item.title}
                   {currentPage.id === item.id && (
-                    <div className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
+                    <span className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
                   )}
-                </div>
-              </div>
+                </span>
+              </a>
             ))}
-          </div>
+          </nav>
         </div>
       )}
     />

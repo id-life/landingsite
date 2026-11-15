@@ -1,22 +1,23 @@
-import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom, mobileIsScrollingAtom } from '@/atoms';
+import { innerPageIndexAtom, innerPageTotalAtom, mobileCurrentPageAtom } from '@/atoms';
 import { NAV_LIST, NavItem } from '@/components/nav/nav';
 import { useMobileThemeTransition } from '@/hooks/useMobileThemeTransition';
 import gsap from 'gsap';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { useCallback } from 'react';
+import { useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function useMobileNavigation() {
   const setCurrentPage = useSetAtom(mobileCurrentPageAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
-  const mobileIsScrolling = useAtomValue(mobileIsScrollingAtom);
   const { isTransitioning } = useMobileThemeTransition();
+  const isTransitioningRef = useRef(isTransitioning);
+  isTransitioningRef.current = isTransitioning;
+  // One section change asked for during a background theme transition waits for it (the latest wins).
+  // It used to be dropped silently, so a menu tap or an arrow tap at the wrong moment did nothing.
+  const pendingRef = useRef<NavItem | null>(null);
 
-  const mobileNavChange = useCallback(
+  const go = useCallback(
     (item: NavItem) => {
-      // 如果动画正在进行中，不响应新的切换请求
-      if (isTransitioning || mobileIsScrolling) return;
-
       setCurrentPage(item);
       setInnerPageIndex(0); // 切换页面时重置内页索引
       if (item?.id === NAV_LIST[6].id) {
@@ -31,8 +32,26 @@ export function useMobileNavigation() {
         window.history.pushState({}, '', `${item.href}${window.location.search}`);
       }
     },
-    [isTransitioning, mobileIsScrolling, setCurrentPage, setInnerPageIndex, setInnerPageTotal],
+    [setCurrentPage, setInnerPageIndex, setInnerPageTotal],
   );
+
+  const mobileNavChange = useCallback(
+    (item: NavItem) => {
+      if (isTransitioningRef.current) {
+        pendingRef.current = item;
+        return;
+      }
+      go(item);
+    },
+    [go],
+  );
+
+  useEffect(() => {
+    if (isTransitioning || !pendingRef.current) return;
+    const item = pendingRef.current;
+    pendingRef.current = null;
+    go(item);
+  }, [isTransitioning, go]);
 
   return { mobileNavChange };
 }
