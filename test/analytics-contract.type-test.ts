@@ -3,7 +3,7 @@
  * @ts-expect-error stops being an error, i.e. if track() starts accepting an unknown event name, a missing required
  * parameter, an undeclared parameter or a wrongly typed one. Never imported; checked by tsc only.
  */
-import { track } from './track';
+import { track } from '@/lib/analytics/track';
 
 export function contractTypeTest() {
   // Valid calls compile.

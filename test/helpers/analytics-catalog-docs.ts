@@ -1,4 +1,4 @@
-import { CONTEXT_PARAMS, EVENTS, KEY_EVENTS } from './events';
+import { CONTEXT_PARAMS, EVENTS, KEY_EVENTS } from '@/lib/analytics/events';
 
 type Desc = { t: 'string' | 'number'; required: boolean; doc: string; values?: readonly string[]; unit?: string };
 

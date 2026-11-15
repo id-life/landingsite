@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 import { EVENTS, KEY_EVENTS } from '@/lib/analytics/events';
-import { catalogJson, catalogMarkdown } from '@/lib/analytics/catalog-docs';
+import { catalogJson, catalogMarkdown } from './helpers/analytics-catalog-docs';
 
 const MD = new URL('../src/lib/analytics/EVENTS.md', import.meta.url);
 const JSON_FILE = new URL('../src/lib/analytics/events.json', import.meta.url);

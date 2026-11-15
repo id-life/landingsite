@@ -2,7 +2,7 @@
  * The analytics event contract: every event the site may send to GA4, with its parameters.
  *
  * This catalog is the single source of truth. track() (./track.ts) only accepts names listed here and the
- * parameters their entry declares (TypeScript checks both, see ./contract-type-test.ts), ./EVENTS.md and
+ * parameters their entry declares (TypeScript checks both, see test/analytics-contract.type-test.ts), ./EVENTS.md and
  * ./events.json are generated from it (npm test fails when they are stale), and the Playwright contract tests
  * read the JSON export.
  *
