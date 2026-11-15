@@ -41,7 +41,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
   }, [currentPage.id]);
 
   return (
-    <div className={cn('pointer-events-auto z-40 flex cursor-pointer flex-col items-center gap-5', className)}>
+    <div className={cn('pointer-events-auto z-40 flex flex-col items-center gap-5', className)}>
       {/* 44 px buttons, 8 px apart (WCAG 2.5.8 / Apple's 44 pt minimum). */}
       <div className="flex-center order-1 gap-2 mobile:order-2">
         <ArrowItem isUp />

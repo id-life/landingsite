@@ -67,14 +67,26 @@ export default function MobileScrollButton({ className }: ScrollButtonProps) {
   }, [reduced]);
 
   return (
-    <div className={cn('pointer-events-auto z-10 cursor-pointer', className)} onClick={onClick}>
+    // A named control (RWD-06; it was a clickable div): role button, keyboard Enter and Space, a 44 px box on touch
+    // screens. Kept a div so the START label can stay a paragraph.
+    <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        onClick();
+      }}
+      className={cn('pointer-events-auto z-10 flex cursor-pointer items-center tap', className)}
+      onClick={onClick}
+    >
       <div className="relative h-10 w-[7.625rem]">
         <div ref={rippleRef1} className="scroll-button-ripple-init" />
         <div ref={rippleRef2} className="scroll-button-ripple-init" />
         <div ref={rippleRef3} className="scroll-button-ripple-init" />
         <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-tone-750">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
-          <p className="font-button text-base/4 font-bold uppercase text-white">START</p>
+          <p className="font-button text-body font-bold uppercase leading-none text-white">START</p>
         </div>
       </div>
     </div>

@@ -76,8 +76,8 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         type="button"
         aria-label={isPlaying ? 'Pause music' : 'Play music'}
         onClick={handleChangePlayStatus}
-        // tap-area: at least 44x44 to touch (RWD-06); the pill keeps its 32 px height.
-        className="relative flex cursor-pointer items-center gap-1 tap-area"
+        // tap: a 44 px box on touch screens (RWD-06); the pill keeps its 32 px height.
+        className="relative flex cursor-pointer items-center justify-center gap-1 tap"
       >
         <span aria-hidden="true">
           <DesktopAudioSiriWave className="w-6 overflow-hidden" />
@@ -109,7 +109,8 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         <button
           type="button"
           aria-label="Playlist"
-          className="relative size-5 cursor-pointer before:absolute before:-inset-x-3 before:-inset-y-3 before:content-['']"
+          // A 44 px box on touch screens (RWD-06); the icon stays 20 px.
+          className="relative flex size-5 cursor-pointer items-center justify-center tap"
         >
           <PlayListSVG aria-hidden="true" className="size-5 fill-white" />
         </button>
