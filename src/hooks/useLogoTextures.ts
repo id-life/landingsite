@@ -1,6 +1,6 @@
-import { useTexture } from '@react-three/drei';
 import { useMemo } from 'react';
 import * as THREE from 'three';
+import { useHeroTextures } from '@/components/gl/heroAssets';
 
 interface LogoTextures {
   logoEnTexture: THREE.Texture;
@@ -14,13 +14,8 @@ interface LogoTextures {
 }
 
 export function useLogoTextures(): LogoTextures {
-  // Preload all textures with optimal format
-  const [logoEnTexture, logoCnTexture, descEnTexture, descCnTexture] = useTexture([
-    `/textures/logos/logo-en.png`,
-    `/textures/logos/logo-cn.png`,
-    `/textures/logos/main-description.png`,
-    `/textures/logos/main-description-cn.png`,
-  ]);
+  // EN and CN wordmark plus the two description lines, loaded with the hero (heroLoadingManager)
+  const [logoEnTexture, logoCnTexture, descEnTexture, descCnTexture] = useHeroTextures();
 
   // Calculate aspect ratios separately for each language to prevent distortion
   const { logoEnAspectRatio, logoCnAspectRatio, descEnAspectRatio, descCnAspectRatio } = useMemo(() => {

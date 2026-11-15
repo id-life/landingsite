@@ -4,8 +4,13 @@ import { Center, useAnimations, useGLTF, useProgress } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
+const MODEL_URL = '/models/test-v3.glb';
+
+/** Fetch the avatar into the loader cache before Model0Out mounts (see useDeferredWarm). */
+export const preloadModel0Out = () => useGLTF.preload(MODEL_URL);
+
 export default function Model0Out() {
-  const { scene, animations } = useGLTF('/models/test-v3.glb');
+  const { scene, animations } = useGLTF(MODEL_URL);
   const currentActionRef = useRef<THREE.AnimationAction | null>(null); // 存储当前动画
   const animationLoopRef = useRef<NodeJS.Timeout | null>(null);
   const { actions } = useAnimations(animations, scene);

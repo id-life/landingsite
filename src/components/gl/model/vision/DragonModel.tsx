@@ -1,11 +1,12 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { trackEvent } from '@/hooks/useGA';
 import { getElementOffsetTop } from '@/utils';
 import { useGSAP } from '@gsap/react';
-import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei';
+import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
@@ -25,7 +26,7 @@ const ANIMATION_DELAY = 0.21;
 const AUTO_SWING_AMPLITUDE = 0.1;
 
 export function useOptimizedGLTF() {
-  const { nodes } = useGLTF('/models/logo_v1.glb');
+  const { nodes } = useHeroGLTF();
 
   const logoGeometry = useMemo(() => {
     const logoNode = nodes.logo as THREE.Mesh;
