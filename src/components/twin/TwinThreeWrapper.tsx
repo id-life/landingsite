@@ -33,7 +33,32 @@ import { useGpuTier } from '@/motion/gpuTier';
 import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
+/**
+ * The avatar's field of view. Every View's camera is 45 degrees and 15 units away, so the avatar's height follows the
+ * window's height: about 78 % of it on a laptop, but on a portrait tablet (820x1180) that is 920 px, wider than the
+ * headline column and over every control. Portrait and square windows widen the field of view to 56 degrees, which
+ * draws the avatar about 78 % as large (tan 28 / tan 22.5) without moving the camera that the controls animate.
+ * (RWD-02 medium tier.)
+ */
+const PORTRAIT_QUERY = '(max-aspect-ratio: 1/1)';
+function useTwinFov() {
+  const [portrait, setPortrait] = useState(() => typeof window !== 'undefined' && window.matchMedia(PORTRAIT_QUERY).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(PORTRAIT_QUERY);
+    const update = () => setPortrait(mq.matches);
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return portrait ? 56 : 45;
+}
+
+/**
+ * The Digital Twin's 3D stage: the twin canvas (avatar and anatomy models in drei Views), its controls (deck
+ * "desktop") and the reports. Mounted once by the deck shell, outside the scrolled content (Home today); the section
+ * (src/app/twin/Twin.tsx) reveals it through #twin-three-wrapper.
+ */
 export default function TwinThreeWrapper() {
+  const fov = useTwinFov();
   // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
   // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
   const deferredReady = useDeferredAssets('twin');
@@ -215,11 +240,11 @@ export default function TwinThreeWrapper() {
 
   return (
     <div id="twin-three-wrapper" className="invisible fixed left-0 top-0 z-0 grid h-screen w-screen grid-cols-1 opacity-0">
-      <SwitchModel />
-      <SwitchSkin />
-      <SwitchAnatomyCamera />
+      <SwitchModel deck="desktop" />
+      <SwitchSkin deck="desktop" />
+      <SwitchAnatomyCamera deck="desktop" />
       <ModelReport />
-      <YTBDemo />
+      <YTBDemo deck="desktop" />
       <div
         style={{
           position: 'relative',
@@ -256,7 +281,7 @@ export default function TwinThreeWrapper() {
             <>
               {currentModel && (
                 <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={fov} near={0.1} far={10000} />
                   {modelType === ModelType.Skin && (
                     <ModelBoundary suspense={false} canvas="twin" model="Model0Out">
                       <Model0Out />
@@ -277,7 +302,7 @@ export default function TwinThreeWrapper() {
               )}
               {currentModel === PredictionModel.M1 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={fov} near={0.1} far={10000} />
                   {modelType === ModelType.Skin && (
                     <ModelBoundary suspense={false} canvas="twin" model="Model1Out">
                       <Model1Out />
@@ -297,7 +322,7 @@ export default function TwinThreeWrapper() {
               )}
               {currentModel === PredictionModel.M2 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={fov} near={0.1} far={10000} />
                   {modelType === ModelType.Skin && (
                     <ModelBoundary suspense={false} canvas="twin" model="Model2Out">
                       <Model2Out />
@@ -317,7 +342,7 @@ export default function TwinThreeWrapper() {
               )}
               {currentModel === PredictionModel.M3 && (
                 <View index={2} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={45} near={0.1} far={10000} />
+                  <PerspectiveCamera makeDefault position={[0, 0, 15]} fov={fov} near={0.1} far={10000} />
                   {modelType === ModelType.Skin && (
                     <ModelBoundary suspense={false} canvas="twin" model="Model3Out">
                       <Model3Out />

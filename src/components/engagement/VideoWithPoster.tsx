@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useState } from 'react';
 import { CustomView } from 'react-device-detect';
 import { DURATION, EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 interface VideoWithPosterProps {
   coverUrl?: string;
@@ -17,6 +18,8 @@ interface VideoWithPosterProps {
 export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, coverClass, videoClass }: VideoWithPosterProps) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const supportsWebm = useSupportsWebm();
+  // Reduced motion (MOT-02): the still cover instead of a looping clip.
+  const reduced = useReducedMotionPref();
 
   return (
     <motion.div
@@ -41,10 +44,10 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >
       <div className={cn('flex-center relative -mt-5 overflow-hidden', containerClass)}>
-        {coverUrl && !videoLoaded && (
-          <img src={coverUrl} alt={title} className={cn('size-[15.5rem] object-contain', coverClass)} />
+        {coverUrl && (!videoLoaded || reduced) && (
+          <img src={coverUrl} alt={title} className={cn('size-[max(15.5rem,186px)] object-contain', coverClass)} />
         )}
-        <CustomView condition={supportsWebm}>
+        <CustomView condition={supportsWebm && !reduced}>
           {videoUrl && (
             <video
               src={videoUrl}
@@ -52,7 +55,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
               loop
               muted
               playsInline
-              className={cn('size-[15.5rem] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
+              className={cn('size-[max(15.5rem,186px)] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
               onLoadedData={() => setVideoLoaded(true)}
             />
           )}

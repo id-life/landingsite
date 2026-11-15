@@ -1,36 +1,51 @@
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
-import { DEFAULT_PULSE_CONFIG, MapBookDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
 import { VideoWithPoster } from './VideoWithPoster';
+import {
+  BADGE_CLASS,
+  BADGE_ICON_CLASS,
+  BadgeBlurBg,
+  CARD_TEXT_BACKING,
+  MAP_LABEL_CLASS,
+  MAP_POINT_TAP_CLASS,
+  PulseDot,
+  type CalcPoint,
+  type MapDeck,
+} from './WorldMapDotComponents';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
 import { DURATION, EASE } from '@/motion/tokens';
-import { useReducedMotionPref } from '@/motion/preference';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
   active: { scale: 1.2 },
 };
 
+/**
+ * A book (translation) dot, one component for both decks (RWD-02; it was WorldMapBookDot and MobileWorldMapBookDot).
+ * The mouse deck opens on hover and pins on click; the phone deck opens on tap, with its smaller dot and badge.
+ */
 export function WorldMapBookDotPoint({
+  deck,
   dot,
   index,
   calcPoint,
 }: {
+  deck: MapDeck;
   dot: MapBookDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
+  calcPoint: CalcPoint;
 }) {
-  // Reduced motion (MOT-02): the pulse rings hold still.
-  const reduced = useReducedMotionPref();
+  const phone = deck === 'phone';
   const { title, lat, lng, pulseConfig } = dot;
   const [activeBookDotClickOpen, setActiveBookDotClickOpen] = useAtom(activeBookDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
@@ -41,7 +56,12 @@ export function WorldMapBookDotPoint({
   const { handleClickPoint, handleMouseEnter, handleMouseLeave, activeBookDot } = useEngagementClickPoint();
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 防止冒泡
+    e.stopPropagation();
+    if (phone) {
+      handleClickPoint('book', index);
+      if (!activeBookDotClickOpen) setActiveBookDotClickOpen(true);
+      return;
+    }
     if (!activeBookDotClickOpen) {
       setActiveBookDotClickOpen(true);
       handleClickPoint('book', index, true);
@@ -53,31 +73,26 @@ export function WorldMapBookDotPoint({
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeBookDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
-    // 检查鼠标是否移出到非点区域
     if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
       handleMouseLeave(e, index, 'book');
     }
   };
   useEffect(() => {
-    if (!activeBookDot) setActiveBookDotClickOpen(false);
-  }, [activeBookDot, setActiveBookDotClickOpen]);
+    if (!phone && !activeBookDot) setActiveBookDotClickOpen(false);
+  }, [phone, activeBookDot, setActiveBookDotClickOpen]);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-
-  // 使用自定义配置或默认配置
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
     () => pulseConfig || DEFAULT_PULSE_CONFIG,
     [pulseConfig],
   );
 
-  // 计算SVG中心点
-  const centerPoint = useMemo(() => svgSize / 2, [svgSize]);
-
   return (
     <motion.div
       className={cn(
-        `world-map-dot-book world-map-dot-book-${index} `,
+        `world-map-dot-book world-map-dot-book-${index}`,
         'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
       initial="initial"
@@ -85,87 +100,37 @@ export function WorldMapBookDotPoint({
       onClick={handleClick}
       variants={pointVariants}
       animate={isActive ? 'active' : 'initial'}
-      onMouseEnter={(e) => {
-        if (activeBookDotClickOpen) return;
-        handleMouseEnter(e, index, 'book');
-      }}
-      onMouseLeave={handleContentMouseLeave}
-      style={{
-        left: `${left}px`,
-        top: `${top}px`,
-      }}
+      onMouseEnter={
+        phone
+          ? undefined
+          : (e) => {
+              if (activeBookDotClickOpen) return;
+              handleMouseEnter(e, index, 'book');
+            }
+      }
+      onMouseLeave={phone ? undefined : handleContentMouseLeave}
+      style={{ left: `${left}px`, top: `${top}px` }}
     >
-      <div className={cn('flex items-center gap-1', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
-        {/* 中心红点和波纹 */}
-        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
-          <svg
-            width={svgSize}
-            height={svgSize}
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="absolute -left-full -top-full size-18"
-          >
-            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-            {isActive && (
-              <>
-                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  {!reduced && (
-                    <animate
-                      attributeName="r"
-                      from={pulse1.fromRadius}
-                      to={pulse1.toRadius}
-                      dur={`${pulse1.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                  {!reduced && (
-                    <animate
-                      attributeName="opacity"
-                      from="0.5"
-                      to="0"
-                      dur={`${pulse1.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                </circle>
-                <circle
-                  cx={centerPoint}
-                  cy={centerPoint}
-                  r={pulse2.fromRadius}
-                  stroke={color}
-                  strokeWidth="2"
-                  fill="none"
-                  opacity="0.5"
-                >
-                  {!reduced && (
-                    <animate
-                      attributeName="r"
-                      from={pulse2.fromRadius}
-                      to={pulse2.toRadius}
-                      dur={`${pulse2.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                  {!reduced && (
-                    <animate
-                      attributeName="opacity"
-                      from="0.5"
-                      to="0"
-                      dur={`${pulse2.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                </circle>
-              </>
-            )}
-          </svg>
-        </div>
-        {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white">
+      <div
+        className={cn(
+          'flex items-center',
+          !phone && 'gap-1',
+          { 'map-dot-dim-soft': isOtherActive },
+          { 'map-dot-dim-strong': isDarker },
+        )}
+      >
+        <PulseDot
+          containerClassName={phone ? undefined : 'size-6'}
+          svgSize={svgSize}
+          centerPoint={svgSize / 2}
+          centerRadius={centerRadius}
+          color={color}
+          pulse1={pulse1}
+          pulse2={pulse2}
+          isActive={isActive}
+          svgClassName={phone ? `${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}` : undefined}
+        />
+        <motion.p className={cn('flex items-center', MAP_LABEL_CLASS[deck])}>
           {title}
           <AnimatePresence>
             {isActive && (
@@ -173,9 +138,19 @@ export function WorldMapBookDotPoint({
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 0.83 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="flex items-center gap-1 rounded-lg bg-data-sky/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-sky backdrop-blur-2xl"
+                className={
+                  phone
+                    ? cn(
+                        'relative flex items-center gap-0.5 rounded',
+                        MOBILE_MAP_SCALE.badgePaddingClass,
+                        MOBILE_MAP_SCALE.badgeTextClass,
+                        'font-semibold text-data-sky',
+                      )
+                    : cn(BADGE_CLASS, 'bg-data-sky/20 text-data-sky')
+                }
               >
-                <BookSVG className="size-5 fill-data-cyan" />
+                {phone && <BadgeBlurBg className="bg-data-sky/20" />}
+                <BookSVG className={cn(phone ? MOBILE_MAP_SCALE.badgeIconSize : BADGE_ICON_CLASS, 'fill-data-cyan')} />
                 Translation
               </motion.span>
             )}
@@ -186,17 +161,24 @@ export function WorldMapBookDotPoint({
   );
 }
 
+/**
+ * The book card. On the scrolled deck it hangs centred under its dot (it used to start at the dot and run right, so the
+ * open Network State cover sat over the dimmed "Abu Dhabi, UAE" label at 2.9:1); the phone card is unchanged.
+ */
 export function WorldMapBookDotContent({
+  deck,
   dot,
   index,
   calcPoint,
 }: {
+  deck: MapDeck;
   dot: MapBookDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
+  calcPoint: CalcPoint;
 }) {
+  const phone = deck === 'phone';
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle, containerClass } = dot;
-  const [activeBookDot] = useAtom(activeBookDotAtom);
+  const activeBookDot = useAtomValue(activeBookDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
   const isActive = activeBookDot === index;
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
@@ -213,9 +195,8 @@ export function WorldMapBookDotContent({
   };
 
   const handleContentMouseLeave = (e: React.MouseEvent) => {
-    if (activeBookDotClickOpen) return;
+    if (phone || activeBookDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
-    // 检查鼠标是否移出到非点区域
     if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-book-${index}`)) {
       handleMouseLeave(e, index, 'book');
     }
@@ -227,43 +208,70 @@ export function WorldMapBookDotContent({
         <div
           className={cn(
             `world-map-dot-book-content world-map-dot-book-content-${index}`,
-            'pointer-events-none absolute z-20 -mt-2 flex h-20 flex-col overflow-visible',
+            'pointer-events-none absolute flex h-20 flex-col overflow-visible',
+            phone ? 'z-30 translate-y-4' : 'z-20 -mt-2',
           )}
-          // onClick={onClick}
-          style={{
-            left: `${left}px`,
-            top: `${top}px`,
-          }}
+          style={{ left: `${left}px`, top: `${top}px` }}
         >
-          <a href={link || undefined} target="_blank" rel="noreferrer" className="pointer-events-auto" onClick={onClick}>
+          <a
+            href={link || undefined}
+            target="_blank"
+            rel="noreferrer"
+            className={cn('pointer-events-auto', phone && '-mt-4')}
+            onClick={onClick}
+          >
             <motion.div
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className={cn('absolute left-2 top-5 flex w-[15.5rem] flex-col items-center overflow-hidden pt-6 font-display')}
+              className={cn(
+                'absolute flex flex-col items-center overflow-hidden font-display',
+                phone ? 'left-0 top-0 w-[9rem] pt-4' : 'left-3 top-5 w-[max(15.5rem,186px)] -translate-x-1/2 pt-6',
+              )}
               onMouseLeave={handleContentMouseLeave}
             >
-              <VideoWithPoster coverUrl={coverUrl} videoUrl={videoUrl} title={title} containerClass={containerClass} />
+              <VideoWithPoster
+                coverUrl={coverUrl}
+                videoUrl={videoUrl}
+                title={title}
+                containerClass={phone ? cn('-mt-6', containerClass) : containerClass}
+                coverClass={phone ? 'size-[8.5rem]' : undefined}
+                videoClass={phone ? 'size-[8.5rem]' : undefined}
+              />
               <motion.div
                 variants={{
                   hidden: { opacity: 0, y: -30 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                  },
+                  visible: { opacity: 1, y: 0 },
                 }}
                 transition={{
                   duration: DURATION.base,
                   ease: EASE.inOut,
                   delay: 0.2,
                 }}
-                className="flex cursor-pointer flex-col items-center gap-4"
+                className={cn('flex cursor-pointer flex-col items-center', phone ? '-mt-3 gap-2' : 'gap-4')}
               >
-                <h4 className="text-2xl/7 font-semibold capitalize text-white">{bookTitle}</h4>
-                <div className="flex items-center">
-                  <LinkSVG className={cn('size-4 fill-data-sky', { 'fill-tone-400': !link })} />
-                  <p className={cn('ml-1 text-xs/3 font-medium text-data-sky', { 'text-tone-400': !link })}>{desc} </p>
-                  <ArrowSVG className={cn('size-4 -rotate-90 fill-data-sky', { 'fill-tone-400': !link })} />
+                <h4
+                  className={cn(
+                    'text-balance text-center font-semibold capitalize text-white',
+                    phone ? 'text-label' : 'text-lead',
+                  )}
+                >
+                  <span className={CARD_TEXT_BACKING}>{bookTitle}</span>
+                </h4>
+                <div className={cn('flex items-center', CARD_TEXT_BACKING)}>
+                  <LinkSVG
+                    className={cn(phone ? 'size-2' : 'size-[max(1rem,12px)]', 'fill-data-sky', { 'fill-tone-400': !link })}
+                  />
+                  <p
+                    className={cn('ml-1 whitespace-nowrap text-caption font-medium text-data-sky', { 'text-tone-400': !link })}
+                  >
+                    {desc}
+                  </p>
+                  <ArrowSVG
+                    className={cn(phone ? 'size-2' : 'size-[max(1rem,12px)]', '-rotate-90 fill-data-sky', {
+                      'fill-tone-400': !link,
+                    })}
+                  />
                 </div>
               </motion.div>
             </motion.div>
