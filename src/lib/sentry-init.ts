@@ -1,5 +1,7 @@
 import { browserTracingIntegration, captureException, captureRouterTransitionStart, init } from '@sentry/nextjs';
 import { sentryBaseOptions } from '@/lib/sentry-options';
+import { getConsentState, isAnalyticsRefused } from '@/lib/analytics/consent';
+import { mayEndTrace, traceSampleRate } from '@/lib/sentry-sampling';
 
 // The browser SDK's init, in a chunk of its own that ./sentry-client.ts loads after the page is idle (PERF-10).
 // The build-time values the Sentry webpack plugin injects (release, the /monitoring tunnel) are set by
@@ -14,7 +16,10 @@ init({
   // start and reads the buffered web-vitals entries.
   integrations: [browserTracingIntegration()],
 
-  tracesSampleRate: 0.05,
+  // DATA-01: traces only with consent (5 % then), decided when each trace starts; a trace that ends after a Reject is
+  // dropped. Error reports need no consent and are unaffected.
+  tracesSampler: () => traceSampleRate(getConsentState(), isAnalyticsRefused()),
+  beforeSendTransaction: (event) => (mayEndTrace(getConsentState(), isAnalyticsRefused()) ? event : null),
   // Errors are reported from Vercel production and preview builds only, tagged by environment and release
   // (src/lib/sentry-options.ts); local and self-hosted UAT builds stay out of the production Sentry project.
 });
