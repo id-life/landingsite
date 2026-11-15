@@ -1,6 +1,6 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@/lib/sentry-client';
 import { useEffect } from 'react';
 import ErrorState, { ERROR_LINKS, ERROR_MESSAGE, TryAgainButton } from '@/components/common/ErrorState';
 
@@ -13,7 +13,7 @@ import '@/styles/globals.css';
 // critical body styles inline (the root layout's font classes and background are gone with it).
 export default function GlobalError({ error }: { error: Error & { digest?: string } }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error);
   }, [error]);
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@/lib/sentry-client';
 import { ReactNode } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorState, { ERROR_LINKS, ERROR_MESSAGE, TryAgainButton } from '@/components/common/ErrorState';
@@ -25,7 +25,7 @@ function Fallback() {
 
 export default function ClientChunkBoundary({ children }: { children: ReactNode }) {
   return (
-    <ErrorBoundary fallback={<Fallback />} onError={(error) => Sentry.captureException(error)}>
+    <ErrorBoundary fallback={<Fallback />} onError={(error) => captureException(error)}>
       {children}
     </ErrorBoundary>
   );

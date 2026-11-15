@@ -45,7 +45,9 @@ Each job is its own status check. Run the same commands locally before pushing.
   header and footer. `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
   non-production builds (`pageExtensions` in `next.config.mjs`), noindex, linked from nowhere.
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
-  `/podcast?c=lt` answers 308 from `src/proxy.ts`) and `/podcast/[id]`. Unknown ids return 404.
+  `/podcast?c=lt` answers 308 from `src/proxy.ts`, as do any other `?c=` (to `/podcast`) and leading-zero ids such
+  as `/podcast/056`) and `/podcast/[id]`. Unknown ids return 404. The retired `/vision`, `/value` and `/mission` answer
+  308 to `/presence`, `/connect` and `/` (`redirects()` in `next.config.mjs`).
 - Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
   `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
   `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,
@@ -120,6 +122,10 @@ Each job is its own status check. Run the same commands locally before pushing.
 - `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
   footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
   (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+- Not in the content pages' first-load JavaScript (PERF-10; `npm run perf:budget` measures it): the Sentry SDK (lazy,
+  above), React Query (`ReactQueryProvider` is mounted by the experience, the Influence Network tool and the podcast
+  comments, around themselves, sharing one client; not by the root providers), react-hook-form, the consent and
+  Google tag boot and Vercel's scripts (`src/lib/analytics/lazy.tsx`). Keep it that way.
 - Episode transcripts are rendered to HTML on the server (`podcast/[id]/page.tsx`); do not move react-markdown back
   into a client component. SVG icons are imported per file (there is no `src/components/svg` barrel: it pulled the
   3,085-circle world map into every page that used one icon).
@@ -153,8 +159,9 @@ Each job is its own status check. Run the same commands locally before pushing.
   React 19, version 5 needs p5 2.
 - No `console.log` in src (ESLint `no-console`; `console.warn` and `console.error` are allowed for real problems).
   The drei `StatsGl` overlay loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
-- `reactStrictMode` is off on purpose: under Strict Mode (development only) the five pinned sections get nested pin
-  spacers and the particle sketch mounts a second p5 canvas. Make those effects idempotent before turning it on.
+- `reactStrictMode` is on (ENG-16): in development every effect mounts, unmounts and mounts again, so effects must be
+  idempotent. Create the ScrollSmoother before any ScrollTrigger (`ScrollSmootherRoot` in `Home.tsx`): a pinned
+  trigger created before it keeps its spacer through a revert, and the remount nests a second one.
 - **Analytics** (`src/lib/analytics`) run only in analytics builds (`ANALYTICS_ENABLED`: production by default,
   `NEXT_PUBLIC_ANALYTICS_ENABLED=1` to force). One Google tag, gtag, owned in code: `HeadScript` (first in <head>:
   Consent Mode v2 defaults, landing URL, load stage) and `AnalyticsBoot` (consent, then gtag/js after
@@ -174,7 +181,10 @@ Each job is its own status check. Run the same commands locally before pushing.
   (web_vital with attribution, filed under the landing URL and section; `perf/vitals-p75.sql` reads it from the GA4
   BigQuery export, `scripts/crux-weekly.mjs` adds CrUX). Sentry only on Vercel production and preview: errors plus
   light tracing, no Replay or profiling (`src/lib/sentry-options.ts`, tunnel `/monitoring`); report caught errors
-  with `reportError` (`src/lib/report.ts`).
+  with `reportError` (`src/lib/report.ts`). The browser SDK is not in the first-load bundle (PERF-10):
+  `src/lib/sentry-client.ts` queues captures and uncaught errors and loads `src/lib/sentry-init.ts` when the page is
+  idle or on the first error; client code never imports `@sentry/nextjs` directly (use `reportError` or
+  `captureException` from `sentry-client`).
 - Newsletter: every form posts to `POST /api/subscribe` (`src/app/api/subscribe`: validation, honeypot, rate limit,
   optional Turnstile, Mailchimp upstream with double opt-in) through `submitNewsletter` (`src/utils/newsletter.ts`);
   the browser never contacts Mailchimp. Typed result codes in `src/lib/newsletter/result.ts`, 6 s browser timeout.

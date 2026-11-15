@@ -1,6 +1,6 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@/lib/sentry-client';
 import { useRouter } from 'next/navigation';
 import { startTransition, useEffect } from 'react';
 import SiteHeader from '@/components/site/SiteHeader';
@@ -12,7 +12,7 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
   const router = useRouter();
 
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error);
   }, [error]);
 
   // The failed part may be server-rendered: fetch it again, then re-render this segment.

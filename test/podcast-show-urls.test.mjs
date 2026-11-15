@@ -28,9 +28,28 @@ describe('/podcast?c=lt', () => {
     expect(res.headers.get('location')).toBe('https://www.id.life/podcast/long-talk?utm_source=x');
   });
 
-  test('runs only for that URL, so /podcast stays a static page', () => {
-    expect(config.matcher).toEqual([{ source: '/podcast', has: [{ type: 'query', key: 'c', value: 'lt' }] }]);
+  test('runs only for the redirected URLs, so /podcast stays a static page', () => {
+    expect(config.matcher).toEqual([{ source: '/podcast', has: [{ type: 'query', key: 'c' }] }, '/podcast/:id(0\\d+)']);
     expect(proxy(new NextRequest('https://www.id.life/podcast')).headers.get('location')).toBeNull();
+    expect(proxy(new NextRequest('https://www.id.life/podcast/56')).headers.get('location')).toBeNull();
+  });
+});
+
+// ENG-07: one URL per page and per episode.
+describe('other podcast URLs', () => {
+  test('/podcast?c=<unknown> answers 308 to /podcast, keeping other parameters', () => {
+    const res = proxy(new NextRequest('https://www.id.life/podcast?c=zzz&utm_source=x'));
+    expect(res.status).toBe(308);
+    expect(res.headers.get('location')).toBe('https://www.id.life/podcast?utm_source=x');
+  });
+
+  test('/podcast/056 answers 308 to /podcast/56', () => {
+    const res = proxy(new NextRequest('https://www.id.life/podcast/056'));
+    expect(res.status).toBe(308);
+    expect(res.headers.get('location')).toBe('https://www.id.life/podcast/56');
+    expect(proxy(new NextRequest('https://www.id.life/podcast/00')).headers.get('location')).toBe(
+      'https://www.id.life/podcast/0',
+    );
   });
 });
 

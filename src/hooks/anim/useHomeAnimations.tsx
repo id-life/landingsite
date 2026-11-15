@@ -1,10 +1,9 @@
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
 import { PAGE_CONFIGS, PAGE_IDS, type PageConfig } from '@/constants/pages';
-import { SCROLL_SMOOTHER_DEFAULTS, THEME_TRANSITION_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config';
+import { THEME_TRANSITION_DEFAULTS, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import { reportError } from '@/lib/report';
@@ -135,9 +134,7 @@ export function useHomeAnimations() {
   // 初始化所有动画
   const initializeAnimations = contextSafe(() => {
     try {
-      // 初始化 ScrollSmoother
-      ScrollSmoother.create(SCROLL_SMOOTHER_DEFAULTS);
-
+      // The ScrollSmoother is created before the sections' ScrollTriggers, by ScrollSmootherRoot (Home.tsx).
       // 基于配置创建所有页面动画
       PAGE_CONFIGS.forEach((config, index) => {
         createConfigBasedAnimation(config, index);

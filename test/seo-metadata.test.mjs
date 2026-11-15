@@ -89,3 +89,18 @@ describe('snippet', () => {
     expect(out.endsWith('…')).toBe(true);
   });
 });
+
+describe('snippet, bilingual and short-clause text', () => {
+  test('a mostly-Latin bilingual description is cut by the Latin limit, so it is kept whole here', () => {
+    const show =
+      '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.';
+    expect(snippet(show)).toBe(show);
+  });
+
+  test('Chinese without a clause end after 70 characters is cut at an earlier clause, not inside a word', () => {
+    const text = `${'不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。'}不朽真龙宣布设立 4000 万美元首期基金，投向生命延长（life extension）相关技术。`;
+    const out = snippet(text);
+    expect(out.endsWith('首期基金…')).toBe(true);
+    expect(out.length).toBeGreaterThanOrEqual(35);
+  });
+});
