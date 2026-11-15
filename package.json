@@ -15,7 +15,6 @@
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
     "@gsap/react": "file:./packages/gsap-react-2.1.1.tgz",
-    "@microsoft/clarity": "^1.0.0",
     "@next/third-parties": "^15.0.2",
     "@p5-wrapper/react": "^4.4.2",
     "@pmndrs/vanilla": "^1.19.3",
