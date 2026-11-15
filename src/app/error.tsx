@@ -3,6 +3,7 @@
 import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/navigation';
 import { startTransition, useEffect } from 'react';
+import SiteHeader from '@/components/site/SiteHeader';
 import ErrorState, { ERROR_LINKS, ERROR_MESSAGE, TryAgainButton } from '@/components/common/ErrorState';
 
 // Route-level error page. It renders inside the root layout, so the document keeps its title,
@@ -22,12 +23,15 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
     });
 
   return (
-    <ErrorState
-      code="Error"
-      title="Something went wrong"
-      message={ERROR_MESSAGE}
-      links={ERROR_LINKS}
-      action={<TryAgainButton onClick={retry} />}
-    />
+    <>
+      <SiteHeader variant="solid" className="absolute left-0 top-0 z-20 px-10 mobile:px-5" />
+      <ErrorState
+        code="Error"
+        title="Something went wrong"
+        message={ERROR_MESSAGE}
+        links={ERROR_LINKS}
+        action={<TryAgainButton onClick={retry} />}
+      />
+    </>
   );
 }

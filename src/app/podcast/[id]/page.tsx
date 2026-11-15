@@ -15,6 +15,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
+import Breadcrumb from '@/components/site/Breadcrumb';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
@@ -91,6 +92,13 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <JsonLd data={jsonLd} />
       <ReadDepth itemId={String(params.id)} />
       <div className="pb-24 mobile:pb-16">
+        <Breadcrumb
+          className="mb-6 text-read-sm mobile:mb-5 mobile:text-read-sm"
+          items={[
+            { label: 'Podcast', href: '/podcast' },
+            { label: nav.title, href: nav.link },
+          ]}
+        />
         <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
           <h1 className="text-center text-read-lg font-semibold">{data.title}</h1>

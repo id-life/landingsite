@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
-import ClientNav from '@/components/nav/CilentNav';
+import SiteHeader from '@/components/site/SiteHeader';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
@@ -33,7 +33,7 @@ export default function PresenceLayout({ children }: { children: ReactNode }) {
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
-      <ClientNav />
+      <SiteHeader variant="overlay" />
       <PresenceSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
       {children}
     </>

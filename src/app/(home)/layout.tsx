@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import ClientNav from '@/components/nav/CilentNav';
+import SiteHeader from '@/components/site/SiteHeader';
 import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
@@ -41,7 +41,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
-      <ClientNav />
+      <SiteHeader variant="overlay" />
       {children}
     </>
   );

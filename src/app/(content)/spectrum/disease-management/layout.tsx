@@ -1,7 +1,9 @@
 import React, { ReactNode } from 'react';
 import DMStyle from '@/app/spectrum/_components/DMStyle';
 import '@/styles/components/disease-management-page.css';
-import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
+import SiteHeader from '@/components/site/SiteHeader';
+import SubscribePopup from '@/components/layout/footer/SubscribePopup';
+import SiteFooter from '@/components/site/SiteFooter';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
@@ -43,9 +45,11 @@ export default function DiseaseManagementLayout({ children }: { children: ReactN
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <DMStyle />
-      <SpectrumHeader />
+      <SiteHeader variant="solid" action="exit" className="p-10 mobile:p-5" />
+      <SubscribePopup />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">
         {children}
+        <SiteFooter className="mt-15 text-white" />
       </div>
       <div className="base-background base-background1 fixed left-0 top-0 -z-10 h-screen w-screen" />
     </div>

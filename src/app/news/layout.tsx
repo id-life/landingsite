@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import NewsFooter from './_components/NewsFooter';
-import NewsHeader from './_components/NewsHeader';
+import SiteFooter from '@/components/site/SiteFooter';
+import SiteHeader from '@/components/site/SiteHeader';
 import NewsStyle from './_components/NewsStyle';
 import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 
@@ -12,9 +13,11 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
       <NewsStyle />
       {/* 80rem (1280 px) from 1360 px up, as before; narrower screens keep a 40 px margin each side. */}
       <div className="mx-auto w-[min(80rem,calc(100%-5rem))] mobile:w-auto mobile:px-5">
-        <NewsHeader />
+        <SiteHeader variant="solid" />
         {children}
-        <NewsFooter />
+        <SiteFooter>
+          <NewsFooter />
+        </SiteFooter>
       </div>
       <SubscribePopup />
     </>

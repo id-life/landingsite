@@ -22,6 +22,8 @@ import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useEffect } from 'react';
+import { useNavigation } from '@/hooks/useNavigation';
 
 export default function Home() {
   const [currentPage] = useAtom(currentPageAtom);
@@ -37,6 +39,14 @@ export default function Home() {
   // Address bar and tab title follow the visible section (after the initial deep link is applied).
   const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
   useSectionUrlSync(currentPage, initialRouteHandled);
+  // The arrows and the SCROLL cue ask for a section through navigateToAtom (this used to live in the desktop nav).
+  useNavigation();
+  // A reload starts at the top, where the deep link is applied from (this used to live in the desktop nav).
+  useEffect(() => {
+    const toTop = () => window.scrollTo({ top: 0 });
+    window.addEventListener('beforeunload', toTop);
+    return () => window.removeEventListener('beforeunload', toTop);
+  }, []);
 
   // Section views are counted by GA4 from the URL (one page_view per pushState / replaceState, DATA-05); there is no
   // parallel section event, so a deep link no longer reports a phantom Mission view.

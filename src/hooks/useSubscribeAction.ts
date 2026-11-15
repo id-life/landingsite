@@ -10,26 +10,6 @@ type Inputs = {
   website: string;
 };
 
-/**
- * The desktop header's SUBSCRIBE button. The popup opens only on request: it used to open by itself
- * (first on arrival, then on reaching the 4th section), covering the hero, the phone controls and the
- * Connect contact block. The button toggles it; a page scroll closes it without counting as a dismissal.
- */
-export function useSubscribeAction() {
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const isSubscribeShowRef = useRef(isSubscribeShow);
-  isSubscribeShowRef.current = isSubscribeShow;
-  const dispatch = useSetAtom(subscribePopupAtom);
-
-  const onSubscribeClick = () => dispatch({ type: 'toggle', placement: 'nav' });
-
-  const handleScroll = useThrottle(() => {
-    if (isSubscribeShowRef.current) dispatch({ type: 'close', method: 'scroll' });
-  }, 300);
-
-  return { isSubscribeShow, onSubscribeClick, handleScroll };
-}
-
 /** Form state of the phone SUBSCRIBE popup (MobileFooter). Opening and closing go through subscribePopupAtom. */
 export function useMobileSubscribeAction() {
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);

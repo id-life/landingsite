@@ -1,5 +1,6 @@
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import { NAV_LIST } from '@/components/nav/nav';
+import { ABOUT_LINK, NEWS_LINK, PODCAST_LINK } from '@/components/site/site-nav';
 import { SPECTRUM_GROUPS } from '@/content/initiatives';
 import { SLOGANS } from '@/content/slogans';
 
@@ -19,8 +20,9 @@ export const CONNECT_EVANGELISM_CN = '布道者';
 export const CONNECT_BRIDGE_CN = '桥梁';
 
 export const DISPLAY_STRINGS: readonly string[] = [
-  // Experience navigation (PCNav, the phone menu) and the podcast header tabs.
+  // The site navigation (SiteHeader, SiteMenu, SiteFooter) and the podcast show tabs.
   ...NAV_LIST.map((item) => item.title),
+  ...[NEWS_LINK, PODCAST_LINK, ABOUT_LINK].map((item) => item.title),
   ...PODCAST_NAV_LIST.map((item) => item.title),
   // Spectrum group titles (SpectrumItem, SpectrumInitiatives, MobileSpectrumSponsorPage).
   ...SPECTRUM_GROUPS.map((group) => group.text.zh ?? ''),

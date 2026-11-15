@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import INStyle from '@/app/spectrum/_components/INStyle';
-import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
+import SiteHeader from '@/components/site/SiteHeader';
+import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
@@ -39,7 +40,8 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <INStyle />
       <div className="relative h-full w-full">
-        <SpectrumHeader className="fixed left-0 top-0 w-full" />
+        <SiteHeader variant="solid" action="exit" className="fixed left-0 top-0 z-[100] p-10 mobile:p-5" />
+        <SubscribePopup />
         {children}
       </div>
     </>
