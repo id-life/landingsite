@@ -10,7 +10,7 @@ export const CONNECT_VALUES = defineContent('content/connect.ts#values', z.array
     id: 'a-new-dawn',
     title: { en: 'A New Dawn', zh: '曙光' },
     text: {
-      en: 'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
+      en: 'Our dedication is to a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
       zh: '我们的使命是通过前沿科技与医学突破，为全人类开启璀璨生命新纪元',
     },
     approval: live(),

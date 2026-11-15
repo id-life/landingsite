@@ -14,7 +14,7 @@ import { useGA } from '@/hooks/useGA';
 import { submitNewsletter } from '@/utils/newsletter';
 import { FormEvent, useState } from 'react';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
-import { ORG_ADDRESS_TEXT, ORG_EMAIL } from '@/constants/contact';
+import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -91,16 +91,23 @@ export default function NewsFooter() {
             </div>
           </div>
         </div>
-        <div className="font-oxanium text-base/5 font-bold uppercase">
-          <p className="opacity-50">Contact</p>
-          <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
-            <img className="size-5" src="/svgs/home.svg" alt="" />
-            {ORG_ADDRESS_TEXT}
-          </div>
-          <div className="mt-3 flex items-center justify-start gap-1.5 font-poppins font-semibold">
-            <img className="size-5" src="/svgs/contact-email.svg" alt="" />
-            {ORG_EMAIL}
-          </div>
+        <div className="font-oxanium text-base/5 font-bold">
+          {/* Only the label is set in capitals: the address and the email read as written (CON-20), and the email
+              is a mailto link, as in the Connect footer. */}
+          <p className="uppercase opacity-50">Contact</p>
+          <address className="not-italic">
+            <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
+              <img className="size-5" src="/svgs/home.svg" alt="" />
+              {ORG_ADDRESS_TEXT}
+            </div>
+            <a
+              href={ORG_MAILTO}
+              className="mt-3 flex w-fit items-center justify-start gap-1.5 font-poppins font-semibold hover:text-red-600"
+            >
+              <img className="size-5" src="/svgs/contact-email.svg" alt="" />
+              {ORG_EMAIL}
+            </a>
+          </address>
           <a href="/about" className="mt-3 flex w-fit items-center gap-1.5 font-poppins font-semibold hover:text-red-600">
             About Immortal Dragons <span aria-hidden="true">→</span>
           </a>

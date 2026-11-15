@@ -9,7 +9,7 @@ import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'Spectrum 谱系';
 const PAGE_DESCRIPTION =
-  "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.";
+  "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.";
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum' },

@@ -135,7 +135,7 @@ export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',
   url: absoluteUrl('/spectrum'),
   description:
-    "Immortal Dragon's variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
+    "Immortal Dragons' variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
   hasPart: spectrumBaseData.map((item) => ({
     '@type': 'WebPageElement',
     name: `${item.title} (${item.titleCn})`,

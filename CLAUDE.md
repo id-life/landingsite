@@ -15,6 +15,7 @@ npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
 npx tsc --noEmit -p .                     # full type check
 npx prettier --write --ignore-unknown .   # format
+npx --yes cspell@10.4.0 --no-progress "src/**/*.{ts,tsx,md}"   # spell-check (cspell.json; docs/content-style.md)
 ```
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on staged files.

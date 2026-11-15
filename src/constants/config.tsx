@@ -47,7 +47,7 @@ const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
   },
   'collective-recognition': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[17.375rem w-[19.875rem]',
+    textClass: 'mobile:w-[17.375rem] w-[19.875rem]',
   },
   'accelerate-longevity-tech': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
