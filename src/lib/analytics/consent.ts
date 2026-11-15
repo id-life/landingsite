@@ -140,10 +140,17 @@ export const hasGlobalPrivacyControl = () =>
   (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl === true;
 
 /** Resolve the consent state once per page (idempotent). */
+/**
+ * Pages that are never measured: the owner's draft review page (CON-10), which exists only in builds that are not for
+ * production. No tag, no events, no banner, and no load_abandon beacon (the head script checks the same path).
+ */
+export const EXCLUDED_PATH = /^\/content-review(\/|$)/;
+export const isExcludedPath = () => EXCLUDED_PATH.test(window.location.pathname);
+
 export async function startConsent() {
   if (started || typeof window === 'undefined') return;
   started = true;
-  if (!ANALYTICS_ENABLED) return setState({ analytics: 'denied', reason: 'disabled' });
+  if (!ANALYTICS_ENABLED || isExcludedPath()) return setState({ analytics: 'denied', reason: 'disabled' });
   if (isAutomated()) return setState({ analytics: 'denied', reason: 'automation' });
   const region = await lookupRegion();
   const optIn = isOptInRegion(region);
