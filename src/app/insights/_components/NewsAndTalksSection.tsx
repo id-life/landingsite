@@ -15,6 +15,7 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { safeHref } from '@/utils/safe-href';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -31,7 +32,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
 
   // Articles are real links (preview, copy, middle-click, keyboard): our own pages in the same tab, external
   // press in a new tab. Videos stay buttons that open the modal; an item with neither is not interactive.
-  const href = isYouTube || !item.url || item.url === '#' ? undefined : item.url;
+  const href = isYouTube ? undefined : safeHref(item.url);
   const external = Boolean(href && !isInternalHref(href));
   const openVideo = isYouTube ? () => setIsModalOpen(true) : undefined;
 

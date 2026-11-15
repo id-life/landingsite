@@ -6,6 +6,7 @@ import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
+import { safeHref } from '@/utils/safe-href';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
   const isYouTube = !!data.videoId;
 
   const isExternal = Boolean(data.isExternal && data.url);
-  const href = isYouTube ? undefined : isExternal ? (data.url ?? undefined) : `/news/${data.id}`;
+  const href = isYouTube ? undefined : isExternal ? safeHref(data.url) : `/news/${data.id}`;
 
   return (
     <>

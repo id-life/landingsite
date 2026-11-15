@@ -6,6 +6,7 @@ import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
 import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import HomeProfile from '@/app/(home)/_components/HomeProfile';
+import JsonLd from '@/components/seo/JsonLd';
 
 // Chinese intro for crawlers, from the 不朽真龙介绍 profile (previously a hidden 0×0 block).
 const HOME_INTRO_CN = [
@@ -56,7 +57,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <HomeProfile />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />
       {children}

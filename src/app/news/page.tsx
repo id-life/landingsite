@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 import SubTitle from '@/app/news/_components/SubTitle';
 import Topic from '@/app/news/_components/Topic';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 
@@ -79,7 +80,7 @@ export default async function NewsPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <h1 className="sr-only">News 新闻</h1>
       <Topic data={featured} />
       <div className="mt-7.5 mobile:mt-3">

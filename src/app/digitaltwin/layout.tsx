@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import DigitalTwinSummary from '@/app/digitaltwin/_components/DigitalTwinSummary';
 import { ORG_REF } from '@/constants/entity';
 import { SoftwareApplication, WithContext } from 'schema-dts';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'DigitalTwin 孪生';
 const PAGE_DESCRIPTION =
@@ -59,7 +60,7 @@ export default function DigitalTwinLayout({ children }: { children: ReactNode })
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <Style />
       <ClientNav />
       <DigitalTwinSummary title={PAGE_TITLE} description={PAGE_DESCRIPTION} />

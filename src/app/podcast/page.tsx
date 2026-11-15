@@ -6,6 +6,7 @@ import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
 import { podcastSeriesJsonLd } from '@/app/podcast/_components/jsonLd';
 import { breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 
@@ -43,7 +44,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Sear
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <div className="mt-2">
         <PodcastCover category={category} />
         <div className="mt-8.5 h-px bg-gray-950/20 mobile:mt-7.5" />

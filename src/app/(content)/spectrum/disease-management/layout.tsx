@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { MedicalWebPage, WithContext } from 'schema-dts';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'Disease Management & Cure Status';
 const PAGE_DESCRIPTION = '可治疗与可控制疾病列表 A list of curable and manageable diseases';
@@ -57,7 +58,7 @@ const breadcrumb = breadcrumbJsonLd([
 export default function DiseaseManagementLayout({ children }: { children: ReactNode }) {
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <DMStyle />

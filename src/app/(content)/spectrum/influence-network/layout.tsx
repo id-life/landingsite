@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { CollectionPage, WithContext } from 'schema-dts';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'Influence Network';
 const PAGE_DESCRIPTION = '长寿领域人物影响力与关系图 Longevity influencer network and relationship map';
@@ -55,7 +56,7 @@ const breadcrumb = breadcrumbJsonLd([
 export default function InfluenceNetworkLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <INStyle />

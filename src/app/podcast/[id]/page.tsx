@@ -8,6 +8,7 @@ import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/json
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
@@ -80,7 +81,7 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">

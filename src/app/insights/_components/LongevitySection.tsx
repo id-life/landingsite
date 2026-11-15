@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { safeHref } from '@/utils/safe-href';
 
 type LongevityItem = {
   id: number;
@@ -36,8 +37,9 @@ const ZHIHU_LINK = 'https://www.zhihu.com/column/c_2021919119344150153';
 
 function LongevityCard({ item }: { item: LongevityItem }) {
   const handleClick = () => {
-    if (!item.link) return;
-    window.open(item.link, '_blank', 'noopener,noreferrer');
+    const href = safeHref(item.link);
+    if (!href) return;
+    window.open(href, '_blank', 'noopener,noreferrer');
   };
 
   return (

@@ -26,6 +26,10 @@
       {
         "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
         "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+      },
+      {
+        "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+        "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
       }
     ]
   },
@@ -73,8 +77,19 @@
           {
             "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
             "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+          },
+          {
+            "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+            "message": "No raw HTML from JSX: render text, sanitise markdown through @/utils/markdown, and emit structured data with <JsonLd> (the one allowed use)."
           }
         ]
+      }
+    },
+    {
+      // Structured data is the one place raw HTML is allowed: JsonLd escapes every '<'.
+      "files": ["src/components/seo/JsonLd.tsx"],
+      "rules": {
+        "no-restricted-syntax": "off"
       }
     }
   ]

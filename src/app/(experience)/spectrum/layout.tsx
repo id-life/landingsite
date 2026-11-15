@@ -4,6 +4,7 @@ import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { getSpectrumJsonLd, spectrumBaseData } from '@/app/spectrum/_components/spectrumData';
+import JsonLd from '@/components/seo/JsonLd';
 
 const PAGE_TITLE = 'Spectrum 谱系';
 const PAGE_DESCRIPTION =
@@ -46,7 +47,7 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
     <>
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
       {/* Same summary as the other section routes: one h1, the page description and the section's five
           headings, no links. The hidden link list that stood here (31 links, 28 of them external) read as
           hidden link spam. */}
