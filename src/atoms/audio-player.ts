@@ -105,8 +105,7 @@ export const audioControlsAtom = atom(
               trackEvent({ name: GA_EVENT_NAMES.MUSIC_AUTO_PLAY, label: currentMusic?.title, music_play_type: value });
               set(currentPlayStatusAtom, true);
             })
-            .catch((error) => {
-              console.log('error: ', error);
+            .catch(() => {
               set(currentPlayStatusAtom, false);
             });
         }
@@ -244,8 +243,7 @@ export const togglePlayAtom = atom(null, (get, set) => {
       .then(() => {
         set(currentPlayStatusAtom, true);
       })
-      .catch((error) => {
-        console.log('error: ', error);
+      .catch(() => {
         set(currentPlayStatusAtom, false);
       });
   }

@@ -1,0 +1,31 @@
+// Knip (https://knip.dev) finds unused files, dependencies and exports. `npm run knip` runs in CI and fails on an
+// unused file or dependency; unused exports and types are reported as warnings until they are cleaned up.
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  // Maintenance scripts run by hand (node scripts/<name>.mjs).
+  "entry": ["scripts/*.mjs"],
+  "ignore": [
+    // Runtime assets fetched by URL (the Draco decoder), not imported.
+    "public/**",
+    // The Chinese lockup is kept for the /zh locale and the bilingual favicon (see src/components/nav/Logo.tsx).
+    "src/components/svg/LogoSVGcn.tsx",
+  ],
+  "ignoreDependencies": [
+    // Webpack loaders named as strings in next.config.mjs.
+    "@svgr/webpack",
+    "raw-loader",
+    "glslify-loader",
+    // Pinned so vitest resolves a patched vite.
+    "vite",
+    // Type-only import in a JSDoc comment (postcss.config.mjs).
+    "postcss-load-config",
+  ],
+  "rules": {
+    "exports": "warn",
+    "types": "warn",
+    "nsExports": "warn",
+    "nsTypes": "warn",
+    "enumMembers": "warn",
+    "duplicates": "warn",
+  },
+}

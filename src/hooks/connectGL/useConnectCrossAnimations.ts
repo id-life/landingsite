@@ -74,7 +74,6 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
 
   // Footer 动画 - 只显示底栏，不包含 EN→CN 动画
   const playFooterEnterAnim = () => {
-    console.log('[useConnectCrossAnimations] playFooterEnterAnim - 开始显示footer');
     // Shows the contact footer only. It also used to flag the SUBSCRIBE popup as open, so on Connect the
     // header SUBSCRIBE button only shook an invisible popup; the popup now opens only on request.
 
@@ -89,8 +88,6 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
   };
 
   const playFooterLeaveAnim = () => {
-    console.log('[useConnectCrossAnimations] playFooterLeaveAnim - 开始隐藏footer');
-
     // 先停止footer相关的所有动画
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.sound-button');

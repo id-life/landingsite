@@ -63,7 +63,6 @@ function Spectrum() {
   const { setEnableJudge: setEnableDownJudge, enableJudge } = useScrollSmootherAction({
     // profile auto scroll to engagement
     scrollFn: () => {
-      // console.log('[DEBUG] [Spectrum] DOWN scrollFn called - enableJudge:', enableJudge, 'currentPage:', currentPage.id, 'isNavScrolling:', window.isNavScrolling);
       if (
         !enableJudge ||
         currentPage.id !== PAGE_ID ||
@@ -74,10 +73,8 @@ function Spectrum() {
         return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
-        // console.log('[DEBUG] [Spectrum] engagement-scroll-trigger not found');
         return;
       }
-      // console.log('[DEBUG] [Spectrum] Starting DOWN auto-scroll to Engagement');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
@@ -87,7 +84,6 @@ function Spectrum() {
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false; // TODO: Trick to prevent the scroll animation from being triggered again, Please fix while you have time.
-          // console.log('[DEBUG] [Spectrum] DOWN Auto-scroll completed');
         },
       });
     },

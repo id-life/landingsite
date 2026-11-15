@@ -71,7 +71,6 @@ function ConnectGL() {
           scrub: true,
           onEnter: () => {
             if (window.isResizing) return;
-            console.log('[ConnectGL] onEnter - 进入Connect页面');
             setCurrentPage(NAV_LIST[6]);
             setEnableUpJudge(true);
             // 立即显示底栏
@@ -95,20 +94,17 @@ function ConnectGL() {
           },
           onEnterBack: () => {
             if (window.isResizing) return;
-            console.log('[ConnectGL] onEnterBack - 隐藏footer');
             setEnableUpJudge(true);
             playFooterLeaveAnim();
           },
           onLeave: () => {
             if (window.isResizing) return;
             setEnableUpJudge(false);
-            console.log('[ConnectGL] onLeave - 显示footer', { isNavScrolling: window.isNavScrolling });
             // 立即显示底栏
             playFooterEnterAnim();
           },
           onLeaveBack: () => {
             if (window.isResizing) return;
-            console.log('[ConnectGL] onLeaveBack - 隐藏footer');
             setEnableUpJudge(false);
             playFooterLeaveAnim();
           },

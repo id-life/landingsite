@@ -62,14 +62,7 @@ function Portfolio() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // profile auto scroll to vision
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Portfolio] UP scrollFn called - enableUpJudge:',
-      //   enableUpJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {

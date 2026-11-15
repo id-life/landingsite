@@ -13,6 +13,7 @@ npm run build     # production build (also type-checks app routes)
 npm start         # serve the production build
 npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax rules)
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
+npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
 npx tsc --noEmit -p .                     # full type check
 npx prettier --write --ignore-unknown .   # format
 ```
@@ -32,8 +33,8 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
-- Not routable (no page.tsx; dead code to delete): `src/app/partners`, `processes`, `tracking`. `src/app/twin` and
-  `src/app/vision` hold section components, not routes.
+- `src/app/twin` and `src/app/vision` hold section components, not routes. Unreachable modules are deleted rather
+  than kept: `npm run knip` fails on an unused file or dependency.
 
 ## Architecture of the experience
 
@@ -67,6 +68,10 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
   goes through `src/components/seo/JsonLd.tsx`; links from API data through `src/utils/safe-href.ts`.
 - Server-rendered summaries for crawlers and assistive tech: `PageSEOContent`. Never hide text from people while
   serving it to crawlers (no `aria-hidden` text, no zero-height wrappers).
+- No `console.log` in src (ESLint `no-console`; `console.warn` and `console.error` are allowed for real problems).
+  `r3f-perf` loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
+- `reactStrictMode` is off on purpose: under Strict Mode (development only) the five pinned sections get nested pin
+  spacers and the particle sketch mounts a second p5 canvas. Make those effects idempotent before turning it on.
 - Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
   production and preview, with no Replay or profiling in the shared runtime.
 - Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.

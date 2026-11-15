@@ -32,7 +32,6 @@ const DynamicParticleGL = ({
 }) => {
   const wrappedSketch = useMemo(() => {
     return function sketch(p5: P5CanvasInstance<MySketchProps>) {
-      // console.log('sketch 函数开始执行');
       let id = 'particle-container';
       let canvas: P5.Renderer;
       const sourceImgs: P5.Image[] = [];
@@ -62,7 +61,6 @@ const DynamicParticleGL = ({
       };
 
       p5.preload = () => {
-        // console.log('p5.preload 开始执行');
         for (let i = 0; i < sourceImgInfos.length; i++) {
           const img = p5.loadImage(sourceImgInfos[i].url);
           const [width, height] = sourceImgInfos[i]?.resize ?? [0, 0];
@@ -71,11 +69,9 @@ const DynamicParticleGL = ({
           else img.resize(img.width * scaleNum, img.height * scaleNum);
           sourceImgs.push(img);
         }
-        // console.log('p5.preload 执行完毕');
       };
 
       p5.setup = () => {
-        // console.log('p5.setup 开始执行');
         const ratio = 1280 / 750;
         const width = IS_MOBILE ? 800 : 1280;
         const height = width / ratio;
@@ -101,8 +97,6 @@ const DynamicParticleGL = ({
         const [sourceImgWidth, sourceImgHeight] = resize;
         if (sourceImgWidth) sourceImg.resize(sourceImgWidth * scaleNum, sourceImgHeight * scaleNum);
         sourceImg.loadPixels();
-        // console.log(`图像尺寸: ${sourceImg.width}x${sourceImg.height}`);
-        // console.log(`loadPercentage: ${loadPercentage}, resolution: ${resolution}`);
 
         // Create an array of indexes from particle array.
         const preParticleIndexes = allParticles.map((_, index) => index);
@@ -110,7 +104,6 @@ const DynamicParticleGL = ({
         let pixelIndex = 0;
 
         const [imgWidth, imgHeight] = [sourceImg.width, sourceImg.height];
-        // console.log('imgWidth', imgWidth, 'imgHeight', imgHeight);
 
         // Pre-calculate random numbers for better performance
         const randomThreshold = loadPercentage * resolution;
@@ -146,7 +139,6 @@ const DynamicParticleGL = ({
               // Create a new particle.
               newParticle = new Particle(p5.width / 2, p5.height / 2, p5, IS_MOBILE);
               allParticles.push(newParticle);
-              // console.log('创建了新粒子', newParticle);
             }
             newParticle.target.x = x + p5.width / 2 - sourceImg.width / 2;
             newParticle.target.y = y + p5.height / 2 - sourceImg.height / 2;

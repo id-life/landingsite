@@ -8,8 +8,13 @@ import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import PrefHook from '@/components/gl/PrefHook';
 import { HeroReady } from '@/components/gl/heroAssets';
+import dynamic from 'next/dynamic';
+
+// r3f-perf is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
+// production build drops this branch and r3f-perf never reaches the bundle.
+const PrefHook =
+  process.env.NODE_ENV === 'development' ? dynamic(() => import('@/components/gl/PrefHook'), { ssr: false }) : null;
 
 export default function ThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
@@ -38,8 +43,8 @@ export default function ThreeWrapper() {
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
-        {/* Performance monitoring - enable in development */}
-        {process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
+        {/* Performance monitoring - development only */}
+        {PrefHook && process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
         <Suspense fallback={null}>
           <VisionGL />

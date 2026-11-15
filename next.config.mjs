@@ -1,9 +1,4 @@
 import { withSentryConfig } from '@sentry/nextjs';
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-// 获取当前文件的目录
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Which deployment this build is for. Vercel sets VERCEL_ENV (production | preview | development);
 // anything else (a local build, the self-hosted UAT server) is 'local'.
@@ -16,8 +11,10 @@ const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Strict Mode stays off until the section effects are idempotent. Under Strict Mode (development only) the five
+  // pinned sections get nested pin spacers (the page shrinks from 22,590 to 9,090 px, the URL desyncs and wheel-up
+  // stalls) and the particle sketch mounts a second p5 canvas. Turn it on once the section controller replaces them.
   reactStrictMode: false,
-  transpilePackages: ['three'],
   // src has ~59 debugging console.log calls (one fired on every wheel event). Strip console.log/info/debug
   // from production bundles; keep warn and error so real problems still reach the console and Sentry.
   compiler: {
@@ -76,7 +73,6 @@ const nextConfig = {
     ];
     return config;
   },
-  cacheHandler: path.join(__dirname, 'cache-handler.mjs'),
   async headers() {
     return [
       {
