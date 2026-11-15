@@ -125,8 +125,9 @@ Each job is its own status check. Run the same commands locally before pushing.
   React 19, version 5 needs p5 2.
 - No `console.log` in src (ESLint `no-console`; `console.warn` and `console.error` are allowed for real problems).
   The drei `StatsGl` overlay loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
-- `reactStrictMode` is off on purpose: under Strict Mode (development only) the five pinned sections get nested pin
-  spacers and the particle sketch mounts a second p5 canvas. Make those effects idempotent before turning it on.
+- `reactStrictMode` is on (ENG-16): in development every effect mounts, unmounts and mounts again, so effects must be
+  idempotent. Create the ScrollSmoother before any ScrollTrigger (`ScrollSmootherRoot` in `Home.tsx`): a pinned
+  trigger created before it keeps its spacer through a revert, and the remount nests a second one.
 - **Analytics** (`src/lib/analytics`) run only in analytics builds (`ANALYTICS_ENABLED`: production by default,
   `NEXT_PUBLIC_ANALYTICS_ENABLED=1` to force). One Google tag, gtag, owned in code: `HeadScript` (first in <head>:
   Consent Mode v2 defaults, landing URL, load stage) and `AnalyticsBoot` (consent, then gtag/js after
