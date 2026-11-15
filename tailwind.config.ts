@@ -50,8 +50,9 @@ const config: Config = {
         large: { raw: WIDTH_CLASS_QUERY.large },
         shortScreen: { raw: COMPACT_HEIGHT_QUERY },
         coarse: { raw: COARSE_POINTER_QUERY },
-        // The site header fits its logo, nine items and actions on one row from here (SiteHeader, NAV-04).
-        navRow: { raw: '(min-width: 1700px)' },
+        // The site header fits its logo, Motion switch, nine items and actions on one row from here (SiteHeader,
+        // NAV-04; measured: at 1920 px the row overflowed by the switch's width).
+        navRow: { raw: '(min-width: 2048px)' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },

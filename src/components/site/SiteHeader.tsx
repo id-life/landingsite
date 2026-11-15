@@ -69,7 +69,7 @@ export default function SiteHeader({
       className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? // The experience: one row from 1700 px; below, the navigation takes its own row (wrapping on tablets),
+          ? // The experience: one row from 2048 px; below, the navigation takes its own row (wrapping on tablets),
             // because labels are 14 px or more at every width (RWD-01).
             'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 p-10 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap'
           : // Content pages: the logo and the actions on the first row, the navigation on its own row below.
@@ -95,7 +95,7 @@ export default function SiteHeader({
           'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
           overlay
             ? clsx(
-                // Below 1700 px a row of its own that wraps (never a sideways scroller: its items would be cut by the window).
+                // Below 2048 px a row of its own that wraps (never a sideways scroller: its items would be cut by the window).
                 'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap',
                 live,
               )

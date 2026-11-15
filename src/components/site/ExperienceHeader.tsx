@@ -65,7 +65,8 @@ export default function ExperienceHeader() {
       onLogoClick={onLogoClick}
       onItemClick={onItemClick}
       // MOT-02: in the bar on both decks, visible on every section (as in the old PCNav and MobileNav).
-      motionSwitch={<MotionSwitch className={shown ? 'pointer-events-auto mobile:mr-2' : 'mobile:mr-2'} />}
+      // `tap`: a 44 px box on touch screens (RWD-06), like the other header controls.
+      motionSwitch={<MotionSwitch className={shown ? 'pointer-events-auto tap mobile:mr-2' : 'tap mobile:mr-2'} />}
     />
   );
 }

@@ -29,7 +29,7 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
         'fixed z-[29] text-foreground transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
         // Desktop tree: top left, under the logo, clear of the wordmark and the dragon. Sizes have a px floor so the
         // 0.8333vw root (RWD-01) cannot shrink them below a readable size on tablets.
-        // Below 1700 px the header's navigation takes a second row (NAV-04), and below 1200 px it may wrap to a third, so
+        // Below 2048 px the header's navigation takes a second row (NAV-04), and below 1200 px it may wrap to a third, so
         // the statement starts lower there.
         'left-10 top-[max(10rem,190px)] w-[max(42rem,460px)] large:top-[max(10rem,128px)] navRow:top-[max(7.5rem,92px)]',
         // Phone tree: under the header, above the wordmark.
