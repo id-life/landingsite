@@ -19,6 +19,9 @@
     // Type-only import in a JSDoc comment (postcss.config.mjs).
     "postcss-load-config",
   ],
+  // System tools a maintenance script shells out to (scripts/optimize-models.mjs measures SSIM with ffmpeg); they are
+  // not npm packages, so there is nothing to list in package.json.
+  "ignoreBinaries": ["ffmpeg"],
   "rules": {
     "exports": "warn",
     "types": "warn",
