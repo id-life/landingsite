@@ -15,6 +15,7 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { useRouter } from 'next/navigation';
 import { track } from '@/lib/analytics/track';
 
+import BilingualText from '@/components/common/BilingualText';
 const CONTENT_LINKS = [
   { href: '/about', title: 'about 关于' },
   { href: '/news', title: 'news 新闻' },
@@ -117,7 +118,7 @@ function MobileNavDialog() {
                 key={item.id}
               >
                 <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
-                  {item.title}
+                  <BilingualText text={item.title} />
                   {currentPage.id === item.id && (
                     <span className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
                   )}

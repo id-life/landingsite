@@ -85,6 +85,20 @@ Each job is its own status check. Run the same commands locally before pushing.
   entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
   `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.
 
+## Design tokens and type (VIS-02, VIS-07)
+
+- `src/styles/tokens.ts` is the one source of colours, font roles, type roles and the grid; `tokens.css` is generated
+  from it (`node scripts/build-tokens.mjs`, checked by `test/tokens.test.mjs`). `theme.colors` in tailwind.config.ts
+  REPLACES Tailwind's palette: a palette utility (`text-red-600`) renders nothing, and no six-digit hex may appear in
+  src outside the token files (unit test and suite). After merging new colours run `node scripts/codemod-color-tokens.mjs`.
+- Components name a font role (`font-display`, `font-text`, `font-title`, `font-button`, `font-menu`,
+  `font-brand`), never a face; `FONT_PALETTE` in tokens.ts is the owner's open font choice. Chinese display strings
+  are the closed list in `src/constants/display-strings.ts`, set from a generated Source Han subset
+  (`UPDATE_CJK_SUBSET=1 npx vitest run test/cjk-display.test.mjs`); all other Chinese uses the system faces.
+- The nine type roles are rem-bounded: on the experience and Spectrum tool routes the root is still 0.8333vw above
+  768 px, so a role shrinks with the window there. Guide, sizes per viewport and the rule: `docs/design-tokens.md`.
+  Device tiers: `docs/support-matrix.md`.
+
 ## Content pages
 
 - `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the

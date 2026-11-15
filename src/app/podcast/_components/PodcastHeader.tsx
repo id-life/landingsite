@@ -16,6 +16,7 @@ import { track } from '@/lib/analytics/track';
 import { subscribePopupAtom } from '@/atoms/footer';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 
+import BilingualText from '@/components/common/BilingualText';
 // The phone menu (GSAP stagger) loads on its first open, not with the page.
 const PodcastNavDialog = dynamic(() => import('@/app/podcast/_components/PodcastNavDialog'), { ssr: false });
 
@@ -56,7 +57,7 @@ export default function PodcastHeader() {
                   search === item.id && 'nav-active',
                 )}
               >
-                {item.title}
+                <BilingualText text={item.title} />
               </div>
             </Link>
           ))}

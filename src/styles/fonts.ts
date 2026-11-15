@@ -44,16 +44,18 @@ const oxanium = Oxanium({
   variable: '--font-oxanium',
 });
 
-// Subsets of the characters the site sets in this face (font-min/index.md), as WOFF2
-// (scripts/build-fonts.mjs). Any other Chinese character falls back to the system CJK face.
+// The Chinese display face (VIS-07): Source Han Sans CN cut to the characters of the display strings
+// (src/constants/display-strings.ts) by scripts/build-cjk-subset.mjs; test/cjk-display.test.mjs fails when a display
+// character is missing. Only the brand font roles use it (tokens.ts fontRoles); all other Chinese is set in the system
+// faces, so no run mixes the two. Not preloaded: 17 KB per weight, requested when a display string is laid out.
 const sourceHanSansCN = localFont({
   src: [
     {
-      path: './fonts/SourceHanSansCN-Bold-min.woff2',
+      path: './fonts/cjk-display-700.woff2',
       weight: '700',
     },
     {
-      path: './fonts/SourceHanSansCN-Medium-min.woff2',
+      path: './fonts/cjk-display-500.woff2',
       weight: '500',
     },
   ],

@@ -1,4 +1,5 @@
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
+import { CONNECT_BRIDGE_CN, CONNECT_EVANGELISM_CN } from '@/constants/display-strings';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
@@ -30,7 +31,7 @@ const MobileConnectSinglePage = () => {
         <div className="relative text-left">
           <span className="connect-text-en whitespace-nowrap text-[28px]/[28px] text-accent">Evangelism</span>
           <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[40px]/[60px] font-bold text-accent opacity-0">
-            布道者
+            {CONNECT_EVANGELISM_CN}
           </span>
           <div className="connect-text-en text-[1.75rem]/[1.75rem]">
             OF GLOBAL LONGEVITY
@@ -44,7 +45,7 @@ const MobileConnectSinglePage = () => {
           <span className="connect-text-en whitespace-nowrap text-[28px]/[46px]">East & West</span>{' '}
           <span className="connect-text-en whitespace-pre-wrap text-[28px]/[46px] text-accent">Access</span>
           <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-accent opacity-0">
-            桥梁
+            {CONNECT_BRIDGE_CN}
           </span>
           <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">
             Deep Roots in Both East & West, a Conduit that Bridges

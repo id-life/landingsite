@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { useEvent } from 'react-use';
 import { NAV_LIST } from './nav';
 
+import BilingualText from '@/components/common/BilingualText';
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   // Visible from state, so a remount (Back from /news) shows the nav at once instead of waiting for the intro tween.
@@ -81,7 +82,7 @@ export default function PCNav() {
             )}
             key={item.id}
           >
-            {item.title}
+            <BilingualText text={item.title} />
           </Link>
         ))}
       </div>
