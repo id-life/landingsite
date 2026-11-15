@@ -87,7 +87,7 @@ export default async function PodcastContentPage({ params }: PodcastPlayerProps)
     <>
       <JsonLd data={jsonLd} />
       <div className="pb-24 mobile:pb-16">
-        <img className="mx-auto w-24 rounded-lg mobile:w-21" src={data.album} alt="" />
+        <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
           <h1 className="text-center text-read-lg font-semibold">{data.title}</h1>
           <PodcastLinks data={data} />

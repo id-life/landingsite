@@ -13,7 +13,8 @@ type PodcastListItemProps = {
 export default function PodcastListItem({ data }: PodcastListItemProps) {
   return (
     <EpisodeClickTracker label={`${data.category.split('_')[1]}_${data.title}`}>
-      <img className="w-16 rounded mobile:w-21" src={data.album} alt="" />
+      {/* Square artwork: the box is reserved before the image loads, so the list does not shift (CLS). */}
+      <img className="aspect-square w-16 shrink-0 self-start rounded object-cover mobile:w-21" src={data.album} alt="" />
       <div className="flex-1 overflow-hidden">
         <div className="flex items-center justify-between gap-2">
           <h3 className="truncate text-read font-semibold group-hover:text-red-600">{data.title}</h3>
