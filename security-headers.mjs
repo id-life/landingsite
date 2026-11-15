@@ -22,8 +22,12 @@ export function contentSecurityPolicy({ deployEnv, turnstile = false }) {
     // CMS content may embed images from any https host.
     'img-src': ["'self'", 'data:', 'blob:', 'https:'],
     'font-src': ["'self'", 'data:'],
+    // blob: and data: because three's GLTFLoader turns embedded textures into blob: URLs and fetches them through
+    // ImageBitmapLoader (found by the CSP check on the desktop sections: 31 to 35 violations per page).
     'connect-src': [
       "'self'",
+      'blob:',
+      'data:',
       'https://id-platform.id.life',
       'https://cdn.id.life',
       'https://resources.id.life',
