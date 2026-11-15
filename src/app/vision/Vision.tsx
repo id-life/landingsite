@@ -56,7 +56,8 @@ export default function Vision() {
             itemHeight={40}
             duration={5}
             transition={0.6}
-            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2"
+            // In landscape (compact height) the slogans move to the bottom left, clear of START and the tagline.
+            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-5 shortScreen:left-5 shortScreen:right-auto shortScreen:top-auto shortScreen:translate-y-0"
           >
             {CAROUSEL_ITEMS.map((item) => (
               <CarouselItem key={item.cnText ?? item.text} {...item} />

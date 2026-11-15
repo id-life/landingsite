@@ -16,10 +16,13 @@ export default function HomeStatement() {
 
   return (
     <HomeStatementFrame>
-      <h1 className="text-[max(1.375rem,17px)]/[1.35] font-semibold mobile:text-base/6 [@media(max-height:740px)]:mobile:text-[0.9375rem]/5">
+      {/* Type roles (RWD-01): lead for the statement, body-sm for the facts, label for the links; on phones body
+          and caption, as before (16 and 12 px). On the desktop deck the leading and gaps are tight so the block
+          stays in the band between the header and the top of the glass ring. */}
+      <h1 className="text-lead font-semibold mobile:text-body mobile:leading-normal notMobile:leading-snug [@media(max-height:740px)]:mobile:text-body-sm">
         {FUND.statement.text.en}
       </h1>
-      <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[max(1rem,13px)]/[1.45] font-medium mobile:mt-2 mobile:justify-center mobile:text-xs/5">
+      <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-0.5 text-body-sm font-medium mobile:mt-2 mobile:justify-center mobile:text-caption shortScreen:justify-start">
         {facts.map((fact) => (
           <div key={fact.label} className="flex gap-1.5">
             <dt className="opacity-60">{fact.label}</dt>
@@ -31,7 +34,7 @@ export default function HomeStatement() {
           <dd className="inline">{THEMES.map((theme) => theme.name.en).join(' · ')}</dd>
         </div>
       </dl>
-      <StatementDoors className="mt-3 mobile:mt-2 [@media(max-height:740px)]:mobile:mt-1" />
+      <StatementDoors className="mt-2 mobile:mt-2 [@media(max-height:740px)]:mobile:mt-1" />
     </HomeStatementFrame>
   );
 }

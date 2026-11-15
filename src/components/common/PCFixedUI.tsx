@@ -86,7 +86,7 @@ export function CarouselItem({
         <p
           className={cn(
             // Type roles on the desktop tree (RWD-01): 14 px and up instead of a size that shrank with the window.
-            'line-clamp-2 text-left text-body-sm leading-[1.3] mobile:text-center mobile:text-sm/4.5 mobile:font-bold',
+            'line-clamp-2 text-left text-body-sm leading-[1.3] mobile:text-center mobile:text-label mobile:font-bold',
             textClass,
           )}
         >
@@ -97,7 +97,7 @@ export function CarouselItem({
       return (
         <p
           className={cn(
-            'bilingual-font line-clamp-2 text-left text-lead mobile:text-center mobile:text-base/5 mobile:font-bold',
+            'bilingual-font line-clamp-2 text-left text-lead mobile:text-center mobile:text-body mobile:font-bold mobile:leading-tight',
             textClass,
           )}
         >

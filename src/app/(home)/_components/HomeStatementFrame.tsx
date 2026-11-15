@@ -29,11 +29,14 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
         'fixed z-[29] text-foreground transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
         // Desktop tree: top left, under the logo, clear of the wordmark and the dragon. Sizes have a px floor so the
         // 0.8333vw root (RWD-01) cannot shrink them below a readable size on tablets.
-        // Below 2048 px the header's navigation takes a second row (NAV-04), and below 1200 px it may wrap to a third, so
-        // the statement starts lower there.
-        'left-10 top-[max(10rem,190px)] w-[max(42rem,460px)] large:top-[max(10rem,128px)] navRow:top-[max(7.5rem,92px)]',
+        // It starts 12 px below the header, whose height (one, two or three rows) the header publishes as
+        // --site-header-h, so the block never meets the navigation at any width.
+        'left-10 top-[calc(var(--site-header-h,7.5rem)_+_12px)] w-[max(42rem,560px)]',
         // Phone tree: under the header, above the wordmark.
         'mobile:inset-x-5 mobile:top-[5.5rem] mobile:w-auto mobile:text-center [@media(max-height:740px)]:mobile:top-[4.75rem]',
+        // A phone in landscape (compact height): the statement takes the left column, clear of the wordmark in the
+        // middle of the screen.
+        'shortScreen:right-auto shortScreen:top-[4.25rem] shortScreen:w-[46%] shortScreen:text-left',
         onHero ? 'visible opacity-100' : 'invisible opacity-0',
       )}
     >
@@ -63,13 +66,13 @@ export function StatementDoors({ className }: { className?: string }) {
   };
 
   return (
-    <ul className={cn('flex gap-6 mobile:justify-center mobile:gap-5', className)}>
+    <ul className={cn('flex gap-6 mobile:justify-center mobile:gap-5 shortScreen:justify-start', className)}>
       {DOORS.map((door) => (
         <li key={door.href}>
           <a
             href={door.href}
             onClick={(event) => onClick(event, door.section)}
-            className="group relative inline-flex items-center gap-1.5 py-1 font-display text-[max(1rem,13px)]/[1.4] font-bold uppercase transition-colors duration-300 tap-area hover:text-accent"
+            className="group relative inline-flex items-center gap-1.5 py-1 font-display text-label font-bold uppercase transition-colors duration-300 tap hover:text-accent"
           >
             {door.label}
             <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5">
