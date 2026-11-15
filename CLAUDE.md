@@ -90,7 +90,7 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 
 ## Analytics build (for the e2e suite)
 
-`DEPLOY_ENV=preview NEXT_PUBLIC_ANALYTICS_ENABLED=1 NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=<QA stream id> npm run build`,
+`DEPLOY_ENV=preview NEXT_PUBLIC_ANALYTICS_ENABLED=1 NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=<QA stream id> npm run build` (the id is never committed: without it no tag loads),
 then `npm start`. Use the production stream only when every beacon is answered locally (the suite's safety fixture
 does); never browse such a build outside the harness. Set `idl_region=DE` (opt-in) or `idl_region=SG` (opt-out) as a
 cookie to pick the consent path, and mask `navigator.webdriver` and the headless user agent, or the site treats the
