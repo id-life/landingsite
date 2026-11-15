@@ -86,7 +86,11 @@ function keyFactRows(): Row[] {
     {
       label: 'Contact',
       value: (
-        <a href={`mailto:${FUND.email}`} className="underline underline-offset-2 hover:text-red-600">
+        <a
+          href={`mailto:${FUND.email}`}
+          data-track-placement="about"
+          className="underline underline-offset-2 hover:text-red-600"
+        >
           {FUND.email}
         </a>
       ),

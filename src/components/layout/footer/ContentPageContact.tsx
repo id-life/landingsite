@@ -23,7 +23,7 @@ export default function ContentPageContact() {
             <img className="size-5" src="/svgs/home.svg" alt="" />
             {ORG_ADDRESS_TEXT}
           </span>
-          <a href={ORG_MAILTO} className="flex w-fit items-center gap-1.5 hover:text-red-600">
+          <a href={ORG_MAILTO} data-track-placement="footer" className="flex w-fit items-center gap-1.5 hover:text-red-600">
             <img className="size-5" src="/svgs/contact-email.svg" alt="" />
             {ORG_EMAIL}
           </a>
