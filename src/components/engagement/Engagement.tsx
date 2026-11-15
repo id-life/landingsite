@@ -19,19 +19,11 @@ function Engagement() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // engagement auto scroll to portfolio
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Engagement] UP scrollFn called - enableUpJudge:',
-      //   enableUpJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('spectrum-trigger');
       if (!st) {
-        // console.log('[DEBUG] [Engagement] spectrum-trigger not found');
         return;
       }
-      // console.log('[DEBUG] [Engagement] Starting UP auto-scroll to Spectrum');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
@@ -40,7 +32,6 @@ function Engagement() {
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
-          // console.log('[DEBUG] [Engagement] UP Auto-scroll completed');
         },
         ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
       });
@@ -50,19 +41,11 @@ function Engagement() {
   const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
     // engagement auto scroll to twin
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Engagement] DOWN scrollFn called - enableDownJudge:',
-      //   enableDownJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('twin-scroll-trigger');
       if (!st) {
-        // console.log('[DEBUG] [Engagement] twin-scroll-trigger not found');
         return;
       }
-      // console.log('[DEBUG] [Engagement] Starting DOWN auto-scroll to Twin');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
@@ -72,7 +55,6 @@ function Engagement() {
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
-          // console.log('[DEBUG] [Engagement] DOWN Auto-scroll completed');
         },
       });
     },

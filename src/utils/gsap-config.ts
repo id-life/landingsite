@@ -116,7 +116,4 @@ export const SCROLL_SMOOTHER_DEFAULTS: ScrollSmoother.Vars = {
   // content (the fixed nav, the SUBSCRIBE dialog animating in, the contact footer) that only jumps the page
   // to another section, so it is limited to elements inside #content.
   onFocusIn: (_smoother, event) => event.target instanceof Element && event.target.closest('#content') !== null,
-  // onUpdate: (self) => {
-  //   console.log('scroll smoother update', self.progress);
-  // },
 };

@@ -99,21 +99,23 @@ export const audioControlsAtom = atom(
         set(playModeAtom, value);
         break;
       case AUDIO_DISPATCH.TOGGLE_PLAY:
-        // The visitor pressed play (DATA-11: music_play only for visitor-started playback, not every PLAY).
-        if (!isPlaying) trackMusicPlay(currentMusic);
+        // The visitor pressed play (DATA-11: music_play only for visitor-started playback, not every PLAY). Same test
+        // as togglePlayAtom: a press while the track is still loading pauses it and is not a play.
+        if (audioRef && currentMusic && audioRef.paused && !isPlaying) trackMusicPlay(currentMusic);
         set(togglePlayAtom);
         break;
       case AUDIO_DISPATCH.PLAY:
         if (audioRef) {
+          // The control shows the visitor's intent at once; a refused or interrupted play() puts it back.
+          set(currentPlayStatusAtom, true);
           audioRef
             .play()
             .then(() => {
               if (value === PLAY_TRIGGER.TOGGLE) trackMusicPlay(currentMusic);
-              set(currentPlayStatusAtom, true);
             })
             .catch((error) => {
               reportMediaError(error, { area: 'media', component: 'site_player' });
-              set(currentPlayStatusAtom, false);
+              onPlayRejected(audioRef, set);
             });
         }
         break;
@@ -234,6 +236,14 @@ export const determineNextTrackAtom = atom(null, (get, set) => {
   return null;
 });
 
+/**
+ * play() was refused (no gesture, decode error) or interrupted by a pause before it started (the visitor
+ * pausing). Either way the control follows the element.
+ */
+function onPlayRejected(audio: HTMLAudioElement, set: (atom: typeof currentPlayStatusAtom, value: boolean) => void) {
+  if (audio.paused) set(currentPlayStatusAtom, false);
+}
+
 export const togglePlayAtom = atom(null, (get, set) => {
   const isPlaying = get(currentPlayStatusAtom);
   const audioRef = get(audioRefAtom);
@@ -241,18 +251,17 @@ export const togglePlayAtom = atom(null, (get, set) => {
 
   if (!audioRef || !currentAudio) return;
 
-  if (isPlaying) {
+  // Decide by the element, not by currentPlayStatusAtom: a second press while the track is still loading must
+  // pause it (play() flips audio.paused at once; the status used to follow only when playback had started, so
+  // that press called play() again and the toggle was lost).
+  if (!audioRef.paused || isPlaying) {
     audioRef.pause();
     set(currentPlayStatusAtom, false);
   } else {
-    audioRef
-      .play()
-      .then(() => {
-        set(currentPlayStatusAtom, true);
-      })
-      .catch((error) => {
-        reportMediaError(error, { area: 'media', component: 'site_player' });
-        set(currentPlayStatusAtom, false);
-      });
+    set(currentPlayStatusAtom, true);
+    audioRef.play().catch((error) => {
+      reportMediaError(error, { area: 'media', component: 'site_player' });
+      onPlayRejected(audioRef, set);
+    });
   }
 });

@@ -8,6 +8,7 @@ import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
 import { track } from '@/lib/analytics/track';
+import { youtubeWatchUrl } from '@/utils/youtube';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +27,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         external={isExternal}
         onActivate={() => setIsModalOpen(true)}
         onNavigate={() => track('news_item_click', { item_id: String(data.id), placement: 'news_featured' })}
+        linkFallback={isYouTube ? youtubeWatchUrl(data.videoId!) : undefined}
         className="group block cursor-pointer"
       >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">

@@ -12,12 +12,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useEffect, useMemo, useRef } from 'react';
-import { Swiper as SwiperType } from 'swiper';
-import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-
-SwiperType.use([FreeMode]);
 
 const PAGE_ID = 'portfolio_page';
 const FIRST_ROW_COUNT = 8;
@@ -60,14 +56,7 @@ function Portfolio() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // profile auto scroll to vision
     scrollFn: () => {
-      // console.log(
-      //   '[DEBUG] [Portfolio] UP scrollFn called - enableUpJudge:',
-      //   enableUpJudge,
-      //   'isNavScrolling:',
-      //   window.isNavScrolling,
-      // );
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      // console.log('[DEBUG] [Portfolio] Starting auto-scroll to Vision');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {

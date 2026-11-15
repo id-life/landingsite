@@ -5,13 +5,19 @@ import {
   AUDIO_DISPATCH,
   audioListRequestedAtom,
   currentAudioAtom,
+  currentPlayStatusAtom,
   hasInteractedAtom,
   musicListAtom,
   playlistAtom,
 } from '@/atoms/audio-player';
 import Dialog from '@/components/dialog';
 import { useFetchAudioData } from '@/hooks/audio/fetch';
-import useCurrentMusicControl, { getAudioContext, requestPlayWhenReady } from '@/hooks/audio/useCurrentAudio';
+import useCurrentMusicControl, {
+  cancelPlayWhenReady,
+  getAudioContext,
+  isPlayWhenReadyPending,
+  requestPlayWhenReady,
+} from '@/hooks/audio/useCurrentAudio';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
@@ -29,6 +35,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   // The player list is fetched on intent: touching or focusing the player, or opening its playlist (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
   const onIntent = () => requestAudioList(true);
@@ -47,9 +54,12 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
-    // Pressed before the list has arrived: start the first track as soon as it is in.
-    if (!data) requestPlayWhenReady();
-    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: PLAY_TRIGGER.TOGGLE });
+    // Pressed before the list has arrived: the control shows the press at once, and a second press cancels it.
+    if (!data) {
+      if (isPlayWhenReadyPending()) cancelPlayWhenReady();
+      else requestPlayWhenReady();
+      setPlayStatus(isPlayWhenReadyPending());
+    } else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: PLAY_TRIGGER.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 

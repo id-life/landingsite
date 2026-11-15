@@ -40,8 +40,8 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
   const [isCompactEnd, setIsCompactEnd] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const swiperRef = useRef<SwiperType>();
-  const compactSwiperRef = useRef<SwiperType>();
+  const swiperRef = useRef<SwiperType>(undefined);
+  const compactSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible); // 播客卡片106 + 间距20 + 30
 

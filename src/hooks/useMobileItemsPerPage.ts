@@ -4,7 +4,7 @@ import { useContainerResize } from './useContainerResize';
 const DEFAULT_SLOT_HEIGHT = 206; // 默认卡片高度146 + 间距20 + 40
 
 export function useMobileItemsPerPage(
-  containerRef: RefObject<HTMLDivElement>,
+  containerRef: RefObject<HTMLDivElement | null>,
   isMobile: boolean,
   slotHeight = DEFAULT_SLOT_HEIGHT,
   isVisible = true,

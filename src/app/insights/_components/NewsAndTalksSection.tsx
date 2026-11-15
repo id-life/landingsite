@@ -19,6 +19,7 @@ import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
 import SectionLoadError from '@/components/common/SectionLoadError';
+import { youtubeWatchUrl } from '@/utils/youtube';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -37,7 +38,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   const isYouTube = !!item.videoId;
 
   // Articles are real links (preview, copy, middle-click, keyboard): our own pages in the same tab, external
-  // press in a new tab. Videos stay buttons that open the modal; an item with neither is not interactive.
+  // press in a new tab. Videos open the modal on a plain click and are real links to their YouTube page; an item with neither is not interactive.
   const href = isYouTube ? undefined : safeHref(item.url);
   const external = Boolean(href && !isInternalHref(href));
   const openVideo = isYouTube ? () => setIsModalOpen(true) : undefined;
@@ -63,6 +64,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           external={external}
           onActivate={openVideo}
           onNavigate={onNavigate}
+          linkFallback={isYouTube ? youtubeWatchUrl(item.videoId!) : undefined}
           className="group flex cursor-pointer flex-col overflow-hidden"
         >
           {/* Image */}
@@ -99,6 +101,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         external={external}
         onActivate={openVideo}
         onNavigate={onNavigate}
+        linkFallback={isYouTube ? youtubeWatchUrl(item.videoId!) : undefined}
         className="group flex cursor-pointer flex-col overflow-hidden"
       >
         {/* Image */}
@@ -163,8 +166,8 @@ export default function NewsAndTalksSection({
   const [isMobileBeginning, setIsMobileBeginning] = useState(true);
   const [isMobileEnd, setIsMobileEnd] = useState(false);
   const [mobileItemCount, setMobileItemCount] = useState(8); // Default to max
-  const swiperRef = useRef<SwiperType>();
-  const mobileSwiperRef = useRef<SwiperType>();
+  const swiperRef = useRef<SwiperType>(undefined);
+  const mobileSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);

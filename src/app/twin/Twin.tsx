@@ -31,7 +31,6 @@ function Twin() {
   //   triggerId: 'twin-scroll-trigger',
   //   scrollFn: () => {
   //     if (!enableUpJudge || currentPage.id !== NAV_LIST[4].id) return;
-  //     // console.log('Twin scrollFn up');
   //     const st = ScrollTrigger.getById('engagement-scroll-trigger');
   //     if (!st) return;
   //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
@@ -42,14 +41,11 @@ function Twin() {
   const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
     // twin auto scroll to engagement
     scrollFn: () => {
-      // console.log('[DEBUG] [Twin] UP scrollFn called - enableUpJudge:', enableUpJudge, 'isNavScrolling:', window.isNavScrolling);
       if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
       const st = ScrollTrigger.getById('engagement-scroll-trigger');
       if (!st) {
-        // console.log('[DEBUG] [Twin] engagement-scroll-trigger not found');
         return;
       }
-      // console.log('[DEBUG] [Twin] Starting UP auto-scroll to Engagement');
       window.isNavScrolling = true;
       window.isSmootherScrolling = true;
       gsap.to(window, {
@@ -59,7 +55,6 @@ function Twin() {
         onComplete: () => {
           window.isNavScrolling = false;
           window.isSmootherScrolling = false;
-          // console.log('[DEBUG] [Twin] UP Auto-scroll completed');
         },
       });
     },
@@ -122,9 +117,6 @@ function Twin() {
           if (window.isResizing) return;
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
-        // onUpdate: (self) => {
-        //   console.log('twin onUpdate ', self?.progress);
-        // },
       },
     });
     // tl.add(() => {
