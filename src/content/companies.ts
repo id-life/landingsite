@@ -5,10 +5,9 @@
 // Retro Biosciences ("Cellular Partial Reprogramming") was commented out of the portfolio at the baseline; its logo
 // and particle images are still in public/imgs.
 import { live } from './approval';
-import { Company, defineContent } from './schema';
-import { z } from 'zod';
+import type { Company } from './schema';
 
-export const COMPANIES = defineContent('content/companies.ts', z.array(Company), [
+export const COMPANIES: Company[] = [
   {
     slug: 'healthspan-capital',
     name: 'Healthspan Capital',
@@ -151,7 +150,7 @@ export const COMPANIES = defineContent('content/companies.ts', z.array(Company),
     logoAlt: 'EONARK logo - AI-driven longevity drug discovery',
     approval: live(),
   },
-]);
+];
 
 /** The portfolio count, computed (never typed): the plan's recommendation for CON-11 #6. */
 export const PORTFOLIO_COUNT = COMPANIES.length;

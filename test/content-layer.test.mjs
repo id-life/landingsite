@@ -55,6 +55,17 @@ describe('validation', () => {
   test('the fund record re-validates', () => {
     expect(FundFacts.safeParse(FUND).success).toBe(true);
   });
+
+  test('every collection validates, and an invalid record makes the validator throw (the build imports it)', async () => {
+    const { CONTENT_ENTRIES, validateContent } = await import('@/content/validate');
+    expect(validateContent()).toBe(CONTENT_ENTRIES.length);
+    const broken = CONTENT_ENTRIES.map(([name, schema, data]) =>
+      name === 'content/companies.ts'
+        ? [name, schema, [{ ...data[0], slug: 'Healthspan Capital' }, ...data.slice(1)]]
+        : [name, schema, data],
+    );
+    expect(() => validateContent(broken)).toThrow(/Invalid content in content\/companies\.ts:\n {2}0\.slug/);
+  });
 });
 
 // The same literals the plan's acceptance greps for (CON-16): outside src/content they may appear only as imports.

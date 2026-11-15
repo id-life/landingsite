@@ -2,18 +2,17 @@
 // the papers, and (in ./grants.ts) the sponsored bodies. Presentation (icons, sizes, grids) stays in
 // src/app/spectrum/_components/spectrumData.tsx, keyed by these slugs.
 import { live } from './approval';
-import { Book, Copy, Lab, Paper, defineContent } from './schema';
-import { z } from 'zod';
+import type { Book, Copy, Lab, Paper } from './schema';
 
-export const SPECTRUM_GROUPS = defineContent('content/initiatives.ts#groups', z.array(Copy), [
+export const SPECTRUM_GROUPS: Copy[] = [
   { id: 'translation-publishing', text: { en: 'Translation & Publishing', zh: '翻译与出版' }, approval: live() },
   { id: 'evangelism', text: { en: 'Evangelism', zh: '布道者' }, approval: live() },
   { id: 'digital-twin', text: { en: 'Digital Twin', zh: '数字孪生' }, approval: live() },
   { id: 'peer-reviews', text: { en: 'Peer Reviews', zh: '论文与综述' }, approval: live() },
   { id: 'proudly-supporting', text: { en: 'Proudly Supporting', zh: '本机构赞助支持' }, approval: live() },
-]);
+];
 
-export const BOOKS = defineContent('content/initiatives.ts#books', z.array(Book), [
+export const BOOKS: Book[] = [
   { slug: 'bio-acc-manifesto', title: 'Bio/Acc Manifesto', url: 'https://bioacc.life/zh/', approval: live() },
   {
     slug: 'the-case-against-death',
@@ -39,9 +38,9 @@ export const BOOKS = defineContent('content/initiatives.ts#books', z.array(Book)
     url: 'https://link.springer.com/book/9783032327222',
     approval: live(),
   },
-]);
+];
 
-export const LABS = defineContent('content/initiatives.ts#labs', z.array(Lab), [
+export const LABS: Lab[] = [
   { slug: 'influence-network', title: 'Influence Network', url: '/spectrum/influence-network', approval: live() },
   { slug: 'disease-management', title: 'Disease Management', url: '/spectrum/disease-management', approval: live() },
   {
@@ -52,9 +51,9 @@ export const LABS = defineContent('content/initiatives.ts#labs', z.array(Lab), [
   },
   // A section of the experience: a plain click moves there through the digital-twin hash route.
   { slug: 'digital-twin', title: 'Access Digital Twin', url: '/digitaltwin', routeKey: 'digital-twin', approval: live() },
-]);
+];
 
-export const PAPERS = defineContent('content/initiatives.ts#papers', z.array(Paper), [
+export const PAPERS: Paper[] = [
   {
     slug: 'mitochondrial-quality-control',
     title: 'Mitochondrial quality control as a central pharmacological target in aging',
@@ -91,7 +90,7 @@ export const PAPERS = defineContent('content/initiatives.ts#papers', z.array(Pap
     url: 'https://link.springer.com/article/10.1186/s12967-026-08988-0',
     approval: live(),
   },
-]);
+];
 
 export const bySlug = <T extends { slug: string }>(list: T[], slug: string, where: string): T => {
   const found = list.find((entry) => entry.slug === slug);

@@ -7,11 +7,10 @@ import { live } from './approval';
 import { FUND, FUND_ADDRESS_LINE } from './fund';
 import { PROFILE_GRANTS } from './grants';
 import { personBySlug } from './people';
-import { Copy, defineContent } from './schema';
+import type { Copy } from './schema';
 import { THEMES } from './themes';
-import { z } from 'zod';
 
-const PROFILE_TEXT = defineContent('content/profile.ts', z.array(Copy), [
+export const PROFILE_TEXT: Copy[] = [
   {
     id: 'intro',
     text: {
@@ -97,7 +96,7 @@ const PROFILE_TEXT = defineContent('content/profile.ts', z.array(Copy), [
     },
     approval: live(),
   },
-]);
+];
 
 /** One profile text by id. */
 export function profileText(id: string) {

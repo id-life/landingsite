@@ -1,12 +1,11 @@
 // Press releases and syndicated coverage about Immortal Dragons and its portfolio companies.
 // Titles and dates are copied from the published pages.
 import { live } from './approval';
-import { PressItem, defineContent } from './schema';
-import { z } from 'zod';
+import type { PressItem } from './schema';
 
 export type { PressItem } from './schema';
 
-export const PRESS = defineContent('content/press.ts', z.array(PressItem), [
+export const PRESS: PressItem[] = [
   {
     subject: 'fund',
     title: 'Immortal Dragons Launches $40M Longevity Fund to Support Radical Life Extensions',
@@ -39,7 +38,7 @@ export const PRESS = defineContent('content/press.ts', z.array(PressItem), [
     date: '2026-04-09',
     approval: live(),
   },
-]);
+];
 
 /** Coverage whose subject is Immortal Dragons itself (also exposed as Organization.subjectOf). */
 export const FUND_PRESS = PRESS.filter((item) => item.subject === 'fund');

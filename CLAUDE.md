@@ -82,8 +82,9 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 - **Content layer** (`src/content/`): fund facts, people, themes, companies, press, grants, books, papers, labs, the
   profile behind llms.txt, slogans, Connect, Digital Twin and subscribe copy, and the two long articles
-  (`src/content/articles/*.md`). Records are data only (`{ en, zh }` text, URLs, image paths, dates), validated with
-  zod when their module loads (`defineContent` in `schema.ts`), so `next build` fails on a missing field. Presentation
+  (`src/content/articles/*.md`). Records are data only (`{ en, zh }` text, URLs, image paths, dates), typed with
+  `import type` from the zod schemas in `schema.ts` (so zod never ships to the browser) and validated by
+  `src/content/validate.ts`, which the root layout imports: `next build` fails on an invalid record. Presentation
   (logo sizes, particle images, icons, Tailwind classes) stays in the component, keyed by the record's slug. Never type
   a fund fact (contact@id.life, US$40 million, 15+, the Biopolis address) outside `src/content`; `entity.ts`,
   llms.txt and the About page derive from it (`test/content-layer.test.mjs` fails otherwise). The feed fields the

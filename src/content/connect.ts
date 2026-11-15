@@ -2,10 +2,9 @@
 // Rendered visibly by FixedConnect / FixedConnectPage1 (English) and in full by the server-rendered summary.
 // Wording edits are owner drafts (src/content/drafts/copy-edits.ts).
 import { live } from './approval';
-import { Copy, CopyList, defineContent } from './schema';
-import { z } from 'zod';
+import type { Copy, CopyList } from './schema';
 
-export const CONNECT_VALUES = defineContent('content/connect.ts#values', z.array(Copy), [
+export const CONNECT_VALUES: Copy[] = [
   {
     id: 'a-new-dawn',
     title: { en: 'A New Dawn', zh: '曙光' },
@@ -42,9 +41,9 @@ export const CONNECT_VALUES = defineContent('content/connect.ts#values', z.array
     },
     approval: live(),
   },
-]);
+];
 
-export const CONNECT_CRITERIA = defineContent('content/connect.ts#criteria', CopyList, {
+export const CONNECT_CRITERIA: CopyList = {
   id: 'early-stage-ventures',
   title: { en: 'Promising Early-Stage Ventures', zh: '聚焦早期企业投资' },
   items: [
@@ -59,9 +58,9 @@ export const CONNECT_CRITERIA = defineContent('content/connect.ts#criteria', Cop
   ],
   // The Chinese line says 种子轮 (seed) where the English and the profile say pre-seed (CON-11 #10).
   approval: live('stage'),
-});
+};
 
-export const CONNECT_STRENGTHS = defineContent('content/connect.ts#strengths', z.array(Copy), [
+export const CONNECT_STRENGTHS: Copy[] = [
   {
     id: 'east-west-access',
     title: { en: 'East & West Access', zh: '贯通东西' },
@@ -89,4 +88,4 @@ export const CONNECT_STRENGTHS = defineContent('content/connect.ts#strengths', z
     },
     approval: live(),
   },
-]);
+];

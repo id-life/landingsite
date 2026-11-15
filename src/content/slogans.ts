@@ -2,10 +2,9 @@
 // mixing); the Chinese ones wait for the /zh locale. Icons and widths are presentation (src/constants/config.tsx).
 // Rewrites and the choice between the two near-duplicates are owner drafts (src/content/drafts/slogans.ts).
 import { live } from './approval';
-import { Slogan, defineContent } from './schema';
-import { z } from 'zod';
+import type { Slogan } from './schema';
 
-export const SLOGANS = defineContent('content/slogans.ts', z.array(Slogan), [
+export const SLOGANS: Slogan[] = [
   { id: 'purpose-driven-fund', locale: 'en', text: 'Immortal Dragons is a purpose-driven longevity fund', approval: live() },
   { id: 'crack-immortality-code', locale: 'zh', text: '破解永生密码', approval: live() },
   { id: 'igniting-revolution', locale: 'en', text: 'Igniting longevity revolution', approval: live() },
@@ -23,4 +22,4 @@ export const SLOGANS = defineContent('content/slogans.ts', z.array(Slogan), [
     approval: live(),
   },
   { id: 'accelerate-longevity-tech', locale: 'zh', text: '加速长寿技术革命', approval: live() },
-]);
+];

@@ -1,4 +1,5 @@
-// Schemas of the content layer (CON-16). Records are data only: ids, { en, zh } text, URLs, image paths and
+// Schemas of the content layer (CON-16). Import this module with `import type` from record modules (shipped to the
+// browser); only ./validate.ts and the drafts import it at runtime. Records are data only: ids, { en, zh } text, URLs, image paths and
 // dates. No JSX, no Tailwind classes, no positions in an array that another array depends on: presentation
 // (logo sizes, particle images, map positions) lives in the component that draws it, keyed by the record's slug.
 //
@@ -180,6 +181,27 @@ export type Slogan = z.infer<typeof Slogan>;
 export const Copy = z.object({ id: slug, text: Text, title: Text.optional(), ...shippable });
 export type Copy = z.infer<typeof Copy>;
 
+/** The Digital Twin section's copy. */
+export const TwinCopy = z.object({
+  features: z.array(Text).min(1),
+  ontology: z.object({ title: Text, text: Text }),
+  approval: ShippableApproval,
+});
+export type TwinCopy = z.infer<typeof TwinCopy>;
+
+/** A typed override for one id-platform feed item (docs/id-platform-content-api.md). */
+export const FeedOverride = z.object({
+  feed: z.enum(['insights', 'weekly', 'podcast']),
+  id: z.number().int(),
+  type: z.enum(['writing', 'press', 'talk', 'weekly', 'paper', 'episode']).optional(),
+  lang: z.string().optional(),
+  summary: Text.optional(),
+  about: z.array(z.string()).optional(),
+  slug: slug.optional(),
+  approval: ShippableApproval,
+});
+export type FeedOverride = z.infer<typeof FeedOverride>;
+
 /** A titled list (the Connect criteria). */
 export const CopyList = z.object({ id: slug, title: Text, items: z.array(Text).min(1), ...shippable });
 export type CopyList = z.infer<typeof CopyList>;
@@ -201,8 +223,9 @@ export const DraftRecord = z.object({
 export type DraftRecord = z.infer<typeof DraftRecord>;
 
 /**
- * Parse a record or a collection when its module loads, so `next build` fails on invalid content
- * (every route that renders it imports the module while it prerenders). The message names the file and field.
+ * Parse a record or a collection and throw a message that names the file and the field. Server and tests only: the
+ * records themselves are plain typed data, so zod never reaches a browser bundle; ./validate.ts runs every check from
+ * the root layout, which makes `next build` fail on invalid content.
  */
 export function defineContent<S extends z.ZodTypeAny>(name: string, schema: S, data: z.input<S>): z.output<S> {
   const result = schema.safeParse(data);

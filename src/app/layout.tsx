@@ -15,6 +15,8 @@ import { SITE_URL } from '@/constants/site';
 import { ANALYTICS_ENABLED } from '@/constants/env';
 
 import '@/styles/globals.css';
+// CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
+import '@/content/validate';
 import { SubscribePopupStorageReporter } from './_components/page-storage-reporter';
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;

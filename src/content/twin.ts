@@ -1,15 +1,8 @@
 // The Digital Twin section's copy. Shared by Twin (3D page) and the server-rendered page summary.
 import { live } from './approval';
-import { Text, ShippableApproval, defineContent } from './schema';
-import { z } from 'zod';
+import type { TwinCopy } from './schema';
 
-const TwinCopy = z.object({
-  features: z.array(Text).min(1),
-  ontology: z.object({ title: Text, text: Text }),
-  approval: ShippableApproval,
-});
-
-const TWIN = defineContent('content/twin.ts', TwinCopy, {
+export const TWIN: TwinCopy = {
   features: [
     { en: 'High-Precision Digital Twin Model Creation', zh: '高精度数字孪生' },
     { en: 'Predictive Models', zh: 'AI预测克隆体' },
@@ -24,7 +17,7 @@ const TWIN = defineContent('content/twin.ts', TwinCopy, {
     },
   },
   approval: live(),
-});
+};
 
 export const TWIN_FEATURES = TWIN.features.map((feature) => feature.en);
 

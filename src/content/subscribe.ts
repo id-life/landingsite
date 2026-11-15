@@ -1,10 +1,9 @@
 // The newsletter promise next to every subscribe form. Two wordings were live at the baseline; both are kept here so
 // the one-string promise the owner approves (src/content/drafts/subscribe.ts, CON-20) is a single edit.
 import { live } from './approval';
-import { Copy, defineContent } from './schema';
-import { z } from 'zod';
+import type { Copy } from './schema';
 
-const PROMISES = defineContent('content/subscribe.ts', z.array(Copy), [
+export const SUBSCRIBE_PROMISES: Copy[] = [
   // Connect footer (desktop and phone) and the news footer.
   {
     id: 'priority-access',
@@ -17,9 +16,9 @@ const PROMISES = defineContent('content/subscribe.ts', z.array(Copy), [
     text: { en: 'Join our Longevity Circle and receive the latest insights & research' },
     approval: live(),
   },
-]);
+];
 
-const promise = (id: string) => PROMISES.find((item) => item.id === id)?.text.en ?? '';
+const promise = (id: string) => SUBSCRIBE_PROMISES.find((item) => item.id === id)?.text.en ?? '';
 
 export const SUBSCRIBE_PROMISE = {
   priorityAccess: promise('priority-access'),
