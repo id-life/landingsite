@@ -20,8 +20,18 @@ describe.skipIf(!BUILD)('production build output', () => {
   test('no draft line and no review page in the build', async () => {
     expect(existsSync(BUILD), `${BUILD} exists`).toBe(true);
     const { ALL_DRAFTS } = await import('@/content/drafts');
-    // Lines that only a draft contains (a draft may quote live copy, which is allowed to be in the build).
-    const shipped = JSON.stringify(content);
+    // Lines that only a draft contains (a draft may quote live copy, which is allowed to be in the build). The shipped
+    // corpus is every string in the content index, raw (JSON.stringify would escape quotes and miss quoted copy).
+    const strings = [];
+    const collect = (value, seen = new Set()) => {
+      if (typeof value === 'string') strings.push(value);
+      else if (value && typeof value === 'object' && !seen.has(value)) {
+        seen.add(value);
+        Object.values(value).forEach((child) => collect(child, seen));
+      }
+    };
+    collect(content);
+    const shipped = strings.join('\n');
     const needles = [
       ...new Set(
         ALL_DRAFTS.flatMap((draft) => [draft.body.en, draft.body.zh ?? ''].flatMap((text) => text.split('\n')))
