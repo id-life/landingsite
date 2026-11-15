@@ -13,7 +13,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const articleTitle = '不朽真龙公司资讯';
 const articleDescription = '不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。';
 const articleUrl = 'https://www.id.life/news/immortal-dragons-milestones-and-portfolio';
-const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-milestones-and-portfolio/article.md');
+const articlePath = path.join(process.cwd(), 'src/content/articles/immortal-dragons-milestones-and-portfolio.md');
 
 export const dynamic = 'force-static';
 

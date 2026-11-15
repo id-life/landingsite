@@ -21,6 +21,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -178,7 +179,7 @@ export default function FooterContact() {
               </form>
               <div className="mt-3.5 flex gap-1.5 font-poppins text-xs font-semibold">
                 <InfoSVG className="size-4" />
-                Join our longevity circle for priority access to pioneer research
+                {SUBSCRIBE_PROMISE.priorityAccess}
               </div>
             </div>
           </div>

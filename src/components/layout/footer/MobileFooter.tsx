@@ -11,6 +11,7 @@ import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -132,7 +133,7 @@ export default function MobileFooter() {
             </form>
             <div className="mt-5 flex gap-1.5 text-left text-xs/5 font-semibold text-foreground opacity-50">
               <InfoSVG className="size-4 shrink-0 mobile:mt-0.5" />
-              Join our Longevity Circle and receive the latest insights & research
+              {SUBSCRIBE_PROMISE.latestInsights}
             </div>
           </motion.div>
         </FloatingFocusManager>

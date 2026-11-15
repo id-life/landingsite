@@ -13,6 +13,8 @@ import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
 import { submitNewsletter } from '@/utils/newsletter';
 import { FormEvent, useState } from 'react';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
+import { ORG_ADDRESS_TEXT, ORG_EMAIL } from '@/constants/contact';
 
 export default function NewsFooter() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -92,11 +94,12 @@ export default function NewsFooter() {
         <div className="font-oxanium text-base/5 font-bold uppercase">
           <p className="opacity-50">Contact</p>
           <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
-            <img className="size-5" src="/svgs/home.svg" alt="" />3 Biopolis Dr, #01-15, Singapore 138623
+            <img className="size-5" src="/svgs/home.svg" alt="" />
+            {ORG_ADDRESS_TEXT}
           </div>
           <div className="mt-3 flex items-center justify-start gap-1.5 font-poppins font-semibold">
             <img className="size-5" src="/svgs/contact-email.svg" alt="" />
-            contact@id.life
+            {ORG_EMAIL}
           </div>
         </div>
         <div className="font-oxanium text-base/5">
@@ -123,7 +126,7 @@ export default function NewsFooter() {
             )}
             <div className="mt-3 flex items-start gap-1.5 font-poppins text-xs font-semibold">
               <InfoSVG className="size-4 shrink-0" />
-              Join our longevity circle for priority access to pioneer research
+              {SUBSCRIBE_PROMISE.priorityAccess}
             </div>
             <div className="footer-submit-clip relative mt-3 h-11 w-[10.5rem] self-end bg-red-600 text-white">
               {isSubmitting ? (

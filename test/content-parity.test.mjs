@@ -35,7 +35,7 @@ const key = (name) =>
     .replace(/[\s.]+/g, '')
     .toLowerCase();
 
-const profile = readFileSync('src/app/news/immortal-dragons-news-and-updates/article.md', 'utf8');
+const profile = readFileSync('src/content/articles/immortal-dragons-news-and-updates.md', 'utf8');
 
 /** Column `col` of the markdown table under the `## heading` of the profile article. */
 function tableColumn(heading, col) {

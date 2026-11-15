@@ -1,31 +1,35 @@
 import type { BreadcrumbList, Organization, WithContext } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
-import { FUND_PRESS } from '@/constants/press';
+import { FUND } from '@/content/fund';
+import { personBySlug } from '@/content/people';
+import { FUND_PRESS } from '@/content/press';
+import { THEMES } from '@/content/themes';
 import { SITE_URL, absoluteUrl } from '@/constants/site';
 
-// Single source for the Immortal Dragons entity used by every JSON-LD block.
-// Facts follow the site copy and the 不朽真龙介绍 profile; keep them in sync with llms.txt.
+// JSON-LD builders for the Immortal Dragons entity. The facts come from the content layer (src/content/fund.ts),
+// which llms.txt and the About page read too, so the copies cannot drift apart.
 
 export const ORG_ID = `${SITE_URL}/#org`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
-export const ORG_NAME = 'Immortal Dragons';
-export const ORG_ALTERNATE_NAME = '不朽真龙';
-export const ORG_LEGAL_NAME = 'IMMORTAL DRAGONS PRIVATE LIMITED';
-export const ORG_EMAIL = 'contact@id.life';
+export const ORG_NAME = FUND.name.en;
+export const ORG_ALTERNATE_NAME = FUND.name.zh;
+export const ORG_LEGAL_NAME = FUND.legalName.value.en;
+export const ORG_EMAIL = FUND.email;
 export const ORG_LOGO = 'https://resources.id.life/logo.png';
 export const ORG_COVER = 'https://resources.id.life/id-life-cover-2.webp';
 
-export const ORG_DESCRIPTION =
-  'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.';
+export const ORG_DESCRIPTION = FUND.description.text.en;
 
 export const ORG_ADDRESS = {
   '@type': 'PostalAddress',
-  streetAddress: '3 Biopolis Dr, #01-15',
-  addressLocality: 'Singapore',
-  postalCode: '138623',
-  addressCountry: 'SG',
+  streetAddress: FUND.address.streetAddress,
+  addressLocality: FUND.address.addressLocality,
+  postalCode: FUND.address.postalCode,
+  addressCountry: FUND.address.addressCountry,
 } as const;
+
+const FOUNDER = personBySlug(FUND.founder);
 
 // Official profiles. Short links (b23.tv, xhslink) are resolved to their canonical profile URLs.
 export const ORG_SAME_AS = [
@@ -70,18 +74,15 @@ export const ORGANIZATION: Exclude<Organization, string> = {
   image: ORG_COVER,
   description: ORG_DESCRIPTION,
   email: ORG_EMAIL,
-  foundingDate: '2024',
+  foundingDate: FUND.foundingYear.value.en,
   founder: {
     '@type': 'Person',
-    name: 'Boyang Wang',
-    alternateName: '朢舶洋',
-    alumniOf: [
-      { '@type': 'CollegeOrUniversity', name: 'National University of Singapore' },
-      { '@type': 'CollegeOrUniversity', name: 'Yale University' },
-    ],
+    name: FOUNDER.name.en,
+    alternateName: FOUNDER.name.zh,
+    alumniOf: FOUNDER.alumniOf.map((name) => ({ '@type': 'CollegeOrUniversity' as const, name })),
   },
   address: ORG_ADDRESS,
-  knowsAbout: ['Replacement Strategy', 'Neuro & Brain Rejuvenation', 'Cells and Gene Therapy', 'Reproduction Technology'],
+  knowsAbout: THEMES.map((theme) => theme.name.en),
   sameAs: ORG_SAME_AS,
   subjectOf: ORG_PRESS,
 };

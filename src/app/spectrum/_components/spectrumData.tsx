@@ -1,6 +1,11 @@
-// Shared spectrum data - used by the useSpectrumData hook and the Spectrum JSON-LD
+// Shared spectrum data - used by the useSpectrumData hook and the Spectrum JSON-LD.
+// The records (groups, books, labs, papers, sponsored bodies) live in the content layer (src/content/initiatives.ts,
+// src/content/grants.ts); this file adds only their presentation, keyed by slug.
 
 import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
+import { absoluteUrl } from '@/constants/site';
+import { SPECTRUM_GRANTS } from '@/content/grants';
+import { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS, bySlug } from '@/content/initiatives';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 export type SpectrumLinkData = {
@@ -23,241 +28,112 @@ export type SpectrumItemData = {
   className?: string;
 };
 
-export const spectrumBaseData: SpectrumItemData[] = [
-  {
-    title: 'Translation & Publishing',
-    titleCn: '翻译与出版',
-    icon: <BookSVG />,
-    linksClassName: 'grid grid-cols-2',
-    links: [
-      { label: 'Bio/Acc Manifesto', link: 'https://bioacc.life/zh/' },
-      {
-        label: 'The case against death',
-        link: 'https://book.douban.com/subject/38180553/',
-        isComingSoon: false,
-      },
-      { label: 'The Network State', link: 'https://www.thenetworkstate-zh.com/foreword/' },
-      {
-        label: 'Better With Age',
-        labelClassName: 'mobile:ml-0',
-        link: 'https://book.douban.com/subject/37415399/?dt_dapp=1',
-      },
-      {
-        label: 'Springer Nature, Frontiers of Longevity Science',
-        link: 'https://link.springer.com/book/9783032327222',
-      },
-    ],
-  },
-  {
-    title: 'Evangelism',
-    titleCn: '布道者',
-    icon: <RelationSVG />,
-    linksClassName: 'grid grid-cols-2 gap-x-6',
-    links: [
-      { label: 'Influence Network', link: '/spectrum/influence-network' },
-      {
-        label: 'Disease Management',
-        link: '/spectrum/disease-management',
-      },
-      { label: 'Longevity Trend Radar', link: 'https://longevity-trend-radar.vercel.app' },
-    ],
-  },
-  {
-    title: 'Digital Twin',
-    titleCn: '数字孪生',
-    icon: <DigitalTwinSVG />,
-    className: 'mobile:pt-4',
-    // A section of this page: a plain click moves the experience there (the digital-twin hash route).
-    links: [{ label: 'Access Digital Twin', link: '/digitaltwin', routeKey: 'digital-twin' }],
-  },
-  {
-    title: 'Peer Reviews',
-    titleCn: '论文与综述',
+/** Group presentation, in display order. */
+const GROUP_VIEW: Record<string, Pick<SpectrumItemData, 'icon' | 'linksClassName' | 'className'>> = {
+  'translation-publishing': { icon: <BookSVG />, linksClassName: 'grid grid-cols-2' },
+  evangelism: { icon: <RelationSVG />, linksClassName: 'grid grid-cols-2 gap-x-6' },
+  'digital-twin': { icon: <DigitalTwinSVG />, className: 'mobile:pt-4' },
+  'peer-reviews': {
     icon: <ResearchSVG className="[&_path]:fill-white" />,
     linksClassName: 'flex max-w-[15rem] flex-col gap-1',
-    links: [
-      {
-        label: 'Mitochondrial quality control as a central pharmacological target in aging',
-        link: 'https://pubmed.ncbi.nlm.nih.gov/41956139/',
-      },
-      {
-        label: 'Magnesium as a Bioenergetic Checkpoint Linking Mitochondrial Function, Metabolic Disease, and Aging',
-        link: 'https://onlinelibrary.wiley.com/doi/full/10.1111/acel.70578',
-      },
-      {
-        label: 'The GLP-1–Mitochondria Axis in Metabolic Aging',
-        link: 'https://onlinelibrary.wiley.com/doi/10.1111/acel.70676',
-      },
-      {
-        label:
-          'Ferroptosis and ovarian senescence: integrating lipid metabolism, iron homeostasis, and established aging pathways',
-        link: 'https://www.nature.com/articles/s41514-026-00508-0',
-      },
-      {
-        label: 'Clonal Mosaicism of Mitochondrial DNA Heteroplasmy as a Molecular Clock of Aging',
-        link: 'https://onlinelibrary.wiley.com/doi/10.1111/acel.70718',
-      },
-      {
-        label: 'Reproducibility-driven clinical translation of spatial multi-omics in precision medicine',
-        link: 'https://link.springer.com/article/10.1186/s12967-026-08988-0',
-      },
-    ],
   },
-  {
-    title: 'Proudly Supporting',
-    titleCn: '本机构赞助支持',
-    icon: <SponsorSVG />,
-    className: 'mobile:text-xl',
-    links: [
-      {
-        label: 'ARDD',
-        link: 'https://agingpharma.org/',
-        icon: '/imgs/investments/sponsors/ardd.png',
-        size: 'h-15',
-        mobileSize: 'h-10.5 ipad:h-15',
-      },
-      {
-        label: 'Nakauchi Lab – Stem Cell Research',
-        link: 'https://med.stanford.edu/nakauchilab.html',
-        icon: '/imgs/investments/sponsors/nakauchi-lab.png',
-        size: 'h-18',
-        mobileSize: 'h-9 ipad:h-11',
-      },
-      {
-        label: 'XPRIZE',
-        link: 'https://www.xprize.org/',
-        icon: '/imgs/investments/sponsors/xprize.png',
-        size: 'h-9',
-        mobileSize: 'h-6 ipad:h-9',
-      },
-      {
-        label: 'Lifespan Research Institute',
-        link: 'https://lifespan.io/',
-        icon: '/imgs/investments/sponsors/lifespan.png',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-13',
-      },
-      {
-        label: 'Public Longevity Group',
-        link: '',
-        icon: '/imgs/investments/sponsors/public-longevity.png',
-        size: 'h-15',
-        mobileSize: 'h-10.5 ipad:h-15',
-      },
-      {
-        label: '2060 Longevity Forum',
-        link: 'https://forum.2060.life/',
-        icon: '/imgs/investments/sponsors/2060-longevity.png',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-13',
-      },
-      {
-        label: 'REVIVE ME',
-        link: 'https://revivemeexpo.com/',
-        icon: '/imgs/investments/sponsors/revive-me.png',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-13',
-      },
-      {
-        label: 'Health Longevity and Medicine Conference',
-        link: 'https://www.hlmconference.com/',
-        icon: '/imgs/investments/sponsors/healthy-longevity.png',
-        size: 'h-15',
-        mobileSize: 'h-10.5 ipad:h-15',
-      },
-      {
-        label: 'Vitalist Bay Summit',
-        link: 'https://vitalistbay.com/',
-        icon: '/imgs/investments/sponsors/vitalist-bay.png',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-13',
-      },
-      {
-        label: 'UNIVERSITY OF COPENHAGEN PROJECT: Aging Brain Rejuvenation',
-        link: '',
-        icon: '/imgs/investments/sponsors/aging-brain.png',
-        size: 'h-18',
-        mobileSize: 'h-14 ipad:h-18',
-      },
-      {
-        label: 'UNIVERSITY OF OXFORD PROJECT: Heart Aging And Metabolism',
-        link: '',
-        icon: '/imgs/investments/sponsors/heart-aging.png',
-        size: 'h-18',
-        mobileSize: 'h-14 ipad:h-18',
-      },
-      {
-        label: 'Stanford University PROJECT: Brain Resilience Mechanism',
-        link: '',
-        icon: '/imgs/investments/sponsors/brain-resilience.png',
-        size: 'h-18',
-        mobileSize: 'h-14 ipad:h-18',
-      },
-      {
-        label: 'Cornerstone Non-profit Foundation',
-        link: 'https://www.cornerstone.foundation/',
-        icon: '/imgs/investments/sponsors/cornerstone.png',
-        size: 'h-6.5',
-        mobileSize: 'h-4.5 ipad:h-6.5',
-      },
-      {
-        label: 'Beyond Tomorrow Podcast',
-        link: 'https://beyondtomorrowpodcast.com/',
-        icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
-        size: 'h-5',
-        mobileSize: 'h-3.5 ipad:h-4.5',
-      },
-      {
-        label: 'HackAging.ai Hackathon',
-        link: 'https://www.hackaging.ai/',
-        icon: '/imgs/investments/sponsors/hackaging.png',
-        size: 'h-5',
-        mobileSize: 'h-3.5 ipad:h-4.5',
-      },
-      {
-        label: 'BioHackerDAO',
-        link: 'https://biohackerdao.org/',
-        icon: '/imgs/investments/sponsors/biohackerdao.png',
-        size: 'h-15',
-        mobileSize: 'h-10.5 ipad:h-15',
-      },
-      {
-        label: 'Vitalism',
-        link: 'https://vitalismfoundation.org/',
-        icon: '/imgs/investments/sponsors/vitalism.png',
-        size: 'h-10',
-        mobileSize: 'h-7.5 ipad:h-10',
-      },
-      {
-        label: 'Longevity Science Foundation',
-        link: 'https://longevity.foundation/',
-        icon: '/imgs/investments/sponsors/longevity-science.png',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-12',
-      },
-      {
-        label: 'Sundial Initiative',
-        link: 'https://sundial-initiative.org/',
-        icon: '/imgs/investments/sponsors/sundial-initiative.webp',
-        size: 'h-12',
-        mobileSize: 'h-8 ipad:h-12',
-      },
-      {
-        label: 'TimePie Longevity Forum',
-        link: 'https://www.timepie.com/',
-        icon: '/imgs/investments/sponsors/time-pie.png',
-        size: 'h-15',
-        mobileSize: 'h-10.5 ipad:h-14',
-      },
-    ],
+  'proudly-supporting': { icon: <SponsorSVG />, className: 'mobile:text-xl' },
+};
+
+/** Per-link presentation that is not content: label classes and logo heights. */
+const BOOK_VIEW: Record<string, Partial<SpectrumLinkData>> = {
+  'the-case-against-death': { isComingSoon: false },
+  'better-with-age': { labelClassName: 'mobile:ml-0' },
+};
+
+const SPONSOR_VIEW: Record<string, Required<Pick<SpectrumLinkData, 'icon' | 'size' | 'mobileSize'>>> = {
+  ardd: { icon: '/imgs/investments/sponsors/ardd.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-15' },
+  'nakauchi-lab': { icon: '/imgs/investments/sponsors/nakauchi-lab.png', size: 'h-18', mobileSize: 'h-9 ipad:h-11' },
+  xprize: { icon: '/imgs/investments/sponsors/xprize.png', size: 'h-9', mobileSize: 'h-6 ipad:h-9' },
+  'lifespan-research-institute': { icon: '/imgs/investments/sponsors/lifespan.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  'public-longevity-group': {
+    icon: '/imgs/investments/sponsors/public-longevity.png',
+    size: 'h-15',
+    mobileSize: 'h-10.5 ipad:h-15',
   },
-];
+  '2060-longevity-forum': { icon: '/imgs/investments/sponsors/2060-longevity.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  'revive-me': { icon: '/imgs/investments/sponsors/revive-me.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  'healthy-longevity-medicine-conference': {
+    icon: '/imgs/investments/sponsors/healthy-longevity.png',
+    size: 'h-15',
+    mobileSize: 'h-10.5 ipad:h-15',
+  },
+  'vitalist-bay-summit': { icon: '/imgs/investments/sponsors/vitalist-bay.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  'copenhagen-aging-brain-rejuvenation': {
+    icon: '/imgs/investments/sponsors/aging-brain.png',
+    size: 'h-18',
+    mobileSize: 'h-14 ipad:h-18',
+  },
+  'oxford-heart-aging-metabolism': {
+    icon: '/imgs/investments/sponsors/heart-aging.png',
+    size: 'h-18',
+    mobileSize: 'h-14 ipad:h-18',
+  },
+  'stanford-brain-resilience': {
+    icon: '/imgs/investments/sponsors/brain-resilience.png',
+    size: 'h-18',
+    mobileSize: 'h-14 ipad:h-18',
+  },
+  'cornerstone-foundation': {
+    icon: '/imgs/investments/sponsors/cornerstone.png',
+    size: 'h-6.5',
+    mobileSize: 'h-4.5 ipad:h-6.5',
+  },
+  'beyond-tomorrow-podcast': {
+    icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
+    size: 'h-5',
+    mobileSize: 'h-3.5 ipad:h-4.5',
+  },
+  'hackaging-ai': { icon: '/imgs/investments/sponsors/hackaging.png', size: 'h-5', mobileSize: 'h-3.5 ipad:h-4.5' },
+  biohackerdao: { icon: '/imgs/investments/sponsors/biohackerdao.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-15' },
+  vitalism: { icon: '/imgs/investments/sponsors/vitalism.png', size: 'h-10', mobileSize: 'h-7.5 ipad:h-10' },
+  'longevity-science-foundation': {
+    icon: '/imgs/investments/sponsors/longevity-science.png',
+    size: 'h-12',
+    mobileSize: 'h-8 ipad:h-12',
+  },
+  'sundial-initiative': {
+    icon: '/imgs/investments/sponsors/sundial-initiative.webp',
+    size: 'h-12',
+    mobileSize: 'h-8 ipad:h-12',
+  },
+  'timepie-longevity-forum': { icon: '/imgs/investments/sponsors/time-pie.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-14' },
+};
+
+const lab = (slug: string): SpectrumLinkData => {
+  const { title, url, routeKey } = bySlug(LABS, slug, 'spectrumData');
+  return { label: title, link: url, ...(routeKey && { routeKey }) };
+};
+
+const LINKS: Record<string, SpectrumLinkData[]> = {
+  'translation-publishing': BOOKS.map(({ slug, title, url }) => ({ label: title, link: url, ...BOOK_VIEW[slug] })),
+  evangelism: ['influence-network', 'disease-management', 'longevity-trend-radar'].map(lab),
+  'digital-twin': [lab('digital-twin')],
+  'peer-reviews': PAPERS.map(({ title, url }) => ({ label: title, link: url })),
+  'proudly-supporting': SPECTRUM_GRANTS.map((grant) => ({
+    label: grant.spectrumLabel ?? grant.name,
+    link: grant.url ?? '',
+    ...SPONSOR_VIEW[grant.slug],
+  })),
+};
+
+export const spectrumBaseData: SpectrumItemData[] = SPECTRUM_GROUPS.map(({ id, text }) => ({
+  title: text.en,
+  titleCn: text.zh ?? '',
+  ...GROUP_VIEW[id],
+  links: LINKS[id],
+}));
 
 export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',
-  url: 'https://id.life/spectrum',
+  url: absoluteUrl('/spectrum'),
   description:
     "Immortal Dragon's variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
   hasPart: spectrumBaseData.map((item) => ({

@@ -23,6 +23,7 @@ import { NewsletterPlacement, submitNewsletter } from '@/utils/newsletter';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -164,7 +165,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       </form>
       <div className="mt-3 flex gap-1.5 font-poppins text-xs/5 font-semibold text-black/50">
         <InfoSVG className="size-4 shrink-0" />
-        Join our longevity circle for priority access to pioneer research
+        {SUBSCRIBE_PROMISE.priorityAccess}
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-import { ORG_ADDRESS, ORG_EMAIL } from '@/constants/entity';
+import { FUND, FUND_ADDRESS_LINE } from '@/content/fund';
 
-/** The organisation's postal address on one line, as the site shows it ("3 Biopolis Dr, #01-15, Singapore 138623"). */
-export const ORG_ADDRESS_TEXT = `${ORG_ADDRESS.streetAddress}, ${ORG_ADDRESS.addressLocality} ${ORG_ADDRESS.postalCode}`;
+/** The organisation's postal address on one line, as the site shows it (src/content/fund.ts). */
+export const ORG_ADDRESS_TEXT = FUND_ADDRESS_LINE;
+
+export const ORG_EMAIL = FUND.email;
 
 export const ORG_MAILTO = `mailto:${ORG_EMAIL}`;
-
-export { ORG_EMAIL };

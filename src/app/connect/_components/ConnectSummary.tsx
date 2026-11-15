@@ -1,6 +1,6 @@
 import PageSEOContent from '@/components/seo/PageSEOContent';
-import { CONNECT_TEXT, END_CONTENT_1, END_CONTENT_2 } from '@/app/connect/content';
 import { ORG_ADDRESS, ORG_EMAIL } from '@/constants/entity';
+import { CONNECT_CRITERIA, CONNECT_STRENGTHS, CONNECT_VALUES } from '@/content/connect';
 
 export default function ConnectSummary({ title, description }: { title: string; description: string }) {
   const { streetAddress, addressLocality, postalCode } = ORG_ADDRESS;
@@ -9,22 +9,25 @@ export default function ConnectSummary({ title, description }: { title: string; 
       title={title}
       intro={[description]}
       sections={[
-        ...CONNECT_TEXT.map((item) => ({ heading: item.title, text: [item.content] })),
+        ...CONNECT_VALUES.map((item) => ({
+          heading: `${item.title?.en} ${item.title?.zh}`,
+          text: [`${item.text.en}\n${item.text.zh}`],
+        })),
         {
-          heading: END_CONTENT_1.en.title,
-          text: END_CONTENT_1.en.items,
+          heading: CONNECT_CRITERIA.title.en,
+          text: CONNECT_CRITERIA.items.map((item) => item.en),
         },
         {
-          heading: END_CONTENT_1.cn.title,
-          text: END_CONTENT_1.cn.items.map((text) => ({ text, lang: 'zh-CN' })),
+          heading: CONNECT_CRITERIA.title.zh ?? '',
+          text: CONNECT_CRITERIA.items.map((item) => ({ text: item.zh ?? '', lang: 'zh-CN' })),
         },
         {
-          heading: END_CONTENT_2.en.map((item) => item.title).join(' · '),
+          heading: CONNECT_STRENGTHS.map((item) => item.title?.en).join(' · '),
           items: [
-            ...END_CONTENT_2.en.map((item) => ({ title: item.title, text: [item.content] })),
-            ...END_CONTENT_2.cn.map((item) => ({
-              title: item.title.replace(/[:：]\s*$/, '').trim(),
-              text: [{ text: item.mobileContent ?? item.content, lang: 'zh-CN' }],
+            ...CONNECT_STRENGTHS.map((item) => ({ title: item.title?.en ?? '', text: [item.text.en] })),
+            ...CONNECT_STRENGTHS.map((item) => ({
+              title: item.title?.zh ?? '',
+              text: [{ text: item.text.zh ?? '', lang: 'zh-CN' }],
             })),
           ],
         },

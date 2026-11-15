@@ -60,6 +60,14 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 
 ## Content, data and SEO
 
+- **Content layer** (`src/content/`): fund facts, people, themes, companies, press, grants, books, papers, labs, the
+  profile behind llms.txt, slogans, Connect, Digital Twin and subscribe copy, and the two long articles
+  (`src/content/articles/*.md`). Records are data only (`{ en, zh }` text, URLs, image paths, dates), validated with
+  zod when their module loads (`defineContent` in `schema.ts`), so `next build` fails on a missing field. Presentation
+  (logo sizes, particle images, icons, Tailwind classes) stays in the component, keyed by the record's slug. Never type
+  a fund fact (contact@id.life, US$40 million, 15+, the Biopolis address) outside `src/content`; `entity.ts`,
+  llms.txt and the About page derive from it (`test/content-layer.test.mjs` fails otherwise). The feed fields the
+  site needs from id-platform are specified in `docs/id-platform-content-api.md`.
 - API layer: `src/apis/request.ts` (axios, `ApiError`, `isApiNotFound`) and `src/apis/index.ts`. The base URL is
   `NEXT_PUBLIC_API_PREFIX`; public defaults for every `NEXT_PUBLIC_*` value live in `next.config.mjs`
   (see `.env.example`). Never commit `.env`.

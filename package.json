@@ -68,7 +68,8 @@
     "tailwind-merge": "^2.5.2",
     "three": "0.169.0",
     "vaul": "^1.1.2",
-    "wavesurfer.js": "^7.9.5"
+    "wavesurfer.js": "^7.9.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

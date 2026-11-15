@@ -50,8 +50,10 @@ next-env.d.ts
 # Local reference documents (not for the repo)
 *.docx
 
-# Local planning docs (not for the repo)
-docs/
+# Local planning docs (not for the repo), except the content docs the site's code refers to (CON-10, CON-16, CON-20)
+docs/*
+!docs/content-*.md
+!docs/id-platform-content-api.md
 
 # Local configuration (ENG-10)
 .env

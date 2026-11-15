@@ -13,6 +13,7 @@ import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {
   EMAIL: string;
@@ -189,7 +190,7 @@ export default function Footer() {
               </form>
               <div className="mt-3.5 flex items-center gap-1.5 text-xs/5 font-semibold text-[var(--foreground)] opacity-50">
                 <InfoSVG className="size-4 shrink-0" />
-                Join our Longevity Circle and receive the latest insights & research
+                {SUBSCRIBE_PROMISE.latestInsights}
               </div>
             </div>
           </FloatingFocusManager>

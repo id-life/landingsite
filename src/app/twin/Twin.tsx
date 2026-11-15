@@ -1,5 +1,5 @@
 import { currentPageAtom } from '@/atoms';
-import { TWIN_FEATURES, TWIN_FEATURES_CN, TWIN_ONTOLOGY } from '@/app/twin/content';
+import { TWIN_FEATURES, TWIN_FEATURES_CN, TWIN_ONTOLOGY } from '@/content/twin';
 import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
