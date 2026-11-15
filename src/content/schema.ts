@@ -202,6 +202,22 @@ export const FeedOverride = z.object({
 });
 export type FeedOverride = z.infer<typeof FeedOverride>;
 
+/**
+ * A route's metadata: the topic of its <title> (src/lib/seo/metadata.ts adds the brand) and its meta description,
+ * which the layout, its JSON-LD and the Pages list of llms.txt all read, so the copies cannot drift.
+ */
+export const PageMeta = z.object({
+  id: slug,
+  /** The canonical path, e.g. '/portfolio'. */
+  path: z.string().regex(/^\/[a-z0-9/-]*$/, 'expected a root-relative path'),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  /** The link text of the route in llms.txt's Pages list; absent leaves the route out of that list. */
+  llmsLabel: z.string().min(1).optional(),
+  ...shippable,
+});
+export type PageMeta = z.infer<typeof PageMeta>;
+
 /** A titled list (the Connect criteria). */
 export const CopyList = z.object({ id: slug, title: Text, items: z.array(Text).min(1), ...shippable });
 export type CopyList = z.infer<typeof CopyList>;

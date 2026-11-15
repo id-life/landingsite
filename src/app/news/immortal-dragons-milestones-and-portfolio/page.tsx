@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -10,30 +12,18 @@ import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 
-const articleTitle = '不朽真龙公司资讯';
-const articleDescription = '不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。';
+// Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('article-milestones');
+const articleTitle = PAGE.title;
+const articleDescription = PAGE.description;
 const articleUrl = 'https://www.id.life/news/immortal-dragons-milestones-and-portfolio';
 const articlePath = path.join(process.cwd(), 'src/content/articles/immortal-dragons-milestones-and-portfolio.md');
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/news/immortal-dragons-milestones-and-portfolio' },
-  title: 'Immortal Dragons: Milestones and Portfolio',
-  description: articleDescription,
-  openGraph: {
-    title: 'Immortal Dragons: Milestones and Portfolio',
-    siteName: 'Immortal Dragons',
-    description: articleDescription,
-    url: articleUrl,
-    type: 'article',
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+// The title is the article's own heading, in its language; it names the brand, so it is not suffixed twice
+// (it read "Immortal Dragons ... | Immortal Dragons 不朽真龙").
+export const metadata: Metadata = buildMetadata({ ...PAGE, type: 'article' });
 
 const jsonLd: WithContext<NewsArticle> = {
   '@context': 'https://schema.org',
@@ -81,7 +71,7 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
             {articleTitle}
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
-          <div className="markdown-body mobile:[&_p]:text-sm mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
+          <div className="article-body markdown-body mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
             <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {articleContent}
             </Markdown>

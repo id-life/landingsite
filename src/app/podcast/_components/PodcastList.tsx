@@ -16,7 +16,7 @@ export default async function PodcastList(props: PodcastListProps) {
     return (
       <div role="status" className="py-16 text-center font-poppins text-base font-medium text-black/60 mobile:py-12">
         <p>节目列表暂时无法加载。The episode list could not be loaded right now.</p>
-        {/* A full reload: the list is rendered on the server for every request. */}
+        {/* A full reload fetches the page again; it regenerates on the server every 5 minutes. */}
         <a href={retry} className="mt-4 inline-block text-sm font-semibold uppercase text-red-600 underline">
           Try again 重试
         </a>

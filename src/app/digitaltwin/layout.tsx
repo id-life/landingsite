@@ -2,42 +2,21 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import DigitalTwinSummary from '@/app/digitaltwin/_components/DigitalTwinSummary';
 import { ORG_REF } from '@/constants/entity';
 import { SoftwareApplication, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('digitaltwin');
 const PAGE_TITLE = 'DigitalTwin 孪生';
-const PAGE_DESCRIPTION =
-  'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.';
+const PAGE_DESCRIPTION = PAGE.description;
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/digitaltwin' },
-  title: 'Digital Twin 孪生',
-  description: PAGE_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'DigitalTwin 孪生',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata(PAGE);
 
 const jsonLd: WithContext<SoftwareApplication> = {
   '@context': 'https://schema.org',

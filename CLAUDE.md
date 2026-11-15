@@ -42,8 +42,11 @@ Each job is its own status check. Run the same commands locally before pushing.
 - `/about` (CON-01): the fund profile as visible server-rendered text from the content layer, in the content pages'
   header and footer. `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
   non-production builds (`pageExtensions` in `next.config.mjs`), noindex, linked from nowhere.
-- `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
-- Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
+- `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
+  `/podcast?c=lt` answers 308 from `src/proxy.ts`) and `/podcast/[id]`. Unknown ids return 404.
+- Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
+  `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
+  `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
 - `src/app/twin` and `src/app/vision` hold section components, not routes. Unreachable modules are deleted rather
   than kept: `npm run knip` fails on an unused file or dependency.
@@ -64,7 +67,8 @@ Each job is its own status check. Run the same commands locally before pushing.
   `global.d.ts`; respect them instead of adding new ones.
 - **Phone.** No document scroll: sections switch through `useMobileNavigation`, the arrows
   (`MobilePageArrows.tsx`), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
-- **URL and history.** `HashRouter` (root layout, never unmounts) applies the URL once per mount of the experience
+- **URL and history.** `HashRouter` (loaded by `ExperienceRouter` in the root layout on the first experience URL, then
+  never unmounted) applies the URL once per mount of the experience
   (`useExperienceLifecycle` bumps `experienceMountIdAtom`); `useSectionUrlSync` replaces the URL and title as the
   visitor scrolls; nav clicks push. Scroll restoration is 'manual' only while the experience is mounted.
 - **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
@@ -77,11 +81,24 @@ Each job is its own status check. Run the same commands locally before pushing.
 - **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
   R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
   300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
+- **GSAP stays in the experience.** Plugins are registered in `src/utils/gsap-plugins.ts`, imported by the experience's
+  entry points (HomeEntry, ClientNav, HashRouter), not by the root providers. Shared dialogs pause the smoother through
+  `src/utils/smoother.ts`; never import `gsap/*` plugins from code that content pages load.
+
+## Content pages
+
+- `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
+  footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
+  (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+- Episode transcripts are rendered to HTML on the server (`podcast/[id]/page.tsx`); do not move react-markdown back
+  into a client component. SVG icons are imported per file (there is no `src/components/svg` barrel: it pulled the
+  3,085-circle world map into every page that used one icon).
 
 ## Content, data and SEO
 
 - **Content layer** (`src/content/`): fund facts, people, themes, companies, press, grants, books, papers, labs, the
-  profile behind llms.txt, slogans, Connect, Digital Twin and subscribe copy, and the two long articles
+  profile behind llms.txt, slogans, Connect, Digital Twin and subscribe copy, each route's metadata topic and
+  description (`pages.ts`, passed to `buildMetadata` in `src/lib/seo/metadata.ts`), and the two long articles
   (`src/content/articles/*.md`). Records are data only (`{ en, zh }` text, URLs, image paths, dates), typed with
   `import type` from the zod schemas in `schema.ts` (so zod never ships to the browser) and validated by
   `src/content/validate.ts`, which the root layout imports: `next build` fails on an invalid record. Presentation
@@ -111,6 +128,9 @@ Each job is its own status check. Run the same commands locally before pushing.
 - Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel
   production and preview, with no Replay or profiling in the shared runtime.
 - Newsletter: `src/utils/subscribe.ts` (Mailchimp JSONP, typed result codes). The popup opens only on request.
+- Images: `NEXT_PUBLIC_IMAGE_OPTIMIZER` (next.config.mjs) decides who resizes next/image images: `off` on Vercel by
+  default (Vercel Image Optimization is metered and not approved), `next` on self-hosted builds, `cdn` for the CMS
+  cover loader in `src/lib/image-loader.ts`. Never turn the Vercel optimizer on in code; it is the owner's switch.
 
 ## Testing safely
 

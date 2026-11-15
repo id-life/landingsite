@@ -11,6 +11,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
+import '@/utils/gsap-plugins';
 
 /**
  * Maps the URL to a section of the experience. Rendered once in the root layout, so it never unmounts;
@@ -19,6 +20,11 @@ import { useCallback, useEffect, useRef } from 'react';
  * before, it was applied once per tab, so a return from a content page showed the default section and
  * the URL sync then rewrote the address to it.
  */
+// Which tree HomeEntry has mounted, read when it is needed. HashRouter now loads after the page (ExperienceRouter), so
+// its media-query listener can fire after HomeEntry's: on a resize across 768 px the new tree could mount while this
+// component's own isMobile state still held the old value, and the URL was then mapped onto the wrong tree.
+const phoneTree = () => window.matchMedia('(max-width: 768px)').matches;
+
 export default function HashRouter() {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const mountId = useAtomValue(experienceMountIdAtom);
@@ -38,8 +44,10 @@ export default function HashRouter() {
       if (!globalLoaded || isMobile === null) return;
       const { pathname } = window.location;
 
+      const mobile = phoneTree();
+
       // Check if returning from /news or /podcast on mobile
-      if (isMobile && pathname === '/') {
+      if (mobile && pathname === '/') {
         const returnPageId = sessionStorage.getItem(STORAGE_KEY.MOBILE_RETURN_PAGE);
         if (returnPageId) {
           sessionStorage.removeItem(STORAGE_KEY.MOBILE_RETURN_PAGE);
@@ -53,7 +61,7 @@ export default function HashRouter() {
 
       const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
       if (matchingNavItem) {
-        if (isMobile) mobileNavChange(matchingNavItem);
+        if (mobile) mobileNavChange(matchingNavItem);
         else if (now) handleNavClickNow(matchingNavItem);
         else handleNavClick(matchingNavItem);
       }
@@ -104,7 +112,7 @@ export default function HashRouter() {
     const handlePopState = () => {
       const item = NAV_LIST.find((navItem) => navItem.href === window.location.pathname);
       if (!item) return;
-      if (isMobile) mobileNavChange(item);
+      if (phoneTree()) mobileNavChange(item);
       else handleNavClick(item);
     };
     window.addEventListener('popstate', handlePopState);

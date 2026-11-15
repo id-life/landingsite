@@ -3,7 +3,7 @@ import ErrorState from '@/components/common/ErrorState';
 import { NAV_LIST } from '@/components/nav/nav';
 
 export const metadata: Metadata = {
-  title: { absolute: 'Page not found | Immortal Dragons 不朽真龙' },
+  title: { absolute: 'Page not found | Immortal Dragons' },
   robots: { index: false, follow: true },
 };
 

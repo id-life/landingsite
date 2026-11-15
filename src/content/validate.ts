@@ -9,6 +9,7 @@ import { FUND } from './fund';
 import { GRANTS } from './grants';
 import { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS } from './initiatives';
 import { FEED_OVERRIDES } from './overrides';
+import { PAGES } from './pages';
 import { PEOPLE } from './people';
 import { PRESS } from './press';
 import { PROFILE_TEXT } from './profile';
@@ -21,6 +22,7 @@ import {
   FundFacts,
   Grant,
   Lab,
+  PageMeta,
   Paper,
   Person,
   PressItem,
@@ -48,6 +50,7 @@ export const CONTENT_ENTRIES: ContentEntry[] = [
   ['content/initiatives.ts#labs', z.array(Lab), LABS],
   ['content/initiatives.ts#papers', z.array(Paper), PAPERS],
   ['content/profile.ts', z.array(Copy), PROFILE_TEXT],
+  ['content/pages.ts', z.array(PageMeta), PAGES],
   ['content/slogans.ts', z.array(Slogan), SLOGANS],
   ['content/connect.ts#values', z.array(Copy), CONNECT_VALUES],
   ['content/connect.ts#criteria', CopyList, CONNECT_CRITERIA],

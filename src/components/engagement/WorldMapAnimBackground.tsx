@@ -1,6 +1,6 @@
 import { cn } from '@/utils';
 import { forwardRef, memo, useEffect, useRef, useState } from 'react';
-import { WorldMapSVG } from '../svg';
+import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
 
 interface WorldMapAnimBackgroundProps {
   className?: string;

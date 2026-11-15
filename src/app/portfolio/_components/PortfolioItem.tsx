@@ -45,7 +45,7 @@ const PortfolioItem = memo(
           {image}
         </div>
         <div className={cn('text-center font-semibold', isGridMode ? 'mt-2 mobile:mt-3' : 'mt-7 mobile:mt-3')}>
-          <h4
+          <h3
             className={cn(
               'fund-title flex-center gap-2.5 font-oxanium tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
               isGridMode ? 'text-sm/5 font-semibold' : 'text-xl/6',
@@ -72,7 +72,7 @@ const PortfolioItem = memo(
               className="title-selected w-5.5 shrink-0 opacity-0 notMobile:absolute notMobile:right-0"
               alt=""
             />
-          </h4>
+          </h3>
           {/* At least 12 px on every device: the phone grid used 10 px, and the desktop tree's text-xs scales with
               the viewport-width root font (9 px at 1440, 5.1 px at 820). */}
           <p

@@ -7,7 +7,7 @@ import MediaSVG from '@/../public/svgs/media.svg?component';
 import YoutubeSVG from '@/../public/svgs/youtube.svg?component';
 import CornerBorder from '@/components/common/CornerBorder';
 import FooterContactContent from '@/components/layout/footer/FooterContactContent';
-import { InfoSVG } from '@/components/svg';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
@@ -61,7 +61,8 @@ export default function NewsFooter() {
   return (
     <div className="relative z-10 -mx-5 flex flex-col pb-15 pt-30 mobile:mt-5 mobile:border-2 mobile:border-white mobile:bg-white/20 mobile:p-5 mobile:backdrop-blur-lg">
       {/* Desktop Layout */}
-      <div className="flex items-start justify-between mobile:hidden">
+      {/* Wraps below about 1200 px (tablets) instead of overflowing; unchanged on wider screens. */}
+      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-10 mobile:hidden">
         <div className="flex flex-col items-start gap-5 self-stretch">
           <img className="h-12 w-auto" src="/svgs/logo-en.svg" alt="" />
           <div className="mt-auto flex items-center gap-5">
@@ -123,7 +124,7 @@ export default function NewsFooter() {
             <div className="border-2 border-black p-3">
               <input
                 id="news-subscribe-email"
-                className="w-[25rem] bg-transparent font-poppins text-xs font-semibold"
+                className="w-[min(25rem,30vw)] bg-transparent font-poppins text-xs font-semibold"
                 placeholder="Please enter email"
                 type="email"
                 name="EMAIL"

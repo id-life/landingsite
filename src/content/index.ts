@@ -1,5 +1,6 @@
 // The content layer (CON-16): typed, validated records that pages, JSON-LD, llms.txt and the sitemap read.
-// Each module validates its records with zod when it loads, so `next build` fails on a missing or malformed field.
+// ./validate.ts checks every record with its zod schema while `next build` prerenders, so the build fails on a
+// missing or malformed field.
 // Drafts are NOT exported here: they live in ./drafts and only the preview review page may import them (CON-10).
 export * from './approval';
 export { COMPANIES, PORTFOLIO_COUNT } from './companies';
@@ -9,6 +10,7 @@ export { GRANTS, PROFILE_GRANTS, SPECTRUM_GRANTS } from './grants';
 // Typed overrides for id-platform feed items (empty until CON-09; docs/id-platform-content-api.md).
 export { FEED_OVERRIDES } from './overrides';
 export { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS } from './initiatives';
+export { PAGES, pageMeta } from './pages';
 export { PEOPLE, personBySlug } from './people';
 export { FUND_PRESS, PORTFOLIO_PRESS, PRESS } from './press';
 export { LLMS_CHINESE_SUMMARY, LLMS_HEADER, LLMS_SECTIONS, keyFactLines, llmsIntro, llmsSection, profileText } from './profile';

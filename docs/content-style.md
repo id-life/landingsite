@@ -92,6 +92,8 @@ live today; the replacement is a draft waiting on the owner's answer (`src/conte
 ## Applied (corrections that change no meaning, 2026-11-15)
 
 - "Explore Immortal Dragon's variety ..." to "Immortal Dragons'" (Spectrum metadata, Spectrum JSON-LD, llms.txt).
+- "presence --bridging East and West" to "presence, bridging East and West" (Presence metadata, JSON-LD, llms.txt;
+  applied by w1-pages, kept in `src/content/pages.ts`).
 - Connect "A New Dawn": "Our dedication is a world where ..." to "Our dedication is to a world where ...".
 - News and podcast footer: the address and the email are no longer set in capitals; the email is a mailto link.
 - The 不朽真龙介绍 article's website line: `https://id.life` to the canonical `https://www.id.life`.

@@ -2,44 +2,20 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { getSpectrumJsonLd, spectrumBaseData } from '@/app/spectrum/_components/spectrumData';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('spectrum');
 const PAGE_TITLE = 'Spectrum 谱系';
-const PAGE_DESCRIPTION =
-  "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.";
+const PAGE_DESCRIPTION = PAGE.description;
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/spectrum' },
-  // The two tool pages (/spectrum/disease-management, /spectrum/influence-network) live in the (content)
-  // route group, so this layout, its experience nav and its JSON-LD no longer wrap them; they take the
-  // root layout's title template.
-  title: { default: PAGE_TITLE, template: '%s | Immortal Dragons 不朽真龙' },
-  description: PAGE_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: PAGE_TITLE,
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata(PAGE);
 
 export default function SpectrumLayout({ children }: { children: ReactNode }) {
   const jsonLd = getSpectrumJsonLd();

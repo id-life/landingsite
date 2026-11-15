@@ -2,27 +2,19 @@ import type { Metadata } from 'next';
 import type { AboutPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import { ORG_ADDRESS, ORG_COVER, ORG_ID, ORG_LOGO, WEBSITE_ID, breadcrumbJsonLd } from '@/constants/entity';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { absoluteUrl } from '@/constants/site';
+import { pageMeta } from '@/content/pages';
 import { FUND } from '@/content/fund';
 import { THEMES } from '@/content/themes';
 import AboutView, { ABOUT_TITLE } from './_components/AboutView';
 
-// The one-sentence statement (76 characters) suits a search snippet; the page itself opens with the two-sentence summary.
-const description = FUND.statement.text.en;
+// Title "About | Immortal Dragons" and the one-sentence statement (79 characters, it suits a search snippet) from the
+// content layer (src/content/pages.ts); the page itself opens with the two-sentence summary.
+const PAGE = pageMeta('about');
+const description = PAGE.description;
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/about' },
-  title: 'About',
-  description,
-  openGraph: {
-    type: 'website',
-    title: ABOUT_TITLE,
-    siteName: 'Immortal Dragons',
-    description,
-    url: absoluteUrl('/about'),
-    images: [{ url: ORG_COVER }],
-  },
-};
+export const metadata: Metadata = buildMetadata({ ...PAGE, image: ORG_COVER });
 
 // Structured data states only what the page shows (Google: do not mark up content that is not visible). The full
 // Organization node (founder, legal name, founding date) stays on / and /connect until those facts are confirmed.

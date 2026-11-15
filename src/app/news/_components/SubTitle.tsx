@@ -5,7 +5,7 @@ import ClipBorderSVG from '@/../public/svgs/twin/clip-border.svg?component';
 import SubscribeSVG from '@/../public/svgs/news/subscribe.svg?component';
 import { subscribePopupAtom } from '@/atoms/footer';
 import { useSetAtom } from 'jotai';
-import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 
 export default function SubTitle() {
   const subscribePopup = useSetAtom(subscribePopupAtom);

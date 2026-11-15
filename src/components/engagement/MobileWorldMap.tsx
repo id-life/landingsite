@@ -10,7 +10,7 @@ import { throttle } from 'lodash-es';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from 'react';
 import { useMeasure } from 'react-use';
 import { NAV } from '../nav/nav';
-import { WorldMapSVG } from '../svg';
+import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
 import { MobileWorldMapBookDotContent, MobileWorldMapBookDotPoint } from './MobileWorldMapBookDot';
 import { MobileWorldMapDotContent, MobileWorldMapDotPoint } from './MobileWorldMapDot';
 import { MobileWorldMapSponsorDotContent, MobileWorldMapSponsorDotPoint } from './MobileWorldMapSponsorDot';

@@ -5,6 +5,7 @@ import { isNull } from 'lodash-es';
 import ClientChunkBoundary from '@/components/common/ClientChunkBoundary';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
+import '@/utils/gsap-plugins';
 
 const Home = dynamic(() => retryImport(() => import('./Home')), { ssr: false });
 const MobileHome = dynamic(() => retryImport(() => import('./MobileHome')), { ssr: false });

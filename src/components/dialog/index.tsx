@@ -13,8 +13,8 @@ import {
   useRole,
   useTransitionStyles,
 } from '@floating-ui/react';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import React, { cloneElement, useCallback, useEffect, useState } from 'react';
+import { pauseSmoother } from '@/utils/smoother';
 
 type DialogProps = {
   className?: string;
@@ -89,9 +89,7 @@ function Dialog({
   }, [passedOpen]);
 
   useEffect(() => {
-    const smoother = ScrollSmoother.get();
-    if (!smoother) return;
-    smoother.paused(isOpen);
+    pauseSmoother(isOpen);
   }, [isOpen]);
 
   return (

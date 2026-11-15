@@ -1,16 +1,20 @@
 'use client';
 
 import { Fragment, useState } from 'react';
-import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
-import VideoModal from '@/app/insights/_components/VideoModal';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
 import { youtubeWatchUrl } from '@/utils/youtube';
+import dynamic from 'next/dynamic';
+
+// The video modal (Floating UI) loads when a video card is first opened, not with the page.
+const VideoModal = dynamic(() => import('@/app/insights/_components/VideoModal'), { ssr: false });
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Stays true after the first open, so the modal can play its closing transition.
+  const [modalLoaded, setModalLoaded] = useState(false);
   const isYouTube = !!data.videoId;
 
   // Articles are real links (crawlable, middle-click and keyboard work): external press opens in a
@@ -18,7 +22,10 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
   // to their YouTube page (crawlers, middle-click, no JavaScript).
   const isExternal = Boolean(data.isExternal && data.url);
   const href = isYouTube ? undefined : isExternal ? safeHref(data.url) : `/news/${data.id}`;
-  const openVideo = () => setIsModalOpen(true);
+  const openVideo = () => {
+    setModalLoaded(true);
+    setIsModalOpen(true);
+  };
   const cardClassName =
     'group block cursor-pointer overflow-hidden bg-white duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-lg mobile:rounded-lg';
 
@@ -47,7 +54,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
               <Fragment>
                 {data?.source && <span>{data.source}</span>}
                 {data?.source && data.publishDate && <span>·</span>}
-                {data?.publishDate && <span>{dayjs(data.publishDate).format('MMM DD, YYYY')}</span>}{' '}
+                {data?.publishDate && <span>{data.publishLabel}</span>}{' '}
               </Fragment>
             ) : (
               <span>Article</span>
@@ -56,7 +63,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
         </div>
       </CardShell>
 
-      {isYouTube && (
+      {isYouTube && modalLoaded && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={data.videoId!} title={data.title} />
       )}
     </>

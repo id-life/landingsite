@@ -5,6 +5,7 @@ import { isNull } from 'lodash-es';
 import MobileNav from './MobileNav';
 import { NAV_LIST } from './nav';
 import PCNav from './PCNav';
+import '@/utils/gsap-plugins';
 
 // Rendered on the server and until the device type is known after mount, so crawlers that
 // read the raw HTML still see the site's main navigation. Swapped for the real nav on mount.

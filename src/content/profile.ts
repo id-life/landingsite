@@ -6,6 +6,7 @@
 import { live } from './approval';
 import { FUND, FUND_ADDRESS_LINE } from './fund';
 import { PROFILE_GRANTS } from './grants';
+import { PAGES } from './pages';
 import { personBySlug } from './people';
 import type { Copy } from './schema';
 import { THEMES } from './themes';
@@ -75,24 +76,11 @@ export const PROFILE_TEXT: Copy[] = [
     approval: live(),
   },
   {
-    // Page descriptions quoted verbatim from each page's metadata description at the baseline.
-    id: 'pages',
+    // The Pages list's podcast line: both shows, each at its own path (/podcast?c=lt became /podcast/long-talk). The
+    // other lines are generated from ./pages.ts.
+    id: 'pages-podcast',
     text: {
-      en: [
-        '- [Home](https://www.id.life/): Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore.',
-        "- [Portfolio](https://www.id.life/portfolio): Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
-        "- [Spectrum](https://www.id.life/spectrum): Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
-        '- [Disease Management](https://www.id.life/spectrum/disease-management): 可治疗与可控制疾病列表 A list of curable and manageable diseases',
-        '- [Influence Network](https://www.id.life/spectrum/influence-network): 长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
-        '- [Digital Twin](https://www.id.life/digitaltwin): Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
-        "- [Presence](https://www.id.life/presence): A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
-        '- [Insights](https://www.id.life/insights): Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
-        "- [News](https://www.id.life/news): Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
-        '- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast?c=lt)',
-        "- [Connect](https://www.id.life/connect): Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
-        '- [不朽真龙介绍](https://www.id.life/news/immortal-dragons-news-and-updates): 介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。',
-        '- [Immortal Dragons: Milestones and Portfolio](https://www.id.life/news/immortal-dragons-milestones-and-portfolio): 不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。',
-      ].join('\n'),
+      en: '- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast/long-talk)',
     },
     approval: live(),
   },
@@ -126,6 +114,15 @@ export const keyFactLines = () => [
   `Website: ${FUND.website}`,
   `Contact: ${FUND.email}`,
 ];
+
+/** llms.txt's Pages list: every route with an llms label, in ./pages.ts order, with the two podcast shows after News. */
+function llmsPageLines() {
+  return PAGES.flatMap((page) => {
+    if (!page.llmsLabel) return [];
+    const line = `- [${page.llmsLabel}](${FUND.website}${page.path}): ${page.description}`;
+    return page.id === 'news' ? [line, profileText('pages-podcast').en] : [line];
+  });
+}
 
 const bullets = (lines: string[]) => lines.map((line) => `- ${line}`).join('\n');
 const quote = (text: string) =>
@@ -168,7 +165,7 @@ ${profileText('media-coverage').en}
 
 ## Pages
 
-${profileText('pages').en}
+${llmsPageLines().join('\n')}
 `;
 
 export const LLMS_CHINESE_SUMMARY = `## 中文简介

@@ -7,14 +7,22 @@ import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
 import { isNewsNavOpenAtom } from '@/atoms/news';
 import { useAtom, useSetAtom } from 'jotai';
-import NewsNavDialog from './NewsNavDialog';
 import { subscribePopupAtom } from '@/atoms/footer';
-import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
+import dynamic from 'next/dynamic';
+import { useState } from 'react';
+
+// The phone menu (GSAP stagger) loads on its first open, not with the page.
+const NewsNavDialog = dynamic(() => import('./NewsNavDialog'), { ssr: false });
 
 export default function NewsHeader() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useAtom(isNewsNavOpenAtom);
   const subscribePopup = useSetAtom(subscribePopupAtom);
+  const [navWanted, setNavWanted] = useState(false);
+
+  // The menu's code loads on its first open; set while rendering, not in an effect.
+  if (menuOpen && !navWanted) setNavWanted(true);
 
   const handleSubscribeClick = () => subscribePopup({ type: 'toggle', placement: 'nav' });
 
@@ -38,7 +46,7 @@ export default function NewsHeader() {
           {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
         </div>
       </div>
-      <NewsNavDialog />
+      {navWanted && <NewsNavDialog />}
     </div>
   );
 }

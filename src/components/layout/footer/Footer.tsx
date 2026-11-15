@@ -4,14 +4,14 @@ import CheckedSVG from '@/../public/svgs/checked.svg?component';
 import CloseSVG from '@/../public/svgs/close.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { subscribeTypeAtom } from '@/atoms/footer';
-import { InfoSVG } from '@/components/svg';
+import InfoSVG from '@/../public/svgs/info.svg?component';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
 import { cn } from '@/utils';
 import { submitNewsletter } from '@/utils/newsletter';
 import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
@@ -36,6 +36,9 @@ export default function Footer() {
   const boxRef = useRef<HTMLDivElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  // True once the portal content exists. Content pages mount this popup on its first open (SubscribePopup), so
+  // the open state arrives before the portal has rendered the box; the open effect waits for it.
+  const [portalReady, setPortalReady] = useState(false);
 
   const {
     register,
@@ -53,7 +56,8 @@ export default function Footer() {
     },
   });
 
-  const boxMergedRef = useMergeRefs([refs.setFloating, boxRef]);
+  const trackPortal = useCallback((node: HTMLDivElement | null) => setPortalReady(!!node), []);
+  const boxMergedRef = useMergeRefs([refs.setFloating, boxRef, trackPortal]);
   const emailMergedRef = useMergeRefs([emailFieldRef, emailRef]);
 
   // Built on first open: the popup lives in a portal that mounts after this component, so its elements
@@ -86,7 +90,7 @@ export default function Footer() {
       cancelAnimationFrame(outer);
       cancelAnimationFrame(inner);
     };
-  }, [isSubscribeShow]);
+  }, [isSubscribeShow, portalReady]);
 
   useEffect(() => {
     if (isSubscribeShow) {

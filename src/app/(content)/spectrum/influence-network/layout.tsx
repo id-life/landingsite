@@ -2,42 +2,20 @@ import { ReactNode } from 'react';
 import INStyle from '@/app/spectrum/_components/INStyle';
 import SpectrumHeader from '@/app/spectrum/_components/SpectrumHeader';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { pageMeta } from '@/content/pages';
 import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { CollectionPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 
-const PAGE_TITLE = 'Influence Network';
-const PAGE_DESCRIPTION = '长寿领域人物影响力与关系图 Longevity influencer network and relationship map';
+// Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
+const PAGE = pageMeta('influence-network');
+const PAGE_TITLE = PAGE.title;
+const PAGE_DESCRIPTION = PAGE.description;
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/spectrum/influence-network' },
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
-  keywords: [
-    '长寿',
-    '长寿影响力',
-    '长寿领域领军人物',
-    '长寿领域人物关系',
-    '长寿领域核心人物',
-    'longevity',
-    'longevity influencer',
-    'longevity mentor',
-    'longevity leaders',
-    'longevity key opinion leaders',
-    'longevity key people',
-  ],
-  openGraph: {
-    title: 'Influence Network | Immortal Dragons',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata(PAGE);
 
 const jsonLd: WithContext<CollectionPage> = {
   '@context': 'https://schema.org',

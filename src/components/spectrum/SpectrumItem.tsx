@@ -5,7 +5,7 @@ import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
 import { spectrumLinkProps } from './spectrumLinkProps';
-import { ArrowSVG } from '../svg';
+import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 
 interface SpectrumItemProps {

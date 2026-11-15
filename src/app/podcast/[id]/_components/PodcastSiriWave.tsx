@@ -17,7 +17,12 @@ function PodcastSiriWave({ status }: PodcastSiriWaveProps) {
           amplitude={status ? 1.5 : 0}
           height={40}
           theme="ios9"
-          onInit={(siriwave) => (siriwaveRef.current = siriwave)}
+          onInit={(siriwave) => {
+            siriwaveRef.current = siriwave;
+            // Paused: draw one frame (the flat line) and stop. The wave's animation loop otherwise runs every frame at
+            // amplitude 0, which was most of the episode page's main-thread time on a phone (Lighthouse bootup).
+            if (!status) requestAnimationFrame(() => siriwave.stop());
+          }}
         />
       </div>
     </div>
