@@ -132,12 +132,15 @@ export default function Insights() {
         <div
           className={cn(
             'insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]',
+            // A short laptop window (up to 760 px tall): the box starts below the header (126 px at 1366x641) and
+            // content taller than it starts at its top rather than above it.
+            '[@media(max-height:760px)]:mt-[132px] [@media(max-height:760px)]:h-[calc(100dvh-212px)] [@media(max-height:760px)]:[justify-content:safe_center]',
             'medium:mt-[160px] medium:h-[calc(100dvh-250px)] medium:gap-[28px] medium:px-[64px]',
             'expanded:mt-[132px] expanded:h-[calc(100dvh-212px)] expanded:gap-[20px] expanded:px-[80px]',
           )}
         >
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
-          <div className="-mt-10 medium:mt-0 expanded:mt-0">
+          <div className="-mt-10 medium:mt-0 expanded:mt-0 [@media(max-height:760px)]:mt-0">
             <NewsAndTalksSection
               items={insightItems}
               isLoading={isInsightsLoading}
