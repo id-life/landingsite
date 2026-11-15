@@ -4,8 +4,9 @@ import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
+import { spectrumLinkProps } from './spectrumLinkProps';
 import { ArrowSVG } from '../svg';
-import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
@@ -23,8 +24,6 @@ export const SpectrumLink = memo(
   ({
     item,
     executeSpectrumRoute,
-    updateUrlAndExecute,
-    routeConfigs,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
@@ -33,93 +32,40 @@ export const SpectrumLink = memo(
   }) => {
     const { trackEvent } = useGA();
 
-    const { key, label, link, isComingSoon, onClick, icon, labelClassName, routeKey, size } = item;
+    const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link);
-    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
-    const { pathname, useHash } = routeConfig ?? {};
+    const anchorProps = spectrumLinkProps({
+      link,
+      routeKey,
+      executeSpectrumRoute,
+      onTrack: () => trackEvent({ name: GA_EVENT_NAMES.SPECTRUM_CLICK, label: key ?? label }),
+    });
 
-    const url = useMemo(() => {
-      if (!hasLink) return undefined;
-      if (link) return link;
-      // routeKey
-      return generateSpectrumUrl(item?.routeKey ?? '', pathname, useHash);
-    }, [hasLink, item?.routeKey, pathname, useHash, link]);
-
-    const handleClick = useCallback(
-      (event?: React.MouseEvent) => {
-        if (!hasLink) return;
-        event?.preventDefault();
-        event?.stopPropagation();
-
-        trackEvent({
-          name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-          label: key ?? label,
-        });
-
-        if (link) {
-          window.open(link, '_blank');
-          return;
-        }
-
-        if (event?.metaKey || event?.ctrlKey) {
-          // cmd + click
-          if (url) window.open(url, '_blank');
-        } else {
-          // normal click
-          if (routeKey) {
-            // Normal click - update URL and execute action in current page
-            if (updateUrlAndExecute) {
-              updateUrlAndExecute(routeKey);
-            } else if (executeSpectrumRoute) {
-              executeSpectrumRoute(routeKey);
-            }
-            return;
-          }
-          onClick?.();
-        }
-
-        if (link) window.open(link, '_blank');
-      },
-      [hasLink, trackEvent, key, label, onClick, link, routeKey, executeSpectrumRoute, updateUrlAndExecute, url],
-    );
-
-    const renderContent = useCallback(() => {
-      if (icon) {
-        return (
-          <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
-            <img src={icon} onClick={handleClick} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
-          </div>
-        );
-      }
-      return (
-        <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
-          <p
-            onClick={handleClick}
-            className={cn(
-              'spectrum-link-text group relative whitespace-nowrap font-poppins text-xs/5 font-medium capitalize',
-              hasLink &&
-                'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
-              labelClassName,
-            )}
-          >
-            {label}
-          </p>
-          {isComingSoon && (
-            <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
-              coming soon
-            </span>
-          )}
-        </div>
-      );
-    }, [icon, hasLink, handleClick, labelClassName, label, isComingSoon, size]);
-
-    return hasLink ? (
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        {renderContent()}
-      </a>
+    const content = icon ? (
+      <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
+        <img src={icon} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
+      </div>
     ) : (
-      renderContent()
+      <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
+        <p
+          className={cn(
+            'spectrum-link-text group relative whitespace-nowrap font-poppins text-xs/5 font-medium capitalize',
+            hasLink &&
+              'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
+            labelClassName,
+          )}
+        >
+          {label}
+        </p>
+        {isComingSoon && (
+          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-oxanium text-xs capitalize text-white/50 backdrop-blur-2xl">
+            coming soon
+          </span>
+        )}
+      </div>
     );
+
+    return anchorProps ? <a {...anchorProps}>{content}</a> : content;
   },
 );
 

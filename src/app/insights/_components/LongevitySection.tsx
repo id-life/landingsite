@@ -11,7 +11,6 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { cn } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -70,7 +69,6 @@ export default function LongevitySection({ isMobile = false, compact = false, is
   const compactSwiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
-  const router = useRouter();
   const pageSize = Math.max(1, itemsPerPage);
 
   const { data: longevityWeeklyData = [], isLoading } = useQuery({
@@ -121,13 +119,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     setCurrentPage(index);
   };
 
+  // The VIEW ALL link opens the WeChat album (same tab on the phone, a new tab on desktop, as before); this
+  // only marks the return page so Back restores Insights on the phone.
   const handleViewAllClick = () => {
-    if (isMobile) {
-      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-      router.push(WECHAT_LINK);
-    } else {
-      window.open(WECHAT_LINK, '_blank');
-    }
+    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
   };
 
   const renderContent = () => {
@@ -265,7 +260,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
               </a>
             </div>
           </div>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href={WECHAT_LINK} external={!isMobile} onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         <div className={cn('relative mt-3', !isMobile && 'pr-0')}>

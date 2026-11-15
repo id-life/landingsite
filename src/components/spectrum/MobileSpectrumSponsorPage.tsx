@@ -2,7 +2,8 @@
 
 import { GA_EVENT_NAMES } from '@/constants/ga';
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
-import { generateSpectrumUrl, SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { spectrumLinkProps } from './spectrumLinkProps';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
 import { cloneElement, memo, useEffect, useState } from 'react';
@@ -19,8 +20,6 @@ const SponsorLogoItem = memo(
   ({
     item,
     executeSpectrumRoute,
-    updateUrlAndExecute,
-    routeConfigs,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
@@ -28,51 +27,26 @@ const SponsorLogoItem = memo(
     routeConfigs?: SpectrumRouteConfig[];
   }) => {
     const { trackEvent } = useGA();
-    const { key, label, link, onClick, routeKey, icon, mobileSize } = item;
-    const hasLink = Boolean(link);
+    const { key, label, link, routeKey, icon, mobileSize } = item;
+    const anchorProps = spectrumLinkProps({
+      link,
+      routeKey,
+      executeSpectrumRoute,
+      onTrack: () => trackEvent({ name: GA_EVENT_NAMES.SPECTRUM_CLICK, label: key ?? label }),
+    });
+    const className = 'flex items-center justify-center transition-opacity hover:opacity-80';
+    const logo = icon && (
+      <div className={cn('flex items-center justify-center', mobileSize || 'h-10')}>
+        <img src={icon} alt={label} className="h-full w-auto object-contain" />
+      </div>
+    );
 
-    const handleClick = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!hasLink) return;
-      trackEvent({
-        name: GA_EVENT_NAMES.SPECTRUM_CLICK,
-        label: key ?? label,
-      });
-
-      if (link) {
-        window.open(link, '_blank');
-        return;
-      }
-
-      if (routeKey) {
-        if (updateUrlAndExecute) {
-          updateUrlAndExecute(routeKey);
-        } else if (executeSpectrumRoute) {
-          executeSpectrumRoute(routeKey);
-        }
-        return;
-      }
-
-      onClick?.();
-    };
-
-    const routeConfig = routeConfigs?.find((config) => config.key === routeKey);
-    const { pathname, useHash } = routeConfig ?? {};
-
-    return (
-      <a
-        href={link || undefined}
-        target="_blank"
-        onClick={handleClick}
-        className="flex items-center justify-center transition-opacity hover:opacity-80"
-      >
-        {icon && (
-          <div className={cn('flex items-center justify-center', mobileSize || 'h-10')}>
-            <img src={icon} alt={label} className="h-full w-auto object-contain" />
-          </div>
-        )}
+    return anchorProps ? (
+      <a {...anchorProps} className={className}>
+        {logo}
       </a>
+    ) : (
+      <div className={className}>{logo}</div>
     );
   },
 );

@@ -71,6 +71,8 @@ export default function PCNav() {
           <Link
             href={item.href}
             onClick={(event) => {
+              // Cmd/Ctrl/Shift/Alt-click and non-left buttons are the browser's (new tab, new window).
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
               event.preventDefault();
               handleNavClick(item);
             }}

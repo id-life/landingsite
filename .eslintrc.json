@@ -10,6 +10,22 @@
       {
         "selector": "MemberExpression[object.name='NAV_LIST'][computed=true][property.type='Literal']",
         "message": "Look a section up by id (NAV.engagement_page from '@/components/nav/nav'), not by its position in NAV_LIST: positions change when sections are reordered."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > Literal:first-child[value=/^\\//]",
+        "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+      },
+      {
+        "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > TemplateLiteral:first-child[quasis.0.value.raw=/^\\//]",
+        "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+      },
+      {
+        "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'][value.value=/^\\//])",
+        "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+      },
+      {
+        "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
+        "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
       }
     ]
   },
@@ -38,8 +54,27 @@
         "src/hooks/anim/useHomeAnimations.tsx",
         "src/hooks/useMobileNavigation.tsx"
       ],
+      // Every rule above except the NAV_LIST one (an override replaces the whole rule).
       "rules": {
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > Literal:first-child[value=/^\\//]",
+            "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+          },
+          {
+            "selector": "CallExpression[callee.object.name='window'][callee.property.name='open'] > TemplateLiteral:first-child[quasis.0.value.raw=/^\\//]",
+            "message": "Link to this site with <a href> or next/link (same tab; Cmd-click still opens a new tab), not window.open."
+          },
+          {
+            "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'][value.value=/^\\//])",
+            "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+          },
+          {
+            "selector": "JSXOpeningElement:has(JSXAttribute[name.name='target'][value.value='_blank']):has(JSXAttribute[name.name='href'] > JSXExpressionContainer > Literal[value=/^\\//])",
+            "message": "Pages of this site open in the same tab: drop target=_blank from internal links."
+          }
+        ]
       }
     }
   ]

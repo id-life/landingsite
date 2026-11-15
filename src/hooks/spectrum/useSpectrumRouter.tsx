@@ -21,11 +21,6 @@ export const generateSpectrumUrl = (key: string, pathname: string = '/presence',
   }
 };
 
-export const openSpectrumInNewTab = (key: string, pathname: string = '/presence', useHash: boolean = true) => {
-  const url = generateSpectrumUrl(key, pathname, useHash);
-  window.open(url, '_blank');
-};
-
 export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const pendingHashRef = useRef<string | null>(null);
@@ -117,7 +112,6 @@ export const useSpectrumRouter = (routeConfigs: SpectrumRouteConfig[]) => {
 
   return {
     generateSpectrumUrl,
-    openSpectrumInNewTab,
     handleHashNavigation,
     executeSpectrumRoute,
     updateUrlAndExecute,

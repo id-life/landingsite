@@ -54,10 +54,10 @@ export const spectrumBaseData: SpectrumItemData[] = [
     icon: <RelationSVG />,
     linksClassName: 'grid grid-cols-2 gap-x-6',
     links: [
-      { label: 'Influence Network', link: 'https://www.id.life/spectrum/influence-network' },
+      { label: 'Influence Network', link: '/spectrum/influence-network' },
       {
         label: 'Disease Management',
-        link: 'https://www.id.life/spectrum/disease-management',
+        link: '/spectrum/disease-management',
       },
       { label: 'Longevity Trend Radar', link: 'https://longevity-trend-radar.vercel.app' },
     ],
@@ -67,7 +67,8 @@ export const spectrumBaseData: SpectrumItemData[] = [
     titleCn: '数字孪生',
     icon: <DigitalTwinSVG />,
     className: 'mobile:pt-4',
-    links: [{ label: 'Access Digital Twin', link: 'https://www.id.life/digitaltwin' }],
+    // A section of this page: a plain click moves the experience there (the digital-twin hash route).
+    links: [{ label: 'Access Digital Twin', link: '/digitaltwin', routeKey: 'digital-twin' }],
   },
   {
     title: 'Peer Reviews',

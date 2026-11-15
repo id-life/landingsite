@@ -50,13 +50,13 @@ export default function NewsFooter() {
     });
 
     if (type === MediaLinkType.Youtube) {
-      window.open(Links.youtube, '__blank');
+      window.open(Links.youtube, '_blank', 'noopener,noreferrer');
     }
     if (type === MediaLinkType.Linkedin) {
-      window.open(Links.linkedin, '__blank');
+      window.open(Links.linkedin, '_blank', 'noopener,noreferrer');
     }
     if (type === MediaLinkType.Media) {
-      window.open(Links.media, '__blank');
+      window.open(Links.media, '_blank', 'noopener,noreferrer');
     }
   };
 

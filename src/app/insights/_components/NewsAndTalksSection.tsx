@@ -8,12 +8,13 @@ import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
+import CardShell from '@/components/common/CardShell';
+import { isInternalHref } from '@/constants/site';
 import { cn } from '@/utils';
 import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
-import { useRouter } from 'next/navigation';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -28,18 +29,11 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isYouTube = !!item.videoId;
 
-  const handleClick = () => {
-    if (isYouTube) {
-      setIsModalOpen(true);
-    } else if (item?.url) {
-      // For internal links (starting with /), use same tab; for external links, open new tab
-      if (item.url.startsWith('/')) {
-        window.location.href = item.url;
-      } else {
-        window.open(item.url, '_blank');
-      }
-    }
-  };
+  // Articles are real links (preview, copy, middle-click, keyboard): our own pages in the same tab, external
+  // press in a new tab. Videos stay buttons that open the modal; an item with neither is not interactive.
+  const href = isYouTube || !item.url || item.url === '#' ? undefined : item.url;
+  const external = Boolean(href && !isInternalHref(href));
+  const openVideo = isYouTube ? () => setIsModalOpen(true) : undefined;
 
   // Use imageUrl if available, otherwise fallback for YouTube videos
   const thumbnailPic = item.imageUrl ?? '';
@@ -48,10 +42,15 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   if (isMobile) {
     return (
       <>
-        <div className="group flex cursor-pointer flex-col overflow-hidden" onClick={handleClick}>
+        <CardShell
+          href={href}
+          external={external}
+          onActivate={openVideo}
+          className="group flex cursor-pointer flex-col overflow-hidden"
+        >
           {/* Image */}
           <div className="relative h-[4.25rem] w-full overflow-hidden">
-            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
+            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
@@ -61,7 +60,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
           </div>
-        </div>
+        </CardShell>
         {isYouTube && (
           <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
         )}
@@ -72,10 +71,15 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   // Desktop layout: vertical card with image on top, text below
   return (
     <>
-      <div className="group flex cursor-pointer flex-col overflow-hidden" onClick={handleClick}>
+      <CardShell
+        href={href}
+        external={external}
+        onActivate={openVideo}
+        className="group flex cursor-pointer flex-col overflow-hidden"
+      >
         {/* Image */}
         <div className="relative h-[9.25rem] w-full overflow-hidden">
-          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={handleClick} />
+          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
@@ -86,7 +90,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
             {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
           </div>
         </div>
-      </div>
+      </CardShell>
       {isYouTube && (
         <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
       )}
@@ -133,7 +137,6 @@ export default function NewsAndTalksSection({
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);
   const totalMobilePages = Math.ceil(items.length / mobileItemCount);
-  const router = useRouter();
 
   const containerResizeCallback = useCallback(
     (entry: ResizeObserverEntry) => {
@@ -180,11 +183,10 @@ export default function NewsAndTalksSection({
     mobileSwiperRef.current?.slideNext();
   };
 
+  // The VIEW ALL link navigates (same tab on every device); this only marks the return page so Back
+  // restores Insights on the phone (desktop restores it from the /insights URL).
   const handleViewAllClick = () => {
-    // Same tab on every device; Back returns to Insights (mobile restores it from sessionStorage,
-    // desktop from the /insights URL).
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push('/news');
   };
 
   const renderContent = () => {
@@ -289,7 +291,7 @@ export default function NewsAndTalksSection({
           <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
             NEWS & TALKS
           </h2>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content with arrow navigation */}
