@@ -8,7 +8,7 @@
   "routes": {
     "/": {
       "kind": "experience",
-      "jsInitialGzipKB": 286.7
+      "jsInitialGzipKB": 284.5
     },
     "/news": {
       "kind": "content",
@@ -16,23 +16,23 @@
     },
     "/news/immortal-dragons-news-and-updates": {
       "kind": "content",
-      "jsInitialGzipKB": 182.7
+      "jsInitialGzipKB": 182.6
     },
     "/podcast": {
       "kind": "content",
-      "jsInitialGzipKB": 166.5
+      "jsInitialGzipKB": 166.4
     },
     "/podcast/long-talk": {
       "kind": "content",
-      "jsInitialGzipKB": 166.5
+      "jsInitialGzipKB": 166.4
     },
     "/podcast/56": {
       "kind": "content",
-      "jsInitialGzipKB": 176
+      "jsInitialGzipKB": 172.9
     },
     "/spectrum/disease-management": {
       "kind": "content",
-      "jsInitialGzipKB": 185.4
+      "jsInitialGzipKB": 185.3
     },
     "/spectrum/influence-network": {
       "kind": "content",
@@ -42,8 +42,8 @@
   "firstVisit": {
     "phone": {
       "/": {
-        "kB": 2870.8,
-        "jsKB": 1224,
+        "kB": 2869.7,
+        "jsKB": 1222.9,
         "requests": 215
       },
       "/news": {
@@ -52,16 +52,16 @@
         "requests": 33
       },
       "/podcast/56": {
-        "kB": 348.2,
-        "jsKB": 187.9,
-        "requests": 34
+        "kB": 344.4,
+        "jsKB": 184.2,
+        "requests": 33
       }
     },
     "tablet": {
       "/": {
-        "kB": 5998.1,
-        "jsKB": 1239.6,
-        "requests": 198
+        "kB": 5995.6,
+        "jsKB": 1237.1,
+        "requests": 197
       },
       "/news": {
         "kB": 437.4,
@@ -69,15 +69,15 @@
         "requests": 33
       },
       "/podcast/56": {
-        "kB": 368.6,
-        "jsKB": 187.9,
-        "requests": 35
+        "kB": 364.8,
+        "jsKB": 184.2,
+        "requests": 34
       }
     },
     "laptop": {
       "/": {
-        "kB": 5998.1,
-        "jsKB": 1239.6,
+        "kB": 5996.9,
+        "jsKB": 1238.4,
         "requests": 198
       },
       "/news": {
@@ -86,9 +86,9 @@
         "requests": 33
       },
       "/podcast/56": {
-        "kB": 368.6,
-        "jsKB": 187.9,
-        "requests": 35
+        "kB": 364.8,
+        "jsKB": 184.2,
+        "requests": 34
       }
     }
   },
@@ -110,5 +110,5 @@
       }
     }
   },
-  "recordedAt": "2026-11-15T16:09:37.217Z"
+  "recordedAt": "2026-11-15T16:51:47.224Z"
 }
