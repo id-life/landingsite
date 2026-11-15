@@ -7,7 +7,7 @@ import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
 import MobileFixedUI from '@/components/common/MobileFixedUI';
-import MobileEngagement from '@/components/engagement/MobileEngagement';
+import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
@@ -53,7 +53,7 @@ export default function MobileHome() {
         <MobilePortfolio />
         <MobileInsights />
         <MobileSpectrum />
-        <MobileEngagement />
+        <Engagement deck="phone" />
         <MobileTwin />
         <Connect />
         <MobileFooter />

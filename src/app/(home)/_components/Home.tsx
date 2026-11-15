@@ -95,7 +95,7 @@ export default function Home() {
           <Portfolio />
           <Insights />
           <Spectrum />
-          <Engagement />
+          <Engagement deck="desktop" />
           <Twin />
           <Connect />
           <Footer />

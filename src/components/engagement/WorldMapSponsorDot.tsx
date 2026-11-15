@@ -1,37 +1,112 @@
 import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
-import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, PulseConfig } from '@/constants/engagement';
+import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
 import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, type ReactNode } from 'react';
 import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { VideoWithPoster } from './VideoWithPoster';
+import {
+  BADGE_CLASS,
+  BADGE_ICON_CLASS,
+  BadgeBlurBg,
+  CARD_TEXT_BACKING,
+  MAP_LABEL_CLASS,
+  MAP_POINT_TAP_CLASS,
+  PulseDot,
+  type CalcPoint,
+  type MapDeck,
+} from './WorldMapDotComponents';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
 import { DURATION, EASE } from '@/motion/tokens';
-import { useReducedMotionPref } from '@/motion/preference';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
   active: { scale: 1.2 },
 };
 
+const badgeMotion = {
+  initial: { opacity: 0, scale: 0.5 },
+  animate: { opacity: 1, scale: 0.83 },
+  exit: { opacity: 0, scale: 0.5 },
+};
+
+/** One badge of an open sponsor dot; the phone badge is smaller and blurs its own background layer. */
+function SponsorBadge({
+  deck,
+  tone,
+  icon,
+  children,
+}: {
+  deck: MapDeck;
+  tone: 'purple' | 'yellow' | 'orange';
+  icon: ReactNode;
+  children: ReactNode;
+}) {
+  const toneClass = { purple: 'text-data-purple', yellow: 'text-data-yellow', orange: 'text-data-orange' }[tone];
+  const bgClass = { purple: 'bg-data-purple/20', yellow: 'bg-data-yellow/20', orange: 'bg-data-orange/20' }[tone];
+  if (deck === 'phone') {
+    return (
+      <motion.span
+        {...badgeMotion}
+        className={cn(
+          'relative flex items-center gap-0.5 rounded',
+          MOBILE_MAP_SCALE.badgePaddingClass,
+          MOBILE_MAP_SCALE.badgeTextClass,
+          'font-semibold',
+          toneClass,
+        )}
+      >
+        <BadgeBlurBg className={bgClass} />
+        {icon}
+        {children}
+      </motion.span>
+    );
+  }
+  return (
+    <motion.span {...badgeMotion} className={cn(BADGE_CLASS, bgClass, toneClass)}>
+      {icon}
+      {children}
+    </motion.span>
+  );
+}
+
+/**
+ * A sponsor dot, one component for both decks (RWD-02; it was WorldMapSponsorDot and MobileWorldMapSponsorDot). By
+ * deck: hover and click-to-pin vs tap; the phone map may place the dot at its own coordinate (mobileLat / mobileLng)
+ * and uses its smaller dot and badges.
+ */
 export function WorldMapSponsorDotPoint({
+  deck,
   dot,
   index,
   calcPoint,
 }: {
+  deck: MapDeck;
   dot: MapSponsorDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
+  calcPoint: CalcPoint;
 }) {
-  // Reduced motion (MOT-02): the pulse rings hold still.
-  const reduced = useReducedMotionPref();
-  const { lat, lng, title, pulseConfig, isConference, conferenceText, isSponsor, sponsorText, isResearch, researchText } = dot;
+  const phone = deck === 'phone';
+  const {
+    lat,
+    lng,
+    mobileLat,
+    mobileLng,
+    title,
+    pulseConfig,
+    isConference,
+    conferenceText,
+    isSponsor,
+    sponsorText,
+    isResearch,
+    researchText,
+  } = dot;
   const { handleClickPoint, handleMouseEnter, handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
   const { isDarker, isOtherActive, isActive } = useEngagementDotInfo({
@@ -41,8 +116,8 @@ export function WorldMapSponsorDotPoint({
   });
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 防止冒泡
-    if (!activeSponsorDotClickOpen) {
+    e.stopPropagation();
+    if (!phone && !activeSponsorDotClickOpen) {
       setActiveSponsorDotClickOpen(true);
       handleClickPoint('sponsor', index, true);
     } else {
@@ -53,32 +128,30 @@ export function WorldMapSponsorDotPoint({
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
-    // 检查鼠标是否移出到非点区域
     if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
       handleMouseLeave(e, index, 'sponsor');
     }
   };
 
   useEffect(() => {
-    if (!activeSponsorDot) setActiveSponsorDotClickOpen(false);
-  }, [activeSponsorDot, setActiveSponsorDotClickOpen]);
+    if (!phone && !activeSponsorDot) setActiveSponsorDotClickOpen(false);
+  }, [phone, activeSponsorDot, setActiveSponsorDotClickOpen]);
 
-  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
-
-  // 使用自定义配置或默认配置
+  const pLat = phone ? (mobileLat ?? lat) : lat;
+  const pLng = phone ? (mobileLng ?? lng) : lng;
+  const { left, top } = useMemo(() => calcPoint(pLat, pLng), [calcPoint, pLat, pLng]);
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
     () => pulseConfig || DEFAULT_PULSE_CONFIG,
     [pulseConfig],
   );
-
-  // 计算SVG中心点
-  const centerPoint = useMemo(() => svgSize / 2, [svgSize]);
+  const iconClass = phone ? MOBILE_MAP_SCALE.badgeIconSize : BADGE_ICON_CLASS;
 
   return (
     <motion.div
       className={cn(
         `world-map-dot-sponsor world-map-dot-sponsor-${index}`,
         'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
       initial="initial"
@@ -86,123 +159,55 @@ export function WorldMapSponsorDotPoint({
       animate={isActive ? 'active' : 'initial'}
       onClick={handleClick}
       variants={pointVariants}
-      onMouseEnter={(e) => {
-        if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
-        handleMouseEnter(e, index, 'sponsor');
-      }}
-      onMouseLeave={handleContentMouseLeave}
-      style={{
-        left: `${left}px`,
-        top: `${top}px`,
-      }}
+      onMouseEnter={
+        phone
+          ? undefined
+          : (e) => {
+              if (activeSponsorDotClickOpen) setActiveSponsorDotClickOpen(false);
+              handleMouseEnter(e, index, 'sponsor');
+            }
+      }
+      onMouseLeave={phone ? undefined : handleContentMouseLeave}
+      style={{ left: `${left}px`, top: `${top}px` }}
     >
-      <div className={cn('flex items-center gap-1', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
-        {/* 中心红点和波纹 */}
-        <div className={cn('relative size-6', isActive ? 'overflow-visible' : 'overflow-hidden')}>
-          <svg
-            width={svgSize}
-            height={svgSize}
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="absolute -left-full -top-full size-18"
-          >
-            <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
-            {isActive && (
-              <>
-                {/* 使用SVG animate元素来创建平滑的波纹效果 */}
-                <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  {!reduced && (
-                    <animate
-                      attributeName="r"
-                      from={pulse1.fromRadius}
-                      to={pulse1.toRadius}
-                      dur={`${pulse1.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                  {!reduced && (
-                    <animate
-                      attributeName="opacity"
-                      from="0.5"
-                      to="0"
-                      dur={`${pulse1.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                </circle>
-                <circle
-                  cx={centerPoint}
-                  cy={centerPoint}
-                  r={pulse2.fromRadius}
-                  stroke={color}
-                  strokeWidth="2"
-                  fill="none"
-                  opacity="0.5"
-                >
-                  {!reduced && (
-                    <animate
-                      attributeName="r"
-                      from={pulse2.fromRadius}
-                      to={pulse2.toRadius}
-                      dur={`${pulse2.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                  {!reduced && (
-                    <animate
-                      attributeName="opacity"
-                      from="0.5"
-                      to="0"
-                      dur={`${pulse2.duration}s`}
-                      begin="0s"
-                      repeatCount="indefinite"
-                    />
-                  )}
-                </circle>
-              </>
-            )}
-          </svg>
-        </div>
-        {/* 标签 */}
-        <motion.p className="-ml-1.5 flex items-center whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white">
+      <div
+        className={cn(
+          'flex items-center',
+          !phone && 'gap-1',
+          { 'map-dot-dim-soft': isOtherActive },
+          { 'map-dot-dim-strong': isDarker },
+        )}
+      >
+        <PulseDot
+          containerClassName={phone ? MOBILE_MAP_SCALE.dotContainerSize : 'size-6'}
+          svgSize={svgSize}
+          centerPoint={svgSize / 2}
+          centerRadius={centerRadius}
+          color={color}
+          pulse1={pulse1}
+          pulse2={pulse2}
+          isActive={isActive}
+          svgClassName={phone ? `${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}` : undefined}
+        />
+        <motion.p className={cn('flex items-center', MAP_LABEL_CLASS[deck])}>
           {title}
           <AnimatePresence>
             {isActive ? (
               <>
                 {isConference ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.83 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-data-purple/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-purple backdrop-blur-2xl"
-                  >
-                    <MeetingSVG className="size-5 fill-data-purple" />
+                  <SponsorBadge deck={deck} tone="purple" icon={<MeetingSVG className={cn(iconClass, 'fill-data-purple')} />}>
                     {conferenceText ?? 'Conference'}
-                  </motion.div>
+                  </SponsorBadge>
                 ) : null}
                 {isSponsor ? (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.83 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-data-yellow/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-yellow backdrop-blur-2xl"
-                  >
-                    <SponsorSVG className="size-5 fill-data-yellow" />
+                  <SponsorBadge deck={deck} tone="yellow" icon={<SponsorSVG className={cn(iconClass, 'fill-data-yellow')} />}>
                     {sponsorText ?? 'Sponsorship'}
-                  </motion.span>
+                  </SponsorBadge>
                 ) : null}
                 {isResearch && (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.83 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1 rounded-lg bg-data-orange/20 p-1 px-2 py-1 text-base/5 font-semibold text-data-orange backdrop-blur-2xl"
-                  >
-                    <ResearchSVG className="size-5 fill-data-orange" />
+                  <SponsorBadge deck={deck} tone="orange" icon={<ResearchSVG className={cn(iconClass, 'fill-data-orange')} />}>
                     {researchText ?? 'Research'}
-                  </motion.span>
+                  </SponsorBadge>
                 )}
               </>
             ) : null}
@@ -213,24 +218,29 @@ export function WorldMapSponsorDotPoint({
   );
 }
 
+/** The sponsor logos of an open sponsor dot, one component for both decks (sizes by deck). */
 export function WorldMapSponsorDotContent({
+  deck,
   dot,
   index,
   calcPoint,
 }: {
+  deck: MapDeck;
   dot: MapSponsorDotData;
   index: number;
-  calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
+  calcPoint: CalcPoint;
 }) {
-  const { data, lat, lng, title } = dot;
+  const phone = deck === 'phone';
+  const { data, lat, lng, mobileLat, mobileLng, title } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const isActive = activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
-  const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const pLat = phone ? (mobileLat ?? lat) : lat;
+  const pLng = phone ? (mobileLng ?? lng) : lng;
+  const { left, top } = useMemo(() => calcPoint(pLat, pLng), [calcPoint, pLat, pLng]);
   const handleContentMouseLeave = (e: React.MouseEvent) => {
     if (activeSponsorDotClickOpen) return;
     const relatedTarget = e.relatedTarget as Element;
-    // 检查鼠标是否移出到非点区域
     if (typeof relatedTarget?.closest === 'function' && !relatedTarget?.closest(`.world-map-dot-sponsor-${index}`)) {
       handleMouseLeave(e, index, 'sponsor');
     }
@@ -253,25 +263,23 @@ export function WorldMapSponsorDotContent({
         <div
           className={cn(
             `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index}`,
-            'pointer-events-auto absolute z-30 flex h-20 translate-y-5 flex-col overflow-visible',
+            'pointer-events-auto absolute z-30 flex h-20 flex-col overflow-visible',
+            phone ? 'translate-y-4' : 'translate-y-5',
           )}
-          style={{
-            left: `${left}px`,
-            top: `${top}px`,
-          }}
-          // onClick={onClick}
+          style={{ left: `${left}px`, top: `${top}px` }}
         >
           <div className="flex items-center">
             {data.map((item, itemIndex) => (
               <SponsorItem
                 key={`sponsor-item-${itemIndex}`}
+                deck={deck}
                 alt={item.alt}
                 link={item.link}
                 coverUrl={item.coverUrl}
                 videoUrl={item.videoUrl}
                 onMouseLeave={handleContentMouseLeave}
                 onClick={(e) => handleLinkClick(e, item.link)}
-                className={cn(itemIndex > 0 && '-ml-2', item.className)}
+                className={cn(itemIndex > 0 && (phone ? '-ml-6' : '-ml-2'), item.className)}
               />
             ))}
           </div>
@@ -283,6 +291,7 @@ export function WorldMapSponsorDotContent({
 
 const SponsorItem = memo(
   ({
+    deck,
     alt,
     link,
     coverUrl,
@@ -291,6 +300,7 @@ const SponsorItem = memo(
     onClick,
     className,
   }: {
+    deck: MapDeck;
     alt?: string;
     link?: string;
     coverUrl?: string;
@@ -299,24 +309,22 @@ const SponsorItem = memo(
     onClick: (e: React.MouseEvent) => void;
     className?: string;
   }) => {
+    const phone = deck === 'phone';
+    // Scrolled deck: never smaller than the 1440 px size on tablets, where the scaled unit shrinks and text has a floor.
+    const logo = phone ? 'size-[8.5rem]' : 'size-[max(15.5rem,186px)]';
     const content = (
       <motion.div
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="clip-sponsor-content flex w-[15.5rem] origin-top-left flex-col items-center overflow-hidden font-display"
+        className={cn(
+          'clip-sponsor-content flex origin-top-left flex-col items-center overflow-hidden font-display',
+          phone ? 'w-[10rem]' : 'w-[max(15.5rem,186px)]',
+        )}
         onMouseLeave={onMouseLeave}
         variants={{
-          hidden: {
-            opacity: 0,
-            y: -10,
-            transformOrigin: 'top left',
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transformOrigin: 'top left',
-          },
+          hidden: { opacity: 0, y: -10, transformOrigin: 'top left' },
+          visible: { opacity: 1, y: 0, transformOrigin: 'top left' },
         }}
         transition={{
           staggerChildren: 0.05,
@@ -329,11 +337,18 @@ const SponsorItem = memo(
           videoUrl={videoUrl}
           // The caption below names the sponsor in the same link, so the logo is decorative (axe image-redundant-alt).
           title=""
-          containerClass="-mt-5"
-          videoClass="size-[15.5rem]"
-          coverClass="size-[15.5rem]"
+          containerClass={phone ? '-mt-4' : '-mt-5'}
+          videoClass={logo}
+          coverClass={logo}
         />
-        <h4 className="-mt-5 whitespace-pre-wrap text-center text-2xl/7 font-semibold capitalize text-white">{alt}</h4>
+        <h4
+          className={cn(
+            '-mt-5 whitespace-pre-wrap text-center font-semibold capitalize text-white',
+            phone ? 'text-label' : 'text-balance text-lead',
+          )}
+        >
+          <span className={CARD_TEXT_BACKING}>{alt}</span>
+        </h4>
       </motion.div>
     );
 
