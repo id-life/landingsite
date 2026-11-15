@@ -15,6 +15,7 @@ import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { reportError } from '@/lib/report';
 import { DURATION, EASE } from '@/motion/tokens';
+import { u } from '@/utils/layout-unit';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -164,20 +165,20 @@ export default function SwitchModel() {
 
     gsap.to('.twin-title', { opacity: 0 });
     gsap.to('#ytb-demo', { opacity: 0 });
-    gsap.to('#switch-skin', { bottom: '8rem' });
+    gsap.to('#switch-skin', { bottom: u(8) });
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.killTweensOf(list);
     if (currentModelType === ModelType.Skin) {
-      gsap.to(list, { left: '-80rem', duration: DURATION.moderate }).then(() => {
-        gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
+      gsap.to(list, { left: u(-80), duration: DURATION.moderate }).then(() => {
+        gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
       });
       setCurrentModel(model);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
       eventBus.next({ type: MessageType.RESET_ANIMATION });
     }
     if (currentModelType === ModelType.Anatomy) {
-      gsap.to(list, { left: '-80rem', delay: 0.5, duration: DURATION.moderate }).then(() => {
-        gsap.to(`.twin-title-${model}`, { left: '5rem', delay: 0.3 });
+      gsap.to(list, { left: u(-80), delay: 0.5, duration: DURATION.moderate }).then(() => {
+        gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
       });
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }

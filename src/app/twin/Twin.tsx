@@ -12,6 +12,7 @@ import { gsap } from 'gsap';
 import { useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { u } from '@/utils/layout-unit';
 
 const PAGE_ID = 'twin_page';
 const twinNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -71,10 +72,10 @@ function Twin() {
     }
     if (!inView && isResetDemo.current) {
       const list = gsap.utils.toArray('.twin-title-item');
-      gsap.to(list, { left: '-80rem' });
+      gsap.to(list, { left: u(-80) });
       gsap.to('.twin-title', { opacity: 1 });
       gsap.to('#ytb-demo', { opacity: 1 });
-      gsap.to('#switch-skin', { bottom: '15rem' });
+      gsap.to('#switch-skin', { bottom: u(15) });
       setCurrentModel(PredictionModel.M0);
       setCurrentModelType(ModelType.Skin);
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });

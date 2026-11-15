@@ -54,7 +54,9 @@ const PortfolioItem = memo(
           <h3
             className={cn(
               'fund-title flex-center gap-2.5 font-display tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
-              isGridMode ? 'text-sm/5 font-semibold' : 'text-xl/6',
+              // Type roles (RWD-01): the company name is body-sm on both decks, the one-liner and subtitle caption.
+              'text-body-sm',
+              isGridMode && 'font-semibold',
             )}
           >
             <img
@@ -79,20 +81,20 @@ const PortfolioItem = memo(
               alt=""
             />
           </h3>
-          {/* At least 12 px on every device: the phone grid used 10 px, and the desktop tree's text-xs scales with
-              the viewport-width root font (9 px at 1440, 5.1 px at 820). */}
+          {/* The caption role: 12 px up to 1440 px, 13.8 at 1920, on both decks (the phone grid used 10 px, the desktop
+              tree 9 px at 1440 and 5.1 px at 820 under the old viewport-scaled root). */}
           <p
             className={cn(
-              'fund-desc mx-auto text-xs/5 notMobile:max-w-full notMobile:px-3',
+              'fund-desc mx-auto text-caption notMobile:max-w-full notMobile:px-3',
               isGridMode
-                ? 'mt-3 line-clamp-3 min-h-8 w-full px-2 text-xs/4 font-medium'
-                : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5 notMobile:text-[length:max(12px,0.75rem)] notMobile:leading-[max(15px,1.25rem)]',
+                ? 'mt-3 line-clamp-3 min-h-8 w-full px-2 font-medium'
+                : 'mt-4 min-h-10 w-full max-w-72 mobile:mt-2 mobile:min-h-5',
             )}
           >
             {description}
           </p>
           {subTitle && !isGridMode && (
-            <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-tone-350 mobile:mt-3">{subTitle}</div>
+            <div className="fund-subtitle mx-auto py-1.5 text-caption font-semibold text-tone-350 mobile:mt-3">{subTitle}</div>
           )}
         </div>
       </>

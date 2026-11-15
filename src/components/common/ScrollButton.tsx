@@ -15,9 +15,9 @@ interface ScrollButtonProps {
 export default function ScrollButton({ className }: ScrollButtonProps) {
   const setNavigateTo = useSetAtom(navigateToAtom);
   const reduced = useReducedMotionPref();
-  const rippleRef1 = useRef<HTMLDivElement>(null);
-  const rippleRef2 = useRef<HTMLDivElement>(null);
-  const rippleRef3 = useRef<HTMLDivElement>(null);
+  const rippleRef1 = useRef<HTMLSpanElement>(null);
+  const rippleRef2 = useRef<HTMLSpanElement>(null);
+  const rippleRef3 = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const ripple1 = rippleRef1.current;
@@ -30,8 +30,9 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
     // 创建循环动画
     const createRippleAnim = (el: HTMLElement, delay: number) => {
       gsap.to(el, {
-        width: '9.875rem',
-        height: '4.75rem',
+        // 9.875 x 4.75 of the 7.625 x 2.5 box, as before, measured from the box (it has px floors on tablets).
+        width: (el.parentElement?.offsetWidth ?? 0) * (9.875 / 7.625),
+        height: (el.parentElement?.offsetHeight ?? 0) * (4.75 / 2.5),
         opacity: 0,
         duration: LOOP.ripple,
         delay,
@@ -55,16 +56,22 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
   }, [reduced]);
 
   return (
-    <div className={cn('pointer-events-auto z-10 cursor-pointer', className)} onClick={() => setNavigateTo(NAV_LIST[1])}>
-      <div className="relative h-10 w-[7.625rem]">
-        <div ref={rippleRef1} className="scroll-button-ripple-init" />
-        <div ref={rippleRef2} className="scroll-button-ripple-init" />
-        <div ref={rippleRef3} className="scroll-button-ripple-init" />
-        <div className="flex-center absolute inset-0 gap-1.5 rounded-full bg-tone-750">
+    // A real button (it was a clickable div); px floors so it stays a readable, tappable control on tablets (RWD-01,
+    // RWD-06), the same size as before from 1440 px up.
+    <button
+      type="button"
+      className={cn('pointer-events-auto z-10 cursor-pointer tap-area', className)}
+      onClick={() => setNavigateTo(NAV_LIST[1])}
+    >
+      <span className="relative block h-[max(2.5rem,40px)] w-[max(7.625rem,120px)]">
+        <span ref={rippleRef1} className="scroll-button-ripple-init block" />
+        <span ref={rippleRef2} className="scroll-button-ripple-init block" />
+        <span ref={rippleRef3} className="scroll-button-ripple-init block" />
+        <span className="flex-center absolute inset-0 gap-1.5 rounded-full bg-tone-750">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
-          <p className="font-button text-base/4 font-bold uppercase text-white">SCROLL</p>
-        </div>
-      </div>
-    </div>
+          <span className="font-button text-label font-bold uppercase text-white">SCROLL</span>
+        </span>
+      </span>
+    </button>
   );
 }

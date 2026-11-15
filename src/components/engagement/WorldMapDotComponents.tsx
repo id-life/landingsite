@@ -455,7 +455,7 @@ export function MobileConferenceBadgesWithVideo({
           <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
             <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
               <YoutubeSVG className="size-3 fill-white" />
-              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <span className="inline-block text-xs/4 font-semibold text-white">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>

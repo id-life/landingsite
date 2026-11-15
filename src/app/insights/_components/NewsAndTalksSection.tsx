@@ -74,7 +74,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
             <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-text text-[10px]/3 text-black/60">
+            <div className="flex w-full flex-col text-left font-text text-caption text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>

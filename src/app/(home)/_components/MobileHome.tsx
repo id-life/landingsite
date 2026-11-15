@@ -3,12 +3,11 @@
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
 import MobileTwin from '@/app/twin/MobileTwin';
 import MobileInsights from '@/app/insights/MobileInsights';
-import MobileConnect from '@/app/connect/MobileConnect';
-import MobileVision from '@/app/vision/_components/MobileVision';
+import Connect from '@/app/connect/Connect';
+import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
 import MobileFixedUI from '@/components/common/MobileFixedUI';
 import MobileEngagement from '@/components/engagement/MobileEngagement';
-import MobileThreeWrapper from '@/components/gl/MobileThreeWrapper';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
@@ -22,6 +21,8 @@ import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { usePhoneSectionDriver } from '@/hooks/useMobileNavigation';
 import { initialRouteHandledAtom } from '@/atoms';
+import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
+import LinkTracker from '@/components/site/LinkTracker';
 import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
 export default function MobileHome() {
@@ -32,6 +33,8 @@ export default function MobileHome() {
   useMobileHomeAnimateInit();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.
   useExperienceLifecycle();
+  // The header's SUBSCRIBE buttons are plain DOM events (NAV-04, PERF-10); this connects them to the popup.
+  useSubscribeBridge();
   // The phone tree changes section through the same controller as the desktop deck (MOT-01).
   usePhoneSectionDriver();
   // Vertical swipes step through sections, like the arrow buttons.
@@ -45,19 +48,20 @@ export default function MobileHome() {
     <MotionPreferenceConfig>
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
-      {webgl && <MobileThreeWrapper />}
       <div id="wrapper" className="">
-        <MobileVision />
+        <Vision />
         <MobilePortfolio />
         <MobileInsights />
         <MobileSpectrum />
         <MobileEngagement />
         <MobileTwin />
-        <MobileConnect />
+        <Connect />
         <MobileFooter />
         <MobileFooterContact />
       </div>
       <MobileFixedUI />
+      {/* Channel links of the contact panel are tracked by one delegated listener (data-channel). */}
+      <LinkTracker />
     </MotionPreferenceConfig>
   );
 }

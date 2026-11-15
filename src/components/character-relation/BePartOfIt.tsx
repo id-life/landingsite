@@ -17,6 +17,7 @@ import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { Form, FormSubmitHandler, useForm } from 'react-hook-form';
+import { u } from '@/utils/layout-unit';
 
 const CHARACTER_RELATION_PLAIN_DATA: CharacterRelation = {
   character: '',
@@ -138,14 +139,14 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       submittedMsgTimelineRef.current.clear();
       if (isMobile) {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
-          bottom: '4.875rem',
+          bottom: u(4.875),
           translateY: '100%',
           opacity: 1,
           zIndex: 30,
         });
       } else {
         submittedMsgTimelineRef.current.to(submittedMsgRef.current, {
-          top: '2.5rem',
+          top: u(2.5),
           opacity: 1,
         });
       }
@@ -173,7 +174,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
-        '-bottom-full mobile:w-full mobile:p-8 mobile:py-5',
+        // Never wider than the window (RWD-01: the tool pages are drawn at the 16 px root at every width).
+        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
@@ -250,7 +252,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               target="_blank"
               onClick={handleLinkClick}
               className={cn(
-                'relative text-accent',
+                // A 44 px line box on touch screens (RWD-06), the text unchanged.
+                'relative inline-flex items-center text-accent tap',
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition after:duration-300 hover:after:scale-x-100',
               )}
             >

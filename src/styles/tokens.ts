@@ -268,9 +268,8 @@ const readBody = 'clamp(1rem, 0.44vw + 0.625rem, 1.375rem)';
 
 /**
  * The nine type roles: [font-size, line-height]. Sizes are rem-bounded clamp()s, each maximum at most 2.5x its
- * minimum (RWD-01), so browser zoom and the visitor's default font size still scale the text. The floors (12 px
- * captions, 14 px labels, 16 px reading text) hold only where the root is 16 px: see docs/design-tokens.md for the
- * experience routes, whose root is still 0.8333vw above 768 px.
+ * minimum (RWD-01), so browser zoom and the visitor's default font size still scale the text. The root is a fixed
+ * 16 px on every route, so the floors (12 px captions, 14 px labels, 16 px reading text) hold everywhere.
  */
 export const typeRoles = {
   /** Dates, credits, legal, metadata. 12 px floor. */
@@ -338,9 +337,8 @@ export function cssVariables(): [string, string][] {
     ['--grid-gutter', grid.gutter],
     ['--measure', grid.measure],
     ['--space', `${SPACE_UNIT_PX}px`],
-    // The layout unit (RWD-01): today exactly the root rem (1rem = 0.8333vw on the experience and Spectrum tool routes
-    // above 768 px, 16 px elsewhere). Layout that should keep tracking the window moves to calc(var(--u) * n); when the
-    // root becomes a fixed 16 px, only --u is redefined on those routes and the layout does not move.
+    // The layout unit (RWD-01): 1rem here; the desktop experience redefines it as 0.8333vw (Style.tsx), what its root
+    // used to be. Compiled rem lengths become calc(var(--u) * n) (scripts/postcss-layout-unit.js).
     ['--u', '1rem'],
     // The light theme is the default; the experience tweens these per section.
     ...Object.entries(themes.light),

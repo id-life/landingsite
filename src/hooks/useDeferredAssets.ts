@@ -6,6 +6,7 @@ import { globalLoadedAtom } from '@/atoms/geo';
 import { DeferredGroup, deferredSettledAtom, furthestSectionAtom } from '@/atoms/loading';
 import { currentPageIndexAtom, mobileCurrentPageIndexAtom } from '@/atoms/nav';
 import { NAV_LIST } from '@/components/nav/nav';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 /**
  * Later-section 3D assets (the Digital Twin avatar and HDR of section 6, about 6 MB; the Connect
@@ -27,8 +28,8 @@ const SECTION: Record<DeferredGroup, number> = {
 const OTHER: Record<DeferredGroup, DeferredGroup> = { twin: 'jellyfish', jellyfish: 'twin' };
 const WAIT_LIMIT_MS = 15000;
 
-// Same breakpoint as HomeEntry (useMediaQuery maxWidth 768): the phone tree has no 3D twin.
-const inPhoneTree = () => window.matchMedia('(max-width: 768px)').matches;
+// The device profile's tree (RWD-02): the phone tree has no 3D twin.
+const inPhoneTree = () => window.matchMedia(PHONE_TREE_QUERY).matches;
 const routeSection = () => NAV_LIST.findIndex((item) => item.href === window.location.pathname);
 const saveData = () => {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;

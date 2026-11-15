@@ -22,7 +22,7 @@ import TaglineSVG from '@/../public/svgs/main-description.svg?component';
  * height when that fits, else 86 % of the width (heroFit.ts). A viewBox of 1577 x 1000 with "meet" scaling gives
  * exactly that rule: 1577 / 1000 is the aspect at which both limits meet. The tagline sits 3.5 units below the
  * wordmark centre (CenterLogo.tsx). The phone tree's wordmark spans 86 % of the width with its tagline nearer
- * (MobileCenterLogo.tsx); its layer is the 390 x 844 composition, width-fitted.
+ * (CenterLogo.tsx, phone deck); its layer is the 390 x 844 composition, width-fitted.
  */
 export default function HeroPoster() {
   const mode = useAtomValue(experienceModeAtom);

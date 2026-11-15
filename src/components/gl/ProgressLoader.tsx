@@ -14,6 +14,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { experienceModeAtom, markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { EASE } from '@/motion/tokens';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -33,7 +34,7 @@ export function useRevealExperienceUI() {
   return useCallback(() => {
     if (jotaiStore.get(fadeInAnimCompletedAtom)) return;
     setGlobalLoaded(true);
-    if (window.matchMedia('(max-width: 768px)').matches) ensureMobileUIVisible();
+    if (window.matchMedia(PHONE_TREE_QUERY).matches) ensureMobileUIVisible();
     else ensureDesktopUIVisible();
     setFadeInAnimCompleted(true);
   }, [setFadeInAnimCompleted, setGlobalLoaded]);

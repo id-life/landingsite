@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { cn } from '@/utils';
+// clsx, not cn: no caller passes a conflicting class, and tailwind-merge would cost every news page 6.7 kB (PERF-10).
+import { clsx } from 'clsx';
 
 // Hosts configured in next.config.mjs images.remotePatterns. Covers from any other host are served
 // unoptimized, because the next/image loader throws for unconfigured hosts.
@@ -33,7 +34,7 @@ type CoverImageProps = {
  * CMS covers are stored at full upload resolution; served raw they cost up to 11 MB each.
  */
 export default function CoverImage({ src, alt, sizes, className, priority = false }: CoverImageProps) {
-  const classes = cn('size-full object-cover', className);
+  const classes = clsx('size-full object-cover', className);
   if (!src) return null;
   // Unconfigured hosts are served as-is (`unoptimized` skips the loader and its host check) but still
   // get next/image's lazy loading, async decoding and fill layout.

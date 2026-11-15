@@ -78,7 +78,7 @@ export default function FooterContact() {
   return (
     <>
       <FloatingPortal>
-        <div className="page-footer-contact fixed -bottom-80 z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
+        <div className="page-footer-contact fixed bottom-[-100vh] z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
           {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
           <section
             aria-label="Contact and subscribe"

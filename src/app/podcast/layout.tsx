@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import PodcastHeader from '@/app/podcast/_components/PodcastHeader';
+import SiteHeader from '@/components/site/SiteHeader';
 import PodcastNavTabs from '@/app/podcast/_components/PodcastNavTabs';
 import ContentPageContact from '@/components/layout/footer/ContentPageContact';
 import SubscribePopup from '@/components/layout/footer/SubscribePopup';
@@ -10,7 +10,7 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
         <div className="reading-column">
-          <PodcastHeader />
+          <SiteHeader variant="solid" currentId="podcast" className="relative py-10 mobile:py-5" />
           <PodcastNavTabs />
           {children}
         </div>

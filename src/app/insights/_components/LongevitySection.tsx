@@ -68,7 +68,7 @@ function LongevityCard({ item }: { item: LongevityItem }) {
             alt="Open"
           />
         </div>
-        <p className="line-clamp-1 text-base font-medium mobile:text-[10px]/4">{item.description}</p>
+        <p className="line-clamp-1 text-base font-medium mobile:text-xs/4">{item.description}</p>
       </div>
     </Root>
   );

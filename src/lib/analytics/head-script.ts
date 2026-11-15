@@ -1,4 +1,5 @@
 import { CONSENT_COOKIE, OPT_IN_COUNTRIES } from './config';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 /**
  * The inline script rendered first in <head> of analytics builds (src/lib/analytics/HeadScript.tsx).
@@ -34,7 +35,7 @@ try{var r=sessionStorage.getItem('idl_region');if(r!==null)I.region=r;}catch(e){
 if(I.region===undefined&&w.fetch){I.geo=fetch('/api/geo',{credentials:'same-origin',cache:'no-store'}).then(function(res){return res.ok?res.json():{};}).then(function(j){I.region=typeof j.country==='string'?j.country.toUpperCase():'';try{sessionStorage.setItem('idl_region',I.region);}catch(e){}return I.region;},function(){I.region='';return '';});}
 function allowed(){if(I.bot||I.gpc||I.off)return false;if(I.choice)return I.choice==='granted';return typeof I.region==='string'&&I.region!==''&&OPT.indexOf(I.region)<0;}
 var sent=false;function abandon(){if(sent||I.stage==='ready')return;sent=true;if(!allowed()||!n.sendBeacon)return;
-var b=JSON.stringify({e:'load_abandon',stage:I.stage,ms:Math.round(performance.now()),layout:w.innerWidth<=768?'mobile':'desktop',conn:(n.connection&&n.connection.effectiveType)||''});
+var b=JSON.stringify({e:'load_abandon',stage:I.stage,ms:Math.round(performance.now()),layout:w.matchMedia&&w.matchMedia(${JSON.stringify(PHONE_TREE_QUERY)}).matches?'mobile':'desktop',conn:(n.connection&&n.connection.effectiveType)||''});
 try{n.sendBeacon('/api/t',new Blob([b],{type:'application/json'}));}catch(e){}}
 w.addEventListener('pagehide',abandon);d.addEventListener('visibilitychange',function(){if(d.visibilityState==='hidden')abandon();});
 w.addEventListener('load',function(){if(!I.experience)I.stage='ready';});

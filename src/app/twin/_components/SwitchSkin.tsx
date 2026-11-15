@@ -8,6 +8,7 @@ import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, modelLoadingItem
 import clsx from 'clsx';
 import { gsap } from 'gsap';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
+import { u } from '@/utils/layout-unit';
 
 export default function SwitchSkin() {
   const currentModelType = useAtomValue(currentModelTypeAtom);
@@ -21,8 +22,8 @@ export default function SwitchSkin() {
     if (currentModel === PredictionModel.M0) {
       gsap.to('.twin-title', { opacity: 0 });
       gsap.to('#ytb-demo', { opacity: 0 });
-      gsap.to('#switch-skin', { bottom: '8rem' });
-      gsap.to('.twin-title-M0', { left: '5rem', delay: 0.3 });
+      gsap.to('#switch-skin', { bottom: u(8) });
+      gsap.to('.twin-title-M0', { left: u(5), delay: 0.3 });
     }
     eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
   };

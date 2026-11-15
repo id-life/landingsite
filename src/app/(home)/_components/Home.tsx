@@ -11,7 +11,6 @@ import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
-import ThreeWrapper from '@/components/gl/ThreeWrapper';
 import Footer from '@/components/layout/footer/Footer';
 import FooterContact from '@/components/layout/footer/FooterContact';
 import Spectrum from '@/components/spectrum/Spectrum';
@@ -24,9 +23,12 @@ import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useEffect } from 'react';
+import { useNavigation } from '@/hooks/useNavigation';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
 import { reportError } from '@/lib/report';
+import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
 import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
 // ENG-16: the ScrollSmoother exists before any section creates its ScrollTrigger (GSAP's ScrollSmoother docs: "create
@@ -55,11 +57,21 @@ export default function Home() {
   useResizeRefresh();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.
   useExperienceLifecycle();
+  // The header's SUBSCRIBE buttons are plain DOM events (NAV-04, PERF-10); this connects them to the popup.
+  useSubscribeBridge();
   // The section controller's desktop driver and inputs: wheel, keys and touch each step one section (MOT-01).
   useDesktopSections();
   // Address bar and tab title follow the visible section (after the initial deep link is applied).
   const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
   useSectionUrlSync(currentPage, initialRouteHandled);
+  // The arrows and the SCROLL cue ask for a section through navigateToAtom (this used to live in the desktop nav).
+  useNavigation();
+  // A reload starts at the top, where the deep link is applied from (this used to live in the desktop nav).
+  useEffect(() => {
+    const toTop = () => window.scrollTo({ top: 0 });
+    window.addEventListener('beforeunload', toTop);
+    return () => window.removeEventListener('beforeunload', toTop);
+  }, []);
 
   // Section views are counted by GA4 from the URL (one page_view per pushState / replaceState, DATA-05); there is no
   // parallel section event, so a deep link no longer reports a phantom Mission view.
@@ -75,7 +87,6 @@ export default function Home() {
       <ScrollSmootherRoot />
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
-      {webgl && <ThreeWrapper />}
       {webgl && <TwinThreeWrapper />}
       <PCAudioPlayer />
       <div id="wrapper">

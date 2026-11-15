@@ -1,3 +1,5 @@
+'use client';
+
 import { useLogoTextures } from '@/hooks/useLogoTextures';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { Center } from '@react-three/drei';
@@ -9,10 +11,11 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { INTRO, shouldSkipIntro } from './intro';
 import { EASE } from '@/motion/tokens';
+import MergedSvg from './MergedSvg';
 
 const POINTER_DAMPING = 2.5;
 
-export default function CenterLogo() {
+function DesktopCenterLogo() {
   const { pointer, size } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const smootherRef = useRef(ScrollSmoother.get());
@@ -101,4 +104,31 @@ export default function CenterLogo() {
       </Center>
     </group>
   );
+}
+
+/**
+ * The phone wordmark and tagline, one mesh per fill colour each (MergedSvg). English only: the Chinese lockups were
+ * drawn at opacity 0 (CON-12 retired the tap-to-switch) and still cost their draw calls; a /zh locale would swap the
+ * src here instead.
+ */
+function PhoneCenterLogo() {
+  return (
+    <group>
+      <Center scale={0.7} position={[0, 0, -5]}>
+        <MergedSvg scale={0.06} src="/svgs/logo-en.svg" />
+      </Center>
+      <Center position={[0, -2.6, 0]}>
+        <MergedSvg scale={0.01} src="/svgs/main-description.svg" />
+      </Center>
+    </group>
+  );
+}
+
+/**
+ * The hero wordmark, one component for both decks (RWD-02; it was CenterLogo and MobileCenterLogo). By deck:
+ * desktop draws rasterised textures (drawn from the SVGs at screen resolution) with pointer parallax and a scroll
+ * offset; phone draws merged vector meshes (one mesh per colour) with no parallax (touch has no pointer to follow).
+ */
+export default function CenterLogo({ deck }: { deck: 'desktop' | 'phone' }) {
+  return deck === 'phone' ? <PhoneCenterLogo /> : <DesktopCenterLogo />;
 }

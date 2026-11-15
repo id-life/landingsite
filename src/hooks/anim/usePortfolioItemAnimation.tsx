@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { RefObject } from 'react';
 import { useThrottle } from '../useThrottle';
 import { DURATION, EASE } from '@/motion/tokens';
+import { u } from '@/utils/layout-unit';
 
 export interface PortfolioItemAnimationConfig {
   /** 缁勪欢鏄惁鍚敤 */
@@ -54,7 +55,7 @@ export function usePortfolioItemAnimation(
     // The one-liner is visible at rest on every device (it used to start at opacity 0 and appear only on
     // hover, so touch tablets and keyboard users never read it); hover lifts it slightly.
     if (desc) {
-      tl.to(desc, { y: '-0.25rem' }, '<50%');
+      tl.to(desc, { y: u(-0.25) }, '<50%');
     }
 
     if (subtitle) {

@@ -3,14 +3,12 @@
 import RightSVG from '@/../public/svgs/twin/right.svg?component';
 import ClipBorderSVG from '@/../public/svgs/twin/clip-border.svg?component';
 import SubscribeSVG from '@/../public/svgs/news/subscribe.svg?component';
-import { subscribePopupAtom } from '@/atoms/footer';
-import { useSetAtom } from 'jotai';
+import { requestSubscribe } from '@/components/site/subscribe-events';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 
 export default function SubTitle() {
-  const subscribePopup = useSetAtom(subscribePopupAtom);
-
-  const handleSubscribeClick = () => subscribePopup({ type: 'open', placement: 'content' });
+  // A DOM event, not jotai (PERF-10): the page's SubscribePopup loads the popup on the first request.
+  const handleSubscribeClick = () => requestSubscribe({ type: 'open', placement: 'content' });
 
   return (
     <div className="relative isolate border-2 border-white bg-[url(/imgs/news/news-logo-bg.webp)] bg-cover px-6 py-7.5 mobile:overflow-hidden mobile:p-3">
