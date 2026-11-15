@@ -1,4 +1,4 @@
-// Shared spectrum data - used by both useSpectrumData hook and SpectrumSEO component
+// Shared spectrum data - used by the useSpectrumData hook and the Spectrum JSON-LD
 
 import { BookSVG, DigitalTwinSVG, RelationSVG, ResearchSVG, SponsorSVG } from '@/components/svg';
 import { CollectionPage, WithContext } from 'schema-dts';

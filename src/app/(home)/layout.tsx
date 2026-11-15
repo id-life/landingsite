@@ -3,7 +3,6 @@ import ClientNav from '@/components/nav/CilentNav';
 import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
-import NewsArticle1 from '@/app/news/_components/NewsArticle1';
 import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import HomeProfile from '@/app/(home)/_components/HomeProfile';
@@ -61,7 +60,6 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <Style />
       <ClientNav />
       {children}
-      <NewsArticle1 />
     </>
   );
 }
