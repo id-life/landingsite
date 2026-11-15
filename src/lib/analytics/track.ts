@@ -14,7 +14,11 @@ export const KEY_EVENT_NAMES: readonly EventName[] = ['newsletter_subscribe', 'c
  *  - queues (at most 100 events) while the consent answer and the deferred tag are pending, sends once the tag is
  *    configured, and drops everything once analytics is refused or unavailable.
  */
-type TrackOptions = { once?: string };
+type TrackOptions = {
+  once?: string;
+  /** The path the event belongs to when it is not the current one (vitals belong to the landing URL). */
+  at?: string;
+};
 type TrackArgs<K extends EventName> =
   {} extends EventParams<K> ? [params?: EventParams<K>, opts?: TrackOptions] : [params: EventParams<K>, opts?: TrackOptions];
 
@@ -45,8 +49,9 @@ export function isInternalTraffic() {
   }
 }
 
-function sectionId() {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/';
+/** The experience section a path points at (undefined on content pages). */
+export function sectionIdFor(pathname: string) {
+  const path = pathname.replace(/\/+$/, '') || '/';
   return NAV_LIST.find((item) => item.href === path)?.id;
 }
 
@@ -79,7 +84,7 @@ export function track<K extends EventName>(name: K, ...args: TrackArgs<K>) {
   if (mode === 'off') return;
   const payload = clean({
     layout,
-    section_id: sectionId(),
+    section_id: sectionIdFor(opts?.at ?? window.location.pathname),
     page_load_id: PAGE_LOAD_ID,
     ...(isInternalTraffic() ? { traffic_type: 'internal' } : {}),
     ...(params as Record<string, unknown> | undefined),

@@ -10,7 +10,7 @@ Key events (mark them in GA4 Admin): `newsletter_subscribe`, `contact_intent`, `
 | parameter | meaning |
 |---|---|
 | `layout` | desktop or mobile tree |
-| `section_id` | Section of the experience the URL points at (absent on content pages) |
+| `section_id` | Section of the experience the URL points at (web_vital: the landing URL; absent on content pages) |
 | `page_load_id` | Random id of this page load (joins the events of one load; not stored anywhere) |
 | `traffic_type` | "internal" while the ?internal=1 flag is set (GA4 internal-traffic filter) |
 

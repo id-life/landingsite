@@ -42,6 +42,15 @@ describe('track()', () => {
     expect(window.gtag).not.toHaveBeenCalled();
   });
 
+  test('an event that belongs to another path (a vital of the landing URL) carries that section', async () => {
+    const { track, setTrackMode } = await load();
+    setTrackMode('on');
+    track('relation_submit', undefined, { at: '/spectrum/' });
+    track('relation_submit', undefined, { at: '/news' });
+    expect(window.gtag.mock.calls[0][2]).toMatchObject({ section_id: 'spectrum_page' });
+    expect(window.gtag.mock.calls[1][2]).not.toHaveProperty('section_id');
+  });
+
   test('internal traffic is tagged', async () => {
     globalThis.localStorage = { getItem: (k) => (k === 'idl_internal' ? '1' : null) };
     const { track, setTrackMode } = await load();
