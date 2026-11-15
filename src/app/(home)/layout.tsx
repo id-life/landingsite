@@ -8,6 +8,7 @@ import PageSEOContent from '@/components/seo/PageSEOContent';
 import HomeProfile from '@/app/(home)/_components/HomeProfile';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
+import HomeStatement from '@/app/(home)/_components/HomeStatement';
 
 // Chinese intro for crawlers, from the 不朽真龙介绍 profile (previously a hidden 0×0 block).
 const HOME_INTRO_CN = [
@@ -51,8 +52,11 @@ const jsonLd: Graph = {
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      {/* CON-05: the visible h1 and statement come first; the crawler summary below now starts at h2. */}
+      <HomeStatement />
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
+        titleAs="h2"
         intro={[...HOME_INTRO_CN.map((text) => ({ text, lang: 'zh-CN' })), { text: ORG_DESCRIPTION, lang: 'en' }]}
       />
       <HomeProfile />
