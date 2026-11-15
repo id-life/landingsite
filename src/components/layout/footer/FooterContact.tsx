@@ -21,7 +21,7 @@ import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { trackChannelLink } from '@/lib/analytics/social';
-import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/PrivacyChoicesLink';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
 type Inputs = {

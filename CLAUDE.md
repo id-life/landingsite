@@ -92,6 +92,10 @@ Each job is its own status check. Run the same commands locally before pushing.
 - `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
   footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
   (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+- Not in the content pages' first-load JavaScript (PERF-10; `npm run perf:budget` measures it): the Sentry SDK (lazy,
+  above), React Query (`ReactQueryProvider` is mounted by the experience, the Influence Network tool and the podcast
+  comments, around themselves, sharing one client; not by the root providers), react-hook-form, the consent and
+  Google tag boot and Vercel's scripts (`src/lib/analytics/lazy.tsx`). Keep it that way.
 - Episode transcripts are rendered to HTML on the server (`podcast/[id]/page.tsx`); do not move react-markdown back
   into a client component. SVG icons are imported per file (there is no `src/components/svg` barrel: it pulled the
   3,085-circle world map into every page that used one icon).
@@ -147,7 +151,10 @@ Each job is its own status check. Run the same commands locally before pushing.
   (web_vital with attribution, filed under the landing URL and section; `perf/vitals-p75.sql` reads it from the GA4
   BigQuery export, `scripts/crux-weekly.mjs` adds CrUX). Sentry only on Vercel production and preview: errors plus
   light tracing, no Replay or profiling (`src/lib/sentry-options.ts`, tunnel `/monitoring`); report caught errors
-  with `reportError` (`src/lib/report.ts`).
+  with `reportError` (`src/lib/report.ts`). The browser SDK is not in the first-load bundle (PERF-10):
+  `src/lib/sentry-client.ts` queues captures and uncaught errors and loads `src/lib/sentry-init.ts` when the page is
+  idle or on the first error; client code never imports `@sentry/nextjs` directly (use `reportError` or
+  `captureException` from `sentry-client`).
 - Newsletter: every form posts to `POST /api/subscribe` (`src/app/api/subscribe`: validation, honeypot, rate limit,
   optional Turnstile, Mailchimp upstream with double opt-in) through `submitNewsletter` (`src/utils/newsletter.ts`);
   the browser never contacts Mailchimp. Typed result codes in `src/lib/newsletter/result.ts`, 6 s browser timeout.

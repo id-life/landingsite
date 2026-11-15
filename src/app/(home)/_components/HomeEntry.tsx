@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { isNull } from 'lodash-es';
 import ClientChunkBoundary from '@/components/common/ClientChunkBoundary';
+import { ReactQueryProvider } from '@/providers/react-query-provider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
 import '@/utils/gsap-plugins';
@@ -15,5 +16,9 @@ export default function HomeEntry() {
   const isMobile = useIsMobile();
   if (isNull(isMobile)) return null;
 
-  return <ClientChunkBoundary>{isMobile ? <MobileHome /> : <Home />}</ClientChunkBoundary>;
+  return (
+    <ReactQueryProvider>
+      <ClientChunkBoundary>{isMobile ? <MobileHome /> : <Home />}</ClientChunkBoundary>
+    </ReactQueryProvider>
+  );
 }

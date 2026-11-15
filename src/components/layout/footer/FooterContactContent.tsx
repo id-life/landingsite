@@ -20,16 +20,19 @@ import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import { NewsletterPlacement, submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
 import clsx from 'clsx';
-import { useMemo, useState, useId } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormEvent, useId, useMemo, useRef, useState } from 'react';
 import { trackChannelLink } from '@/lib/analytics/social';
-import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/PrivacyChoicesLink';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 
-type Inputs = {
-  EMAIL: string;
-  website: string;
-};
+const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+/** The field's two rules and their messages (they were react-hook-form's `required` and `pattern`). */
+function validateEmail(value: string) {
+  if (!value) return 'Please fill in this field';
+  if (!EMAIL_PATTERN.test(value)) return 'Please enter email address';
+  return null;
+}
 
 /** placement: 'connect' in the phone Connect contact panel, 'footer' at the foot of the news pages. */
 export default function FooterContactContent({ placement = 'connect' }: { placement?: NewsletterPlacement }) {
@@ -37,18 +40,30 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const fieldId = useId();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<Inputs>();
-  const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
+  // Plain form state, not react-hook-form (PERF-10: about 9 kB gzip on every news page for one email field). The same
+  // behaviour: validated on submit (the first invalid field takes focus), then re-validated on every change, and a
+  // server error shows under the field until the next change or submit.
+  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmittedOnce] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
+  const errors = { EMAIL: error ? { message: error } : undefined };
+
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmittedOnce(true);
+    const email = emailRef.current?.value ?? '';
+    const invalid = validateEmail(email);
+    setError(invalid);
+    if (invalid) {
+      emailRef.current?.focus();
+      return;
+    }
     setIsSubmitting(true);
-    const result = await submitNewsletter({ email: formData.EMAIL, website: formData.website }, placement);
+    const result = await submitNewsletter({ email, website: websiteRef.current?.value ?? '' }, placement);
     setIsSubmitting(false);
     if (!result.ok) {
-      setError('EMAIL', { type: 'server', message: result.message });
+      setError(result.message);
       return;
     }
     setIsSubmitted(true);
@@ -127,7 +142,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
         id="subscribe-form"
         noValidate
         className="relative flex justify-between gap-3"
-        onSubmit={handleSubmit(onFormSubmit)}
+        onSubmit={(event) => void onFormSubmit(event)}
       >
         {errors.EMAIL && (
           <span
@@ -138,7 +153,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
             {errors.EMAIL.message}
           </span>
         )}
-        <HoneypotField {...register('website')} />
+        <HoneypotField ref={websiteRef} />
         <label htmlFor={`${fieldId}-email`} className="sr-only">
           Email
         </label>
@@ -154,13 +169,11 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
             aria-invalid={errors.EMAIL ? true : undefined}
             aria-describedby={errors.EMAIL ? `${fieldId}-error` : undefined}
             defaultValue=""
-            {...register('EMAIL', {
-              required: 'Please fill in this field',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Please enter email address',
-              },
-            })}
+            ref={emailRef}
+            name="EMAIL"
+            onChange={(event) => {
+              if (submitted) setError(validateEmail(event.target.value));
+            }}
           />
         </div>
         <div className="footer-submit-clip relative h-11 w-[90px] bg-red-600 text-white">
