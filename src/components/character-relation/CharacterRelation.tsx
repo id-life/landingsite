@@ -109,6 +109,9 @@ const CharacterRelation = () => {
           'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
         )}
         onClick={handleBePartOfItOpen}
+        // Faded out (and click-through) while the form is open: out of the Tab order and the accessibility tree too.
+        tabIndex={isBePartOfItShow ? -1 : undefined}
+        aria-hidden={isBePartOfItShow || undefined}
         animate={{
           opacity: isBePartOfItShow ? 0 : 1,
           pointerEvents: isBePartOfItShow ? 'none' : 'auto',

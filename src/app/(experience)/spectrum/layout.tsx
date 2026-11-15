@@ -3,7 +3,7 @@ import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
 import PageSEOContent from '@/components/seo/PageSEOContent';
-import { getSpectrumJsonLd } from './_components/spectrumData';
+import { getSpectrumJsonLd } from '@/app/spectrum/_components/spectrumData';
 
 const PAGE_TITLE = 'Spectrum 谱系';
 const PAGE_DESCRIPTION =
@@ -11,8 +11,9 @@ const PAGE_DESCRIPTION =
 
 export const metadata: Metadata = {
   alternates: { canonical: '/spectrum' },
-  // An object, not a string: a string title here would reset the title template for the nested
-  // /spectrum/* pages, which then shipped without the brand.
+  // The two tool pages (/spectrum/disease-management, /spectrum/influence-network) live in the (content)
+  // route group, so this layout, its experience nav and its JSON-LD no longer wrap them; they take the
+  // root layout's title template.
   title: { default: PAGE_TITLE, template: '%s | Immortal Dragons 不朽真龙' },
   description: PAGE_DESCRIPTION,
   keywords: [

@@ -1,6 +1,6 @@
 export default function LogoSVGcn({ className }: { className?: string }) {
   return (
-    <svg id="logo-cn" className={className} viewBox="0 0 190 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} viewBox="0 0 190 29" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M72.6431 8.89771H86.8028V5.27271H54.3V8.89771H66.0149L56.0308 21.8304L58.8078 24.0785L69.1032 10.7425L69.1032 29L72.6431 29L72.6431 8.89771Z"
         fill="var(--foreground)"
