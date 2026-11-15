@@ -3,13 +3,10 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
-import { noteSectionView } from '@/lib/analytics/section-view';
-import { sectionTitle } from '@/constants/section-titles';
 import { NAV_LIST } from '@/components/nav/nav';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useMobileNavigation } from '@/hooks/useMobileNavigation';
-import { useNavigation } from '@/hooks/useNavigation';
+import { goToSection, type SectionSource } from '@/motion/sectionController';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
@@ -23,26 +20,22 @@ import '@/utils/gsap-plugins';
  * the URL sync then rewrote the address to it.
  */
 // Which tree HomeEntry has mounted, read when it is needed. HashRouter now loads after the page (ExperienceRouter), so
-// its media-query listener can fire after HomeEntry's: on a resize across 768 px the new tree could mount while this
-// component's own isMobile state still held the old value, and the URL was then mapped onto the wrong tree.
+// its media-query listener can fire after HomeEntry's. The section controller moves whichever tree registered its
+// driver, so the URL is always applied to the tree on screen.
 const phoneTree = () => window.matchMedia('(max-width: 768px)').matches;
 
 export default function HashRouter() {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const mountId = useAtomValue(experienceMountIdAtom);
   const experienceMounted = useAtomValue(experienceMountedAtom);
-  const { handleNavClick, handleNavClickNow } = useNavigation();
-  const { mobileNavChange } = useMobileNavigation();
   const isMobile = useIsMobile();
   const handledMountRef = useRef(0);
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
   const setInitialRouteHandled = useSetAtom(initialRouteHandledAtom);
 
-  // `now`: programmatic mapping on mount uses the unthrottled navigation. A popstate fired while no
-  // experience was mounted (Back from /news) used to spend the 500 ms throttle on a no-op call, so the
-  // mapping on mount a moment later was dropped and the page stayed on the hero.
+  // source 'deeplink' when the experience mounts (no transition, no history entry), 'link' for a hash link.
   const handlePathnameNavigation = useCallback(
-    (now = false) => {
+    (source: SectionSource) => {
       if (!globalLoaded || isMobile === null) return;
       const { pathname } = window.location;
 
@@ -55,26 +48,22 @@ export default function HashRouter() {
           sessionStorage.removeItem(STORAGE_KEY.MOBILE_RETURN_PAGE);
           const returnNavItem = NAV_LIST.find((item) => item.id === returnPageId);
           if (returnNavItem) {
-            mobileNavChange(returnNavItem);
+            goToSection(returnNavItem.id, 'restore');
             return;
           }
         }
       }
 
       const matchingNavItem = NAV_LIST.find((item) => item.href === pathname);
-      if (matchingNavItem) {
-        if (mobile) mobileNavChange(matchingNavItem);
-        else if (now) handleNavClickNow(matchingNavItem);
-        else handleNavClick(matchingNavItem);
-      }
+      if (matchingNavItem) goToSection(matchingNavItem.id, source);
     },
-    [globalLoaded, handleNavClick, handleNavClickNow, isMobile, mobileNavChange],
+    [globalLoaded, isMobile],
   );
 
   const handleHashNavigation = useCallback(
-    (now = false) => {
+    (source: SectionSource) => {
       if (!globalLoaded) return;
-      handlePathnameNavigation(now);
+      handlePathnameNavigation(source);
       const { hash } = window.location;
       // Handle hash navigation for any pathname with hash
       if (hash) {
@@ -92,7 +81,7 @@ export default function HashRouter() {
   useEffect(() => {
     if (!globalLoaded || isMobile === null || mountId === 0 || handledMountRef.current === mountId) return;
     handledMountRef.current = mountId;
-    handleHashNavigation(true);
+    handleHashNavigation('deeplink');
     setInitialRouteHandled(true);
     // The fixed UI is revealed from fadeInAnimCompletedAtom. The intro tween (DragonModel) reveals it on a
     // first visit to /; a deep link or a return to the experience shows it at once.
@@ -102,7 +91,7 @@ export default function HashRouter() {
   // Hash links inside the experience (Spectrum tools) for the whole session.
   useEffect(() => {
     if (!globalLoaded) return;
-    const onHashChange = () => handleHashNavigation();
+    const onHashChange = () => handleHashNavigation('link');
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [globalLoaded, handleHashNavigation]);
@@ -111,16 +100,14 @@ export default function HashRouter() {
   useEffect(() => {
     // Only while an experience is mounted: a return from a content page is applied by the mount effect above.
     if (!globalLoaded || isMobile === null || !experienceMounted) return;
+    // The controller records the view (DATA-05) and moves without touching the address.
     const handlePopState = () => {
       const item = NAV_LIST.find((navItem) => navItem.href === window.location.pathname);
-      if (!item) return;
-      noteSectionView(sectionTitle(item));
-      if (phoneTree()) mobileNavChange(item);
-      else handleNavClick(item);
+      if (item) goToSection(item.id, 'history');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [globalLoaded, isMobile, experienceMounted, handleNavClick, mobileNavChange]);
+  }, [globalLoaded, isMobile, experienceMounted]);
 
   return null;
 }

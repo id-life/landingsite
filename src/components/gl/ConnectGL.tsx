@@ -1,15 +1,11 @@
 import { currentPageAtom } from '@/atoms';
 import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
+import { isLayoutRefreshing } from '@/motion/sectionController';
 import { useConnectCrossAnimations } from '@/hooks/connectGL/useConnectCrossAnimations';
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
-import { EASE } from '@/motion/tokens';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
 import { memo, RefObject, useRef } from 'react';
 import * as THREE from 'three';
@@ -40,27 +36,6 @@ function ConnectGL() {
     modelRef,
   });
 
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // connect auto scroll to twin
-    scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('twin-scroll-trigger');
-      if (!st) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('SLOW'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: true,
-  });
-
   useGSAP(
     () => {
       const tl1 = gsap.timeline({
@@ -71,43 +46,23 @@ function ConnectGL() {
           end: 'bottom bottom',
           scrub: true,
           onEnter: () => {
-            if (window.isResizing) return;
+            if (isLayoutRefreshing()) return;
             setCurrentPage(NAV_LIST[6]);
-            setEnableUpJudge(true);
-            // 立即显示底栏
+            // 立即显示底栏. (It also used to pause the smoother and auto-scroll for 3 s to the end of this
+            // trigger; the section controller now lands on the timeline's 'rest' label, MOT-01.)
             playFooterEnterAnim();
-            if (window.isNavScrolling || window.isSmootherScrolling) return;
-            const smoother = ScrollSmoother.get();
-            if (!smoother || !tl1.scrollTrigger) return;
-            window.isNavScrolling = true;
-            window.isSmootherScrolling = true;
-            smoother.paused(true);
-            gsap.to(smoother, {
-              // eslint-disable-next-line no-restricted-syntax -- this auto-scroll is removed by MOT-01
-              duration: 3,
-              scrollTop: tl1.scrollTrigger.end + 50,
-              ease: EASE.linear,
-              onComplete: () => {
-                smoother.paused(false);
-                window.isNavScrolling = false;
-                window.isSmootherScrolling = false;
-              },
-            });
           },
           onEnterBack: () => {
-            if (window.isResizing) return;
-            setEnableUpJudge(true);
+            if (isLayoutRefreshing()) return;
             playFooterLeaveAnim();
           },
           onLeave: () => {
-            if (window.isResizing) return;
-            setEnableUpJudge(false);
+            if (isLayoutRefreshing()) return;
             // 立即显示底栏
             playFooterEnterAnim();
           },
           onLeaveBack: () => {
-            if (window.isResizing) return;
-            setEnableUpJudge(false);
+            if (isLayoutRefreshing()) return;
             playFooterLeaveAnim();
           },
         },

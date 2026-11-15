@@ -4,15 +4,13 @@ import ParticleGL from '@/components/gl/particle/ParticleGL';
 import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { isLayoutRefreshing } from '@/motion/sectionController';
 import { cn } from '@/utils';
 import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 
@@ -52,47 +50,6 @@ function Portfolio() {
   const portfolioRefs = useRef<HTMLDivElement[]>([]);
   const setCurrentPage = useSetAtom(currentPageAtom);
 
-  const currentPage = useAtomValue(currentPageAtom);
-
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // profile auto scroll to vision
-    scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        scrollTo: { y: 0 },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: true,
-  });
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // portfolio auto scroll to insights
-    scrollFn: () => {
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('insights-scroll-trigger');
-      if (!st) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        scrollTo: { y: st.start + (st.end - st.start) * 0.5 },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-      });
-    },
-    isUp: false,
-  });
-
   // 使用新的 Portfolio 动画 Hook
   usePortfolioItemAnimation(wrapperRef, portfolioRefs, setImageIdx);
 
@@ -108,17 +65,17 @@ function Portfolio() {
         scrub: true,
         id: 'portfolio-trigger', // add an ID for later reference
         onEnter: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(portfolioNavItem);
           setActiveAnim(true);
         },
         onEnterBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(portfolioNavItem);
           setActiveAnim(true);
         },
         onLeaveBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(NAV_LIST[0]);
           setActiveAnim(false);
         },
@@ -129,17 +86,11 @@ function Portfolio() {
     tl.from('.page2-title', { delay: beats(0.5), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
     tl.from('.page2-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
     tl.from('.page2-contact', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    // Every arrival lands here (MOT-01): the entrance complete, contact fully shown. A short hold follows, so the
+    // rest pose sits inside the pin rather than on its last pixel.
+    tl.addLabel('rest');
+    tl.to({}, { duration: beats(0.25) });
   }, []);
-
-  useEffect(() => {
-    if (currentPage.id === PAGE_ID) {
-      setEnableUpJudge(true);
-      setEnableDownJudge(true);
-    } else {
-      setEnableUpJudge(false);
-      setEnableDownJudge(false);
-    }
-  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   const portfolioItems = useMemo(() => {
     const items = portfolio.map((item, index) => (

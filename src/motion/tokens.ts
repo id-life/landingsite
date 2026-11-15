@@ -121,6 +121,12 @@ export const beats = (n: number) => n;
 /** The phone inner-page step (Portfolio pages, Spectrum pages, Insights slides): one preset everywhere. */
 export const PAGE_STEP = { duration: 0.25, ease: 'out' } as const satisfies { duration: number; ease: EaseName };
 
+/**
+ * A jump of more than one section fades a cover in the target's theme colour in, jumps under it and fades it out
+ * (src/hooks/anim/useDesktopSections.ts): never a one-frame cut, and no long glide through the sections between.
+ */
+export const SECTION_COVER = { fade: 0.25 } as const;
+
 /** CSS cubic-bezier() for an ease token. */
 const cssEase = (name: EaseName) => (name === 'linear' ? 'linear' : `cubic-bezier(${EASE_POINTS[name].join(', ')})`);
 

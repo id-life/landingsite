@@ -60,13 +60,22 @@ Each job is its own status check. Run the same commands locally before pushing.
   `HeroPreloads` (in each section layout) preloads the hero model and wordmark textures.
 - **Fixed UI** (nav, arrows, player) is revealed from `fadeInAnimCompletedAtom`, not by imperative tweens; the intro
   tween in `DragonModel` only runs on a first visit.
-- **Desktop scrolling.** GSAP ScrollSmoother (created in `src/hooks/anim/useHomeAnimations.tsx`) with one
-  ScrollTrigger timeline per section. Section stepping: `useScrollSmootherAction` (wheel; one gesture = one step,
-  200 ms of wheel silence between steps), `useSectionInput` (keyboard and tablet touch), both dispatching through
-  `src/utils/section-step.ts`. Window flags `isNavScrolling`, `isSmootherScrolling`, `isResizing` are declared in
-  `global.d.ts`; respect them instead of adding new ones.
-- **Phone.** No document scroll: sections switch through `useMobileNavigation`, the arrows
-  (`MobilePageArrows.tsx`), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
+- **Desktop scrolling.** GSAP ScrollSmoother (created in `src/hooks/anim/useHomeAnimations.tsx`) with one scrubbed
+  ScrollTrigger timeline per section. Each ends its entrance on a `'rest'` label, where every arrival lands
+  (`src/utils/section-step.ts`); add one to any new section timeline.
+- **Section controller** (MOT-01, `src/motion/sectionController.ts`): the one way to change section, on both trees:
+  `goToSection(indexOrId, source)` and `stepSection(dir, source)`. State is `sectionStateAtom` (`index`, `target`,
+  `phase`, `direction`; mirrored as `<html data-section-phase data-section-target>`); `isSectionMoving()`,
+  `isLayoutRefreshing()` and `afterSectionSettles()` replace the old window flags. Each tree registers a driver: the
+  desktop deck in `src/hooks/anim/useDesktopSections.ts` (wheel, keys, tablet touch; one gesture = one step, re-armed
+  after 200 ms of wheel silence; neighbours tween the smoother's `scrollTop` for `DURATION.section`, far jumps fade a
+  cover; an opposite step reverses, anything else retargets; the nav is never dimmed), the phone in
+  `usePhoneSectionDriver` (`src/hooks/useMobileNavigation.tsx`). When a transition ends the controller writes the URL
+  and title (push for explicit navigation, replace for scrolling, nothing for deep links) and calls
+  `noteSectionView` exactly once; Back and Forward record one view. `useNavigation` and `useMobileNavigation` are thin
+  wrappers. Never tween the window or change `smoother.smooth()` from a section.
+- **Phone.** No document scroll: sections switch through the controller from the arrows (`MobilePageArrows.tsx`,
+  which also owns the inner pages), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
 - **URL and history.** `HashRouter` (loaded by `ExperienceRouter` in the root layout on the first experience URL, then
   never unmounted) applies the URL once per mount of the experience
   (`useExperienceLifecycle` bumps `experienceMountIdAtom`); `useSectionUrlSync` replaces the URL and title as the

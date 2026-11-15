@@ -7,6 +7,7 @@ import {
   mobileCurrentPageIndexAtom,
 } from '@/atoms';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
+import type { SectionSource } from '@/motion/sectionController';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -112,7 +113,7 @@ export function useMobileSectionStep() {
     [],
   );
 
-  return useCallback((isUp: boolean) => {
+  return useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
     const run = (up: boolean) => {
       const s = stateRef.current;
       lastStepRef.current = performance.now();
@@ -124,7 +125,7 @@ export function useMobileSectionStep() {
       });
       if (!step) return;
       if (step.kind === 'inner') s.setInnerPageNavigateTo(step.index);
-      else s.mobileNavChange(NAV_LIST[step.index]);
+      else s.mobileNavChange(NAV_LIST[step.index], source);
     };
     const wait = lastStepRef.current + STEP_SPACING_MS - performance.now();
     if (wait <= 0 && !timerRef.current) {

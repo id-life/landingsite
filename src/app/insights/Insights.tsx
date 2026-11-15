@@ -2,16 +2,13 @@
 
 import { currentPageAtom } from '@/atoms';
 import { NAV_LIST } from '@/components/nav/nav';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { isLayoutRefreshing } from '@/motion/sectionController';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import LongevitySection from '@/app/insights/_components/LongevitySection';
 import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
-import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useSetAtom } from 'jotai';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInsightsWithGeoData } from '@/hooks/insights/fetch';
 import PodcastSection from './_components/PodcastSection';
 
@@ -19,49 +16,7 @@ const PAGE_ID = 'insights_page';
 const insightsNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
 
 export default function Insights() {
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-
-  // Insights 向上滚动 → 回到 Portfolio 页面
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('portfolio-trigger');
-      if (!st) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.96 },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: true,
-  });
-
-  // Insights 向下滚动 → 前往 Spectrum 页面
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    scrollFn: () => {
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('spectrum-trigger');
-      if (!st) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('FAST'),
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.965 },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: false,
-  });
+  const setCurrentPage = useSetAtom(currentPageAtom);
 
   // 添加页面锁定效果（与其他页面一致）
   useGSAP(() => {
@@ -74,11 +29,11 @@ export default function Insights() {
         pin: true,
         scrub: true,
         onEnter: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(insightsNavItem);
         },
         onEnterBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(insightsNavItem);
         },
       },
@@ -97,6 +52,8 @@ export default function Insights() {
       ease: EASE.out,
       duration: entranceDuration,
     });
+    // Every arrival lands here (MOT-01): the content fully in.
+    tl.addLabel('rest');
 
     // 停留阶段（缩短停留时间，方便快速翻页）
     tl.to({}, { duration: beats(0.5) * factor });
@@ -110,17 +67,6 @@ export default function Insights() {
       duration: exitDuration,
     });
   }, []);
-
-  // 根据当前页面启用/禁用滚动判断
-  useEffect(() => {
-    if (currentPage.id === PAGE_ID) {
-      setEnableUpJudge(true);
-      setEnableDownJudge(true);
-    } else {
-      setEnableUpJudge(false);
-      setEnableDownJudge(false);
-    }
-  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   // Use the new API for news & talks
   const { items: insightItems, isLoading: isInsightsLoading, isError: isInsightsError, refetch } = useInsightsWithGeoData();

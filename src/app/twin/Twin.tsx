@@ -5,13 +5,11 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
-import { useScrollSmootherAction } from '@/hooks/anim/useScrollSmootherAction';
-import { SCROLL_ANIMATION_CONFIG, sectionDuration } from '@/constants/scroll-config';
+import { isLayoutRefreshing } from '@/motion/sectionController';
 import { beats, EASE } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useAtom, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { memo, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -22,74 +20,10 @@ function Twin() {
   const isResetDemo = useRef(false);
   const { ref, inView } = useInView({ threshold: 0 });
 
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+  const setCurrentPage = useSetAtom(currentPageAtom);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const setCurrentModel = useSetAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
-
-  // const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollTriggerAction({
-  //   // profile auto scroll to engagement
-  //   triggerId: 'twin-scroll-trigger',
-  //   scrollFn: () => {
-  //     if (!enableUpJudge || currentPage.id !== NAV_LIST[4].id) return;
-  //     const st = ScrollTrigger.getById('engagement-scroll-trigger');
-  //     if (!st) return;
-  //     gsap.to(window, { duration: 1.5, scrollTo: { y: st.start + (st.end - st.start) * 0.4 } });
-  //   },
-  //   isUp: true,
-  // });
-
-  const { setEnableJudge: setEnableUpJudge, enableJudge: enableUpJudge } = useScrollSmootherAction({
-    // twin auto scroll to engagement
-    scrollFn: () => {
-      if (!enableUpJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      const st = ScrollTrigger.getById('engagement-scroll-trigger');
-      if (!st) {
-        return;
-      }
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('SLOW'),
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: st.start + (st.end - st.start) * 0.4 },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: true,
-  });
-
-  const { setEnableJudge: setEnableDownJudge, enableJudge: enableDownJudge } = useScrollSmootherAction({
-    // twin auto scroll to connect
-    scrollFn: () => {
-      if (!enableDownJudge || window.isNavScrolling || window.isSmootherScrolling || window.isResizing) return;
-      window.isNavScrolling = true;
-      window.isSmootherScrolling = true;
-      gsap.to(window, {
-        duration: sectionDuration('SLOW'),
-        ease: SCROLL_ANIMATION_CONFIG.EASING.DEFAULT,
-        scrollTo: { y: '#connect_page' },
-        onComplete: () => {
-          window.isNavScrolling = false;
-          window.isSmootherScrolling = false;
-        },
-      });
-    },
-    isUp: false,
-  });
-
-  useEffect(() => {
-    if (currentPage.id === PAGE_ID) {
-      setEnableUpJudge(true);
-      setEnableDownJudge(true);
-    } else {
-      setEnableUpJudge(false);
-      setEnableDownJudge(false);
-    }
-  }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -101,21 +35,21 @@ function Twin() {
         pin: true,
         scrub: true,
         onEnter: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(twinNavItem);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onEnterBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           setCurrentPage(twinNavItem);
           gsap.set('#twin-three-wrapper', { visibility: 'visible', zIndex: 10 });
         },
         onLeaveBack: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
         onLeave: () => {
-          if (window.isResizing) return;
+          if (isLayoutRefreshing()) return;
           gsap.set('#twin-three-wrapper', { visibility: 'hidden', zIndex: 0 });
         },
       },
@@ -126,6 +60,8 @@ function Twin() {
     tl.to(imageContainerRef.current, { height: '100svh', duration: beats(0.5) });
     tl.to('#twin-three-wrapper', { opacity: 1, duration: beats(1), ease: EASE.out });
     tl.to('#twin-three-wrapper', { opacity: 0, duration: beats(1) }, 'twin-show');
+    // Every arrival lands where the model is fully shown (MOT-01).
+    tl.addLabel('rest', 'twin-show');
   }, []);
 
   useEffect(() => {
