@@ -11,6 +11,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
 import '@/utils/gsap-plugins';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 /**
  * Maps the URL to a section of the experience. Rendered once in the root layout, so it never unmounts;
@@ -22,7 +23,7 @@ import '@/utils/gsap-plugins';
 // Which tree HomeEntry has mounted, read when it is needed. HashRouter now loads after the page (ExperienceRouter), so
 // its media-query listener can fire after HomeEntry's. The section controller moves whichever tree registered its
 // driver, so the URL is always applied to the tree on screen.
-const phoneTree = () => window.matchMedia('(max-width: 768px)').matches;
+const phoneTree = () => window.matchMedia(PHONE_TREE_QUERY).matches;
 
 export default function HashRouter() {
   const globalLoaded = useAtomValue(globalLoadedAtom);

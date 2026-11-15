@@ -4,7 +4,7 @@
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   // Maintenance scripts run by hand (node scripts/<name>.mjs), and type-only contract tests that nothing imports:
   // npm run typecheck compiles them (tsconfig includes every .ts file) and fails when a @ts-expect-error goes unused.
-  "entry": ["scripts/*.mjs", "test/**/*.type-test.ts"],
+  "entry": ["scripts/*.mjs", "scripts/postcss-layout-unit.js", "test/**/*.type-test.ts"],
   "ignore": [
     // Runtime assets fetched by URL (the Draco decoder), not imported.
     "public/**",
@@ -19,6 +19,9 @@
     // Type-only import in a JSDoc comment (postcss.config.mjs).
     "postcss-load-config",
   ],
+  // System tools a maintenance script shells out to (scripts/optimize-models.mjs measures SSIM with ffmpeg); they are
+  // not npm packages, so there is nothing to list in package.json.
+  "ignoreBinaries": ["ffmpeg"],
   "rules": {
     "exports": "warn",
     "types": "warn",

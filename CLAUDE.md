@@ -57,8 +57,22 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 ## Architecture of the experience
 
-- **Two trees.** `HomeEntry` renders `MobileHome` at <= 768 px (`src/hooks/useIsMobile.tsx`) and `Home` above. They are
-  separate component trees with separate sections (`Mobile*` components); a change usually needs both.
+- **Device profile and the two trees (RWD-02, in progress).** `src/styles/device-classes.ts` is the one definition of the
+  width classes (compact < 600, medium 600-839, expanded 840-1199, large >= 1200), compact height (< 480), pointer and
+  the tree query: the phone experience for `(max-width: 768px), (max-height: 479.98px)` (so phones in landscape and a
+  laptop at 200 % zoom get it too), the desktop experience otherwise. Tailwind `mobile:` / `notMobile:` and the
+  `compact: medium: expanded: large: shortScreen: coarse: navRow:` screens are built from it; JavaScript reads
+  `useDeviceProfile()` (one matchMedia store, tree debounced 200 ms, mirrored as `<html data-tree data-width-class
+data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` again (`test/device-classes.test.mjs`).
+  `HomeEntry` still renders `MobileHome` or `Home`, separate trees with `Mobile*` sections; they are being merged
+  section by section, so a change usually still needs both.
+- **Site header and footer (NAV-04).** One `SiteHeader` (`src/components/site`) on every route: hook-free, so content
+  pages render it on the server; client islands are `SubscribeTrigger` (an `idl:subscribe` DOM event,
+  `subscribe-events.ts`; `SubscribePopup` / `useSubscribeBridge` connect it to the popup), `MenuToggle` (+ `SiteMenu`
+  on first open) and `LinkTracker` (delegated clicks on `data-nav-id` / `data-channel`). The experience renders it as
+  the fixed overlay through `ExperienceHeader` (section controller, ids `#nav` / `#mobile-nav` assigned once mounted;
+  the suite reads their opacity as "ready"). Exactly one item has aria-current. Keep jotai, tailwind-merge and
+  prefetching links out of the content pages' header and footer (PERF-10: <= 180 kB first-party JS).
 - **Loader gate.** `src/components/gl/ProgressLoader.tsx` gates on the hero assets only and sets `globalLoadedAtom`
   (`src/atoms/geo.ts`); later-section 3D mounts on approach. A 15 s fail-open reveals the UI if loading stalls.
   `HeroPreloads` (in each section layout) preloads the hero model and wordmark textures.
@@ -94,6 +108,36 @@ Each job is its own status check. Run the same commands locally before pushing.
 - **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
   R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
   300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
+- **Fail safe (ENG-02).** `HeroPreloads` runs an inline WebGL probe while the HTML is parsed (`window.__idlWebGL`,
+  `__idlGpu`) and preloads the hero model only when WebGL works. `useExperienceMode` (`full` | `static` | `poster`):
+  without WebGL no canvas, loader or model mounts (`StaticReveal`); a lost hero context or a failed hero scene shows the
+  poster. `HeroPoster` (server-rendered by `HomeEntry`) is the DOM wordmark: first paint, the no-WebGL hero, the
+  stand-in during context loss. Each model sits in its own `ModelBoundary`; the UI is revealed from `OuterLoader`, never
+  from a model. Canvases use `onCanvasCreated(name)` from `GLBoundary.tsx`.
+- **Rendering (MOT-03).** Every `<Canvas>` has `frameloop="never"` and a `FrameDriver`: it renders from the GSAP ticker
+  and only while the canvas can be seen (hide a canvas with opacity 0 or visibility hidden and it stops drawing in the
+  same frame). `src/motion/runtime.ts` pauses everything (ticker, p5, held animation frames) after 60 s without input
+  and in a hidden tab; `onMotionPause` / `useMotionPaused` for any new loop. p5 sketches loop only while active and on
+  screen (`P5Canvas`).
+- **Reduced motion (MOT-02, `src/motion/preference.ts`)**: the only reader of `prefers-reduced-motion` (plus the CSS
+  guard in `globals.css`). The on-page `MotionSwitch` (`src/components/common/MotionSwitch.tsx`, in both headers, early
+  in the tab order) stores a choice in localStorage that wins over the OS setting either way. Read `isReducedMotion()` /
+  `useReducedMotionPref()` when starting a movement and `onReducedMotionChange` for loops; every `DURATION` token reads 0
+  while reduced, `<html>` gets `.motion-reduced` / `.motion-full`, motion components follow `MotionPreferenceConfig`.
+  Reduced mode is designed: section changes are 0.2 s crossfades (at least 400 ms apart), canvases render a settled
+  still frame and stop (`FrameDriver`), particle logos draw at their targets once (`P5Canvas` never loops), and the
+  ripples, carousel, marquee, map pulses, map auto-cards, Twin attention loops and visualiser stay still. Any new loop
+  must stop when reduced. Scrubbed entrances are `fromTo` with explicit end values, not `from`.
+- **Quality tiers (MOT-06).** `src/motion/gpuTier.ts` (low / mid / high) sets DPR cap, composer MSAA, glass samples and
+  fluid grid; `AdaptiveDpr` steps DPR down on sustained drops; canvases expose `data-tier` / `data-dpr`. The hero glass
+  is one preset (`HERO_GLASS` in `config/visionGLConfig.ts`, owner's choice pending; `?hero-glass=0-5` outside
+  production). `docs/device-tiers.md`.
+- **Assets (PERF-05, PERF-14).** Particle logos read precomputed points (`scripts/precompute-particles.mjs` ->
+  `public/particles/*.bin` + `particle-points.json`; re-run it after changing a particle image or parameter, the unit
+  test fails otherwise) and start only once the visitor leaves the hero. Models come from
+  `scripts/optimize-models.mjs` with hashed names in `src/components/gl/models-manifest.json`; never hand-edit a file
+  under `public/models` (`docs/models.md`). The desktop wordmark is rasterised from the SVGs at screen resolution
+  (`useLogoTextures`).
 - **Motion tokens** (MOT-08, `src/motion/tokens.ts`): every duration, ease, stagger and distance. GSAP gets the eases
   under their token names and `gsap.defaults` from `src/motion/gsap.ts` (imported by `gsap-plugins.ts`); CSS gets
   `--dur-*` / `--ease-*` (Tailwind `duration-<token>`, `ease-token-<name>`); motion gets `MOTION.*` (`presets.ts`).
@@ -113,9 +157,13 @@ Each job is its own status check. Run the same commands locally before pushing.
   `font-brand`), never a face; `FONT_PALETTE` in tokens.ts is the owner's open font choice. Chinese display strings
   are the closed list in `src/constants/display-strings.ts`, set from a generated Source Han subset
   (`UPDATE_CJK_SUBSET=1 npx vitest run test/cjk-display.test.mjs`); all other Chinese uses the system faces.
-- The nine type roles are rem-bounded: on the experience and Spectrum tool routes the root is still 0.8333vw above
-  768 px, so a role shrinks with the window there. Guide, sizes per viewport and the rule: `docs/design-tokens.md`.
-  Device tiers: `docs/support-matrix.md`.
+- The root is a fixed 100 % (16 px) on every route (RWD-01). `--u`, the layout unit, is 0.8333vw on the desktop
+  experience (what the root used to be) and 1rem elsewhere; `scripts/postcss-layout-unit.js` turns every rem in the
+  compiled CSS into `--u` (layout) or `--t` = max(--u, 12 px) (font-size and line-height, with a 12 px floor), so rem
+  in a class draws as before and text never falls under 12 px. GSAP and inline styles use `u(n)` from
+  `src/utils/layout-unit.ts`. The nine type roles are custom properties, so they stay real rem. Touch targets: the
+  `tap` / `tap-area` utilities (RWD-06, 44 px on coarse pointers). Guide: `docs/design-tokens.md`; device tiers:
+  `docs/support-matrix.md`.
 
 ## Content pages
 

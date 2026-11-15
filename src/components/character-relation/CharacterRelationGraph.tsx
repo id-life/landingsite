@@ -1,8 +1,16 @@
 'use client';
 
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import RelationGraph, { RelationGraphInstance } from 'relation-graph-react';
-import type { JsonLine, JsonNode, RGJsonData, RGNodeSlotProps, RGOptions, RelationGraphExpose } from 'relation-graph-react';
+import type {
+  JsonLine,
+  JsonNode,
+  RGJsonData,
+  RGNode,
+  RGNodeSlotProps,
+  RGOptions,
+  RelationGraphExpose,
+} from 'relation-graph-react';
 import { CharacterRelationTransformedData } from './CharacterRelation';
 import { cn } from '@/utils';
 import { CHARACTER_RELATION_IMPRESSION } from '@/constants/character-relation';
@@ -14,6 +22,18 @@ const BASE_NODE_SIZE_DELTA = 0;
 
 const SPECIAL_NODE_SIZE = 112;
 
+/**
+ * MOT-12: the force layout comes to rest. It used to run for maxLayoutTimes 500000 steps (one per animation frame,
+ * about 2.3 hours), repositioning every node and re-laying-out the page 60 times a second for as long as the tab
+ * stayed open. Now it stops once the graph has settled (the summed node movement per frame stays under SETTLED_PX for
+ * SETTLED_FRAMES frames in a row), and in any case after MAX_LAYOUT_STEPS (about 15 s at 60 Hz). A drag restarts it
+ * for at most RELAYOUT_MS so the neighbours follow, then it rests again.
+ */
+const MAX_LAYOUT_STEPS = 900;
+const SETTLED_PX = 0.5;
+const SETTLED_FRAMES = 30;
+const RELAYOUT_MS = 2000;
+
 interface CharacterRelationGraphProps {
   data?: CharacterRelationTransformedData;
 }
@@ -22,6 +42,63 @@ interface CharacterRelationGraphProps {
 const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   const { data } = props;
   const graphRef = useRef<RelationGraphExpose | null>(null);
+  const settleRef = useRef<{ frame: number; timer: ReturnType<typeof setTimeout> | undefined }>({
+    frame: 0,
+    timer: undefined,
+  });
+
+  /** Watch the layout and stop it once the nodes stop moving (or after `limitMs`, for a relayout after a drag). */
+  const settle = useCallback((limitMs?: number) => {
+    const watch = settleRef.current;
+    cancelAnimationFrame(watch.frame);
+    clearTimeout(watch.timer);
+    let previous = new Map<string, [number, number]>();
+    let quiet = 0;
+    // setJsonData restarts the force layout on a timeout: only a layout seen running can be seen to have finished.
+    let seenRunning = false;
+    const step = () => {
+      const instance = graphRef.current?.getInstance();
+      if (!instance) return;
+      seenRunning ||= Boolean(instance.options.autoLayouting);
+      const next = new Map<string, [number, number]>();
+      let moved = 0;
+      for (const node of instance.getNodes() as RGNode[]) {
+        const before = previous.get(node.id);
+        if (before) moved += Math.abs(node.x - before[0]) + Math.abs(node.y - before[1]);
+        next.set(node.id, [node.x, node.y]);
+      }
+      quiet = seenRunning && previous.size && moved < SETTLED_PX ? quiet + 1 : 0;
+      previous = next;
+      if (quiet >= SETTLED_FRAMES || (seenRunning && !instance.options.autoLayouting)) {
+        instance.stopAutoLayout();
+        clearTimeout(watch.timer);
+        return;
+      }
+      watch.frame = requestAnimationFrame(step);
+    };
+    watch.frame = requestAnimationFrame(step);
+    if (limitMs) {
+      watch.timer = setTimeout(() => {
+        cancelAnimationFrame(watch.frame);
+        graphRef.current?.getInstance()?.stopAutoLayout();
+      }, limitMs);
+    }
+  }, []);
+
+  useEffect(() => {
+    const watch = settleRef.current;
+    return () => {
+      cancelAnimationFrame(watch.frame);
+      clearTimeout(watch.timer);
+    };
+  }, []);
+
+  const onNodeDragEnd = useCallback(() => {
+    const instance = graphRef.current?.getInstance();
+    if (!instance) return;
+    instance.startAutoLayout();
+    settle(RELAYOUT_MS);
+  }, [settle]);
 
   const jsonData = useMemo<RGJsonData>(() => {
     let maxCountNode: JsonNode | null = null;
@@ -108,6 +185,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
         // instance.moveToCenter();
         // instance.setZoom(78);
         instance.setZoom(0);
+        settle();
         await instance.animateToZoom(75, 800);
       });
     }
@@ -115,7 +193,7 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     return () => {
       graphRef.current = null;
     };
-  }, [jsonData]);
+  }, [jsonData, settle]);
 
   // useEffect(() => {
   //   if (isCharacterRelationShow || isMobileCharacterRelationShow) {
@@ -145,14 +223,14 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     // https://www.relation-graph.com/?open_in_browser=true#/docs/layout
     layout: {
       layoutName: 'force',
-      maxLayoutTimes: 500000,
+      maxLayoutTimes: MAX_LAYOUT_STEPS,
       force_node_repulsion: 0.8,
       force_line_elastic: 1,
       allowAutoLayoutIfSupport: true,
     },
   };
 
-  return <RelationGraph ref={graphRef} options={options} nodeSlot={CustomNode} />;
+  return <RelationGraph ref={graphRef} options={options} nodeSlot={CustomNode} onNodeDragEnd={onNodeDragEnd} />;
 };
 export default memo(CharacterRelationGraph);
 

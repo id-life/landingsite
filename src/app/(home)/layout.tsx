@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import ClientNav from '@/components/nav/CilentNav';
+import ExperienceHeader from '@/components/site/ExperienceHeader';
 import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
@@ -32,6 +32,10 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* CON-05: the visible h1 and statement come first; the crawler summary below now starts at h2. */}
+      {/* The header, then the experience (whose music player is an early Tab stop, within the first 15), then the
+          statement: all three are fixed on screen, so document order only sets the Tab order. */}
+      <ExperienceHeader />
+      {children}
       <HomeStatement />
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
@@ -41,8 +45,6 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
-      <ClientNav />
-      {children}
     </>
   );
 }

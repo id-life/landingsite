@@ -83,9 +83,21 @@ function Portfolio() {
     });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: beats(2) });
     // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
-    tl.from('.page2-title', { delay: beats(0.5), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
-    tl.from('.page2-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
-    tl.from('.page2-contact', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.fromTo(
+      '.page2-title',
+      { y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { delay: beats(0.5), y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
+    tl.fromTo(
+      '.page2-fund',
+      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
+    tl.fromTo(
+      '.page2-contact',
+      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
     // Every arrival lands here (MOT-01): the entrance complete, contact fully shown. A short hold follows, so the
     // rest pose sits inside the pin rather than on its last pixel.
     tl.addLabel('rest');
@@ -116,11 +128,13 @@ function Portfolio() {
       <ParticleGLWrapper />
       <div className="relative flex h-[100svh] flex-col items-center justify-center">
         <ParticleGLContainer />
-        <h2 className="page2-title font-title text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</h2>
+        <h2 className="page2-title font-title text-title font-bold uppercase">Portfolio</h2>
         <div className="page2-fund mb-2.5 mt-12 w-full max-w-[152rem] px-12">
           <div className="flex flex-col gap-8">
-            <div className="grid grid-cols-8 justify-items-center">{portfolioItems.firstRow}</div>
-            <div className="grid grid-cols-8 justify-items-center">{portfolioItems.secondRow}</div>
+            {/* Eight columns from 840 px; four on a medium (portrait tablet) window, so names and one-liners at their
+                role sizes are not squeezed into 90 px columns (RWD-01, RWD-02). */}
+            <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.firstRow}</div>
+            <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.secondRow}</div>
           </div>
         </div>
         <div className="page2-contact">

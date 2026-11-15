@@ -144,7 +144,7 @@ export default function AnalyticsBoot() {
     if (!VERCEL_INSIGHTS_ENABLED) void import('./vitals').then((m) => m.reportWebVitals());
   }, []);
 
-  // Layout: a user property and page parameter at boot; a resize across 768 px is one layout_change.
+  // Layout: a user property and page parameter at boot; a resize across the phone tree query (RWD-02) is one layout_change.
   useEffect(() => {
     if (!layout) return;
     const previous = layoutRef.current;

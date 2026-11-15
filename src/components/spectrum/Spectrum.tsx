@@ -60,8 +60,16 @@ function Spectrum() {
       },
     });
     // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
-    tl.from('.spectrum-title', { delay: beats(1), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
-    tl.from('.spectrum-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
+    tl.fromTo(
+      '.spectrum-title',
+      { y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { delay: beats(1), y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
+    tl.fromTo(
+      '.spectrum-fund',
+      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
+    );
 
     // Every arrival lands here (MOT-01), then a short hold inside the pin.
     tl.addLabel('rest');
@@ -79,9 +87,9 @@ function Spectrum() {
       />
       <div className="relative flex h-[100svh] flex-col overflow-y-auto px-10 pb-20 pt-28 xl:px-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
-        <header className="spectrum-title relative z-10 pb-5 text-center">
+        <div className="spectrum-title relative z-10 pb-5 text-center">
           <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
-        </header>
+        </div>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>

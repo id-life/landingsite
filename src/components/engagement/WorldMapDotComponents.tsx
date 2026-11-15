@@ -10,6 +10,7 @@ import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import FeatherImg from './FeatherImg';
 import { VideoWithPoster } from './VideoWithPoster';
 import { DURATION, EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
@@ -44,6 +45,8 @@ export function PulseDot({
   containerClassName?: string;
   svgClassName?: string;
 }) {
+  // Reduced motion (MOT-02): the pulse rings hold still.
+  const reduced = useReducedMotionPref();
   return (
     <div
       className={cn(
@@ -58,22 +61,26 @@ export function PulseDot({
           <>
             {/* 使用SVG animate元素来创建平滑的波纹效果 */}
             <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-              <animate
-                attributeName="r"
-                from={pulse1.fromRadius}
-                to={pulse1.toRadius}
-                dur={`${pulse1.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                from="0.5"
-                to="0"
-                dur={`${pulse1.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
+              {!reduced && (
+                <animate
+                  attributeName="r"
+                  from={pulse1.fromRadius}
+                  to={pulse1.toRadius}
+                  dur={`${pulse1.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
+              {!reduced && (
+                <animate
+                  attributeName="opacity"
+                  from="0.5"
+                  to="0"
+                  dur={`${pulse1.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
             </circle>
             <circle
               cx={centerPoint}
@@ -84,22 +91,26 @@ export function PulseDot({
               fill="none"
               opacity="0.5"
             >
-              <animate
-                attributeName="r"
-                from={pulse2.fromRadius}
-                to={pulse2.toRadius}
-                dur={`${pulse2.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                from="0.5"
-                to="0"
-                dur={`${pulse2.duration}s`}
-                begin="0s"
-                repeatCount="indefinite"
-              />
+              {!reduced && (
+                <animate
+                  attributeName="r"
+                  from={pulse2.fromRadius}
+                  to={pulse2.toRadius}
+                  dur={`${pulse2.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
+              {!reduced && (
+                <animate
+                  attributeName="opacity"
+                  from="0.5"
+                  to="0"
+                  dur={`${pulse2.duration}s`}
+                  begin="0s"
+                  repeatCount="indefinite"
+                />
+              )}
             </circle>
           </>
         )}
@@ -444,7 +455,7 @@ export function MobileConferenceBadgesWithVideo({
           <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
             <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
               <YoutubeSVG className="size-3 fill-white" />
-              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <span className="inline-block text-xs/4 font-semibold text-white">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>

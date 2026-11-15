@@ -26,13 +26,13 @@ export default function Contact({ onCopy }: ContactProps) {
 
   return (
     // Phones: the chip sizes to its content and must end left of the 44 px section arrows (bottom centre).
-    <div className="group relative w-52 bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 mobile:w-auto mobile:px-1 mobile:text-xs/5 notMobile:hover:text-accent">
+    <div className="group relative w-auto min-w-52 bg-white/10 px-4 py-3.5 text-center text-body-sm font-semibold backdrop-blur duration-300 mobile:w-auto mobile:min-w-0 mobile:px-1 mobile:text-caption notMobile:hover:text-accent">
       <SubscribeBorderSVG
         preserveAspectRatio="none"
         className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 notMobile:group-hover:stroke-accent"
       />
       <div className="flex-center relative h-full w-full gap-4 mobile:gap-1">
-        <a href={ORG_MAILTO} data-track-placement="portfolio" className="w-36 mobile:w-auto">
+        <a href={ORG_MAILTO} data-track-placement="portfolio" className="relative whitespace-nowrap tap-area">
           {ORG_EMAIL}
         </a>
         <button
@@ -41,7 +41,9 @@ export default function Contact({ onCopy }: ContactProps) {
           onClick={handleCopy}
           // Hidden on phones narrower than 386 px, where it would run into the section arrows; the address stays a
           // mailto link (and can be long-pressed to copy).
-          className="relative flex cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-3 before:content-[''] [@media(max-width:385px)]:hidden"
+          // tap-area: a 44 px hit area on touch screens (RWD-06). On phones the icon sits before the address, so its
+          // hit area stays clear of the section arrows' (both are 44 px; they overlapped by 6 px at 390 px).
+          className="relative z-10 flex cursor-pointer tap-area mobile:order-first [@media(max-width:385px)]:hidden"
         >
           {state.value ? (
             <CheckmarkSVG

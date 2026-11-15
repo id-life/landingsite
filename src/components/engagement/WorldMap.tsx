@@ -19,6 +19,7 @@ import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 
 import { color } from '@/styles/tokens';
+import { isReducedMotion } from '@/motion/preference';
 
 const svgViewBox = {
   w: 756,
@@ -186,7 +187,8 @@ export const WorldMap = memo(function WorldMapComponent({
   // 处理鼠标移动，更新视差效果
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!mapContainerRef.current || !mapContentRef.current || isAnyActive) return;
+      // Reduced motion (MOT-02): no pointer parallax.
+      if (!mapContainerRef.current || !mapContentRef.current || isAnyActive || isReducedMotion()) return;
 
       const containerRect = mapContainerRef.current.getBoundingClientRect();
 

@@ -1,0 +1,210 @@
+{
+  "dynamic|d|/imgs/particle/0.png|512x300|2.2|0.0007|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 0
+  },
+  "dynamic|d|/imgs/particle/1.png|600x600|0.8|0.005|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 1
+  },
+  "dynamic|d|/imgs/particle/5.png|300x307|1|0.008|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 2
+  },
+  "dynamic|d|/imgs/particle/9.png|600x600|1|0.0012|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 3
+  },
+  "dynamic|d|/imgs/particle/4.png|300x300|1.4|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 4
+  },
+  "dynamic|d|/imgs/particle/immune-bridge.png|584x680|1|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 5
+  },
+  "dynamic|d|/imgs/particle/cyclarity.png|800x115|1.2|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 6
+  },
+  "dynamic|d|/imgs/particle/kindbio.png|450x352|1.8|0.002|5|18,49,87": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 7
+  },
+  "dynamic|d|/imgs/particle/3.png|600x576|1|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 8
+  },
+  "dynamic|d|/imgs/particle/6.png|338x340|1.4|0.004|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 9
+  },
+  "dynamic|d|/imgs/particle/renewal-bio.png|860x129|1.2|0.004|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 10
+  },
+  "dynamic|d|/imgs/particle/domayn.png|760x115|1|0.005|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 11
+  },
+  "dynamic|d|/imgs/particle/oisin.png|600x163|1.2|0.005|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 12
+  },
+  "dynamic|d|/imgs/particle/etheros.png|600x146|1.2|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 13
+  },
+  "dynamic|d|/imgs/particle/2.png|600x536|0.7|0.0012|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 14
+  },
+  "dynamic|d|/imgs/particle/7.png|860x82|1.2|0.002|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 15
+  },
+  "dynamic|d|/imgs/investments/eonark.svg|830x180|1|0.005|5|": {
+    "file": "/particles/portfolio-desktop.d4c3d7044a.bin",
+    "index": 16
+  },
+  "dynamic|m|/imgs/particle/0.png|512x300|0.66|0.0007|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 0
+  },
+  "dynamic|m|/imgs/particle/1.png|600x600|0.24|0.005|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 1
+  },
+  "dynamic|m|/imgs/particle/5.png|300x307|0.54|0.004|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 2
+  },
+  "dynamic|m|/imgs/particle/9.png|600x600|0.3|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 3
+  },
+  "dynamic|m|/imgs/particle/4.png|300x300|0.588|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 4
+  },
+  "dynamic|m|/imgs/particle/immune-bridge.png|584x680|0.24|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 5
+  },
+  "dynamic|m|/imgs/particle/cyclarity-mobile.png|328x328|0.54|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 6
+  },
+  "dynamic|m|/imgs/particle/kindbio.png|450x352|0.9720000000000001|0.002|15|18,49,87": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 7
+  },
+  "dynamic|m|/imgs/particle/3.png|600x576|0.285|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 8
+  },
+  "dynamic|m|/imgs/particle/6.png|338x340|0.42|0.004|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 9
+  },
+  "dynamic|m|/imgs/particle/renewal-bio.png|860x129|0.396|0.008|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 10
+  },
+  "dynamic|m|/imgs/particle/domayn.png|760x115|0.24|0.012|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 11
+  },
+  "dynamic|m|/imgs/particle/oisin-mobile.png|164x164|1.008|0.003|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 12
+  },
+  "dynamic|m|/imgs/particle/etheros-mobile.png|328x328|0.54|0.0012|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 13
+  },
+  "dynamic|m|/imgs/particle/2.png|600x536|0.21|0.0012|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 14
+  },
+  "dynamic|m|/imgs/particle/vitalia-mobile.png|328x328|0.54|0.002|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 15
+  },
+  "dynamic|m|/imgs/investments/eonark.svg|830x180|0.33|0.008|15|": {
+    "file": "/particles/portfolio-mobile.14312498a1.bin",
+    "index": 16
+  },
+  "static|d|/imgs/particle/0.png|512x300|1.8|0.015|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 0
+  },
+  "static|d|/imgs/particle/spectrum/02.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 1
+  },
+  "static|d|/imgs/particle/spectrum/05.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 2
+  },
+  "static|d|/imgs/particle/spectrum/06.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 3
+  },
+  "static|d|/imgs/particle/spectrum/papers-reviews.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 4
+  },
+  "static|d|/imgs/particle/spectrum/03.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 5
+  },
+  "static|d|/imgs/particle/spectrum/01.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 6
+  },
+  "static|d|/imgs/particle/spectrum/07.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 7
+  },
+  "static|d|/imgs/particle/spectrum/04.png|700x700|0.9|0.02|5|": {
+    "file": "/particles/spectrum-desktop.7ad939f928.bin",
+    "index": 8
+  },
+  "static|m|/imgs/particle/0.png|512x300|0.4|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 0
+  },
+  "static|m|/imgs/particle/spectrum/02.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 1
+  },
+  "static|m|/imgs/particle/spectrum/05.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 2
+  },
+  "static|m|/imgs/particle/spectrum/06.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 3
+  },
+  "static|m|/imgs/particle/spectrum/papers-reviews.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 4
+  },
+  "static|m|/imgs/particle/spectrum/03.png|700x700|0.4|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 5
+  },
+  "static|m|/imgs/particle/spectrum/01.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 6
+  },
+  "static|m|/imgs/particle/spectrum/07.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 7
+  },
+  "static|m|/imgs/particle/spectrum/04.png|700x700|0.3|0.01|15|": {
+    "file": "/particles/spectrum-mobile.13adc56e8d.bin",
+    "index": 8
+  }
+}

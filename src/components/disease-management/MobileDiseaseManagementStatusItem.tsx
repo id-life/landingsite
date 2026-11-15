@@ -31,7 +31,7 @@ export const MobileDiseaseManagementStatusItem: FC<DiseaseManagementStatusItemTy
         download
         target="_blank"
         rel="noopener noreferrer"
-        className="corner-button-top relative flex items-center gap-1 p-2 text-xs font-medium"
+        className="corner-button-top relative flex items-center gap-1 p-2 text-xs font-medium tap"
       >
         <FileSVG />
         <span>Download CSV</span>

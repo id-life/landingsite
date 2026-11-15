@@ -548,6 +548,17 @@
           "type": "number",
           "required": true,
           "doc": "The loader gave up waiting (15 s or an asset error) and revealed the UI (1 = yes, 0 = no)"
+        },
+        "gpu_tier": {
+          "type": "string",
+          "required": false,
+          "doc": "GPU quality tier the 3D ran at (MOT-06); none: no WebGL",
+          "values": [
+            "low",
+            "mid",
+            "high",
+            "none"
+          ]
         }
       }
     },
@@ -576,7 +587,7 @@
       }
     },
     "layout_change": {
-      "when": "The page swapped between the desktop and the mobile tree (a resize across 768 px)",
+      "when": "The page swapped between the desktop and the mobile tree (a resize or rotation across the phone tree query)",
       "key": false,
       "params": {
         "from": {

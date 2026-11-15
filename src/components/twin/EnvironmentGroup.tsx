@@ -2,8 +2,11 @@ import { Environment } from '@react-three/drei';
 import { RGBELoader } from 'three-stdlib';
 import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
+import MODELS from '@/components/gl/models-manifest.json';
 
-const HDR_URL = 'https://resources.id.life/env/neutral.hdr';
+// PERF-14: the 1024x512 HDR from resources.id.life (772 kB), resampled to 256x128 and served with the models (131 kB);
+// it is only seen as a blurred environment at 45 % opacity. scripts/optimize-models.mjs writes it.
+const HDR_URL = MODELS.environment;
 
 /** Fetch the HDR into the loader cache before EnvironmentGroup mounts (see useDeferredWarm). */
 export const preloadEnvironmentGroup = () => useLoader.preload(RGBELoader, HDR_URL);

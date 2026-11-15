@@ -256,6 +256,7 @@ The 3D experience loader hides (once per document)
 | `layout` | `desktop` \| `mobile` | yes | Tree that was shown |
 | `cache_state` | `warm` \| `cold` \| `unknown` | yes | Hero model came from the HTTP cache (warm) or the network |
 | `fail_open` | number | yes | The loader gave up waiting (15 s or an asset error) and revealed the UI (1 = yes, 0 = no) |
+| `gpu_tier` | `low` \| `mid` \| `high` \| `none` | no | GPU quality tier the 3D ran at (MOT-06); none: no WebGL |
 
 ### `experience_error`
 
@@ -268,7 +269,7 @@ A 3D failure, once per kind per document (asset_failed once per file)
 
 ### `layout_change`
 
-The page swapped between the desktop and the mobile tree (a resize across 768 px)
+The page swapped between the desktop and the mobile tree (a resize or rotation across the phone tree query)
 
 | parameter | type | required | meaning |
 |---|---|---|---|

@@ -2,6 +2,8 @@ import { P5Canvas, P5CanvasInstance, SketchProps } from './P5Canvas';
 import P5 from 'p5';
 import { useMemo } from 'react';
 import { Particle } from './particle-stuct';
+import { loadParticlePoints, ParticlePoints, samplePixels } from './particle-points';
+import { isReducedMotion } from '@/motion/preference';
 
 export const fundLogoLength = 2;
 
@@ -34,7 +36,12 @@ const DynamicParticleGL = ({
     return function sketch(p5: P5CanvasInstance<MySketchProps>) {
       let id = 'particle-container';
       let canvas: P5.Renderer;
-      const sourceImgs: P5.Image[] = [];
+      // The canvas lives in the section's container (id). Setup now runs at once (no image preload), possibly before
+      // that container is rendered: keep it where p5 made it until the container exists (props re-parent it).
+      const moveToContainer = () => {
+        const target = canvas && document.getElementById(id);
+        if (target && canvas.elt.parentElement !== target) canvas.parent(target);
+      };
       const allParticles: Particle[] = [];
       const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const defaultConfig = {
@@ -52,24 +59,41 @@ const DynamicParticleGL = ({
         forceColor?: [number, number, number];
         instantColor?: boolean;
       }[] = getSourceImgInfos ? getSourceImgInfos(IS_MOBILE) : [];
+      // PERF-05: each logo's points, precomputed at build time (particle-points.ts); no stencil image is downloaded.
+      let pointSets: (ParticlePoints | null)[] | null = null;
+      let pendingIdx: number | null = null;
 
       p5.updateWithProps = (props) => {
         activeAnim = props.activeAnim ?? false;
         setImageIdx(props?.imageIdx || 0);
         id = props?.id ?? 'particle-container';
-        if (canvas) canvas?.parent(id);
+        moveToContainer();
       };
 
-      p5.preload = () => {
-        for (let i = 0; i < sourceImgInfos.length; i++) {
-          const img = p5.loadImage(sourceImgInfos[i].url);
-          const [width, height] = sourceImgInfos[i]?.resize ?? [0, 0];
-          const scaleNum = sourceImgInfos[i]?.scaleNum ?? defaultConfig.scaleNum;
-          if (width && height) img.resize(width * scaleNum, height * scaleNum);
-          else img.resize(img.width * scaleNum, img.height * scaleNum);
-          sourceImgs.push(img);
-        }
-      };
+      loadParticlePoints('dynamic', IS_MOBILE, sourceImgInfos).then((sets) => {
+        pointSets = sets;
+        // A logo without precomputed points samples its image, as the sketch always did.
+        sets.forEach((set, idx) => {
+          if (set) return;
+          const info = sourceImgInfos[idx];
+          p5.loadImage(info.url, (img) => {
+            const [w, h] = info.resize ?? [0, 0];
+            const scaleNum = info.scaleNum ?? defaultConfig.scaleNum;
+            if (w && h) img.resize(w * scaleNum, h * scaleNum);
+            img.loadPixels();
+            const threshold =
+              (info.loadPercentage ?? defaultConfig.loadPercentage) * (info.resolution ?? defaultConfig.resolution);
+            sets[idx] = samplePixels(
+              img.pixels,
+              img.width,
+              img.height,
+              (_x, _y, alpha) => alpha >= 128 && p5.random(1.0) <= threshold,
+            );
+            if (pendingIdx === idx) setImageIdx(idx);
+          });
+        });
+        if (pendingIdx !== null) setImageIdx(pendingIdx);
+      });
 
       p5.setup = () => {
         const ratio = 1280 / 750;
@@ -79,73 +103,48 @@ const DynamicParticleGL = ({
         // The canvas is drawn about 390 CSS px wide there, so 1.5x already matches the screen's pixels.
         p5.pixelDensity(Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1.5 : 2));
         canvas = p5.createCanvas(width, height);
-        canvas.parent(id);
-        if (!IS_MOBILE) setImageIdx(0);
+        moveToContainer();
+        // An index asked for before the canvas existed is applied now; desktop starts on the idle shape.
+        if (pendingIdx !== null) setImageIdx(pendingIdx);
+        else if (!IS_MOBILE) setImageIdx(0);
       };
 
       function setImageIdx(idx: number) {
-        const {
-          scaleNum = defaultConfig.scaleNum,
-          loadPercentage = defaultConfig.loadPercentage,
-          resolution = defaultConfig.resolution,
-          resize = [0, 0],
-          forceColor,
-          instantColor,
-        } = sourceImgInfos[idx] ?? {};
-        const sourceImg = sourceImgs[idx];
-        if (!sourceImg) return;
-        const [sourceImgWidth, sourceImgHeight] = resize;
-        if (sourceImgWidth) sourceImg.resize(sourceImgWidth * scaleNum, sourceImgHeight * scaleNum);
-        sourceImg.loadPixels();
+        const { forceColor, instantColor } = sourceImgInfos[idx] ?? {};
+        const points = pointSets?.[idx];
+        if (!points || !canvas) {
+          pendingIdx = idx;
+          return;
+        }
+        pendingIdx = null;
 
         // Create an array of indexes from particle array.
         const preParticleIndexes = allParticles.map((_, index) => index);
 
-        let pixelIndex = 0;
-
-        const [imgWidth, imgHeight] = [sourceImg.width, sourceImg.height];
-
-        // Pre-calculate random numbers for better performance
-        const randomThreshold = loadPercentage * resolution;
-
-        // Go through each pixel of the image.
-        for (let y = 0; y < imgHeight; y++) {
-          for (let x = 0; x < imgWidth; x++) {
-            // Get the pixel's color.
-            const pixelR = sourceImg.pixels[pixelIndex++];
-            const pixelG = sourceImg.pixels[pixelIndex++];
-            const pixelB = sourceImg.pixels[pixelIndex++];
-            const pixelA = sourceImg.pixels[pixelIndex++];
-            // 检查像素是否透明
-            if (pixelA < 128) {
-              // 如果 alpha 值小于 128，我们认为它是透明的
-              continue; // 跳过这个像素，不为其创建粒子
-            }
-            // Give it small odds that we'll assign a particle to this pixel.
-            if (p5.random(1.0) > randomThreshold) {
-              continue;
-            }
-
-            const pixelColor = forceColor ? p5.color(...forceColor) : p5.color(pixelR, pixelG, pixelB);
-            let newParticle: Particle;
-            if (preParticleIndexes.length > 0) {
-              // Re-use existing particle - optimized random selection
-              const randomIndex = Math.floor(p5.random(preParticleIndexes.length));
-              const index = preParticleIndexes[randomIndex];
-              preParticleIndexes[randomIndex] = preParticleIndexes[preParticleIndexes.length - 1];
-              preParticleIndexes.pop();
-              newParticle = allParticles[index];
-            } else {
-              // Create a new particle.
-              newParticle = new Particle(p5.width / 2, p5.height / 2, p5, IS_MOBILE);
-              allParticles.push(newParticle);
-            }
-            newParticle.target.x = x + p5.width / 2 - sourceImg.width / 2;
-            newParticle.target.y = y + p5.height / 2 - sourceImg.height / 2;
-            newParticle.endColor = pixelColor;
-            if (instantColor) {
-              newParticle.currentColor = pixelColor;
-            }
+        for (let i = 0; i < points.count; i++) {
+          const x = points.xy[i * 2];
+          const y = points.xy[i * 2 + 1];
+          const pixelColor = forceColor
+            ? p5.color(...forceColor)
+            : p5.color(points.rgba[i * 4], points.rgba[i * 4 + 1], points.rgba[i * 4 + 2]);
+          let newParticle: Particle;
+          if (preParticleIndexes.length > 0) {
+            // Re-use existing particle - optimized random selection
+            const randomIndex = Math.floor(p5.random(preParticleIndexes.length));
+            const index = preParticleIndexes[randomIndex];
+            preParticleIndexes[randomIndex] = preParticleIndexes[preParticleIndexes.length - 1];
+            preParticleIndexes.pop();
+            newParticle = allParticles[index];
+          } else {
+            // Create a new particle.
+            newParticle = new Particle(p5.width / 2, p5.height / 2, p5, IS_MOBILE);
+            allParticles.push(newParticle);
+          }
+          newParticle.target.x = x + p5.width / 2 - points.width / 2;
+          newParticle.target.y = y + p5.height / 2 - points.height / 2;
+          newParticle.endColor = pixelColor;
+          if (instantColor) {
+            newParticle.currentColor = pixelColor;
           }
         }
         // Kill off any left over particles that aren't assigned to anything.
@@ -157,10 +156,26 @@ const DynamicParticleGL = ({
             allParticles[index].endColor = p5.color(0);
           }
         }
+        // Reduced motion: P5Canvas does not loop; draw the settled logo once.
+        if (isReducedMotion()) p5.redraw();
       }
       p5.draw = () => {
+        if (canvas && canvas.elt.parentElement?.id !== id) moveToContainer();
         if (!activeAnim || !allParticles?.length) return;
         p5.clear();
+
+        // Reduced motion (MOT-02): one still frame of the finished logo, no flight, wander or fade.
+        if (isReducedMotion()) {
+          let kept = 0;
+          for (const particle of allParticles) {
+            if (particle.isKilled) continue;
+            particle.settle();
+            particle.draw();
+            allParticles[kept++] = particle;
+          }
+          allParticles.length = kept;
+          return;
+        }
 
         let writeIndex = 0;
 

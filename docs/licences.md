@@ -17,11 +17,11 @@ Commercial font files must not stay publicly downloadable from this repository; 
 
 ## 3D models and media
 
-| Asset                                          | Where             | Source / licence                                                                                                                     | Status                                       |
-| ---------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
-| `logo.glb`, `logo_v1.glb`                      | `public/models/`  | commissioned brand mark (assumed)                                                                                                    | **owner to confirm**                         |
-| `animal2_v2.glb`, `test-v3.glb`, `geo.min.glb` | `public/models/`  | unknown                                                                                                                              | **owner to confirm**                         |
-| `animal4.glb`                                  | resources.id.life | root node `Sketchfab_model`: a Sketchfab download, and the site shows no credit; most Sketchfab licences (CC BY) require attribution | **owner to confirm** licence and credit line |
+| Asset                                                                                                                 | Where             | Source / licence                                                                                                                     | Status                                       |
+| --------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `hero.<hash>.glb` (was `logo_v2.glb`, from `logo_v1.glb`; `logo.glb` deleted as unused)                               | `public/models/`  | commissioned brand mark (assumed)                                                                                                    | **owner to confirm**                         |
+| `jellyfish.<hash>.glb` (was `animal2_v2.glb`), `twin.<hash>.glb` (was `test-v3.glb`); `geo.min.glb` deleted as unused | `public/models/`  | unknown                                                                                                                              | **owner to confirm**                         |
+| `animal4.glb`                                                                                                         | resources.id.life | root node `Sketchfab_model`: a Sketchfab download, and the site shows no credit; most Sketchfab licences (CC BY) require attribution | **owner to confirm** licence and credit line |
 
 ## Code libraries with notable licences
 

@@ -76,7 +76,8 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         type="button"
         aria-label={isPlaying ? 'Pause music' : 'Play music'}
         onClick={handleChangePlayStatus}
-        className="relative flex cursor-pointer items-center gap-1 before:absolute before:-inset-x-1 before:-inset-y-1.5 before:content-['']"
+        // tap-area: at least 44x44 to touch (RWD-06); the pill keeps its 32 px height.
+        className="relative flex cursor-pointer items-center gap-1 tap-area"
       >
         <span aria-hidden="true">
           <DesktopAudioSiriWave className="w-6 overflow-hidden" />

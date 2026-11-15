@@ -57,7 +57,7 @@ const CarouselWrapper = memo(() => {
         itemHeight={48}
         duration={5}
         transition={0.6}
-        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]')}
+        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[max(25rem,320px)]')}
       >
         {CAROUSEL_ITEMS?.map((item) => (
           <CarouselItem key={item.cnText ?? item.text} {...item} />
@@ -85,7 +85,8 @@ export function CarouselItem({
       return (
         <p
           className={cn(
-            'line-clamp-2 text-left text-base/4.5 mobile:text-center mobile:text-sm/4.5 mobile:font-bold',
+            // Type roles on the desktop tree (RWD-01): 14 px and up instead of a size that shrank with the window.
+            'line-clamp-2 text-left text-body-sm leading-[1.3] mobile:text-center mobile:text-sm/4.5 mobile:font-bold',
             textClass,
           )}
         >
@@ -96,7 +97,7 @@ export function CarouselItem({
       return (
         <p
           className={cn(
-            'bilingual-font line-clamp-2 text-left text-xl/6 mobile:text-center mobile:text-base/5 mobile:font-bold',
+            'bilingual-font line-clamp-2 text-left text-lead mobile:text-center mobile:text-base/5 mobile:font-bold',
             textClass,
           )}
         >
@@ -108,7 +109,7 @@ export function CarouselItem({
   }, [cnText, text, textClass]);
 
   return (
-    <div className="flex items-center gap-1 text-base/4.5 font-bold uppercase text-foreground mobile:justify-center">
+    <div className="flex items-center gap-1 text-body-sm font-bold uppercase text-foreground mobile:justify-center">
       {icon}
       {content}
     </div>

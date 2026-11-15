@@ -58,13 +58,13 @@ export const MOBILE_MAP_SCALE = {
   dotSvgPosition: 'absolute left-[-16px] top-[-18px]', // SVG positioning to center the pulse effect
 
   // Location label text size (Tailwind class: text-X/Y)
-  labelTextClass: 'text-[8px]/[12px]', // 12px
+  labelTextClass: 'text-xs/[14px]', // 12 px floor (RWD-01; it was 8 px)
 
   // Region icon size (Tailwind class: size-X)
   regionIconSize: 'size-4', // 16px
 
   // Badge text size (Tailwind class: text-X/Y)
-  badgeTextClass: 'text-[8px]/[10px]', // 8px
+  badgeTextClass: 'text-xs/[14px]', // 12 px floor (RWD-01; it was 8 px)
 
   // Badge icon size (Tailwind class: size-X)
   badgeIconSize: 'size-2.5', // 10px

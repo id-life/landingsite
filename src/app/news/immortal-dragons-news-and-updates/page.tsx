@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
-import Link from 'next/link';
 import Markdown from 'react-markdown';
 import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import { NewsArticle, WithContext } from 'schema-dts';
@@ -11,6 +10,7 @@ import { getArticleContent } from './content';
 import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
+import Breadcrumb from '@/components/site/Breadcrumb';
 
 // Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('article-profile');
@@ -49,12 +49,7 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
       <JsonLd data={[jsonLd, breadcrumb]} />
       <ReadDepth itemId={'immortal-dragons-news-and-updates'} />
       <div>
-        <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
-          <div className="text-xl/5 font-medium mobile:text-xs/5">
-            <Link href="/news">News</Link>
-            <span className="ml-1 text-ink-muted">&gt; Article</span>
-          </div>
-        </div>
+        <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
         <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
           <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />

@@ -189,9 +189,7 @@ export function MobileWorldMapBookDotContent({
                 <h4 className="text-xs/4 font-semibold capitalize text-white">{bookTitle}</h4>
                 <div className="flex items-center">
                   <LinkSVG className={cn('size-2 fill-data-sky', { 'fill-tone-400': !link })} />
-                  <p
-                    className={cn('ml-1 whitespace-nowrap text-[8px]/3 font-medium text-data-sky', { 'text-tone-400': !link })}
-                  >
+                  <p className={cn('ml-1 whitespace-nowrap text-xs/4 font-medium text-data-sky', { 'text-tone-400': !link })}>
                     {desc}
                   </p>
                   <ArrowSVG className={cn('size-2 -rotate-90 fill-data-sky', { 'fill-tone-400': !link })} />

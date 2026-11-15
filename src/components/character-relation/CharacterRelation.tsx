@@ -12,6 +12,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { track } from '@/lib/analytics/track';
 import { motion } from 'motion/react';
 import { DURATION, EASE } from '@/motion/tokens';
+import { u } from '@/utils/layout-unit';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
 
@@ -50,7 +51,7 @@ const CharacterRelation = () => {
       if (isBePartOfItShow) {
         bePartOfItTimelineRef.current.clear();
         gsap.set(bePartOfItRef.current, { bottom: '-100%' });
-        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? '1.5rem' : '2.5rem' });
+        bePartOfItTimelineRef.current.to(bePartOfItRef.current, { bottom: isMobile ? u(1.5) : u(2.5) });
         bePartOfItTimelineRef.current.play(0);
       } else {
         bePartOfItTimelineRef.current.reverse();

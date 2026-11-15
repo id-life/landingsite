@@ -13,6 +13,7 @@ import { VideoWithPoster } from './VideoWithPoster';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
 import { DURATION, EASE } from '@/motion/tokens';
+import { useReducedMotionPref } from '@/motion/preference';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -28,6 +29,8 @@ export function WorldMapSponsorDotPoint({
   index: number;
   calcPoint: (lat: number, lng: number) => { x: number; y: number; left: number; top: number };
 }) {
+  // Reduced motion (MOT-02): the pulse rings hold still.
+  const reduced = useReducedMotionPref();
   const { lat, lng, title, pulseConfig, isConference, conferenceText, isSponsor, sponsorText, isResearch, researchText } = dot;
   const { handleClickPoint, handleMouseEnter, handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
   const [activeSponsorDotClickOpen, setActiveSponsorDotClickOpen] = useAtom(activeSponsorDotClickOpenAtom);
@@ -107,22 +110,26 @@ export function WorldMapSponsorDotPoint({
               <>
                 {/* 使用SVG animate元素来创建平滑的波纹效果 */}
                 <circle cx={centerPoint} cy={centerPoint} r={pulse1.fromRadius} fill={color} opacity="0.5">
-                  <animate
-                    attributeName="r"
-                    from={pulse1.fromRadius}
-                    to={pulse1.toRadius}
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse1.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
+                  {!reduced && (
+                    <animate
+                      attributeName="r"
+                      from={pulse1.fromRadius}
+                      to={pulse1.toRadius}
+                      dur={`${pulse1.duration}s`}
+                      begin="0s"
+                      repeatCount="indefinite"
+                    />
+                  )}
+                  {!reduced && (
+                    <animate
+                      attributeName="opacity"
+                      from="0.5"
+                      to="0"
+                      dur={`${pulse1.duration}s`}
+                      begin="0s"
+                      repeatCount="indefinite"
+                    />
+                  )}
                 </circle>
                 <circle
                   cx={centerPoint}
@@ -133,22 +140,26 @@ export function WorldMapSponsorDotPoint({
                   fill="none"
                   opacity="0.5"
                 >
-                  <animate
-                    attributeName="r"
-                    from={pulse2.fromRadius}
-                    to={pulse2.toRadius}
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    from="0.5"
-                    to="0"
-                    dur={`${pulse2.duration}s`}
-                    begin="0s"
-                    repeatCount="indefinite"
-                  />
+                  {!reduced && (
+                    <animate
+                      attributeName="r"
+                      from={pulse2.fromRadius}
+                      to={pulse2.toRadius}
+                      dur={`${pulse2.duration}s`}
+                      begin="0s"
+                      repeatCount="indefinite"
+                    />
+                  )}
+                  {!reduced && (
+                    <animate
+                      attributeName="opacity"
+                      from="0.5"
+                      to="0"
+                      dur={`${pulse2.duration}s`}
+                      begin="0s"
+                      repeatCount="indefinite"
+                    />
+                  )}
                 </circle>
               </>
             )}

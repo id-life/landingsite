@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { currentPageAtom } from '@/atoms';
 import { jotaiStore } from '@/atoms/store';
 import { NAV_LIST, type SectionId } from '@/components/nav/nav';
-import { prefersReducedMotion } from '@/constants/scroll-config';
+import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 import {
   canStepSection,
   goToSection,
@@ -14,8 +14,8 @@ import {
   type SectionDriver,
   stepSection,
 } from '@/motion/sectionController';
-import { DURATION, EASE, SECTION_COVER } from '@/motion/tokens';
-import { THEME_TRANSITIONS } from '@/utils/gsap-config';
+import { DURATION, EASE, REDUCED_FADE, SECTION_COVER } from '@/motion/tokens';
+import { SMOOTHER_LAG, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { getRestScroll } from '@/utils/section-step';
 
 /**
@@ -133,11 +133,12 @@ const desktopDriver: SectionDriver = {
     const smoother = ScrollSmoother.get();
     if (y === null || !smoother) return null;
     gsap.killTweensOf([window, smoother]);
-    if (source === 'deeplink' || source === 'layout' || prefersReducedMotion()) {
+    if (source === 'deeplink' || source === 'layout') {
       jumpTo(y);
       return null;
     }
-    if (Math.abs(to - from) <= 1) {
+    const reduced = isReducedMotion();
+    if (!reduced && Math.abs(to - from) <= 1) {
       // Tween the smoother's scrollTop rather than the window: its setter renders the content at once, so the
       // section rests when the tween ends instead of trailing it by the smoother's 0.5 s lag.
       const tween = gsap.to(smoother, {
@@ -152,12 +153,15 @@ const desktopDriver: SectionDriver = {
     // A cover fade still running from an interrupted jump. (Not overwrite: true on the tween below: GSAP applies it
     // when the tween first renders and would kill this timeline's own fade-out of the same element.)
     gsap.killTweensOf(el);
+    // Reduced motion (MOT-02): every change, neighbours included, is this crossfade at REDUCED_FADE: no movement,
+    // no hold (the tokens read 0), done within about 0.2 s.
+    const fade = reduced ? REDUCED_FADE : SECTION_COVER.fade;
     const tl = gsap.timeline({ paused: true });
     tl.set(el, { backgroundColor: themeColour(to), visibility: 'visible' });
-    tl.to(el, { opacity: 1, duration: SECTION_COVER.fade, ease: EASE.out });
+    tl.to(el, { opacity: 1, duration: fade, ease: EASE.out });
     tl.call(() => jumpTo(y));
     // A short hold so the sections and canvases under the cover render the new position before it lifts.
-    tl.to(el, { opacity: 0, duration: SECTION_COVER.fade, ease: EASE.inOut }, `+=${DURATION.micro}`);
+    tl.to(el, { opacity: 0, duration: fade, ease: EASE.inOut }, `+=${DURATION.micro}`);
     tl.set(el, { visibility: 'hidden' });
     return { transition: tl, reversible: false };
   },
@@ -180,6 +184,10 @@ const desktopDriver: SectionDriver = {
 export function useDesktopSections() {
   useEffect(() => {
     const unregister = registerSectionDriver(desktopDriver);
+    // The Motion switch takes the smoother's glide away (and back) without a reload (MOT-02).
+    const offPreference = onReducedMotionChange((reduced) =>
+      ScrollSmoother.get()?.smooth(reduced ? SMOOTHER_LAG.reduced : SMOOTHER_LAG.full),
+    );
 
     // ---- wheel: one gesture, one step ----
     let lastWheelAt = -Infinity;
@@ -292,6 +300,7 @@ export function useDesktopSections() {
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       unregister();
+      offPreference();
       cover?.remove();
       cover = null;
     };

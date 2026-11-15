@@ -222,15 +222,21 @@ export const EVENTS = {
     layout: oneOf(LAYOUTS, 'Tree that was shown'),
     cache_state: oneOf(['warm', 'cold', 'unknown'], 'Hero model came from the HTTP cache (warm) or the network'),
     fail_open: flag('The loader gave up waiting (15 s or an asset error) and revealed the UI'),
+    gpu_tier: oneOf(['low', 'mid', 'high', 'none'], 'GPU quality tier the 3D ran at (MOT-06); none: no WebGL', {
+      optional: true,
+    }),
   }),
   experience_error: ev('A 3D failure, once per kind per document (asset_failed once per file)', {
     kind: oneOf(EXPERIENCE_ERROR_KINDS, 'What failed'),
     detail: str('Canvas name or file name', { optional: true }),
   }),
-  layout_change: ev('The page swapped between the desktop and the mobile tree (a resize across 768 px)', {
-    from: oneOf(LAYOUTS, 'Previous tree'),
-    to: oneOf(LAYOUTS, 'New tree'),
-  }),
+  layout_change: ev(
+    'The page swapped between the desktop and the mobile tree (a resize or rotation across the phone tree query)',
+    {
+      from: oneOf(LAYOUTS, 'Previous tree'),
+      to: oneOf(LAYOUTS, 'New tree'),
+    },
+  ),
   visibility_summary: ev('On pagehide, once per page load, when the tab was hidden at least once', {
     hidden_ms: num('Time hidden', { unit: 'ms' }),
     visible_ms: num('Time visible', { unit: 'ms' }),

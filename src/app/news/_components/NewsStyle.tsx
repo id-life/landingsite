@@ -1,4 +1,5 @@
 import React from 'react';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 import 'swiper/css';
 import '@/styles/webgl.css';
@@ -18,7 +19,7 @@ const NEWS_CSS = `
     background: var(--background);
   }
 
-  @media screen and (max-width: 768px) {
+  @media ${PHONE_TREE_QUERY} {
     :root {
       font-size: 16px;
     }

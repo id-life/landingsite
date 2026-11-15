@@ -8,16 +8,39 @@ import GlobalError from '@/app/global-error';
 import NotFound from '@/app/not-found';
 
 vi.mock('@sentry/nextjs', () => ({ captureException: () => {} }));
-vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: () => {} }) }));
+// SVGR components of the site header (vitest has no SVGR loader).
+vi.mock('@/../public/svgs/menu-close.svg?component', () => ({ default: () => null }));
+vi.mock('@/../public/svgs/subscribe-border.svg?component', () => ({ default: () => null }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: () => {} }), usePathname: () => '/missing' }));
 
 const hrefs = (html) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((m) => m[1]);
+// The site header (NAV-04) comes first on the 404: the logo, the nine navigation items and
+// About.
+const HEADER = [
+  '/',
+  '/',
+  '/portfolio',
+  '/insights',
+  '/spectrum',
+  '/presence',
+  '/digitaltwin',
+  '/connect',
+  '/news',
+  '/podcast',
+  '/about',
+];
+const afterHeader = (html) => {
+  const all = hrefs(html);
+  expect(all.slice(0, HEADER.length)).toEqual(HEADER);
+  return all.slice(HEADER.length);
+};
 
 describe('error pages', () => {
-  test('the 404 keeps its 11 links and its heading', () => {
+  test('the 404 keeps its 11 links and its heading, under the site header', () => {
     const html = renderToStaticMarkup(createElement(NotFound));
     expect(html).toContain('<h1');
     expect(html).toContain('Page not found');
-    expect(hrefs(html)).toEqual([
+    expect(afterHeader(html)).toEqual([
       '/',
       '/',
       '/portfolio',
@@ -35,6 +58,7 @@ describe('error pages', () => {
     const html = renderToStaticMarkup(createElement(RouteError, { error: new Error('boom'), reset: () => {} }));
     expect(html).toContain('Something went wrong');
     expect(html).toMatch(/<button[^>]*>Try again/);
+    // No site header here: the route error boundary is part of every route's bundle (PERF-10).
     expect(hrefs(html)).toEqual(['/', '/', '/news', '/podcast', '/connect']);
   });
 

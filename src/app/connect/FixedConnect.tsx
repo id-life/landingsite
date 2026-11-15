@@ -20,7 +20,7 @@ const MobileConnectSinglePage = () => {
       role="region"
       aria-label="Connect"
       className={cn(
-        // invisible until Connect is entered (MobileConnectGL sets visibility), so this scroll box never catches
+        // invisible until Connect is entered (ConnectGL on the phone deck sets visibility), so this scroll box never catches
         // taps meant for the other sections.
         'invisible fixed inset-x-0 top-[80px] z-30 flex flex-col overflow-y-auto overscroll-contain px-4 opacity-0 transition-[bottom] duration-300 ease-out',
         isContactShow ? 'bottom-[calc(var(--connect-panel-h,310px)+0.5rem)]' : 'bottom-[80px]',

@@ -1,4 +1,5 @@
 import gsap from 'gsap';
+import { onReducedMotionChange } from './preference';
 import { DISTANCE, DURATION, EASE } from './tokens';
 
 /**
@@ -17,6 +18,8 @@ for (const [name, fn] of Object.entries(EASE)) {
 }
 
 gsap.defaults({ duration: DURATION.base, ease: EASE.out });
+// Reduced motion (MOT-02): a tween without its own duration lands at once too.
+onReducedMotionChange(() => gsap.defaults({ duration: DURATION.base }));
 
 function effect(
   name: string,

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useReducedMotionPref } from '@/motion/preference';
 
 interface UseStaggerAnimationOptions {
   enabled: boolean;
@@ -6,7 +7,10 @@ interface UseStaggerAnimationOptions {
   onAnimate: () => void;
 }
 
-export function useStaggerAnimation({ enabled, interval, onAnimate }: UseStaggerAnimationOptions) {
+export function useStaggerAnimation({ enabled: wanted, interval, onAnimate }: UseStaggerAnimationOptions) {
+  // Reduced motion (MOT-02): attention loops (the Twin avatar and border cycles) do not run by themselves.
+  const reduced = useReducedMotionPref();
+  const enabled = wanted && !reduced;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const mountedRef = useRef(true);
 

@@ -32,7 +32,7 @@ function SpectrumInitiatives({
       {items.map((item, index) => {
         return (
           <article key={item.title} className="min-w-0" onMouseEnter={() => onSelect(index)} onFocus={() => onSelect(index)}>
-            <header className="flex items-start gap-2.5">
+            <div className="flex items-start gap-2.5">
               {cloneElement(item.icon, { className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white') })}
               <div className={cn('min-w-0', layout === 'publications' && 'flex flex-wrap items-baseline gap-x-4 gap-y-1')}>
                 <h2 className="bilingual-font text-[clamp(19px,1.6vw,30px)]/tight font-semibold text-white">{item.title}</h2>
@@ -40,7 +40,7 @@ function SpectrumInitiatives({
                   {item.titleCn}
                 </p>
               </div>
-            </header>
+            </div>
             <ul
               className={cn(
                 'mt-4',
