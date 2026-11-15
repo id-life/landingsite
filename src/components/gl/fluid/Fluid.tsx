@@ -11,6 +11,9 @@ import { OPTS } from './constant';
 import { usePointer } from './hooks/usePointer';
 import { BlendFunction } from 'postprocessing';
 
+/** Frames after the last splat until the dye has faded out (0.96^180 is below 0.1 %). */
+const SETTLE_FRAMES = 180;
+
 type Uniforms = {
   uColor: Vector3 | Color;
   uPointer: Vector2;
@@ -61,9 +64,9 @@ export const Fluid = ({
     (name: keyof ReturnType<typeof useMaterials>) => {
       if (!meshRef.current) return;
 
+      // Swapping the mesh's material is enough; needsUpdate here re-validated the program on every pass.
       meshRef.current.material = materials[name];
       meshRef.current.material.side = DoubleSide;
-      meshRef.current.material.needsUpdate = true;
     },
     [materials],
   );
@@ -97,8 +100,14 @@ export const Fluid = ({
     [materials],
   );
 
+  // MOT-03: frames since the last pointer splat. The dye fades by densityDissipation per frame (0.96: under 0.1 % left
+  // after SETTLE_FRAMES), so past that the solver's dozen passes per frame change nothing visible and are skipped.
+  const quietFramesRef = useRef(SETTLE_FRAMES);
   useFrame(({ gl }) => {
     if (!meshRef.current || !postRef.current) return;
+    if (splatStack.length) quietFramesRef.current = 0;
+    else if (quietFramesRef.current >= SETTLE_FRAMES) return;
+    quietFramesRef.current += 1;
 
     for (let i = splatStack.length - 1; i >= 0; i--) {
       const { mouseX, mouseY, velocityX, velocityY } = splatStack[i];

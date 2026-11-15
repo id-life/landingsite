@@ -28,6 +28,7 @@ import Model2In from './model/Model2In';
 import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
+import FrameDriver from '@/components/gl/FrameDriver';
 import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
@@ -228,6 +229,7 @@ export default function TwinThreeWrapper() {
         <GLBoundary canvas="twin">
           <Canvas
             id="model-canvas"
+            frameloop="never"
             onCreated={onCanvasCreated('twin')}
             dpr={[1, 2]}
             gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
@@ -238,6 +240,7 @@ export default function TwinThreeWrapper() {
               height: '100vh',
             }}
           >
+            <FrameDriver />
             <Suspense fallback={<Loader />}>
               <View.Port />
             </Suspense>

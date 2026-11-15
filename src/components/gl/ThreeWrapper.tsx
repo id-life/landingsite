@@ -11,6 +11,7 @@ import { markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { HeroAssetsGate, HeroReady, preloadHeroAssets } from '@/components/gl/heroAssets';
 import dynamic from 'next/dynamic';
+import FrameDriver from '@/components/gl/FrameDriver';
 
 // The performance overlay is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
 // production build drops this branch and the overlay never reaches the bundle.
@@ -32,6 +33,7 @@ export default function ThreeWrapper() {
     <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
+        frameloop="never"
         onCreated={onCanvasCreated('vision')}
         style={{ position: 'fixed', zIndex: 1 }}
         gl={{
@@ -42,6 +44,7 @@ export default function ThreeWrapper() {
         }}
         dpr={Math.min(devicePixelRatio, isMobile ? 1.5 : 2)}
       >
+        <FrameDriver />
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />

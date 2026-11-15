@@ -10,6 +10,7 @@ import PCFixedUI, { PCAudioPlayer } from '@/components/common/PCFixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
+import MotionRuntime from '@/components/gl/MotionRuntime';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
 import Footer from '@/components/layout/footer/Footer';
 import FooterContact from '@/components/layout/footer/FooterContact';
@@ -51,6 +52,7 @@ export default function Home() {
 
   return (
     <>
+      <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
       {webgl && <ThreeWrapper />}
       {webgl && <TwinThreeWrapper />}

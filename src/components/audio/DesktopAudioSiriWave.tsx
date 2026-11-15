@@ -20,11 +20,23 @@ function DesktopAudioSiriWave({ className }: { className?: string; amplitude?: n
   });
 
   useEffect(() => {
-    if (!siriwaveRef.current) return;
-    if (!playStatus) {
-      siriwaveRef.current.setAmplitude(0);
-      siriwaveRef.current.setSpeed(0);
+    const wave = siriwaveRef.current;
+    if (!wave) return;
+    if (playStatus) {
+      wave.start();
+      return;
     }
+    wave.setAmplitude(0);
+    wave.setSpeed(0);
+    // MOT-03: once the wave has eased down to a flat line, stop its draw loop (it redrew the same flat line 60 times
+    // a second for as long as nothing played). The last frame stays on the canvas; play starts it again.
+    const settle = setInterval(() => {
+      if (wave.amplitude < 0.002) {
+        wave.stop();
+        clearInterval(settle);
+      }
+    }, 500);
+    return () => clearInterval(settle);
   }, [playStatus]);
 
   return (
@@ -33,7 +45,7 @@ function DesktopAudioSiriWave({ className }: { className?: string; amplitude?: n
       <div className="absolute left-1/2 top-1/2 mt-[3px] -translate-x-1/2 -translate-y-1/2">
         <Siriwave
           width={120}
-          amplitude={0.5}
+          amplitude={playStatus ? 0.5 : 0}
           height={60}
           theme="ios9"
           onInit={(siriwave) => (siriwaveRef.current = siriwave)}

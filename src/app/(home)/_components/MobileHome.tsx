@@ -11,6 +11,7 @@ import MobileEngagement from '@/components/engagement/MobileEngagement';
 import MobileThreeWrapper from '@/components/gl/MobileThreeWrapper';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
+import MotionRuntime from '@/components/gl/MotionRuntime';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
@@ -37,6 +38,7 @@ export default function MobileHome() {
 
   return (
     <>
+      <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
       {webgl && <MobileThreeWrapper />}
       <div id="wrapper" className="">

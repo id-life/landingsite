@@ -12,6 +12,7 @@ import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBo
 import { markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { EffectComposer } from '@react-three/postprocessing';
 import { useGLTF } from '@react-three/drei';
+import FrameDriver from './FrameDriver';
 import { HeroAssetsGate, HeroReady, preloadHeroAssets } from './heroAssets';
 
 export default function MobileThreeWrapper() {
@@ -27,6 +28,7 @@ export default function MobileThreeWrapper() {
     <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
+        frameloop="never"
         onCreated={onCanvasCreated('vision')}
         className={cn('pointer-events-none', !showCanvas && 'invisible opacity-0')}
         style={{ position: 'fixed', zIndex: 1 }}
@@ -37,6 +39,7 @@ export default function MobileThreeWrapper() {
           powerPreference: 'high-performance',
         }}
       >
+        <FrameDriver />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
