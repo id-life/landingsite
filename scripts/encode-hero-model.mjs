@@ -10,7 +10,9 @@
 //   mkdir /tmp/hero-model && cd /tmp/hero-model && npm init -y && \
 //     npm i @gltf-transform/core@4.2.1 @gltf-transform/extensions@4.2.1 @gltf-transform/functions@4.2.1 \
 //       meshoptimizer@0.22.0 draco3dgltf@1.5.7
-//   node <repo>/scripts/encode-hero-model.mjs <repo>/public/models/logo_v1.glb <repo>/public/models/logo_v2.glb
+//   node <repo>/scripts/encode-hero-model.mjs logo_v1.glb logo_v2.glb
+// (logo_v1.glb, the Draco source, is in git history: git show 3be6cc3:public/models/logo_v1.glb. The output then goes
+// through scripts/optimize-models.mjs, which gives it its content-hashed name.)
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';

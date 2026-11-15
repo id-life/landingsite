@@ -51,8 +51,12 @@ next-env.d.ts
 *.docx
 
 # Local planning docs (not for the repo), except the docs the site's code or README refers to: the performance
-# budget (PERF-09), the licence register (ENG-10) and the content docs (CON-10, CON-16, CON-20)
+# budget (PERF-09), the licence register (ENG-10), the content docs (CON-10, CON-16, CON-20), the device tiers (MOT-06)
+# and the model pipeline reports (PERF-14)
 docs/*
+!docs/device-tiers.md
+!docs/models.md
+!docs/models/
 !docs/performance-budget.md
 !docs/licences.md
 !docs/content-*.md

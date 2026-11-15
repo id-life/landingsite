@@ -3,8 +3,10 @@ import { useEventBus } from '@/components/event-bus/useEventBus';
 import { Center, useAnimations, useGLTF, useProgress } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import MODELS from '@/components/gl/models-manifest.json';
 
-const MODEL_URL = '/models/test-v3.glb';
+// Content-hashed by scripts/optimize-models.mjs (PERF-14).
+const MODEL_URL = MODELS.twin;
 
 /** Fetch the avatar into the loader cache before Model0Out mounts (see useDeferredWarm). */
 export const preloadModel0Out = () => useGLTF.preload(MODEL_URL);

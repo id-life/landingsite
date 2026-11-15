@@ -1,8 +1,10 @@
+import MODELS from './models-manifest.json';
+
 /**
- * The first screen's own 3D assets. Kept free of imports so the experience layouts (server
- * components) can preload them without pulling three.js into the server bundle.
+ * The first screen's own 3D assets. Kept free of code imports (the model manifest is JSON) so the experience layouts
+ * (server components) can preload them without pulling three.js into the server bundle.
  */
-export const HERO_MODEL_URL = '/models/logo_v2.glb';
+export const HERO_MODEL_URL = MODELS.hero;
 
 /** Wordmark textures of the desktop and tablet tree (CenterLogo via useLogoTextures). */
 export const HERO_TEXTURE_URLS = [

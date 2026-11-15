@@ -1,4 +1,5 @@
 'use client';
+import MODELS from '@/components/gl/models-manifest.json';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import * as THREE from 'three';
 import { useAnimations, useGLTF } from '@react-three/drei';
@@ -14,7 +15,7 @@ export type AnimationGroupHandle = {
   stopAnimationLoop: () => void;
 };
 const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ modelRef }, ref) => {
-  const { nodes, materials, animations } = useGLTF('/models/test-v3.glb') as unknown as {
+  const { nodes, materials, animations } = useGLTF(MODELS.twin) as unknown as {
     nodes: {
       Basic_T_shirts001: THREE.SkinnedMesh;
       CC_Base_Body001: THREE.SkinnedMesh;
@@ -263,8 +264,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001.geometry}
           material={materials['基本皮肤头.006b177.001']}
           skeleton={nodes.CC_Base_Body001.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -274,8 +273,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001_1.geometry}
           material={materials['基本皮肤身体.006b178.001']}
           skeleton={nodes.CC_Base_Body001_1.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001_1.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001_1.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -285,8 +282,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001_2.geometry}
           material={materials['基本皮肤手臂.006b179.001']}
           skeleton={nodes.CC_Base_Body001_2.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001_2.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001_2.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -296,8 +291,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001_3.geometry}
           material={materials['基本皮肤腿.006b180.001']}
           skeleton={nodes.CC_Base_Body001_3.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001_3.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001_3.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -307,8 +300,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001_4.geometry}
           material={materials['基本指甲.006b181.001']}
           skeleton={nodes.CC_Base_Body001_4.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001_4.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001_4.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -318,8 +309,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Body001_5.geometry}
           material={materials['基本睫毛.006b182.001']}
           skeleton={nodes.CC_Base_Body001_5.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Body001_5.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Body001_5.morphTargetInfluences}
           material-metalness={0.87}
           material-roughness={0.9}
           material-color={'#ffeaea'}
@@ -331,32 +320,24 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_Eye001.geometry}
           material={materials['基本眼睛r.006b188']}
           skeleton={nodes.CC_Base_Eye001.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Eye001.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Eye001.morphTargetInfluences}
         />
         <skinnedMesh
           name="CC_Base_Eye001_1"
           geometry={nodes.CC_Base_Eye001_1.geometry}
           material={materials['基本c或near.006b189']}
           skeleton={nodes.CC_Base_Eye001_1.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Eye001_1.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Eye001_1.morphTargetInfluences}
         />
         <skinnedMesh
           name="CC_Base_Eye001_2"
           geometry={nodes.CC_Base_Eye001_2.geometry}
           material={materials['基本眼睛l.006b190']}
           skeleton={nodes.CC_Base_Eye001_2.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Eye001_2.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Eye001_2.morphTargetInfluences}
         />
         <skinnedMesh
           name="CC_Base_Eye001_3"
           geometry={nodes.CC_Base_Eye001_3.geometry}
           material={materials['基本c或neal.006b191']}
           skeleton={nodes.CC_Base_Eye001_3.skeleton}
-          morphTargetDictionary={nodes.CC_Base_Eye001_3.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_Eye001_3.morphTargetInfluences}
         />
       </group>
       <group name="CC_Base_EyeOcclusion002">
@@ -365,16 +346,12 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_EyeOcclusion001.geometry}
           material={materials['基本眼部阻塞r.006b193']}
           skeleton={nodes.CC_Base_EyeOcclusion001.skeleton}
-          morphTargetDictionary={nodes.CC_Base_EyeOcclusion001.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_EyeOcclusion001.morphTargetInfluences}
         />
         <skinnedMesh
           name="CC_Base_EyeOcclusion001_1"
           geometry={nodes.CC_Base_EyeOcclusion001_1.geometry}
           material={materials['基本眼部阻塞l.006b194']}
           skeleton={nodes.CC_Base_EyeOcclusion001_1.skeleton}
-          morphTargetDictionary={nodes.CC_Base_EyeOcclusion001_1.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_EyeOcclusion001_1.morphTargetInfluences}
         />
       </group>
       <group name="CC_Base_TearLine002">
@@ -383,16 +360,12 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
           geometry={nodes.CC_Base_TearLine001.geometry}
           material={materials['基本分裂线r.006b195']}
           skeleton={nodes.CC_Base_TearLine001.skeleton}
-          morphTargetDictionary={nodes.CC_Base_TearLine001.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_TearLine001.morphTargetInfluences}
         />
         <skinnedMesh
           name="CC_Base_TearLine001_1"
           geometry={nodes.CC_Base_TearLine001_1.geometry}
           material={materials['基本分裂线l.006b196']}
           skeleton={nodes.CC_Base_TearLine001_1.skeleton}
-          morphTargetDictionary={nodes.CC_Base_TearLine001_1.morphTargetDictionary}
-          morphTargetInfluences={nodes.CC_Base_TearLine001_1.morphTargetInfluences}
         />
       </group>
       <group name="CC_Base_Teeth001">
@@ -414,8 +387,6 @@ const AnimationGroup = forwardRef<AnimationGroupHandle, AnimationGroupProps>(({ 
         geometry={nodes.CC_Base_Tongue002.geometry}
         material={materials['基本舌头.006b185.001']}
         skeleton={nodes.CC_Base_Tongue002.skeleton}
-        morphTargetDictionary={nodes.CC_Base_Tongue002.morphTargetDictionary}
-        morphTargetInfluences={nodes.CC_Base_Tongue002.morphTargetInfluences}
       />
       <skinnedMesh
         name="Layered_Straight_Hair002"
