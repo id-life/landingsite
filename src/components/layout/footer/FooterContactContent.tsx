@@ -18,6 +18,7 @@ import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
 import { cn } from '@/utils';
+import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 import { NewsletterPlacement, submitNewsletter } from '@/utils/newsletter';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
@@ -108,16 +109,17 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           </div>
         ))}
       </div>
-      <div className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold uppercase">
+      {/* The email is a mailto link (it was the uppercase literal CONTACT@ID.LIFE in a span). */}
+      <address className="mt-4 flex flex-col gap-1.5 font-oxanium text-xs/[15px] font-bold not-italic">
         <div className="flex items-center gap-1">
-          <HomeSVG className="size-5" />
-          <span>3 BIOPOLIS DR, #01-15, SINGAPORE 138623</span>
+          <HomeSVG aria-hidden="true" className="size-5" />
+          <span>{ORG_ADDRESS_TEXT}</span>
         </div>
-        <div className="flex items-center gap-1">
-          <ContactEmailSVG className="size-5" />
-          <span>CONTACT@ID.LIFE</span>
-        </div>
-      </div>
+        <a href={ORG_MAILTO} className="flex w-fit items-center gap-1 py-1">
+          <ContactEmailSVG aria-hidden="true" className="size-5" />
+          <span>{ORG_EMAIL}</span>
+        </a>
+      </address>
       <div className="my-4 h-px w-full bg-black/20" />
       <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
         {errors.EMAIL && (

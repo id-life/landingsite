@@ -1,3 +1,5 @@
+import { ConnectCriteria, ConnectValues } from './ConnectDetails';
+
 export default function FixedConnectPage1() {
   return (
     <div id="fixed-connect-page-1" style={{ transformStyle: 'preserve-3d' }} className="fixed left-0 top-0 w-screen">
@@ -262,6 +264,12 @@ export default function FixedConnectPage1() {
         <p className="mt-8 w-[32rem] text-left text-xl/6 font-semibold">
           We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
         </p>
+        {/* Investment criteria, live text under the headlines (sized to clear the contact footer on 16:9 screens). */}
+        <ConnectCriteria
+          className="mt-6 w-[40rem] text-left"
+          titleClassName="text-base/5"
+          listClassName="mt-2 gap-2 font-poppins text-base/5 font-semibold"
+        />
       </div>
       <div className="absolute right-20 top-36 flex flex-col items-end">
         <svg className="connect-title7 w-[34.875rem]" viewBox="0 0 697 83">
@@ -368,6 +376,12 @@ export default function FixedConnectPage1() {
         <p className="mt-42 w-[35rem] text-right text-xl/6 font-semibold">
           Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
         </p>
+        {/* The four value statements, live text in the right column. */}
+        <ConnectValues
+          className="mt-8 flex w-[38rem] flex-col gap-4 text-right"
+          titleClassName="text-base/5"
+          textClassName="mt-0.5 font-poppins text-base/5 font-medium"
+        />
       </div>
     </div>
   );

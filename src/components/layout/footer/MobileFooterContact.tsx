@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import FooterContactContent from './FooterContactContent';
 
 export default function MobileFooterContact() {
-  const subscribeRef = useRef<HTMLDivElement>(null);
+  const subscribeRef = useRef<HTMLDivElement | null>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
   const pathname = usePathname();
   const isConnectPage = pathname === '/connect';
@@ -22,6 +22,22 @@ export default function MobileFooterContact() {
     },
     [setIsSubscribeShow],
   );
+
+  // Publish the open panel's height so the Connect text box above it ends where the panel starts
+  // (--connect-panel-h, read by MobileConnectSinglePage). A callback ref: AnimatePresence mounts the panel
+  // after the previous child's exit, so it is not there yet when isSubscribeShow turns true.
+  const panelObserverRef = useRef<ResizeObserver | null>(null);
+  const panelRef = useCallback((el: HTMLDivElement | null) => {
+    subscribeRef.current = el;
+    panelObserverRef.current?.disconnect();
+    panelObserverRef.current = null;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--connect-panel-h', `${el.offsetHeight}px`);
+    });
+    observer.observe(el);
+    panelObserverRef.current = observer;
+  }, []);
 
   useEffect(() => {
     if (isSubscribeShow) {
@@ -38,7 +54,7 @@ export default function MobileFooterContact() {
         {isSubscribeShow ? (
           <motion.div
             key="expanded"
-            ref={subscribeRef}
+            ref={panelRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}

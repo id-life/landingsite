@@ -13,8 +13,8 @@ import * as THREE from 'three';
 
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
-// Updated selector for new single-page mobile layout
-const CONNECT_FIXED_ELEMENTS = '#mobile-connect-content, .page-connect-item, #connect-end-1, #connect-end-2';
+// The single-page phone layout (the criteria and values are in flow inside it).
+const CONNECT_FIXED_ELEMENTS = '#mobile-connect-content';
 
 function MobileConnectGL() {
   const { camera } = useThree();
