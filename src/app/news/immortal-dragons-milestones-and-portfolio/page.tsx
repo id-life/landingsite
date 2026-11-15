@@ -81,7 +81,7 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
             {articleTitle}
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
-          <div className="markdown-body mobile:[&_p]:text-sm mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
+          <div className="article-body markdown-body mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
             <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {articleContent}
             </Markdown>

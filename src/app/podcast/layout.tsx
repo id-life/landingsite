@@ -8,7 +8,7 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
-        <div className="w-full max-w-[50rem]">
+        <div className="reading-column">
           <PodcastHeader />
           <PodcastNavTabs />
           {children}

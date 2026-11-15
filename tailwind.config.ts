@@ -161,6 +161,12 @@ const config: Config = {
       },
       fontSize: {
         ss: '0.625rem',
+        // Reading sizes of the content pages (news, podcast), all derived from --read-body (globals.css): 16 px body
+        // on phones, growing about 1.3x from 1440 to 2560 px. Captions stay at 12 px or more.
+        read: ['var(--read-body)', { lineHeight: '1.7' }],
+        'read-sm': ['calc(var(--read-body) * 0.875)', { lineHeight: '1.6' }],
+        'read-xs': ['calc(var(--read-body) * 0.75)', { lineHeight: '1.5' }],
+        'read-lg': ['calc(var(--read-body) * 1.25)', { lineHeight: '1.4' }],
       },
     },
   },

@@ -37,7 +37,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
             </h1>
-            <p className="mt-4 text-sm font-medium mobile:hidden">{data.description}</p>
+            <p className="mt-4 text-read-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
             <img
@@ -61,7 +61,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
           </div>
         </div>
       </div>
-      <div className="mt-7.5 hidden text-xs/5 font-medium mobile:block">{data.description}</div>
+      <div className="mt-7.5 hidden text-read-sm font-medium mobile:block">{data.description}</div>
     </div>
   );
 }
