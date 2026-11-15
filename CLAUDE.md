@@ -23,12 +23,14 @@ The pre-commit hook (simple-git-hooks + lint-staged) runs lint and prettier on s
 
 **Pages:**
 
-- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast
+- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast, about
 
 - `/` and the six section URLs render the same client-only experience (`src/app/(home)/_components/HomeEntry.tsx`);
   the URL selects the section. Section layouts carry metadata, JSON-LD and the server-rendered summary.
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
+- `/about` (CON-01): the fund profile as visible server-rendered text from the content layer, in the content pages'
+  header and footer.
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` (`?c=` channel) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts`, `llms.txt/route.ts`. Error UI: `not-found.tsx`, `error.tsx`,
   `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.

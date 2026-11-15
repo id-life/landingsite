@@ -121,6 +121,9 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
+      <a href="/about" className="mt-1.5 flex w-fit items-center gap-1 py-1 font-oxanium text-xs/[15px] font-bold">
+        About Immortal Dragons <span aria-hidden="true">→</span>
+      </a>
       <div className="my-4 h-px w-full bg-black/20" />
       <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
         {errors.EMAIL && (

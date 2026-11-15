@@ -129,6 +129,9 @@ export default function FooterContact() {
                   {ORG_EMAIL}
                 </a>
               </address>
+              <a href="/about" className="mt-3 flex w-fit items-center gap-1.5 transition duration-300 hover:text-red-600">
+                About Immortal Dragons <span aria-hidden="true">→</span>
+              </a>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>

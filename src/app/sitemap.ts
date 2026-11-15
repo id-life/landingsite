@@ -7,6 +7,7 @@ import { absoluteUrl } from '@/constants/site';
 // `changeFrequency` / `priority` are omitted because Google ignores them.
 const STATIC_PATHS = [
   '/',
+  '/about',
   '/portfolio',
   '/spectrum',
   '/spectrum/disease-management',

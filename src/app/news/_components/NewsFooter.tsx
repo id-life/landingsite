@@ -101,6 +101,9 @@ export default function NewsFooter() {
             <img className="size-5" src="/svgs/contact-email.svg" alt="" />
             {ORG_EMAIL}
           </div>
+          <a href="/about" className="mt-3 flex w-fit items-center gap-1.5 font-poppins font-semibold hover:text-red-600">
+            About Immortal Dragons <span aria-hidden="true">→</span>
+          </a>
         </div>
         <div className="font-oxanium text-base/5">
           <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>

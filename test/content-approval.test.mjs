@@ -1,6 +1,8 @@
 // CON-10: nothing unapproved ships. Each rule of docs/content-approval.md is proven here with a fixture or a scan.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { createElement } from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import * as content from '@/content';
 import { isConfirmed } from '@/content/approval';
@@ -92,5 +94,29 @@ describe('drafts never reach production', () => {
     };
     expect(await extensions('production')).not.toContain('preview.tsx');
     expect(await extensions('preview')).toContain('preview.tsx');
+  });
+});
+
+describe('new placements show only confirmed facts', () => {
+  // The facts that wait on a ruling, as they would render (the founder line, the stated count, the stage, the legal
+  // name, the founding year). "Boyang Wang" alone may appear: the media line says he has been quoted, not who founded.
+  const PENDING_TEXT = ['founded by', 'Founder</dt>', '朢舶洋', '15+', 'pre-seed', 'PRIVATE LIMITED', '>Founded<', '>2024<'];
+
+  test('the About page renders the confirmed facts and none that wait on a ruling', async () => {
+    const { default: AboutView } = await import('@/app/about/_components/AboutView');
+    const html = renderToStaticMarkup(createElement(AboutView));
+    expect(html).toContain('approximately US$40 million');
+    expect(html).toContain(`${content.PORTFOLIO_COUNT} companies in the portfolio`);
+    expect(html).toContain(content.FUND.email);
+    expect(html.match(/<h1/g)).toHaveLength(1);
+    for (const text of PENDING_TEXT) expect(html, `pending fact "${text}" on /about`).not.toContain(text);
+  });
+
+  test('the About page with its drafts (review page) contains the pending facts, marked as drafts', async () => {
+    const { default: AboutView } = await import('@/app/about/_components/AboutView');
+    const { ABOUT_DRAFTS } = await import('@/content/drafts');
+    const html = renderToStaticMarkup(createElement(AboutView, { drafts: ABOUT_DRAFTS }));
+    expect(html).toContain('Boyang Wang (朢舶洋) is the founder');
+    expect(html).toContain('Draft, not in production');
   });
 });
