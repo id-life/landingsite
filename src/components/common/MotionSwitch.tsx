@@ -18,7 +18,8 @@ export default function MotionSwitch({ className }: { className?: string }) {
       aria-pressed={!reduced}
       onClick={() => setMotionEnabled(reduced)}
       className={cn(
-        'pointer-events-auto flex h-10 shrink-0 items-center gap-2 whitespace-nowrap text-sm font-bold uppercase transition-colors duration-base hover:text-accent mobile:h-8 mobile:gap-1 mobile:text-xs/5',
+        // The ::before box extends the touch target to at least 44 px tall (WCAG 2.5.8, Apple's 44 pt).
+        "pointer-events-auto relative flex h-10 shrink-0 items-center gap-2 whitespace-nowrap text-sm font-bold uppercase transition-colors duration-base before:absolute before:-inset-y-1 before:inset-x-0 before:content-[''] hover:text-accent mobile:h-8 mobile:gap-1 mobile:text-xs/5 mobile:before:-inset-y-1.5",
         className,
       )}
     >
