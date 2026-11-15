@@ -12,7 +12,7 @@ import HoneypotField from '@/components/forms/HoneypotField';
 import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -30,6 +30,8 @@ export default function Footer() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);
   const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
+  const emailId = useId();
   const footerRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -133,7 +135,7 @@ export default function Footer() {
                   e.stopPropagation();
                   closeWithX();
                 }}
-                className="absolute right-4 top-4 z-10 p-2 transition-opacity hover:opacity-70"
+                className="absolute right-2 top-2 z-10 flex size-[44px] items-center justify-center transition-opacity hover:opacity-70"
               >
                 <CloseSVG aria-hidden="true" className="size-5 stroke-[var(--foreground)] stroke-2" />
               </button>
@@ -156,17 +158,20 @@ export default function Footer() {
                   </span>
                 )}
                 <HoneypotField {...register('website')} />
-                <div className="relative flex h-11 flex-1 justify-center p-2">
+                <div className="relative flex h-11 flex-1 items-center justify-center p-2">
                   <div
                     className={cn(
                       'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
                       errors.EMAIL && 'border-red-600 opacity-100',
                     )}
                   />
+                  <label htmlFor={emailId} className="mr-2 shrink-0 text-xs/5 font-semibold opacity-70">
+                    Email
+                  </label>
                   <input
                     className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-[#747374]"
+                    id={emailId}
                     placeholder="Please enter email"
-                    aria-label="Email"
                     type="email"
                     inputMode="email"
                     autoComplete="email"
