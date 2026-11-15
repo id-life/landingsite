@@ -1,12 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
+import { sentryBaseOptions } from '@/lib/sentry-options';
 
 Sentry.init({
-  dsn: 'https://da52a0eda21c3287f29a63f9ae3f04af@o4509309166616576.ingest.us.sentry.io/4509309184180224',
+  ...sentryBaseOptions,
   tracesSampleRate: 0.2,
-  debug: false,
-  // Errors are reported from Vercel production and preview builds only, tagged by environment;
-  // local and self-hosted UAT builds stay out of the production Sentry project.
-  environment: process.env.NEXT_PUBLIC_DEPLOY_ENV,
-  enabled:
-    process.env.NODE_ENV !== 'development' && ['production', 'preview'].includes(process.env.NEXT_PUBLIC_DEPLOY_ENV ?? ''),
 });

@@ -86,7 +86,7 @@ export type InsightItem = {
 
 // Hook to get formatted insights data for NewsAndTalksSection
 export function useInsightsWithGeoData() {
-  const { data, isLoading, error } = useFetchInsightsWithGeo();
+  const { data, isLoading, error, isError, refetch } = useFetchInsightsWithGeo();
 
   const insightItems = useMemo(() => {
     if (!data) return [];
@@ -125,5 +125,7 @@ export function useInsightsWithGeoData() {
     items: insightItems,
     isLoading,
     error,
+    isError,
+    refetch,
   };
 }

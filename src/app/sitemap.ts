@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { fetchNewsList, fetchPodcastList } from '@/apis';
 import { absoluteUrl } from '@/constants/site';
+import { reportError } from '@/lib/report';
 
 // Static pages carry no `lastModified`: a build-time `new Date()` would claim every page
 // changed on every deploy, which teaches Google to ignore the sitemap's dates entirely.
@@ -47,7 +48,7 @@ async function getNewsEntries(): Promise<MetadataRoute.Sitemap> {
     }
     return [];
   } catch (error) {
-    console.warn('Sitemap: Failed to fetch news entries:', error instanceof Error ? error.message : 'Unknown error');
+    reportError(error, { area: 'sitemap', source: 'news' });
     return [];
   }
 }
@@ -74,7 +75,7 @@ async function getPodcastEntries(): Promise<MetadataRoute.Sitemap> {
         : [],
     );
   } catch (error) {
-    console.warn('Sitemap: Failed to fetch podcast entries:', error instanceof Error ? error.message : 'Unknown error');
+    reportError(error, { area: 'sitemap', source: 'podcast' });
     return [];
   }
 }

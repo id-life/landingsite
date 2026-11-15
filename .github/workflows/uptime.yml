@@ -1,0 +1,41 @@
+# ENG-08: uptime of /, /news, one article, /podcast and the content API, every 10 minutes (free on a public
+# repository). A failure opens one issue labelled "uptime" (or comments on the open one); a recovery closes it.
+name: uptime
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - id: run
+        run: node scripts/uptime-check.mjs | tee uptime.log
+        continue-on-error: true
+      - name: Open or update the uptime issue
+        if: steps.run.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="$(printf 'Uptime check failed at %s\n\n```\n%s\n```\n%s' "$(date -u +%FT%TZ)" "$(cat uptime.log)" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")"
+          open=$(gh issue list --label uptime --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then gh issue comment "$open" --body "$body"; else gh label create uptime --color B60205 --force >/dev/null; gh issue create --title "Site down: uptime check failing" --label uptime --body "$body"; fi
+          exit 1
+      - name: Close the uptime issue on recovery
+        if: steps.run.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --label uptime --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then gh issue close "$open" --comment "Recovered at $(date -u +%FT%TZ)."; fi

@@ -122,7 +122,7 @@ export default function Insights() {
   }, [currentPage, setEnableUpJudge, setEnableDownJudge]);
 
   // Use the new API for news & talks
-  const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
+  const { items: insightItems, isLoading: isInsightsLoading, isError: isInsightsError, refetch } = useInsightsWithGeoData();
 
   return (
     <div id={PAGE_ID} className="page-container insights h-screen">
@@ -130,7 +130,12 @@ export default function Insights() {
         <div className="insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]">
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
           <div className="-mt-10">
-            <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} />
+            <NewsAndTalksSection
+              items={insightItems}
+              isLoading={isInsightsLoading}
+              isError={isInsightsError}
+              onRetry={() => void refetch()}
+            />
           </div>
           {/* Bottom sections */}
           <div className="grid shrink-0 grid-cols-2 gap-12">

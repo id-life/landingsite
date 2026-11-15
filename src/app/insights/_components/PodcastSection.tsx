@@ -12,6 +12,7 @@ import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDot
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
+import SectionLoadError from '@/components/common/SectionLoadError';
 
 export type PodcastItem = {
   id: number;
@@ -45,7 +46,12 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible); // 播客卡片106 + 间距20 + 30
 
   // 只获取 podcast_id 分类的播客
-  const { data: podcastIDData, isLoading } = useQuery({
+  const {
+    data: podcastIDData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ['podcast_list', 'podcast_id'],
     queryFn: () => fetchPodcastList('podcast_id'),
     select: (res) => (res.code === 200 ? res.data : []),
@@ -98,6 +104,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   };
 
   const renderContent = () => {
+    if (isError) return <SectionLoadError onRetry={() => void refetch()} />;
     if (isLoading) {
       const skeletonCount = compact ? 2 : isMobile ? 2 : 3;
       return (

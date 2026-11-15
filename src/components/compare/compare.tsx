@@ -6,6 +6,7 @@ import { cn } from '@/utils';
 import { IconDotsVertical } from '@tabler/icons-react';
 import gsap from 'gsap';
 import Image from 'next/image';
+import { reportMediaError } from '@/lib/report';
 
 interface CompareProps {
   firstImage?: string;
@@ -132,12 +133,12 @@ export const Compare = ({
                   }, 100);
                 })
                 .catch((error) => {
-                  console.error('视频播放失败:', error);
+                  reportMediaError(error, { area: 'media', component: 'compare' });
                   setIsLoading(false);
                 });
             });
           } catch (error) {
-            console.error('视频播放失败:', error);
+            reportMediaError(error, { area: 'media', component: 'compare' });
             setIsLoading(false);
           }
         }

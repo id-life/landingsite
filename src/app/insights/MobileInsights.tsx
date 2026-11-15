@@ -18,7 +18,7 @@ function MobileInsights() {
   const isVisible = currentPage?.id === PAGE_ID;
   const { enterAnimate, leaveAnimate } = useMobileInsightsAnim();
   // Use the new API for news & talks
-  const { items: insightItems, isLoading: isInsightsLoading } = useInsightsWithGeoData();
+  const { items: insightItems, isLoading: isInsightsLoading, isError: isInsightsError, refetch } = useInsightsWithGeoData();
 
   // Ensure fixed UI elements are visible when page becomes visible
   useEffect(() => {
@@ -54,7 +54,14 @@ function MobileInsights() {
       <div className="mobile-insights-content flex flex-1 flex-col overflow-y-auto px-5 pb-4">
         <div className="my-auto flex flex-col gap-6">
           {/* News & Talks Section */}
-          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile isVisible={isVisible} />
+          <NewsAndTalksSection
+            items={insightItems}
+            isLoading={isInsightsLoading}
+            isError={isInsightsError}
+            onRetry={() => void refetch()}
+            isMobile
+            isVisible={isVisible}
+          />
 
           {/* Podcast Section (compact mode - 2 items) */}
           <PodcastSection isMobile compact isVisible={isVisible} />

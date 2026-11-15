@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useSetAtom } from 'jotai';
 import { useCallback } from 'react';
+import { reportError } from '@/lib/report';
 
 // 背景点阵过渡配置
 const BG_TRANSITION = {
@@ -125,7 +126,7 @@ export function useHomeAnimations() {
       applyThemeAnimation(timeline, config);
       return timeline;
     } catch (error) {
-      console.error(`Failed to create animation for page ${config.id}:`, error);
+      reportError(error, { area: 'animation', step: 'create_section_timeline', section: config.id });
       return null;
     }
   });
@@ -141,7 +142,7 @@ export function useHomeAnimations() {
         createConfigBasedAnimation(config, index);
       });
     } catch (error) {
-      console.error('Failed to initialize animations:', error);
+      reportError(error, { area: 'animation', step: 'initialize' });
     }
   });
 

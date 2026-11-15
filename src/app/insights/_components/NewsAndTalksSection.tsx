@@ -16,10 +16,16 @@ import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
 import { safeHref } from '@/utils/safe-href';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import { track } from '@/lib/analytics/track';
+import SectionLoadError from '@/components/common/SectionLoadError';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
   isLoading?: boolean;
+  /** The list failed to load (ENG-08): show an error with a retry, not an empty list. */
+  isError?: boolean;
+  onRetry?: () => void;
   isMobile?: boolean;
   isVisible?: boolean;
 };
@@ -35,6 +41,15 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   const href = isYouTube ? undefined : safeHref(item.url);
   const external = Boolean(href && !isInternalHref(href));
   const openVideo = isYouTube ? () => setIsModalOpen(true) : undefined;
+  // DATA-03: external press is outbound_click (press), our own articles news_item_click; videos send video_open.
+  const onNavigate = () => {
+    if (!href) return;
+    if (external) {
+      trackOutbound(href, 'outbound_click', { link_type: 'press', item_id: String(item.id), placement: 'insights_news' });
+    } else {
+      track('news_item_click', { item_id: String(item.id), placement: 'insights_news' });
+    }
+  };
 
   // Use imageUrl if available, otherwise fallback for YouTube videos
   const thumbnailPic = item.imageUrl ?? '';
@@ -47,6 +62,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           href={href}
           external={external}
           onActivate={openVideo}
+          onNavigate={onNavigate}
           className="group flex cursor-pointer flex-col overflow-hidden"
         >
           {/* Image */}
@@ -63,7 +79,13 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
         </CardShell>
         {isYouTube && (
-          <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
+          <VideoModal
+            placement="insights_news"
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            videoId={item.videoId!}
+            title={item.title}
+          />
         )}
       </>
     );
@@ -76,6 +98,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         href={href}
         external={external}
         onActivate={openVideo}
+        onNavigate={onNavigate}
         className="group flex cursor-pointer flex-col overflow-hidden"
       >
         {/* Image */}
@@ -93,7 +116,13 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         </div>
       </CardShell>
       {isYouTube && (
-        <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} videoId={item.videoId!} title={item.title} />
+        <VideoModal
+          placement="insights_news"
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          videoId={item.videoId!}
+          title={item.title}
+        />
       )}
     </>
   );
@@ -124,6 +153,8 @@ function calculateMobileItemCount(containerHeight: number): number {
 export default function NewsAndTalksSection({
   items = [],
   isLoading,
+  isError = false,
+  onRetry,
   isMobile = false,
   isVisible = true,
 }: NewsAndTalksSectionProps) {
@@ -191,6 +222,7 @@ export default function NewsAndTalksSection({
   };
 
   const renderContent = () => {
+    if (isError && onRetry) return <SectionLoadError onRetry={onRetry} />;
     if (isLoading) {
       if (isMobile) {
         // Show skeleton based on calculated item count (default 8 initially)

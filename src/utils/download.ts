@@ -1,3 +1,4 @@
+import { reportError } from '@/lib/report';
 export async function downloadFile(url: string, fileName: string) {
   try {
     const response = await fetch(url, { method: 'GET', mode: 'cors' });
@@ -17,6 +18,6 @@ export async function downloadFile(url: string, fileName: string) {
     window.URL.revokeObjectURL(blobUrl);
     document.body.removeChild(a);
   } catch (error) {
-    console.error('Download failed:', error);
+    reportError(error, { area: 'download', file: fileName });
   }
 }

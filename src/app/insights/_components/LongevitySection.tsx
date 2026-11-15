@@ -15,6 +15,8 @@ import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { safeHref } from '@/utils/safe-href';
+import { trackOutbound } from '@/lib/analytics/outbound';
+import SectionLoadError from '@/components/common/SectionLoadError';
 
 type LongevityItem = {
   id: number;
@@ -36,14 +38,25 @@ const REDBOOK_LINK = 'https://xhslink.com/m/8j90ABQa9jS';
 const ZHIHU_LINK = 'https://www.zhihu.com/column/c_2021919119344150153';
 
 function LongevityCard({ item }: { item: LongevityItem }) {
-  const handleClick = () => {
-    const href = safeHref(item.link);
-    if (!href) return;
-    window.open(href, '_blank', 'noopener,noreferrer');
-  };
+  // A real link when the item has one (DATA-03: it was a div calling window.open), counted as outbound_click.
+  const href = safeHref(item.link);
+  const Root = href ? 'a' : 'div';
+  const linkProps = href
+    ? {
+        href,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        onClick: () =>
+          trackOutbound(href, 'outbound_click', {
+            link_type: 'other',
+            item_id: String(item.id),
+            placement: 'insights_longevity',
+          }),
+      }
+    : {};
 
   return (
-    <div onClick={handleClick} className={cn('podcast-card-clip relative bg-white p-0.5', item.link && 'cursor-pointer')}>
+    <Root {...linkProps} className={cn('podcast-card-clip relative block bg-white p-0.5', href && 'cursor-pointer')}>
       <div className="podcast-card-clip-inner bg-[#F6F8FB] p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
           <h3 className="line-clamp-1 flex-1 font-poppins text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
@@ -57,7 +70,7 @@ function LongevityCard({ item }: { item: LongevityItem }) {
         </div>
         <p className="line-clamp-1 text-base font-medium mobile:text-[10px]/4">{item.description}</p>
       </div>
-    </div>
+    </Root>
   );
 }
 
@@ -73,7 +86,12 @@ export default function LongevitySection({ isMobile = false, compact = false, is
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
   const pageSize = Math.max(1, itemsPerPage);
 
-  const { data: longevityWeeklyData = [], isLoading } = useQuery({
+  const {
+    data: longevityWeeklyData = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ['longevity_weekly_list'],
     queryFn: () => fetchLongevityWeeklyList(),
     select: (res) => (res.code === 200 ? res.data : []),
@@ -143,6 +161,8 @@ export default function LongevitySection({ isMobile = false, compact = false, is
         </div>
       );
     }
+
+    if (isError) return <SectionLoadError onRetry={() => void refetch()} />;
 
     if (!longevityData.length) {
       return (
