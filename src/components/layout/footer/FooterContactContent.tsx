@@ -80,7 +80,8 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
   );
 
   return (
-    <div className="text-black">
+    // A named region (the phone panel is portalled outside <main>): axe region rule. Not "Connect": the section already has that name.
+    <section aria-label="Contact and subscribe" className="text-black">
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
         <div className="flex flex-col items-end gap-1">
@@ -186,6 +187,6 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
         <InfoSVG className="size-4 shrink-0" />
         {SUBSCRIBE_PROMISE.priorityAccess}
       </div>
-    </div>
+    </section>
   );
 }

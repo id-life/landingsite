@@ -79,7 +79,11 @@ export default function FooterContact() {
     <>
       <FloatingPortal>
         <div className="page-footer-contact fixed -bottom-80 z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
-          <div className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4">
+          {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
+          <section
+            aria-label="Contact and subscribe"
+            className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4"
+          >
             <div className="mb-7.5 font-oxanium font-bold uppercase">
               <p className="opacity-50">Media</p>
               <div className="mt-7">
@@ -198,7 +202,7 @@ export default function FooterContact() {
                 {SUBSCRIBE_PROMISE.priorityAccess}
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </FloatingPortal>
     </>
