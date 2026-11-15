@@ -38,10 +38,6 @@ function Engagement() {
     tl.set(['.world-map-region', '.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor'], {
       opacity: 0,
     });
-    tl.set('.world-map-dot-content', {
-      opacity: 0,
-      height: 0,
-    });
 
     // 使用进度位置控制动画时机
     const factor = 10; // 动画因子

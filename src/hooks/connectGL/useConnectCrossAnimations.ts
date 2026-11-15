@@ -83,22 +83,18 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
 
     // 先停止footer相关的所有动画
     gsap.killTweensOf('.page-footer-contact');
-    gsap.killTweensOf('.sound-button');
     gsap.killTweensOf('.scroll-title');
 
     gsap.to('.page-footer-contact', { bottom: isMobile ? '5rem' : '0rem', duration: DURATION.moderate, ease: EASE.out });
-    gsap.to('.sound-button', { bottom: isMobile ? '25.5rem' : '22.5rem', duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 0, duration: DURATION.moderate });
   };
 
   const playFooterLeaveAnim = () => {
     // 先停止footer相关的所有动画
     gsap.killTweensOf('.page-footer-contact');
-    gsap.killTweensOf('.sound-button');
     gsap.killTweensOf('.scroll-title');
 
     gsap.to('.page-footer-contact', { bottom: '-20rem', duration: DURATION.moderate, ease: EASE.out });
-    gsap.to('.sound-button', { bottom: '2.5rem', duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 1, duration: DURATION.moderate });
 
     // 中文标题一个一个消失，然后英文标题一个一个出现

@@ -92,6 +92,11 @@ export function usePortfolioItemAnimation(
 
       wrapper.addEventListener('mouseenter', handleWrapperMouseEnter);
       wrapper.addEventListener('mouseleave', handleWrapperMouseLeave);
+      // revertOnUpdate reverts the tweens, not DOM listeners: each one is removed here (MOT-14).
+      const removers: (() => void)[] = [
+        () => wrapper.removeEventListener('mouseenter', handleWrapperMouseEnter),
+        () => wrapper.removeEventListener('mouseleave', handleWrapperMouseLeave),
+      ];
 
       // 涓烘瘡涓」鐩垱寤哄姩鐢诲拰浜嬩欢鐩戝惉
       const itemAnimations: gsap.core.Timeline[] = [];
@@ -117,7 +122,12 @@ export function usePortfolioItemAnimation(
 
         div.addEventListener('mouseenter', handleMouseEnter);
         div.addEventListener('mouseleave', handleMouseLeave);
+        removers.push(() => {
+          div.removeEventListener('mouseenter', handleMouseEnter);
+          div.removeEventListener('mouseleave', handleMouseLeave);
+        });
       });
+      return () => removers.forEach((remove) => remove());
     },
     {
       scope: wrapperRef,

@@ -24,7 +24,9 @@ export default function PCNav() {
   const { isSubscribeShow, onSubscribeClick, handleScroll } = useSubscribeAction();
 
   useEffect(() => {
-    window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
+    const toTop = () => window.scrollTo({ top: 0 });
+    window.addEventListener('beforeunload', toTop);
+    return () => window.removeEventListener('beforeunload', toTop);
   }, []);
 
   useEvent('scroll', handleScroll);

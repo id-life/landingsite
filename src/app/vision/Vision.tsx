@@ -7,22 +7,22 @@ const PAGE_ID = 'vision_page';
 
 /** Mission. Section changes are the section controller's (src/motion/sectionController.ts); it rests at the top. */
 export default function Vision() {
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const visionBottomRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      ScrollTrigger.create({
-        trigger: `#${PAGE_ID}`,
-        start: 'top bottom',
-        endTrigger: `#${PAGE_IDS.PORTFOLIO}`,
-        end: 'top top',
-        id: 'vision-trigger',
-      });
-    },
-
-    { scope: wrapperRef },
-  );
+  // Elements, not selectors: inside a scope, '#vision_page' (the scope itself) and '#portfolio_page' (outside it)
+  // matched nothing, and GSAP warned on every refresh (MOT-14).
+  useGSAP(() => {
+    const portfolio = document.getElementById(PAGE_IDS.PORTFOLIO);
+    if (!wrapperRef.current || !portfolio) return;
+    ScrollTrigger.create({
+      trigger: wrapperRef.current,
+      start: 'top bottom',
+      endTrigger: portfolio,
+      end: 'top top',
+      id: 'vision-trigger',
+    });
+  });
 
   return (
     <div ref={wrapperRef} id={PAGE_ID} className="page-container">

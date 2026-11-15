@@ -88,8 +88,8 @@ export default function MobileVisionGL() {
             duration: DURATION.camera,
             ease: EASE.in,
           })
-          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: DURATION.camera, ease: EASE.in }, '<')
-          .to(modelRef.current, { opacity: 0, duration: DURATION.moderate }, '<');
+          // (A Group has no opacity: the old opacity tween here only made GSAP warn, MOT-14.)
+          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: DURATION.camera, ease: EASE.in }, '<');
       }
     }
 

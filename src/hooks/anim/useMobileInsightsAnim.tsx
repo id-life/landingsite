@@ -12,17 +12,13 @@ export function useMobileInsightsAnim() {
     ensureMobileUIVisible();
 
     const tl = gsap.timeline({
-      delay: 0.5, // 等待上一页退出动画
+      delay: DURATION.moderate, // 等待上一页退出动画 (the previous page's exit)
     });
 
     // 设置初始状态
     tl.set('.mobile-insights-content', {
       opacity: 0,
       y: 30,
-    });
-
-    tl.set('.mobile-insights-nav', {
-      opacity: 0,
     });
 
     // 内容淡入上移
@@ -33,22 +29,11 @@ export function useMobileInsightsAnim() {
       ease: EASE.out,
     });
 
-    // 底部导航淡入
-    tl.to(
-      '.mobile-insights-nav',
-      {
-        opacity: 1,
-        duration: DURATION.base,
-        ease: EASE.out,
-      },
-      '-=0.2',
-    );
-
     return tl;
   });
 
   const leaveAnimate = useCallback(() => {
-    gsap.set(['.mobile-insights-content', '.mobile-insights-nav'], {
+    gsap.set('.mobile-insights-content', {
       opacity: 0,
     });
   }, []);

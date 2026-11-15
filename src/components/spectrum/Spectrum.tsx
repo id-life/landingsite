@@ -59,22 +59,13 @@ function Spectrum() {
         },
       },
     });
-    // tl.add(() => {
-    //   setEnableUpJudge(true);
-    // });
     // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
     tl.from('.spectrum-title', { delay: beats(1), y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
     tl.from('.spectrum-fund', { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 });
 
-    // tl.to(() => {}, { duration: 5 });
-    tl.to('.fixed-top', { opacity: 0 });
-    tl.to('.fixed-bottom', { opacity: 0 }, '<');
     // Every arrival lands here (MOT-01), then a short hold inside the pin.
     tl.addLabel('rest');
     tl.to({}, { duration: beats(0.25) });
-    // tl.add(() => {
-    //   setEnableDownJudge(true);
-    // });
   }, []);
 
   return (
