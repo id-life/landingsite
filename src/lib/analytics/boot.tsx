@@ -178,10 +178,15 @@ export default function AnalyticsBoot() {
   }, [layout]);
 
   useEffect(() => {
+    // Google's documented kill switch: with window['ga-disable-<id>'] set, a loaded tag sends nothing at all, not even
+    // the cookieless pings Consent Mode sends after a denial (an opt-out must stop GA4 on this page and the next).
+    const gaDisable = `ga-disable-${GA_ID}`;
     if (consent.analytics === 'granted') {
+      (window as unknown as Record<string, boolean>)[gaDisable] = false;
       gtag('consent', 'update', { analytics_storage: 'granted' });
       void loadTag(layoutRef.current);
     } else if (consent.analytics === 'denied') {
+      (window as unknown as Record<string, boolean>)[gaDisable] = true;
       setTrackMode('off');
       if (consent.reason !== 'automation' && consent.reason !== 'disabled') {
         gtag('consent', 'update', { analytics_storage: 'denied' });
