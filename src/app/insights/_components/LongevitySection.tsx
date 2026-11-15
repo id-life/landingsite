@@ -11,7 +11,6 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { cn } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -70,7 +69,6 @@ export default function LongevitySection({ isMobile = false, compact = false, is
   const compactSwiperRef = useRef<SwiperType>();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
-  const router = useRouter();
   const pageSize = Math.max(1, itemsPerPage);
 
   const { data: longevityWeeklyData = [], isLoading } = useQuery({
@@ -121,13 +119,9 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     setCurrentPage(index);
   };
 
+  // Phones open the WeChat page in the same tab (Back restores Insights from sessionStorage), desktops in a new tab.
   const handleViewAllClick = () => {
-    if (isMobile) {
-      sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-      router.push(WECHAT_LINK);
-    } else {
-      window.open(WECHAT_LINK, '_blank');
-    }
+    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
   };
 
   const renderContent = () => {
@@ -232,7 +226,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
 
   return (
     <div ref={containerRef} className={cn('relative flex flex-col', isMobile && !compact && 'h-full')}>
-      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col justify-center overflow-hidden')}>
+      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
@@ -265,7 +259,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
               </a>
             </div>
           </div>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href={WECHAT_LINK} onClick={handleViewAllClick} isMobile={isMobile} newTab={!isMobile} />
         </div>
 
         <div className={cn('relative mt-3', !isMobile && 'pr-0')}>

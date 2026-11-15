@@ -13,7 +13,6 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useWindowResize } from '@/hooks/useWindowResize';
-import { useRouter } from 'next/navigation';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -133,7 +132,6 @@ export default function NewsAndTalksSection({
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);
   const totalMobilePages = Math.ceil(items.length / mobileItemCount);
-  const router = useRouter();
 
   const containerResizeCallback = useCallback(
     (entry: ResizeObserverEntry) => {
@@ -180,11 +178,10 @@ export default function NewsAndTalksSection({
     mobileSwiperRef.current?.slideNext();
   };
 
+  // Same tab on every device; Back returns to Insights (mobile restores it from sessionStorage,
+  // desktop from the /insights URL). The link itself navigates.
   const handleViewAllClick = () => {
-    // Same tab on every device; Back returns to Insights (mobile restores it from sessionStorage,
-    // desktop from the /insights URL).
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push('/news');
   };
 
   const renderContent = () => {
@@ -289,7 +286,7 @@ export default function NewsAndTalksSection({
           <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
             NEWS & TALKS
           </h2>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content with arrow navigation */}

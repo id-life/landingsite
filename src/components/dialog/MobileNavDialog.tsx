@@ -11,6 +11,13 @@ import Dialog from '.';
 import { NAV_LIST, NavItem } from '../nav/nav';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
+import { STORAGE_KEY } from '@/constants/storage';
+import { useRouter } from 'next/navigation';
+
+const CONTENT_LINKS = [
+  { href: '/news', title: 'news 新闻' },
+  { href: '/podcast', title: 'podcast 播客' },
+];
 
 function MobileNavDialog() {
   const [open, setOpen] = useAtom(mobileNavOpenAtom);
@@ -18,6 +25,7 @@ function MobileNavDialog() {
   const subscribePopup = useSetAtom(subscribePopupAtom);
   const [currentPage, setCurrentPage] = useAtom(mobileCurrentPageAtom);
   const isMobile = useIsMobile();
+  const router = useRouter();
   const startAnim = useCallback(
     (isOpen: boolean) => {
       if (!isMobile) return;
@@ -110,6 +118,24 @@ function MobileNavDialog() {
                     <span className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />
                   )}
                 </span>
+              </a>
+            ))}
+            {/* The press list and the podcast, reachable from the phone (they were not in the menu). Same tab;
+                Back returns to the section the visitor left. */}
+            <div className="mx-auto my-2 h-px w-12 bg-white/30" />
+            {CONTENT_LINKS.map((link) => (
+              <a
+                href={link.href}
+                key={link.href}
+                onClick={(event) => {
+                  event.preventDefault();
+                  sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, currentPage.id);
+                  setOpen(false);
+                  router.push(link.href);
+                }}
+                className="flex-center mobile-nav-item relative py-6 text-white opacity-0"
+              >
+                <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">{link.title}</span>
               </a>
             ))}
           </nav>

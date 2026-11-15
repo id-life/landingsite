@@ -12,7 +12,6 @@ import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDot
 import ViewAllButton from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
-import { useRouter } from 'next/navigation';
 
 export type PodcastItem = {
   id: number;
@@ -71,7 +70,6 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
 
   const totalPages = isMobile ? Math.ceil(podcastData.length / itemsPerPage) : 1;
   const totalCompactPages = Math.ceil(podcastData.length / COMPACT_ITEMS_PER_PAGE);
-  const router = useRouter();
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
@@ -96,7 +94,6 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
 
   const handleViewAllClick = () => {
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push('/podcast');
   };
 
   const renderContent = () => {
@@ -199,7 +196,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   return (
     <div ref={containerRef} className={cn('relative flex flex-col', isMobile && !compact && 'h-full')}>
       {/* Mobile: wrap header + content for vertical centering (not in compact mode) */}
-      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col justify-center overflow-hidden')}>
+      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -234,7 +231,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
               </a>
             </div>
           </div>
-          <ViewAllButton onClick={handleViewAllClick} isMobile={isMobile} />
+          <ViewAllButton href="/podcast" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content */}

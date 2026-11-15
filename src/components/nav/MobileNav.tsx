@@ -30,7 +30,9 @@ export default function MobileNav() {
     <div
       id="mobile-nav"
       className={cn(
-        'fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
+        // The bar itself lets taps through (its transparent area swallowed taps meant for the page below,
+        // such as the Insights VIEW ALL); only its controls take them.
+        'pointer-events-none fixed left-0 top-0 z-[60] flex w-full items-center gap-15 p-10 text-foreground opacity-0 mobile:gap-0 mobile:p-5',
       )}
     >
       <Logo />
@@ -42,7 +44,7 @@ export default function MobileNav() {
           aria-expanded={isSubscribeShow}
           onClick={onSubscribeClick}
           className={cn(
-            'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
+            'group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
             { 'stroke-red-600 text-red-600': isSubscribeShow },
           )}
         >
@@ -61,7 +63,7 @@ export default function MobileNav() {
             aria-controls="mobile-nav-menu"
             onClick={() => setMenuOpen((pre) => !pre)}
             // 40 px icon; the ::before pseudo-element extends the touch target to 48 px.
-            className="relative flex before:absolute before:-inset-1 before:content-['']"
+            className="pointer-events-auto relative flex before:absolute before:-inset-1 before:content-['']"
           >
             {menuOpen ? <MenuCloseSVG className="h-10" /> : <MenuOpenSVG className="h-10" />}
           </button>
