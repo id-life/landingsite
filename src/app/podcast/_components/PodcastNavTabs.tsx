@@ -17,7 +17,9 @@ export default function PodcastNavTabs() {
     // The podcast's in-page sub-navigation: the two shows (NAV-04 moved them out of the old podcast header, where the
     // desktop tabs sat beside the logo). Same look as before on both layouts.
     <nav aria-label="Podcast shows">
-      <div className="flex gap-8 pb-10 text-sm font-bold mobile:hidden">
+      {/* RWD-09: the reading size (text-read-sm, 14.3 px at 1440, 18.6 px at 2560) instead of a fixed 14 px, so the show
+          tabs grow with the reading column on large screens; the line height stays 20 px. */}
+      <div className="flex gap-8 pb-10 text-read-sm font-bold leading-5 mobile:hidden">
         {PODCAST_NAV_LIST.map((item) => (
           <Link
             href={item.link}

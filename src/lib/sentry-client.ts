@@ -1,8 +1,11 @@
 import { sentryBaseOptions } from '@/lib/sentry-options';
+import { getConsentState, isAnalyticsRefused, subscribeConsent } from '@/lib/analytics/consent';
+import { mayEndTrace, rollTraceSession } from '@/lib/sentry-sampling';
 
 /**
- * The browser's Sentry SDK, loaded after the page is idle instead of in every route's first-load bundle (PERF-10:
- * about 50 kB gzip of the 284 kB /news shipped). Until it has loaded, captures wait in a queue, and uncaught errors
+ * The browser's Sentry SDK, never in a route's first-load bundle (PERF-10: about 50 kB gzip of the 284 kB /news
+ * shipped), and downloaded only when needed: on the first error, or for a trace visit with consent (startSentry). Until
+ * it has loaded, captures wait in a queue, and uncaught errors
  * and rejections are queued by two listeners of our own; the first error loads the SDK at once. Once it has
  * initialised, its own global handlers take over and ours are removed. Builds where Sentry is disabled (local and
  * self-hosted UAT, see ./sentry-options.ts) never download it: captures are dropped there, as the SDK would drop them.
@@ -62,18 +65,40 @@ export function captureException(error: unknown) {
   withSentry((s) => s.captureException(error));
 }
 
+let traceVisit = false;
+/** Whether this visit is one of the few that may send performance traces (see ./sentry-sampling.ts). */
+export const isTraceVisit = () => traceVisit;
+
+const consented = () => mayEndTrace(getConsentState(), isAnalyticsRefused());
+
+/** A trace visit loads the SDK once analytics consent is granted (now, or when the visitor accepts later). */
+function loadWhenConsented() {
+  if (consented()) {
+    void loadSentry();
+    return;
+  }
+  const stop = subscribeConsent(() => {
+    if (!consented()) return;
+    stop();
+    void loadSentry();
+  });
+}
+
 /**
- * Called once from instrumentation-client.ts: queue uncaught errors from the start, and load the SDK when the browser
- * is idle after the load event (at most 5 s later), so it never competes with the first screen.
+ * Called once from instrumentation-client.ts. Uncaught errors are queued from the start, and the first error loads the
+ * SDK. Otherwise only a trace visit (5 %) with analytics consent loads it, when the browser is idle after the load event
+ * (at most 5 s later), so it never competes with the first screen; every other visit never downloads it.
  */
 export function startSentry() {
   if (!SENTRY_ENABLED || typeof window === 'undefined') return;
   window.addEventListener('error', onError);
   window.addEventListener('unhandledrejection', onRejection);
+  traceVisit = rollTraceSession();
+  if (!traceVisit) return;
   const idle = () =>
     'requestIdleCallback' in window
-      ? window.requestIdleCallback(() => void loadSentry(), { timeout: 5000 })
-      : setTimeout(() => void loadSentry(), 1000);
+      ? window.requestIdleCallback(loadWhenConsented, { timeout: 5000 })
+      : setTimeout(loadWhenConsented, 1000);
   if (document.readyState === 'complete') idle();
   else window.addEventListener('load', idle, { once: true });
 }
