@@ -7,6 +7,7 @@ import { COMPANY_DRAFTS } from './companies';
 import { COPY_EDIT_DRAFTS } from './copy-edits';
 import { EPISODE_DRAFTS } from './episodes';
 import { HOME_DRAFTS } from './home';
+import { METADATA_DRAFTS } from './metadata';
 import { SLOGAN_DRAFTS } from './slogans';
 import { SUBSCRIBE_DRAFTS } from './subscribe';
 import { TAGLINE_DRAFTS } from './taglines';
@@ -19,6 +20,7 @@ export const DRAFT_GROUPS: { id: string; title: string; drafts: DraftRecord[] }[
   { id: 'home', title: 'Home statement (CON-05)', drafts: HOME_DRAFTS },
   { id: 'slogans', title: 'Hero slogans (CON-05, CON-20)', drafts: SLOGAN_DRAFTS },
   { id: 'copy', title: 'Copy edits that change wording (CON-20)', drafts: COPY_EDIT_DRAFTS },
+  { id: 'metadata', title: 'Page descriptions (SEO-06)', drafts: METADATA_DRAFTS },
   { id: 'subscribe', title: 'Subscribe promise (CON-20, CON-21)', drafts: SUBSCRIBE_DRAFTS },
   { id: 'taglines', title: 'Portfolio taglines (CON-15)', drafts: TAGLINE_DRAFTS },
   { id: 'thesis', title: 'Thesis page (CON-07)', drafts: THESIS_DRAFTS },

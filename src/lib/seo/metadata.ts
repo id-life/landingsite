@@ -36,6 +36,7 @@ export function brandTitle(topic: string, locale: Locale = localeOf(topic)): str
 // Longest description kept whole, and the shortest cut accepted, per language: 110-160 Latin or 70-80 CJK
 // characters (the plan's bounds; Google shows about 155 Latin characters).
 const LIMITS = { en: { max: 160, min: 110 }, zh: { max: 80, min: 70 } } as const;
+const ZH_FLOOR = 35;
 const SENTENCE_END = /[.!?。！？](?=\s|$)|[。！？]/g;
 const CLAUSE_END = /[,;:，；：、]/g;
 
@@ -60,6 +61,9 @@ export function snippet(text: string, locale: Locale = descriptionLocale(text)):
   if (sentence > 0) return head.slice(0, sentence).trim();
   const clause = lastMatchEnd(head.slice(0, max - 1), CLAUSE_END, min);
   if (clause > 0) return `${head.slice(0, clause - 1).trim()}…`;
+  // Chinese has no spaces to cut at, so an earlier clause end (down to the 35-character floor) beats a cut inside a word.
+  const early = locale === 'zh' ? lastMatchEnd(head.slice(0, max - 1), CLAUSE_END, ZH_FLOOR) : -1;
+  if (early > 0) return `${head.slice(0, early - 1).trim()}…`;
   const space = locale === 'en' ? head.lastIndexOf(' ', max - 1) : -1;
   return `${head.slice(0, space > min ? space : max - 1).trim()}…`;
 }

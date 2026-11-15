@@ -97,7 +97,9 @@ describe('sponsored bodies', () => {
 // CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description, and a description continued with a
 // page's own text quotes that text word for word.
 describe('page descriptions', async () => {
-  const { PAGES, metaDescription } = await import('@/content/pages');
+  const { ARTICLE_OPENINGS, DISEASE_MANAGEMENT_HEADINGS, PAGES, metaDescription } = await import('@/content/pages');
+  const { diseaseManagementStatusItems } = await import('@/constants/disease-management');
+  const flat = (text) => text.replace(/\\([._-])/g, '$1').replace(/\s+/g, ' ');
 
   test("every Pages line of llms.txt is that page's meta description", () => {
     const lines = [...llmsSection('Pages').matchAll(/^- \[([^\]]+)\]\(https:\/\/www\.id\.life([^)]*)\): (.*)$/gm)];
@@ -105,5 +107,19 @@ describe('page descriptions', async () => {
     expect(lines.map((m) => m[2])).toEqual(listed.map((page) => page.path));
     for (const [, , path, line] of lines) expect(line).toBe(metaDescription(PAGES.find((page) => page.path === path)));
     expect(lines.map((m) => m[2])).toContain('/about');
+  });
+
+  test("the article openings are the articles' own first paragraphs", () => {
+    for (const [slug, key] of [
+      ['immortal-dragons-news-and-updates', 'profile'],
+      ['immortal-dragons-milestones-and-portfolio', 'milestones'],
+    ]) {
+      const md = flat(readFileSync(`src/content/articles/${slug}.md`, 'utf8'));
+      expect(md).toContain(flat(ARTICLE_OPENINGS[key]));
+    }
+  });
+
+  test("the Disease Management headings are the page's own", () => {
+    expect(DISEASE_MANAGEMENT_HEADINGS).toEqual(diseaseManagementStatusItems.map((item) => item.title));
   });
 });
