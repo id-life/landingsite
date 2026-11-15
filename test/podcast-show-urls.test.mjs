@@ -11,26 +11,26 @@ const apis = vi.hoisted(() => ({
 vi.mock('@/apis', () => apis);
 vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn(), captureMessage: vi.fn() }));
 
-const { middleware, config } = await import('@/middleware');
+const { proxy, config } = await import('@/proxy');
 const { default: sitemap, revalidate } = await import('@/app/sitemap');
 
 const ok = (data) => Promise.resolve({ code: 200, data });
 
 describe('/podcast?c=lt', () => {
   test('answers 308 to /podcast/long-talk without the c parameter', () => {
-    const res = middleware(new NextRequest('https://www.id.life/podcast?c=lt'));
+    const res = proxy(new NextRequest('https://www.id.life/podcast?c=lt'));
     expect(res.status).toBe(308);
     expect(res.headers.get('location')).toBe('https://www.id.life/podcast/long-talk');
   });
 
   test('keeps any other parameter', () => {
-    const res = middleware(new NextRequest('https://www.id.life/podcast?utm_source=x&c=lt'));
+    const res = proxy(new NextRequest('https://www.id.life/podcast?utm_source=x&c=lt'));
     expect(res.headers.get('location')).toBe('https://www.id.life/podcast/long-talk?utm_source=x');
   });
 
   test('runs only for that URL, so /podcast stays a static page', () => {
     expect(config.matcher).toEqual([{ source: '/podcast', has: [{ type: 'query', key: 'c', value: 'lt' }] }]);
-    expect(middleware(new NextRequest('https://www.id.life/podcast')).headers.get('location')).toBeNull();
+    expect(proxy(new NextRequest('https://www.id.life/podcast')).headers.get('location')).toBeNull();
   });
 });
 

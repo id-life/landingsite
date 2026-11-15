@@ -39,7 +39,7 @@ Each job is its own status check. Run the same commands locally before pushing.
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
-  `/podcast?c=lt` answers 308 from `src/middleware.ts`) and `/podcast/[id]`. Unknown ids return 404.
+  `/podcast?c=lt` answers 308 from `src/proxy.ts`) and `/podcast/[id]`. Unknown ids return 404.
 - Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
   `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
   `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,

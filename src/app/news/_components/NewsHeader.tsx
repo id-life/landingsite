@@ -10,7 +10,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { subscribePopupAtom } from '@/atoms/footer';
 import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // The phone menu (GSAP stagger) loads on its first open, not with the page.
 const NewsNavDialog = dynamic(() => import('./NewsNavDialog'), { ssr: false });
@@ -21,9 +21,8 @@ export default function NewsHeader() {
   const subscribePopup = useSetAtom(subscribePopupAtom);
   const [navWanted, setNavWanted] = useState(false);
 
-  useEffect(() => {
-    if (menuOpen) setNavWanted(true);
-  }, [menuOpen]);
+  // The menu's code loads on its first open; set while rendering, not in an effect.
+  if (menuOpen && !navWanted) setNavWanted(true);
 
   const handleSubscribeClick = () => subscribePopup({ type: 'toggle', placement: 'nav' });
 

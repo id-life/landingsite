@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
 
 // HashRouter and what it pulls in (the navigation hooks, GSAP and its plugins) load only once the visitor is
@@ -19,10 +19,8 @@ const EXPERIENCE_PATHS = new Set(NAV_LIST.map((item) => item.href));
 export default function ExperienceRouter() {
   const pathname = usePathname();
   const [needed, setNeeded] = useState(false);
-
-  useEffect(() => {
-    if (!needed && EXPERIENCE_PATHS.has(pathname)) setNeeded(true);
-  }, [needed, pathname]);
+  // Updated while rendering (React's pattern for state derived from a changing value), not in an effect.
+  if (!needed && EXPERIENCE_PATHS.has(pathname)) setNeeded(true);
 
   return needed ? <HashRouter /> : null;
 }

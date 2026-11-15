@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { clsx } from 'clsx';
 import Link from 'next/link';
@@ -26,9 +26,8 @@ export default function PodcastHeader() {
   const subscribePopup = useSetAtom(subscribePopupAtom);
   const [navWanted, setNavWanted] = useState(false);
 
-  useEffect(() => {
-    if (menuOpen) setNavWanted(true);
-  }, [menuOpen]);
+  // The menu's code loads on its first open; set while rendering, not in an effect.
+  if (menuOpen && !navWanted) setNavWanted(true);
 
   // Each show has its own path; an episode page highlights no tab.
   const search = useMemo(() => PODCAST_NAV_LIST.find((item) => item.link === pathname)?.id ?? null, [pathname]);

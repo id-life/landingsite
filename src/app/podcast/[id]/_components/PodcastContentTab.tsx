@@ -31,6 +31,8 @@ export default function PodcastContentTab({ id, episode, children }: PodcastCont
   const { trackEvent } = useGA();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [commentsOpened, setCommentsOpened] = useState(false);
+  // The comments load the first time their tab is shown; set while rendering, not in an effect.
+  if (activeTab === 1 && !commentsOpened) setCommentsOpened(true);
 
   const handleTranscriptClick = (event: MouseEvent<HTMLDivElement>) => {
     const marker = (event.target as Element).closest?.('[data-custom-type]');
@@ -43,7 +45,6 @@ export default function PodcastContentTab({ id, episode, children }: PodcastCont
   };
 
   useEffect(() => {
-    if (activeTab === 1) setCommentsOpened(true);
     const label = activeTab === 0 ? GA_EVENT_LABELS.SECTION_VIEW.DETAIL : GA_EVENT_LABELS.SECTION_VIEW.COMMENT;
     trackEvent({ name: GA_EVENT_NAMES.SECTION_VIEW, label, podcast_episode: episode });
   }, [activeTab, episode, trackEvent]);
