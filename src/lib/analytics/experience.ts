@@ -4,6 +4,7 @@ import type { EXPERIENCE_ERROR_KINDS } from './events';
 import { advanceStage } from './stage';
 import { track } from './track';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { detectGpuTier, gpuReportTags } from '@/motion/gpuTier';
 
 /**
  * Health of the 3D experience (DATA-06): one experience_ready per document with numeric timings, and one
@@ -34,6 +35,7 @@ export function reportExperienceReady({ failOpen, mountedAt }: { failOpen: boole
       layout: window.matchMedia(PHONE_TREE_QUERY).matches ? 'mobile' : 'desktop',
       cache_state: heroCacheState(),
       fail_open: failOpen ? 1 : 0,
+      gpu_tier: probeWebGL() ? detectGpuTier() : 'none',
     },
     { once: 'experience_ready' },
   );
@@ -53,7 +55,7 @@ export function reportExperienceError(kind: Kind, detail?: string, error?: unkno
   track('experience_error', detail ? { kind, detail } : { kind }, { once: `experience_error:${kind}` });
   if (WEBGL_KINDS.includes(kind) && !sentToSentry.has(kind)) {
     sentToSentry.add(kind);
-    reportError(error ?? new Error(`WebGL: ${kind}`), { area: 'webgl', kind, canvas: detail });
+    reportError(error ?? new Error(`WebGL: ${kind}`), { area: 'webgl', kind, canvas: detail, ...gpuReportTags() });
   }
 }
 
@@ -69,6 +71,13 @@ let probed: boolean | null = null;
 /** Whether this browser can create a WebGL context; a failure is reported once (webgl_unavailable). */
 export function probeWebGL() {
   if (probed !== null || typeof document === 'undefined') return probed ?? true;
+  // HeroPreloads probed while the HTML was parsed (a client-side navigation skips that script).
+  const early = (window as Window & { __idlWebGL?: boolean }).__idlWebGL;
+  if (typeof early === 'boolean') {
+    probed = early;
+    if (!probed) reportExperienceError('webgl_unavailable');
+    return probed;
+  }
   try {
     const canvas = document.createElement('canvas');
     const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as WebGLRenderingContext | null;

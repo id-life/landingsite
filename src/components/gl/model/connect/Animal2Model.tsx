@@ -1,4 +1,6 @@
 import { model2VisibleAtom } from '@/atoms/geo';
+import { currentPageIndexAtom, mobileCurrentPageIndexAtom } from '@/atoms/nav';
+import { NAV, NAV_LIST } from '@/components/nav/nav';
 import { ANIMAL_CONFIG } from '@/components/gl/config/animalConfig';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 import { useAnimations, useFBO, useGLTF } from '@react-three/drei';
@@ -13,6 +15,7 @@ const thickness = 1;
 const animation = 0;
 
 const gltfConfig = ANIMAL_CONFIG[0];
+const CONNECT_INDEX = NAV_LIST.findIndex((item) => item.id === NAV.connect_page.id);
 
 const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const { scene, animations } = useGLTF(gltfConfig.path);
@@ -23,6 +26,12 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
   const fboMain = useFBO(gltfConfig.resolution, gltfConfig.resolution);
   const fboBack = useFBO(gltfConfig.resolution, gltfConfig.resolution);
   const visible = useAtomValue(model2VisibleAtom);
+  // MOT-03: the jellyfish swims and refracts only while the visitor is at Connect or one section before it (the
+  // vision canvas also shows the hero, with the jellyfish far below the frame). Elsewhere its animation is paused and
+  // its transmission pass (a second render of the scene every frame) is skipped.
+  const desktopIndex = useAtomValue(currentPageIndexAtom);
+  const mobileIndex = useAtomValue(mobileCurrentPageIndexAtom);
+  const near = Math.max(desktopIndex, mobileIndex) >= CONNECT_INDEX - 1;
 
   useEffect(() => {
     if (!scene) return;
@@ -46,9 +55,14 @@ const Animal2Model = forwardRef((props, ref: Ref<THREE.Group>) => {
     actions[names[animation]]?.reset().play();
   }, [actions, names]);
 
+  useEffect(() => {
+    const action = actions[names[animation]];
+    if (action) action.paused = !near;
+  }, [actions, names, near]);
+
   useFrame(({ clock, gl, scene, camera }) => {
     // 当不可见时跳过渲染循环
-    if (!visible) return;
+    if (!visible || !near) return;
 
     meshRef.current.forEach((mesh: any) => {
       mesh.material.time = clock.getElapsedTime();

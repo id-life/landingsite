@@ -256,6 +256,7 @@ The 3D experience loader hides (once per document)
 | `layout` | `desktop` \| `mobile` | yes | Tree that was shown |
 | `cache_state` | `warm` \| `cold` \| `unknown` | yes | Hero model came from the HTTP cache (warm) or the network |
 | `fail_open` | number | yes | The loader gave up waiting (15 s or an asset error) and revealed the UI (1 = yes, 0 = no) |
+| `gpu_tier` | `low` \| `mid` \| `high` \| `none` | no | GPU quality tier the 3D ran at (MOT-06); none: no WebGL |
 
 ### `experience_error`
 

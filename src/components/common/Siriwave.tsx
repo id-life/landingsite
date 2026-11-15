@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import type * as SiriWave from 'siriwave';
+import { onMotionPause } from '@/motion/runtime';
 
 declare type CurveStyle = 'ios' | 'ios9';
 
@@ -49,8 +50,19 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
       if (typeof props.onInit === 'function') props.onInit(siriwave);
     });
 
+    // MOT-03: the visualiser stops with the rest of the experience (60 s idle, hidden tab) and resumes as it was.
+    let wasRunning = false;
+    const offPause = onMotionPause((paused) => {
+      if (!siriwave) return;
+      if (paused) {
+        wasRunning = siriwave.run;
+        if (wasRunning) siriwave.stop();
+      } else if (wasRunning) siriwave.start();
+    });
+
     return () => {
       disposed = true;
+      offPause();
       siriwave?.dispose();
     };
   }, [

@@ -1,5 +1,6 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
-import { RANDOM_CONFIG } from '@/components/gl/config/visionGLConfig';
+import { HERO_GLASS } from '@/components/gl/config/visionGLConfig';
+import { TRANSMISSION_RESOLUTION, useGpuTier } from '@/motion/gpuTier';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -16,7 +17,10 @@ import { DURATION } from '@/motion/tokens';
 const InitRotation = Math.PI / 2;
 
 export default function MobileDragonModel(props: {}) {
-  const { events, clock } = useThree();
+  const { events } = useThree();
+  const { budget } = useGpuTier();
+  // Phase of the idle swing: it advances only while the dragon swings, so a drag pauses it (clock.stop() used to).
+  const swingPhaseRef = useRef(0);
   const { geometry } = useOptimizedGLTF();
   const modelRef = useRef<THREE.Group>(null);
   const autoSwingRef = useRef(false);
@@ -54,10 +58,11 @@ export default function MobileDragonModel(props: {}) {
       );
   });
 
-  useFrame(({ clock }) => {
+  useFrame((_, delta) => {
     if (!modelRef.current) return;
     if (autoSwingRef.current) {
-      modelRef.current.rotation.y = rotationRef.current.y + Math.sin(clock.elapsedTime) * 0.1;
+      swingPhaseRef.current += delta;
+      modelRef.current.rotation.y = rotationRef.current.y + Math.sin(swingPhaseRef.current) * 0.1;
     }
   });
 
@@ -73,7 +78,6 @@ export default function MobileDragonModel(props: {}) {
           events.connected.style.cursor = 'grabbing';
           modelRef.current.rotation.y = rotationRef.current.y + x / 150;
           modelRef.current.rotation.x = rotationRef.current.x + y / 150;
-          clock.stop();
         } else {
           autoSwingRef.current = false;
           isRecoveringRef.current = true;
@@ -89,7 +93,6 @@ export default function MobileDragonModel(props: {}) {
             onComplete: () => {
               autoSwingRef.current = true;
               isRecoveringRef.current = false;
-              clock.start();
             },
           });
         }
@@ -163,7 +166,12 @@ export default function MobileDragonModel(props: {}) {
   return (
     <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh ref={meshRef} geometry={geometry}>
-        <MeshTransmissionMaterial resolution={256} background={backgroundRef.current} {...RANDOM_CONFIG} />
+        <MeshTransmissionMaterial
+          resolution={TRANSMISSION_RESOLUTION}
+          samples={budget.transmissionSamples}
+          background={backgroundRef.current}
+          {...HERO_GLASS}
+        />
       </mesh>
     </group>
   );

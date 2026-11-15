@@ -9,7 +9,9 @@ import { mobileCurrentPageAtom } from '@/atoms';
 import MobileFixedUI from '@/components/common/MobileFixedUI';
 import MobileEngagement from '@/components/engagement/MobileEngagement';
 import MobileThreeWrapper from '@/components/gl/MobileThreeWrapper';
-import { OuterLoader } from '@/components/gl/ProgressLoader';
+import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
+import { useExperienceMode } from '@/hooks/useExperienceMode';
+import MotionRuntime from '@/components/gl/MotionRuntime';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
 import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
@@ -25,6 +27,8 @@ import LinkTracker from '@/components/site/LinkTracker';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
+  // ENG-02: without WebGL no canvas, loader or model mounts; the server-rendered poster is the hero.
+  const webgl = useExperienceMode() !== 'static';
 
   useMobileHomeAnimateInit();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.
@@ -41,8 +45,9 @@ export default function MobileHome() {
 
   return (
     <>
-      <OuterLoader />
-      <MobileThreeWrapper />
+      <MotionRuntime />
+      {webgl ? <OuterLoader /> : <StaticReveal />}
+      {webgl && <MobileThreeWrapper />}
       <div id="wrapper" className="">
         <MobileVision />
         <MobilePortfolio />

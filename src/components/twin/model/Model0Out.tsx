@@ -3,8 +3,10 @@ import { useEventBus } from '@/components/event-bus/useEventBus';
 import { Center, useAnimations, useGLTF, useProgress } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import MODELS from '@/components/gl/models-manifest.json';
 
-const MODEL_URL = '/models/test-v3.glb';
+// Content-hashed by scripts/optimize-models.mjs (PERF-14).
+const MODEL_URL = MODELS.twin;
 
 /** Fetch the avatar into the loader cache before Model0Out mounts (see useDeferredWarm). */
 export const preloadModel0Out = () => useGLTF.preload(MODEL_URL);
@@ -15,6 +17,18 @@ export default function Model0Out() {
   const animationLoopRef = useRef<NodeJS.Timeout | null>(null);
   const { actions } = useAnimations(animations, scene);
   const [resetAnimation, setResetAnimation] = useState<number>(0);
+
+  // MOT-06: hair and lashes are transparent and double-sided, which three.js draws in two passes (back faces, then
+  // front); one pass looks the same on strands this thin and halves their draw calls.
+  useEffect(() => {
+    scene.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        if (/毛发|睫毛/.test(material.name)) material.forceSinglePass = true;
+      }
+    });
+  }, [scene]);
 
   useEffect(() => {
     const startAnimationLoop = () => {

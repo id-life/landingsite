@@ -1,6 +1,7 @@
 import { useFBO } from '@react-three/drei';
 import { useMemo } from 'react';
 import * as THREE from 'three';
+import MODELS from '@/components/gl/models-manifest.json';
 
 type Mesh = {
   name: string;
@@ -17,7 +18,7 @@ type AnimalConfig = {
 };
 export const ANIMAL_CONFIG: AnimalConfig[] = [
   {
-    path: '/models/animal2_v2.glb',
+    path: MODELS.jellyfish,
     scale: 1,
     animation: 0,
     resolution: 32,

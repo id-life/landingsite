@@ -1,5 +1,6 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { heroReadyAtom } from '@/atoms/loading';
+import { jotaiStore } from '@/atoms/store';
 import { ensureDesktopUIVisible, ensureMobileUIVisible } from '@/utils/ui';
 import Background from '@/components/common/Background';
 import { heroLoadingManager } from '@/components/gl/heroAssets';
@@ -10,7 +11,8 @@ import { useProgress } from '@react-three/drei';
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { experienceModeAtom, markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { EASE } from '@/motion/tokens';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
@@ -23,6 +25,22 @@ const FILL_SECONDS = 0.2;
 const FADE_SECONDS = 0.3;
 
 /**
+ * Reveals the fixed UI (nav, arrows, player) at once, as the hero's intro would: used when the intro cannot run (no
+ * WebGL, a failed or lost scene, a stalled load). A no-op once the UI is visible.
+ */
+export function useRevealExperienceUI() {
+  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  const setGlobalLoaded = useSetAtom(globalLoadedAtom);
+  return useCallback(() => {
+    if (jotaiStore.get(fadeInAnimCompletedAtom)) return;
+    setGlobalLoaded(true);
+    if (window.matchMedia(PHONE_TREE_QUERY).matches) ensureMobileUIVisible();
+    else ensureDesktopUIVisible();
+    setFadeInAnimCompleted(true);
+  }, [setFadeInAnimCompleted, setGlobalLoaded]);
+}
+
+/**
  * The first-visit loader. It follows the hero alone: its bar shows heroLoadingManager's progress
  * (the dragon model and the wordmark textures) and it leaves once the hero's Suspense boundary has
  * committed (heroReadyAtom). Later-section 3D assets load on approach and never hold it.
@@ -31,35 +49,48 @@ const FADE_SECONDS = 0.3;
 // Home / MobileHome) do not re-render it; it renders on mount, when the hero is ready and on exit.
 export const OuterLoader = memo(function OuterLoader() {
   const heroReady = useAtomValue(heroReadyAtom);
+  const mode = useAtomValue(experienceModeAtom);
   const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
   const setGlobalLoaded = useSetAtom(globalLoadedAtom);
-  const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
+  const revealUI = useRevealExperienceUI();
   const [show, setShow] = useState(true);
+  const showRef = useRef(show);
+  useEffect(() => {
+    showRef.current = show;
+  }, [show]);
   const mountedAtRef = useRef(0);
   const exitingRef = useRef(false);
   const loaderRef = useRef<ProgressLoaderHandle>(null);
-  // Why the loader failed open: its timeout (reported as loader_timeout) or an asset error (asset_failed).
-  const failReasonRef = useRef<'timeout' | 'asset'>('timeout');
+  // Why the loader failed open: its timeout (reported as loader_timeout), an asset error (asset_failed) or a scene
+  // that cannot show (no WebGL, a lost hero context, a boundary error: reported where they happen).
+  const failReasonRef = useRef<'timeout' | 'asset' | 'scene'>('timeout');
 
-  // Fail open: an asset that errors, or a load that takes longer than LOADER_TIMEOUT_MS, no longer
-  // leaves the visitor on an endless loader with no navigation. The UI is revealed and the scene
-  // fills in when (if) its assets arrive.
-  const [failOpen, setFailOpen] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setFailOpen(true), LOADER_TIMEOUT_MS);
-    return () => clearTimeout(timer);
+  // Fail open: an asset that errors, a scene that cannot show, or a load that takes longer than LOADER_TIMEOUT_MS no
+  // longer leaves the visitor on an endless loader with no navigation. The UI is revealed from here, never from a
+  // model, so one failed model cannot hide it (ENG-02); this also runs after the loader has left, when the hero's
+  // intro (which normally reveals the UI) can no longer run. The scene fills in when (if) its assets arrive.
+  const [failOpen, setFailOpen] = useState(0);
+  const requestFailOpen = useCallback((reason: 'timeout' | 'asset' | 'scene') => {
+    failReasonRef.current = reason;
+    setFailOpen((n) => n + 1);
   }, []);
   useEffect(() => {
-    if (!failOpen || !show) return;
-    if (failReasonRef.current === 'timeout') reportExperienceError('loader_timeout');
-    reportExperienceReady({ failOpen: true, mountedAt: mountedAtRef.current });
-    setIsLoadingUI(true);
-    setGlobalLoaded(true);
-    setShow(false);
-    if (window.matchMedia(PHONE_TREE_QUERY).matches) ensureMobileUIVisible();
-    else ensureDesktopUIVisible();
-    setFadeInAnimCompleted(true);
-  }, [failOpen, show, setFadeInAnimCompleted, setGlobalLoaded, setIsLoadingUI]);
+    const timer = setTimeout(() => requestFailOpen('timeout'), LOADER_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [requestFailOpen]);
+  const sceneDown = mode !== 'full';
+  useEffect(() => {
+    if (!failOpen && !sceneDown) return;
+    if (sceneDown) failReasonRef.current = 'scene';
+    if (showRef.current) {
+      if (failReasonRef.current === 'timeout') reportExperienceError('loader_timeout');
+      reportExperienceReady({ failOpen: true, mountedAt: mountedAtRef.current });
+      setIsLoadingUI(true);
+      setGlobalLoaded(true);
+      setShow(false);
+    }
+    revealUI();
+  }, [failOpen, sceneDown, revealUI, setGlobalLoaded, setIsLoadingUI]);
 
   useEffect(() => {
     mountedAtRef.current = performance.now();
@@ -71,22 +102,26 @@ export const OuterLoader = memo(function OuterLoader() {
   // re-rendering this component. Successful loads are not reported (DATA-06: noise).
   useEffect(() => {
     const unsubscribe = useProgress.subscribe((state, previous) => {
-      state.errors.slice(previous.errors.length).forEach(reportAssetFailed);
+      const failed = state.errors.slice(previous.errors.length);
+      failed.forEach(reportAssetFailed);
+      // A later-section asset that fails after the loader has left must not leave the UI hidden either.
+      if (failed.length && !showRef.current) requestFailOpen('asset');
     });
     heroLoadingManager.onProgress = (url, loaded, total) => {
       if (total > 0) loaderRef.current?.animateTo((LOADING_MAX * loaded) / total, 0.4);
     };
     heroLoadingManager.onError = (url) => {
       reportAssetFailed(url);
-      failReasonRef.current = 'asset';
-      setFailOpen(true);
+      // The hero cannot draw without its own files: the poster stands in for it.
+      markHeroSceneFailed();
+      requestFailOpen('asset');
     };
     return () => {
       unsubscribe();
       heroLoadingManager.onProgress = () => {};
       heroLoadingManager.onError = () => {};
     };
-  }, []);
+  }, [requestFailOpen]);
 
   // Exit once the hero is on screen: fill the bar, then start the scene's intro and fade the
   // overlay over it; the overlay lets input through while it fades.
@@ -188,3 +223,19 @@ const ProgressLoader = forwardRef<ProgressLoaderHandle>((_, ref) => {
 ProgressLoader.displayName = 'ProgressLoader';
 
 export default ProgressLoader;
+
+/**
+ * Stands in for the loader when the browser has no WebGL (ENG-02 'static' mode): nothing loads, so the UI is revealed
+ * at once and the experience reports itself ready (fail_open 1; webgl_unavailable is reported by the probe).
+ */
+export function StaticReveal() {
+  const revealUI = useRevealExperienceUI();
+  const setIsLoadingUI = useSetAtom(isLoadingUIAtom);
+  useEffect(() => {
+    markExperiencePage();
+    reportExperienceReady({ failOpen: true, mountedAt: performance.now() });
+    setIsLoadingUI(true);
+    revealUI();
+  }, [revealUI, setIsLoadingUI]);
+  return null;
+}

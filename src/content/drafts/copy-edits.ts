@@ -111,7 +111,7 @@ export const COPY_EDIT_DRAFTS = defineDrafts('copy-edits.ts', [
     },
     approval: {
       status: 'draft',
-      replaces: 'Sorry no WebGL supported!',
+      replaces: 'the raw no-WebGL fallback string of the 3D wrappers (removed by ENG-02; the poster now stands in)',
       sources: [{ ref: 'src/components/gl/ThreeWrapper.tsx:36, MobileThreeWrapper.tsx:36, VisionWrapper.tsx:50' }, FIGURE],
       questions: ['ENG-02 replaces these fallbacks with one designed SceneFallback in wave 1; use this line there?'],
     },

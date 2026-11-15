@@ -1,11 +1,13 @@
-import { useLoader, useThree } from '@react-three/fiber';
+import { useLoader } from '@react-three/fiber';
 import { useSetAtom } from 'jotai';
 import { type PropsWithChildren, useEffect, useState } from 'react';
 import { peek } from 'suspend-react';
 import * as THREE from 'three';
 import { GLTF, GLTFLoader, MeshoptDecoder, SVGLoader } from 'three-stdlib';
 import { heroReadyAtom } from '@/atoms/loading';
-import { HERO_MODEL_URL, HERO_PHONE_SVG_URLS, HERO_TEXTURE_URLS } from './heroAssetUrls';
+import { jotaiStore } from '@/atoms/store';
+import { heroSceneFailedAtom } from '@/hooks/useExperienceMode';
+import { HERO_MODEL_URL, HERO_SVG_URLS } from './heroAssetUrls';
 
 /**
  * The first screen's own assets (the dragon model and the four wordmark textures) load through this
@@ -23,9 +25,44 @@ class HeroGLTFLoader extends GLTFLoader {
   }
 }
 
-class HeroTextureLoader extends THREE.TextureLoader {
+/** A vector image, decoded and ready to draw at any size, with its viewBox aspect ratio. */
+export type SvgImage = { image: HTMLImageElement; aspect: number };
+
+/**
+ * Loads an SVG as an image to rasterise at any resolution (VIS-03), with its viewBox aspect ratio (an SVG image
+ * without width and height has no reliable natural size). A fetch through three's FileLoader, like SVGLoader's, so
+ * both trees share one preloaded response.
+ */
+class HeroSvgImageLoader extends THREE.Loader<SvgImage> {
   constructor() {
     super(heroLoadingManager);
+  }
+
+  load(
+    url: string,
+    onLoad: (svg: SvgImage) => void,
+    onProgress?: (event: ProgressEvent) => void,
+    onError?: (e: unknown) => void,
+  ) {
+    const files = new THREE.FileLoader(this.manager);
+    files.setResponseType('text');
+    files.load(
+      url,
+      (text) => {
+        const box =
+          /viewBox="([^"]+)"/
+            .exec(String(text))?.[1]
+            .split(/[\s,]+/)
+            .map(Number) ?? [];
+        const aspect = box[2] > 0 && box[3] > 0 ? box[2] / box[3] : 1;
+        const image = new Image();
+        image.onload = () => onLoad({ image, aspect });
+        image.onerror = (event) => onError?.(event);
+        image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(String(text))}`;
+      },
+      onProgress,
+      onError,
+    );
   }
 }
 
@@ -58,7 +95,7 @@ export function HeroReady() {
   return null;
 }
 
-/** The desktop hero is the dragon and four wordmark textures; the phone hero is the dragon and four SVGs (drei Svg). */
+/** Both heroes are the dragon and the two wordmark SVGs: rasterised on desktop, merged meshes on the phone. */
 type HeroVariant = 'desktop' | 'phone';
 
 /**
@@ -67,14 +104,14 @@ type HeroVariant = 'desktop' | 'phone';
  */
 export function preloadHeroAssets(variant: HeroVariant) {
   useLoader.preload(HeroGLTFLoader, HERO_MODEL_URL, heroGLTFExtensions);
-  if (variant === 'desktop') useLoader.preload(HeroTextureLoader, HERO_TEXTURE_URLS as unknown as string[]);
-  else for (const url of HERO_PHONE_SVG_URLS) useLoader.preload(SVGLoader, url);
+  if (variant === 'desktop') useLoader.preload(HeroSvgImageLoader, HERO_SVG_URLS as unknown as string[]);
+  else for (const url of HERO_SVG_URLS) useLoader.preload(SVGLoader, url);
 }
 
 // Keys under which R3F's useLoader caches each resource (suspend-react, keyed by loader class and URLs).
 const heroCacheKeys = (variant: HeroVariant): unknown[][] => [
   [HeroGLTFLoader, HERO_MODEL_URL],
-  ...(variant === 'desktop' ? [[HeroTextureLoader, ...HERO_TEXTURE_URLS]] : HERO_PHONE_SVG_URLS.map((url) => [SVGLoader, url])),
+  ...(variant === 'desktop' ? [[HeroSvgImageLoader, ...HERO_SVG_URLS]] : HERO_SVG_URLS.map((url) => [SVGLoader, url])),
 ];
 const heroAssetsCached = (variant: HeroVariant) => heroCacheKeys(variant).every((keys) => peek(keys) !== undefined);
 
@@ -92,6 +129,8 @@ export function HeroAssetsGate({ variant, children }: PropsWithChildren<{ varian
     preloadHeroAssets(variant);
     let frame = 0;
     const check = () => {
+      // A hero file that failed never reaches the cache: stop polling (the poster stands in, ENG-02).
+      if (jotaiStore.get(heroSceneFailedAtom)) return;
       if (heroAssetsCached(variant)) setCached(true);
       else frame = requestAnimationFrame(check);
     };
@@ -101,12 +140,7 @@ export function HeroAssetsGate({ variant, children }: PropsWithChildren<{ varian
   return cached ? children : null;
 }
 
-/** The four wordmark textures, uploaded to the GPU once loaded (as drei's useTexture does). */
-export function useHeroTextures() {
-  const gl = useThree((state) => state.gl);
-  const textures = useLoader(HeroTextureLoader, HERO_TEXTURE_URLS as unknown as string[]);
-  useEffect(() => {
-    textures.forEach((texture) => gl.initTexture(texture));
-  }, [gl, textures]);
-  return textures;
+/** The wordmark and tagline SVGs as drawable images (useLogoTextures rasterises them). */
+export function useHeroSvgImages() {
+  return useLoader(HeroSvgImageLoader, HERO_SVG_URLS as unknown as string[]) as SvgImage[];
 }
