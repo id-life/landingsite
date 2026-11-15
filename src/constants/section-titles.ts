@@ -1,16 +1,20 @@
 import { NavItem } from '@/components/nav/nav';
+import { BRAND, brandTitle } from '@/lib/seo/metadata';
 
-const BRAND = 'Immortal Dragons 不朽真龙';
-
-/** document.title per section, matching each route's metadata title (root template: "%s | brand"). */
-export const SECTION_TITLES: Record<string, string> = {
-  vision_page: BRAND,
-  portfolio_page: `Portfolio 投资 | ${BRAND}`,
-  insights_page: `Insights 洞见 | ${BRAND}`,
-  spectrum_page: `Spectrum 谱系 | ${BRAND}`,
-  engagement_page: `Presence 印迹 | ${BRAND}`,
-  twin_page: `Digital Twin 孪生 | ${BRAND}`,
-  connect_page: `Connect 联结 | ${BRAND}`,
+/**
+ * The topic of each experience section, as its route's metadata names it (each route's layout.tsx calls
+ * buildMetadata with these titles). test/section-titles.test.mjs keeps the two in step: GA4 reads document.title for
+ * each section's page_view (DATA-05), so it must equal the route's own <title>.
+ */
+export const SECTION_TOPICS: Record<string, string> = {
+  vision_page: BRAND.en,
+  portfolio_page: 'Portfolio',
+  insights_page: 'Insights',
+  spectrum_page: 'Spectrum',
+  engagement_page: 'Presence',
+  twin_page: 'Digital Twin',
+  connect_page: 'Connect',
 };
 
-export const sectionTitle = (item: NavItem) => SECTION_TITLES[item.id] ?? BRAND;
+/** document.title per section: "<topic> | Immortal Dragons", the same rule as the route metadata (SEO-06). */
+export const sectionTitle = (item: NavItem) => brandTitle(SECTION_TOPICS[item.id] ?? BRAND.en);
