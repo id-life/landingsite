@@ -3,9 +3,12 @@
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { useEffect } from 'react';
+import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 
 /** Longest step a frame may take, so a canvas that was paused or hidden resumes smoothly instead of jumping. */
 const MAX_STEP_S = 0.1;
+/** Frames rendered after anything that can change the still frame, so loaded textures and shaders settle in it. */
+const STILL_FRAMES = 12;
 
 /** Whether the canvas can be seen: in the viewport, and no ancestor hidden or at (near) zero opacity. */
 function isShown(el: HTMLElement) {
@@ -35,21 +38,63 @@ function isShown(el: HTMLElement) {
 export default function FrameDriver() {
   const advance = useThree((state) => state.advance);
   const canvas = useThree((state) => state.gl.domElement);
+  const scene = useThree((state) => state.scene);
+  const camera = useThree((state) => state.camera);
+  const gl = useThree((state) => state.gl);
 
   useEffect(() => {
     let time = performance.now() / 1000;
     let last = performance.now();
+    // Reduced motion (MOT-02): the canvas shows a still frame. It renders a few frames whenever something that shapes
+    // that frame changes (the canvas comes into view, its size, the camera, which the section timelines move, the
+    // visible objects, their opacity and the textures, as models load and fade in), until that settles, then stops:
+    // zero draw calls at rest.
+    let reduced = isReducedMotion();
+    let signature = '';
+    let pending = STILL_FRAMES;
+    const stillSignature = (shown: boolean) => {
+      let objects = 0;
+      let opacity = 0;
+      scene.traverse((node) => {
+        objects += node.visible ? 1 : 0;
+        const material = (node as { material?: { opacity?: number } }).material;
+        if (material && typeof material.opacity === 'number') opacity += material.opacity;
+      });
+      const m = camera.matrixWorld.elements;
+      return `${shown}|${canvas.width}x${canvas.height}|${objects}|${opacity.toFixed(2)}|${gl.info.memory.textures}|${gl.info.memory.geometries}|${m[12].toFixed(3)},${m[13].toFixed(3)},${m[14].toFixed(3)},${m[0].toFixed(4)},${m[5].toFixed(4)},${m[10].toFixed(4)}`;
+    };
+    const offPreference = onReducedMotionChange((next) => {
+      reduced = next;
+      pending = STILL_FRAMES;
+    });
     const tick = () => {
       const now = performance.now();
       const step = Math.min((now - last) / 1000, MAX_STEP_S);
       last = now;
-      if (!isShown(canvas)) return;
+      const shown = isShown(canvas);
+      if (reduced) {
+        const next = stillSignature(shown);
+        if (next !== signature) {
+          signature = next;
+          pending = STILL_FRAMES;
+        }
+        if (!shown || pending <= 0) return;
+        pending -= 1;
+        // Time runs while the frame settles (a model fading in finishes its fade), and stops with it.
+        time += step;
+        advance(time, true);
+        return;
+      }
+      if (!shown) return;
       time += step;
       advance(time, true);
     };
     gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
-  }, [advance, canvas]);
+    return () => {
+      offPreference();
+      gsap.ticker.remove(tick);
+    };
+  }, [advance, canvas, scene, camera, gl]);
 
   return null;
 }

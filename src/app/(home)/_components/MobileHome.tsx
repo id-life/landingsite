@@ -22,6 +22,7 @@ import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { usePhoneSectionDriver } from '@/hooks/useMobileNavigation';
 import { initialRouteHandledAtom } from '@/atoms';
+import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
 export default function MobileHome() {
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
@@ -40,7 +41,8 @@ export default function MobileHome() {
   useSectionUrlSync(mobileCurrentPage, initialRouteHandled, { replaceUrl: false });
 
   return (
-    <>
+    // motion components follow the Motion preference (MOT-02)
+    <MotionPreferenceConfig>
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
       {webgl && <MobileThreeWrapper />}
@@ -56,6 +58,6 @@ export default function MobileHome() {
         <MobileFooterContact />
       </div>
       <MobileFixedUI />
-    </>
+    </MotionPreferenceConfig>
   );
 }

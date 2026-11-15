@@ -1,3 +1,5 @@
+import { isReducedMotion } from '@/motion/preference';
+
 import { DURATION, EASE } from '@/motion/tokens';
 
 /**
@@ -29,7 +31,7 @@ export function shouldSkipIntro(): boolean {
   } catch {
     // Storage blocked (private mode, disabled cookies): treat as a first visit.
   }
-  return seen || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return seen || isReducedMotion();
 }
 
 /** Called when the fly-in has played to the end. */

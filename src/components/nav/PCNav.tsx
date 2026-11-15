@@ -17,6 +17,7 @@ import { useEvent } from 'react-use';
 import { NAV_LIST } from './nav';
 
 import BilingualText from '@/components/common/BilingualText';
+import MotionSwitch from '@/components/common/MotionSwitch';
 export default function PCNav() {
   const currentPage = useAtomValue(currentPageAtom);
   // Visible from state, so a remount (Back from /news) shows the nav at once instead of waiting for the intro tween.
@@ -45,6 +46,8 @@ export default function PCNav() {
       <div className="pointer-events-auto">
         <Logo />
       </div>
+      {/* MOT-02: right after the logo, so it is among the first Tab stops. */}
+      <MotionSwitch />
       <div className={cn('main-nav-links pointer-events-auto flex gap-8 text-sm font-semibold')}>
         {NAV_LIST.map((item) => (
           <Link

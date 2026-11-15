@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { DURATION, EASE } from '@/motion/tokens';
+import { isReducedMotion } from '@/motion/preference';
 
 // 自动播放配置
 const AUTO_PLAY_CONFIG = {
@@ -144,7 +145,8 @@ export function useMobileEngagementAnim() {
 
   // 自动展示点
   const startAutoDotShow = useCallback(() => {
-    if (userInteractedRef.current) return;
+    // Reduced motion (MOT-02): the map's cards do not open one after another by themselves.
+    if (userInteractedRef.current || isReducedMotion()) return;
     if (dotShowIntervalRef.current) {
       clearInterval(dotShowIntervalRef.current);
       dotShowIntervalRef.current = null;
