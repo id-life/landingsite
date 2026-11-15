@@ -3,6 +3,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTypescript from 'eslint-config-next/typescript';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 const restrictedSyntax = [
   {
@@ -45,6 +46,16 @@ export default defineConfig([
   ...nextVitals,
   ...nextTypescript,
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'public/**']),
+  {
+    // eslint-plugin-jsx-a11y's recommended rules (ENG-01), as warnings with their recommended options. They report
+    // existing problems; scripts/eslint-ratchet.mjs (eslint-warnings.json) keeps the count from growing.
+    rules: Object.fromEntries(
+      Object.entries(jsxA11y.configs.recommended.rules).map(([rule, value]) => {
+        const [severity, ...options] = Array.isArray(value) ? value : [value];
+        return [rule, severity === 'off' || severity === 0 ? 'off' : ['warn', ...options]];
+      }),
+    ),
+  },
   {
     rules: {
       '@next/next/no-img-element': 'off',

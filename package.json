@@ -15,7 +15,8 @@
     "knip": "knip",
     "typecheck": "tsc --noEmit --incremental false",
     "perf:budget": "node scripts/perf-budget.mjs",
-    "build:turbopack": "next build --turbopack"
+    "build:turbopack": "next build --turbopack",
+    "lint:ratchet": "node scripts/eslint-ratchet.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
@@ -81,6 +82,7 @@
     "@types/three": "0.169.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.4.6",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "glslify-loader": "^2.0.0",
     "knip": "^6.45.1",
     "lint-staged": "^15.5.2",

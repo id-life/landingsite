@@ -14,6 +14,7 @@ npm run build     # production build with webpack (next build --webpack; also ty
 npm run build:turbopack   # the same build on Turbopack, to re-measure before switching
 npm start         # serve the production build
 npm run lint      # ESLint CLI with the flat config in eslint.config.mjs (next lint no longer exists in Next 16)
+npm run lint:ratchet   # fails if any rule has more warnings than eslint-warnings.json (re-record with --record)
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
 npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
 npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
@@ -23,9 +24,9 @@ npx prettier --write --ignore-unknown .   # format
 
 The pre-commit hook (simple-git-hooks + lint-staged) runs `eslint --fix` and prettier on staged files only.
 
-CI (`.github/workflows/ci.yml`, on every pull request and on pushes to main) runs typecheck, lint + knip, unit
-tests, `npm audit --omit=dev --audit-level=high`, and a production build followed by `npm run perf:budget`. Each job
-is its own status check. Run the same commands locally before pushing.
+CI (`.github/workflows/ci.yml`, on every pull request and on pushes to main) runs typecheck, lint + warning ratchet +
+knip, unit tests, `npm audit --omit=dev --audit-level=high`, and a production build followed by `npm run perf:budget`.
+Each job is its own status check. Run the same commands locally before pushing.
 
 ## Routes
 

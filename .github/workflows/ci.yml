@@ -46,6 +46,8 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run lint
+      # Warnings may only go down: any rule above its count in eslint-warnings.json fails.
+      - run: npm run lint:ratchet
       # Unused files and dependencies fail; unused exports are reported as warnings (knip.jsonc).
       - run: npm run knip
 
