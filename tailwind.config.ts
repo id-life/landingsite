@@ -53,6 +53,11 @@ const config: Config = {
         // The site header fits its logo, Motion switch, nine items and actions on one row from here (SiteHeader,
         // NAV-04; measured: at 1920 px the row overflowed by the switch's width).
         navRow: { raw: '(min-width: 2048px)' },
+        // Widths of the desktop deck where the header's nine items do not fit one row, so they break into five plus
+        // four (SiteHeader). Measured: the experience header fits one row from 1150 px, the content-page header (wider
+        // padding and gaps) from 1280 px; between them it left Podcast alone on a second row.
+        navGrid: { raw: '(min-width: 600px) and (max-width: 1149.98px) and (min-height: 480px)' },
+        navGridSolid: { raw: '(min-width: 600px) and (max-width: 1279.98px) and (min-height: 480px)' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },

@@ -76,12 +76,12 @@ export default function SiteMenu({
             {/* One modal at a time: the menu closes, then the SUBSCRIBE dialog opens. */}
             <SubscribeTrigger
               onBeforeOpen={close}
-              className="group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
+              className="group relative flex h-10 w-33 cursor-pointer items-center justify-center text-label font-semibold uppercase text-white duration-300 tap data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-caption"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-white duration-300 group-data-[open=true]:stroke-accent" />
               Subscribe
             </SubscribeTrigger>
-            <button type="button" aria-label="Close menu" onClick={close} className="flex">
+            <button type="button" aria-label="Close menu" onClick={close} className="flex items-center justify-center tap">
               <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
             </button>
           </div>
@@ -111,7 +111,7 @@ function MenuLink({
 }) {
   return (
     <a href={item.href} aria-current={current ? 'page' : undefined} onClick={(event) => onClick(event, item)} className={ITEM}>
-      <span className="relative w-fit text-center text-sm/3.5 font-semibold uppercase">
+      <span className="relative w-fit text-center text-label font-semibold uppercase">
         <BilingualText text={item.title} />
         {current && <span className="absolute -bottom-2.5 left-1/2 h-0.5 w-1/2 -translate-x-1/2 bg-white" />}
       </span>

@@ -14,6 +14,16 @@ import SubscribeTrigger from './SubscribeTrigger';
 
 type Variant = 'overlay' | 'solid';
 
+/**
+ * Below 1150 px (1280 px on content pages) nine labels at 14 px do not fit one row (about 890 px of labels and their
+ * gaps). Rather than wrapping six plus an orphan row of three, the row breaks after the fifth item (a full-width
+ * break, shown only there, whose height is the row gap): two balanced rows, five sections then Digital Twin, Connect,
+ * News and Podcast. Above that they run as one row. All nine stay visible: nothing moves into a menu on tablets.
+ */
+const NAV_TABLET_GRID = 'navGrid:gap-x-6 navGrid:gap-y-0';
+/** The content-page header is wider (padding, gaps) and needs the break up to 1280 px (tailwind.config.ts). */
+const NAV_TABLET_GRID_SOLID = 'navGridSolid:gap-x-6 navGridSolid:gap-y-0';
+
 export type SiteHeaderProps = {
   variant: Variant;
   /** The navigation item of the page in view (a section id, 'news', 'podcast' or 'about'), or null. */
@@ -71,7 +81,7 @@ export default function SiteHeader({
         overlay
           ? // The experience: one row from 2048 px; below, the navigation takes its own row (wrapping on tablets),
             // because labels are 14 px or more at every width (RWD-01).
-            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 p-10 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap'
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10'
           : // Content pages: the logo and the actions on the first row, the navigation on its own row below.
             'flex-wrap gap-x-6 gap-y-4',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
@@ -97,14 +107,24 @@ export default function SiteHeader({
             ? clsx(
                 // Below 2048 px a row of its own that wraps (never a sideways scroller: its items would be cut by the window).
                 'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap',
+                NAV_TABLET_GRID,
                 live,
               )
-            : 'order-last w-full flex-wrap gap-y-3',
+            : clsx('order-last w-full flex-wrap gap-y-3', NAV_TABLET_GRID_SOLID),
         )}
       >
-        {SITE_NAV.map((item) => {
+        {SITE_NAV.map((item, index) => {
           const current = currentId === item.id;
-          return (
+          return [
+            index === 5 && (
+              <span
+                key="row-break"
+                aria-hidden="true"
+                // A flex line of its own that is the row gap (the nav has none here: a zero-height line would add
+                // the gap twice, and a negative margin cannot shrink a flex line below zero).
+                className={clsx('hidden basis-full', overlay ? 'h-1 navGrid:block' : 'h-3 navGridSolid:block')}
+              />
+            ),
             <Link
               key={item.id}
               prefetch={false}
@@ -124,8 +144,8 @@ export default function SiteHeader({
               <span>
                 <BilingualText text={item.title} />
               </span>
-            </Link>
-          );
+            </Link>,
+          ];
         })}
       </nav>
       <div
@@ -148,7 +168,7 @@ export default function SiteHeader({
           <Link
             prefetch={false}
             href="/"
-            className="group pointer-events-auto relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center px-5 text-label font-semibold uppercase transition-colors duration-300 tap hover:stroke-accent hover:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-xs/5"
+            className="group pointer-events-auto relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center px-5 text-label font-semibold uppercase transition-colors duration-300 tap hover:stroke-accent hover:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-caption"
           >
             <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
             ID.LIFE
@@ -156,7 +176,7 @@ export default function SiteHeader({
         ) : (
           <SubscribeTrigger
             className={clsx(
-              'group relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center whitespace-nowrap px-5 text-label font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-xs/5',
+              'group relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center whitespace-nowrap px-5 text-label font-semibold uppercase duration-300 tap hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-caption',
               live,
             )}
           >

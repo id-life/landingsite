@@ -9,7 +9,7 @@ import { track } from '@/lib/analytics/track';
 import { goToSection, sectionStateAtom } from '@/motion/sectionController';
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
-import type { MouseEvent } from 'react';
+import { useEffect, type MouseEvent } from 'react';
 import MotionSwitch from '@/components/common/MotionSwitch';
 import SiteHeader from './SiteHeader';
 import { isPlainClick, isSection, type SiteNavItem } from './site-nav';
@@ -55,6 +55,18 @@ export default function ExperienceHeader() {
   // server-painted bar is not.
   const id = experienceMounted && isMobile !== null ? (isMobile ? 'mobile-nav' : 'nav') : undefined;
 
+  // The bar's height as --site-header-h on <html>, so the sections place their first line below it at every width
+  // (the bar takes one row on wide screens, two or three on tablets).
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>('header');
+    if (!header) return;
+    const write = () => document.documentElement.style.setProperty('--site-header-h', `${header.offsetHeight}px`);
+    write();
+    const observer = new ResizeObserver(write);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <SiteHeader
       variant="overlay"
@@ -66,7 +78,9 @@ export default function ExperienceHeader() {
       onItemClick={onItemClick}
       // MOT-02: in the bar on both decks, visible on every section (as in the old PCNav and MobileNav).
       // `tap`: a 44 px box on touch screens (RWD-06), like the other header controls.
-      motionSwitch={<MotionSwitch className={shown ? 'pointer-events-auto tap mobile:mr-2' : 'tap mobile:mr-2'} />}
+      motionSwitch={
+        <MotionSwitch className={shown ? 'pointer-events-auto tap mobile:ml-3 mobile:mr-2' : 'tap mobile:ml-3 mobile:mr-2'} />
+      }
     />
   );
 }
