@@ -45,7 +45,13 @@ export default function DiseaseManagementLayout({ children }: { children: ReactN
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <DMStyle />
-      <SiteHeader variant="solid" action="exit" className="p-10 mobile:p-5" />
+      <SiteHeader
+        variant="solid"
+        currentId="spectrum_page"
+        currentKind="true"
+        action="exit"
+        className="relative p-10 mobile:p-5"
+      />
       <SubscribePopup />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">
         {children}

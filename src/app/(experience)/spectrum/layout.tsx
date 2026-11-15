@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
-import SiteHeader from '@/components/site/SiteHeader';
+import ExperienceHeader from '@/components/site/ExperienceHeader';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { pageMeta } from '@/content/pages';
@@ -36,7 +36,7 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
         }))}
       />
       <Style />
-      <SiteHeader variant="overlay" />
+      <ExperienceHeader />
       {children}
     </>
   );

@@ -40,7 +40,13 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <INStyle />
       <div className="relative h-full w-full">
-        <SiteHeader variant="solid" action="exit" className="fixed left-0 top-0 z-[100] p-10 mobile:p-5" />
+        <SiteHeader
+          variant="solid"
+          currentId="spectrum_page"
+          currentKind="true"
+          action="exit"
+          className="fixed left-0 top-0 z-[100] p-10 mobile:p-5"
+        />
         <SubscribePopup />
         {children}
       </div>

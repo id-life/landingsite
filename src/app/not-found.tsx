@@ -19,7 +19,7 @@ export default function NotFound() {
   return (
     <>
       {/* The site header (NAV-04) over the designed 404 frame, which stays centred in the viewport. */}
-      <SiteHeader variant="solid" className="absolute left-0 top-0 z-20 px-10 mobile:px-5" />
+      <SiteHeader variant="solid" currentId={null} className="absolute left-0 top-0 z-20 px-10 py-5 mobile:px-5" />
       <SubscribePopup />
       <ErrorState
         code="404"

@@ -13,7 +13,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
       <NewsStyle />
       {/* 80rem (1280 px) from 1360 px up, as before; narrower screens keep a 40 px margin each side. */}
       <div className="mx-auto w-[min(80rem,calc(100%-5rem))] mobile:w-auto mobile:px-5">
-        <SiteHeader variant="solid" />
+        <SiteHeader variant="solid" currentId="news" className="relative py-5" />
         {children}
         <SiteFooter>
           <NewsFooter />

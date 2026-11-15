@@ -12,7 +12,8 @@ export const ABOUT_LINK: PageLink = { id: 'about', title: 'about 关于', href: 
  * The site's primary navigation (NAV-04), the same on every route: the seven sections of the experience, then
  * News and Podcast. The header, the phone menu and the footer all render this list.
  */
-export const SITE_NAV: ReadonlyArray<NavItem | PageLink> = [...NAV_LIST, NEWS_LINK, PODCAST_LINK];
+export type SiteNavItem = NavItem | PageLink;
+export const SITE_NAV: ReadonlyArray<SiteNavItem> = [...NAV_LIST, NEWS_LINK, PODCAST_LINK];
 
 export function isSection(item: NavItem | PageLink): item is NavItem {
   return NAV_LIST.some((section) => section.id === item.id);

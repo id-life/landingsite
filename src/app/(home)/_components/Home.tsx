@@ -27,6 +27,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
 import { reportError } from '@/lib/report';
+import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
 
 // ENG-16: the ScrollSmoother exists before any section creates its ScrollTrigger (GSAP's ScrollSmoother docs: "create
 // the scrollSmoother before your scrollTriggers"). Rendered first, its layout effect runs before the sections'
@@ -52,6 +53,8 @@ export default function Home() {
   useResizeRefresh();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.
   useExperienceLifecycle();
+  // The header's SUBSCRIBE buttons are plain DOM events (NAV-04, PERF-10); this connects them to the popup.
+  useSubscribeBridge();
   // The section controller's desktop driver and inputs: wheel, keys and touch each step one section (MOT-01).
   useDesktopSections();
   // Address bar and tab title follow the visible section (after the initial deep link is applied).

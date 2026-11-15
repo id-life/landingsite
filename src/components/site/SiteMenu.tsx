@@ -2,21 +2,17 @@
 
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { mobileNavOpenAtom } from '@/atoms';
-import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import BilingualText from '@/components/common/BilingualText';
 import Dialog from '@/components/dialog';
 import { NAV_LIST } from '@/components/nav/nav';
 import { STORAGE_KEY } from '@/constants/storage';
-import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
 import { track } from '@/lib/analytics/track';
 import { playMenuItems } from '@/motion/menu';
 import { getSectionState, goToSection } from '@/motion/sectionController';
-import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
 import { ABOUT_LINK, isPlainClick, isSection, NEWS_LINK, PODCAST_LINK, SITE_NAV } from './site-nav';
+import SubscribeTrigger from './SubscribeTrigger';
 
 const ITEM = 'flex-center mobile-nav-item relative py-6 text-white opacity-0 [@media(max-height:740px)]:py-4';
 
@@ -25,10 +21,17 @@ const ITEM = 'flex-center mobile-nav-item relative py-6 text-white opacity-0 [@m
  * and About, with the current one marked (aria-current). Inside the experience a section tap moves through the
  * section controller; elsewhere every item is a same-tab navigation. Loaded on the first open.
  */
-export default function SiteMenu({ currentId, inExperience }: { currentId: string | null; inExperience: boolean }) {
-  const [open, setOpen] = useAtom(mobileNavOpenAtom);
-  const subsOpen = useAtomValue(isSubscribeShowAtom);
-  const subscribePopup = useSetAtom(subscribePopupAtom);
+export default function SiteMenu({
+  open,
+  onOpenChange: setOpen,
+  currentId,
+  inExperience,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  currentId: string | null;
+  inExperience: boolean;
+}) {
   const router = useRouter();
 
   useEffect(() => {
@@ -70,25 +73,14 @@ export default function SiteMenu({ currentId, inExperience }: { currentId: strin
         // Scrolls when ten items do not fit (short phones); items are tighter below 740 px of height.
         <div id="mobile-nav-menu" className="flex max-h-[100svh] w-full flex-col overflow-y-auto">
           <div className="flex flex-1 items-center justify-end gap-5 p-5">
-            <button
-              type="button"
-              {...SUBSCRIBE_TRIGGER}
-              aria-haspopup="dialog"
-              onClick={() => {
-                // One modal at a time: the menu closes, then the SUBSCRIBE dialog opens.
-                close();
-                subscribePopup({ type: 'open', placement: 'nav' });
-              }}
-              className={cn(
-                'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 mobile:h-8 mobile:w-24 mobile:text-xs/5',
-                subsOpen && 'text-accent',
-              )}
+            {/* One modal at a time: the menu closes, then the SUBSCRIBE dialog opens. */}
+            <SubscribeTrigger
+              onBeforeOpen={close}
+              className="group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-white duration-300 data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
-              <SubscribeBorderSVG
-                className={cn('absolute left-0 top-0 size-full stroke-white duration-300', subsOpen && 'stroke-accent')}
-              />
+              <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-white duration-300 group-data-[open=true]:stroke-accent" />
               Subscribe
-            </button>
+            </SubscribeTrigger>
             <button type="button" aria-label="Close menu" onClick={close} className="flex">
               <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
             </button>

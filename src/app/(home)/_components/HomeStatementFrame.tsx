@@ -29,7 +29,8 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
         'fixed z-[29] text-foreground transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
         // Desktop tree: top left, under the logo, clear of the wordmark and the dragon. Sizes have a px floor so the
         // 0.8333vw root (RWD-01) cannot shrink them below a readable size on tablets.
-        'left-10 top-[max(7.5rem,92px)] w-[max(42rem,460px)]',
+        // Below 1700 px the header's navigation takes a second row (NAV-04), so the statement starts lower there.
+        'left-10 top-[max(10rem,128px)] w-[max(42rem,460px)] navRow:top-[max(7.5rem,92px)]',
         // Phone tree: under the header, above the wordmark.
         'mobile:inset-x-5 mobile:top-[5.5rem] mobile:w-auto mobile:text-center [@media(max-height:740px)]:mobile:top-[4.75rem]',
         onHero ? 'visible opacity-100' : 'invisible opacity-0',
@@ -67,7 +68,7 @@ export function StatementDoors({ className }: { className?: string }) {
           <a
             href={door.href}
             onClick={(event) => onClick(event, door.section)}
-            className="group inline-flex items-center gap-1.5 py-1 font-display text-[max(1rem,13px)]/[1.4] font-bold uppercase transition-colors duration-300 hover:text-accent"
+            className="group relative inline-flex items-center gap-1.5 py-1 font-display text-[max(1rem,13px)]/[1.4] font-bold uppercase transition-colors duration-300 tap-area hover:text-accent"
           >
             {door.label}
             <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5">

@@ -23,7 +23,13 @@ export default function Breadcrumb({ items, className }: { items: Crumb[]; class
                 </li>
               )}
               <li className={cn(current && index > 0 && 'text-ink-muted')} aria-current={current ? 'page' : undefined}>
-                {item.href ? <Link href={item.href}>{item.label}</Link> : item.label}
+                {item.href ? (
+                  <Link prefetch={false} href={item.href}>
+                    {item.label}
+                  </Link>
+                ) : (
+                  item.label
+                )}
               </li>
             </Fragment>
           );

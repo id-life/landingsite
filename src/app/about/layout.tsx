@@ -12,7 +12,7 @@ export default function AboutLayout({ children }: { children: ReactNode }) {
     <>
       <NewsStyle />
       <div className="mx-auto w-[min(80rem,calc(100%-5rem))] mobile:w-auto mobile:px-5">
-        <SiteHeader variant="solid" />
+        <SiteHeader variant="solid" currentId="about" className="relative py-5" />
         {children}
         <SiteFooter>
           <NewsFooter />

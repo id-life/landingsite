@@ -251,7 +251,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               target="_blank"
               onClick={handleLinkClick}
               className={cn(
-                'relative text-accent',
+                // A 44 px line box on touch screens (RWD-06), the text unchanged.
+                'relative inline-flex items-center text-accent tap',
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition after:duration-300 hover:after:scale-x-100',
               )}
             >

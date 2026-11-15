@@ -14,8 +14,14 @@ export function SiteFooterNav({ className }: { className?: string }) {
       <ul className="flex flex-wrap gap-x-6 gap-y-3">
         {[...SITE_NAV, ABOUT_LINK].map((item) => (
           <li key={item.id}>
-            <Link href={item.href} className="transition-colors duration-300 hover:text-accent">
-              <BilingualText text={item.title} />
+            <Link
+              prefetch={false}
+              href={item.href}
+              className="inline-flex items-center transition-colors duration-300 tap hover:text-accent"
+            >
+              <span>
+                <BilingualText text={item.title} />
+              </span>
             </Link>
           </li>
         ))}

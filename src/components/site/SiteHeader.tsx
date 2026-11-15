@@ -1,142 +1,96 @@
-'use client';
-
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
-import { experienceMountedAtom, initialRouteHandledAtom, mobileNavOpenAtom } from '@/atoms';
-import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
-import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import BilingualText from '@/components/common/BilingualText';
 import Logo from '@/components/nav/Logo';
-import { NAV, NAV_LIST } from '@/components/nav/nav';
+import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
-import { SUBSCRIBE_TRIGGER } from '@/hooks/subscribe-trigger';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsMounted } from '@/hooks/useIsMounted';
-import { track } from '@/lib/analytics/track';
-import { goToSection, sectionStateAtom } from '@/motion/sectionController';
-import { cn } from '@/utils';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import dynamic from 'next/dynamic';
+import { clsx } from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState, type MouseEvent } from 'react';
-import { ABOUT_LINK, isPlainClick, isSection, pageOfPath, SITE_NAV } from './site-nav';
-
-// The phone menu sheet (GSAP stagger) loads on its first open, on every route.
-const SiteMenu = dynamic(() => import('./SiteMenu'), { ssr: false });
+import type { MouseEvent } from 'react';
+import LinkTracker from './LinkTracker';
+import MenuToggle from './MenuToggle';
+import { ABOUT_LINK, isSection, SITE_NAV, type SiteNavItem } from './site-nav';
+import SubscribeTrigger from './SubscribeTrigger';
 
 type Variant = 'overlay' | 'solid';
 
-/**
- * The id of the navigation item for the page in view: the section the controller is at or moving to while the
- * experience is mounted (so a transition never shows two, NAV-04), otherwise the route.
- */
-function useCurrentNavId(): string | null {
-  const pathname = usePathname();
-  const experienceMounted = useAtomValue(experienceMountedAtom);
-  const routeApplied = useAtomValue(initialRouteHandledAtom);
-  const { target } = useAtomValue(sectionStateAtom);
-  if (experienceMounted && routeApplied) return NAV_LIST[target]?.id ?? null;
-  const page = pageOfPath(pathname);
-  if (page) return page;
-  // The Spectrum tool pages belong to Spectrum.
-  return NAV_LIST.find((s) => (s.href === '/' ? pathname === '/' : pathname?.startsWith(s.href)))?.id ?? null;
-}
+export type SiteHeaderProps = {
+  variant: Variant;
+  /** The navigation item of the page in view (a section id, 'news', 'podcast' or 'about'), or null. */
+  currentId: string | null;
+  /** 'page' when the item is this page; 'true' when the page sits under it (the Spectrum tool pages). */
+  currentKind?: 'page' | 'true';
+  /** `exit`: the Spectrum tool pages' ID.LIFE link back into the site, in place of SUBSCRIBE. */
+  action?: 'subscribe' | 'exit';
+  /** Position and padding of the bar (the content layouts differ). */
+  className?: string;
+  // Set by ExperienceHeader only (the experience's fixed bar).
+  id?: string;
+  /** False while the experience's intro hides its fixed UI. */
+  shown?: boolean;
+  inExperience?: boolean;
+  onLogoClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  onItemClick?: (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => void;
+};
 
 /**
- * The one site header (NAV-04), on every route: the logo (a link to /), the primary navigation (the seven sections
- * plus News and Podcast, exactly one item marked aria-current) and the actions. `overlay` is the experience's fixed
- * transparent bar; `solid` sits in the flow of the content pages. On phones the navigation moves into the menu sheet.
+ * The one site header (NAV-04), on every route: the logo (a same-tab link to /), the primary navigation (the seven
+ * sections plus News and Podcast, the current one marked aria-current) and the actions. `solid` sits in the flow of
+ * the content pages; `overlay` is the experience's fixed transparent bar (rendered by ExperienceHeader, which adds the
+ * section controller). On phones the navigation moves into the menu sheet.
  *
- * Inside the experience a section link moves through the section controller and keeps its real href, so a
- * modifier-click still opens a new tab; everywhere else it is a plain next/link navigation.
+ * No hooks and no client state (PERF-10): on content pages it renders on the server. Its only client code is the
+ * SUBSCRIBE button, the menu button and one delegated click tracker; labels, icons and the wordmark are HTML.
  */
 export default function SiteHeader({
   variant,
+  currentId,
+  currentKind = 'page',
   action = 'subscribe',
   className,
-}: {
-  variant: Variant;
-  /** `exit`: the Spectrum tool pages' ID.LIFE link back into the site, in place of SUBSCRIBE. */
-  action?: 'subscribe' | 'exit';
-  className?: string;
-}) {
-  const isMobile = useIsMobile();
-  const mounted = useIsMounted();
-  const pathname = usePathname();
-  const currentId = useCurrentNavId();
-  const experienceMounted = useAtomValue(experienceMountedAtom);
-  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
-  const subscribePopup = useSetAtom(subscribePopupAtom);
-  const [menuOpen, setMenuOpen] = useAtom(mobileNavOpenAtom);
-  const [menuWanted, setMenuWanted] = useState(false);
-  // The experience reveals its fixed UI when the intro ends (fadeInAnimCompletedAtom). The server HTML and the
-  // first paint show the header, so it paints from HTML on every route.
-  const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
+  id,
+  shown = true,
+  inExperience = false,
+  onLogoClick,
+  onItemClick,
+}: SiteHeaderProps) {
   const overlay = variant === 'overlay';
-  const shown = !overlay || !mounted || uiVisible;
-  const inExperience = overlay && experienceMounted;
-
-  // The menu's code loads on its first open; set while rendering, not in an effect.
-  if (menuOpen && !menuWanted) setMenuWanted(true);
-
-  // A page scroll closes the SUBSCRIBE popup (it used to be the desktop nav's job), without counting as a dismissal.
-  useEffect(() => {
-    if (!isSubscribeShow) return;
-    const close = () => subscribePopup({ type: 'close', method: 'scroll' });
-    window.addEventListener('scroll', close, { passive: true, once: true });
-    return () => window.removeEventListener('scroll', close);
-  }, [isSubscribeShow, subscribePopup]);
-
-  // The menu closes when the route changes (set while rendering, not in an effect).
-  const [menuPath, setMenuPath] = useState(pathname);
-  if (menuPath !== pathname) {
-    setMenuPath(pathname);
-    if (menuOpen) setMenuOpen(false);
-  }
-
-  const onLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    track('nav_click', { target_section: NAV.vision_page.id, source: 'logo' });
-    if (!inExperience || !isPlainClick(event)) return;
-    event.preventDefault();
-    goToSection(NAV.vision_page.id, 'nav');
-  };
-
-  const onItemClick = (event: MouseEvent<HTMLAnchorElement>, item: (typeof SITE_NAV)[number]) => {
-    track('nav_click', { target_section: item.id, source: 'nav' });
-    if (!inExperience || !isSection(item) || !isPlainClick(event)) return;
-    event.preventDefault();
-    goToSection(item.id, 'nav');
-  };
-
-  // The experience's bar keeps the ids the experience and its tests know: #nav on the desktop deck, #mobile-nav
-  // on the phone deck. Only once mounted: the intro tweens and the suite read that id's opacity as "the experience
-  // is ready", which the server-painted header is not.
-  const id = overlay && mounted && isMobile !== null ? (isMobile ? 'mobile-nav' : 'nav') : undefined;
+  // Without handlers (server-rendered pages) the tracker reads these attributes; with them the caller tracks.
+  const trackNav = (navId: string, source?: string) =>
+    onItemClick ? {} : { 'data-nav-id': navId, ...(source ? { 'data-nav-source': source } : {}) };
+  const live = overlay && shown ? 'pointer-events-auto' : undefined;
 
   return (
     <header
       id={id}
-      className={cn(
+      className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? 'fixed left-0 top-0 z-50 gap-15 p-10 transition-opacity duration-300 mobile:z-[60] mobile:gap-0 mobile:p-5'
+          ? // The experience: one row from 1700 px; below, the navigation takes a second row (it scrolls sideways
+            // where nine items do not fit), because labels are 14 px or more at every width (RWD-01).
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 p-10 transition-opacity duration-300 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap'
           : // Content pages: the logo and the actions on the first row, the navigation on its own row below.
-            'relative flex-wrap gap-x-6 gap-y-4 py-5',
+            'flex-wrap gap-x-6 gap-y-4',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
         // On phones the bar lets taps through to the page (its controls take them).
         overlay && (shown ? 'pointer-events-auto opacity-100 mobile:pointer-events-none' : 'pointer-events-none opacity-0'),
         className,
       )}
     >
-      <div className={cn(overlay && shown && 'pointer-events-auto')}>
-        <Logo onClick={onLogoClick} />
+      {!onItemClick && <LinkTracker />}
+      <div className={live}>
+        <Logo onClick={onLogoClick} {...trackNav(NAV.vision_page.id, 'logo')} />
       </div>
       <nav
         aria-label="Main"
-        className={cn(
-          'main-nav-links flex gap-8 text-sm font-semibold mobile:hidden',
-          overlay ? (shown ? 'pointer-events-auto' : '') : 'order-last w-full flex-wrap gap-y-3',
+        className={clsx(
+          'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
+          overlay
+            ? clsx(
+                'hide-scrollbar order-last -mx-10 w-[calc(100%_+_5rem)] overflow-x-auto px-10 pb-3 navRow:order-none navRow:mx-0 navRow:w-auto navRow:overflow-visible navRow:px-0 navRow:pb-0',
+                live,
+              )
+            : 'order-last w-full flex-wrap gap-y-3',
         )}
       >
         {SITE_NAV.map((item) => {
@@ -144,30 +98,39 @@ export default function SiteHeader({
           return (
             <Link
               key={item.id}
+              prefetch={false}
               href={item.href}
-              aria-current={current ? (pathname === item.href || inExperience ? 'page' : 'true') : undefined}
-              onClick={(event) => onItemClick(event, item)}
-              className={cn(
-                'nav-item bilingual-font relative cursor-pointer whitespace-nowrap text-center font-bold uppercase',
+              aria-current={current ? (inExperience ? 'page' : currentKind) : undefined}
+              onClick={onItemClick ? (event) => onItemClick(event, item) : undefined}
+              {...trackNav(item.id)}
+              className={clsx(
+                // Sections are .nav-item and the pages .nav-page-item (same look, globals.css): the e2e guards count
+                // the seven section items by that class.
+                isSection(item) ? 'nav-item' : 'nav-page-item',
+                'bilingual-font relative flex shrink-0 cursor-pointer items-center whitespace-nowrap text-center font-bold uppercase tap',
                 current && 'nav-active',
               )}
             >
-              <BilingualText text={item.title} />
+              {/* In a span: the link is a flex box, which would drop the space between the two languages. */}
+              <span>
+                <BilingualText text={item.title} />
+              </span>
             </Link>
           );
         })}
       </nav>
       <div
         id={overlay ? 'subscribe-btn' : undefined}
-        className="flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5"
+        className="flex h-[max(3rem,44px)] flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5"
       >
         {/* The About page (CON-01): a separate page, so a plain link, not an item of the section navigation. */}
         <Link
+          prefetch={false}
           href={ABOUT_LINK.href}
           aria-current={currentId === ABOUT_LINK.id ? 'page' : undefined}
-          className={cn(
-            'flex h-10 items-center whitespace-nowrap text-sm font-bold uppercase transition-colors duration-300 hover:text-accent mobile:hidden',
-            overlay && shown && 'pointer-events-auto',
+          className={clsx(
+            'flex h-10 items-center whitespace-nowrap text-label font-bold uppercase transition-colors duration-300 tap hover:text-accent mobile:hidden',
+            live,
           )}
         >
           About
@@ -175,47 +138,33 @@ export default function SiteHeader({
         {/* MOT-02: the Motion switch (<button aria-pressed>) goes here, before SUBSCRIBE, so it is an early Tab stop. */}
         {action === 'exit' ? (
           <Link
+            prefetch={false}
             href="/"
-            className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
+            className="group pointer-events-auto relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center px-5 text-label font-semibold uppercase transition-colors duration-300 tap hover:stroke-accent hover:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-xs/5"
           >
             <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
             ID.LIFE
           </Link>
         ) : (
-          <button
-            type="button"
-            {...SUBSCRIBE_TRIGGER}
-            aria-haspopup="dialog"
-            aria-expanded={isSubscribeShow}
-            onClick={() => subscribePopup({ type: 'toggle', placement: 'nav' })}
-            className={cn(
-              'group relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
-              overlay && shown && 'pointer-events-auto',
-              isSubscribeShow && 'stroke-accent text-accent',
+          <SubscribeTrigger
+            className={clsx(
+              'group relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center whitespace-nowrap px-5 text-label font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-xs/5',
+              live,
             )}
           >
-            <SubscribeBorderSVG
-              className={cn(
-                'absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent',
-                isSubscribeShow && 'stroke-accent',
-              )}
-            />
+            <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent group-data-[open=true]:stroke-accent" />
             Subscribe
-          </button>
+          </SubscribeTrigger>
         )}
-        <button
-          type="button"
-          aria-label="Menu"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-nav-menu"
-          onClick={() => setMenuOpen((open) => !open)}
-          // 40 px icon; the ::before pseudo-element extends the touch target to 48 px.
-          className="pointer-events-auto relative hidden before:absolute before:-inset-1 before:content-[''] mobile:flex"
-        >
-          {menuOpen ? <MenuCloseSVG aria-hidden="true" className="h-10" /> : <MenuOpenSVG className="h-10" />}
-        </button>
+        <MenuToggle
+          currentId={currentId}
+          inExperience={inExperience}
+          // 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px.
+          className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex"
+          openIcon={<MenuOpenSVG className="h-10" />}
+          closeIcon={<MenuCloseSVG aria-hidden="true" className="h-10" />}
+        />
       </div>
-      {menuWanted && <SiteMenu currentId={currentId} inExperience={inExperience} />}
     </header>
   );
 }

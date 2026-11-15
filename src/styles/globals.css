@@ -28,6 +28,13 @@
   border-radius: 6px;
 }
 
+/* 44 px tall to touch, like every control (RWD-06). */
+@media (pointer: coarse) {
+  .skip-link {
+    min-height: 44px;
+  }
+}
+
 .skip-link:focus,
 .skip-link:focus-visible {
   top: 1rem;
@@ -108,7 +115,8 @@
     max-width: calc(var(--read-body) * 48);
   }
 
-  .nav-item {
+  .nav-item,
+  .nav-page-item {
     &::after {
       content: '';
       position: absolute;
@@ -385,8 +393,9 @@
     transform: translate(-50%, -50%);
     border: 0.7px solid black;
     border-radius: 9999px;
-    width: 7.625rem;
-    height: 2.5rem;
+    /* The SCROLL button's own box (ScrollButton: px floors on tablets, RWD-01). */
+    width: 100%;
+    height: 100%;
   }
 
   .back-button-ripple-init {

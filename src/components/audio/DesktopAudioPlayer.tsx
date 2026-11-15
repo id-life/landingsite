@@ -110,7 +110,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           type="button"
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
           onClick={handleChangePlayStatus}
-          className="flex cursor-pointer items-center rounded-full"
+          className="relative flex cursor-pointer items-center rounded-full tap-area"
         >
           <span aria-hidden="true" className="px-[8px]">
             <DesktopAudioSiriWave />
@@ -124,7 +124,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             type="button"
             // The name contains the visible title (WCAG 2.5.3 label in name).
             aria-label={`${title || 'Music'}, playlist`}
-            className="mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px]"
+            className="relative mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px] tap-area"
           >
             <AudioTitle width={148} title={title || 'Music'} />
             <span aria-hidden="true" className="h-[14px] w-px bg-tone-650" />

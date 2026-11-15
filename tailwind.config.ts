@@ -194,13 +194,13 @@ const config: Config = {
     // Touch targets (RWD-06), in px so they never shrink with a scaled unit, and only on coarse pointers (the mouse
     // layout is unchanged). `tap`: the box is at least 44x44 (pair it with flex or inline-flex and centring).
     // `tap-area`: the box keeps its size and a centred ::before grows the hit area to at least 44x44, for icons and
-    // links whose box must not move; it takes ::before, so the element must not use it already.
+    // links whose box must not move; it takes ::before, so the element must not use it already, and the element must
+    // be positioned (relative, absolute or fixed): the utility does not set position, so it never overrides one.
     plugin(({ addUtilities }) => {
       addUtilities({
         '.tap': { [`@media ${COARSE_POINTER_QUERY}`]: { minHeight: '44px', minWidth: '44px' } },
         '.tap-area': {
           [`@media ${COARSE_POINTER_QUERY}`]: {
-            position: 'relative',
             '&::before': {
               content: "''",
               position: 'absolute',

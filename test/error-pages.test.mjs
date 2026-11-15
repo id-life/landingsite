@@ -14,7 +14,7 @@ vi.mock('@/../public/svgs/subscribe-border.svg?component', () => ({ default: () 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: () => {} }), usePathname: () => '/missing' }));
 
 const hrefs = (html) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((m) => m[1]);
-// The site header (NAV-04) comes first on the 404 and the route error page: the logo, the nine navigation items and
+// The site header (NAV-04) comes first on the 404: the logo, the nine navigation items and
 // About.
 const HEADER = [
   '/',
@@ -58,7 +58,8 @@ describe('error pages', () => {
     const html = renderToStaticMarkup(createElement(RouteError, { error: new Error('boom'), reset: () => {} }));
     expect(html).toContain('Something went wrong');
     expect(html).toMatch(/<button[^>]*>Try again/);
-    expect(afterHeader(html)).toEqual(['/', '/', '/news', '/podcast', '/connect']);
+    // No site header here: the route error boundary is part of every route's bundle (PERF-10).
+    expect(hrefs(html)).toEqual(['/', '/', '/news', '/podcast', '/connect']);
   });
 
   test('the global error page renders its own <html lang="en"> with the same frame', () => {
