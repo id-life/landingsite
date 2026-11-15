@@ -1,7 +1,7 @@
 'use client';
 
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
-import MobileTwin from '@/app/twin/MobileTwin';
+import Twin from '@/app/twin/Twin';
 import MobileInsights from '@/app/insights/MobileInsights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
@@ -54,7 +54,7 @@ export default function MobileHome() {
         <MobileInsights />
         <MobileSpectrum />
         <Engagement deck="phone" />
-        <MobileTwin />
+        <Twin deck="phone" />
         <Connect />
         <MobileFooter />
         <MobileFooterContact />

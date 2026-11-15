@@ -3,22 +3,57 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { ModelType } from '@/components/twin/model/type';
 import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { AnatomyCamera, currentModelAtom, currentModelTypeAtom, modelLoadingItemAtom, PredictionModel } from '@/atoms/twin';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import {
+  currentModelAtom,
+  currentModelTypeAtom,
+  mobileBorderAnimationStateAtom,
+  modelLoadingItemAtom,
+  PredictionModel,
+} from '@/atoms/twin';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
+import { motion, useAnimation } from 'motion/react';
+import { useEffect } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { u } from '@/utils/layout-unit';
+import type { TwinDeck } from '@/app/twin/twin-deck';
 
-export default function SwitchSkin() {
-  const currentModelType = useAtomValue(currentModelTypeAtom);
+// Phone deck: the pair of icons breathes with the model picker's border (mobileBorderAnimationStateAtom).
+const BORDER_ANIMATION_CONFIG = { scaleDuration: 1.5, scaleValue: 1.1 };
+
+/**
+ * Skin / anatomy switch, one component for both decks (RWD-02; it was SwitchSkin and its mobile twin). By deck:
+ * - desktop: two 42 px icons side by side at the bottom right; switching moves the titles out (GSAP) and asks the 3D
+ *   stage for the other model (SWITCH_MODEL), timing the load (modelLoadingItemAtom);
+ * - phone: two 28 px icons stacked at the right edge, scaling with the model picker's border; switching sets the model
+ *   type, which picks the clip or still.
+ * RWD-06: each icon has a 44x44 box on coarse pointers.
+ */
+export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
+  const phone = deck === 'phone';
+  const [currentModelType, setCurrentModelType] = useAtom(currentModelTypeAtom);
   const currentModel = useAtomValue(currentModelAtom);
   const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
+  const borderAnimationState = useAtomValue(mobileBorderAnimationStateAtom);
+  const borderControls = useAnimation();
+
+  useEffect(() => {
+    if (!phone || borderAnimationState === 'idle') return;
+    void borderControls.start({
+      scale: borderAnimationState === 'scale-up' ? BORDER_ANIMATION_CONFIG.scaleValue : 1,
+      transition: { duration: BORDER_ANIMATION_CONFIG.scaleDuration },
+    });
+  }, [phone, borderAnimationState, borderControls]);
+
   const handleModelTypeChange = (type: ModelType) => {
     const label = type === ModelType.Skin ? 'skin' : 'anatomy';
     trackTwin('skin', label, currentModel);
+    if (phone) {
+      setCurrentModelType(type);
+      return;
+    }
     setModelLoadingItem({ view: label, model: twinModelId(currentModel) ?? '', at: performance.now() });
-
     if (currentModel === PredictionModel.M0) {
       gsap.to('.twin-title', { opacity: 0 });
       gsap.to('#ytb-demo', { opacity: 0 });
@@ -28,26 +63,33 @@ export default function SwitchSkin() {
     eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
   };
 
+  const iconClass = (type: ModelType) =>
+    clsx(
+      phone ? 'w-7' : 'h-[42px] w-[42px] animate-scale',
+      currentModelType === type ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
+    );
   return (
-    <div id="switch-skin" className="absolute bottom-60 right-[64px] z-20 grid gap-5">
-      <div className="grid grid-cols-2 gap-10">
-        <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Skin)}>
-          <SkinSVG
-            className={clsx(
-              'h-[42px] w-[42px] animate-scale',
-              currentModelType === ModelType.Skin ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
-            )}
-          />
+    <div
+      id="switch-skin"
+      className={clsx(
+        'absolute z-20 grid gap-5',
+        // Desktop: never closer to the bottom than 190 px, so the feature list under it (which has a type floor) does
+        // not reach it on tablets. GSAP moves it (bottom) when a model is shown.
+        phone ? 'right-5 top-1/2 -translate-y-1/2' : 'bottom-[max(15rem,190px)] right-[64px]',
+      )}
+    >
+      <motion.div
+        className={phone ? 'grid grid-rows-2 gap-3 coarse:gap-0' : 'grid grid-cols-2 gap-10'}
+        initial={{ scale: 1 }}
+        animate={borderControls}
+      >
+        <div className="cursor-pointer tap" onClick={() => handleModelTypeChange(ModelType.Skin)}>
+          <SkinSVG className={iconClass(ModelType.Skin)} />
         </div>
-        <div className="cursor-pointer" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
-          <AnatomySVG
-            className={clsx(
-              'h-[42px] w-[42px] animate-scale',
-              currentModelType === ModelType.Anatomy ? 'fill-accent stroke-accent' : 'fill-black stroke-black',
-            )}
-          />
+        <div className="cursor-pointer tap" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
+          <AnatomySVG className={iconClass(ModelType.Anatomy)} />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

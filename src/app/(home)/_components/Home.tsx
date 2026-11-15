@@ -87,6 +87,7 @@ export default function Home() {
       <ScrollSmootherRoot />
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
+      {/* The Digital Twin's 3D stage (canvas + controls), mounted once outside the scrolled content (RWD-02). */}
       {webgl && <TwinThreeWrapper />}
       <PCAudioPlayer />
       <div id="wrapper">
@@ -96,7 +97,7 @@ export default function Home() {
           <Insights />
           <Spectrum />
           <Engagement deck="desktop" />
-          <Twin />
+          <Twin deck="desktop" />
           <Connect />
           <Footer />
           <FooterContact />
