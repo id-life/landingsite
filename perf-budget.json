@@ -42,9 +42,9 @@
   "firstVisit": {
     "phone": {
       "/": {
-        "kB": 1484.8,
-        "jsKB": 1058.2,
-        "requests": 95
+        "kB": 1408.6,
+        "jsKB": 983.4,
+        "requests": 94
       },
       "/news": {
         "kB": 437.4,
@@ -59,9 +59,9 @@
     },
     "tablet": {
       "/": {
-        "kB": 1934.4,
-        "jsKB": 1077,
-        "requests": 153
+        "kB": 1795.1,
+        "jsKB": 999.3,
+        "requests": 150
       },
       "/news": {
         "kB": 437.4,
@@ -76,9 +76,9 @@
     },
     "laptop": {
       "/": {
-        "kB": 1934.4,
-        "jsKB": 1077,
-        "requests": 153
+        "kB": 1796.4,
+        "jsKB": 1000.6,
+        "requests": 151
       },
       "/news": {
         "kB": 437.4,
