@@ -6,6 +6,7 @@ import Markdown from 'react-markdown';
 import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent } from '@/apis';
+import { isApiNotFound } from '@/apis/request';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
 import Link from 'next/link';
@@ -27,8 +28,7 @@ const getCacheNewsContent = cache(async (id: string) => {
   } catch (error) {
     // The API rejects a malformed or unknown id with 400/404: render the not-found page, not a 500.
     // Anything else (API down) still throws, so ISR keeps serving the last good version.
-    const code = (error as { code?: number } | undefined)?.code;
-    if (code === 400 || code === 404) return undefined;
+    if (isApiNotFound(error)) return undefined;
     throw error;
   }
 });

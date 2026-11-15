@@ -20,7 +20,7 @@ type SearchParams = { [key: string]: PodcastCategory | undefined };
 
 async function seriesJsonLd(category: PodcastCategory) {
   const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
-  const episodes = await getPodcastEpisodes(nav.id);
+  const episodes = (await getPodcastEpisodes(nav.id)) ?? [];
   return [
     { '@context': 'https://schema.org', ...podcastSeriesJsonLd(nav.id, episodes) },
     // The main show shares the company's name, so its crumb is labelled by what the page is.
