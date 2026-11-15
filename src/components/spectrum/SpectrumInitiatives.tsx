@@ -54,6 +54,8 @@ function SpectrumInitiatives({
                 layout === 'publications'
                   ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
                   : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+                // Long titles (the phone's peer review page) wrap over several lines: keep a gap between them.
+                layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
                 // A landscape tablet (coarse pointer, 840-1199 px): the 44 px link boxes would push the logo wall under
                 // the bottom controls, so an initiative's links run in two columns there; a phone in landscape (under
                 // 480 px tall) takes three, so the first page fits above the section arrows.
@@ -70,7 +72,9 @@ function SpectrumInitiatives({
                     'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-body-sm [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.5] [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
                     // Peer review titles are running text: body with a tighter leading (RWD-01's 16 px bar for runs of
                     // 60 characters or more). After the line above, so cn() keeps these.
-                    layout === 'publications' && '[&_.spectrum-link-text]:!text-body [&_.spectrum-link-text]:!leading-[1.4]',
+                    // The phone pages the peer reviews in the column layout, so the length decides there.
+                    (layout === 'publications' || item.links.some((l) => l.label.length >= 60)) &&
+                      '[&_.spectrum-link-text]:!text-body [&_.spectrum-link-text]:!leading-[1.4]',
                   )}
                 >
                   <SpectrumLink
