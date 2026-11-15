@@ -113,7 +113,14 @@ export default function FooterContact() {
               </div>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
-              <p className="uppercase opacity-50">Contact</p>
+              {/* The About link shares the label's row: a line of its own made the panel taller and put it under
+                  the section arrows at the bottom of the screen. */}
+              <div className="flex items-baseline justify-between gap-6">
+                <p className="uppercase opacity-50">Contact</p>
+                <a href="/about" className="transition duration-300 hover:text-red-600">
+                  About Immortal Dragons <span aria-hidden="true">→</span>
+                </a>
+              </div>
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
                   constants instead of repeated literals. */}
               <address className="not-italic">
@@ -129,9 +136,6 @@ export default function FooterContact() {
                   {ORG_EMAIL}
                 </a>
               </address>
-              <a href="/about" className="mt-3 flex w-fit items-center gap-1.5 transition duration-300 hover:text-red-600">
-                About Immortal Dragons <span aria-hidden="true">→</span>
-              </a>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>

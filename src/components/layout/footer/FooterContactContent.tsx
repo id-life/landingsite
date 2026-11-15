@@ -89,7 +89,12 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
 
   return (
     <div className="text-black">
-      <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="font-oxanium text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+        <a href="/about" className="font-oxanium text-xs/[15px] font-bold">
+          About Immortal Dragons <span aria-hidden="true">→</span>
+        </a>
+      </div>
       <div className="mt-3">
         {mediaRows.map((row, rowIndex) => (
           <div key={rowIndex} className={cn('flex justify-between gap-2', rowIndex === 1 && 'mt-4')}>
@@ -121,9 +126,6 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
-      <a href="/about" className="mt-1.5 flex w-fit items-center gap-1 py-1 font-oxanium text-xs/[15px] font-bold">
-        About Immortal Dragons <span aria-hidden="true">→</span>
-      </a>
       <div className="my-4 h-px w-full bg-black/20" />
       <form id="subscribe-form" className="relative flex justify-between gap-3" onSubmit={handleSubmit(onFormSubmit)}>
         {errors.EMAIL && (

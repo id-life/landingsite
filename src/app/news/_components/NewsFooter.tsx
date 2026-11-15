@@ -94,7 +94,12 @@ export default function NewsFooter() {
         <div className="font-oxanium text-base/5 font-bold">
           {/* Only the label is set in capitals: the address and the email read as written (CON-20), and the email
               is a mailto link, as in the Connect footer. */}
-          <p className="uppercase opacity-50">Contact</p>
+          <div className="flex items-baseline justify-between gap-6">
+            <p className="uppercase opacity-50">Contact</p>
+            <a href="/about" className="font-poppins font-semibold hover:text-red-600">
+              About Immortal Dragons <span aria-hidden="true">→</span>
+            </a>
+          </div>
           <address className="not-italic">
             <div className="mt-7 flex items-center justify-start gap-1.5 font-poppins font-semibold">
               <img className="size-5" src="/svgs/home.svg" alt="" />
@@ -108,9 +113,6 @@ export default function NewsFooter() {
               {ORG_EMAIL}
             </a>
           </address>
-          <a href="/about" className="mt-3 flex w-fit items-center gap-1.5 font-poppins font-semibold hover:text-red-600">
-            About Immortal Dragons <span aria-hidden="true">→</span>
-          </a>
         </div>
         <div className="font-oxanium text-base/5">
           <p className="font-bold uppercase opacity-50">SUBSCRIBE</p>
