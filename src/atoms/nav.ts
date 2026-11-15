@@ -16,6 +16,9 @@ export const initialRouteHandledAtom = atom<boolean>(false);
 /** Incremented each time the experience (Home or MobileHome) mounts; HashRouter maps the URL once per mount. */
 export const experienceMountIdAtom = atom<number>(0);
 
+/** True while the experience is mounted (false on /news, /podcast and the other content pages). */
+export const experienceMountedAtom = atom<boolean>(false);
+
 // 移动端 portfolio 轮播页面进度条
 export const mobilePortfolioPageIndexAtom = atom<number>(0);
 export const mobilePortfolioPageNavigateToAtom = atom<number | null>(null);

@@ -1,6 +1,6 @@
 'use client';
 
-import { experienceMountIdAtom, initialRouteHandledAtom } from '@/atoms';
+import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
@@ -21,13 +21,16 @@ import { useEffect } from 'react';
 export function useExperienceLifecycle() {
   const bumpMountId = useSetAtom(experienceMountIdAtom);
   const setInitialRouteHandled = useSetAtom(initialRouteHandledAtom);
+  const setMounted = useSetAtom(experienceMountedAtom);
 
   useEffect(() => {
     ScrollTrigger.clearScrollMemory('manual');
+    setMounted(true);
     bumpMountId((id) => id + 1);
     return () => {
+      setMounted(false);
       setInitialRouteHandled(false);
       ScrollTrigger.clearScrollMemory('auto');
     };
-  }, [bumpMountId, setInitialRouteHandled]);
+  }, [bumpMountId, setInitialRouteHandled, setMounted]);
 }

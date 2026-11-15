@@ -135,6 +135,9 @@ export function useNavigation() {
   );
 
   const handleNavClick = useThrottle(handleNavClickImpl, 500);
+  // Unthrottled, for programmatic navigation that must not be swallowed by an earlier no-op call
+  // (HashRouter applying the URL when the experience mounts).
+  const handleNavClickNow = handleNavClickImpl;
 
   useEffect(() => {
     if (navigateTo) {
@@ -144,5 +147,5 @@ export function useNavigation() {
     }
   }, [handleNavClick, navigateTo, setCurrentPage, setNavigateTo]);
 
-  return { handleNavClick };
+  return { handleNavClick, handleNavClickNow };
 }
