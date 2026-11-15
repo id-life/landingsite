@@ -16,6 +16,7 @@ import { motion, useAnimation } from 'motion/react';
 import { useCallback } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { reportError } from '@/lib/report';
+import { EASE } from '@/motion/tokens';
 
 // Animation configuration - can be customized
 const ANIMATION_CONFIG = {
@@ -54,7 +55,7 @@ export default function SwitchModel() {
       scale: 1.03,
       transition: {
         duration: ANIMATION_CONFIG.scaleDuration * 0.8,
-        ease: 'easeOut',
+        ease: EASE.out,
       },
     });
 
@@ -68,7 +69,7 @@ export default function SwitchModel() {
             scale: ANIMATION_CONFIG.scaleValue,
             transition: {
               duration: ANIMATION_CONFIG.scaleDuration,
-              ease: 'easeOut',
+              ease: EASE.out,
             },
           });
 
@@ -77,7 +78,7 @@ export default function SwitchModel() {
             scale: 1,
             transition: {
               duration: ANIMATION_CONFIG.scaleDuration,
-              ease: 'easeOut',
+              ease: EASE.out,
             },
           });
         } catch (error) {
@@ -94,7 +95,7 @@ export default function SwitchModel() {
         scale: 1,
         transition: {
           duration: ANIMATION_CONFIG.scaleDuration,
-          ease: 'easeOut',
+          ease: EASE.out,
         },
       });
     }, totalAnimationTime);

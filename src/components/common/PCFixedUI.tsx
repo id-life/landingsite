@@ -11,7 +11,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, ReactNode, useEffect, useMemo } from 'react';
 import { NAV_LIST } from '../nav/nav';
 import { ClientOnly } from './ClientOnly';
-import FixedParticles from './FixedParticles';
 import PageArrows from './PageArrows';
 import ScrollButton from './ScrollButton';
 import VerticalCarousel from './VerticalCarousel';

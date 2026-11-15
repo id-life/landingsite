@@ -1,4 +1,11 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
+import { DURATION, EASE_POINTS, motionCssVariables } from './src/motion/tokens';
+
+// Motion tokens (MOT-08, src/motion/tokens.ts): --dur-* / --ease-* on :root, and duration-<token> / ease-<token>
+// utilities that read them, so CSS transitions play the same durations and curves as GSAP and motion.
+const motionDurations = Object.fromEntries([...Object.keys(DURATION), 'page'].map((n) => [n, `var(--dur-${n})`]));
+const motionEases = Object.fromEntries([...Object.keys(EASE_POINTS), 'linear'].map((n) => [`token-${n}`, `var(--ease-${n})`]));
 
 const config: Config = {
   content: [
@@ -158,6 +165,8 @@ const config: Config = {
         'move-right': 'move-right 3s linear infinite',
         'fade-in': 'fade-in 1s ease-in-out forwards',
       },
+      transitionDuration: motionDurations,
+      transitionTimingFunction: motionEases,
       fontSize: {
         ss: '0.625rem',
         // Reading sizes of the content pages (news, podcast), all derived from --read-body (globals.css): 16 px body
@@ -169,6 +178,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [plugin(({ addBase }) => addBase({ ':root': motionCssVariables() }))],
 };
 export default config;

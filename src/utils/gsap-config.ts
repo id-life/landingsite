@@ -1,9 +1,11 @@
 import { PAGE_IDS } from '@/constants/pages';
+import { beats, EASE } from '@/motion/tokens';
 
 // 主题过渡默认配置
+// Inside the scrubbed section timelines, so the length is in beats (a share of the section's scroll).
 export const THEME_TRANSITION_DEFAULTS = {
-  duration: 0.5, // timeline 中的相对时长
-  ease: 'power2.inOut',
+  duration: beats(0.5),
+  ease: EASE.inOut,
 };
 
 // 主题色彩变换配置

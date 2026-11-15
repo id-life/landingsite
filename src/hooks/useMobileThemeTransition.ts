@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
 import { useRef } from 'react';
+import { DURATION } from '@/motion/tokens';
 
 export function useMobileThemeTransition() {
   const [currentTheme, setCurrentTheme] = useAtom(mobileCurrentThemeAtom);
@@ -48,7 +49,7 @@ export function useMobileThemeTransition() {
     // 执行主题切换动画
     tl.set('.base-background2', { opacity: 0 }).to(root, {
       ...BACKGROUND_COLORS[theme],
-      duration: 0.5,
+      duration: DURATION.moderate,
     });
   });
 

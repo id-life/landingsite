@@ -1,24 +1,29 @@
-/**
- * Section stepping for the desktop experience. Wheel input is handled per section in
- * useScrollSmootherAction; keyboard and touch input arrive here as one normalised "step" event so
- * every input moves through the sections the same way. (Before, only the wheel stepped: arrow keys
- * crept 40 px through transitions thousands of pixels long and touch on a tablet scrolled freely
- * through half-finished states.)
- */
-export type StepDirection = 'up' | 'down';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import type { SectionId } from '@/components/nav/nav';
 
-export type SectionStepDetail = {
-  dir: StepDirection;
-  source: 'keyboard' | 'touch';
-  /** Set by the section that acts on the step (or swallows it during a transition). */
-  handled: boolean;
+/**
+ * Where each section of the desktop deck rests (MOT-01). Every section's scrubbed timeline marks the end of its
+ * entrance with a 'rest' label; the section controller lands every arrival there (wheel, keys, nav, arrows,
+ * deep links, Back), so a section has one pose whatever the path. (There were three landing literals for
+ * Portfolio alone, 0.95 / 0.96 / 0.965 of its scroll, leaving the contact block at 84-92 % of its entrance.)
+ * Mission rests at the top of the page.
+ */
+const REST_TRIGGER: Record<SectionId, string | null> = {
+  vision_page: null,
+  portfolio_page: 'portfolio-trigger',
+  insights_page: 'insights-scroll-trigger',
+  spectrum_page: 'spectrum-trigger',
+  engagement_page: 'engagement-scroll-trigger',
+  twin_page: 'twin-scroll-trigger',
+  connect_page: 'connect-page1-scroll-trigger',
 };
 
-export const SECTION_STEP_EVENT = 'idlife:section-step';
-
-/** Dispatch a step; returns true when a section handled it. */
-export function dispatchSectionStep(dir: StepDirection, source: SectionStepDetail['source']) {
-  const detail: SectionStepDetail = { dir, source, handled: false };
-  window.dispatchEvent(new CustomEvent<SectionStepDetail>(SECTION_STEP_EVENT, { detail }));
-  return detail.handled;
+/** The scroll position (px) where a section rests, or null while its ScrollTrigger does not exist yet. */
+export function getRestScroll(id: SectionId): number | null {
+  const triggerId = REST_TRIGGER[id];
+  if (triggerId === null) return 0;
+  const st = ScrollTrigger.getById(triggerId);
+  if (!st) return null;
+  const y = st.labelToScroll('rest');
+  return Number.isFinite(y) ? Math.round(y) : null;
 }

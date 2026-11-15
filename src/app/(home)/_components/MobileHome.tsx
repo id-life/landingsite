@@ -20,6 +20,7 @@ import { useAtomValue } from 'jotai';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
 import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
+import { usePhoneSectionDriver } from '@/hooks/useMobileNavigation';
 import { initialRouteHandledAtom } from '@/atoms';
 
 export default function MobileHome() {
@@ -30,6 +31,8 @@ export default function MobileHome() {
   useMobileHomeAnimateInit();
   // Scroll restoration and URL mapping are scoped to each mount of the experience.
   useExperienceLifecycle();
+  // The phone tree changes section through the same controller as the desktop deck (MOT-01).
+  usePhoneSectionDriver();
   // Vertical swipes step through sections, like the arrow buttons.
   useMobileSwipe();
   // Mobile section changes push their own URL; keep the tab title in step.
