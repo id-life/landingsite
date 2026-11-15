@@ -7,6 +7,7 @@ import VideoModal from '@/app/insights/_components/VideoModal';
 import CoverImage from '@/components/media/CoverImage';
 import CardShell from '@/components/common/CardShell';
 import { safeHref } from '@/utils/safe-href';
+import { youtubeWatchUrl } from '@/utils/youtube';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         href={href}
         external={isExternal}
         onActivate={() => setIsModalOpen(true)}
+        linkFallback={isYouTube ? youtubeWatchUrl(data.videoId!) : undefined}
         className="group block cursor-pointer"
       >
         <div className="relative h-87 overflow-hidden mobile:h-[12.5rem]">
