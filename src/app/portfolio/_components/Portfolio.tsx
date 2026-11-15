@@ -14,12 +14,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { Swiper as SwiperType } from 'swiper';
-import { FreeMode } from 'swiper/modules';
 import { portfolio, portfolioGetSourceImgInfos, PortfolioItemInfo } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
-
-SwiperType.use([FreeMode]);
 
 const PAGE_ID = 'portfolio_page';
 const FIRST_ROW_COUNT = 8;

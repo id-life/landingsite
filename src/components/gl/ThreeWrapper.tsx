@@ -11,8 +11,8 @@ import { useIsMounted } from '@/hooks/useIsMounted';
 import { HeroReady } from '@/components/gl/heroAssets';
 import dynamic from 'next/dynamic';
 
-// r3f-perf is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
-// production build drops this branch and r3f-perf never reaches the bundle.
+// The performance overlay is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
+// production build drops this branch and the overlay never reaches the bundle.
 const PrefHook =
   process.env.NODE_ENV === 'development' ? dynamic(() => import('@/components/gl/PrefHook'), { ssr: false }) : null;
 

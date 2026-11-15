@@ -1,6 +1,8 @@
 import { cn } from '@/utils';
 import { ItemList, WithContext } from 'schema-dts';
 
+import type { JSX } from 'react';
+
 export type PortfolioItemInfo = {
   title: string;
   subTitle?: string;

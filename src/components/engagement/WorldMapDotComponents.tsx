@@ -192,7 +192,7 @@ export function ContentSection({
   period?: string;
   imgs?: { src: string; alt: string }[];
   link?: string;
-  scrollContainerRef?: React.RefObject<HTMLDivElement>;
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   onClick: (e: MouseEvent) => void;
 }) {
   const content = (
@@ -463,7 +463,7 @@ export function MobileContentSection({
   period?: string;
   imgs?: { src: string; alt: string }[];
   link?: string;
-  scrollContainerRef?: React.RefObject<HTMLDivElement>;
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   onClick: (e: MouseEvent) => void;
 }) {
   const scrollContent = imgs?.length ? (

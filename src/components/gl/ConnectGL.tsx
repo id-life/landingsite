@@ -14,7 +14,7 @@ import { memo, RefObject, useRef } from 'react';
 import * as THREE from 'three';
 
 type TitleProps = {
-  titleRef: RefObject<THREE.Group>;
+  titleRef: RefObject<THREE.Group | null>;
   position: THREE.Vector3;
   rotation?: THREE.Euler;
   scale: number;

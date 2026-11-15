@@ -15,8 +15,8 @@ export interface PortfolioItemAnimationConfig {
  * 涓撻棬澶勭悊 Portfolio 缁勪欢涓殑澶嶆潅鎮仠鍔ㄧ敾閫昏緫
  */
 export function usePortfolioItemAnimation(
-  wrapperRef: RefObject<HTMLDivElement>,
-  portfolioRefs: RefObject<HTMLDivElement[]>,
+  wrapperRef: RefObject<HTMLDivElement | null>,
+  portfolioRefs: RefObject<HTMLDivElement[] | null>,
   onImageIndexChange: (index: number) => void,
   config: PortfolioItemAnimationConfig = {},
 ) {

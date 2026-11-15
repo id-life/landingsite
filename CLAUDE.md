@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 14 App Router site with a
+Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 15.5 App Router site (React 19, React Three Fiber 9, drei 10) with a
 scroll-driven 3D experience and server-rendered content pages. Read this before changing anything; update it in the
 same commit as any change to the architecture it describes.
 
@@ -73,8 +73,11 @@ is its own status check. Run the same commands locally before pushing.
   goes through `src/components/seo/JsonLd.tsx`; links from API data through `src/utils/safe-href.ts`.
 - Server-rendered summaries for crawlers and assistive tech: `PageSEOContent`. Never hide text from people while
   serving it to crawlers (no `aria-hidden` text, no zero-height wrappers).
+- p5 sketches mount through `src/components/gl/particle/P5Canvas.tsx` (one instance per sketch, props through
+  `updateWithProps`). Do not bring back `@p5-wrapper/react`: version 4 bundles React 18's JSX runtime and breaks on
+  React 19, version 5 needs p5 2.
 - No `console.log` in src (ESLint `no-console`; `console.warn` and `console.error` are allowed for real problems).
-  `r3f-perf` loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
+  The drei `StatsGl` overlay loads only in development (`NEXT_PUBLIC_ENABLE_PREF=1 npm run dev`).
 - `reactStrictMode` is off on purpose: under Strict Mode (development only) the five pinned sections get nested pin
   spacers and the particle sketch mounts a second p5 canvas. Make those effects idempotent before turning it on.
 - Analytics run only in production builds (`ANALYTICS_ENABLED`, `src/constants/env.ts`); Sentry only on Vercel

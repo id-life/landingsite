@@ -7,7 +7,7 @@ import { Group, Vector3 } from 'three';
 import gsap from 'gsap';
 import { isMobile } from 'react-device-detect';
 
-export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group> }) => {
+export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group | null> }) => {
   const { camera } = useThree();
   const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
   const page2Config = useMemo(() => CONNECT_GL_CONFIG[1], []);
