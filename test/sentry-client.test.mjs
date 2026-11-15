@@ -9,18 +9,36 @@ vi.mock('@/lib/sentry-init', () => {
   return { Sentry: { captureException: (e, hint) => captured.push({ e, hint }), captureRouterTransitionStart: () => {} } };
 });
 
+const consent = vi.hoisted(() => ({ analytics: 'unset', listeners: new Set() }));
+vi.mock('@/lib/analytics/consent', () => ({
+  getConsentState: () => ({ analytics: consent.analytics }),
+  isAnalyticsRefused: () => consent.analytics === 'denied',
+  subscribeConsent: (fn) => (consent.listeners.add(fn), () => consent.listeners.delete(fn)),
+}));
+const setConsent = (value) => {
+  consent.analytics = value;
+  for (const fn of [...consent.listeners]) fn();
+};
+
 function fakeWindow() {
   const listeners = {};
   globalThis.window = {
     addEventListener: (type, fn) => (listeners[type] ??= new Set()).add(fn),
     removeEventListener: (type, fn) => listeners[type]?.delete(fn),
-    requestIdleCallback: () => 0,
+    idle: [],
+    requestIdleCallback(fn) {
+      this.idle.push(fn);
+      return 0;
+    },
   };
   globalThis.document = { readyState: 'complete' };
   return listeners;
 }
 
 afterEach(() => {
+  consent.analytics = 'unset';
+  consent.listeners.clear();
+  vi.restoreAllMocks();
   delete globalThis.window;
   delete globalThis.document;
   captured.length = 0;
@@ -66,5 +84,37 @@ describe('lazy Sentry', () => {
     expect(listeners.error).toBeUndefined();
     expect(captured).toEqual([]);
     expect(inits.count).toBe(before);
+  });
+
+  test('a visit outside the 5 % never downloads the SDK unless an error happens', async () => {
+    fakeWindow();
+    vi.doMock('@/lib/sentry-options', () => ({ sentryBaseOptions: { enabled: true } }));
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const before = inits.count;
+    const client = await import('@/lib/sentry-client');
+    client.startSentry();
+    setConsent('granted');
+    expect(window.idle).toEqual([]);
+    expect(inits.count).toBe(before);
+    client.captureException(new Error('needs the SDK'));
+    await client.loadSentry();
+    expect(captured.map((c) => c.e.message)).toEqual(['needs the SDK']);
+  });
+
+  test('a trace visit loads the SDK when idle only once consent is granted', async () => {
+    fakeWindow();
+    vi.doMock('@/lib/sentry-options', () => ({ sentryBaseOptions: { enabled: true } }));
+    vi.spyOn(Math, 'random').mockReturnValue(0.01);
+    const client = await import('@/lib/sentry-client');
+    client.startSentry();
+    expect(client.isTraceVisit()).toBe(true);
+    expect(window.idle).toHaveLength(1);
+    window.idle[0]();
+    expect(consent.listeners.size).toBe(1);
+    setConsent('denied');
+    expect(consent.listeners.size).toBe(1);
+    setConsent('granted');
+    expect(consent.listeners.size).toBe(0);
+    expect(await client.loadSentry()).not.toBeNull();
   });
 });

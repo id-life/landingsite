@@ -1,15 +1,22 @@
 import type { ConsentState } from '@/lib/analytics/consent';
 
-/** The share of consented page loads and navigations that send a performance trace (ENG-08). */
+/** The share of consented visits that send performance traces (ENG-08). */
 export const TRACE_SAMPLE_RATE = 0.05;
 
 /**
- * DATA-01: a performance trace is analytics, so it needs the visitor's consent; error reports do not. Granted: the
- * usual 5 %. Anything else (no choice yet, Reject, Global Privacy Control, automation, a build without the consent
- * layer): no trace. Decided when each trace starts, from the consent state at that moment.
+ * Whether this visit is one of the 5 % that may send traces, rolled once when the page starts, before the SDK loads,
+ * so the other visits need not download it at all (it then loads only for an error).
  */
-export function traceSampleRate(consent: Pick<ConsentState, 'analytics'>, refused: boolean): number {
-  return consent.analytics === 'granted' && !refused ? TRACE_SAMPLE_RATE : 0;
+export const rollTraceSession = (random: () => number = Math.random) => random() < TRACE_SAMPLE_RATE;
+
+/**
+ * DATA-01: a performance trace is analytics, so it needs the visitor's consent; error reports do not. Granted, in a
+ * trace visit: every trace of the visit. Anything else (no choice yet, Reject, Global Privacy Control, automation, a
+ * build without the consent layer, or one of the 95 % of visits): no trace. Asked when each trace starts, so it reads
+ * the consent state at that moment.
+ */
+export function traceSampleRate(consent: Pick<ConsentState, 'analytics'>, refused: boolean, traceVisit: boolean): number {
+  return traceVisit && consent.analytics === 'granted' && !refused ? 1 : 0;
 }
 
 /**
