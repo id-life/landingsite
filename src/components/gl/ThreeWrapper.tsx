@@ -8,7 +8,7 @@ import { Suspense, useMemo } from 'react';
 import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useIsMounted } from '@/hooks/useIsMounted';
-import { HeroReady } from '@/components/gl/heroAssets';
+import { HeroAssetsGate, HeroReady, preloadHeroAssets } from '@/components/gl/heroAssets';
 import dynamic from 'next/dynamic';
 
 // The performance overlay is a development tool (NEXT_PUBLIC_ENABLE_PREF=1 npm run dev). NODE_ENV is a build-time constant, so a
@@ -18,6 +18,7 @@ const PrefHook =
 
 export default function ThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
+  preloadHeroAssets('desktop');
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
 
@@ -47,9 +48,11 @@ export default function ThreeWrapper() {
         {PrefHook && process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
         {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
         <Suspense fallback={null}>
-          <VisionGL />
-          <Preload all />
-          <HeroReady />
+          <HeroAssetsGate variant="desktop">
+            <VisionGL />
+            <Preload all />
+            <HeroReady />
+          </HeroAssetsGate>
         </Suspense>
         <Suspense fallback={null}>
           <ConnectGL />

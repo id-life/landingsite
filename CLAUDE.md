@@ -1,17 +1,19 @@
 # CLAUDE.md
 
-Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 15.5 App Router site (React 19, React Three Fiber 9, drei 10) with a
-scroll-driven 3D experience and server-rendered content pages. Read this before changing anything; update it in the
-same commit as any change to the architecture it describes.
+Guidance for coding agents working on www.id.life (Immortal Dragons 不朽真龙), a Next.js 16 App Router site (React 19,
+React Three Fiber 9, drei 10) with a scroll-driven 3D experience and server-rendered content pages. Read
+this before changing anything; update it in the same commit as any change to the architecture it describes.
 
 ## Commands
 
 ```bash
 npm ci            # install exactly what package-lock.json pins
-npm run dev       # dev server on http://localhost:3000
-npm run build     # production build (also type-checks app routes)
+npm run dev       # dev server on http://localhost:3000 (Turbopack; writes to .next/dev, so it can run beside a build)
+npm run build     # production build with webpack (next build --webpack; also type-checks). Not `npx next build`:
+                  # Next 16 defaults to Turbopack, which reaches the first screen about 270 ms later here on fast 4G
+npm run build:turbopack   # the same build on Turbopack, to re-measure before switching
 npm start         # serve the production build
-npm run lint      # next lint (ESLint, including the repo's no-restricted-syntax rules)
+npm run lint      # ESLint CLI with the flat config in eslint.config.mjs (next lint no longer exists in Next 16)
 npm test          # vitest unit tests (markdown sanitising, error handling, routes, content parity)
 npm run knip      # unused files and dependencies (fails); unused exports (warnings). Config: knip.jsonc
 npm run perf:budget   # after a build: initial JS per route + first visit per device vs perf-budget.json
@@ -63,6 +65,13 @@ is its own status check. Run the same commands locally before pushing.
 - **Spectrum and Presence hash routes** are data in `src/hooks/spectrum/spectrum-routes.ts` (unit-tested in
   `test/spectrum-routes.test.mjs`); deep links replace the history entry.
 - **Section ids**: use `NAV.<id>` from `src/components/nav/nav.ts`, never `NAV_LIST[<number>]` (lint rule).
+- **Bundling.** SVGs import as React components with `?component` (SVGR) and shaders (`.glsl/.vert/.frag`) import as
+  strings, in both `webpack()` (production) and `turbopack.rules` (dev) in `next.config.mjs`. Production builds use
+  webpack: Turbopack 16.4 merges three, swiper and the GL code into one 1.8 MB lazy chunk on the path to the first
+  canvas. Request APIs are async (`await props.params`, `await props.searchParams`).
+- **Hero gate.** `HeroAssetsGate` (`src/components/gl/heroAssets.ts`) mounts the hero only once its resources are in
+  R3F's loader cache, so it never suspends: React 19 holds back the reveal of a Suspense boundary that resolves within
+  300 ms of its fallback, which delayed every first screen. Add any new hero resource to its cache keys.
 
 ## Content, data and SEO
 
@@ -96,7 +105,8 @@ is its own status check. Run the same commands locally before pushing.
 
 ## Definition of done
 
-1. `npx tsc --noEmit -p .`, `npm run lint` and `npm test` pass.
+1. `npm run typecheck`, `npm run lint` (errors fail; the React Compiler rules of eslint-plugin-react-hooks 7 warn),
+   `npm test` and `npm run knip` pass.
 2. `npm run build` succeeds.
 3. The e2e suite shows no guard regression against the baseline, and the targets of the item you worked on are green.
 4. Checked on a preview or local build on phone, tablet and laptop; screenshots or a recording for visible changes.

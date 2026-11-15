@@ -73,13 +73,11 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      # Production dependencies only, high and critical. Advisory until the Next 16 upgrade (ENG-04): the remaining
-      # high and critical advisories are in next 14 itself.
+      # Production dependencies only; fails on a high or critical advisory.
       - run: npm audit --omit=dev --audit-level=high
-        continue-on-error: true
 
   build:
-    name: build and performance budget
+    name: build, bundle and first-visit budget
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -91,9 +89,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
-      # A local build: analytics and Sentry are compiled out (DEPLOY_ENV is not production).
+      # A local build (webpack, like Vercel's `npm run build`): analytics and Sentry are compiled out (DEPLOY_ENV is
+      # not production).
       - run: npm run build
-      # Initial JS per route and first-visit weight per device against perf-budget.json. Chrome ships on the
+      # Bundle check (initial JS per route, gzipped) and first-visit weight per device against perf-budget.json. Chrome ships on the
       # runner image; the runner has no GPU, so WebGL runs on SwiftShader, and the check fails if the experience
       # gets no WebGL context (the no-WebGL path would pass for the wrong reason).
       - run: npm run perf:budget -- --out perf-report.json
