@@ -32,10 +32,22 @@ export default function PCFixedUI() {
       )}
 
       <CarouselWrapper />
+      <NewFixedConnect />
+    </div>
+  );
+}
+
+/**
+ * The music player. Rendered before the page content (Home), not inside PCFixedUI, so its buttons are early Tab
+ * stops: inside PCFixedUI they came after every link of the seven sections. It fades in with the fixed UI.
+ */
+export function PCAudioPlayer() {
+  const uiReady = useAtomValue(fadeInAnimCompletedAtom);
+  return (
+    <div className={cn('transition-opacity duration-300', uiReady ? 'opacity-100' : 'opacity-0')}>
       <ClientOnly>
         <DesktopAudioPlayer className="fixed bottom-10 right-10 z-[51]" />
       </ClientOnly>
-      <NewFixedConnect />
     </div>
   );
 }

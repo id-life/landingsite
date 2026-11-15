@@ -197,7 +197,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   return (
     <div ref={containerRef} className={cn('relative flex flex-col', isMobile && !compact && 'h-full')}>
       {/* Mobile: wrap header + content for vertical centering (not in compact mode) */}
-      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col justify-center overflow-hidden')}>
+      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -6,14 +6,13 @@ import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import Logo from '@/components/nav/Logo';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useSubscribeAction } from '@/hooks/useSubscribeAction';
+import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 import { cn } from '@/utils';
 import { clsx } from 'clsx';
 import { useAtomValue } from 'jotai';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useEvent } from 'react-use';
-import { MessageType } from '../event-bus/messageType';
-import { useEventBus } from '../event-bus/useEventBus';
 import { NAV_LIST } from './nav';
 
 export default function PCNav() {
@@ -21,11 +20,7 @@ export default function PCNav() {
   // Visible from state, so a remount (Back from /news) shows the nav at once instead of waiting for the intro tween.
   const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
   const { handleNavClick } = useNavigation();
-  const { onSubscribeClick, handleScroll, handleClickOutside, handleClose } = useSubscribeAction();
-
-  useEventBus(MessageType.CLOSE_SUBSCRIBE, () => {
-    handleClose();
-  });
+  const { isSubscribeShow, onSubscribeClick, handleScroll } = useSubscribeAction();
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => window.scrollTo({ top: 0 }));
@@ -56,8 +51,6 @@ export default function PCNav() {
   }, []);
 
   useEvent('scroll', handleScroll);
-
-  useEvent('click', handleClickOutside);
 
   return (
     <div
@@ -91,13 +84,17 @@ export default function PCNav() {
         ))}
       </div>
       <div id="subscribe-btn" className="flex h-12 flex-1 justify-end mobile:h-auto mobile:items-center">
-        <div
+        <button
+          type="button"
+          {...SUBSCRIBE_TRIGGER}
+          aria-haspopup="dialog"
+          aria-expanded={isSubscribeShow}
           onClick={onSubscribeClick}
           className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase duration-300 hover:stroke-red-600 hover:text-red-600 mobile:h-8 mobile:w-24 mobile:text-xs/5"
         >
           <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-red-600" />
           Subscribe
-        </div>
+        </button>
       </div>
     </div>
   );

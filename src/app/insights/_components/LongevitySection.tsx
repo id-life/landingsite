@@ -229,7 +229,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
 
   return (
     <div ref={containerRef} className={cn('relative flex flex-col', isMobile && !compact && 'h-full')}>
-      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col justify-center overflow-hidden')}>
+      <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className={cn('font-oxanium text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>

@@ -33,6 +33,11 @@ export const musicListAtom = atom<AudioDataItem[]>([]);
 export const podcastIDAtom = atom<AudioDataItem[]>([]);
 export const podcastLTAtom = atom<AudioDataItem[]>([]);
 export const hasInteractedAtom = atom<boolean>(false);
+/**
+ * Whether the player list may be fetched: set when the visitor shows intent (points at, focuses or presses the
+ * player, or opens its playlist). The list is 1.3 MB uncompressed and nothing on screen needs it before then.
+ */
+export const audioListRequestedAtom = atom<boolean>(false);
 
 export const playlistAtom = atom<AudioDataItem[]>([]);
 

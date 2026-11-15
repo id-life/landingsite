@@ -47,14 +47,19 @@ function MobileInsights() {
         hidden: currentPage?.id !== PAGE_ID,
       })}
     >
-      {/* Content Area - centered with both sections */}
-      <div className="mobile-insights-content flex flex-1 flex-col justify-center gap-6 overflow-y-auto px-5 pb-4">
-        {/* News & Talks Section */}
-        <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile isVisible={isVisible} />
+      {/* Content Area. Centred with auto margins, not justify-content: center: centring content that is
+          taller than the scroll box pushed the NEWS & TALKS row (and the only VIEW ALL to /news) above the
+          box's scroll origin, where neither scrolling nor tapping reached it. Auto margins centre when there
+          is room and start at the top when there is not, on every browser. */}
+      <div className="mobile-insights-content flex flex-1 flex-col overflow-y-auto px-5 pb-4">
+        <div className="my-auto flex flex-col gap-6">
+          {/* News & Talks Section */}
+          <NewsAndTalksSection items={insightItems} isLoading={isInsightsLoading} isMobile isVisible={isVisible} />
 
-        {/* Podcast Section (compact mode - 2 items) */}
-        <PodcastSection isMobile compact isVisible={isVisible} />
-        <LongevitySection isMobile isVisible={isVisible} compact />
+          {/* Podcast Section (compact mode - 2 items) */}
+          <PodcastSection isMobile compact isVisible={isVisible} />
+          <LongevitySection isMobile isVisible={isVisible} compact />
+        </div>
       </div>
     </div>
   );

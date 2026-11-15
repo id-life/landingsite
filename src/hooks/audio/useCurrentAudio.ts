@@ -33,6 +33,21 @@ function getAnalyser() {
 }
 const approxVisualisationUpdateFrequency = 5;
 
+// Play pressed before the player list has arrived (it is fetched only on intent). iOS lets a media element play
+// later, outside the gesture, only if play() or load() ran on it inside a gesture, so the element is created and
+// primed in the press and adopted for the first track once the list is in.
+let primedAudio: HTMLAudioElement | null = null;
+let playWhenReady = false;
+export function requestPlayWhenReady() {
+  playWhenReady = true;
+  if (primedAudio) return;
+  const audio = new Audio();
+  audio.crossOrigin = 'anonymous';
+  audio.preload = 'none';
+  audio.load();
+  primedAudio = audio;
+}
+
 const RA = (f: number) =>
   (12194 ** 2 * f ** 4) /
   ((f ** 2 + 20.6 ** 2) * Math.sqrt((f ** 2 + 107.7 ** 2) * (f ** 2 + 737.9 ** 2)) * (f ** 2 + 12194 ** 2));
@@ -112,6 +127,10 @@ export default function useCurrentAudio() {
       audio = nextAudioRef.current;
       nextAudioRef.current = null;
       isPreloaded = true;
+    } else if (primedAudio) {
+      audio = primedAudio;
+      primedAudio = null;
+      audio.src = currentAudio.url;
     } else {
       // preload 'none': nothing is downloaded until the visitor presses play (the first track is 5.6 MB).
       audio = new Audio();
@@ -122,6 +141,10 @@ export default function useCurrentAudio() {
 
     audio.volume = 0.3;
     setAudioRef(audio);
+    if (playWhenReady) {
+      playWhenReady = false;
+      dispatch({ type: AUDIO_DISPATCH.PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    }
 
     const setupAudio = () => {
       if (!isMobile) {
@@ -234,6 +257,27 @@ export default function useCurrentAudio() {
     document.addEventListener('click', reportInteraction, { once: true });
     return () => document.removeEventListener('click', reportInteraction);
   }, [trackEvent]);
+
+  // Pause while the tab is hidden; resume on return only if it was playing.
+  const audioRefRef = useRef(audioRef);
+  audioRefRef.current = audioRef;
+  useEffect(() => {
+    let resumeOnShow = false;
+    const onVisibilityChange = () => {
+      const audio = audioRefRef.current;
+      if (document.hidden) {
+        if (audio && !audio.paused) {
+          resumeOnShow = true;
+          dispatch({ type: AUDIO_DISPATCH.PAUSE });
+        }
+      } else if (resumeOnShow) {
+        resumeOnShow = false;
+        dispatch({ type: AUDIO_DISPATCH.PLAY, value: 'resume' });
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, [dispatch]);
 
   // 清理预加载的资源
   useEffect(() => {

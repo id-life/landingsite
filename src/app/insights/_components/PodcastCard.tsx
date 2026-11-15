@@ -1,8 +1,6 @@
-import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { STORAGE_KEY } from '@/constants/storage';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
-import { podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
 type PodcastCardProps = {
   item: PodcastItem;
@@ -10,17 +8,14 @@ type PodcastCardProps = {
 };
 
 export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
-  const podcastIDList = useAtomValue(podcastIDAtom);
-  const podcastLTList = useAtomValue(podcastLTAtom);
   const router = useRouter();
 
+  // The card links straight to its episode by id. It used to look the episode up in the player's 1.3 MB list
+  // first, which made the Play button depend on that list (now fetched only when the player is opened).
   const handlePlay = () => {
-    const audioData = podcastIDList.find((p) => p.id === item.id) || podcastLTList.find((p) => p.id === item.id);
-    if (!audioData) return;
-
     // Same tab: the episode page is part of this site.
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push(`/podcast/${audioData.id}`);
+    router.push(`/podcast/${item.id}`);
   };
 
   return (

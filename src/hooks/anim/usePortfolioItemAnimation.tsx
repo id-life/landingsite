@@ -50,15 +50,10 @@ export function usePortfolioItemAnimation(
       tl.to(selected, { opacity: 1 });
     }
 
+    // The one-liner is visible at rest on every device (it used to start at opacity 0 and appear only on
+    // hover, so touch tablets and keyboard users never read it); hover lifts it slightly.
     if (desc) {
-      tl.from(
-        desc,
-        {
-          opacity: 0,
-          translateY: '50%',
-        },
-        '<50%',
-      );
+      tl.to(desc, { y: '-0.25rem' }, '<50%');
     }
 
     if (subtitle) {

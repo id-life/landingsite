@@ -5,7 +5,10 @@ import { useAtomValue } from 'jotai';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
 import { useMobileSectionStep } from '@/components/common/MobilePageArrows';
 
-const IGNORE = '.swiper, [data-no-swipe], .touch-none, input, textarea, select, [role="dialog"], [aria-modal="true"]';
+const IGNORE = '[data-no-swipe], input, textarea, select, [role="dialog"], [aria-modal="true"]';
+// Horizontal carousels (Swiper) and the Presence map (touch-none, scrolls sideways) keep horizontal
+// drags; a swipe that starts on them changes section only when it is clearly vertical.
+const HORIZONTAL_ZONE = '.swiper, .touch-none';
 
 /** The nearest ancestor of the target that scrolls vertically on its own, if any. */
 function verticalScroller(target: Element | null): Element | null {
@@ -46,6 +49,7 @@ export function useMobileSwipe() {
     let scrollerTop = 0;
     let pageY = 0;
     let tracking = false;
+    let horizontalZone = false;
 
     const onStart = (event: TouchEvent) => {
       tracking = false;
@@ -55,6 +59,7 @@ export function useMobileSwipe() {
       const touch = event.touches[0];
       startX = touch.clientX;
       startY = touch.clientY;
+      horizontalZone = Boolean(target?.closest(HORIZONTAL_ZONE));
       scroller = verticalScroller(target);
       scrollerTop = scroller?.scrollTop ?? 0;
       pageY = window.scrollY;
@@ -67,7 +72,7 @@ export function useMobileSwipe() {
       if (!touch) return;
       const dx = touch.clientX - startX;
       const dy = touch.clientY - startY;
-      if (Math.abs(dy) < 50 || Math.abs(dy) < Math.abs(dx) * 1.3) return;
+      if (Math.abs(dy) < 50 || Math.abs(dy) < Math.abs(dx) * (horizontalZone ? 2 : 1.3)) return;
       const dir = dy < 0 ? 'down' : 'up';
       // The swipe scrolled content (or the page): it was a scroll, not a section change. A swipe
       // against content already at its edge moves nothing, so it changes section.

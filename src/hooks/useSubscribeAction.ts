@@ -1,18 +1,9 @@
-import { currentPageIndexAtom, hasShownAutoSubscribeAtom, mobileCurrentPageIndexAtom } from '@/atoms';
-import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
-import { fadeInAnimCompletedAtom } from '@/atoms/geo';
-import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import { subscribeNewsletter } from '@/utils/subscribe';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { isSubscribeShowAtom, subscribePopupAtom, subscribeTypeAtom } from '@/atoms/footer';
+import { submitNewsletter } from '@/utils/newsletter';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { trackEvent } from './useGA';
 import { useThrottle } from './useThrottle';
-
-/** Section index (0-based in NAV_LIST) whose arrival may open the subscribe popup: 3 = Spectrum. */
-const AUTO_POPUP_SECTION_INDEX = 3;
 
 type Inputs = {
   EMAIL: string;
@@ -21,198 +12,53 @@ type Inputs = {
   'amp;f_id': string;
 };
 
+/**
+ * The desktop header's SUBSCRIBE button. The popup opens only on request: it used to open by itself
+ * (first on arrival, then on reaching the 4th section), covering the hero, the phone controls and the
+ * Connect contact block. The button toggles it; a page scroll closes it without counting as a dismissal.
+ */
 export function useSubscribeAction() {
-  const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
-  const playingRef = useRef<boolean>(false);
-  const timelineRef = useRef<GSAPTimeline>(gsap.timeline({ paused: true }));
-  const { contextSafe } = useGSAP();
-  const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
-  const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
-  const [subscribeType, setSubscribeType] = useAtom(subscribeTypeAtom);
+  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const isSubscribeShowRef = useRef(isSubscribeShow);
+  isSubscribeShowRef.current = isSubscribeShow;
+  const dispatch = useSetAtom(subscribePopupAtom);
 
-  // Initialize timeline
-  useGSAP(
-    () => {
-      const tl = gsap.timeline({ paused: true });
-      tl.to('.page-footer', { bottom: '2.25rem', duration: 0.3 });
-      tl.to('.footer-box-clip', { width: '40rem', height: '13rem', duration: 0.3 }, '<');
-      timelineRef.current = tl;
-    },
-    { dependencies: [fadeInAnimCompleted] },
-  );
-
-  const yoyoAnim = contextSafe(() => {
-    if (playingRef.current) return;
-    playingRef.current = true;
-    gsap.to('.footer-box-clip', {
-      x: 10,
-      repeat: 5,
-      yoyo: true,
-      duration: 0.1,
-      onComplete: () => {
-        playingRef.current = false;
-      },
-    });
-  });
-
-  const handleStart = useCallback(
-    (isFirst?: boolean) => {
-      timelineRef.current?.play();
-      setIsSubscribeShow(true);
-      trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.POPUP_APPEAR });
-      if (isFirst) {
-        trackEvent({
-          name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
-          label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
-        });
-        setSubscribeType('first');
-      } else {
-        trackEvent({
-          name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
-          label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FOOTER,
-        });
-        setSubscribeType('footer');
-      }
-    },
-    [setIsSubscribeShow, setSubscribeType],
-  );
-
-  const handleClose = (isFirst?: boolean) => {
-    timelineRef.current?.reverse();
-    setIsSubscribeShow(false);
-    setHasShownAuto(true);
-
-    if (isFirst) {
-      trackEvent({
-        name: GA_EVENT_NAMES.SUBSCRIBE_CLOSE,
-        label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_CLOSE.FOOTER,
-      });
-    }
-  };
-
-  const onSubscribeClick = () => {
-    if (!fadeInAnimCompleted) return;
-
-    if (isSubscribeShow) {
-      yoyoAnim();
-    } else {
-      handleStart();
-    }
-  };
+  const onSubscribeClick = () => dispatch({ type: 'toggle', placement: 'nav' });
 
   const handleScroll = useThrottle(() => {
-    if (isSubscribeShow && !timelineRef.current.reversed()) {
-      handleClose();
-    }
+    if (isSubscribeShowRef.current) dispatch({ type: 'close', method: 'scroll' });
   }, 300);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (isSubscribeShow && !playingRef.current) {
-      const target = e.target as Element;
-      const isClickFooter = target.closest('.footer-box-clip');
-      const isClickSubscribeBtn = target.closest('#subscribe-btn');
-      if (!isClickFooter && !isClickSubscribeBtn) {
-        handleClose();
-      }
-    }
-  };
-
-  // Auto-popup: once, after the visitor has engaged (reached the 4th section), never over the hero
-  // on arrival. It used to open as soon as the intro finished, covering the tagline.
-  const currentPageIndex = useAtomValue(currentPageIndexAtom);
-  useEffect(() => {
-    if (hasShownAuto || !fadeInAnimCompleted || currentPageIndex < AUTO_POPUP_SECTION_INDEX) return;
-    // Wait for the section transition to settle: a scroll event closes this popup on desktop, so
-    // opening it mid-transition would flash it and mark it as seen.
-    const timer = setTimeout(() => {
-      if (window.isNavScrolling || window.isSmootherScrolling) return;
-      handleStart(true);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [fadeInAnimCompleted, handleStart, hasShownAuto, currentPageIndex]);
-
-  return {
-    hasShownAuto,
-    timelineRef,
-    onSubscribeClick,
-    handleScroll,
-    handleClickOutside,
-    handleClose,
-  };
+  return { isSubscribeShow, onSubscribeClick, handleScroll };
 }
 
+/** Form state of the phone SUBSCRIBE popup (MobileFooter). Opening and closing go through subscribePopupAtom. */
 export function useMobileSubscribeAction() {
-  const [isSubscribeShow, setIsSubscribeShow] = useAtom(isSubscribeShowAtom);
-  const subscribeRef = useRef<HTMLDivElement>(null);
+  const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
+  const placement = useAtomValue(subscribeTypeAtom);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
-  const fadeInAnimCompleted = useAtomValue(fadeInAnimCompletedAtom);
-  const [hasShownAuto, setHasShownAuto] = useAtom(hasShownAutoSubscribeAtom);
-  const [subscribeType, setSubscribeType] = useAtom(subscribeTypeAtom);
-
-  const handleClose = () => {
-    setIsSubscribeShow(false);
-    setHasShownAuto(true);
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_CLOSE,
-      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_CLOSE.FOOTER,
-    });
-  };
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (subscribeRef.current && !subscribeRef.current.contains(e.target as Node)) {
-      handleClose();
-    }
-  };
-
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setSubmitError(null);
     setIsSubmitting(true);
-    const result = await subscribeNewsletter(formData);
+    const result = await submitNewsletter(formData, placement ?? 'nav');
     setIsSubmitting(false);
     if (!result.ok) {
       setSubmitError(result.message);
       return;
     }
     setIsSubmitted(true);
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER,
-    });
   };
-
-  // Auto-popup: once, after the visitor has engaged (reached the 4th section).
-  const mobilePageIndex = useAtomValue(mobileCurrentPageIndexAtom);
-  useEffect(() => {
-    if (hasShownAuto || !fadeInAnimCompleted || mobilePageIndex < AUTO_POPUP_SECTION_INDEX) return;
-    setIsSubscribeShow(true);
-    trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.POPUP_APPEAR });
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_SHOW,
-      label: GA_EVENT_LABELS.SUBSCRIBE_SHOW.FIRST,
-    });
-    setSubscribeType('first');
-  }, [fadeInAnimCompleted, hasShownAuto, mobilePageIndex, setIsSubscribeShow, setSubscribeType]);
 
   useEffect(() => {
     if (isSubscribeShow) {
       setIsSubmitted(false);
       setIsSubmitting(false);
+      setSubmitError(null);
     }
   }, [isSubscribeShow]);
 
-  return {
-    isSubscribeShow,
-    subscribeRef,
-    handleClickOutside,
-    onFormSubmit,
-    isSubmitting,
-    isSubmitted,
-    submitError,
-    handleClose,
-  };
+  return { isSubscribeShow, onFormSubmit, isSubmitting, isSubmitted, submitError };
 }

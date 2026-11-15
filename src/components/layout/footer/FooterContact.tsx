@@ -15,7 +15,8 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import { subscribeNewsletter } from '@/utils/subscribe';
+import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
+import { submitNewsletter } from '@/utils/newsletter';
 import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
@@ -43,18 +44,13 @@ export default function FooterContact() {
 
   const onFormSubmit: SubmitHandler<Inputs> = async (formData) => {
     setIsSubmitting(true);
-    const result = await subscribeNewsletter(formData);
+    const result = await submitNewsletter(formData, 'connect');
     setIsSubmitting(false);
     if (!result.ok) {
       setError('EMAIL', { type: 'server', message: result.message });
       return;
     }
     setIsSubmitted(true);
-    // Counted only when Mailchimp confirms, so the event measures subscriptions, not attempts.
-    trackEvent({
-      name: GA_EVENT_NAMES.SUBSCRIBE_LETTER,
-      label: GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT,
-    });
   };
 
   const handleLinkClick = (type: MediaLinkTypeKey) => {
@@ -115,15 +111,23 @@ export default function FooterContact() {
                 ))}
               </div>
             </div>
-            <div className="font-oxanium text-base/5 font-bold uppercase">
-              <p className="opacity-50">Contact</p>
-              <div className="mt-7 flex items-center justify-start gap-1.5">
-                <img src="/svgs/home.svg" alt="" />3 Biopolis Dr, #01-15, Singapore 138623
-              </div>
-              <div className="mt-3 flex items-center justify-start gap-1.5">
-                <img src="/svgs/contact-email.svg" alt="" />
-                contact@id.life
-              </div>
+            <div className="font-oxanium text-base/5 font-bold">
+              <p className="uppercase opacity-50">Contact</p>
+              {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
+                  constants instead of repeated literals. */}
+              <address className="not-italic">
+                <div className="mt-7 flex items-center justify-start gap-1.5">
+                  <img src="/svgs/home.svg" alt="" />
+                  {ORG_ADDRESS_TEXT}
+                </div>
+                <a
+                  href={ORG_MAILTO}
+                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 hover:text-red-600"
+                >
+                  <img src="/svgs/contact-email.svg" alt="" />
+                  {ORG_EMAIL}
+                </a>
+              </address>
             </div>
             <div className="font-oxanium text-base/5 font-bold">
               <p className="uppercase opacity-50">SUBSCRIBE</p>

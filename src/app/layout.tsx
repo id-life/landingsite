@@ -7,7 +7,6 @@ import { WebVitals } from '@/app/_components/web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
-import { WebClarity } from '@/app/_components/web-clarity';
 import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
@@ -66,7 +65,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       {ANALYTICS_ENABLED && <GoogleTagManager gtmId="GTM-NZKZJ38H" />}
       {ANALYTICS_ENABLED && gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
       {ANALYTICS_ENABLED && <WebVitals />}
-      {ANALYTICS_ENABLED && <WebClarity />}
       {ANALYTICS_ENABLED && <SessionInvisibilityTracker />}
       <body
         className={clsx(

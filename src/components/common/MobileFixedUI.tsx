@@ -20,7 +20,7 @@ export default function MobileFixedUI() {
       {currentPage.id === NAV_LIST[0].id ? (
         <MobileScrollButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7" />
       ) : (
-        <MobilePageArrows className="fixed bottom-6 left-1/2 -translate-x-1/2" />
+        <MobilePageArrows className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2" />
       )}
 
       <FixedConnect />

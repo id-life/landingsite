@@ -7,6 +7,7 @@ export const GA_EVENT_NAMES = {
   // common
   SESSION_INVISIBLE_TIME: 'session_invisible_time',
   MUSIC_TOGGLE: 'music_toggle',
+  /** @deprecated Only the unrouted src/app/_about uses it; live forms send NEWSLETTER_SUBSCRIBE. */
   SUBSCRIBE_LETTER: 'subscribe_letter',
   MEDIUM_CLICK: 'medium_click',
   ID_PAGE_VIEW: 'id_page_view',
@@ -16,9 +17,13 @@ export const GA_EVENT_NAMES = {
   PAGE_LOAD_ITEM: 'page_load_item',
   PAGE_LOAD_PROGRESS: 'page_load_progress',
 
-  SUBSCRIBE_SUBMIT: 'subscribe_submit',
-  SUBSCRIBE_SHOW: 'subscribe_show',
-  SUBSCRIBE_CLOSE: 'subscribe_close',
+  // Newsletter funnel: one event per step, every form and the popup share one placement vocabulary
+  // (NewsletterPlacement). newsletter_subscribe fires only when Mailchimp accepts a new address.
+  NEWSLETTER_VIEW: 'newsletter_view',
+  NEWSLETTER_CLOSE: 'newsletter_close',
+  NEWSLETTER_SUBMIT: 'newsletter_submit',
+  NEWSLETTER_SUBSCRIBE: 'newsletter_subscribe',
+  NEWSLETTER_ERROR: 'newsletter_error',
 
   SUBSCRIBE_POPUP_STORAGE: 'subscribe_popup_storage',
 
@@ -98,18 +103,6 @@ export const GA_EVENT_LABELS = {
     FOOTER: 'footer',
     FOOTER_CONTACT: 'footer_contact',
   },
-  SUBSCRIBE_SHOW: {
-    FIRST: 'first',
-    NAV: 'nav',
-    FOOTER: 'footer',
-    FOOTER_CONTACT: 'footer_contact',
-  },
-  SUBSCRIBE_CLOSE: {
-    FIRST: 'first',
-    NAV: 'nav',
-    FOOTER: 'footer',
-    FOOTER_CONTACT: 'footer_contact',
-  },
   TWIN_SWITCH: {
     M0: 'ORG',
     M1: 'C01',
@@ -179,7 +172,6 @@ export const GA_EVENT_LABELS = {
   PAGE_LOAD_PROGRESS: {
     MODEL_ANIMATION: 'model_animation',
     UI_APPEAR: 'ui_appear',
-    POPUP_APPEAR: 'popup_appear',
   },
 } satisfies Omit<
   Record<keyof typeof GA_EVENT_NAMES, Record<string, string>>,
@@ -224,7 +216,11 @@ export const GA_EVENT_LABELS = {
   | 'SUBSCRIBE_VIEW'
   | 'EPISODE_END'
   | 'TIMELINE_JUMP'
-  | 'SUBSCRIBE_SUBMIT'
+  | 'NEWSLETTER_VIEW'
+  | 'NEWSLETTER_CLOSE'
+  | 'NEWSLETTER_SUBMIT'
+  | 'NEWSLETTER_SUBSCRIBE'
+  | 'NEWSLETTER_ERROR'
   | 'SUBSCRIBE_POPUP_STORAGE'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;
