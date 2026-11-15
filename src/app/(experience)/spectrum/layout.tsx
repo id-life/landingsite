@@ -48,13 +48,16 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
       <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
       <JsonLd data={jsonLd} />
-      {/* Same summary as the other section routes: one h1, the page description and the section's five
-          headings, no links. The hidden link list that stood here (31 links, 28 of them external) read as
-          hidden link spam. */}
+      {/* Same summary as the other section routes: one h1, the page description, the section's five headings
+          and the item names it shows, with no links. The hidden link list that stood here (31 links, 28 of
+          them external, aria-hidden) read as hidden link spam. */}
       <PageSEOContent
         title={PAGE_TITLE}
         intro={[PAGE_DESCRIPTION]}
-        sections={spectrumBaseData.map((item) => ({ heading: `${item.title} ${item.titleCn}` }))}
+        sections={spectrumBaseData.map((item) => ({
+          heading: `${item.title} ${item.titleCn}`,
+          items: item.links.map((link) => ({ title: link.label })),
+        }))}
       />
       <Style />
       <ClientNav />
