@@ -7,6 +7,7 @@ import { WebVitals } from '@/app/_components/web-vitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import HashRouter from '@/components/common/HashRouter';
 import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google';
+import Script from 'next/script';
 import { SessionInvisibilityTracker } from '@/app/_components/session-invisibility-tracker';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
 import type { Metadata, Viewport } from 'next';
@@ -63,6 +64,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       {ANALYTICS_ENABLED && <GoogleTagManager gtmId="GTM-NZKZJ38H" />}
+      {/* DATA-07: Google signals and ad personalisation off before the tag's own config runs. Google documents that
+          this suppresses the join beacons and adds npa=1 to every hit. Production builds only, like the tags. */}
+      {ANALYTICS_ENABLED && gaId && (
+        <Script id="ga-privacy-defaults" strategy="beforeInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('set','allow_google_signals',false);gtag('set','allow_ad_personalization_signals',false);`}
+        </Script>
+      )}
       {ANALYTICS_ENABLED && gaId && <GoogleAnalytics gaId={gaId} debugMode={gaDebugMode} />}
       {ANALYTICS_ENABLED && <WebVitals />}
       {ANALYTICS_ENABLED && <SessionInvisibilityTracker />}
