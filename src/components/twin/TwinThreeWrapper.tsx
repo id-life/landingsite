@@ -1,9 +1,9 @@
 'use client';
 
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
-import EnvironmentGroup from '@/components/twin/EnvironmentGroup';
+import EnvironmentGroup, { preloadEnvironmentGroup } from '@/components/twin/EnvironmentGroup';
 import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
@@ -18,7 +18,7 @@ import SwitchAnatomyCamera from '@/app/twin/_components/SwitchAnatomyCamera';
 import { eventBus } from '../event-bus/eventBus';
 import ModelReport from '@/app/twin/_components/ModelReport';
 import Model0In from './model/Model0In';
-import Model0Out from './model/Model0Out';
+import Model0Out, { preloadModel0Out } from './model/Model0Out';
 import Model1In from './model/Model1In';
 import Model1Out from './model/Model1Out';
 import Model3In from './model/Model3In';
@@ -29,10 +29,18 @@ import { pollComponentMethod } from '@/components/twin/model/utils';
 import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useDeferredAssets } from '@/hooks/useDeferredAssets';
+import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
 export default function TwinThreeWrapper() {
-  const deferredReady = useDeferredAssets();
+  // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
+  // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
+  const deferredReady = useDeferredAssets('twin');
+  const warm = useDeferredWarm('twin');
+  useEffect(() => {
+    if (!warm) return;
+    preloadModel0Out();
+    preloadEnvironmentGroup();
+  }, [warm]);
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
@@ -234,7 +242,7 @@ export default function TwinThreeWrapper() {
               <View.Port />
             </Suspense>
           </Canvas>
-          {/* Avatar, anatomy models and the HDR load after the first screen is up (about 6 MB). */}
+          {/* Avatar, anatomy models and the HDR load on approach (about 6 MB), never with the hero. */}
           {deferredReady && (
             <>
               {currentModel && (
@@ -245,6 +253,7 @@ export default function TwinThreeWrapper() {
                   <EnvironmentGroup />
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[0]} />
+                  <DeferredSettled group="twin" />
                 </View>
               )}
               {currentModel === PredictionModel.M1 && (

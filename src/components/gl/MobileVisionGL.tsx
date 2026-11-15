@@ -1,24 +1,29 @@
 import { mobileCurrentPageAtom } from '@/atoms';
-import { useThree } from '@react-three/fiber';
+import { useLoader, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Group } from 'three';
+import { SVGLoader } from 'three-stdlib';
 import { NAV_LIST } from '../nav/nav';
 import MobileCenterLogo from './model/vision/MobileCenterLogo';
 import MobileDragonModel from './model/vision/MobileDragonModel';
+import { fitHeroScale, PHONE_LOGO, svgInkSize } from './model/vision/heroFit';
 
 export default function MobileVisionGL() {
-  const { viewport } = useThree();
-  const [scale, setScale] = useState(1);
+  const size = useThree((state) => state.size);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const modelRef = useRef<Group>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-  useEffect(() => {
-    const newScale = Math.min(1, (1 * viewport?.width) / 10);
-    setScale(newScale);
-  }, [viewport?.width]);
+  // Same frustum fit as the desktop tree, measured on the wordmark SVG MobileCenterLogo draws (the
+  // loader cache returns the file it already loaded).
+  const logoSvg = useLoader(SVGLoader, PHONE_LOGO.url);
+  const logoInk = useMemo(() => svgInkSize(logoSvg), [logoSvg]);
+  const scale = useMemo(
+    () => fitHeroScale(size.width / size.height, logoInk.width * PHONE_LOGO.scale, logoInk.height * PHONE_LOGO.scale),
+    [size.width, size.height, logoInk],
+  );
 
   useEffect(() => {
     if (currentPage.id === NAV_LIST[0].id) {

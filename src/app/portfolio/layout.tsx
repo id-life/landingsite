@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { getPortfolioJsonLd } from './_components/portfolioData';
 import PortfolioSEO from './_components/PortfolioSEO';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroPreloads from '@/components/gl/HeroPreloads';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/portfolio' },
@@ -40,8 +41,7 @@ export default function PortfolioLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_decoder.wasm" />
-      <link rel="prefetch" crossOrigin="anonymous" href="/assets/draco/draco_wasm_wrapper.js" />
+      <HeroPreloads />
       <JsonLd data={jsonLd} />
       <PortfolioSEO />
       <Style />

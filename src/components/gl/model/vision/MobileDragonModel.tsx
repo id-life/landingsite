@@ -12,10 +12,9 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useOptimizedGLTF } from './DragonModel';
+import { INTRO, markIntroSeen, shouldSkipIntro, whenElementMounted } from './intro';
 
 const InitRotation = Math.PI / 2;
-const ANIMATION_DURATION = 2.1;
-const ANIMATION_DELAY = 0.21;
 
 export default function MobileDragonModel(props: {}) {
   const { events, clock } = useThree();
@@ -107,13 +106,23 @@ export default function MobileDragonModel(props: {}) {
       if (!globalLoaded) return;
       if (hasFadeInAhead || uiAlreadyShownRef.current) fixedUIHasTriggered.current = true;
 
+      // Repeat visit or reduced motion: the dragon is already at its resting pose; show the UI now.
+      if (shouldSkipIntro()) {
+        autoSwingRef.current = true;
+        if (!fixedUIHasTriggered.current) {
+          fixedUIHasTriggered.current = true;
+          // #mobile-nav renders only once globalLoaded is set; wait for it before revealing.
+          whenElementMounted('#mobile-nav', () => triggerFadeInAnimation());
+        }
+        return;
+      }
+
       gsap.from(modelRef.current.position, {
         x: 0,
         y: 0,
         z: 10,
-        ease: 'power3.out',
-        duration: ANIMATION_DURATION,
-        delay: ANIMATION_DELAY,
+        ease: INTRO.flyInEase,
+        duration: INTRO.flyInSeconds,
         onUpdate: function () {
           const progress = this.progress();
           if (progress >= 0.85 && !fixedUIHasTriggered.current) {
@@ -128,11 +137,11 @@ export default function MobileDragonModel(props: {}) {
         x: Math.PI,
         y: (Math.PI * 3) / 2,
         z: Math.PI,
-        ease: 'power3.out',
-        duration: ANIMATION_DURATION,
-        delay: ANIMATION_DELAY,
+        ease: INTRO.flyInEase,
+        duration: INTRO.flyInSeconds,
         onComplete: () => {
           autoSwingRef.current = true;
+          markIntroSeen();
           trackEvent({ name: GA_EVENT_NAMES.PAGE_LOAD_PROGRESS, label: GA_EVENT_LABELS.PAGE_LOAD_PROGRESS.MODEL_ANIMATION });
         },
       });

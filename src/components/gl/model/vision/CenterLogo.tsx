@@ -8,6 +8,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { INTRO, shouldSkipIntro } from './intro';
 
 const POINTER_DAMPING = 2.5;
 
@@ -63,7 +64,7 @@ export default function CenterLogo() {
         // Animate fade in
         gsap.to([logoMaterial, descMaterial], {
           opacity: 1,
-          duration: 0.84,
+          duration: shouldSkipIntro() ? INTRO.skippedFadeSeconds : INTRO.wordmarkFadeSeconds,
           ease: 'power2.out',
         });
       }

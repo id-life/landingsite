@@ -1,21 +1,24 @@
 import { useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import CenterLogo from './model/vision/CenterLogo';
 import DragonModel from './model/vision/DragonModel';
 import gsap from 'gsap';
 import { NAV_LIST } from '@/components/nav/nav';
 import * as THREE from 'three';
 import { useGSAP } from '@gsap/react';
+import { useLogoTextures } from '@/hooks/useLogoTextures';
+import { fitHeroScale, LOGO_PLANE_HEIGHT } from './model/vision/heroFit';
 
 export default function VisionGL() {
-  const { viewport } = useThree();
-  const [scale, setScale] = useState(1);
+  const size = useThree((state) => state.size);
+  const { logoEnAspectRatio } = useLogoTextures();
   const modelRef = useRef<THREE.Group>(null);
 
-  useEffect(() => {
-    const newScale = Math.min(1, (1 * viewport?.width) / 10);
-    setScale(newScale);
-  }, [viewport?.width]);
+  // The wordmark (and the dragon with it) fits the frustum with a clear margin on every screen.
+  const scale = useMemo(
+    () => fitHeroScale(size.width / size.height, LOGO_PLANE_HEIGHT * logoEnAspectRatio, LOGO_PLANE_HEIGHT),
+    [size.width, size.height, logoEnAspectRatio],
+  );
 
   useGSAP(() => {
     // in connect page, hide dragon model

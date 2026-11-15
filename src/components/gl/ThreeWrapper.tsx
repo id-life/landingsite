@@ -9,6 +9,7 @@ import { Fluid } from './fluid/Fluid';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import PrefHook from '@/components/gl/PrefHook';
+import { HeroReady } from '@/components/gl/heroAssets';
 
 export default function ThreeWrapper() {
   useGLTF.setDecoderPath('/assets/draco/');
@@ -39,10 +40,14 @@ export default function ThreeWrapper() {
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />
         {/* Performance monitoring - enable in development */}
         {process.env.NEXT_PUBLIC_ENABLE_PREF && <PrefHook />}
+        {/* The hero alone gates the loader; Connect (and its jellyfish) can never hold it back. */}
         <Suspense fallback={null}>
           <VisionGL />
-          <ConnectGL />
           <Preload all />
+          <HeroReady />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ConnectGL />
         </Suspense>
         <EffectComposer>
           <Fluid />
