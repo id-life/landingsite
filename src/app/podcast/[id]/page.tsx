@@ -11,6 +11,7 @@ import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/const
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 
@@ -51,38 +52,19 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: { absolute: 'Episode not found | Immortal Dragons 不朽真龙' },
+      title: { absolute: 'Episode not found | Immortal Dragons' },
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
-      keywords: [
-        'Longevity',
-        'anti-aging',
-        'life extension',
-        'investment fund',
-        'innovation',
-        'biotech',
-        'pharmaceutical',
-        'healthcare',
-        'Immortal Dragons',
-      ],
     };
   }
 
-  return {
-    title: { absolute: `${data.title} | Immortal Dragons` },
+  // The full show notes stay on the page; the meta description is cut at a sentence end (SEO-06).
+  return buildMetadata({
+    path: `/podcast/${canonicalId(id)}`,
+    title: data.title,
     description: data.description,
-    keywords: data.keywords,
-    alternates: { canonical: `/podcast/${canonicalId(id)}` },
-    openGraph: {
-      title: `${data.title} | Immortal Dragons`,
-      siteName: 'Immortal Dragons',
-      description: data.description,
-      images: [
-        {
-          url: data.detailMedia,
-        },
-      ],
-    },
-  };
+    image: data.detailMedia || data.album,
+    type: 'article',
+  });
 }
 
 export default async function PodcastContentPage({ params }: PodcastPlayerProps) {

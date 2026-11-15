@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -17,23 +18,14 @@ const articlePath = path.join(process.cwd(), 'src/app/news/immortal-dragons-mile
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/news/immortal-dragons-milestones-and-portfolio' },
-  title: 'Immortal Dragons: Milestones and Portfolio',
+// The title is the article's own heading, in its language; it names the brand, so it is not suffixed twice
+// (it read "Immortal Dragons ... | Immortal Dragons 不朽真龙").
+export const metadata: Metadata = buildMetadata({
+  path: '/news/immortal-dragons-milestones-and-portfolio',
+  title: articleTitle,
   description: articleDescription,
-  openGraph: {
-    title: 'Immortal Dragons: Milestones and Portfolio',
-    siteName: 'Immortal Dragons',
-    description: articleDescription,
-    url: articleUrl,
-    type: 'article',
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+  type: 'article',
+});
 
 const jsonLd: WithContext<NewsArticle> = {
   '@context': 'https://schema.org',

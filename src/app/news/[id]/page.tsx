@@ -1,6 +1,8 @@
 import { ORG_COVER, ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import { absoluteUrl } from '@/constants/site';
 import React, { cache } from 'react';
+import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import dayjs from 'dayjs';
 import Markdown from 'react-markdown';
 import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
@@ -12,7 +14,6 @@ import '@/styles/markdown.css';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
-import { formatKeywords } from '@/utils';
 import JsonLd from '@/components/seo/JsonLd';
 
 dayjs.extend(relativeTime);
@@ -37,25 +38,16 @@ export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const { id } = params;
   const data = await getCacheNewsContent(id);
-  return {
-    title: { absolute: `${data?.title} | Immortal Dragons` },
-    description: data?.description,
-    keywords: formatKeywords(data?.keyWords),
-    alternates: { canonical: `/news/${id}` },
-    openGraph: {
-      title: `${data?.title} - Immortal Dragons`,
-      siteName: 'Immortal Dragons',
-      description: data?.description,
-      images: [
-        {
-          url: 'https://resources.id.life/id-life-cover-2.webp',
-        },
-      ],
-    },
-  };
+  if (!data) return { title: { absolute: 'Article not found | Immortal Dragons' } };
+  return buildMetadata({
+    path: `/news/${id}`,
+    title: data.title,
+    description: data.description || data.content.slice(0, 200),
+    type: 'article',
+  });
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {

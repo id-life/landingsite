@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import PresenceSummary from '@/app/presence/_components/PresenceSummary';
 import { WEBSITE_ID } from '@/constants/entity';
 import { WebPage, WithContext } from 'schema-dts';
@@ -10,34 +11,14 @@ import HeroPreloads from '@/components/gl/HeroPreloads';
 
 const PAGE_TITLE = 'Presence 印记';
 const PAGE_DESCRIPTION =
-  "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.";
+  "A global map of Immortal Dragons' presence, bridging East and West to advance longevity through events, partnerships, and community.";
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/presence' },
-  title: 'Presence 印迹',
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata({
+  path: '/presence',
+  title: 'Presence',
   description: PAGE_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'Presence 印记',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+});
 
 const jsonLd: WithContext<WebPage> = {
   '@context': 'https://schema.org',

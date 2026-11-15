@@ -1,5 +1,3 @@
-import type { Metadata } from 'next';
-
 export type PodcastNavItem = {
   id: string;
   title: string;
@@ -49,50 +47,19 @@ export const COMMENTS_TYPE = {
   XYZ: 'xyz',
 } as const;
 
-export const PODCAST_METADATA: Record<PodcastCategory, Metadata> = {
+/**
+ * Title (the show, in the page's language, without the brand) and description of each show page. Built into the
+ * page metadata by podcastShowMetadata (PodcastShowPage.tsx); the description is also read by llms.txt and JSON-LD.
+ */
+export const PODCAST_METADATA: Record<PodcastCategory, { title: string; description: string }> = {
   [PODCAST_NAV_LIST[0].id]: {
-    title: 'Podcast 播客',
+    title: '播客',
     description:
       '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
-    keywords: ['Longevity', 'Health', 'Science', 'Tech', 'Investment', 'Biotech', '长寿', '健康', '科技', '投资', '生物科技'],
-    openGraph: {
-      title: 'Podcast 播客 | Immortal Dragons 不朽真龙',
-      siteName: 'Immortal Dragons',
-      description:
-        '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
-      images: [
-        {
-          url: 'https://resources.id.life/audio/idfm_logo@small.webp',
-        },
-      ],
-    },
   },
   [PODCAST_NAV_LIST[1].id]: {
-    title: '龙门阵 Long Talk Podcast',
+    title: '龙门阵',
     description:
       '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
-    keywords: [
-      'Behind the Scenes',
-      'Rabbit Hole',
-      'Random Thoughts',
-      'General Knowledge',
-      'Team Chat',
-      '幕后故事',
-      '兔子洞',
-      '奇思妙想',
-      '知识分享',
-      '团队闲聊',
-    ],
-    openGraph: {
-      title: '龙门阵 Long Talk Podcast | Immortal Dragons',
-      siteName: 'Immortal Dragons',
-      description:
-        '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
-      images: [
-        {
-          url: 'https://resources.id.life/audio/longtalk_logo@small.webp',
-        },
-      ],
-    },
   },
 };

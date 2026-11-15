@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import PodcastList from '@/app/podcast/_components/PodcastList';
 import PodcastCover from '@/app/podcast/_components/PodcastCover';
 import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
@@ -12,7 +13,7 @@ const navOf = (category: PodcastCategory) => PODCAST_NAV_LIST.find((item) => ite
 
 /** Each show has its own path (/podcast, /podcast/long-talk), so each page is static and its own canonical. */
 export function podcastShowMetadata(category: PodcastCategory): Metadata {
-  return { ...PODCAST_METADATA[category], alternates: { canonical: navOf(category).link } };
+  return buildMetadata({ path: navOf(category).link, ...PODCAST_METADATA[category], image: PODCAST_COVER[category].cover });
 }
 
 async function seriesJsonLd(category: PodcastCategory) {

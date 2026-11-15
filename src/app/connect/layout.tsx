@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo/metadata';
 import ConnectSummary from '@/app/connect/_components/ConnectSummary';
 import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
@@ -13,32 +14,12 @@ const PAGE_TITLE = 'CONNECT 联结';
 const PAGE_DESCRIPTION =
   "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.";
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/connect' },
-  title: 'Connect 联结',
+// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+export const metadata: Metadata = buildMetadata({
+  path: '/connect',
+  title: 'Connect',
   description: PAGE_DESCRIPTION,
-  keywords: [
-    'Longevity',
-    'anti-aging',
-    'life extension',
-    'investment fund',
-    'innovation',
-    'biotech',
-    'pharmaceutical',
-    'healthcare',
-    'Immortal Dragons',
-  ],
-  openGraph: {
-    title: 'CONNECT 联结',
-    siteName: 'Immortal Dragons',
-    description: PAGE_DESCRIPTION,
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
-  },
-};
+});
 
 const jsonLd: Graph = {
   '@context': 'https://schema.org',
