@@ -1,5 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs/config';
-import { securityHeaders } from './security-headers.mjs';
+import { documentSecurityHeaders, securityHeaders } from './security-headers.mjs';
 
 // Which deployment this build is for. Vercel sets VERCEL_ENV (production | preview | development);
 // anything else (a local build, the self-hosted UAT server) is 'local'.
@@ -150,13 +150,18 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           // 限制不需要的浏览器功能
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          // ENG-11: CSP, HSTS with includeSubDomains, COOP and CORP (security-headers.mjs).
-          ...securityHeaders({
-            deployEnv,
-            cspMode: process.env.CSP_MODE,
-            turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
-          }),
+          // ENG-11: HSTS with includeSubDomains, COOP and CORP (security-headers.mjs).
+          ...securityHeaders(),
         ],
+      },
+      {
+        // ENG-11: the Content-Security-Policy on documents only: not on hashed chunks, optimised images or models.
+        source: '/:path((?!_next/static/|_next/image|models/).*)',
+        headers: documentSecurityHeaders({
+          deployEnv,
+          cspMode: process.env.CSP_MODE,
+          turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+        }),
       },
       {
         // Unhashed public assets: cache for a day, serve stale while revalidating for a week.

@@ -62,11 +62,11 @@ export function contentSecurityPolicy({ deployEnv, turnstile = false }) {
 export const sentrySecurityEndpoint = (deployEnv) =>
   `https://${SENTRY_ORG_HOST}/api/${SENTRY_PROJECT}/security/?sentry_key=${SENTRY_KEY}&sentry_environment=${encodeURIComponent(deployEnv)}`;
 
-export function securityHeaders({ deployEnv, cspMode, turnstile }) {
-  const mode = cspMode || (deployEnv === 'production' ? 'report-only' : 'enforce');
-  const csp = contentSecurityPolicy({ deployEnv, turnstile });
-  const headers = [
-    { key: mode === 'enforce' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only', value: csp },
+/**
+ * Headers for every response: HSTS, COOP and CORP. A few dozen bytes each, so static files carry them too.
+ */
+export function securityHeaders() {
+  return [
     // www.id.life covers only *.www.id.life; the apex must send this too (see the id.life redirect in next.config).
     // preload is an owner decision (hstspreload.org submission is hard to undo).
     { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
@@ -74,6 +74,18 @@ export function securityHeaders({ deployEnv, cspMode, turnstile }) {
     { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
     { key: 'Cross-Origin-Resource-Policy', value: 'same-site' },
   ];
+}
+
+/**
+ * Headers for documents: the Content-Security-Policy (about 900 bytes) and, on Vercel, its reporting endpoint. A
+ * policy only governs the document (or worker) it arrives with, so next.config.mjs keeps it off the hashed
+ * /_next/static chunks, optimised images and 3D models, where it added about 21 kB to a content page's first
+ * visit (PERF-09 budget) and protected nothing. Workers the site starts from blob: URLs inherit the page's policy.
+ */
+export function documentSecurityHeaders({ deployEnv, cspMode, turnstile }) {
+  const mode = cspMode || (deployEnv === 'production' ? 'report-only' : 'enforce');
+  const csp = contentSecurityPolicy({ deployEnv, turnstile });
+  const headers = [{ key: mode === 'enforce' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only', value: csp }];
   if (['production', 'preview'].includes(deployEnv)) {
     headers.push({ key: 'Reporting-Endpoints', value: `csp="${sentrySecurityEndpoint(deployEnv)}"` });
   }
