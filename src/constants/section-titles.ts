@@ -2,9 +2,10 @@ import { NavItem } from '@/components/nav/nav';
 import { BRAND, brandTitle } from '@/lib/seo/metadata';
 
 /**
- * The topic of each experience section, as its route's metadata names it (each route's layout.tsx calls
- * buildMetadata with these titles). test/section-titles.test.mjs keeps the two in step: GA4 reads document.title for
- * each section's page_view (DATA-05), so it must equal the route's own <title>.
+ * The topic of each experience section, as its route's metadata names it (src/content/pages.ts, which each layout
+ * passes to buildMetadata). The content layer stays out of the browser bundle, so the client keeps this short list
+ * and test/section-titles.test.mjs keeps it equal: GA4 reads document.title for each section's page_view (DATA-05),
+ * so it must equal the route's own <title>.
  */
 export const SECTION_TOPICS: Record<string, string> = {
   vision_page: BRAND.en,
