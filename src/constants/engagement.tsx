@@ -57,14 +57,11 @@ export const MOBILE_MAP_SCALE = {
   dotSvgSize: 'size-14', // 56px - SVG element size for mobile dots
   dotSvgPosition: 'absolute left-[-16px] top-[-18px]', // SVG positioning to center the pulse effect
 
-  // Location label text size (Tailwind class: text-X/Y)
-  labelTextClass: 'text-xs/[14px]', // 12 px floor (RWD-01; it was 8 px)
-
   // Region icon size (Tailwind class: size-X)
   regionIconSize: 'size-4', // 16px
 
-  // Badge text size (Tailwind class: text-X/Y)
-  badgeTextClass: 'text-xs/[14px]', // 12 px floor (RWD-01; it was 8 px)
+  // Badge text: the caption role (RWD-01; it was 8 px), on the label's 14 px line. Labels: MAP_LABEL_CLASS.
+  badgeTextClass: 'text-caption leading-[14px]',
 
   // Badge icon size (Tailwind class: size-X)
   badgeIconSize: 'size-2.5', // 10px
@@ -84,12 +81,12 @@ export const MOBILE_MAP_SCALE = {
   // Content max width
   contentMaxWidth: 'max-w-[12rem]', // 192px
 
-  // Content title text size
-  contentTitleClass: 'text-xs/4', // 14px
+  // Card title: the label role (14 px; RWD-01)
+  contentTitleClass: 'text-label',
 
   // Extra sponsor section dimensions
   extraSponsorWidth: 'w-[12rem]', // 192px
-  extraSponsorTitleClass: 'text-xs/4', // 16px
+  extraSponsorTitleClass: 'text-label', // 14 px (RWD-01)
   extraSponsorLogoSize: 'size-[10rem]', // 160px
   extraSponsorMarginTop: '-mt-3',
 };
