@@ -85,7 +85,7 @@ export default function FooterContact() {
             className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4"
           >
             <div className="mb-7.5 font-display font-bold uppercase">
-              <p className="opacity-50">Media</p>
+              <p className="text-tone-650">Media</p>
               <div className="mt-7">
                 {mediaRows.map((row, rowIndex) => (
                   <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
@@ -111,7 +111,7 @@ export default function FooterContact() {
               {/* The About link shares the label's row: a line of its own made the panel taller and put it under
                   the section arrows at the bottom of the screen. */}
               <div className="flex items-baseline justify-between gap-6">
-                <p className="uppercase opacity-50">Contact</p>
+                <p className="uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
                   <a href="/about" className="transition duration-300 hover:text-accent">
                     About Immortal Dragons <span aria-hidden="true">→</span>
@@ -138,7 +138,7 @@ export default function FooterContact() {
               </address>
             </div>
             <div className="font-display text-base/5 font-bold">
-              <p className="uppercase opacity-50">SUBSCRIBE</p>
+              <p className="uppercase text-tone-650">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
                 noValidate

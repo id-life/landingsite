@@ -52,7 +52,7 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
         <div className="mt-5 flex items-center justify-between mobile:mt-3.5">
           <div className="text-xl/5 font-medium mobile:text-xs/5">
             <Link href="/news">News</Link>
-            <span className="ml-1 text-black/50">&gt; Article</span>
+            <span className="ml-1 text-ink-muted">&gt; Article</span>
           </div>
         </div>
         <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">

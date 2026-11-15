@@ -218,6 +218,21 @@
     font-family: var(--font-role-brand-text);
   }
 
+  /* Presence map dots behind the active one (VIS-02): the dot dims, its label stays readable. The label used to take
+     the same 25 % / 50 % opacity, 2.0:1 on the black map; panel-ink-muted is 8.6:1. */
+  .map-dot-dim-soft > :not(p) {
+    opacity: 0.5;
+  }
+
+  .map-dot-dim-strong > :not(p) {
+    opacity: 0.25;
+  }
+
+  .map-dot-dim-soft > p,
+  .map-dot-dim-strong > p {
+    color: var(--color-panel-ink-muted);
+  }
+
   .corner-button::before,
   .corner-button::after,
   .corner-button span::before,

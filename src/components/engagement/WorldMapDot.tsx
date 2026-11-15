@@ -90,7 +90,7 @@ export function WorldMapDotPoint({
       {/* 热区 */}
       <div className="absolute -inset-5 cursor-pointer" />
       {/* 内容 */}
-      <div className={cn('flex items-center gap-1', { 'opacity-50': isOtherActive }, { 'opacity-25': isDarker })}>
+      <div className={cn('flex items-center gap-1', { 'map-dot-dim-soft': isOtherActive }, { 'map-dot-dim-strong': isDarker })}>
         {/* 中心红点和波纹 */}
         <PulseDot
           containerClassName="size-6"

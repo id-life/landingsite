@@ -243,7 +243,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         </div>
 
         <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
-          <div className="font-text text-xs font-medium tracking-normal text-black/50 mobile:mt-3">
+          <div className="font-text text-xs font-medium tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"

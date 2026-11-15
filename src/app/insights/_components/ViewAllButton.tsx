@@ -21,7 +21,7 @@ export default function ViewAllButton({ href, external = false, onClick, isMobil
     <>
       {/* Border SVG with top-left cut corner */}
       <svg aria-hidden="true" className="absolute inset-0" viewBox="0 0 111 36" fill="none" preserveAspectRatio="none">
-        <path d="M10 1H110V35H1V10L10 1Z" stroke="var(--color-accent)" strokeWidth="2" />
+        <path d="M10 1H110V35H1V10L10 1Z" fill="var(--color-white)" stroke="var(--color-accent)" strokeWidth="2" />
       </svg>
       <span className="relative text-sm/5 text-accent">VIEW ALL</span>
       {/* Right chevron arrow */}
