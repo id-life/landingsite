@@ -13,7 +13,7 @@ import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
-import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
+import Spectrum from '@/components/spectrum/Spectrum';
 import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
 import { useAtomValue } from 'jotai';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
@@ -52,7 +52,7 @@ export default function MobileHome() {
         <Vision />
         <MobilePortfolio />
         <Insights />
-        <MobileSpectrum />
+        <Spectrum />
         <MobileEngagement />
         <MobileTwin />
         <Connect />
