@@ -6,7 +6,7 @@ import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
-import PCFixedUI from '@/components/common/PCFixedUI';
+import PCFixedUI, { PCAudioPlayer } from '@/components/common/PCFixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader } from '@/components/gl/ProgressLoader';
 import ThreeWrapper from '@/components/gl/ThreeWrapper';
@@ -62,6 +62,7 @@ export default function Home() {
       <OuterLoader />
       <ThreeWrapper />
       <TwinThreeWrapper />
+      <PCAudioPlayer />
       <div id="wrapper">
         <div id="content">
           <Vision />

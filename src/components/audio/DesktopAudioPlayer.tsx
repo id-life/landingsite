@@ -9,8 +9,15 @@ import AudioTitle from '@/components/audio/AudioTitle';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
-import useCurrentMusicControl, { getAudioContext } from '@/hooks/audio/useCurrentAudio';
-import { AUDIO_DISPATCH, currentAudioAtom, hasInteractedAtom, musicListAtom, playlistAtom } from '@/atoms/audio-player';
+import useCurrentMusicControl, { getAudioContext, requestPlayWhenReady } from '@/hooks/audio/useCurrentAudio';
+import {
+  AUDIO_DISPATCH,
+  audioListRequestedAtom,
+  currentAudioAtom,
+  hasInteractedAtom,
+  musicListAtom,
+  playlistAtom,
+} from '@/atoms/audio-player';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { AnimatePresence, motion } from 'motion/react';
 import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
@@ -45,6 +52,9 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const setPlaylistAtom = useSetAtom(playlistAtom);
   const setCurrentMusic = useSetAtom(currentAudioAtom);
   const setHasInteracted = useSetAtom(hasInteractedAtom);
+  // The player list is fetched on intent: pointing at, focusing or pressing the player (PERF-07).
+  const requestAudioList = useSetAtom(audioListRequestedAtom);
+  const onIntent = () => requestAudioList(true);
 
   useEffect(() => {
     if (!musicList.length) return;
@@ -52,16 +62,19 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     setPlaylistAtom(musicList);
   }, [musicList, setCurrentMusic, setPlaylistAtom]);
 
-  const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleChangePlayStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setHasInteracted(true);
+    requestAudioList(true);
     const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
     const label = isPlaying ? GA_EVENT_LABELS.MUSIC_PLAYER_START.PAUSE : GA_EVENT_LABELS.MUSIC_PLAYER_START.START;
     trackEvent({ name: GA_EVENT_NAMES.MUSIC_PLAYER_START, label });
-    dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
+    // Pressed before the list has arrived: start the first track as soon as it is in.
+    if (!data) requestPlayWhenReady();
+    else dispatch({ type: AUDIO_DISPATCH.TOGGLE_PLAY, value: GA_EVENT_LABELS.MUSIC_AUTO_PLAY.TOGGLE });
     eventBus.next({ type: MessageType.CHANGE_PLAY_STATUS });
   };
 
@@ -71,27 +84,47 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   );
 
   return (
-    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Popover.Trigger asChild>
-        <div
-          onClick={() => setIsOpen((v) => !v)}
-          className={clsx('flex cursor-pointer items-center rounded-full bg-gray-750', className)}
+    <Popover.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (open) onIntent();
+        setIsOpen(open);
+      }}
+    >
+      {/* Two buttons (they were clickable divs, unreachable by keyboard): play / pause, and the playlist. The
+          play button's name switches between "Play music" and "Pause music" (no aria-pressed, per the APG
+          button pattern). Sound starts only from this button. */}
+      <div
+        onPointerEnter={onIntent}
+        onPointerDown={onIntent}
+        onFocus={onIntent}
+        className={clsx('flex items-center rounded-full bg-gray-750', className)}
+      >
+        <button
+          type="button"
+          aria-label={isPlaying ? 'Pause music' : 'Play music'}
+          onClick={handleChangePlayStatus}
+          className="flex cursor-pointer items-center rounded-full"
         >
-          <div onClick={handleChangePlayStatus} className="flex items-center">
-            <div className="px-[8px]">
-              <DesktopAudioSiriWave />
-            </div>
-            <div className="size-[16px]">
-              {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
-            </div>
-          </div>
-          <div className="mx-[4px] flex select-none items-center gap-[8px] pr-[4px]">
-            <AudioTitle width={148} title={title} />
-            <div className="h-[14px] w-px bg-[#57595C]" />
-            <PlayListSVG className="size-[16px] fill-white" />
-          </div>
-        </div>
-      </Popover.Trigger>
+          <span aria-hidden="true" className="px-[8px]">
+            <DesktopAudioSiriWave />
+          </span>
+          <span aria-hidden="true" className="size-[16px]">
+            {isPlaying ? <PauseSVG className="w-full fill-white" /> : <PlaySVG className="w-full fill-white" />}
+          </span>
+        </button>
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            aria-label="Playlist"
+            className="mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px]"
+          >
+            <AudioTitle width={148} title={title || 'Music'} />
+            <span aria-hidden="true" className="h-[14px] w-px bg-[#57595C]" />
+            <PlayListSVG aria-hidden="true" className="size-[16px] fill-white" />
+          </button>
+        </Popover.Trigger>
+      </div>
       <Popover.Anchor className={clsx('pointer-events-none h-[26px]', className)} />
       {/* Mounted only while open (plus its exit animation). A permanently mounted Content keeps Radix's
           invisible focus-guard spans in <body>, which made the first Tab stop on the page an invisible element,

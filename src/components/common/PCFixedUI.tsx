@@ -3,6 +3,7 @@
 import NewFixedConnect from '@/app/connect/NewFixedConnect';
 import { currentPageAtom } from '@/atoms';
 import { isBePartOfItShowAtom } from '@/atoms/character-relation';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import DesktopAudioPlayer from '@/components/audio/DesktopAudioPlayer';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { GA_EVENT_NAMES } from '@/constants/ga';
@@ -29,10 +30,22 @@ export default function PCFixedUI() {
       )}
 
       <CarouselWrapper />
+      <NewFixedConnect />
+    </div>
+  );
+}
+
+/**
+ * The music player. Rendered before the page content (Home), not inside PCFixedUI, so its buttons are early Tab
+ * stops: inside PCFixedUI they came after every link of the seven sections. It fades in with the fixed UI.
+ */
+export function PCAudioPlayer() {
+  const uiReady = useAtomValue(fadeInAnimCompletedAtom);
+  return (
+    <div className={cn('transition-opacity duration-300', uiReady ? 'opacity-100' : 'opacity-0')}>
       <ClientOnly>
         <DesktopAudioPlayer className="fixed bottom-10 right-10 z-[51]" />
       </ClientOnly>
-      <NewFixedConnect />
     </div>
   );
 }
@@ -47,7 +60,9 @@ const CarouselWrapper = memo(() => {
         transition={0.6}
         className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]')}
       >
-        {CAROUSEL_ITEMS?.map((item) => <CarouselItem key={item.cnText ?? item.text} {...item} />)}
+        {CAROUSEL_ITEMS?.map((item) => (
+          <CarouselItem key={item.cnText ?? item.text} {...item} />
+        ))}
       </VerticalCarousel>
     )
   );
