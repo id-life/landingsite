@@ -31,10 +31,10 @@ if (!['off', 'next', 'cdn'].includes(imageOptimizer)) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Strict Mode stays off until the section effects are idempotent. Under Strict Mode (development only) the five
-  // pinned sections get nested pin spacers (the page shrinks from 22,590 to 9,090 px, the URL desyncs and wheel-up
-  // stalls) and the particle sketch mounts a second p5 canvas. Turn it on once the section controller replaces them.
-  reactStrictMode: false,
+  // ENG-16: Strict Mode (development only: React mounts, unmounts and remounts every effect once) catches effects
+  // that are not idempotent. It once nested the pinned sections' spacers; the ScrollSmoother is now created before
+  // any ScrollTrigger (ScrollSmootherRoot in Home.tsx).
+  reactStrictMode: true,
   // ENG-11: no x-powered-by: Next.js on any route.
   poweredByHeader: false,
   // CON-10: the owner's draft review page (src/app/content-review/page.preview.tsx) is a route only in builds that are
@@ -135,6 +135,11 @@ const nextConfig = {
         destination: 'https://www.id.life/:path*',
         permanent: true,
       },
+      // ENG-07: retired section URLs answer 308 to the section that took over their content (/about is a page now,
+      // CON-01). The mapping is the plan's (ENG-07, folded SEO-status-codes-urls and NAV-404-errors).
+      { source: '/vision', destination: '/presence', permanent: true },
+      { source: '/value', destination: '/connect', permanent: true },
+      { source: '/mission', destination: '/', permanent: true },
     ];
   },
   async rewrites() {

@@ -1,6 +1,6 @@
 // CON-20 copy-edit drafts: the strings of figure CON-copy-strings whose fix changes wording, not just spelling,
 // grammar or consistency. Mechanical corrections were applied directly (see docs/content-style.md, "Applied").
-// Metadata titles and descriptions are drafted by SEO-06 (w1-pages) and the portfolio taglines in ./taglines.ts.
+// Metadata descriptions are drafted in ./metadata.ts (SEO-06) and the portfolio taglines in ./taglines.ts.
 import { defineDrafts } from './define';
 
 const FIGURE = { ref: 'idlife-audit figure CON-copy-strings (15 strings as shipped, main @ 6a90671)' };

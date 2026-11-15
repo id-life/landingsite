@@ -8,8 +8,7 @@ import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
 import { ANALYTICS_ENABLED } from '@/constants/env';
 import HeadScript from '@/lib/analytics/HeadScript';
-import AnalyticsBoot from '@/lib/analytics/boot';
-import VercelInsights from '@/lib/analytics/VercelInsights';
+import { AnalyticsBootLazy, VercelInsightsLazy } from '@/lib/analytics/lazy';
 import { VERCEL_INSIGHTS_ENABLED } from '@/lib/analytics/config';
 import { ORG_DESCRIPTION } from '@/constants/entity';
 
@@ -76,14 +75,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <Providers>
-          {ANALYTICS_ENABLED && <AnalyticsBoot />}
+          {ANALYTICS_ENABLED && <AnalyticsBootLazy />}
           <ExperienceRouter />
           <main id="main-content" tabIndex={-1} className="outline-none">
             {children}
           </main>
           <Background />
         </Providers>
-        {VERCEL_INSIGHTS_ENABLED && <VercelInsights />}
+        {VERCEL_INSIGHTS_ENABLED && <VercelInsightsLazy />}
       </body>
     </html>
   );

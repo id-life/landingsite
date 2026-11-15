@@ -22,6 +22,24 @@ import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
+import { reportError } from '@/lib/report';
+
+// ENG-16: the ScrollSmoother exists before any section creates its ScrollTrigger (GSAP's ScrollSmoother docs: "create
+// the scrollSmoother before your scrollTriggers"). Rendered first, its layout effect runs before the sections'
+// do. Created after them, a pinned section's spacer survived Strict Mode's revert and the second mount
+// nested another inside it (the page shrank from 22,590 to 9,090 px).
+function ScrollSmootherRoot() {
+  useGSAP(() => {
+    try {
+      ScrollSmoother.create(SCROLL_SMOOTHER_DEFAULTS);
+    } catch (error) {
+      reportError(error, { area: 'animation', step: 'create_smoother' });
+    }
+  });
+  return null;
+}
 
 export default function Home() {
   const [currentPage] = useAtom(currentPageAtom);
@@ -48,6 +66,7 @@ export default function Home() {
 
   return (
     <>
+      <ScrollSmootherRoot />
       <OuterLoader />
       <ThreeWrapper />
       <TwinThreeWrapper />

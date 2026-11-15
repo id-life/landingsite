@@ -316,7 +316,8 @@ const SponsorItem = memo(
         <VideoWithPoster
           coverUrl={coverUrl}
           videoUrl={videoUrl}
-          title={alt}
+          // The caption below names the sponsor in the same link, so the logo is decorative (axe image-redundant-alt).
+          title=""
           containerClass="-mt-5"
           videoClass="size-[15.5rem]"
           coverClass="size-[15.5rem]"

@@ -13,7 +13,7 @@ import { trackChannelLink } from '@/lib/analytics/social';
 import { submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FormEvent, useState } from 'react';
-import { PrivacyChoicesLink } from '@/components/consent/ConsentBanner';
+import { PrivacyChoicesLink } from '@/components/consent/PrivacyChoicesLink';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
 
