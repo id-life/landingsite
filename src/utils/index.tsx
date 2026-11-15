@@ -1,6 +1,15 @@
 import clsx from 'clsx';
 import { ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { extendTailwindMerge } from 'tailwind-merge';
+import { typeRoles } from '@/styles/tokens';
+
+// tailwind-merge must know the type roles and reading sizes are font sizes (RWD-01): otherwise it reads
+// `text-body` as a colour and drops it whenever a colour class (`text-black`) follows it in the same cn() call.
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: { 'font-size': [{ text: [...Object.keys(typeRoles), 'read', 'read-sm', 'read-xs', 'read-lg', 'ss'] }] },
+  },
+});
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(...inputs));

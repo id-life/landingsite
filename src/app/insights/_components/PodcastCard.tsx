@@ -22,17 +22,18 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
     <div className="podcast-card-clip relative bg-white p-0.5">
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+          {/* Type roles (RWD-01): title body (body-sm on the phone deck's two-up cards), description body-sm (caption). */}
+          <h3 className="line-clamp-1 flex-1 font-text text-body font-bold leading-snug mobile:line-clamp-2 mobile:text-body-sm mobile:leading-snug">
             {item.title}
           </h3>
           <img
             src="/imgs/podcast/podcast-play-white.svg"
-            className="size-10 shrink-0 cursor-pointer duration-300 hover:scale-110 mobile:size-8"
+            className="size-10 shrink-0 cursor-pointer duration-300 hover:scale-110 mobile:size-8 medium:size-[32px] expanded:size-[32px]"
             alt="Play"
             onClick={handlePlay}
           />
         </div>
-        <p className="line-clamp-1 text-base font-medium mobile:text-xs/4">{item.description}</p>
+        <p className="line-clamp-1 text-body-sm font-medium mobile:text-caption">{item.description}</p>
       </div>
     </div>
   );

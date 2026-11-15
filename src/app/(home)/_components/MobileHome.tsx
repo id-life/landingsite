@@ -2,7 +2,7 @@
 
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
 import MobileTwin from '@/app/twin/MobileTwin';
-import MobileInsights from '@/app/insights/MobileInsights';
+import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
@@ -51,7 +51,7 @@ export default function MobileHome() {
       <div id="wrapper" className="">
         <Vision />
         <MobilePortfolio />
-        <MobileInsights />
+        <Insights />
         <MobileSpectrum />
         <MobileEngagement />
         <MobileTwin />

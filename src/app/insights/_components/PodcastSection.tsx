@@ -208,34 +208,44 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
-              PODCAST
-            </h2>
-            {/* Platform logos */}
+            <h2 className="font-display text-title-sm font-semibold uppercase">PODCAST</h2>
+            {/* Platform logos: each a 44 px box on coarse pointers (RWD-06); the mouse layout is unchanged. */}
             <div className="flex items-center gap-1.5">
               <a
                 href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
+                <img
+                  src="/svgs/podcast/fm_xyz_fill.svg"
+                  alt="Xiaoyuzhou FM"
+                  className="size-6 medium:size-[22px] expanded:size-[22px]"
+                />
               </a>
               <a
                 href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
+                <img
+                  src="/svgs/podcast/fm_spotify_fill.svg"
+                  alt="Spotify"
+                  className="size-6 medium:size-[22px] expanded:size-[22px]"
+                />
               </a>
               <a
                 href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
+                <img
+                  src="/svgs/podcast/fm_podcast_fill.svg"
+                  alt="Apple Podcasts"
+                  className="size-6 medium:size-[22px] expanded:size-[22px]"
+                />
               </a>
             </div>
           </div>
@@ -243,7 +253,9 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         </div>
 
         {/* Content */}
-        <div className={cn('relative mt-3', !isMobile && 'pr-0')}>
+        {/* Phone deck (compact rows): the cards are inset by the arrows' width, so the 44 px arrows (RWD-06) sit beside
+            the cards instead of over their titles. */}
+        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'px-6')}>
           {/* Desktop arrows */}
           {!isMobile && !compact && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" className="-left-5" />
