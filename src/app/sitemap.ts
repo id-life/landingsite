@@ -1,10 +1,19 @@
+import * as Sentry from '@sentry/nextjs';
 import type { MetadataRoute } from 'next';
-import { fetchNewsList, fetchPodcastList } from '@/apis';
+import { PHASE_PRODUCTION_BUILD } from 'next/constants';
+import { fetchInsightsWithGeo, fetchNewsList, fetchPodcastList } from '@/apis';
+import type { InsightsWithGeoItem, NewsListItem, PodcastItem } from '@/apis/types';
+import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import { absoluteUrl } from '@/constants/site';
 
-// Static pages carry no `lastModified`: a build-time `new Date()` would claim every page
-// changed on every deploy, which teaches Google to ignore the sitemap's dates entirely.
-// `changeFrequency` / `priority` are omitted because Google ignores them.
+// Regenerated at most once an hour (ISR), so an episode or article published between deploys is listed
+// within the hour. Without this export Next built sitemap.xml once per deploy.
+export const revalidate = 3600;
+
+// Only canonical, query-free URLs. `lastModified` is set only where the site has a real date: a hub page
+// takes its newest item's date, an article or episode its own. Pages whose copy lives in the code carry none:
+// a build-time `new Date()` would claim every page changed on every deploy, which teaches Google to ignore
+// the sitemap's dates. `changeFrequency` / `priority` are omitted because Google ignores them.
 const STATIC_PATHS = [
   '/',
   '/portfolio',
@@ -13,16 +22,12 @@ const STATIC_PATHS = [
   '/spectrum/influence-network',
   '/digitaltwin',
   '/presence',
-  '/insights',
   '/connect',
-  '/podcast',
-  '/podcast?c=lt',
-  '/news',
   '/news/immortal-dragons-news-and-updates',
   '/news/immortal-dragons-milestones-and-portfolio',
 ];
 
-// Timeout wrapper for API calls during build
+// Timeout wrapper for API calls
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number = 5000): Promise<T> {
   return Promise.race([
     promise,
@@ -30,58 +35,60 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number = 5000): Promise<
   ]);
 }
 
-async function getNewsEntries(): Promise<MetadataRoute.Sitemap> {
-  try {
-    // Skip if API URL is not configured
-    if (!process.env.NEXT_PUBLIC_API_PREFIX) {
-      console.warn('Sitemap: NEXT_PUBLIC_API_PREFIX not configured, skipping news entries');
-      return [];
-    }
+/** The newest valid date among the values, or undefined. */
+function newest(dates: (string | null | undefined)[]): Date | undefined {
+  const times = dates.map((d) => (d ? Date.parse(d) : NaN)).filter((t) => Number.isFinite(t));
+  return times.length ? new Date(Math.max(...times)) : undefined;
+}
 
-    const res = await withTimeout(fetchNewsList(), 5000);
-    if (res.code === 200 && Array.isArray(res.data)) {
-      return res.data.map((item) => ({
-        url: absoluteUrl(`/news/${item.id}`),
-        lastModified: new Date(item.updatedAt || item.createdAt),
-      }));
-    }
-    return [];
+const entry = (path: string, lastModified?: Date): MetadataRoute.Sitemap[number] =>
+  lastModified ? { url: absoluteUrl(path), lastModified } : { url: absoluteUrl(path) };
+
+/**
+ * One API section, or null when it could not be fetched. While building, a failure is reported and the
+ * section is left out, so `next build` never fails on the API. At runtime the error is rethrown: Next then
+ * keeps serving the last good sitemap instead of replacing it with one that lost every dynamic URL.
+ */
+async function load<T>(name: string, fetcher: () => Promise<{ code: number; data: T[] }>): Promise<T[] | null> {
+  try {
+    const res = await withTimeout(fetcher(), 5000);
+    if (res.code === 200 && Array.isArray(res.data)) return res.data;
+    throw new Error(`sitemap: ${name} answered code ${res.code}`);
   } catch (error) {
-    console.warn('Sitemap: Failed to fetch news entries:', error instanceof Error ? error.message : 'Unknown error');
-    return [];
+    if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) throw error;
+    Sentry.captureException(error);
+    return null;
   }
 }
 
-async function getPodcastEntries(): Promise<MetadataRoute.Sitemap> {
-  try {
-    // Skip if API URL is not configured
-    if (!process.env.NEXT_PUBLIC_API_PREFIX) {
-      console.warn('Sitemap: NEXT_PUBLIC_API_PREFIX not configured, skipping podcast entries');
-      return [];
-    }
-
-    const results = await Promise.all([
-      withTimeout(fetchPodcastList('podcast_id'), 5000),
-      withTimeout(fetchPodcastList('podcast_lt'), 5000),
-    ]);
-
-    return results.flatMap((res) =>
-      res.code === 200 && Array.isArray(res.data)
-        ? res.data.map((item) => ({
-            url: absoluteUrl(`/podcast/${item.id}`),
-            lastModified: new Date(item.createdAt),
-          }))
-        : [],
-    );
-  } catch (error) {
-    console.warn('Sitemap: Failed to fetch podcast entries:', error instanceof Error ? error.message : 'Unknown error');
-    return [];
-  }
+/** An empty section is not an error the request can see, so it is reported (Sentry runs on Vercel only). */
+function reportEmpty(name: string, items: unknown[] | null) {
+  if (items && items.length === 0) Sentry.captureMessage(`sitemap: the ${name} section is empty`, 'warning');
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.map((path) => ({ url: absoluteUrl(path) }));
-  const [newsEntries, podcastEntries] = await Promise.all([getNewsEntries(), getPodcastEntries()]);
+  const [news, insights, mainShow, longTalk] = await Promise.all([
+    load<NewsListItem>('news', fetchNewsList),
+    load<InsightsWithGeoItem>('insights', fetchInsightsWithGeo),
+    load<PodcastItem>('podcast_id', () => fetchPodcastList(`podcast_${PODCAST_NAV_LIST[0].id}`)),
+    load<PodcastItem>('podcast_lt', () => fetchPodcastList(`podcast_${PODCAST_NAV_LIST[1].id}`)),
+  ]);
+  reportEmpty('news', news);
+  reportEmpty('insights', insights);
+  reportEmpty('podcast', mainShow);
+  reportEmpty('long talk', longTalk);
 
-  return [...staticEntries, ...podcastEntries, ...newsEntries];
+  // /news lists the insights items that are not GEO articles (src/app/news/page.tsx); /insights shows them all.
+  const newsHubItems = (insights ?? []).filter((item) => item.contentType !== 'geo');
+  const episodeDate = (item: PodcastItem) => item.createdAt;
+
+  return [
+    ...STATIC_PATHS.map((path) => entry(path)),
+    entry('/insights', newest((insights ?? []).map((item) => item.publishDate))),
+    entry('/news', newest(newsHubItems.map((item) => item.publishDate))),
+    entry(PODCAST_NAV_LIST[0].link, newest((mainShow ?? []).map(episodeDate))),
+    entry(PODCAST_NAV_LIST[1].link, newest((longTalk ?? []).map(episodeDate))),
+    ...[...(mainShow ?? []), ...(longTalk ?? [])].map((item) => entry(`/podcast/${item.id}`, newest([episodeDate(item)]))),
+    ...(news ?? []).map((item) => entry(`/news/${item.id}`, newest([item.updatedAt, item.createdAt]))),
+  ];
 }

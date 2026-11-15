@@ -92,7 +92,7 @@ Immortal Dragons and Boyang Wang have been covered or quoted by the Financial Ti
 - [Presence](https://www.id.life/presence): A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.
 - [Insights](https://www.id.life/insights): Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.
 - [News](https://www.id.life/news): Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.
-- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast?c=lt)
+- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast/long-talk)
 - [Connect](https://www.id.life/connect): Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.
 - [不朽真龙介绍](https://www.id.life/news/immortal-dragons-news-and-updates): 介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。
 - [Immortal Dragons: Milestones and Portfolio](https://www.id.life/news/immortal-dragons-milestones-and-portfolio): 不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。

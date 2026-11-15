@@ -7,7 +7,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import LogoSVGen from '@/components/svg/LogoSVGen';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
 import { isPodcastNavOpenAtom } from '@/atoms/podcast';
-import { useSearchParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import PodcastNavDialog from '@/app/podcast/_components/PodcastNavDialog';
@@ -19,14 +19,11 @@ import { SUBSCRIBE_TRIGGER } from '@/hooks/useSubscribeDialog';
 
 export default function PodcastHeader() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useAtom(isPodcastNavOpenAtom);
   const subscribePopup = useSetAtom(subscribePopupAtom);
 
-  const search = useMemo(
-    () => (pathname === '/podcast' ? (searchParams.get('c') ?? PODCAST_NAV_LIST[0].id) : null),
-    [pathname, searchParams],
-  );
+  // Each show has its own path; an episode page highlights no tab.
+  const search = useMemo(() => PODCAST_NAV_LIST.find((item) => item.link === pathname)?.id ?? null, [pathname]);
 
   const handleLogoClick = () => {
     trackEvent({ name: GA_EVENT_NAMES.ID_HOME_REDIRECT });
