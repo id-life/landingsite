@@ -57,3 +57,6 @@ export function formatKeywords(str?: string) {
   if (!str) return '';
   return str.split(',').map((item) => item.trim().replace(/^'|'$/g, ''));
 }
+
+/** Detail routes (/news/[id], /podcast/[id]) only have numeric ids; the API rejects anything else with a 400. */
+export const isNumericId = (id: string) => /^\d+$/.test(id);

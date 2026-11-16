@@ -11,7 +11,7 @@ import '@/styles/markdown.css';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
-import { formatKeywords } from '@/utils';
+import { formatKeywords, isNumericId } from '@/utils';
 
 dayjs.extend(relativeTime);
 
@@ -19,7 +19,9 @@ export const revalidate = 300; // 5min
 export const dynamicParams = true;
 export const dynamic = 'force-static';
 
+// Returns undefined for an id that cannot exist or that the API does not know; the page then renders a 404.
 const getCacheNewsContent = cache(async (id: string) => {
+  if (!isNumericId(id)) return undefined;
   const res = await fetchNewsContent(id);
   return res.code == 200 ? res.data : undefined;
 });
@@ -31,6 +33,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
   const data = await getCacheNewsContent(id);
+  if (!data) return {};
   return {
     title: `${data?.title} - Immortal Dragons`,
     description: data?.description,
