@@ -49,7 +49,12 @@ function SponsorBadge({
   children: ReactNode;
 }) {
   const toneClass = { purple: 'text-data-purple', yellow: 'text-data-yellow', orange: 'text-data-orange' }[tone];
-  const bgClass = { purple: 'bg-data-purple/20', yellow: 'bg-data-yellow/20', orange: 'bg-data-orange/20' }[tone];
+  // The phone's 12 px purple badge takes a 10 % tint (4.3:1 on 20 %, VIS-02); the 14 px desktop badges keep 20 %.
+  const bgClass = {
+    purple: deck === 'phone' ? 'bg-data-purple/10' : 'bg-data-purple/20',
+    yellow: 'bg-data-yellow/20',
+    orange: 'bg-data-orange/20',
+  }[tone];
   if (deck === 'phone') {
     return (
       <motion.span
@@ -154,6 +159,7 @@ export function WorldMapSponsorDotPoint({
         MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
+      data-active={isActive ? 'true' : undefined}
       initial="initial"
       whileHover="active"
       animate={isActive ? 'active' : 'initial'}

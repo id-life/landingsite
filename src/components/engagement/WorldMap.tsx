@@ -19,6 +19,7 @@ import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot'
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 import type { MapDeck } from './WorldMapDotComponents';
+import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
 
@@ -61,6 +62,7 @@ export const WorldMap = memo(function WorldMapComponent({
   const svgRef = useRef<SVGSVGElement>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapContentRef = useRef<HTMLDivElement>(null);
+  const phoneMapRef = useRef<HTMLDivElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
@@ -290,11 +292,17 @@ export const WorldMap = memo(function WorldMapComponent({
     [pan, isAnyActive],
   );
 
+  // Compact heights: each phone label takes a free side of its dot, or waits until its dot is tapped (RWD-02 A3).
+  useCompactLabelRule(phoneMapRef, [phone, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot]);
+
   if (phone) {
     return (
       // The strip's height is --map-h: 55 % of the window, or on a phone in landscape (compact height) what is left
       // between the compact title and the arrows.
-      <div className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]">
+      <div
+        ref={phoneMapRef}
+        className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
+      >
         <div
           ref={mapContainerRef}
           className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"

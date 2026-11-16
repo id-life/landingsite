@@ -1,5 +1,5 @@
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
-import { mobileMapScrollProgressAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, mobileMapScrollProgressAtom } from '@/atoms/engagement';
 import { WorldMap } from '@/components/engagement/WorldMap';
 import type { MapDeck } from '@/components/engagement/WorldMapDotComponents';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -98,6 +98,10 @@ function DesktopPresence() {
 function PhonePresence() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const { enterAnimate } = useMobileEngagementAnim();
+  const meeting = useAtomValue(activeMeetingDotAtom);
+  const book = useAtomValue(activeBookDotAtom);
+  const sponsor = useAtomValue(activeSponsorDotAtom);
+  const cardOpen = meeting !== null || book !== null || sponsor !== null;
 
   useEffect(() => {
     if (currentPage?.id !== PAGE_ID) return;
@@ -118,7 +122,16 @@ function PhonePresence() {
       <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">
         <h2 className="font-title text-title capitalize text-white shortScreen:text-title-sm">Presence</h2>
         {/* Sentence case, not capitals (RWD-01: at most 25 % uppercase Latin per screen); the words are unchanged. */}
-        <p className="mt-2 font-display text-label font-bold text-white shortScreen:mt-0.5">Global reach. East &amp; West</p>
+        {/* Compact heights: an open card's title rises to this line (the strip is under 260 px tall), so the line fades
+            while a card is open; the heading stays (RWD-02 A3). */}
+        <p
+          className={cn(
+            'mt-2 font-display text-label font-bold text-white transition-opacity duration-fast shortScreen:mt-0.5',
+            cardOpen && 'shortScreen:opacity-0',
+          )}
+        >
+          Global reach. East &amp; West
+        </p>
       </div>
       <WorldMap deck="phone" {...MAP_DATA} />
       <MobileScrollProgressBar />

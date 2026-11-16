@@ -25,8 +25,8 @@ export type CalcPoint = (lat: number, lng: number) => { x: number; y: number; le
  * which is a 55 % tall strip where neighbouring cities sit a label's height apart.
  */
 export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
-  desktop: '-ml-1.5 whitespace-nowrap font-display text-label font-semibold capitalize text-white',
-  phone: 'whitespace-nowrap font-display text-caption leading-[14px] font-semibold capitalize text-white',
+  desktop: 'map-label -ml-1.5 whitespace-nowrap font-display text-label font-semibold capitalize text-white',
+  phone: 'map-label whitespace-nowrap font-display text-caption leading-[14px] font-semibold capitalize text-white',
 };
 
 /**
@@ -441,7 +441,8 @@ export function MobileConferenceBadgesWithVideo({
           'font-semibold text-data-purple',
         )}
       >
-        <BadgeBlurBg className="bg-data-purple/20" />
+        {/* 10 %, not 20 %: data-purple on its own 20 % tint over the map was 4.3:1 at the 12 px caption (VIS-02). */}
+        <BadgeBlurBg className="bg-data-purple/10" />
         <MeetingSVG className={cn(MOBILE_MAP_SCALE.badgeIconSize, 'fill-data-purple')} />
         Conference
       </div>

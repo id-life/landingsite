@@ -95,6 +95,7 @@ export function WorldMapBookDotPoint({
         MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
+      data-active={isActive ? 'true' : undefined}
       initial="initial"
       whileHover="active"
       onClick={handleClick}
