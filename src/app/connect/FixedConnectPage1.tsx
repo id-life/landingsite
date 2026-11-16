@@ -4,13 +4,15 @@ export default function FixedConnectPage1() {
       id="fixed-connect-page-1"
       style={{ transformStyle: 'preserve-3d' }}
       // Two columns flanking the jellyfish; on a medium (portrait tablet) window they share the width in a two-column
-      // grid. Both start below the header, whose height the header publishes (RWD-01, RWD-02). On a short landscape
+      // grid. Both start below the header, whose height the header publishes (RWD-01, RWD-02). From 1200 px the
+      // headline blocks sit exactly where the original placed them (top 9 units, MOONSHOT 18 units below AWARENESS,
+      // the right lines 42 units below EAST & WEST), leaving the centre to the jellyfish. On a short landscape
       // tablet the layout unit also follows the height left under the header, so the headlines and gaps shrink with
       // the window instead of running under the contact panel (the text keeps its type roles, which do not use the
       // unit). 430 px is the fixed-size text and the panel; 30 is how many units of height the headlines and gaps take.
       className="fixed left-0 top-0 w-screen medium:grid medium:grid-cols-2 medium:gap-x-6 medium:px-[var(--grid-margin)] medium:pt-[calc(var(--site-header-h,7.5rem)_+_1.5rem)] [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:860px)]:[--u:max(5px,min(0.8333vw,calc((100vh_-_var(--site-header-h,120px)_-_430px)_/_30)))]"
     >
-      <div className="absolute left-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] medium:relative medium:left-auto medium:top-auto">
+      <div className="absolute left-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] medium:relative medium:left-auto medium:top-auto large:top-36">
         <div className="relative h-[5.25rem]">
           <svg
             className="connect-title1 absolute bottom-0 w-[33.75rem]"
@@ -167,7 +169,7 @@ export default function FixedConnectPage1() {
           <path d="M496,63.3v-6.4h30.4c2.9,0,4.3-1.4,4.3-4.2v-7.5c0-2.5-1.1-4-3.3-4.4l-20-4c-7.6-1.5-11.4-6.6-11.4-15.3v-5.4C496,5.3,501.3,0,512,0h22.9l5.8,4.5v6.4h-28.4c-2.9,0-4.3,1.4-4.3,4.2v6.6c0,2.5,1.1,4,3.3,4.4l20,3.9c7.6,1.6,11.4,6.7,11.4,15.3v6.4c0,10.7-5.3,16-16,16h-24.9l-5.8-4.5Z" />
         </svg>
 
-        <div className="relative mt-18 [@media(min-width:840px)_and_(max-height:940px)]:mt-8">
+        <div className="relative mt-18 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:940px)]:mt-8">
           <svg className="connect-title3 w-[31.375rem]" viewBox="0 0 628 83" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/*M*/}
             <path
@@ -277,11 +279,11 @@ export default function FixedConnectPage1() {
             />
           </svg>
         </div>
-        <p className="mt-8 w-[max(32rem,360px)] text-left text-body font-semibold medium:w-auto [@media(min-width:840px)_and_(max-height:940px)]:mt-3">
+        <p className="mt-8 w-[max(32rem,360px)] text-left text-body font-semibold medium:w-auto [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:940px)]:mt-3">
           We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
         </p>
       </div>
-      <div className="absolute right-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] flex flex-col items-end medium:relative medium:right-auto medium:top-auto">
+      <div className="absolute right-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] flex flex-col items-end medium:relative medium:right-auto medium:top-auto large:top-36">
         <svg className="connect-title7 w-[34.875rem]" viewBox="0 0 697 83">
           {/*E*/}
           <rect y="0" width="56" height="13" />
@@ -387,7 +389,7 @@ export default function FixedConnectPage1() {
           </svg>
         </div>
         {/* Room for ACCESS, drawn by the absolute connect-title2 above (top-8, about 4 units tall). */}
-        <p className="mt-32 w-[max(35rem,420px)] text-right text-body font-semibold medium:w-auto medium:text-balance medium:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:leading-snug">
+        <p className="mt-32 w-[max(35rem,420px)] text-right text-body font-semibold medium:w-auto medium:text-balance medium:leading-snug large:mt-42 [@media(min-width:840px)_and_(max-height:800px)]:leading-snug">
           Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
         </p>
       </div>
