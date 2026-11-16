@@ -50,13 +50,12 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
           />
         </div>
         <div className="p-4 mobile:p-3">
-          {/* Kept at its original 18 px: the lead role (23 at 1920) cut two-line titles that wave 0 shows whole. */}
-          {/* Tablets (600-1199 px, three narrow columns): body, up to three lines, so titles show what the original showed. */}
-          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base medium:line-clamp-3 medium:text-body expanded:line-clamp-3 expanded:text-body">
+          {/* Tablets: up to three lines at the original's 1440 size, so a title shows what the original showed. */}
+          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base medium:line-clamp-3 expanded:line-clamp-3">
             {data.title}
           </h3>
           {/* The source and the date never squeeze into columns: the date moves to the next line whole where both do not fit. */}
-          <div className="mt-4 flex flex-wrap items-center gap-x-2 text-label font-medium text-ink-muted mobile:mt-1.5 mobile:leading-[1.125rem] medium:mt-3 medium:text-caption expanded:mt-3 expanded:text-caption">
+          <div className="mt-4 flex flex-wrap items-center gap-x-2 text-sm font-medium text-ink-muted mobile:mt-1.5 mobile:text-sm/4.5">
             {data?.source || data?.publishDate ? (
               <Fragment>
                 {data?.source && <span>{data.source}</span>}

@@ -6,12 +6,20 @@ import '@/styles/webgl.css';
 import '@/styles/loading.css';
 
 // Page-level rules of the news pages. A plain <style> rendered on the server; it was a styled-jsx client
-// component. It unmounts with the news layout, so the rules never reach the experience. The root stays 16 px at
-// every width: a 769-1320 px rule used to shrink it with the viewport, down to 9.75 px (text at 7-11 px) on an
-// 820 px iPad; the layout adapts to those widths instead (layout.tsx, NewsFooter).
+// component. It unmounts with the news layout, so the rules never reach the experience. The root stays 16 px; the
+// layout unit carries the original's 1200-1320 px scaling (below).
 const NEWS_CSS = `
   :root {
     font-size: 16px;
+  }
+
+  /* The owner's rule on font sizes: from 1200 px every text has the original's size, and the original scaled these
+     pages down between 769 and 1320 px. The layout unit follows it from 1200 to 1320 px (text and layout in rem
+     scale together, as they did); below 1200 px the tablet tier keeps the original's 1440 size (16 px). */
+  @media (min-width: 1200px) and (max-width: 1320.98px) {
+    :root {
+      --u: calc(1.25vw - 0.5px);
+    }
   }
 
   body {

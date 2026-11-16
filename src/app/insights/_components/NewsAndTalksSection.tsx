@@ -77,10 +77,9 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
-            {/* The original's phone sizes (the owner's design is the reference): title 12 px, source and date at the
-                12 px floor. */}
+            {/* The original's phone sizes: title 12 px, source and date 10 px. */}
             <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-text text-caption text-black/60">
+            <div className="flex w-full flex-col text-left font-text text-[10px]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
@@ -117,14 +116,11 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
-        {/* From 1200 px the original's sizes (title 18 units, source and date 14 units, never under 12 px), so a card
-            shows what the original showed. Tablets (600-1199 px) use the type roles: title body, source and date
-            caption. The source and date never truncate: where they do not fit one line the date moves to the next. */}
+        {/* The original's sizes at every width (the owner's rule on font sizes; tablets take its 1440 px size through the
+            layout unit). The source and date never truncate: where they do not fit one line the date moves to the next. */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm medium:gap-[8px] medium:p-[12px] expanded:gap-[8px] expanded:p-[12px]">
-          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black medium:text-body medium:leading-snug expanded:text-body expanded:leading-snug desktop:line-clamp-1">
-            {item.title}
-          </h3>
-          <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60 medium:text-caption expanded:text-caption">
+          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
+          <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60">
             {item.publisher && <span>{item.publisher}</span>}
             {item.publisher && item.publishDate && <span>·</span>}
             {item.publishDate && <span className="whitespace-nowrap">{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
@@ -339,8 +335,9 @@ export default function NewsAndTalksSection({
     <div ref={containerRef} className="flex h-full flex-col mobile:h-auto">
       {/* Mobile: wrap header + content for vertical centering */}
       <div className={cn(isMobile ? 'flex flex-col' : 'flex flex-1 flex-col')}>
-        {/* Header */}
-        <div className="flex items-center justify-between">
+        {/* Header. On the phone deck the original paints no NEWS & TALKS heading or VIEW ALL here: the row keeps its
+            place (so the rows sit where the original's do) but is never painted or announced. */}
+        <div className={cn('flex items-center justify-between', isMobile && 'invisible')} aria-hidden={isMobile || undefined}>
           <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>NEWS & TALKS</h2>
           <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>

@@ -69,11 +69,12 @@ than 2.5x its floor, so zoom still enlarges text.
 **The fixed root and the layout unit (RWD-01).** Every route has a fixed root of 100 % (16 px, or the visitor's
 setting). The desktop experience was drawn in rem under a 0.8333vw root; that rem is now `--u`: 0.8333vw on the desktop
 experience (`Style.tsx`), 1rem everywhere else (tokens.css). `scripts/postcss-layout-unit.js` rewrites every rem length
-in the compiled CSS: in `font-size` to `max(calc(var(--t) * n), 0.75rem)`, in `line-height` to `calc(var(--t) * n)`,
-elsewhere to `calc(var(--u) * n)`, where `--t` = `max(var(--u), 0.75rem)` (globals.css). So layout written in rem scales
-with the window as before, text never resolves under 12 px, and from 1440 px up (where `--u` >= 12 px) nothing moved
-except 9-10.5 px text rising to 12 px. Below 1440 px text keeps its 1440 size while boxes keep scaling: a section's
-tablet layout (RWD-02) absorbs that. Custom properties are not rewritten, so the nine roles stay real rem. Values CSS
+in the compiled CSS: in `font-size` and `line-height` to `calc(var(--t) * n)`, elsewhere to `calc(var(--u) * n)`. `--t`
+is `--u` (globals.css), so a size class written as in the original draws the original's size; only in the experience's
+tablet tiers (desktop deck below 1200 px) is `--t` fixed at 12 px, the original's 1440 px size, while boxes keep
+scaling (a section's tablet layout absorbs that). The owner's rule on font sizes (2026-11-16): from 1200 px and on
+phones every text has the original's size; no role, floor or minimum enlarges it there. Text inputs on touch screens
+stay at 16 px (iOS zooms on smaller ones). Custom properties are not rewritten, so the nine roles stay real rem. Values CSS
 never sees (GSAP tweens, inline styles) use `u(n)` from `src/utils/layout-unit.ts`. The Spectrum tool pages have no
 viewport unit: they draw at 16 px at every width.
 
