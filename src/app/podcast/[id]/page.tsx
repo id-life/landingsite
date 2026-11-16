@@ -6,15 +6,19 @@ import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
 import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
+import { isNumericId } from '@/utils';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
 export const dynamic = 'force-static';
 
+// Returns null for an id that cannot exist or that the API does not know; the page then renders a 404.
 const getCachePodcastDetail = cache(async (id: string) => {
+  if (!isNumericId(id)) return null;
   const res = await fetchPodcastDetail(id);
-  return res.data;
+  return res.data ?? null;
 });
 
 type Params = { id: string };
@@ -64,6 +68,7 @@ export async function generateMetadata({ params }: PodcastPlayerProps): Promise<
 export default async function PodcastContentPage({ params }: PodcastPlayerProps) {
   const { id } = params;
   const data = await getCachePodcastDetail(id);
+  if (!data) return notFound();
 
   const category = categoryOf(data);
   const nav = PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
