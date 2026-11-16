@@ -32,7 +32,9 @@ export default function HeroPoster() {
   const shown = onHero && (mode !== 'full' || !globalLoaded);
   // The poster is the page's h1 (CON-05): its accessible name is what it draws, the wordmark and the tagline. Once the
   // 3D hero draws the same composition the poster fades to opacity 0 but stays in the accessibility tree on the hero,
-  // so the page keeps its heading; on the other sections it is hidden entirely (they have their own headings).
+  // so the page keeps its heading; on the other sections it is hidden entirely (they have their own headings), and it
+  // is not a heading there: a section route served directly would otherwise carry two h1 elements.
+  const Heading = onHero ? 'h1' : 'div';
 
   return (
     <div
@@ -43,7 +45,7 @@ export default function HeroPoster() {
         shown ? 'visible opacity-100' : onHero ? 'visible opacity-0' : 'invisible opacity-0',
       )}
     >
-      <h1 className="contents">
+      <Heading className="contents">
         <svg
           role="img"
           aria-label="Immortal Dragons 不朽真龙: a purpose-driven longevity fund"
@@ -66,7 +68,7 @@ export default function HeroPoster() {
           <LogoEnSVG x={70} y={992} width={860} height={180} />
           <TaglineSVG x={225} y={1288.5} width={550} height={22.9} />
         </svg>
-      </h1>
+      </Heading>
     </div>
   );
 }
