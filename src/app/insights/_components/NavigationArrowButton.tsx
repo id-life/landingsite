@@ -46,7 +46,8 @@ export function MobileNavigationArrowButton({ onClick, disabled, direction, clas
       disabled={disabled}
       aria-label={direction === 'prev' ? 'Previous' : 'Next'}
       className={cn(
-        'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white tap disabled:bg-tone-50 disabled:fill-tone-350',
+        // The original's 32 px circle; the hit area grows to 44 px through ::before (tap-area, RWD-06), not the circle.
+        'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white tap-area disabled:bg-tone-50 disabled:fill-tone-350',
         direction === 'prev' ? '-left-5' : '-right-5',
         className,
       )}

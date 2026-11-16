@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
-import ViewAllButton from '@/app/insights/_components/ViewAllButton';
+import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_components/ViewAllButton';
 import CardShell from '@/components/common/CardShell';
 import { isInternalHref } from '@/constants/site';
 import { cn } from '@/utils';
@@ -77,8 +77,9 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
-            {/* Body, as on the desktop deck: titles run to 60 characters and more (RWD-01's 16 px bar for running text). */}
-            <h3 className="line-clamp-1 font-text text-body font-medium leading-snug text-black">{item.title}</h3>
+            {/* The original's phone sizes (the owner's design is the reference): title 12 px, source and date at the
+                12 px floor. */}
+            <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
             <div className="flex w-full flex-col text-left font-text text-caption text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
@@ -116,17 +117,17 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
-        {/* Type roles (RWD-01): the title is body with a heading's tight leading, the source and date caption. The
-            source and date stay on one line: a long source is cut with an ellipsis and the date never wraps (at the
-            12 px floor they broke into three ragged lines on narrow cards). */}
+        {/* From 1200 px the original's sizes (title 18 units, source and date 14 units, never under 12 px), so a card
+            shows what the original showed. Tablets (600-1199 px) use the type roles: title body, source and date
+            caption. The source and date never truncate: where they do not fit one line the date moves to the next. */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm medium:gap-[8px] medium:p-[12px] expanded:gap-[8px] expanded:p-[12px]">
-          <h3 className="line-clamp-2 font-text text-body font-semibold leading-snug text-black desktop:line-clamp-1">
+          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black medium:text-body medium:leading-snug expanded:text-body expanded:leading-snug desktop:line-clamp-1">
             {item.title}
           </h3>
-          <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap font-text text-caption font-medium text-black/60">
-            {item.publisher && <span className="min-w-0 truncate">{item.publisher}</span>}
-            {item.publisher && item.publishDate && <span className="shrink-0">·</span>}
-            {item.publishDate && <span className="shrink-0">{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
+          <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60 medium:text-caption expanded:text-caption">
+            {item.publisher && <span>{item.publisher}</span>}
+            {item.publisher && item.publishDate && <span>·</span>}
+            {item.publishDate && <span className="whitespace-nowrap">{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
           </div>
         </div>
       </CardShell>
@@ -146,9 +147,9 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
 // Constants for dynamic calculation (in pixels)
 const NEWS_HEADER_HEIGHT = 44; // Header text height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 156; // Header (44px) + gap (12px) + 1 row of cards (100px)
+const PODCAST_SECTION_HEIGHT = 128; // Header (44px) + gap (12px) + 1 row of cards (72px)
 const SECTION_GAP = 24; // gap-6 between News and Podcast sections
-const NEWS_CARD_ROW_HEIGHT = 130; // Card: image (68px) + content padding + text (62px: a body title, two caption lines)
+const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
 function calculateMobileItemCount(containerHeight: number, columns: number): number {
@@ -340,7 +341,7 @@ export default function NewsAndTalksSection({
       <div className={cn(isMobile ? 'flex flex-col' : 'flex flex-1 flex-col')}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-title-sm font-semibold uppercase">NEWS & TALKS</h2>
+          <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>NEWS & TALKS</h2>
           <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 

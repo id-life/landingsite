@@ -174,12 +174,12 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
-        // Never wider than the window (RWD-01: the tool pages are drawn at the 16 px root at every width).
-        // Medium windows: the panel takes the window's width less 1 rem a side, and its two inputs share it.
-        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5 medium:w-[calc(100vw_-_2rem)]',
-        // Below 1440 px on the desktop tree (a fixed 12 px layout unit) the panel sits above the legend, so both show
-        // with the form open, as in the original.
-        '[@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:mb-[100px]',
+        // Never wider than the window; on a medium window it takes the width right of the legend.
+        '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
+        // Below 1440 px on the desktop tree (a fixed 12 px layout unit) the panel sits beside the legend at the bottom
+        // right, so both show with the form open and it covers no more of the graph than it must.
+        '[@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:left-auto [@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:right-3 [@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:translate-x-0',
+        'medium:w-[calc(100vw_-_252px)] medium:p-6',
         // A phone in landscape: the original's laptop arrangement (one row of inputs, Confirm beside the note), a
         // panel to the right of the legend and clear of the header, not the portrait phone's full-screen stack.
         'shortScreen:left-auto shortScreen:right-4 shortScreen:w-[44rem] shortScreen:max-w-[calc(100vw_-_2rem)] shortScreen:translate-x-0 shortScreen:p-5 shortScreen:pt-4',
@@ -280,8 +280,9 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               target="_blank"
               onClick={handleLinkClick}
               className={cn(
-                // A 44 px line box on touch screens (RWD-06), the text unchanged.
-                'relative inline-flex items-center text-accent tap',
+                // Inline in the sentence, as the original; the hit area grows to 44 px on touch screens through
+                // ::before (RWD-06), so the line spacing stays the original's.
+                'relative text-accent tap-area',
                 'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition after:duration-300 hover:after:scale-x-100',
               )}
             >

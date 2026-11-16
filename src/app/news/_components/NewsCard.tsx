@@ -51,13 +51,17 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
         </div>
         <div className="p-4 mobile:p-3">
           {/* Kept at its original 18 px: the lead role (23 at 1920) cut two-line titles that wave 0 shows whole. */}
-          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base">{data.title}</h3>
-          <div className="mt-4 flex items-center gap-2 text-label font-medium text-ink-muted mobile:mt-1.5 mobile:leading-[1.125rem]">
+          {/* Tablets (600-1199 px, three narrow columns): body, up to three lines, so titles show what the original showed. */}
+          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base medium:line-clamp-3 medium:text-body expanded:line-clamp-3 expanded:text-body">
+            {data.title}
+          </h3>
+          {/* The source and the date never squeeze into columns: the date moves to the next line whole where both do not fit. */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-2 text-label font-medium text-ink-muted mobile:mt-1.5 mobile:leading-[1.125rem] medium:mt-3 medium:text-caption expanded:mt-3 expanded:text-caption">
             {data?.source || data?.publishDate ? (
               <Fragment>
                 {data?.source && <span>{data.source}</span>}
                 {data?.source && data.publishDate && <span>·</span>}
-                {data?.publishDate && <span>{data.publishLabel}</span>}{' '}
+                {data?.publishDate && <span className="whitespace-nowrap">{data.publishLabel}</span>}{' '}
               </Fragment>
             ) : (
               <span>Article</span>

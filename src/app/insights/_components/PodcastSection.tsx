@@ -9,7 +9,7 @@ import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
-import ViewAllButton from '@/app/insights/_components/ViewAllButton';
+import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
 import SectionLoadError from '@/components/common/SectionLoadError';
@@ -208,14 +208,14 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="font-display text-title-sm font-semibold uppercase">PODCAST</h2>
-            {/* Platform logos: each a 44 px box on coarse pointers (RWD-06); the mouse layout is unchanged. */}
+            <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>PODCAST</h2>
+            {/* Platform logos: each grows its hit area to 44 px on coarse pointers (RWD-06, tap-area); the boxes keep the original's size. */}
             <div className="flex items-center gap-1.5">
               <a
                 href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <img
                   src="/svgs/podcast/fm_xyz_fill.svg"
@@ -227,7 +227,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <img
                   src="/svgs/podcast/fm_spotify_fill.svg"
@@ -239,7 +239,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <img
                   src="/svgs/podcast/fm_podcast_fill.svg"
@@ -253,9 +253,9 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         </div>
 
         {/* Content */}
-        {/* Phone deck (compact rows): the cards are inset by the arrows' width, so the 44 px arrows (RWD-06) sit beside
-            the cards instead of over their titles. */}
-        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'px-6')}>
+        {/* Phone deck: the original's 32 px arrows over the cards' edges; in landscape (four narrow cards) the cards are
+            inset by the arrows' width so the arrows do not cover their text. */}
+        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'shortScreen:px-6')}>
           {/* Desktop arrows */}
           {!isMobile && !compact && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" className="-left-5" />

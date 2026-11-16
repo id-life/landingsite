@@ -47,10 +47,13 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
         download
         target="_blank"
         rel="noopener noreferrer"
-        className="corner-button-top relative ml-auto flex items-center gap-1 p-2 text-caption font-medium tap mobile:ml-0 mobile:text-label"
+        className="corner-button-top relative ml-auto flex items-center gap-1 px-1.5 py-2 text-caption font-medium mobile:ml-0 mobile:p-2 mobile:text-label"
       >
         <FileSVG />
         <span>Download CSV</span>
+        {/* The hit area grows to 44 px on touch screens (RWD-06) while the bracketed box, and its corners, keep the
+            original's size. */}
+        <span aria-hidden="true" className="absolute -inset-y-[6px] inset-x-0 hidden coarse:block" />
       </a>
       {phone ? (
         <DataTable

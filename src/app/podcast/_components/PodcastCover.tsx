@@ -31,7 +31,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
               <span>{data.title}</span>&nbsp;
               <span className="mobile:block">{data.enTitle}</span>
             </h1>
-            <p className="mt-4 text-body font-medium mobile:hidden">{data.description}</p>
+            <p className="mt-4 text-body-sm font-medium mobile:hidden">{data.description}</p>
           </div>
           <div className="flex items-center justify-start gap-2">
             {platforms.map(({ id, name, link, icon }) => {
@@ -52,7 +52,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
           </div>
         </div>
       </div>
-      <div className="mt-7.5 hidden text-body font-medium mobile:block">{data.description}</div>
+      <div className="mt-7.5 hidden text-caption font-medium leading-5 mobile:block">{data.description}</div>
     </div>
   );
 }
