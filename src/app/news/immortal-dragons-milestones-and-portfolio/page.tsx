@@ -12,6 +12,7 @@ import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
 import Breadcrumb from '@/components/site/Breadcrumb';
+import { MARKDOWN_HEADING_ROLES } from '@/constants/markdown-roles';
 
 // Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('article-milestones');
@@ -60,15 +61,17 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
       <div>
         <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
         <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
-          <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
+          <div className="flex items-center justify-center gap-2 text-label font-semibold leading-5">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
             Immortal Dragons
           </div>
-          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg">
+          <h1 className="mt-5 text-center text-title font-semibold leading-[3.75rem] mobile:mt-3 mobile:text-lead">
             {articleTitle}
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
-          <div className="article-body markdown-body mobile:[&_table]:block mobile:[&_table]:overflow-x-auto">
+          <div
+            className={`article-body markdown-body text-body ${MARKDOWN_HEADING_ROLES} mobile:[&_table]:block mobile:[&_table]:overflow-x-auto`}
+          >
             <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {articleContent}
             </Markdown>

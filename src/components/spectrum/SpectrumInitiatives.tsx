@@ -69,12 +69,7 @@ function SpectrumInitiatives({
                   className={cn(
                     // The links are body-sm (the 12 px override is gone, RWD-01). On a coarse pointer each link is a
                     // 44 px tall box (RWD-06); the mouse layout keeps its line boxes.
-                    'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-body-sm [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.5] [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
-                    // Peer review titles are running text: body with a tighter leading (RWD-01's 16 px bar for runs of
-                    // 60 characters or more). After the line above, so cn() keeps these.
-                    // The phone pages the peer reviews in the column layout, so the length decides there.
-                    (layout === 'publications' || item.links.some((l) => l.label.length >= 60)) &&
-                      '[&_.spectrum-link-text]:!text-body [&_.spectrum-link-text]:!leading-[1.4]',
+                    'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!normal-case [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
                   )}
                 >
                   <SpectrumLink
@@ -82,6 +77,13 @@ function SpectrumInitiatives({
                     executeSpectrumRoute={executeSpectrumRoute}
                     updateUrlAndExecute={updateUrlAndExecute}
                     routeConfigs={routeConfigs}
+                    // Links are body-sm; peer review titles are running text, so body with a tighter leading
+                    // (RWD-01's 16 px bar). The phone pages them in the column layout, so the length decides there.
+                    textClassName={
+                      layout === 'publications' || item.links.some((l) => l.label.length >= 60)
+                        ? 'text-body leading-[1.4]'
+                        : 'text-body-sm leading-[1.5]'
+                    }
                   />
                 </li>
               ))}

@@ -93,7 +93,7 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <ReadDepth itemId={String(params.id)} />
       <div className="pb-24 mobile:pb-16">
         <Breadcrumb
-          className="mb-6 text-sm/5 mobile:mb-5 mobile:text-xs/5"
+          className="mb-6 text-label leading-5 mobile:mb-5 mobile:text-caption mobile:leading-5"
           items={[
             { label: 'Podcast', href: '/podcast' },
             { label: nav.title, href: nav.link },

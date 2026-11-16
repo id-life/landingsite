@@ -10,7 +10,10 @@ export type Crumb = { label: string; href?: string };
  */
 export default function Breadcrumb({ items, className }: { items: Crumb[]; className?: string }) {
   return (
-    <nav aria-label="Breadcrumb" className={cn('text-xl/5 font-medium mobile:text-xs/5', className)}>
+    <nav
+      aria-label="Breadcrumb"
+      className={cn('text-lead font-medium leading-5 mobile:text-caption mobile:leading-5', className)}
+    >
       <ol className="flex flex-wrap items-center gap-1">
         {items.map((item, index) => {
           // The last crumb is the page itself unless it links somewhere (an episode's crumb ends at its show).

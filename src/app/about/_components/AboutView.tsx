@@ -116,11 +116,11 @@ function Section({ title, children, className }: { title: string; children: Reac
     >
       <h2
         id={`about-${title.replace(/\W+/g, '-').toLowerCase()}`}
-        className="font-display text-2xl/8 font-bold uppercase mobile:text-lg/6"
+        className="font-display text-title-sm font-bold uppercase leading-8 mobile:text-lead mobile:leading-6"
       >
         {title}
       </h2>
-      <div className="mt-5 flex flex-col gap-4 text-base/7 mobile:text-[0.9375rem]/6">{children}</div>
+      <div className="mt-5 flex flex-col gap-4 text-body">{children}</div>
     </section>
   );
 }
@@ -130,18 +130,18 @@ function DraftBlock({ draft }: { draft: DraftRecord }) {
   const lines = draft.body.en.split('\n');
   return (
     <div className="relative mt-10 border-2 border-dashed border-accent/70 p-6 mobile:p-4" data-draft={draft.id}>
-      <p className="absolute -top-3 left-4 bg-white px-2 text-xs font-bold uppercase tracking-wide text-accent">
+      <p className="absolute -top-3 left-4 bg-white px-2 text-caption font-bold uppercase tracking-wide text-accent">
         Draft, not in production: {draft.title}
       </p>
       {lines.some((line) => line.startsWith('- ')) ? (
-        <ul className="list-disc pl-5 text-base/7">
+        <ul className="list-disc pl-5 text-body">
           {lines.map((line) => (
             <li key={line}>{line.replace(/^- /, '')}</li>
           ))}
         </ul>
       ) : (
         lines.map((line) => (
-          <p key={line} className="text-base/7">
+          <p key={line} className="text-body">
             {line}
           </p>
         ))
@@ -160,15 +160,15 @@ export default function AboutView({ drafts = [] }: { drafts?: DraftRecord[] }) {
 
   return (
     <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-5">
-      <h1 className="font-display text-[2.375rem]/[3rem] font-bold uppercase mobile:text-2xl/8">{ABOUT_TITLE}</h1>
-      <p className="mt-6 max-w-[52rem] text-xl/8 font-medium mobile:text-base/7">{profileText('about-summary').en}</p>
+      <h1 className="font-display text-title font-bold uppercase leading-[3rem] mobile:leading-8">{ABOUT_TITLE}</h1>
+      <p className="mt-6 max-w-[52rem] text-lead font-medium leading-8 mobile:text-body">{profileText('about-summary').en}</p>
       {show('about-intro-full')}
 
       <Section title="Key facts">
         <dl className="grid grid-cols-[14rem_1fr] border-t border-black/10 mobile:grid-cols-1">
           {rows.map((row) => (
             <div key={row.label} className="contents">
-              <dt className="border-b border-black/10 py-3 pr-6 text-sm/6 font-semibold uppercase text-black/50 mobile:border-0 mobile:pb-0">
+              <dt className="border-b border-black/10 py-3 pr-6 text-label font-semibold uppercase leading-6 text-black/50 mobile:border-0 mobile:pb-0">
                 {row.label}
               </dt>
               <dd className="border-b border-black/10 py-3 font-semibold mobile:pt-1">{row.value}</dd>
