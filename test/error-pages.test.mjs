@@ -14,21 +14,8 @@ vi.mock('@/../public/svgs/subscribe-border.svg?component', () => ({ default: () 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: () => {} }), usePathname: () => '/missing' }));
 
 const hrefs = (html) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((m) => m[1]);
-// The site header (NAV-04) comes first on the 404: the logo, the nine navigation items and
-// About.
-const HEADER = [
-  '/',
-  '/',
-  '/portfolio',
-  '/insights',
-  '/spectrum',
-  '/presence',
-  '/digitaltwin',
-  '/connect',
-  '/news',
-  '/podcast',
-  '/about',
-];
+// No site header on the 404: the original 404 had none, and its labels would be text that page never showed.
+const HEADER = [];
 const afterHeader = (html) => {
   const all = hrefs(html);
   expect(all.slice(0, HEADER.length)).toEqual(HEADER);
@@ -36,7 +23,7 @@ const afterHeader = (html) => {
 };
 
 describe('error pages', () => {
-  test('the 404 keeps its 11 links and its heading, under the site header', () => {
+  test('the 404 keeps its 11 links and its heading, without a site header', () => {
     const html = renderToStaticMarkup(createElement(NotFound));
     expect(html).toContain('<h1');
     expect(html).toContain('Page not found');

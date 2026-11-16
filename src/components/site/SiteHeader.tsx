@@ -9,21 +9,21 @@ import Link from 'next/link';
 import type { MouseEvent } from 'react';
 import LinkTracker from './LinkTracker';
 import MenuToggle from './MenuToggle';
-import { ABOUT_LINK, isSection, SITE_NAV, type SiteNavItem } from './site-nav';
+import { isSection, SITE_NAV, type SiteNavItem } from './site-nav';
 import SubscribeTrigger from './SubscribeTrigger';
 
 type Variant = 'overlay' | 'solid';
 
 /**
- * Below 1150 px (1280 px on content pages) nine labels at 14 px do not fit one row (about 890 px of labels and their
- * gaps). Rather than wrapping six plus an orphan row of three, the row breaks after the fifth item (a full-width
- * break, shown only there, whose height is the row gap): two balanced rows, five sections then Digital Twin, Connect,
- * News and Podcast. Above that they run as one row. All nine stay visible: nothing moves into a menu on tablets.
+ * The original menu (the owner's call, 2026-11-16): the seven sections, in capitals with their Chinese half, in the top
+ * row between the logo and the action, as the wave-0 site had them; News, Podcast and About are not in the bar (they
+ * are reached from the Insights section, the footer and the phone menu). From 1150 px the bar is that one row, the
+ * items placed where wave 0 placed them (from 16.67 % of the window, gaps of 1.67 %) but at 14 px instead of 10. Below
+ * 1150 px the seven do not fit beside the logo at 14 px: they take a row of their own under it, and below 900 px that
+ * row breaks after the fourth item (a full-width break whose height is the row gap). The tablet arrangement is a
+ * proposal awaiting the owner.
  */
-const NAV_TABLET_GRID = 'navGrid:gap-x-6 navGrid:gap-y-0';
-/** The content-page header is wider (padding, gaps) and needs the break up to 1280 px (tailwind.config.ts). */
-const NAV_TABLET_GRID_SOLID = 'navGridSolid:gap-x-6 navGridSolid:gap-y-0';
-
+const SECTION_NAV = SITE_NAV.filter(isSection);
 export type SiteHeaderProps = {
   variant: Variant;
   /** The navigation item of the page in view (a section id, 'news', 'podcast' or 'about'), or null. */
@@ -76,11 +76,11 @@ export default function SiteHeader({
       className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? // The experience: one row from 2048 px; below, the navigation takes its own row (wrapping on tablets),
-            // because labels are 14 px or more at every width (RWD-01).
-            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10'
-          : // Content pages: the logo and the actions on the first row, the navigation on its own row below.
-            'flex-wrap gap-x-6 gap-y-4',
+          ? // The experience: one row from 1150 px, with wave 0's padding (2.08 % of the window: 30 px at 1440, 40 at
+            // 1920); below, the navigation takes its own row under the logo row.
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-[2.0833vw]'
+          : // Content pages: the logo and the page's action, as their original headers had them.
+            'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
         // The tool pages fix this bar over a moving graph whose nodes, edges and names passed behind the labels
         // (axe saw the active item fail 4.5:1 on an animated node): there the bar has its own ground, from the
         // section's background token, so every label is judged against it.
@@ -99,71 +99,60 @@ export default function SiteHeader({
       <div className={live}>
         <Logo onClick={onLogoClick} {...trackNav(NAV.vision_page.id, 'logo')} />
       </div>
-      <nav
-        aria-label="Main"
-        className={clsx(
-          'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
-          overlay
-            ? clsx(
-                // Below 2048 px a row of its own that wraps (never a sideways scroller: its items would be cut by the window).
-                'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap',
-                NAV_TABLET_GRID,
-                live,
-              )
-            : clsx('order-last w-full flex-wrap gap-y-3', NAV_TABLET_GRID_SOLID),
-        )}
-      >
-        {SITE_NAV.map((item, index) => {
-          const current = currentId === item.id;
-          return [
-            index === 5 && (
-              <span
-                key="row-break"
-                aria-hidden="true"
-                // A flex line of its own that is the row gap (the nav has none here: a zero-height line would add
-                // the gap twice, and a negative margin cannot shrink a flex line below zero).
-                className={clsx('hidden basis-full', overlay ? 'h-1 navGrid:block' : 'h-3 navGridSolid:block')}
-              />
-            ),
-            <Link
-              key={item.id}
-              prefetch={false}
-              href={item.href}
-              aria-current={current ? (inExperience ? 'page' : currentKind) : undefined}
-              onClick={onItemClick ? (event) => onItemClick(event, item) : undefined}
-              {...trackNav(item.id)}
-              className={clsx(
-                // Sections are .nav-item and the pages .nav-page-item (same look, globals.css): the e2e guards count
-                // the seven section items by that class.
-                isSection(item) ? 'nav-item' : 'nav-page-item',
-                'bilingual-font relative flex shrink-0 cursor-pointer items-center whitespace-nowrap text-center font-bold uppercase tap',
-                current && 'nav-active',
-              )}
-            >
-              {/* In a span: the link is a flex box, which would drop the space between the two languages. */}
-              <span>
-                <BilingualText text={item.title} />
-              </span>
-            </Link>,
-          ];
-        })}
-      </nav>
+      {/* The menu is the experience's only: the original content pages (news, podcast, the tool pages) show the logo
+          and their action, and no menu labels (the owner's rule: no label a page did not show). */}
+      {overlay && (
+        <nav
+          aria-label="Main"
+          className={clsx(
+            'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
+            // Below 1150 px a row of its own (never a sideways scroller: its items would be cut by the window).
+            'order-last w-full flex-wrap navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
+            overlay
+              ? // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
+                clsx('gap-y-1 navRow:absolute navRow:left-[16.667vw] navRow:top-1/2 navRow:-translate-y-1/2', live)
+              : 'gap-y-3 navRow:ml-10',
+          )}
+        >
+          {SECTION_NAV.map((item, index) => {
+            const current = currentId === item.id;
+            return [
+              index === 4 && (
+                <span
+                  key="row-break"
+                  aria-hidden="true"
+                  // A flex line of its own that is the row gap (the nav has none here: a zero-height line would add
+                  // the gap twice, and a negative margin cannot shrink a flex line below zero).
+                  className="hidden h-1 basis-full navGrid:block"
+                />
+              ),
+              <Link
+                key={item.id}
+                prefetch={false}
+                href={item.href}
+                aria-current={current ? (inExperience ? 'page' : currentKind) : undefined}
+                onClick={onItemClick ? (event) => onItemClick(event, item) : undefined}
+                {...trackNav(item.id)}
+                className={clsx(
+                  // The e2e guards count the seven section items by this class.
+                  'nav-item',
+                  'bilingual-font relative flex shrink-0 cursor-pointer items-center whitespace-nowrap text-center font-bold uppercase tap',
+                  current && 'nav-active',
+                )}
+              >
+                {/* In a span: the link is a flex box, which would drop the space between the two languages. */}
+                <span>
+                  <BilingualText text={item.title} />
+                </span>
+              </Link>,
+            ];
+          })}
+        </nav>
+      )}
       <div
         id={overlay ? 'subscribe-btn' : undefined}
         className="flex h-[max(3rem,44px)] flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5"
       >
-        {/* The About page (CON-01): a separate page, so a plain link, not an item of the section navigation. */}
-        <Link
-          prefetch={false}
-          href={ABOUT_LINK.href}
-          aria-current={currentId === ABOUT_LINK.id ? 'page' : undefined}
-          className={clsx(
-            'flex h-10 items-center whitespace-nowrap text-label font-bold uppercase transition-colors duration-300 tap hover:text-accent mobile:hidden',
-            live,
-          )}
-        >
-          About
-        </Link>
         {action === 'exit' ? (
           <Link
             prefetch={false}
