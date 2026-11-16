@@ -62,9 +62,11 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
               <div className="mb-2 text-body font-medium text-white mobile:mb-1.5 mobile:text-caption">{data.publishLabel}</div>
             )}
             <h2 className="flex items-center gap-3 font-semibold text-white">
-              <span className="truncate text-title leading-[2.75rem] mobile:text-lead mobile:leading-8">{data.title}</span>
+              {/* Title and source tag kept at their original 36 and 18 px (no role: title is 38 at 1440 and 44 at 1920, and cut this one-line title
+                  where wave 0 showed it whole). */}
+              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8">{data.title}</span>
               {data.source && (
-                <span className="shrink-0 rounded bg-data-yellow/20 px-2 py-0.5 font-display text-lead font-bold uppercase leading-8 text-data-yellow backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-label mobile:leading-4">
+                <span className="shrink-0 rounded bg-data-yellow/20 px-2 py-0.5 font-display text-lg/8 font-bold uppercase text-data-yellow backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4">
                   {data.source}
                 </span>
               )}

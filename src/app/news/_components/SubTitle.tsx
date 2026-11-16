@@ -17,10 +17,10 @@ export default function SubTitle() {
         src="/imgs/news/news-logo.webp"
         alt=""
       />
-      <h2 className="relative z-10 text-title font-bold uppercase text-accent mobile:text-lead mobile:leading-8">
-        Join our longevity circle
-      </h2>
-      <p className="relative z-10 text-lead font-semibold leading-[1.875rem] mobile:text-caption mobile:leading-[1.125rem]">
+      {/* Title and line kept at their original 36 and 18 px: the title role (44 at 1920) ran the title into the dragon
+          art, which wave 0 keeps clear. */}
+      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8">Join our longevity circle</h2>
+      <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5">
         For <span className="text-accent">priority</span> access to pioneer research
       </p>
       <button
