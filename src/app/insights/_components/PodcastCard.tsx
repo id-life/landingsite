@@ -30,8 +30,8 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
     >
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          {/* The original's sizes on phones and from 1200 px (never under 12 px); the type roles on tablets. */}
-          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5 medium:text-body medium:leading-snug expanded:text-body expanded:leading-snug">
+          {/* The original's sizes at every width (the owner's rule on font sizes). */}
+          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
             {item.title}
           </h3>
           <img
@@ -41,9 +41,7 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
             aria-hidden="true"
           />
         </div>
-        <p className="line-clamp-1 text-base font-medium mobile:text-caption medium:text-body-sm expanded:text-body-sm">
-          {item.description}
-        </p>
+        <p className="line-clamp-1 text-base font-medium mobile:text-[10px]/4">{item.description}</p>
       </div>
     </Link>
   );
