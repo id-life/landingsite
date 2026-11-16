@@ -32,11 +32,11 @@ const MobileConnectSinglePage = () => {
       <div className="my-auto font-display font-semibold uppercase tracking-[-4%]">
         {/* Section 1: EVANGELISM */}
         <div className="relative text-left">
-          <span className="connect-text-en whitespace-nowrap text-title text-accent">Evangelism</span>
+          <span className="connect-text-en whitespace-nowrap text-[28px]/[28px] text-accent">Evangelism</span>
           <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[40px]/[60px] font-bold text-accent opacity-0">
             {CONNECT_EVANGELISM_CN}
           </span>
-          <div className="connect-text-en text-title leading-none">
+          <div className="connect-text-en text-[1.75rem]/[1.75rem]">
             OF GLOBAL LONGEVITY
             <br />
             AWARENESS
@@ -45,24 +45,28 @@ const MobileConnectSinglePage = () => {
 
         {/* Section 2: EAST & WEST ACCESS */}
         <div className="relative mt-4 text-left">
-          <span className="connect-text-en whitespace-nowrap text-title">East & West</span>{' '}
-          <span className="connect-text-en whitespace-pre-wrap text-title text-accent">Access</span>
+          <span className="connect-text-en whitespace-nowrap text-[28px]/[46px]">East & West</span>
+          <span className="connect-text-en whitespace-pre-wrap text-[28px]/[46px] text-accent">Access</span>
           <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-accent opacity-0">
             {CONNECT_BRIDGE_CN}
           </span>
-          <p className="connect-text-en text-body font-semibold normal-case tracking-normal">
-            Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
+          <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">
+            Deep Roots in Both East & West, a Conduit that Bridges
+            <br />
+            Markets, Capital, Institutions and More
           </p>
         </div>
 
         {/* Section 3: MOONSHOT VENTURES */}
         <div className="relative mt-4 text-left">
-          <span className="connect-text-en whitespace-nowrap text-title tracking-normal text-accent">MOONSHOT</span>
+          <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-accent">
+            MOONSHOT
+          </span>
           <span className="connect-text-cn absolute left-0 top-0 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal opacity-0">
             MOONSHOT
           </span>
-          <span className="connect-text-en ml-3 whitespace-nowrap text-title tracking-normal">VENTURES</span>
-          <p className="connect-text-en relative left-1 text-body font-semibold normal-case tracking-normal">
+          <span className="connect-text-en ml-3 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal">VENTURES</span>
+          <p className="connect-text-en relative left-1 text-xs/4 font-semibold normal-case tracking-normal">
             We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
           </p>
         </div>
