@@ -11,7 +11,7 @@ export default function ModelReport() {
   return (
     <>
       <div
-        className={`twin-title-item twin-title-M1 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
+        className={`twin-title-item twin-title-M1 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
       >
         <p className="text-title-sm font-semibold">30 YEARS</p>
         <div className="mt-5 text-body font-medium">
@@ -23,7 +23,7 @@ export default function ModelReport() {
         </p>
       </div>
       <div
-        className={`twin-title-item twin-title-M2 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
+        className={`twin-title-item twin-title-M2 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
       >
         <p className="text-title-sm font-semibold">5 YEARS</p>
         <div className="mt-5 text-body font-medium">
@@ -36,7 +36,7 @@ export default function ModelReport() {
         </p>
       </div>
       <div
-        className={`twin-title-item twin-title-M3 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
+        className={`twin-title-item twin-title-M3 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
       >
         <p className="text-title-sm font-semibold">3 MONTHS</p>
         <div className="mt-5 text-body font-medium">

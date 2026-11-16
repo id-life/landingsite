@@ -40,7 +40,10 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
 
   return (
     // Bottom left, above the fixed slogan; sizes never under their 1440 px values on tablets, where the label has a floor.
-    <div id="ytb-demo" className="absolute bottom-[max(10rem,120px)] left-10 z-20 grid cursor-pointer gap-5">
+    <div
+      id="ytb-demo"
+      className="absolute bottom-[max(10rem,120px)] left-10 z-20 grid cursor-pointer gap-5 expanded:bottom-40 large:bottom-40"
+    >
       <a
         href={DigitalTwinYoutubeLink}
         target="_blank"

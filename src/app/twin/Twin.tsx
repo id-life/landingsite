@@ -33,15 +33,17 @@ const twinNavItem = NAV_LIST[PAGE_INDEX];
  */
 const HEADLINE_ALT = 'Digital Twin: Biomarker Visualization';
 
-/** Desktop: the skin switch's resting distance from the bottom, clear of the feature list (which has a type floor). */
-const skinRestBottom = () => `${Math.max(15 * layoutUnitPx(), 190)}px`;
+/** Desktop: the skin switch's resting distance from the bottom: the original's 15 units from 1200 px, at least 190 px under
+ * it, clear of the feature list (which has a type floor). */
+const skinRestBottom = () => `${innerWidth >= 1200 ? 15 * layoutUnitPx() : Math.max(15 * layoutUnitPx(), 190)}px`;
 
 /**
  * Desktop deck: a pinned page whose scrubbed timeline reveals the 3D stage (#twin-three-wrapper, the twin canvas and
  * its controls, mounted once by the deck shell outside the scrolled content because ScrollSmoother's transform would
  * break position: fixed inside it). The page holds the headline, the feature list and the clone titles.
  *
- * Medium widths (RWD-01/02): the headline starts below the header (two rows from 1200 px, up to three under it) and
+ * Placement: the original's layout units wherever the header (its published height, --site-header-h) leaves room, so
+ * a laptop matches the original; on tablets the headline, titles and picker start below the header, and the headline
  * stops 160 px short of the right edge, where the model picker stands; hidden titles wait fully off stage; text and controls keep their 1440 px sizes as a
  * floor, so nothing with a type floor outgrows its box.
  */
@@ -111,14 +113,14 @@ function DesktopTwin() {
 
   const titleItem = cn('twin-title-item absolute', TWIN_OFFSTAGE_CLASS);
   // Clone and ontology titles: below the header on medium windows, where they were placed in layout units.
-  const titleTop = 'top-[max(16rem,200px)] large:top-64';
+  const titleTop = 'top-[max(16rem,calc(var(--site-header-h,7.5rem)_+_1rem))]';
   return (
     <div id={PAGE_ID} ref={ref} className="page-container twin">
       <div ref={imageContainerRef} className="absolute left-0 top-0 h-0 overflow-hidden">
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>
       <div className="twin-title-wrapper relative h-screen">
-        <h2 className="twin-title absolute left-10 top-[max(10rem,190px)] w-screen large:top-[max(10rem,128px)]">
+        <h2 className="twin-title absolute left-10 top-[max(10rem,calc(var(--site-header-h,7.5rem)_+_1rem))] w-screen">
           <img
             className="w-[min(964px,calc(100vw_-_5rem_-_160px))] xl:w-[min(1084px,calc(100vw_-_5rem_-_160px))] 2xl:w-[min(1205px,calc(100vw_-_5rem_-_160px))]"
             src="/svgs/twin/title-page.svg"
@@ -138,7 +140,12 @@ function DesktopTwin() {
         <div className={cn(titleItem, 'twin-title-M0', titleTop)}>
           <img className="w-[325px] xl:w-[363px] 2xl:w-[403px]" src="/svgs/twin/title-ontology.svg" alt="" />
         </div>
-        <div className={cn(titleItem, 'twin-title-M0 bottom-[max(8rem,96px)] max-w-[max(31.25rem,375px)]')}>
+        <div
+          className={cn(
+            titleItem,
+            'twin-title-M0 bottom-[max(8rem,96px)] max-w-[max(31.25rem,375px)] expanded:bottom-32 large:bottom-32',
+          )}
+        >
           <p className="text-title-sm font-semibold">{TWIN_ONTOLOGY.title}</p>
           <p className="mt-5 text-body font-medium">{TWIN_ONTOLOGY.en}</p>
           <p className="mt-2 text-body font-medium">{TWIN_ONTOLOGY.cn}</p>

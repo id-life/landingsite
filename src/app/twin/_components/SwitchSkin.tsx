@@ -75,7 +75,7 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
         'absolute z-20 grid gap-5',
         // Desktop: never closer to the bottom than 190 px, so the feature list under it (which has a type floor) does
         // not reach it on tablets. GSAP moves it (bottom) when a model is shown.
-        phone ? 'right-5 top-1/2 -translate-y-1/2' : 'bottom-[max(15rem,190px)] right-[64px]',
+        phone ? 'right-5 top-1/2 -translate-y-1/2' : 'bottom-[max(15rem,190px)] right-[64px] large:bottom-60',
       )}
     >
       <motion.div
