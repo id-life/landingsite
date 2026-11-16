@@ -11,7 +11,7 @@ import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 import { useAtomValue } from 'jotai';
 import { MouseEvent, ReactNode, useEffect, useRef } from 'react';
 
-type HeroLayout = 'wide' | 'split' | 'below';
+type HeroLayout = 'free' | 'wide' | 'split' | 'below';
 /** Space kept between the statement and the art, the header or the bottom controls. */
 const CLEAR = 8;
 /** The slogan carousel, the scroll button and the player take the bottom of the window (desktop deck). */
@@ -19,7 +19,8 @@ const BOTTOM_CONTROLS = 110;
 
 /**
  * Places the statement in the room the hero's art leaves (RWD-01): the art keeps its tagged fit, so the text moves.
- * Tries, in order, the whole block at the top left; the statement and its links at the top left and the facts and
+ * Tries, in order, the whole block at the top left at its own width, then with a measure that stops short of the
+ * dragon; the statement and its links at the top left and the facts and
  * themes at the top right, beside the dragon (then the same with those two as captions); the facts and themes in the
  * band under the art. A layout is taken when no line of text comes within CLEAR px of the art's outline (heroFit.ts), the header or the bottom controls.
  */
@@ -48,6 +49,8 @@ function placeStatement(section: HTMLElement) {
   // The statement's measure stops short of the dragon, whatever the layout.
   const measure = `${Math.max(320, art.cx - HERO_DRAGON.left * art.W - CLEAR - margin)}px`;
   const apply: Record<HeroLayout, () => void> = {
+    // Its own width (a portrait tablet, where the art is far below the text).
+    free: reset,
     wide: () => {
       reset();
       section.style.maxWidth = measure;
@@ -82,6 +85,7 @@ function placeStatement(section: HTMLElement) {
   };
   // Each layout first with the facts and themes at their size, then set as captions where the room is tight.
   const tries: [HeroLayout, boolean][] = [
+    ['free', false],
     ['wide', false],
     ['split', false],
     ['split', true],
