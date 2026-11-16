@@ -186,17 +186,13 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
-      {/* Type roles (RWD-01), each the role that fits the original panel's boxes: heading title-sm, inputs body (16 px,
-          so iOS does not zoom on focus), the source note and the success message caption. */}
-      <div className="font-display text-title-sm font-bold tracking-normal mobile:text-title shortScreen:text-title-sm">
-        BE PART OF IT
-      </div>
+      <div className="font-display text-3xl font-bold tracking-normal">BE PART OF IT</div>
 
       {/* submit msg */}
       <div
         ref={submittedMsgRef}
         className={cn(
-          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-data-leaf px-5 py-1 text-center font-text text-caption font-semibold tracking-normal text-white opacity-0',
+          'fixed -top-17 left-1/2 z-[30] w-max -translate-x-1/2 rounded-full bg-data-leaf px-5 py-1 text-center font-text text-xs/5 font-semibold tracking-normal text-white opacity-0',
           'mobile:bottom-0 mobile:left-1/2 mobile:top-auto mobile:-z-10 mobile:min-w-[19.4375rem] mobile:max-w-[calc(100%-4rem)] mobile:-translate-x-1/2',
         )}
       >
@@ -273,7 +269,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <div
           className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse shortScreen:flex-row')}
         >
-          <div className="font-text text-caption font-medium leading-snug tracking-normal text-ink-muted mobile:mt-3">
+          <div className="font-text text-xs font-medium tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"
@@ -309,7 +305,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               </div>
             ) : null}
             <input
-              className="w-full cursor-pointer py-3 text-body font-bold leading-5 mobile:font-semibold"
+              className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
               type="submit"
               value="Confirm"
             />

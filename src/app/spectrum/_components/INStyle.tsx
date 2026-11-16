@@ -19,11 +19,19 @@ const CSS = `
   }
 
   /* The layout unit (RWD-01): the original drew these pages at a root of 0.8333vw (12 px at 1440, 16 at 1920), so
-     on the desktop tree layout written in rem scales as it did from 1440 px up, with a fixed 12 px unit below it.
+     on the desktop tree layout and text written in rem scale as they did from 1200 px up (the owner's rule on font
+     sizes), with a fixed 12 px unit (the original's 1440 size) below 1200.
      Type in the roles is real rem and keeps its floors. */
   @media ${DESKTOP_TREE_QUERY} {
     :root {
-      --u: max(12px, 0.8333vw);
+      --u: 0.8333vw;
+    }
+  }
+
+  /* Below 1200 px (the tablet tier) the unit holds the original's 1440 size: 12 px. */
+  @media ${DESKTOP_TREE_QUERY} and (max-width: 1199.98px) {
+    :root {
+      --u: 12px;
     }
   }
 
