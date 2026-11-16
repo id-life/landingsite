@@ -11,11 +11,15 @@ import { ReactNode } from 'react';
 
 type CarouselItemData = { text?: string; cnText?: string; icon: ReactNode; textClass?: string };
 
-/** Slogan presentation (icon, width), keyed by the slogan id in src/content/slogans.ts. */
+/**
+ * Slogan presentation (icon, width), keyed by the slogan id in src/content/slogans.ts. The desktop widths are in em:
+ * they were drawn for the slogan's own size, so each line breaks where the original design broke it whatever size the
+ * type role gives (in layout units the lines stayed narrow while the text grew, and the last words were cut off).
+ */
 const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
   'purpose-driven-fund': {
     icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[16.25rem] w-[18.125rem]',
+    textClass: 'mobile:w-[16.25rem] w-[18.125em]',
   },
   'crack-immortality-code': {
     icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
@@ -34,21 +38,21 @@ const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
   },
   'setting-forth-lifespan': {
     icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[15.125rem] w-[17.25rem]',
+    textClass: 'mobile:w-[15.125rem] w-[17.25em]',
   },
   'reshape-lifespan-limit': {
     icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   'global-awareness': {
     icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[13.625rem] w-[17.125rem]',
+    textClass: 'mobile:w-[13.625rem] w-[17.125em]',
   },
   'connect-innovation-network': {
     icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
   },
   'collective-recognition': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
-    textClass: 'mobile:w-[17.375rem] w-[19.875rem]',
+    textClass: 'mobile:w-[17.375rem] w-[19.875em]',
   },
   'accelerate-longevity-tech': {
     icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,

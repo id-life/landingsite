@@ -57,7 +57,7 @@ const CarouselWrapper = memo(() => {
         itemHeight={48}
         duration={5}
         transition={0.6}
-        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[max(25rem,320px)]')}
+        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[max(25rem,352px)]')}
       >
         {CAROUSEL_ITEMS?.map((item) => (
           <CarouselItem key={item.cnText ?? item.text} {...item} />
