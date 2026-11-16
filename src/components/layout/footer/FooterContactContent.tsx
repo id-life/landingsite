@@ -88,7 +88,13 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       </address>
       <div className="my-4 h-px w-full bg-black/20" />
       <FooterContactForm placement={placement} />
-      <div className="mt-3 flex gap-1.5 font-text text-caption font-semibold text-ink-muted">
+      {/* In the phone Connect panel the music player sits at the bottom right over this line: keep clear of it. */}
+      <div
+        className={clsx(
+          'mt-3 flex gap-1.5 font-text text-caption font-semibold text-ink-muted',
+          placement === 'connect' && 'pr-[130px]',
+        )}
+      >
         <InfoSVG className="size-4 shrink-0" />
         {SUBSCRIBE_PROMISE.priorityAccess}
       </div>

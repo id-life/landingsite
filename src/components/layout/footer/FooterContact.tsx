@@ -204,7 +204,10 @@ export default function FooterContact() {
                   />
                 </div>
               </form>
-              <div className="mt-3.5 flex gap-1.5 font-text text-caption font-semibold">
+              {/* Its right end stays clear of the music player, which is fixed at the bottom right of the window over
+                  this column (it covered "pioneer research" at 1366 and 1440); the line wraps instead, and the
+                  column stays shorter than the media column, so the panel does not grow. */}
+              <div className="mt-3.5 flex gap-1.5 font-text text-caption font-semibold large:pr-[150px]">
                 <InfoSVG className="size-4" />
                 {SUBSCRIBE_PROMISE.priorityAccess}
               </div>
