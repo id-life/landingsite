@@ -1,5 +1,3 @@
-import { ConnectCriteria, ConnectValues } from './ConnectDetails';
-
 export default function FixedConnectPage1() {
   return (
     <div
@@ -282,12 +280,6 @@ export default function FixedConnectPage1() {
         <p className="mt-8 w-[max(32rem,360px)] text-left text-body font-semibold medium:w-auto [@media(min-width:840px)_and_(max-height:940px)]:mt-3">
           We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
         </p>
-        {/* Investment criteria, live text under the headlines (sized to clear the contact footer on 16:9 screens). */}
-        <ConnectCriteria
-          className="mt-6 w-[max(40rem,400px)] text-left medium:w-auto [@media(min-width:1200px)_and_(orientation:landscape)]:w-[max(48rem,560px)] [@media(min-width:840px)_and_(max-height:940px)]:mt-2 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(orientation:landscape)]:w-[min(560px,40vw)]"
-          titleClassName="text-label"
-          listClassName="mt-2 gap-2 text-pretty font-text text-body font-semibold medium:leading-snug [@media(min-width:840px)_and_(orientation:landscape)]:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:!leading-tight [@media(min-width:840px)_and_(max-height:940px)]:leading-snug"
-        />
       </div>
       <div className="absolute right-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] flex flex-col items-end medium:relative medium:right-auto medium:top-auto">
         <svg className="connect-title7 w-[34.875rem]" viewBox="0 0 697 83">
@@ -398,14 +390,6 @@ export default function FixedConnectPage1() {
         <p className="mt-32 w-[max(35rem,420px)] text-right text-body font-semibold medium:w-auto medium:text-balance medium:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:leading-snug">
           Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
         </p>
-        {/* The four value statements, live text in the right column. */}
-        <ConnectValues
-          // In a landscape window from 840 px the four values take two columns, so the list in the body role ends above
-          // the contact panel at every laptop and desktop size; portrait tablets keep one column.
-          className="mt-8 flex w-[max(38rem,480px)] flex-col gap-4 text-right medium:w-auto [@media(min-width:840px)_and_(max-height:800px)]:!mt-2 [@media(min-width:840px)_and_(max-height:800px)]:!gap-y-1 [@media(min-width:840px)_and_(orientation:landscape)]:mt-4 [@media(min-width:840px)_and_(orientation:landscape)]:grid [@media(min-width:840px)_and_(orientation:landscape)]:w-[max(48rem,min(600px,calc(62vw_-_120px)))] [@media(min-width:840px)_and_(orientation:landscape)]:grid-cols-2 [@media(min-width:840px)_and_(orientation:landscape)]:gap-x-6 [@media(min-width:840px)_and_(orientation:landscape)]:gap-y-2"
-          titleClassName="text-label"
-          textClassName="mt-0.5 text-pretty font-text text-body font-medium medium:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:!leading-tight [@media(min-width:840px)_and_(max-height:940px)]:leading-snug"
-        />
       </div>
     </div>
   );

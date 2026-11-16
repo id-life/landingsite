@@ -14,12 +14,12 @@ export default function PodcastNavTabs() {
   const search = useMemo(() => PODCAST_NAV_LIST.find((item) => item.link === pathname)?.id ?? null, [pathname]);
 
   return (
-    // The podcast's in-page sub-navigation: the two shows (NAV-04 moved them out of the old podcast header, where the
-    // desktop tabs sat beside the logo). Same look as before on both layouts.
+    // The podcast's sub-navigation: the two shows, in the site header beside the logo as the original podcast header
+    // had them (SiteHeader pageLinks); under the bar on phones. Same look as before on both layouts.
     <nav aria-label="Podcast shows">
       {/* RWD-09: the reading size (text-read-sm, 14.3 px at 1440, 18.6 px at 2560) instead of a fixed 14 px, so the show
           tabs grow with the reading column on large screens; the line height stays 20 px. */}
-      <div className="flex gap-8 pb-10 text-read-sm font-bold leading-5 mobile:hidden">
+      <div className="flex gap-8 text-read-sm font-bold leading-5 mobile:hidden">
         {PODCAST_NAV_LIST.map((item) => (
           <Link
             href={item.link}
@@ -34,7 +34,7 @@ export default function PodcastNavTabs() {
           </Link>
         ))}
       </div>
-      <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center mobile:pb-5">
+      <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center mobile:pt-5">
         {PODCAST_NAV_LIST.map((item) => {
           const isActive = search === item.id;
           const [english, chinese] = item.title.split(' ').reduce(

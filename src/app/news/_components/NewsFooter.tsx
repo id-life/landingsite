@@ -63,9 +63,6 @@ export default function NewsFooter() {
           <div className="flex items-baseline justify-between gap-6">
             <p className="uppercase text-ink-muted">Contact</p>
             <div className="flex flex-col items-end gap-1">
-              <a href="/about" className="font-text font-semibold hover:text-accent">
-                About Immortal Dragons <span aria-hidden="true">→</span>
-              </a>
               <PrivacyChoicesLink className="font-text text-caption font-semibold underline opacity-60 hover:opacity-100" />
             </div>
           </div>

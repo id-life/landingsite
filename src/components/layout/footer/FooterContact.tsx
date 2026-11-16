@@ -117,19 +117,13 @@ export default function FooterContact() {
               <div className="flex items-baseline justify-between gap-6 medium:flex-col medium:items-start medium:gap-1 expanded:flex-col expanded:items-start expanded:gap-1">
                 <p className="text-label uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
-                  <a
-                    href="/about"
-                    className="inline-flex items-center transition duration-300 tap hover:text-accent medium:whitespace-nowrap expanded:whitespace-nowrap"
-                  >
-                    About Immortal Dragons <span aria-hidden="true">→</span>
-                  </a>
-                  {/* Beside About (DATA-01), not on a line of its own, for the same reason. */}
                   <PrivacyChoicesLink className="text-body-sm underline opacity-60 hover:opacity-100" />
                 </div>
               </div>
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
                   constants instead of repeated literals. */}
-              <address className="not-italic">
+              {/* In capitals, as the original panel. */}
+              <address className="uppercase not-italic">
                 <div className="mt-7 flex items-center justify-start gap-1.5 medium:mt-1 expanded:mt-1">
                   <img src="/svgs/home.svg" alt="" />
                   {ORG_ADDRESS_TEXT}
