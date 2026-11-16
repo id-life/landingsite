@@ -45,7 +45,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
     >
       <div className={cn('flex-center relative -mt-5 overflow-hidden', containerClass)}>
         {coverUrl && (!videoLoaded || reduced) && (
-          <img src={coverUrl} alt={title} className={cn('size-[max(15.5rem,186px)] object-contain', coverClass)} />
+          <img src={coverUrl} alt={title} className={cn('size-[calc(var(--t)*15.5)] object-contain', coverClass)} />
         )}
         <CustomView condition={supportsWebm && !reduced}>
           {videoUrl && (
@@ -55,7 +55,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
               loop
               muted
               playsInline
-              className={cn('size-[max(15.5rem,186px)] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
+              className={cn('size-[calc(var(--t)*15.5)] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
               onLoadedData={() => setVideoLoaded(true)}
             />
           )}

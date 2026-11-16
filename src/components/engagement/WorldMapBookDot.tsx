@@ -226,7 +226,7 @@ export function WorldMapBookDotContent({
               exit="hidden"
               className={cn(
                 'absolute flex flex-col items-center overflow-hidden font-display',
-                phone ? 'left-0 top-0 w-[9rem] pt-4' : 'left-2 top-5 w-[max(15.5rem,186px)] pt-6',
+                phone ? 'left-0 top-0 w-[9rem] pt-4' : 'left-2 top-5 w-[calc(var(--t)*15.5)] pt-6',
               )}
               onMouseLeave={handleContentMouseLeave}
             >
@@ -250,29 +250,22 @@ export function WorldMapBookDotContent({
                 }}
                 className={cn('flex cursor-pointer flex-col items-center', phone ? '-mt-3 gap-2' : 'gap-4')}
               >
-                <h4
-                  className={cn(
-                    'text-balance text-center font-semibold capitalize text-white',
-                    phone ? 'text-caption leading-4' : 'text-lead',
-                  )}
-                >
+                <h4 className={cn('font-semibold capitalize text-white', phone ? 'text-xs/4' : 'text-2xl/7')}>
                   <span className={CARD_TEXT_BACKING}>{bookTitle}</span>
                 </h4>
                 <div className={cn('flex items-center', CARD_TEXT_BACKING)}>
                   <LinkSVG
-                    className={cn(phone ? 'size-2' : 'size-[max(1rem,12px)]', 'fill-data-sky', { 'fill-tone-400': !link })}
+                    className={cn(phone ? 'size-2' : 'size-[calc(var(--t)*1)]', 'fill-data-sky', { 'fill-tone-400': !link })}
                   />
                   <p
-                    // Phone: the 144 px card clips its overflow and the caption no longer fits on one line at its 12 px
-                    // floor (the original's was 8 px), so it wraps inside the card instead of being cut.
-                    className={cn('ml-1 text-caption font-medium text-data-sky', phone ? 'text-center' : 'whitespace-nowrap', {
+                    className={cn('ml-1 font-medium text-data-sky', phone ? 'whitespace-nowrap text-[8px]/3' : 'text-xs/3', {
                       'text-tone-400': !link,
                     })}
                   >
                     {desc}
                   </p>
                   <ArrowSVG
-                    className={cn(phone ? 'size-2' : 'size-[max(1rem,12px)]', '-rotate-90 fill-data-sky', {
+                    className={cn(phone ? 'size-2' : 'size-[calc(var(--t)*1)]', '-rotate-90 fill-data-sky', {
                       'fill-tone-400': !link,
                     })}
                   />

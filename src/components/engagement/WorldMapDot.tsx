@@ -243,8 +243,8 @@ export function WorldMapDotContent({
           className={cn(
             `world-map-dot-content world-map-dot-content-${index}`,
             'pointer-events-none absolute z-30 flex flex-col overflow-visible',
-            // Never shorter than its 1440 px size: the scaled unit shrinks it on tablets while its text has a floor.
-            'max-h-[max(42.5rem,510px)]',
+            // In the text unit (--t), so on tablets the card keeps the size its text has (the original's 1440 px size).
+            'max-h-[calc(var(--t)*42.5)]',
           )}
           style={{ left: `${left}px`, top: `${top}px` }}
         >
@@ -252,7 +252,7 @@ export function WorldMapDotContent({
           {!phone && (
             <div
               className={cn(
-                'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[max(20.25rem,243px)] origin-top-left flex-col items-center gap-4 font-display',
+                'absolute inset-0 top-4 -z-10 flex h-[70dvh] w-[calc(var(--t)*20.25)] origin-top-left flex-col items-center gap-4 font-display',
                 contentTransformClass,
               )}
               onMouseLeave={handleContentMouseLeave}

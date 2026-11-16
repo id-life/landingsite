@@ -24,7 +24,7 @@ const CARD_TEXT = ['h3', 'h4', 'p', 'img', 'video'].map((t) => `[class*="dot-con
 /**
  * The phone map's label rule at compact heights (a phone in landscape, a 720x450 window: RWD-02 A3). The strip is
  * then 190-250 px tall, the whole world about 400-530 px wide, and the European cities sit a few pixels apart, so
- * labels at their 12 px floor ran into each other. Instead of shrinking text, each label takes a side:
+ * labels ran into each other. Instead of shrinking text, each label takes a side:
  * 1. the open dot (its label, badges and Talk link) and the open card (its text, photos and logos) are placed first
  *    and never move;
  * 2. every other label, in data order (meetings, books, sponsors), takes the first free place among: right of its dot
@@ -62,7 +62,7 @@ export function useCompactLabelRule(
       labels.forEach((l) => l && reset(l));
       // Phone deck at compact heights: no two labels collide. Desktop deck (not the panning strip): a label that
       // would run past the window's right edge takes the left of its dot instead (it was cut at 1180 px, where the
-      // label's type role is larger than the original's scaled 10 px). Otherwise labels stay exactly as designed.
+      // tablet's text is the original's 1440 px size). Otherwise labels stay exactly as designed.
       const collide = mode === 'phone' && mq.matches;
       const edge = mode === 'desktop' || mode === 'pan';
       const frame0 = mode === 'pan' && boundsRef?.current ? box(boundsRef.current) : null;

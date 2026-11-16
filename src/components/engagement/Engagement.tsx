@@ -120,13 +120,14 @@ function PhonePresence() {
     >
       {/* A phone in landscape (compact height) gets a compact title, so the map strip keeps its height. */}
       <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">
-        <h2 className="font-title text-title capitalize text-white shortScreen:text-title-sm">Presence</h2>
-        {/* Sentence case, not capitals (RWD-01: at most 25 % uppercase Latin per screen); the words are unchanged. */}
+        <h2 className="font-title text-[26px] capitalize leading-[30px] text-white shortScreen:text-[20px] shortScreen:leading-[24px]">
+          Presence
+        </h2>
         {/* Compact heights: an open card's title rises to this line (the strip is under 260 px tall), so the line fades
             while a card is open; the heading stays (RWD-02 A3). */}
         <p
           className={cn(
-            'mt-2 font-display text-label font-bold uppercase text-white transition-opacity duration-fast shortScreen:mt-0.5',
+            'mt-2 font-display text-[14px] font-bold uppercase leading-[20px] text-white transition-opacity duration-fast shortScreen:mt-0.5',
             cardOpen && 'shortScreen:opacity-0',
           )}
         >
