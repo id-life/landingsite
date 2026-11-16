@@ -14,6 +14,7 @@ import { cn } from '@/utils';
 import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
+import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
@@ -32,6 +33,9 @@ type NewsAndTalksSectionProps = {
 };
 
 const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
+// Medium windows (600-839 px) show the cards three across (RWD-01): four role-sized cards in a 700 px row cut titles
+// to a few words. Two rows of three per page.
+const ITEMS_PER_PAGE_MEDIUM = 6;
 
 function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,7 +77,8 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
-            <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
+            {/* Body, as on the desktop deck: titles run to 60 characters and more (RWD-01's 16 px bar for running text). */}
+            <h3 className="line-clamp-1 font-text text-body font-medium leading-snug text-black">{item.title}</h3>
             <div className="flex w-full flex-col text-left font-text text-caption text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
@@ -105,16 +110,23 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         className="group flex cursor-pointer flex-col overflow-hidden"
       >
         {/* Image */}
-        <div className="relative h-[9.25rem] w-full overflow-hidden">
+        {/* Medium windows: the picture keeps a 16:9 shape in the wider three-across card (the scaled height made a
+            strip 63 px tall at 820 px); so does a portrait expanded window (1024x1366). */}
+        <div className="relative h-[9.25rem] w-full overflow-hidden medium:aspect-video medium:h-auto expanded:portrait:aspect-video expanded:portrait:h-auto">
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
-        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
-          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
-          <div className="flex items-center gap-1.5 font-text text-sm/5 font-medium text-black/60">
-            {item.publisher && <span>{item.publisher}</span>}
-            {item.publisher && item.publishDate && <span>·</span>}
-            {item.publishDate && <span>{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
+        {/* Type roles (RWD-01): the title is body with a heading's tight leading, the source and date caption. The
+            source and date stay on one line: a long source is cut with an ellipsis and the date never wraps (at the
+            12 px floor they broke into three ragged lines on narrow cards). */}
+        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm medium:gap-[8px] medium:p-[12px] expanded:gap-[8px] expanded:p-[12px]">
+          <h3 className="line-clamp-2 font-text text-body font-semibold leading-snug text-black desktop:line-clamp-1">
+            {item.title}
+          </h3>
+          <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap font-text text-caption font-medium text-black/60">
+            {item.publisher && <span className="min-w-0 truncate">{item.publisher}</span>}
+            {item.publisher && item.publishDate && <span className="shrink-0">·</span>}
+            {item.publishDate && <span className="shrink-0">{dayjs(item.publishDate).format('MMM DD, YYYY')}</span>}
           </div>
         </div>
       </CardShell>
@@ -134,12 +146,12 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
 // Constants for dynamic calculation (in pixels)
 const NEWS_HEADER_HEIGHT = 44; // Header text height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 128; // Header (44px) + gap (12px) + 1 row of cards (72px)
+const PODCAST_SECTION_HEIGHT = 156; // Header (44px) + gap (12px) + 1 row of cards (100px)
 const SECTION_GAP = 24; // gap-6 between News and Podcast sections
-const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
+const NEWS_CARD_ROW_HEIGHT = 130; // Card: image (68px) + content padding + text (62px: a body title, two caption lines)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
-function calculateMobileItemCount(containerHeight: number): number {
+function calculateMobileItemCount(containerHeight: number, columns: number): number {
   // Available height for news content (cards area only)
   const availableForNews = containerHeight - NEWS_HEADER_HEIGHT - NEWS_CONTENT_GAP - SECTION_GAP - PODCAST_SECTION_HEIGHT;
 
@@ -150,7 +162,7 @@ function calculateMobileItemCount(containerHeight: number): number {
 
   // Clamp between 2 and 4 rows
   const clampedRows = Math.max(2, Math.min(4, rows));
-  return clampedRows * 2; // 2 columns
+  return clampedRows * columns;
 }
 
 export default function NewsAndTalksSection({
@@ -169,18 +181,22 @@ export default function NewsAndTalksSection({
   const swiperRef = useRef<SwiperType>(undefined);
   const mobileSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
+  const profile = useDeviceProfile();
+  const itemsPerPage = profile?.width === 'medium' ? ITEMS_PER_PAGE_MEDIUM : ITEMS_PER_PAGE_DESKTOP;
+  // Phone deck in landscape (a compact-height window): four cards across instead of two wide strips.
+  const mobileColumns = profile?.height === 'compact' ? 4 : 2;
 
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE_DESKTOP);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
   const totalMobilePages = Math.ceil(items.length / mobileItemCount);
 
   const containerResizeCallback = useCallback(
     (entry: ResizeObserverEntry) => {
       if (!isMobile) return;
       const containerHeight = entry.contentRect.height;
-      const count = calculateMobileItemCount(containerHeight);
+      const count = calculateMobileItemCount(containerHeight, mobileColumns);
       setMobileItemCount(count);
     },
-    [isMobile],
+    [isMobile, mobileColumns],
   );
 
   // Mobile: calculate items based on container height (using ResizeObserver)
@@ -195,9 +211,9 @@ export default function NewsAndTalksSection({
 
     const viewportHeight = window.innerHeight;
     const containerHeight = viewportHeight - 140 - 80;
-    const count = calculateMobileItemCount(containerHeight);
+    const count = calculateMobileItemCount(containerHeight, mobileColumns);
     setMobileItemCount(count);
-  }, [isMobile]);
+  }, [isMobile, mobileColumns]);
 
   // Mobile: fallback to window resize if parent container is not found
   useWindowResize(windowResizeCallback);
@@ -246,8 +262,8 @@ export default function NewsAndTalksSection({
       }
       // Desktop loading: 4x2 grid skeleton
       return (
-        <div className="grid grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, index) => (
+        <div className="grid grid-cols-4 gap-6 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
+          {Array.from({ length: itemsPerPage }).map((_, index) => (
             <div key={index} className="flex flex-col">
               <div className="h-[148px] animate-pulse bg-tone-800/50" />
               <div className="mt-0 space-y-2 border-2 border-white bg-white/50 p-3">
@@ -277,7 +293,7 @@ export default function NewsAndTalksSection({
             const pageItems = items.slice(pageIndex * mobileItemCount, (pageIndex + 1) * mobileItemCount);
             return (
               <SwiperSlide key={pageIndex}>
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 shortScreen:grid-cols-4">
                   {pageItems.map((item) => (
                     <NewsCard key={item.id} item={item} isMobile />
                   ))}
@@ -302,11 +318,11 @@ export default function NewsAndTalksSection({
         spaceBetween={24}
       >
         {Array.from({ length: totalPages }).map((_, pageIndex) => {
-          const pageItems = items.slice(pageIndex * ITEMS_PER_PAGE_DESKTOP, (pageIndex + 1) * ITEMS_PER_PAGE_DESKTOP);
+          const pageItems = items.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-4 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
                 {pageItems.map((item) => (
                   <NewsCard key={item.id} item={item} />
                 ))}
@@ -324,14 +340,20 @@ export default function NewsAndTalksSection({
       <div className={cn(isMobile ? 'flex flex-col' : 'flex flex-1 flex-col')}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
-            NEWS & TALKS
-          </h2>
+          <h2 className="font-display text-title-sm font-semibold uppercase">NEWS & TALKS</h2>
           <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
         {/* Content with arrow navigation */}
-        <div className={cn('relative mt-5', !isMobile && 'flex-1')}>
+        {/* Phone deck in landscape: the cards are inset by the arrows' width (four across, the 44 px arrows would cover
+            the first and last card's text). */}
+        <div
+          className={cn(
+            'relative mt-5',
+            !isMobile && 'flex-1 medium:mt-[16px] expanded:mt-[12px]',
+            isMobile && totalMobilePages > 1 && 'shortScreen:px-6',
+          )}
+        >
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />

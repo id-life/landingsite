@@ -104,7 +104,8 @@ the server compiler's font results separately without treating the download as a
 its cached result and the other downloads again, the server HTML names a class (for example `__variable_75844e`)
 that the client stylesheet does not define, and every font role falls back. Restoring only `.next/cache`, as Vercel
 does, is enough to cause it. `npm run build` therefore clears `.next/cache/webpack` first and fails afterwards if any
-prerendered page uses an undefined font class (`scripts/next-font-guard.mjs`). Self-hosting Oxanium and Poppins with
+server bundle or prerendered page names a font class no client stylesheet defines (`scripts/next-font-guard.mjs`;
+it reads the server output, because the deployment host has no prerendered `.html` where a local build has it). Self-hosting Oxanium and Poppins with
 next/font/local (both SIL OFL 1.1) would remove the download, and with it the cause.
 
 On a first paint, each role must resolve to its face: `font-display` and `.bilingual-font` to Oxanium,

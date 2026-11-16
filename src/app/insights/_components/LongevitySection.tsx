@@ -59,16 +59,17 @@ function LongevityCard({ item }: { item: LongevityItem }) {
     <Root {...linkProps} className={cn('podcast-card-clip relative block bg-white p-0.5', href && 'cursor-pointer')}>
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+          {/* Type roles (RWD-01), as the podcast cards. */}
+          <h3 className="line-clamp-1 flex-1 font-text text-body font-bold leading-snug mobile:line-clamp-2 mobile:text-body-sm mobile:leading-snug">
             {item.title}
           </h3>
           <img
             src="/imgs/podcast/podcast-play-white.svg"
-            className="invisible size-10 shrink-0 duration-300 hover:scale-110 mobile:size-8"
+            className="invisible size-10 shrink-0 duration-300 hover:scale-110 mobile:size-8 medium:size-[32px] expanded:size-[32px]"
             alt="Open"
           />
         </div>
-        <p className="line-clamp-1 text-base font-medium mobile:text-xs/4">{item.description}</p>
+        <p className="line-clamp-1 text-body font-medium">{item.description}</p>
       </div>
     </Root>
   );
@@ -167,7 +168,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     if (!longevityData.length) {
       return (
         <div className="podcast-card-clip relative bg-white p-0.5">
-          <div className="podcast-card-clip-inner bg-tone-50 p-4 text-sm text-black/50">No longevity weekly data yet.</div>
+          <div className="podcast-card-clip-inner bg-tone-50 p-4 text-body-sm text-black/50">No longevity weekly data yet.</div>
         </div>
       );
     }
@@ -252,40 +253,44 @@ export default function LongevitySection({ isMobile = false, compact = false, is
       <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className={cn('font-display text-[1.625rem]/9 font-semibold uppercase', isMobile && 'text-[26px] leading-9')}>
-              长生周报
-            </h2>
+            <h2 className="font-display text-title-sm font-semibold uppercase">长生周报</h2>
+            {/* Each a 44 px box on coarse pointers (RWD-06); the mouse layout is unchanged. */}
             <div className="flex items-center gap-1.5">
               <a
                 href={WECHAT_LINK}
+                aria-label="WeChat"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <WechatSVG className="size-6 fill-black" />
+                <WechatSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
               <a
                 href={REDBOOK_LINK}
+                aria-label="Xiaohongshu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <RedbookSVG className="size-6 fill-black" />
+                <RedbookSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
               <a
                 href={ZHIHU_LINK}
+                aria-label="Zhihu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="opacity-100 transition-opacity hover:opacity-80"
+                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
               >
-                <ZhihuSVG className="size-6 fill-black" />
+                <ZhihuSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
             </div>
           </div>
           <ViewAllButton href={WECHAT_LINK} external={!isMobile} onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
-        <div className={cn('relative mt-3', !isMobile && 'pr-0')}>
+        {/* Phone deck (compact rows): the cards are inset by the arrows' width, so the 44 px arrows (RWD-06) sit beside
+            the cards instead of over their titles. */}
+        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'px-6')}>
           {!isMobile && !compact && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" className="-left-5" />
           )}

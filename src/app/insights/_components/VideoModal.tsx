@@ -110,7 +110,7 @@ export default function VideoModal({ isOpen, onClose, videoId, title, placement 
             {/* Close button - fixed at screen top right */}
             <button
               onClick={onClose}
-              className="fixed right-6 top-6 z-[101] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
+              className="fixed right-6 top-6 z-[101] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-sm transition-all tap hover:bg-white/20 hover:text-white"
               aria-label="Close video"
             >
               <CloseIcon />

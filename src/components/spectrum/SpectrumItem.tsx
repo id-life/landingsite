@@ -18,17 +18,24 @@ interface SpectrumItemProps {
   updateUrlAndExecute?: (key: string) => void;
   routeConfigs?: SpectrumRouteConfig[];
   isSponsor?: boolean;
+  /** False until the section is approached: logo images keep their boxes but fetch nothing yet (PERF). */
+  loadImages?: boolean;
 }
+
+// A 1x1 transparent GIF: an image box that is laid out at its final height but makes no request.
+const NO_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 export const SpectrumLink = memo(
   ({
     item,
     executeSpectrumRoute,
+    loadImage = true,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
+    loadImage?: boolean;
   }) => {
     const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link);
@@ -41,13 +48,13 @@ export const SpectrumLink = memo(
 
     const content = icon ? (
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
-        <img src={icon} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
+        <img src={loadImage ? icon : NO_IMAGE} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
       </div>
     ) : (
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
         <p
           className={cn(
-            'spectrum-link-text group relative whitespace-nowrap font-text text-xs/5 font-medium capitalize',
+            'spectrum-link-text group relative whitespace-nowrap font-text text-body-sm font-medium capitalize',
             hasLink &&
               'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
             labelClassName,
@@ -56,14 +63,21 @@ export const SpectrumLink = memo(
           {label}
         </p>
         {isComingSoon && (
-          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-xs capitalize text-white/50 backdrop-blur-2xl">
+          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-caption capitalize text-white/50 backdrop-blur-2xl">
             coming soon
           </span>
         )}
       </div>
     );
 
-    return anchorProps ? <a {...anchorProps}>{content}</a> : content;
+    // A logo link keeps its box and grows its hit area to 44 px on coarse pointers (RWD-06).
+    return anchorProps ? (
+      <a {...anchorProps} className={icon ? 'relative block tap-area' : undefined}>
+        {content}
+      </a>
+    ) : (
+      content
+    );
   },
 );
 
@@ -71,7 +85,20 @@ SpectrumLink.displayName = 'SpectrumLink';
 
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
-    ({ item, onClick, onHover, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor }, ref) => {
+    (
+      {
+        item,
+        onClick,
+        onHover,
+        className,
+        executeSpectrumRoute,
+        updateUrlAndExecute,
+        routeConfigs,
+        isSponsor,
+        loadImages = true,
+      },
+      ref,
+    ) => {
       const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
       const [currentPage, setCurrentPage] = useState(0);
       const linksPerPage = 21;
@@ -135,10 +162,11 @@ const SpectrumItem = memo(
               executeSpectrumRoute={executeSpectrumRoute}
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
+              loadImage={loadImages}
             />
           </motion.div>
         ));
-      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, loadImages]);
 
       // Keep the supporting institutions visible together in three rows.
       const sponsorFirstRowLinks = useMemo(() => {
@@ -159,10 +187,11 @@ const SpectrumItem = memo(
               executeSpectrumRoute={executeSpectrumRoute}
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
+              loadImage={loadImages}
             />
           </motion.div>
         ));
-      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs]);
+      }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, loadImages]);
 
       return (
         <div
@@ -183,7 +212,7 @@ const SpectrumItem = memo(
                 })}
             <div className={cn('flex flex-col', isSponsor && 'w-full items-center')}>
               {isSponsor ? (
-                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-xl/6 font-semibold capitalize">
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-body font-semibold capitalize">
                   <div className="flex gap-3">
                     {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
                     <p>{title}</p>
@@ -191,14 +220,19 @@ const SpectrumItem = memo(
                   </div>
                 </h4>
               ) : (
-                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-title-sm font-semibold capitalize">
                   {title}
                 </h4>
               )}
-              <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize', isSponsor && 'hidden')}>
+              <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-body font-bold capitalize', isSponsor && 'hidden')}>
                 {titleCn}
               </h4>
-              <div className={cn('spectrum-links-container flex flex-col', isSponsor ? 'mt-6 w-full' : 'mt-5')}>
+              <div
+                className={cn(
+                  'spectrum-links-container flex flex-col',
+                  isSponsor ? 'mt-6 w-full [@media(max-height:1100px)]:mt-4' : 'mt-5',
+                )}
+              >
                 <AnimatePresence mode="wait">
                   {isSponsor ? (
                     <motion.div
@@ -209,7 +243,9 @@ const SpectrumItem = memo(
                       transition={{ duration: DURATION.fast }}
                       className="flex w-full flex-col"
                     >
-                      <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain">
+                      {/* Seven logos a row; ten (two rows) on a window under 860 px tall, where three rows ran under the
+                          fixed bottom controls once the section's text was set in the type roles (RWD-01); rows closer up to 900 px; logos at most 3 units tall up to 1100 px, 2.5 under 860 (the peer reviews' running text is 16 px). */}
+                      <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain [@media(max-height:860px)]:grid-cols-10 [@media(max-height:860px)]:[&_img]:max-h-10 [@media(max-height:900px)]:gap-y-4 [@media(min-height:861px)_and_(max-height:1100px)]:[&_img]:max-h-12">
                         {sponsorFirstRowLinks}
                       </div>
                     </motion.div>
@@ -230,7 +266,7 @@ const SpectrumItem = memo(
                   <motion.button
                     onClick={handleMoreClick}
                     className={cn(
-                      'mt-1 flex items-center gap-1 font-text text-xs/5 font-medium text-data-sky opacity-90 transition-colors hover:text-data-sky/80 hover:opacity-100',
+                      'mt-1 flex items-center gap-1 font-text text-label font-medium text-data-sky opacity-90 transition-colors tap hover:text-data-sky/80 hover:opacity-100',
                       isSponsor && 'mt-4 self-center',
                     )}
                   >

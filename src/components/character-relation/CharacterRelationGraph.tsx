@@ -242,13 +242,15 @@ function CustomNode(props: RGNodeSlotProps) {
   return !!node.data?.isSpecialNode && !isVisitorOnly ? (
     <div className="relative flex h-full w-full items-center justify-center rounded-full bg-data-rose">
       <div className="h-[76px] w-[76px] rounded-full bg-accent/20"></div>
-      <div className="absolute left-1/2 top-1/2 h-[40px] w-max -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent px-[12px] font-text text-[28px] font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
+      {/* Node labels in the type roles (RWD-01): the centre node title-sm, the others body; the pills keep their
+          px heights, which the force layout's node sizes assume. */}
+      <div className="absolute left-1/2 top-1/2 h-[40px] w-max -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent px-[12px] font-text text-title-sm font-semibold leading-[40px] tracking-normal text-white shadow-[0px_4px_8px_0px_#00000040]">
         {node.text}
       </div>
     </div>
   ) : (
     <div className={cn('relative h-full w-full rounded-full', isVisitorOnly ? 'bg-data-navy' : 'bg-accent')}>
-      <div className="absolute right-0 top-1/2 -z-10 h-[28px] w-max -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-text text-[16px] font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
+      <div className="absolute right-0 top-1/2 -z-10 h-[28px] w-max -translate-y-1/2 translate-x-[calc(100%-16px)] rounded-full bg-white pl-[24px] pr-[16px] font-text text-body font-medium leading-[28px] tracking-normal text-black shadow-[0px_3px_6px_0px_#00000040]">
         {node.text}
       </div>
     </div>

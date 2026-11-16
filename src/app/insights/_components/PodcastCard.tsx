@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { STORAGE_KEY } from '@/constants/storage';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
 
@@ -7,33 +7,43 @@ type PodcastCardProps = {
   isMobile?: boolean;
 };
 
+/**
+ * One episode in the Insights podcast row: the whole card is a real link to its episode page (keyboard, middle-click,
+ * Cmd/Ctrl-click and no-JavaScript all work), as the news cards are. The Play mark inside it is part of that link,
+ * not a second control: it always opened the episode page (where the player is), and an interactive element nested
+ * in a link is invalid. The accessible name is the card's visible text, which starts with the episode title (a name
+ * of the title alone fails WCAG 2.5.3, label in name, as on the news cards).
+ * No prefetch: the cards sit in a section the visitor may never reach, and each prefetch is a request on the hero.
+ */
 export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
-  const router = useRouter();
-
-  // The card links straight to its episode by id. It used to look the episode up in the player's 1.3 MB list
-  // first, which made the Play button depend on that list (now fetched only when the player is opened).
-  const handlePlay = () => {
-    // Same tab: the episode page is part of this site.
+  // Same tab: the episode page is part of this site. On the phone, mark the return page so Back restores Insights.
+  const onNavigate = () => {
     if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-    router.push(`/podcast/${item.id}`);
   };
 
   return (
-    <div className="podcast-card-clip relative bg-white p-0.5">
+    <Link
+      href={`/podcast/${item.id}`}
+      prefetch={false}
+      onClick={onNavigate}
+      className="podcast-card-clip group relative block bg-white p-0.5"
+    >
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+          {/* Type roles (RWD-01): title body (body-sm on the phone deck's two-up cards); the description is running text, so
+              body on every deck (RWD-01's 16 px bar for runs of 60 characters or more). */}
+          <h3 className="line-clamp-1 flex-1 font-text text-body font-bold leading-snug mobile:line-clamp-2 mobile:text-body-sm mobile:leading-snug">
             {item.title}
           </h3>
           <img
             src="/imgs/podcast/podcast-play-white.svg"
-            className="size-10 shrink-0 cursor-pointer duration-300 hover:scale-110 mobile:size-8"
-            alt="Play"
-            onClick={handlePlay}
+            className="size-10 shrink-0 duration-300 group-hover:scale-110 mobile:size-8 medium:size-[32px] expanded:size-[32px]"
+            alt=""
+            aria-hidden="true"
           />
         </div>
-        <p className="line-clamp-1 text-base font-medium mobile:text-xs/4">{item.description}</p>
+        <p className="line-clamp-1 text-body font-medium">{item.description}</p>
       </div>
-    </div>
+    </Link>
   );
 }
