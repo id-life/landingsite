@@ -9,10 +9,10 @@ No network request (drei's `useDetectGPU` downloads benchmark tables from a CDN,
 | ---- | --------------------------------------------------------------------------------------------------- | ------- | ------------- | ------------- | ---------- |
 | low  | software renderer (SwiftShader, llvmpipe), no float render target, Save-Data, <= 2 GB or <= 2 cores | 1       | 0             | 4             | off        |
 | mid  | everything else: phones, tablets                                                                    | 1.5     | 0             | 6             | 64         |
-| high | fine pointer (laptop, desktop) with WebGL2                                                          | 2       | 4             | 10            | 128        |
+| high | fine pointer (laptop, desktop) with WebGL2                                                          | 2       | 8             | 10            | 128        |
 
 Every tier: the hero canvases have no canvas antialias, stencil or depth buffer (the composer antialiases and has its
-own depth); the glass dragon's transmission buffer is 256 px on both trees; the Digital Twin canvas (no composer)
+own depth); the glass dragon's transmission buffer is 128 px on the desktop deck and 256 px on the phone deck, as in the original design; the Digital Twin canvas (no composer)
 keeps its depth buffer and gets antialiasing on the high tier only. Screen size is not an input, so an iPad mini and
 an iPad Air with the same capabilities get the same tier.
 

@@ -32,11 +32,15 @@ export type TierBudget = {
 export const TIER_BUDGETS: Record<GpuTier, TierBudget> = {
   low: { dprCap: 1, multisampling: 0, transmissionSamples: 4, fluidSimRes: null, powerPreference: 'default' },
   mid: { dprCap: 1.5, multisampling: 0, transmissionSamples: 6, fluidSimRes: 64, powerPreference: 'default' },
-  high: { dprCap: 2, multisampling: 4, transmissionSamples: 10, fluidSimRes: 128, powerPreference: 'high-performance' },
+  // The original design's values (the owner's reference for the hero, 2026-11-16): MSAA 8 was the composer's default.
+  high: { dprCap: 2, multisampling: 8, transmissionSamples: 10, fluidSimRes: 128, powerPreference: 'high-performance' },
 };
 
-/** Render-target size of the glass dragon's transmission pass, the same on both trees (VIS-03). */
-export const TRANSMISSION_RESOLUTION = 256;
+/**
+ * Render-target size of the glass dragon's transmission pass, by deck, as in the original design: 128 on the desktop
+ * deck (the refraction behind the glass is soft by design), 256 on the phone deck.
+ */
+export const TRANSMISSION_RESOLUTION = { desktop: 128, phone: 256 } as const;
 
 type GpuSignals = { gl2: boolean; float: boolean; renderer: string };
 

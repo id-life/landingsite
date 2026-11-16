@@ -1,7 +1,7 @@
 'use client';
 
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
-import { HERO_GLASS } from '@/components/gl/config/visionGLConfig';
+import { heroGlass } from '@/components/gl/config/visionGLConfig';
 import { TRANSMISSION_RESOLUTION, useGpuTier } from '@/motion/gpuTier';
 import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -58,13 +58,13 @@ function DesktopDragonModel() {
   uiAlreadyShownRef.current = uiAlreadyShown;
   const fixedUIHasTriggered = useRef(false);
   const offsetYRef = useRef<number>(0);
-  // One fixed glass look; samples from the tier (MOT-06), one buffer size on both trees.
+  // One of the six glass looks per page load (heroGlass); samples from the tier (MOT-06).
   const materialConfig = useMemo(
     () => ({
-      resolution: TRANSMISSION_RESOLUTION,
+      resolution: TRANSMISSION_RESOLUTION.desktop,
       samples: budget.transmissionSamples,
       background: backgroundRef.current,
-      ...HERO_GLASS,
+      ...heroGlass(),
     }),
     [budget.transmissionSamples],
   );
@@ -248,6 +248,8 @@ function PhoneDragonModel(props: {}) {
   const rotationRef = useRef({ y: InitRotation, x: 0 });
   const backgroundRef = useRef(new THREE.Color(0xffffff));
   const meshRef = useRef<THREE.Mesh>(null);
+  // The same look as the desktop dragon for this page load (heroGlass draws once per page load).
+  const glass = useMemo(() => heroGlass(), []);
   const fixedUIHasTriggered = useRef(false);
   const { contextSafe } = useGSAP();
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
@@ -387,10 +389,10 @@ function PhoneDragonModel(props: {}) {
     <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
       <mesh ref={meshRef} geometry={geometry}>
         <MeshTransmissionMaterial
-          resolution={TRANSMISSION_RESOLUTION}
+          resolution={TRANSMISSION_RESOLUTION.phone}
           samples={budget.transmissionSamples}
           background={backgroundRef.current}
-          {...HERO_GLASS}
+          {...glass}
         />
       </mesh>
     </group>
