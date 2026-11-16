@@ -10,7 +10,6 @@ import { goToSection, sectionStateAtom } from '@/motion/sectionController';
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
-import MotionSwitch from '@/components/common/MotionSwitch';
 import SiteHeader from './SiteHeader';
 import { isPlainClick, isSection, type SiteNavItem } from './site-nav';
 
@@ -76,11 +75,6 @@ export default function ExperienceHeader() {
       inExperience={experienceMounted}
       onLogoClick={onLogoClick}
       onItemClick={onItemClick}
-      // MOT-02: in the bar on both decks, visible on every section (as in the old PCNav and MobileNav).
-      // `tap`: a 44 px box on touch screens (RWD-06), like the other header controls.
-      motionSwitch={
-        <MotionSwitch className={shown ? 'pointer-events-auto tap mobile:ml-3 mobile:mr-2' : 'tap mobile:ml-3 mobile:mr-2'} />
-      }
     />
   );
 }

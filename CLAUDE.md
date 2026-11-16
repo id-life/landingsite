@@ -124,10 +124,10 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
   and in a hidden tab; `onMotionPause` / `useMotionPaused` for any new loop. p5 sketches loop only while active and on
   screen (`P5Canvas`).
 - **Reduced motion (MOT-02, `src/motion/preference.ts`)**: the only reader of `prefers-reduced-motion` (plus the CSS
-  guard in `globals.css`). The on-page `MotionSwitch` (`src/components/common/MotionSwitch.tsx`, in both headers, early
-  in the tab order) stores a choice in localStorage that wins over the OS setting either way. Read `isReducedMotion()` /
+  guard in `globals.css`); the OS setting is its only input. There is no on-page motion control: the owner rejected
+  the Motion switch (it clutters the header), so do not add one back. Read `isReducedMotion()` /
   `useReducedMotionPref()` when starting a movement and `onReducedMotionChange` for loops; every `DURATION` token reads 0
-  while reduced, `<html>` gets `.motion-reduced` / `.motion-full`, motion components follow `MotionPreferenceConfig`.
+  while reduced, `<html>` gets `.motion-reduced`, motion components follow `MotionPreferenceConfig`.
   Reduced mode is designed: section changes are 0.2 s crossfades (at least 400 ms apart), canvases render a settled
   still frame and stop (`FrameDriver`), particle logos draw at their targets once (`P5Canvas` never loops), and the
   ripples, carousel, marquee, map pulses, map auto-cards, Twin attention loops and visualiser stay still. Any new loop
