@@ -10,6 +10,7 @@ import { getArticleContent } from './content';
 import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
+import Breadcrumb from '@/components/site/Breadcrumb';
 import { MARKDOWN_HEADING_ROLES } from '@/constants/markdown-roles';
 
 // Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
@@ -49,6 +50,7 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
       <JsonLd data={[jsonLd, breadcrumb]} />
       <ReadDepth itemId={'immortal-dragons-news-and-updates'} />
       <div>
+        <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
         <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
           <div className="flex items-center justify-center gap-2 text-label font-semibold leading-5">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
