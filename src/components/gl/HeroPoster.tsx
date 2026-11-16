@@ -30,38 +30,43 @@ export default function HeroPoster() {
   // Mission is the only section whose URL is '/' (the experience keeps the address bar on the visible section).
   const onHero = usePathname() === '/';
   const shown = onHero && (mode !== 'full' || !globalLoaded);
+  // The poster is the page's h1 (CON-05): its accessible name is what it draws, the wordmark and the tagline. Once the
+  // 3D hero draws the same composition the poster fades to opacity 0 but stays in the accessibility tree on the hero,
+  // so the page keeps its heading; on the other sections it is hidden entirely (they have their own headings).
 
   return (
     <div
       id="hero-poster"
-      aria-hidden={shown ? undefined : true}
+      aria-hidden={onHero ? undefined : true}
       className={cn(
         'pointer-events-none fixed inset-0 z-[1] transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
-        shown ? 'visible opacity-100' : 'invisible opacity-0',
+        shown ? 'visible opacity-100' : onHero ? 'visible opacity-0' : 'invisible opacity-0',
       )}
     >
-      <svg
-        role="img"
-        aria-label="Immortal Dragons 不朽真龙"
-        className="block size-full mobile:hidden"
-        viewBox="0 0 1577 1000"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <title>Immortal Dragons 不朽真龙</title>
-        <LogoEnSVG x={110.25} y={358} width={1356.5} height={284} />
-        <TaglineSVG x={512.7} y={809.2} width={551.6} height={22.9} />
-      </svg>
-      <svg
-        role="img"
-        aria-label="Immortal Dragons 不朽真龙"
-        className="hidden size-full mobile:block"
-        viewBox="0 0 1000 2164"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <title>Immortal Dragons 不朽真龙</title>
-        <LogoEnSVG x={70} y={992} width={860} height={180} />
-        <TaglineSVG x={225} y={1288.5} width={550} height={22.9} />
-      </svg>
+      <h1 className="contents">
+        <svg
+          role="img"
+          aria-label="Immortal Dragons 不朽真龙: a purpose-driven longevity fund"
+          className="block size-full mobile:hidden"
+          viewBox="0 0 1577 1000"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <title>Immortal Dragons 不朽真龙: a purpose-driven longevity fund</title>
+          <LogoEnSVG x={110.25} y={358} width={1356.5} height={284} />
+          <TaglineSVG x={512.7} y={809.2} width={551.6} height={22.9} />
+        </svg>
+        <svg
+          role="img"
+          aria-label="Immortal Dragons 不朽真龙: a purpose-driven longevity fund"
+          className="hidden size-full mobile:block"
+          viewBox="0 0 1000 2164"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <title>Immortal Dragons 不朽真龙: a purpose-driven longevity fund</title>
+          <LogoEnSVG x={70} y={992} width={860} height={180} />
+          <TaglineSVG x={225} y={1288.5} width={550} height={22.9} />
+        </svg>
+      </h1>
     </div>
   );
 }

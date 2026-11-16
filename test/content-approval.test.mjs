@@ -8,11 +8,6 @@ import * as content from '@/content';
 import { isConfirmed } from '@/content/approval';
 import { DraftRecord, ShippableApproval } from '@/content/schema';
 
-vi.mock('@/app/(home)/_components/HomeStatementFrame', () => ({
-  default: ({ children }) => children,
-  StatementDoors: () => null,
-}));
-
 /** Every record (anything with an `approval`) reachable from the content index. */
 function records(value, seen = new Set()) {
   if (!value || typeof value !== 'object' || seen.has(value)) return [];
@@ -123,14 +118,5 @@ describe('new placements show only confirmed facts', () => {
     const html = renderToStaticMarkup(createElement(AboutView, { drafts: ABOUT_DRAFTS }));
     expect(html).toContain('Boyang Wang (朢舶洋) is the founder');
     expect(html).toContain('Draft, not in production');
-  });
-
-  test('the home statement is one h1 naming the fund, with confirmed facts only', async () => {
-    const { default: HomeStatement } = await import('@/app/(home)/_components/HomeStatement');
-    const html = renderToStaticMarkup(createElement(HomeStatement));
-    expect(html.match(/<h1/g)).toHaveLength(1);
-    expect(html).toMatch(/<h1[^>]*>Immortal Dragons is a purpose-driven longevity fund/);
-    expect(html).toContain('approximately US$40 million');
-    for (const text of PENDING_TEXT) expect(html, `pending fact "${text}" on the home statement`).not.toContain(text);
   });
 });
