@@ -23,9 +23,10 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
   };
 
   return (
-    // Never smaller than 24 x 44 px (RWD-01); 44 px tall on coarse pointers (RWD-06: overflow-hidden would clip a hit area).
+    // Never smaller than 24 x 44 px (RWD-01). Its original size on coarse pointers too: it clips its overflow, so a hit
+    // area outside the box would not take taps.
     <div
-      className="relative h-[max(1.5rem,24px)] w-[max(2.75rem,44px)] cursor-pointer overflow-hidden rounded bg-white shadow-lg coarse:h-11"
+      className="relative h-[max(1.5rem,24px)] w-[max(2.75rem,44px)] cursor-pointer overflow-hidden rounded bg-white shadow-lg"
       onClick={handleClick}
     >
       <div

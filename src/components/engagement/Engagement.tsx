@@ -126,11 +126,11 @@ function PhonePresence() {
             while a card is open; the heading stays (RWD-02 A3). */}
         <p
           className={cn(
-            'mt-2 font-display text-label font-bold text-white transition-opacity duration-fast shortScreen:mt-0.5',
+            'mt-2 font-display text-label font-bold uppercase text-white transition-opacity duration-fast shortScreen:mt-0.5',
             cardOpen && 'shortScreen:opacity-0',
           )}
         >
-          Global reach. East &amp; West
+          GLOBAL REACH. EAST &amp; WEST
         </p>
       </div>
       <WorldMap deck="phone" {...MAP_DATA} />

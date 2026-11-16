@@ -63,6 +63,7 @@ export const WorldMap = memo(function WorldMapComponent({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapContentRef = useRef<HTMLDivElement>(null);
   const phoneMapRef = useRef<HTMLDivElement>(null);
+  const desktopMapRef = useRef<HTMLDivElement>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
@@ -294,6 +295,12 @@ export const WorldMap = memo(function WorldMapComponent({
 
   // Compact heights: each phone label takes a free side of its dot, or waits until its dot is tapped (RWD-02 A3).
   useCompactLabelRule(phoneMapRef, [phone, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot]);
+  // Desktop deck: a label at the right edge of the window takes the left of its dot (not on the panning strip).
+  useCompactLabelRule(
+    desktopMapRef,
+    [phone, pan, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot],
+    pan ? 'off' : 'desktop',
+  );
 
   if (phone) {
     return (
@@ -336,6 +343,7 @@ export const WorldMap = memo(function WorldMapComponent({
   // One element tree for both layouts, so switching (a rotation) never remounts the dots the section timeline animates.
   return (
     <div
+      ref={desktopMapRef}
       className={cn(
         'relative font-sans',
         pan ? 'h-[68svh] w-full' : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',

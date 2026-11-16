@@ -181,11 +181,11 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
       id="switch-model"
       className={clsx(
         'absolute z-20 grid',
-        // Desktop: below the header, which takes two or three rows under 1200 px (NAV-04).
+        // Desktop: the original's 12.5 units, or below the header where that is taller (--site-header-h).
         phone
           ? // A phone in landscape: on the right, beside the skin switch, clear of the headline.
             'left-5 top-[25rem] w-20 gap-3 shortScreen:left-auto shortScreen:right-20 shortScreen:top-[60%] shortScreen:-translate-y-1/2'
-          : 'right-[64px] top-[max(12.5rem,200px)] gap-5 large:top-50',
+          : 'right-[64px] top-[max(12.5rem,calc(var(--site-header-h,7.5rem)_+_1rem))] gap-5',
       )}
     >
       <motion.div

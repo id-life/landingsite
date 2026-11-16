@@ -58,7 +58,7 @@ export default function ReportDrawer({
                 {title}
                 {phone && <> {languageSwitch}</>}
               </Drawer.Title>
-              <Drawer.Close className={clsx('flex-center absolute tap', phone ? 'right-4 top-4 w-5' : 'right-10 top-10 w-5')}>
+              <Drawer.Close className={clsx('absolute tap-area', phone ? 'right-4 top-4 w-5' : 'right-10 top-10 w-5')}>
                 <img src="/svgs/close.svg" alt="" />
               </Drawer.Close>
               <div className="mb-2 mt-4 flex items-center justify-between">
@@ -72,7 +72,7 @@ export default function ReportDrawer({
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-label font-semibold text-accent">
+                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-label font-semibold uppercase text-accent">
                       <img src="/svgs/twin/time.svg" alt="" />
                       {isChinese ? period.zh : period.en}
                     </div>
