@@ -316,8 +316,8 @@ const SponsorItem = memo(
     className?: string;
   }) => {
     const phone = deck === 'phone';
-    // Scrolled deck: never smaller than the 1440 px size on tablets, where the scaled unit shrinks and text has a floor.
-    const logo = phone ? 'size-[8.5rem]' : 'size-[max(15.5rem,186px)]';
+    // Scrolled deck: in the text unit (--t), so on tablets the logo keeps its text's (the original's 1440 px) scale.
+    const logo = phone ? 'size-[8.5rem]' : 'size-[calc(var(--t)*15.5)]';
     const content = (
       <motion.div
         initial="hidden"
@@ -325,7 +325,7 @@ const SponsorItem = memo(
         exit="hidden"
         className={cn(
           'clip-sponsor-content flex origin-top-left flex-col items-center overflow-hidden font-display',
-          phone ? 'w-[10rem]' : 'w-[max(15.5rem,186px)]',
+          phone ? 'w-[10rem]' : 'w-[calc(var(--t)*15.5)]',
         )}
         onMouseLeave={onMouseLeave}
         variants={{
@@ -350,7 +350,7 @@ const SponsorItem = memo(
         <h4
           className={cn(
             '-mt-5 whitespace-pre-wrap text-center font-semibold capitalize text-white',
-            phone ? 'text-caption leading-4' : 'text-balance text-lead',
+            phone ? 'text-xs/4' : 'text-2xl/7',
           )}
         >
           <span className={CARD_TEXT_BACKING}>{alt}</span>

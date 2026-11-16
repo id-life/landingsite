@@ -66,7 +66,7 @@ export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
       id="switch-anatomy-camera"
       className={clsx(
         'absolute left-1/2 z-20 -translate-x-1/2',
-        phone ? 'bottom-44' : 'bottom-[max(8rem,96px)] expanded:bottom-32 large:bottom-32',
+        phone ? 'bottom-44' : 'bottom-[calc(var(--t)*8)] expanded:bottom-32 large:bottom-32',
       )}
     >
       {currentModelType === ModelType.Anatomy && views && (

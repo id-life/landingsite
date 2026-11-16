@@ -173,7 +173,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     ? 'absolute -right-6 bottom-0 top-0 my-auto animate-move-right'
     : 'absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right';
   const codeOverlay =
-    'flex-center absolute inset-0 bg-accent/20 text-label font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100';
+    'flex-center absolute inset-0 bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100';
   const original = currentModel === PredictionModel.M0;
 
   return (

@@ -60,8 +60,8 @@ export const MOBILE_MAP_SCALE = {
   // Region icon size (Tailwind class: size-X)
   regionIconSize: 'size-4', // 16px
 
-  // Badge text: the caption role (RWD-01; it was 8 px), on the label's 14 px line. Labels: MAP_LABEL_CLASS.
-  badgeTextClass: 'text-caption leading-[14px]',
+  // Badge text: the original's 8 px. Labels: MAP_LABEL_CLASS.
+  badgeTextClass: 'text-[8px]/[10px]',
 
   // Badge icon size (Tailwind class: size-X)
   badgeIconSize: 'size-2.5', // 10px
@@ -81,13 +81,12 @@ export const MOBILE_MAP_SCALE = {
   // Content max width
   contentMaxWidth: 'max-w-[12rem]', // 192px
 
-  // Card title: the caption role at the original's 12 px on its 16 px line, so the card (whose width the title sets)
-  // sits where the original's does at every step of the tour.
-  contentTitleClass: 'text-caption leading-4',
+  // Card title: the original's size.
+  contentTitleClass: 'text-xs/4',
 
   // Extra sponsor section dimensions
   extraSponsorWidth: 'w-[12rem]', // 192px
-  extraSponsorTitleClass: 'text-caption leading-4', // 12 px, as the original
+  extraSponsorTitleClass: 'text-xs/4', // the original's size
   extraSponsorLogoSize: 'size-[10rem]', // 160px
   extraSponsorMarginTop: '-mt-3',
 };

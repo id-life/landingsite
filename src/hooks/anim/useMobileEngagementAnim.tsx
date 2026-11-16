@@ -16,38 +16,6 @@ const AUTO_PLAY_CONFIG = {
   interval: 2500, // 自动播放间隔（毫秒）
 } as const;
 
-/** The phone map's label size on the original design (px); the tour's centring is computed at it. */
-const ORIGINAL_LABEL_PX = 8;
-
-/**
- * A map point's width as the original laid it out: its in-flow text (the label and inline badges) scaled from its
- * current font size to ORIGINAL_LABEL_PX; the dot, icons and padding as they are. Absolutely placed children (the
- * meeting badges under the label) never counted in the box.
- */
-function designWidth(point: HTMLElement) {
-  const scale = point.getBoundingClientRect().width / (point.offsetWidth || 1) || 1;
-  let width = point.offsetWidth;
-  const walker = document.createTreeWalker(point, NodeFilter.SHOW_TEXT);
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
-    let inFlow = true;
-    for (let el = node.parentElement; el && el !== point; el = el.parentElement) {
-      if (getComputedStyle(el).position === 'absolute') {
-        inFlow = false;
-        break;
-      }
-    }
-    const parent = node.parentElement;
-    if (!inFlow || !parent || !node.textContent?.trim()) continue;
-    const range = document.createRange();
-    range.selectNodeContents(node);
-    const textWidth = range.getBoundingClientRect().width / scale;
-    const size = parseFloat(getComputedStyle(parent).fontSize) || ORIGINAL_LABEL_PX;
-    width -= textWidth * (1 - ORIGINAL_LABEL_PX / size);
-  }
-  return width;
-}
-
 export function useMobileEngagementAnim() {
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -79,11 +47,8 @@ export function useMobileEngagementAnim() {
     if (scrollContainer && activeEle) {
       const containerEl = scrollContainer as HTMLDivElement;
       const eleEl = activeEle as HTMLDivElement;
-      // Centre the point as the original did, with the step's own offset. The original centred the point's box, whose
-      // width comes mostly from its label, and its labels were 8 px; ours are 12 px (RWD-01), so the box is wider and
-      // centring it shifted the whole map left at every step, pushing event cards off the left edge. The width used
-      // here is the box at the original's label size, so every step lands where the original's did.
-      const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + designWidth(eleEl) / 2 + offsetX;
+      // Auto-center the element on screen, with custom offset
+      const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2 + offsetX;
       containerEl.scrollTo({ behavior: 'smooth', left: Math.max(0, targetScrollLeft) });
     }
   }, []);
