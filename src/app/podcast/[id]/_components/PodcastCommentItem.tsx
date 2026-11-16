@@ -13,12 +13,12 @@ export default function PodcastCommentItem({ data }: PodcastCommentItemProps) {
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-read-sm text-tone-550">{data.nickName}</div>
-            <p className="text-read-xs text-tone-350">{dayjs(data.createdAt).format('YYYY.MM.DD')}</p>
+            <div className="text-sm text-tone-550 mobile:text-xs/4.5">{data.nickName}</div>
+            <p className="text-xs/3 text-tone-350">{dayjs(data.createdAt).format('YYYY.MM.DD')}</p>
           </div>
-          {data.source === COMMENTS_TYPE.XYZ && <div className="text-read-xs text-tone-500">— 来自小宇宙用户</div>}
+          {data.source === COMMENTS_TYPE.XYZ && <div className="text-xs text-tone-500">— 来自小宇宙用户</div>}
         </div>
-        <p className="mt-2 text-read-sm font-medium">{data.content}</p>
+        <p className="mt-2 text-sm font-medium mobile:text-xs/4.5">{data.content}</p>
       </div>
     </div>
   );

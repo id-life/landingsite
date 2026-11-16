@@ -17,9 +17,8 @@ export default function PodcastNavTabs() {
     // The podcast's sub-navigation: the two shows, in the site header beside the logo as the original podcast header
     // had them (SiteHeader pageLinks); under the bar on phones. Same look as before on both layouts.
     <nav aria-label="Podcast shows">
-      {/* RWD-09: the reading size (text-read-sm, 14.3 px at 1440, 18.6 px at 2560) instead of a fixed 14 px, so the show
-          tabs grow with the reading column on large screens; the line height stays 20 px. */}
-      <div className="flex gap-8 text-read-sm font-bold leading-5 mobile:hidden">
+      {/* The original's 14 px (the owner's rule on font sizes). */}
+      <div className="flex gap-8 text-sm/5 font-bold mobile:hidden">
         {PODCAST_NAV_LIST.map((item) => (
           <Link
             href={item.link}
@@ -58,13 +57,13 @@ export default function PodcastNavTabs() {
                 )}
               >
                 {item.id === 'lt' ? (
-                  <p className="whitespace-nowrap text-label leading-4">
+                  <p className="whitespace-nowrap text-sm/4">
                     {english} {chinese}
                   </p>
                 ) : (
                   <>
-                    <p className="text-label leading-4">{english}</p>
-                    <p className="text-label leading-4">{chinese}</p>
+                    <p className="text-sm/4">{english}</p>
+                    <p className="text-sm/4">{chinese}</p>
                   </>
                 )}
                 {isActive && <div className="mx-auto mt-1.5 h-0.5 w-5 bg-accent" />}

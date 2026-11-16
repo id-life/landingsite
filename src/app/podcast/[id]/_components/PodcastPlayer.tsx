@@ -112,7 +112,7 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
             />
           </div>
         </div>
-        <div className="mr-3 flex items-center justify-between text-caption font-medium leading-[0.875rem] text-tone-350">
+        <div className="mr-3 flex items-center justify-between text-xs/3.5 font-medium text-tone-350">
           <p className="w-12 text-white">{formatPlaybackTime(audioRef.current?.currentTime ?? 0)}</p>
           <p>/&nbsp;{formatPlaybackTime(data.duration)}</p>
         </div>

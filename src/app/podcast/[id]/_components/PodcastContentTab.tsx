@@ -6,7 +6,6 @@ import { clsx } from 'clsx';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { track } from '@/lib/analytics/track';
-import { MARKDOWN_HEADING_ROLES } from '@/constants/markdown-roles';
 
 // Comments are fetched from the API in the browser; their code and request wait until the tab is opened.
 const PodcastComments = dynamic(() => import('@/app/podcast/[id]/_components/PodcastComments'), { ssr: false });
@@ -57,7 +56,7 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
           <div
             key={index}
             onClick={() => selectTab(index)}
-            className={clsx('podcast-tab-item relative flex cursor-pointer text-label font-bold leading-[0.875rem]', {
+            className={clsx('podcast-tab-item relative flex cursor-pointer text-sm/3.5 font-bold', {
               'podcast-tab-active': activeTab === index,
             })}
           >
@@ -67,7 +66,7 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
       </div>
       <div className="mt-7.5">
         <div className={clsx(activeTab === 0 ? 'block' : 'hidden')}>
-          <div className={`markdown-body text-body ${MARKDOWN_HEADING_ROLES}`} onClick={handleTranscriptClick}>
+          <div className="markdown-body text-[14px]/5 mobile:text-[12px]" onClick={handleTranscriptClick}>
             {children}
           </div>
         </div>

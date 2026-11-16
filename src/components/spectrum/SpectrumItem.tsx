@@ -30,15 +30,12 @@ export const SpectrumLink = memo(
     item,
     executeSpectrumRoute,
     loadImage = true,
-    textClassName,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
     loadImage?: boolean;
-    /** The label's type role and leading, from the list it sits in (a class on the label itself, RWD-01). */
-    textClassName?: string;
   }) => {
     const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link);
@@ -57,17 +54,16 @@ export const SpectrumLink = memo(
       <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
         <p
           className={cn(
-            'spectrum-link-text group relative whitespace-nowrap font-text text-body-sm font-medium capitalize',
+            'spectrum-link-text group relative whitespace-nowrap font-text text-xs/5 font-medium capitalize',
             hasLink &&
               'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
             labelClassName,
-            textClassName,
           )}
         >
           {label}
         </p>
         {isComingSoon && (
-          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-caption capitalize text-white/50 backdrop-blur-2xl">
+          <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-xs capitalize text-white/50 backdrop-blur-2xl">
             coming soon
           </span>
         )}
@@ -216,7 +212,7 @@ const SpectrumItem = memo(
                 })}
             <div className={cn('flex flex-col', isSponsor && 'w-full items-center')}>
               {isSponsor ? (
-                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-body font-semibold capitalize">
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-xl/6 font-semibold capitalize">
                   <div className="flex gap-3">
                     {cloneElement(icon, { className: 'spectrum-icon size-7.5 shrink-0 fill-white' })}
                     <p>{title}</p>
@@ -224,11 +220,11 @@ const SpectrumItem = memo(
                   </div>
                 </h4>
               ) : (
-                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-title-sm font-semibold capitalize">
+                <h4 className="spectrum-title bilingual-font whitespace-nowrap text-[1.625rem]/7.5 font-semibold capitalize">
                   {title}
                 </h4>
               )}
-              <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-body font-bold capitalize', isSponsor && 'hidden')}>
+              <h4 className={cn('spectrum-title-cn bilingual-font mt-2 text-xl/6 font-bold capitalize', isSponsor && 'hidden')}>
                 {titleCn}
               </h4>
               <div
@@ -270,7 +266,7 @@ const SpectrumItem = memo(
                   <motion.button
                     onClick={handleMoreClick}
                     className={cn(
-                      'mt-1 flex items-center gap-1 font-text text-label font-medium text-data-sky opacity-90 transition-colors tap hover:text-data-sky/80 hover:opacity-100',
+                      'mt-1 flex items-center gap-1 font-text text-xs/5 font-medium text-data-sky opacity-90 transition-colors tap hover:text-data-sky/80 hover:opacity-100',
                       isSponsor && 'mt-4 self-center',
                     )}
                   >
