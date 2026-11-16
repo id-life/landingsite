@@ -10,8 +10,13 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
         <div className="reading-column">
-          <SiteHeader variant="solid" currentId="podcast" className="relative py-10 mobile:py-5" />
-          <PodcastNavTabs />
+          {/* The original podcast header: the logo, the two show tabs beside it, Subscribe (tabs under it on phones). */}
+          <SiteHeader
+            variant="solid"
+            currentId="podcast"
+            className="relative py-10 mobile:py-5"
+            pageLinks={<PodcastNavTabs />}
+          />
           {children}
         </div>
       </div>
