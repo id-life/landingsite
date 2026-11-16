@@ -15,7 +15,7 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import jsonp from '@/utils/jsonp';
+import { postSubscribe } from '@/utils/subscribe';
 import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { useMemo, useState } from 'react';
@@ -45,7 +45,7 @@ export default function FooterContact() {
     Object.entries(formData).forEach(([key, value]) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
+    postSubscribe(querystring, GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT).finally(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });

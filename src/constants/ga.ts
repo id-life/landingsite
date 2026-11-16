@@ -17,6 +17,8 @@ export const GA_EVENT_NAMES = {
   PAGE_LOAD_PROGRESS: 'page_load_progress',
 
   SUBSCRIBE_SUBMIT: 'subscribe_submit',
+  // whether Mailchimp accepted the sign-up (subscribe_letter only says the form was submitted)
+  SUBSCRIBE_RESULT: 'subscribe_result',
   SUBSCRIBE_SHOW: 'subscribe_show',
   SUBSCRIBE_CLOSE: 'subscribe_close',
 
@@ -228,6 +230,7 @@ export const GA_EVENT_LABELS = {
   | 'EPISODE_END'
   | 'TIMELINE_JUMP'
   | 'SUBSCRIBE_SUBMIT'
+  | 'SUBSCRIBE_RESULT'
   | 'SUBSCRIBE_POPUP_STORAGE'
 > & {
   TWIN_SWITCH: Record<keyof typeof PredictionModel, string>;

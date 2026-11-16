@@ -11,7 +11,7 @@ import { InfoSVG } from '@/components/svg';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
 import { Links, MediaLinkType, MediaLinkTypeKey } from '@/constants/links';
 import { useGA } from '@/hooks/useGA';
-import jsonp from '@/utils/jsonp';
+import { postSubscribe } from '@/utils/subscribe';
 import { FormEvent, useState } from 'react';
 
 export default function NewsFooter() {
@@ -28,7 +28,7 @@ export default function NewsFooter() {
     formData.forEach((value: any, key) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).then(() => {
+    postSubscribe(querystring, GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER_CONTACT).then(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
-import jsonp from '@/utils/jsonp';
+import { postSubscribe } from '@/utils/subscribe';
 import { useGA } from '@/hooks/useGA';
 import { InfoSVG } from '@/components/svg';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -57,7 +57,7 @@ export default function AboutFooter() {
     Object.entries(formData).forEach(([key, value]) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
+    postSubscribe(querystring, GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER).finally(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });
