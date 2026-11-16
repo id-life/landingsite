@@ -33,12 +33,15 @@ const CARD_TEXT = ['h3', 'h4', 'p', 'img', 'video'].map((t) => `[class*="dot-con
  * The dots themselves always show and stay tappable. Taller windows are left exactly as they were.
  *
  * mode 'desktop' (the scrolled deck's full map): nothing is hidden or moved, except a label that would run past the
- * window's right edge, which takes the left of its dot. 'off': the panning strip, where the edge scrolls.
+ * window's edge, which takes the other side of its dot. 'pan' (the sideways-panning strip of portrait tablets): the
+ * same against the strip's visible edges, again as the visitor pans, so no label is cut at rest where the strip ends.
  */
 export function useCompactLabelRule(
   rootRef: RefObject<HTMLElement | null>,
   deps: readonly unknown[],
-  mode: 'phone' | 'desktop' | 'off' = 'phone',
+  mode: 'phone' | 'desktop' | 'pan' = 'phone',
+  /** 'pan': the scroller whose visible box the labels must stay inside. */
+  boundsRef?: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     const root = rootRef.current;
@@ -61,7 +64,10 @@ export function useCompactLabelRule(
       // would run past the window's right edge takes the left of its dot instead (it was cut at 1180 px, where the
       // label's type role is larger than the original's scaled 10 px). Otherwise labels stay exactly as designed.
       const collide = mode === 'phone' && mq.matches;
-      const edge = mode === 'desktop';
+      const edge = mode === 'desktop' || mode === 'pan';
+      const frame0 = mode === 'pan' && boundsRef?.current ? box(boundsRef.current) : null;
+      const minX = frame0 ? frame0.left : 0;
+      const maxX = frame0 ? frame0.right : innerWidth;
       if (!collide && !edge) return;
 
       const placed: Box[] = [...root.querySelectorAll(CARD_TEXT)].filter(shown).map(box);
@@ -91,7 +97,7 @@ export function useCompactLabelRule(
           [leftX, right.top - h],
           [leftX, right.top + h],
         ];
-        const inView = (b: Box) => !edge || b.right <= innerWidth - 2;
+        const inView = (b: Box) => !edge || (b.left >= minX + 2 && b.right <= maxX - 2);
         for (const [x, y] of candidates) {
           const b: Box = { left: x, top: y, right: x + w, bottom: y + h };
           if ((collide && placed.some((o) => hits(o, b))) || !inView(b)) continue;
@@ -104,8 +110,9 @@ export function useCompactLabelRule(
           placed.push(b);
           return;
         }
-        // Edge mode never hides; compact mode hides a label with no free place until its dot is tapped.
-        if (collide) label.style.visibility = 'hidden';
+        // Compact mode hides a label with no free place until its dot is tapped. Edge mode hides only a label that fits
+        // on neither side yet reaches into view: on the panning strip, the label of a dot just past the visible edge.
+        if (collide || (right.right > minX && right.left < maxX)) label.style.visibility = 'hidden';
       });
     };
 
@@ -122,8 +129,18 @@ export function useCompactLabelRule(
     schedule();
     mq.addEventListener('change', schedule);
     window.addEventListener('resize', schedule);
+    // The panning strip: labels take their side again for the part of the map in view.
+    const scroller = mode === 'pan' ? boundsRef?.current : null;
+    let scrollFrame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(scrollFrame);
+      scrollFrame = requestAnimationFrame(run);
+    };
+    scroller?.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(scrollFrame);
+      scroller?.removeEventListener('scroll', onScroll);
       mq.removeEventListener('change', schedule);
       window.removeEventListener('resize', schedule);
       root

@@ -295,11 +295,13 @@ export const WorldMap = memo(function WorldMapComponent({
 
   // Compact heights: each phone label takes a free side of its dot, or waits until its dot is tapped (RWD-02 A3).
   useCompactLabelRule(phoneMapRef, [phone, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot]);
-  // Desktop deck: a label at the right edge of the window takes the left of its dot (not on the panning strip).
+  // Desktop deck: a label at the edge of the window (or of the panning strip's visible part) takes the other side of
+  // its dot.
   useCompactLabelRule(
     desktopMapRef,
     [phone, pan, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot],
-    pan ? 'off' : 'desktop',
+    pan ? 'pan' : 'desktop',
+    mapContainerRef,
   );
 
   if (phone) {
@@ -346,7 +348,11 @@ export const WorldMap = memo(function WorldMapComponent({
       ref={desktopMapRef}
       className={cn(
         'relative font-sans',
-        pan ? 'h-[68svh] w-full' : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',
+        // Portrait strip: from just below the header to just above the bottom controls, so the map fills the screen
+        // as the original's does (it ended at 68 % of the window and left an empty band above the controls).
+        pan
+          ? 'absolute inset-x-0 bottom-[96px] top-[calc(var(--site-header-h,7.5rem)_+_1rem)]'
+          : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',
       )}
       onMouseMove={handleMouseMove}
       style={{ perspective: pan ? undefined : '1000px' }}
