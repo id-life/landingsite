@@ -93,11 +93,11 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
-          <h1 className="text-center text-read-lg font-semibold">{data.title}</h1>
+          <h1 className="text-center text-read-lg font-semibold mobile:text-read">{data.title}</h1>
           <PodcastLinks data={data} />
         </div>
         {data?.detailMedia ? <img className="mx-auto h-75 object-cover mobile:h-45" alt="" src={data.detailMedia} /> : null}
-        <div className="my-9 mt-7.5 text-read font-medium mobile:mb-7.5 mobile:mt-6">{data.description}</div>
+        <div className="my-9 mt-7.5 text-read-sm font-medium mobile:mb-7.5 mobile:mt-6">{data.description}</div>
         <PodcastContentTab id={data.id.toString()}>
           <Markdown remarkPlugins={transcriptRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
             {data.transcript}
