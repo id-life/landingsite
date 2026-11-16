@@ -80,8 +80,9 @@
   }
 
   :root {
-    /* The type unit (RWD-01, scripts/postcss-layout-unit.js): the layout unit, but never under 12 px. */
-    --t: max(var(--u), 0.75rem);
+    /* The type unit (scripts/postcss-layout-unit.js): the layout unit, so text has the original's size. The tablet
+       tiers of the experience fix it at 12 px, the original's 1440 px size ((home) Style.tsx). */
+    --t: var(--u);
   }
 
   body {

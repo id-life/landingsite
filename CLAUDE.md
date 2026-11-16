@@ -163,8 +163,10 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
   (`UPDATE_CJK_SUBSET=1 npx vitest run test/cjk-display.test.mjs`); all other Chinese uses the system faces.
 - The root is a fixed 100 % (16 px) on every route (RWD-01). `--u`, the layout unit, is 0.8333vw on the desktop
   experience (what the root used to be) and 1rem elsewhere; `scripts/postcss-layout-unit.js` turns every rem in the
-  compiled CSS into `--u` (layout) or `--t` = max(--u, 12 px) (font-size and line-height, with a 12 px floor), so rem
-  in a class draws as before and text never falls under 12 px. GSAP and inline styles use `u(n)` from
+  compiled CSS into `--u` (layout) or `--t` (font-size and line-height, no floor), so rem in a class draws exactly as in
+  the original. `--t` is `--u` except in the experience's tablet tiers (desktop deck below 1200 px), where it is a fixed
+  12 px (the original's 1440 size). The owner's rule (2026-11-16): from 1200 px and on phones every text has the
+  original's size; do not enlarge text with roles, floors or minimums there. GSAP and inline styles use `u(n)` from
   `src/utils/layout-unit.ts`. The nine type roles are custom properties, so they stay real rem. Touch targets: the
   `tap` / `tap-area` utilities (RWD-06, 44 px on coarse pointers). Guide: `docs/design-tokens.md`; device tiers:
   `docs/support-matrix.md`.

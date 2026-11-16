@@ -17,11 +17,20 @@ const CSS = `
     background: var(--background);
   }
 
-  /* The layout unit: what the root used to be (0.8333vw above the phone tree), so layout in rem draws as before
-     (scripts/postcss-layout-unit.js). Type in the roles is real rem and keeps its floors. */
+  /* The layout unit: what the root used to be (0.8333vw above the phone tree), so layout and text in rem draw as
+     before (scripts/postcss-layout-unit.js). */
   @media ${DESKTOP_TREE_QUERY} {
     :root {
       --u: 0.8333vw;
+    }
+  }
+
+  /* The tablet tiers (desktop experience below 1200 px): text at the original's 1440 px size, a 12 px type unit,
+     while the layout keeps scaling (the owner's rule on font sizes). From 1200 px text follows the layout unit, as
+     in the original. */
+  @media ${DESKTOP_TREE_QUERY} and (max-width: 1199.98px) {
+    :root {
+      --t: 12px;
     }
   }
 
