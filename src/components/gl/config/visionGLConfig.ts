@@ -11,10 +11,7 @@ export const VISION_GL_CONFIG = {
   },
 } as const;
 
-/**
- * The six glass looks the hero used to pick from at random on every load (four cold loads gave three visibly
- * different heroes). Kept as the reference set for the owner's choice; the hero now always uses HERO_GLASS.
- */
+/** The six glass looks of the hero; each page load shows one of them, chosen at random (heroGlass). */
 const TRANSMISSION_KEYFRAMES = [
   {
     transmission: 1,
@@ -95,17 +92,15 @@ const TRANSMISSION_KEYFRAMES = [
     metalness: 0.1,
   },
 ] as const;
+let configIndex: number | null = null;
+
 /**
- * The one hero glass look (MOT-06, VIS-03). OWNER DECISION PENDING: which of the six presets ships is the owner's
- * (or the designer's) call; preset 0 is the interim default until then, and changing HERO_GLASS_INDEX is the whole
- * switch. Outside production, ?hero-glass=<0-5> shows any preset for review (the comparison sheet is made that way).
+ * The hero's glass look for this page load: one of the six, at random, as in the original design (the owner's
+ * reference for the hero, 2026-11-16). Drawn the first time the glass dragon renders, which is on the client after
+ * hydration (the 3D tree is client-only), and kept for the page load, so React Strict Mode's second mount and a deck
+ * change (phone and desktop dragons) reuse the same look instead of drawing again.
  */
-const HERO_GLASS_INDEX = 0;
-
-function reviewIndex() {
-  if (process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' || typeof window === 'undefined') return HERO_GLASS_INDEX;
-  const asked = Number(new URLSearchParams(window.location.search).get('hero-glass'));
-  return Number.isInteger(asked) && asked >= 0 && asked < TRANSMISSION_KEYFRAMES.length ? asked : HERO_GLASS_INDEX;
+export function heroGlass() {
+  if (configIndex === null) configIndex = Math.floor(Math.random() * TRANSMISSION_KEYFRAMES.length);
+  return TRANSMISSION_KEYFRAMES[configIndex];
 }
-
-export const HERO_GLASS = TRANSMISSION_KEYFRAMES[reviewIndex()];
