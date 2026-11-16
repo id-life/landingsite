@@ -36,6 +36,12 @@ TitleSVG.displayName = 'TitleSVG';
 function ConnectGLImpl() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const modelRef = useRef<THREE.Group>(null);
+  // The camera the timeline flies to the jellyfish. It must be the one the canvas renders with: on the first render
+  // this is still React Three Fiber's built-in camera, until <PerspectiveCamera makeDefault> takes over. Since the
+  // jellyfish loads on approach in its own boundary (wave 0), nothing here suspends any more, so the timeline was
+  // built in that first commit around the built-in camera and moved a camera nobody renders with: the jellyfish sat
+  // below the screen. The timeline is rebuilt whenever the camera changes.
+  const camera = useThree((state) => state.camera);
 
   // The headlines stay in English: they used to turn into Chinese word by word 1 s after Connect
   // appeared (playEnToCnAnim), so a reader lost the sentence being read (CON-12).
@@ -76,7 +82,7 @@ function ConnectGLImpl() {
       });
       createPage1CrossAnim(tl1);
     },
-    { dependencies: [] },
+    { dependencies: [camera], revertOnUpdate: true },
   );
 
   return (
@@ -100,6 +106,11 @@ function MobileConnectGL() {
   const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
   const startAnimTLRef = useRef<gsap.core.Timeline | null>(null);
   const setIsSubscribeShow = useSetAtom(isMobileFooterContactShowAtom);
+  const onConnectRef = useRef(false);
+  // Declared before the timeline effect, so it is current when that effect runs.
+  useEffect(() => {
+    onConnectRef.current = currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id;
+  }, [currentPage]);
   // The headlines stay in English. Their red words used to turn into Chinese letter by letter 1 s
   // after Connect appeared (playMobileEnToCnAnim), so each line read half in one language (CON-12).
 
@@ -149,8 +160,12 @@ function MobileConnectGL() {
     tl.to('#mobile-connect-content', { opacity: 1, duration: DURATION.moderate }, 0.2);
 
     startAnimTLRef.current = tl;
+    // A rebuild while Connect is showing (a deep link lands there before the camera is final) plays at once.
+    if (onConnectRef.current) tl.restart();
+    // Rebuilt when the camera changes (see ConnectGLImpl): the first one is React Three Fiber's built-in camera.
     return () => {
-      if (startAnimTLRef.current) startAnimTLRef.current.kill();
+      tl.kill();
+      startAnimTLRef.current = null;
     };
   }, [camera, page1Config]);
 
