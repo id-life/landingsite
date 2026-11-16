@@ -81,10 +81,6 @@ export default function SiteHeader({
             'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-[2.0833vw]'
           : // Content pages: the logo and the page's action, as their original headers had them.
             'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
-        // The tool pages fix this bar over a moving graph whose nodes, edges and names passed behind the labels
-        // (axe saw the active item fail 4.5:1 on an animated node): there the bar has its own ground, from the
-        // section's background token, so every label is judged against it.
-        !overlay && action === 'exit' && 'bg-background/95 backdrop-blur-sm',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
         // On phones the bar lets taps through to the page (its controls take them).
         // It fades in; it hides at once (a fade-out from the server-painted bar would read as "visible" for 300 ms).

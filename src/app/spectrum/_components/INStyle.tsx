@@ -5,8 +5,11 @@ import '@/styles/components/character-relation.css';
 // tree queries (src/styles/device-classes.ts), the same queries that decide which experience is mounted.
 // No characters React would escape (<, >, &, quotes) may appear in CSS.
 const CSS = `
+  /* The page fills the window through a chain of 100 % heights, so every box between the root and the page has to
+     carry the height on: the main landmark too (without it the graph is drawn a few pixels high). */
   html,
-  body {
+  body,
+  #main-content {
     height: 100%;
   }
 
