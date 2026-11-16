@@ -66,7 +66,8 @@ export default function NewsFooter() {
               <PrivacyChoicesLink className="font-text text-xs font-semibold underline opacity-60 hover:opacity-100" />
             </div>
           </div>
-          <address className="not-italic">
+          {/* In capitals, as the original footer (set with CSS on the lower-case strings). */}
+          <address className="uppercase not-italic">
             <div className="mt-7 flex items-center justify-start gap-1.5 font-text font-semibold">
               <img className="size-5" src="/svgs/home.svg" alt="" />
               {ORG_ADDRESS_TEXT}

@@ -98,9 +98,15 @@ export default function SiteHeader({
     >
       {!onItemClick && <LinkTracker />}
       <div className={live}>
-        <Logo onClick={onLogoClick} {...trackNav(NAV.vision_page.id, 'logo')} />
+        <Logo
+          onClick={onLogoClick}
+          {...trackNav(NAV.vision_page.id, 'logo')}
+          {...(currentId === 'podcast' ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' } : {})}
+        />
       </div>
-      {pageLinks && <div className="flex items-center mobile:order-last mobile:basis-full">{pageLinks}</div>}
+      {pageLinks && (
+        <div className="flex items-center mobile:order-last mobile:basis-full mobile:[&>nav]:w-full">{pageLinks}</div>
+      )}
       {/* The menu is the experience's only: the original content pages (news, podcast, the tool pages) show the logo
           and their action, and no menu labels (the owner's rule: no label a page did not show). */}
       {overlay && (
