@@ -57,19 +57,20 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
 
   return (
     // A real button (it was a clickable div), drawn at the original size on every pointer; on touch screens a 44 px hit
-    // area around it (tap-area) instead of a bigger pill (RWD-06).
+    // area around it (tap-area) instead of a bigger pill (RWD-06). The pill is sized in em of its label, so it keeps
+    // the original proportions where the label's 12 px floor makes the text larger than the scaled original.
     <button
       type="button"
       className={cn('pointer-events-auto relative z-10 cursor-pointer tap-area', className)}
       onClick={() => setNavigateTo(NAV_LIST[1])}
     >
-      <span className="relative block h-10 w-[7.625rem]">
+      <span className="relative block h-[2.5em] w-[7.625em] font-button text-base/4 font-bold">
         <span ref={rippleRef1} className="scroll-button-ripple-init block" />
         <span ref={rippleRef2} className="scroll-button-ripple-init block" />
         <span ref={rippleRef3} className="scroll-button-ripple-init block" />
-        <span className="flex-center absolute inset-0 gap-1.5 rounded-full bg-tone-750">
-          <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
-          <span className="font-button text-base/4 font-bold uppercase text-white">SCROLL</span>
+        <span className="flex-center absolute inset-0 gap-[0.375em] rounded-full bg-tone-750">
+          <VisionDecorationBottomScrollSVG className="h-[1.875em] w-[1.5em] fill-white" />
+          <span className="uppercase text-white">SCROLL</span>
         </span>
       </span>
     </button>
