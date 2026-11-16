@@ -177,12 +177,20 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         // Never wider than the window (RWD-01: the tool pages are drawn at the 16 px root at every width).
         // Medium windows: the panel takes the window's width less 1 rem a side, and its two inputs share it.
         '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5 medium:w-[calc(100vw_-_2rem)]',
+        // Below 1440 px on the desktop tree (a fixed 12 px layout unit) the panel sits above the legend, so both show
+        // with the form open, as in the original.
+        '[@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:mb-[100px]',
+        // A phone in landscape: the original's laptop arrangement (one row of inputs, Confirm beside the note), a
+        // panel to the right of the legend and clear of the header, not the portrait phone's full-screen stack.
+        'shortScreen:left-auto shortScreen:right-4 shortScreen:w-[44rem] shortScreen:max-w-[calc(100vw_-_2rem)] shortScreen:translate-x-0 shortScreen:p-5 shortScreen:pt-4',
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
-      {/* Type roles (RWD-01): heading title, inputs body (16 px, so iOS does not zoom on focus), the source note body
-          (running text: the 16 px bar), the success message caption. */}
-      <div className="font-display text-title font-bold tracking-normal">BE PART OF IT</div>
+      {/* Type roles (RWD-01), each the role that fits the original panel's boxes: heading title-sm, inputs body (16 px,
+          so iOS does not zoom on focus), the source note and the success message caption. */}
+      <div className="font-display text-title-sm font-bold tracking-normal mobile:text-title shortScreen:text-title-sm">
+        BE PART OF IT
+      </div>
 
       {/* submit msg */}
       <div
@@ -212,11 +220,20 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <CloseSVG className="size-5" />
       </div>
 
-      <Form control={form.control} className="relative mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
+      <Form
+        control={form.control}
+        className="relative mt-6 flex w-full flex-col items-end mobile:mt-4 shortScreen:mt-3"
+        onSubmit={onFormSubmit}
+      >
         <HoneypotField {...form.register('website')} />
         {/* Medium windows (600-839 px): the two inputs share the panel's width instead of keeping 409 px each, which
             pushed the second one out of the window at 820 px. */}
-        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col medium:gap-x-6')}>
+        <div
+          className={cn(
+            'flex w-full gap-x-[4.75rem]',
+            'mobile:flex-col medium:gap-x-6 shortScreen:flex-row shortScreen:gap-x-4',
+          )}
+        >
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
@@ -230,7 +247,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               onChange: (e) => setCharacter(e.target.value),
             })}
           />
-          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col medium:min-w-0 medium:flex-1')}>
+          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col medium:min-w-0 medium:flex-1 shortScreen:flex-row')}>
             {relation.map((rel, i) => (
               <BePartOfItInput
                 key={`introducer-input-${i}`}
@@ -253,8 +270,10 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           </div>
         </div>
 
-        <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
-          <div className="font-text text-body font-medium leading-snug tracking-normal text-ink-muted mobile:mt-3">
+        <div
+          className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse shortScreen:flex-row')}
+        >
+          <div className="font-text text-caption font-medium leading-snug tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
               href="https://agingbiotech.info/people/"
@@ -274,7 +293,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           <div
             className={cn(
               'footer-submit-clip relative mt-1.5 w-[10.5rem] flex-shrink-0 bg-accent text-white mobile:w-[5.625rem]',
-              'mobile:mt-3.5 mobile:w-full',
+              'mobile:mt-3.5 mobile:w-full shortScreen:mt-1.5 shortScreen:w-[10.5rem]',
             )}
             onPointerDown={() => (isSubmittingRef.current = true)}
           >

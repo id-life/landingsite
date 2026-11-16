@@ -15,8 +15,8 @@ import { useDeviceProfile } from '@/hooks/useDeviceProfile';
  * four rows at a time with a See More button (the table renders only after mount, so the row count can come from
  * the device profile without a flash).
  *
- * Type roles (RWD-01): title lead (body on a phone), counts title-sm, the CSV link and See More label, table text
- * cells body (their introductions are running text: RWD-01's 16 px bar), headers body-sm (caption on a phone).
+ * Type roles (RWD-01), each the role that fits the original's boxes (the original drew this page at a 0.8333vw root):
+ * title body, counts lead, the CSV link and the table caption (rows keep the original row height), See More label.
  */
 export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = ({
   img,
@@ -37,8 +37,8 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
       <div className="mb-[3.125rem] flex h-[20.9rem] w-[20.9rem] flex-shrink-0 items-center justify-center mobile:mb-5 mobile:h-[13.6875rem] mobile:w-[14.8125rem]">
         <img src={img} alt={title} className="block h-full w-full object-cover" />
       </div>
-      <span className="mb-4 text-center text-lead mobile:mb-3 mobile:text-body">{title}</span>
-      <div className="mb-1 flex space-x-8 text-title-sm mobile:mb-7">
+      <span className="mb-4 text-center text-body mobile:mb-3">{title}</span>
+      <div className="mb-1 flex space-x-8 text-lead mobile:mb-7">
         <DotCount className="bg-data-ok mobile:size-[3px]">{counts[0]}</DotCount>
         <DotCount className="bg-accent mobile:size-[3px]">{counts[1]}</DotCount>
       </div>
@@ -47,7 +47,7 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
         download
         target="_blank"
         rel="noopener noreferrer"
-        className="corner-button-top relative ml-auto flex items-center gap-1 p-2 text-label font-medium tap mobile:ml-0"
+        className="corner-button-top relative ml-auto flex items-center gap-1 p-2 text-caption font-medium tap mobile:ml-0 mobile:text-label"
       >
         <FileSVG />
         <span>Download CSV</span>
@@ -57,24 +57,24 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
           columns={columns}
           data={rows}
           className="w-full"
-          tableClassName="text-body border-none"
+          tableClassName="text-caption border-none"
           headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th:last-child]:text-left"
           headerRowClass="border-none bg-white/10 backdrop-blur top-0 [&_th]:text-caption truncate max-w-[30svw]"
           bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-25 [&_td:first-child]:truncate [&_td:first-child]:pl-5 pt-1"
           rowClass="border-none bg-transparent hover:bg-white/5"
-          cellClass="font-normal text-body font-light truncate pr-5 py-2.5 max-w-[30svw]"
+          cellClass="font-normal text-caption font-light truncate pr-5 py-2.5 max-w-[30svw]"
         />
       ) : (
         <DataTable
           columns={columns}
           data={rows}
           className="w-full table-fixed overflow-visible"
-          tableClassName="text-body border-none"
-          headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th]:text-body-sm [&_th:last-child]:text-left"
+          tableClassName="text-caption border-none"
+          headerClass="bg-transparent border-none [&_th]:text-white [&_th]:font-semibold [&_th]:text-caption [&_th:last-child]:text-left"
           headerRowClass="border-none bg-white/10 top-0 backdrop-blur"
           bodyClass="bg-transparent [&_td:last-child]:text-left [&_td:first-child]:max-w-[10rem] [&_td:first-child]:pl-[1.25rem] [&_td:last-child]:max-w-[20rem] pt-1"
           rowClass="border-none bg-transparent hover:bg-white/5"
-          cellClass="font-normal text-body pr-5 truncate"
+          cellClass="font-normal text-caption pr-5 truncate"
         />
       )}
       {phone && showAmount < data.length && (
