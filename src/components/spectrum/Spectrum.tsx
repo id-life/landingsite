@@ -137,10 +137,13 @@ function DeckSpectrum() {
           // A large touch screen (1366x1024): the header's 44 px nav boxes make it taller (labels end at 122 px).
           '[@media(min-width:1200px)_and_(pointer:coarse)]:pt-[max(10rem,156px)]',
           'medium:px-[var(--grid-margin)] medium:pt-[176px] expanded:px-[var(--grid-margin)] expanded:pt-[148px] expanded:portrait:pt-[188px]',
+          // From 1200 px the original's composition: its padding, title gap and block spacing (the owner's rule: the
+          // original is the reference; with the original's sizes the blocks fit as it drew them).
+          'large:!pb-20 large:!pt-28',
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
-        <div className="spectrum-title relative z-10 pb-3 text-center [@media(max-height:860px)]:pb-2">
+        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 [@media(max-height:860px)]:pb-2">
           <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
         </div>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
@@ -148,8 +151,8 @@ function DeckSpectrum() {
         </div>
         {/* Up to 1100 px tall the gaps between the three blocks tighten (and the padding under 860), so the logo wall
             clears the bottom controls. */}
-        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 [@media(max-height:860px)]:py-1">
-          <div className="flex flex-1 flex-col justify-evenly gap-6 [@media(max-height:1100px)]:gap-4">
+        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 [@media(max-height:860px)]:py-1">
+          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 [@media(max-height:1100px)]:gap-4">
             <SpectrumInitiatives
               items={initiativeItems}
               onSelect={selectInitiative}
@@ -165,7 +168,7 @@ function DeckSpectrum() {
               updateUrlAndExecute={updateUrlAndExecute}
               routeConfigs={routeConfigs}
             />
-            <div className="w-full pt-2">
+            <div className="w-full pt-2 large:pb-4">
               <SpectrumItem
                 key={sponsorItem.title}
                 item={sponsorItem}

@@ -32,9 +32,9 @@ const PortfolioItem = memo(
       onPointerLeave: cancelInspect,
       className: cn(
         hasLink && 'block',
-        // min-height, not height: with the 12 px tagline floor a tile on a tablet grows instead of spilling
-        // its one-liner over the next row and the contact chip. At laptop sizes the tiles keep 15.5rem.
-        'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem]',
+        // The original tile, 15.5 units tall from 1200 px; in the tablet tiers (text at its 1440 size) at least that,
+        // so a tile grows instead of spilling its one-liner over the next row.
+        'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem] large:h-[15.5rem]',
         hasLink && 'cursor-pointer',
         isGridMode ? 'mobile:h-full mobile:w-full mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
         className,
@@ -54,9 +54,9 @@ const PortfolioItem = memo(
           <h3
             className={cn(
               'fund-title flex-center gap-2.5 font-display tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
-              // Type roles (RWD-01): the company name is body-sm on both decks, the one-liner and subtitle caption.
-              'text-body-sm',
-              isGridMode && 'font-semibold',
+              // The original's sizes (the owner's rule on font sizes): 20 units on the desktop deck, 14 px in the
+              // phone grid.
+              isGridMode ? 'text-sm/5 font-semibold' : 'text-xl/6',
             )}
           >
             <img
@@ -81,21 +81,18 @@ const PortfolioItem = memo(
               alt=""
             />
           </h3>
-          {/* The caption role: 12 px up to 1440 px, 13.8 at 1920, on both decks (the phone grid used 10 px, the desktop
-              tree 9 px at 1440 and 5.1 px at 820 under the old viewport-scaled root); body-sm (14 px) in the four-column
-              tablet grid, whose columns have the room. */}
           <p
             className={cn(
-              'fund-desc mx-auto text-caption notMobile:max-w-full notMobile:px-3 medium:text-body-sm',
+              'fund-desc mx-auto text-xs/5 notMobile:max-w-full notMobile:px-3',
               isGridMode
-                ? 'mt-3 line-clamp-3 min-h-8 w-full px-2 font-medium'
-                : 'mt-4 min-h-10 w-full max-w-72 mobile:mt-2 mobile:min-h-5',
+                ? 'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium'
+                : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5',
             )}
           >
             {description}
           </p>
           {subTitle && !isGridMode && (
-            <div className="fund-subtitle mx-auto py-1.5 text-caption font-semibold text-tone-350 mobile:mt-3">{subTitle}</div>
+            <div className="fund-subtitle mx-auto py-1.5 text-xs/3 font-semibold text-tone-350 mobile:mt-3">{subTitle}</div>
           )}
         </div>
       </>

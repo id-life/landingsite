@@ -83,7 +83,7 @@ export default function SiteHeader({
         overlay
           ? // The experience: one row from 1200 px, with the original's padding and gaps; below, the navigation takes
             // its own row under the logo row.
-            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10'
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:gap-y-[14px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:px-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:pt-[24px]'
           : // Content pages: the logo and the page's action, as their original headers had them.
             'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.

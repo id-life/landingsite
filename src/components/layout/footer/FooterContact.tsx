@@ -82,11 +82,11 @@ export default function FooterContact() {
           {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
           <section
             aria-label="Contact and subscribe"
-            className="footer-contact-clip items mx-10 flex w-full justify-between gap-x-6 bg-white/40 p-10 backdrop-blur mobile:p-4 medium:flex-wrap medium:gap-y-6 notMobile:expanded:pb-24 coarse:py-6 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:800px)]:coarse:py-4"
+            className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4 medium:flex-wrap medium:gap-x-6 medium:gap-y-6 notMobile:expanded:pb-24 coarse:py-6 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:800px)]:coarse:py-4"
           >
             {/* On a portrait tablet the media take the first row and Contact and Subscribe share the second, so the panel
                 is two rows tall, not three, and the section's text above it keeps room (RWD-01). */}
-            <div className="mb-7.5 font-display text-label font-bold uppercase medium:basis-full coarse:mb-0">
+            <div className="mb-7.5 font-display font-bold uppercase medium:basis-full coarse:mb-0">
               <p className="text-tone-650">Media</p>
               <div className="mt-7 coarse:mt-3">
                 {mediaRows.map((row, rowIndex) => (
@@ -98,26 +98,24 @@ export default function FooterContact() {
                         href={Links[type]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap hover:text-accent expanded:w-[104px]"
+                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap-area hover:text-accent expanded:w-[104px]"
                       >
                         <CornerBorder />
                         <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-accent')} />
-                        <span className="font-display text-label font-bold uppercase">{label}</span>
+                        <span className="font-display text-base/5 font-bold uppercase">{label}</span>
                       </a>
                     ))}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-display text-body-sm font-bold medium:min-w-0 medium:flex-1">
-              {/* The About link shares the label's row: a line of its own made the panel taller and put it under
-                  the section arrows at the bottom of the screen. From 840 to 1199 px the column is too narrow for
-                  both, and the link broke into three ragged lines, so there it takes the line under the label (the
-                  media column stays the tallest, so the panel does not grow). */}
+            {/* The original's sizes (the owner's rule on font sizes); the privacy-choices link (DATA-01) shares the
+                label's row so the column keeps the original's height. */}
+            <div className="font-display text-base/5 font-bold medium:min-w-0 medium:flex-1">
               <div className="flex items-baseline justify-between gap-6 medium:flex-col medium:items-start medium:gap-1 expanded:flex-col expanded:items-start expanded:gap-1">
-                <p className="text-label uppercase text-tone-650">Contact</p>
+                <p className="uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
-                  <PrivacyChoicesLink className="text-body-sm underline opacity-60 hover:opacity-100" />
+                  <PrivacyChoicesLink className="text-xs normal-case underline opacity-60 hover:opacity-100" />
                 </div>
               </div>
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
@@ -131,15 +129,15 @@ export default function FooterContact() {
                 <a
                   href={ORG_MAILTO}
                   data-track-placement="connect"
-                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 tap hover:text-accent coarse:mt-0"
+                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 tap-area hover:text-accent"
                 >
                   <img src="/svgs/contact-email.svg" alt="" />
                   {ORG_EMAIL}
                 </a>
               </address>
             </div>
-            <div className="font-display text-body-sm font-bold medium:min-w-0 medium:flex-[1.2]">
-              <p className="text-label uppercase text-tone-650">SUBSCRIBE</p>
+            <div className="font-display text-base/5 font-bold medium:min-w-0 medium:flex-[1.2]">
+              <p className="uppercase text-tone-650">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
                 noValidate
@@ -150,7 +148,7 @@ export default function FooterContact() {
                   <span
                     id="connect-subscribe-error"
                     role="alert"
-                    className="absolute -top-6 font-text text-caption font-semibold text-accent"
+                    className="absolute -top-6 font-text text-xs font-semibold text-accent"
                   >
                     {errors.EMAIL.message}
                   </span>
@@ -162,7 +160,7 @@ export default function FooterContact() {
                 <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-accent' : 'border-black')}>
                   <input
                     id="connect-subscribe-email"
-                    className="w-[max(18rem,200px)] bg-transparent text-body-sm font-semibold mobile:text-xs/5 medium:w-full"
+                    className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5 medium:w-full coarse:text-[16px]"
                     placeholder="Please enter email"
                     type="email"
                     inputMode="email"
@@ -192,16 +190,13 @@ export default function FooterContact() {
                     </div>
                   ) : null}
                   <input
-                    className="w-full cursor-pointer py-3 text-body font-bold mobile:font-semibold"
+                    className="w-full cursor-pointer py-3 text-base/5 font-bold mobile:font-semibold"
                     type="submit"
                     value="Submit"
                   />
                 </div>
               </form>
-              {/* Its right end stays clear of the music player, which is fixed at the bottom right of the window over
-                  this column (it covered "pioneer research" at 1366 and 1440); the line wraps instead, and the
-                  column stays shorter than the media column, so the panel does not grow. */}
-              <div className="mt-3.5 flex gap-1.5 font-text text-caption font-semibold large:max-w-[calc(100%_-_150px)]">
+              <div className="mt-3.5 flex gap-1.5 font-text text-xs font-semibold">
                 <InfoSVG className="size-4" />
                 {SUBSCRIBE_PROMISE.priorityAccess}
               </div>

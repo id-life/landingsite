@@ -61,7 +61,7 @@ export default function FooterContactForm({ placement }: { placement: Newsletter
       onSubmit={(event) => void onFormSubmit(event)}
     >
       {errors.EMAIL && (
-        <span id={`${fieldId}-error`} role="alert" className="absolute -top-6 font-text text-caption font-semibold text-accent">
+        <span id={`${fieldId}-error`} role="alert" className="absolute -top-6 font-text text-xs font-semibold text-accent">
           {errors.EMAIL.message}
         </span>
       )}
@@ -72,7 +72,7 @@ export default function FooterContactForm({ placement }: { placement: Newsletter
       <div className={clsx('flex-center h-11 w-full border-2 px-3', errors.EMAIL ? 'border-accent' : 'border-black')}>
         <input
           id={`${fieldId}-email`}
-          className="w-full bg-transparent font-text text-caption font-semibold placeholder:text-tone-600 mobile:text-body"
+          className="w-full bg-transparent font-text text-xs/5 font-semibold placeholder:text-tone-600 coarse:text-[16px]"
           placeholder="Please enter email"
           type="email"
           inputMode="email"
@@ -100,7 +100,7 @@ export default function FooterContactForm({ placement }: { placement: Newsletter
           </div>
         ) : null}
         <input
-          className={clsx('w-[5.625rem] cursor-pointer py-3 font-text text-body font-semibold', {
+          className={clsx('w-[5.625rem] cursor-pointer py-3 font-text text-base/5 font-semibold', {
             'text-accent': isSubmitting || isSubmitted,
           })}
           type="submit"

@@ -57,7 +57,11 @@ const CarouselWrapper = memo(() => {
         itemHeight={48}
         duration={5}
         transition={0.6}
-        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[max(25rem,352px)]')}
+        // The original's 25 units; in the tablet tiers its 1440 px width (300 px), as the text there is its 1440 size.
+        className={cn(
+          'scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]',
+          '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[300px]',
+        )}
       >
         {CAROUSEL_ITEMS?.map((item) => (
           <CarouselItem key={item.cnText ?? item.text} {...item} />
@@ -85,8 +89,8 @@ export function CarouselItem({
       return (
         <p
           className={cn(
-            // Type roles on the desktop tree (RWD-01): 14 px and up instead of a size that shrank with the window.
-            'line-clamp-2 text-left text-body-sm leading-[1.3] mobile:text-center mobile:text-label mobile:font-bold',
+            // The original's sizes (the owner's rule on font sizes).
+            'line-clamp-2 text-left text-base/4.5 mobile:text-center mobile:text-sm/4.5 mobile:font-bold',
             textClass,
           )}
         >
@@ -97,7 +101,7 @@ export function CarouselItem({
       return (
         <p
           className={cn(
-            'bilingual-font line-clamp-2 text-left text-lead mobile:text-center mobile:text-body mobile:font-bold mobile:leading-tight',
+            'bilingual-font line-clamp-2 text-left text-xl/6 mobile:text-center mobile:text-base/5 mobile:font-bold',
             textClass,
           )}
         >
@@ -109,8 +113,7 @@ export function CarouselItem({
   }, [cnText, text, textClass]);
 
   return (
-    // In capitals, as on wave 0 (the owner's call).
-    <div className="flex items-center gap-1 text-body-sm font-bold uppercase text-foreground mobile:justify-center">
+    <div className="flex items-center gap-1 text-base/4.5 font-bold uppercase text-foreground mobile:justify-center">
       {icon}
       {content}
     </div>

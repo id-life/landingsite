@@ -10,9 +10,28 @@ export function useFetchAudioData() {
   const setPodcastID = useSetAtom(podcastIDAtom);
   const setPodcastLT = useSetAtom(podcastLTAtom);
 
-  // The list is 1.3 MB (uncompressed from the API) and nothing needs it until the visitor reaches for the player:
-  // fetch it on intent (audioListRequestedAtom), never at load or on idle.
+  // The list is 1.3 MB (uncompressed from the API). The player shows the first track's name at rest, as the original
+  // does, so the list is fetched once the page is idle after load (or at once on intent); no audio is fetched or played
+  // until the visitor asks.
   const enabled = useAtomValue(audioListRequestedAtom);
+  const requestList = useSetAtom(audioListRequestedAtom);
+  useEffect(() => {
+    if (enabled) return;
+    let idle = 0;
+    let timer = 0;
+    const schedule = () => {
+      if (typeof window.requestIdleCallback === 'function') {
+        idle = window.requestIdleCallback(() => requestList(true), { timeout: 4000 });
+      } else timer = window.setTimeout(() => requestList(true), 2000);
+    };
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+    return () => {
+      window.removeEventListener('load', schedule);
+      if (idle) window.cancelIdleCallback(idle);
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [enabled, requestList]);
 
   const { data } = useQuery({
     queryKey: ['fetch_audio_data'],
