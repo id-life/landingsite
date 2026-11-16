@@ -19,6 +19,12 @@ const files = walk('src')
 const corpus = files.map((file) => ({ file, text: readFileSync(file, 'utf8') }));
 const hits = (pattern) => corpus.filter(({ text }) => pattern.test(text)).map(({ file }) => file);
 
+// The owner's published text stays as he wrote it (his rule of 2026-11-16: no wording of his is changed for a style
+// rule). His article gives the website as https://id.life, so that one file is exempt from the apex-domain rule.
+const OWNER_TEXT = {
+  'apex-domain URL (canonical host is www.id.life)': ['src/content/articles/immortal-dragons-news-and-updates.md'],
+};
+
 const BANNED = {
   "Immortal Dragon's (possessive of the fund is Immortal Dragons')": /Immortal Dragon['’]s/,
   'apex-domain URL (canonical host is www.id.life)': /https?:\/\/id\.life\b/,
@@ -43,7 +49,7 @@ const PENDING = {
 describe('copy style', () => {
   for (const [name, pattern] of Object.entries(BANNED)) {
     test(`no ${name}`, () => {
-      expect(hits(pattern)).toEqual([]);
+      expect(hits(pattern).filter((file) => !(OWNER_TEXT[name] ?? []).includes(file))).toEqual([]);
     });
   }
 

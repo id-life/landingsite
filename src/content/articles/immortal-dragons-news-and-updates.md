@@ -8,16 +8,16 @@
 
 ![不朽真龙基金标志](/imgs/news/immortal-dragons-news-and-updates/image1.png)
 
-| 基本信息 | 内容 |
-| --- | --- |
-| 中文名 | 不朽真龙 |
-| 外文名 | Immortal Dragons |
-| 创始人 | 朢舶洋（Boyang Wang） |
-| 总部 | 新加坡Biopolis |
-| 一期基金规模 | 约4000万美元 |
-| 投资数量 | 15余项 |
-| 投资阶段 | 前种子轮至A轮，不限地域 |
-| 官方网站 | <https://www.id.life> |
+| 基本信息     | 内容                    |
+| ------------ | ----------------------- |
+| 中文名       | 不朽真龙                |
+| 外文名       | Immortal Dragons        |
+| 创始人       | 朢舶洋（Boyang Wang）   |
+| 总部         | 新加坡Biopolis          |
+| 一期基金规模 | 约4000万美元            |
+| 投资数量     | 15余项                  |
+| 投资阶段     | 前种子轮至A轮，不限地域 |
+| 官方网站     | <https://id.life>       |
 
 ## 一、基金介绍
 
@@ -53,49 +53,49 @@
 
 ## 二、投资组合
 
-| 序号 | 公司 | 业务简述 |
-| --- | --- | --- |
-| 1 | Healthspan Capital | 长寿生物科技风投基金 |
-| 2 | Frontier Bio | 自体细胞3D组织工程 |
-| 3 | Unlimited Bio | 组合型基因疗法 |
-| 4 | R3 Bio | 全身替换（Wholebody Replacement） |
-| 5 | ImmuneBridge | 异体免疫细胞疗法与扩增平台 |
-| 6 | Cyclarity Therapeutics | 小分子动脉斑块清除疗法 |
-| 7 | Kind Biotechnology（KindBio） | 整合性器官网络（Integrated Organ Network） |
-| 8 | Mito Health | 消费级血液检测与AI健康管理平台 |
-| 9 | Kangaroo Biomedical | 人造子宫技术 |
-| 10 | Renewal Bio | 合成型干细胞胚胎与细胞疗法平台 |
-| 11 | Domayn | 消费级神经调控头戴设备 |
-| 12 | Oisín Biotechnologies | 非病毒基因疗法递送平台 |
-| 13 | Etheros Pharmaceuticals | 渐冻症小分子药物 |
-| 14 | Longevity.Technology | 英国长寿产业媒体与数据平台 |
-| 15 | Vitalia | 长寿生物科技特殊经济区 |
+| 序号 | 公司                          | 业务简述                                   |
+| ---- | ----------------------------- | ------------------------------------------ |
+| 1    | Healthspan Capital            | 长寿生物科技风投基金                       |
+| 2    | Frontier Bio                  | 自体细胞3D组织工程                         |
+| 3    | Unlimited Bio                 | 组合型基因疗法                             |
+| 4    | R3 Bio                        | 全身替换（Wholebody Replacement）          |
+| 5    | ImmuneBridge                  | 异体免疫细胞疗法与扩增平台                 |
+| 6    | Cyclarity Therapeutics        | 小分子动脉斑块清除疗法                     |
+| 7    | Kind Biotechnology（KindBio） | 整合性器官网络（Integrated Organ Network） |
+| 8    | Mito Health                   | 消费级血液检测与AI健康管理平台             |
+| 9    | Kangaroo Biomedical           | 人造子宫技术                               |
+| 10   | Renewal Bio                   | 合成型干细胞胚胎与细胞疗法平台             |
+| 11   | Domayn                        | 消费级神经调控头戴设备                     |
+| 12   | Oisín Biotechnologies         | 非病毒基因疗法递送平台                     |
+| 13   | Etheros Pharmaceuticals       | 渐冻症小分子药物                           |
+| 14   | Longevity.Technology          | 英国长寿产业媒体与数据平台                 |
+| 15   | Vitalia                       | 长寿生物科技特殊经济区                     |
 
 ## 三、行业赞助
 
-| 名称 | 简介 |
-| --- | --- |
-| ARDD | 衰老研究与药物发现会议，每年在哥本哈根举行；不朽真龙为ARDD 2025赞助商。 |
-| Nakauchi Lab – Stem Cell Research | 斯坦福大学中内啓光干细胞实验室。 |
-| XPRIZE | 奖金竞赛基金会；不朽真龙为XPRIZE Healthspan合作伙伴，赞助2026年决赛入围颁奖典礼。 |
-| Lifespan Research Institute | 美国长寿非营利组织；不朽真龙为其Lifespan Alliance首批赞助方。 |
-| Public Longevity Group | Lifespan Research Institute旗下项目，研究公众对长寿科学的态度。 |
-| 2060 Longevity Forum | 法国2060 Foundation主办的长寿论坛。 |
-| REVIVE ME | 阿布扎比长寿与健康科技峰会。 |
-| Healthy Longevity and Medicine Conference | 新加坡国立大学医学院等合办的健康长寿与医学会议。 |
-| Vitalist Bay Summit | 美国伯克利长寿主题快闪城市及峰会；不朽真龙为创始赞助方。 |
-| University of Copenhagen Project: Aging Brain Rejuvenation | 哥本哈根大学健康老龄化中心，开发清除衰老星形胶质细胞的化合物。 |
-| University of Oxford Project: Heart Aging and Metabolism | 牛津大学心脏衰老代谢机制与饮食干预研究。 |
-| Stanford University Project: Brain Resilience Mechanism | 斯坦福大学Wyss-Coray实验室的大脑与神经衰老研究。 |
-| Cornerstone Non-profit Foundation | 支持新罕布什尔州"尝试权"法案HB 701的政策倡导。 |
-| Beyond Tomorrow Podcast | 关于AI与长寿的播客，主持人Julian Issa。 |
-| HackAging.ai Hackathon | 2025年"用AI智能体对抗衰老"全球线上黑客松。 |
-| Vitalism | 以终结衰老为目标的倡导组织，Vitalist Bay主办方。 |
-| Longevity Science Foundation | 瑞士非营利组织，资助早期长寿研究。 |
-| Sundial Initiative | 加州非营利组织，研究衰老与韧性基因。 |
-| TimePie Longevity Forum | 时光派在上海举办的衰老干预论坛。 |
-| American Alzheimer Association | 美国最大的阿尔茨海默病研究非营利资助机构（Alzheimer's Association）。 |
-| China Alzheimer Association | 中国阿尔茨海默病防治协会（CAAD）。 |
+| 名称                                                       | 简介                                                                              |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| ARDD                                                       | 衰老研究与药物发现会议，每年在哥本哈根举行；不朽真龙为ARDD 2025赞助商。           |
+| Nakauchi Lab – Stem Cell Research                          | 斯坦福大学中内啓光干细胞实验室。                                                  |
+| XPRIZE                                                     | 奖金竞赛基金会；不朽真龙为XPRIZE Healthspan合作伙伴，赞助2026年决赛入围颁奖典礼。 |
+| Lifespan Research Institute                                | 美国长寿非营利组织；不朽真龙为其Lifespan Alliance首批赞助方。                     |
+| Public Longevity Group                                     | Lifespan Research Institute旗下项目，研究公众对长寿科学的态度。                   |
+| 2060 Longevity Forum                                       | 法国2060 Foundation主办的长寿论坛。                                               |
+| REVIVE ME                                                  | 阿布扎比长寿与健康科技峰会。                                                      |
+| Healthy Longevity and Medicine Conference                  | 新加坡国立大学医学院等合办的健康长寿与医学会议。                                  |
+| Vitalist Bay Summit                                        | 美国伯克利长寿主题快闪城市及峰会；不朽真龙为创始赞助方。                          |
+| University of Copenhagen Project: Aging Brain Rejuvenation | 哥本哈根大学健康老龄化中心，开发清除衰老星形胶质细胞的化合物。                    |
+| University of Oxford Project: Heart Aging and Metabolism   | 牛津大学心脏衰老代谢机制与饮食干预研究。                                          |
+| Stanford University Project: Brain Resilience Mechanism    | 斯坦福大学Wyss-Coray实验室的大脑与神经衰老研究。                                  |
+| Cornerstone Non-profit Foundation                          | 支持新罕布什尔州"尝试权"法案HB 701的政策倡导。                                    |
+| Beyond Tomorrow Podcast                                    | 关于AI与长寿的播客，主持人Julian Issa。                                           |
+| HackAging.ai Hackathon                                     | 2025年"用AI智能体对抗衰老"全球线上黑客松。                                        |
+| Vitalism                                                   | 以终结衰老为目标的倡导组织，Vitalist Bay主办方。                                  |
+| Longevity Science Foundation                               | 瑞士非营利组织，资助早期长寿研究。                                                |
+| Sundial Initiative                                         | 加州非营利组织，研究衰老与韧性基因。                                              |
+| TimePie Longevity Forum                                    | 时光派在上海举办的衰老干预论坛。                                                  |
+| American Alzheimer Association                             | 美国最大的阿尔茨海默病研究非营利资助机构（Alzheimer's Association）。             |
+| China Alzheimer Association                                | 中国阿尔茨海默病防治协会（CAAD）。                                                |
 
 ## 四、行业点评
 

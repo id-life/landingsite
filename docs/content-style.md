@@ -19,7 +19,9 @@ grammar and consistency are applied to live copy (listed under "Applied"); every
 - Capitals only for one- or two-word labels and for display type set in capitals by design (Oxanium headings,
   slogans, the nav). Visual identity decisions on display type belong to VIS.
 - Never capitals for an email address, a postal address or a body sentence: `contact@id.life`, "3 Biopolis Dr,
-  #01-15, Singapore 138623".
+  #01-15, Singapore 138623". This governs the strings. Where the original design draws the address and the email in
+  capitals (the footers, the Connect panel), the capitals are the owner's and stay: they are set with CSS on
+  lower-case strings (his ruling of 2026-11-16: the original design is the reference).
 - Company names as the company writes them: DOMAYN, EONARK, KindBio, Longevity.Technology, XPRIZE.
 
 ## Spelling and punctuation
@@ -96,5 +98,7 @@ live today; the replacement is a draft waiting on the owner's answer (`src/conte
   applied by w1-pages, kept in `src/content/pages.ts`).
 - Connect "A New Dawn": "Our dedication is a world where ..." to "Our dedication is to a world where ...".
 - News and podcast footer: the address and the email are no longer set in capitals; the email is a mailto link.
-- The 不朽真龙介绍 article's website line: `https://id.life` to the canonical `https://www.id.life`.
+- The 不朽真龙介绍 article's website line: `https://id.life` to the canonical `https://www.id.life`. REVERTED
+  2026-11-16: the article is the owner's published text and reads `https://id.life` again (his rule: his wording is
+  not changed for a style rule); `test/copy-style.test.mjs` exempts that one file.
 - The broken class `mobile:w-[17.375rem w-[19.875rem]` on the last English slogan (its phone width now applies).
