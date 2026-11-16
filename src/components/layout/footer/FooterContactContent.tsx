@@ -92,7 +92,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       <div
         className={clsx(
           'mt-3 flex gap-1.5 font-text text-caption font-semibold text-ink-muted',
-          placement === 'connect' && 'pr-[130px]',
+          placement === 'connect' && 'max-w-[calc(100%_-_130px)]',
         )}
       >
         <InfoSVG className="size-4 shrink-0" />
