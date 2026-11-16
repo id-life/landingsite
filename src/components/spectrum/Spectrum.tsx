@@ -141,7 +141,7 @@ function DeckSpectrum() {
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
         <div className="spectrum-title relative z-10 pb-3 text-center [@media(max-height:860px)]:pb-2">
-          <h2 className="font-title text-title uppercase leading-none text-white">Spectrum</h2>
+          <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
         </div>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
@@ -240,7 +240,7 @@ function PhoneSpectrum() {
           and title margin, so an initiative and its links fit between the
           title and the section arrows. */}
       <div className="relative flex h-[100svh] flex-col overflow-hidden px-5 pb-24 pt-[88px] shortScreen:pb-[72px]">
-        <h2 className="mb-6 shrink-0 text-center font-title text-title font-bold uppercase leading-tight shortScreen:mb-1">
+        <h2 className="mb-6 shrink-0 text-center font-title text-[26px]/[30px] font-bold uppercase shortScreen:mb-1">
           Spectrum
         </h2>
         <div
@@ -290,7 +290,7 @@ function PhoneSpectrum() {
         <p
           aria-live="polite"
           aria-atomic="true"
-          className="mt-3 shrink-0 text-center font-display text-caption tabular-nums text-white/60"
+          className="mt-3 shrink-0 text-center font-display text-xs tabular-nums text-white/60"
         >
           <span className="sr-only">Spectrum page </span>
           {pageIndex + 1} / {totalPages}

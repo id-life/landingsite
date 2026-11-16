@@ -41,8 +41,8 @@ function SpectrumInitiatives({
               })}
               <div className={cn('min-w-0', layout === 'publications' && 'flex flex-wrap items-baseline gap-x-4 gap-y-1')}>
                 {/* Type roles (RWD-01): initiative title-sm, its Chinese name caption, the links body-sm. */}
-                <h2 className="bilingual-font text-title-sm font-semibold leading-tight text-white">{item.title}</h2>
-                <p className={cn('bilingual-font text-caption font-medium text-white/65', layout === 'columns' && 'mt-2')}>
+                <h2 className="bilingual-font text-[clamp(19px,1.6vw,30px)]/tight font-semibold text-white">{item.title}</h2>
+                <p className={cn('bilingual-font text-sm/5 font-medium text-white/65', layout === 'columns' && 'mt-2')}>
                   {item.titleCn}
                 </p>
               </div>
@@ -67,9 +67,9 @@ function SpectrumInitiatives({
                 <li
                   key={link.label}
                   className={cn(
-                    // The links are body-sm (the 12 px override is gone, RWD-01). On a coarse pointer each link is a
-                    // 44 px tall box (RWD-06); the mouse layout keeps its line boxes.
-                    'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!normal-case [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
+                    // The original's link sizes. On a coarse pointer each link is a 44 px tall box (RWD-06); the
+                    // mouse layout keeps its line boxes.
+                    'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
                   )}
                 >
                   <SpectrumLink
@@ -77,13 +77,6 @@ function SpectrumInitiatives({
                     executeSpectrumRoute={executeSpectrumRoute}
                     updateUrlAndExecute={updateUrlAndExecute}
                     routeConfigs={routeConfigs}
-                    // Links are body-sm; peer review titles are running text, so body with a tighter leading
-                    // (RWD-01's 16 px bar). The phone pages them in the column layout, so the length decides there.
-                    textClassName={
-                      layout === 'publications' || item.links.some((l) => l.label.length >= 60)
-                        ? 'text-body leading-[1.4]'
-                        : 'text-body-sm leading-[1.5]'
-                    }
                   />
                 </li>
               ))}
