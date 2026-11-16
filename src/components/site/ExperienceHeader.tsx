@@ -55,11 +55,20 @@ export default function ExperienceHeader() {
   const id = experienceMounted && isMobile !== null ? (isMobile ? 'mobile-nav' : 'nav') : undefined;
 
   // The bar's height as --site-header-h on <html>, so the sections place their first line below it at every width
-  // (the bar takes one row on wide screens, two or three on tablets).
+  // (one row on wide screens, two on tablets). It is the bottom of the bar as drawn (its logo, items and action),
+  // not of the element, whose bottom padding is empty: at 1440 the original's row ends at about 70 px.
   useEffect(() => {
     const header = document.querySelector<HTMLElement>('header');
     if (!header) return;
-    const write = () => document.documentElement.style.setProperty('--site-header-h', `${header.offsetHeight}px`);
+    const write = () => {
+      const top = header.getBoundingClientRect().top;
+      let bottom = 0;
+      for (const child of header.children) {
+        const r = child.getBoundingClientRect();
+        if (r.height > 0) bottom = Math.max(bottom, r.bottom - top);
+      }
+      document.documentElement.style.setProperty('--site-header-h', `${Math.ceil(bottom || header.offsetHeight)}px`);
+    };
     write();
     const observer = new ResizeObserver(write);
     observer.observe(header);
