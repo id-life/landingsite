@@ -99,9 +99,6 @@ const DynamicParticleGL = ({
         const ratio = 1280 / 750;
         const width = IS_MOBILE ? 800 : 1280;
         const height = width / ratio;
-        // p5 defaults to the full devicePixelRatio: a 3x phone allocated 2400x1406 per canvas (six of them).
-        // The canvas is drawn about 390 CSS px wide there, so 1.5x already matches the screen's pixels.
-        p5.pixelDensity(Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1.5 : 2));
         canvas = p5.createCanvas(width, height);
         moveToContainer();
         // An index asked for before the canvas existed is applied now; desktop starts on the idle shape.
