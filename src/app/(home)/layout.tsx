@@ -9,7 +9,6 @@ import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
-import HomeStatement from '@/app/(home)/_components/HomeStatement';
 
 // Chinese intro for crawlers, from the 不朽真龙介绍 profile (previously a hidden 0×0 block).
 const HOME_INTRO_CN = [
@@ -31,12 +30,10 @@ const jsonLd: Graph = {
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* CON-05: the visible h1 and statement come first; the crawler summary below now starts at h2. */}
-      {/* The header, then the experience (whose music player is an early Tab stop, within the first 15), then the
-          statement: all three are fixed on screen, so document order only sets the Tab order. */}
+      {/* The page's h1 is the hero itself (HeroPoster: the wordmark and its tagline as drawn), so the crawler summary
+          below starts at h2. The header, then the experience (whose music player is an early Tab stop). */}
       <ExperienceHeader />
       {children}
-      <HomeStatement />
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
         titleAs="h2"

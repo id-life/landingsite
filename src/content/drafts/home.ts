@@ -1,5 +1,5 @@
-// Drafts for the home statement (CON-05). The shipping statement uses only published, confirmed records
-// (src/app/(home)/_components/HomeStatement.tsx); these are the parts that need the owner.
+// Drafts for a home statement (CON-05). The owner chose the original first screen (no added statement, 2026-11-16);
+// these records stay for the review page only.
 import { defineDrafts } from './define';
 
 export const HOME_DRAFTS = defineDrafts('home.ts', [

@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import ErrorState from '@/components/common/ErrorState';
 import { NAV_LIST } from '@/components/nav/nav';
-import SiteHeader from '@/components/site/SiteHeader';
-import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 
 export const metadata: Metadata = {
   title: { absolute: 'Page not found | Immortal Dragons' },
@@ -18,9 +16,6 @@ const MORE_LINKS = [
 export default function NotFound() {
   return (
     <>
-      {/* The site header (NAV-04) over the designed 404 frame, which stays centred in the viewport. */}
-      <SiteHeader variant="solid" currentId={null} className="absolute left-0 top-0 z-20 px-10 py-5 mobile:px-5" />
-      <SubscribePopup />
       <ErrorState
         code="404"
         title="Page not found"

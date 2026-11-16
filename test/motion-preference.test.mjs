@@ -1,5 +1,5 @@
-// MOT-02: one motion preference. The OS setting decides until the on-page Motion switch is used; the switch wins in
-// both directions, is remembered, and the motion tokens follow it (every duration reads 0 while reduced).
+// MOT-02: one motion preference, from the OS setting alone (the owner rejected an on-page switch); the motion tokens
+// follow it (every duration reads 0 while reduced).
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 function fakeBrowser({ osReduce = false, stored = null } = {}) {
@@ -43,21 +43,9 @@ describe('motion preference', () => {
     expect(env.classes.has('motion-reduced')).toBe(true);
   });
 
-  test('the switch wins over the OS in both directions and is remembered', async () => {
-    const { env, pref, tokens } = await load({ osReduce: true });
-    expect(pref.isReducedMotion()).toBe(true);
-    pref.setMotionEnabled(true);
-    expect(pref.isReducedMotion()).toBe(false);
-    expect(env.classes.has('motion-full')).toBe(true); // lifts the CSS guard of the OS setting
-    expect(env.store.get('idl_motion')).toBe('on');
-    expect(tokens.DURATION.base).toBeGreaterThan(0);
-    pref.setMotionEnabled(false);
-    expect(pref.isReducedMotion()).toBe(true);
-    expect(env.store.get('idl_motion')).toBe('off');
-  });
-
-  test('a stored "off" reduces motion on a device that asks for nothing', async () => {
+  test('a choice stored by an earlier build is ignored: the OS setting alone decides', async () => {
     const { pref } = await load({ osReduce: false, stored: 'off' });
-    expect(pref.isReducedMotion()).toBe(true);
+    expect(pref.isReducedMotion()).toBe(false);
+    expect('setMotionEnabled' in pref).toBe(false);
   });
 });

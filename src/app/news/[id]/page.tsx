@@ -15,7 +15,6 @@ import { notFound } from 'next/navigation';
 import { NewsArticle, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
-import Breadcrumb from '@/components/site/Breadcrumb';
 
 dayjs.extend(relativeTime);
 
@@ -84,7 +83,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <JsonLd data={[jsonLd, breadcrumb]} />
       <ReadDepth itemId={String(id)} />
       <div>
-        <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
         <div className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
           <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />

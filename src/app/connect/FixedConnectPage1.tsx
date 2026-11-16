@@ -10,7 +10,7 @@ export default function FixedConnectPage1() {
       // tablet the layout unit also follows the height left under the header, so the headlines and gaps shrink with
       // the window instead of running under the contact panel (the text keeps its type roles, which do not use the
       // unit). 430 px is the fixed-size text and the panel; 30 is how many units of height the headlines and gaps take.
-      className="fixed left-0 top-0 w-screen medium:grid medium:grid-cols-2 medium:gap-x-6 medium:px-[var(--grid-margin)] medium:pt-[calc(var(--site-header-h,7.5rem)_+_1.5rem)] [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:860px)]:[--u:max(6px,min(0.8333vw,calc((100vh_-_var(--site-header-h,120px)_-_430px)_/_30)))]"
+      className="fixed left-0 top-0 w-screen medium:grid medium:grid-cols-2 medium:gap-x-6 medium:px-[var(--grid-margin)] medium:pt-[calc(var(--site-header-h,7.5rem)_+_1.5rem)] [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:860px)]:[--u:max(5px,min(0.8333vw,calc((100vh_-_var(--site-header-h,120px)_-_430px)_/_30)))]"
     >
       <div className="absolute left-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] medium:relative medium:left-auto medium:top-auto">
         <div className="relative h-[5.25rem]">
@@ -169,7 +169,7 @@ export default function FixedConnectPage1() {
           <path d="M496,63.3v-6.4h30.4c2.9,0,4.3-1.4,4.3-4.2v-7.5c0-2.5-1.1-4-3.3-4.4l-20-4c-7.6-1.5-11.4-6.6-11.4-15.3v-5.4C496,5.3,501.3,0,512,0h22.9l5.8,4.5v6.4h-28.4c-2.9,0-4.3,1.4-4.3,4.2v6.6c0,2.5,1.1,4,3.3,4.4l20,3.9c7.6,1.6,11.4,6.7,11.4,15.3v6.4c0,10.7-5.3,16-16,16h-24.9l-5.8-4.5Z" />
         </svg>
 
-        <div className="relative mt-18 [@media(min-width:840px)_and_(max-height:860px)]:mt-8">
+        <div className="relative mt-18 [@media(min-width:840px)_and_(max-height:940px)]:mt-8">
           <svg className="connect-title3 w-[31.375rem]" viewBox="0 0 628 83" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/*M*/}
             <path
@@ -279,14 +279,14 @@ export default function FixedConnectPage1() {
             />
           </svg>
         </div>
-        <p className="mt-8 w-[max(32rem,360px)] text-left text-body font-semibold medium:w-auto [@media(min-width:840px)_and_(max-height:860px)]:mt-3">
+        <p className="mt-8 w-[max(32rem,360px)] text-left text-body font-semibold medium:w-auto [@media(min-width:840px)_and_(max-height:940px)]:mt-3">
           We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
         </p>
         {/* Investment criteria, live text under the headlines (sized to clear the contact footer on 16:9 screens). */}
         <ConnectCriteria
-          className="mt-6 w-[max(40rem,400px)] text-left medium:w-auto [@media(min-width:840px)_and_(max-height:860px)]:mt-2 [@media(min-width:840px)_and_(max-height:860px)]:w-[min(500px,40vw)]"
+          className="mt-6 w-[max(40rem,400px)] text-left medium:w-auto [@media(min-width:1200px)_and_(orientation:landscape)]:w-[max(48rem,560px)] [@media(min-width:840px)_and_(max-height:940px)]:mt-2 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(orientation:landscape)]:w-[min(560px,40vw)]"
           titleClassName="text-label"
-          listClassName="mt-2 gap-2 text-pretty font-text text-body-sm font-semibold [@media(min-width:840px)_and_(max-height:860px)]:leading-snug"
+          listClassName="mt-2 gap-2 text-pretty font-text text-body font-semibold medium:leading-snug [@media(min-width:840px)_and_(orientation:landscape)]:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:!leading-tight [@media(min-width:840px)_and_(max-height:940px)]:leading-snug"
         />
       </div>
       <div className="absolute right-20 top-[max(9rem,calc(var(--site-header-h,7.5rem)_+_1.5rem))] flex flex-col items-end medium:relative medium:right-auto medium:top-auto">
@@ -395,16 +395,16 @@ export default function FixedConnectPage1() {
           </svg>
         </div>
         {/* Room for ACCESS, drawn by the absolute connect-title2 above (top-8, about 4 units tall). */}
-        <p className="mt-32 w-[max(35rem,420px)] text-right text-body font-semibold medium:w-auto medium:text-balance">
+        <p className="mt-32 w-[max(35rem,420px)] text-right text-body font-semibold medium:w-auto medium:text-balance medium:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:leading-snug">
           Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
         </p>
         {/* The four value statements, live text in the right column. */}
         <ConnectValues
-          // On short wide windows (a landscape tablet) the four values take two columns, so the list ends above the
-          // contact panel; elsewhere one column, as before.
-          className="mt-8 flex w-[max(38rem,480px)] flex-col gap-4 text-right medium:w-auto [@media(min-width:840px)_and_(max-height:860px)]:mt-4 [@media(min-width:840px)_and_(max-height:860px)]:grid [@media(min-width:840px)_and_(max-height:860px)]:w-[min(600px,calc(62vw_-_120px))] [@media(min-width:840px)_and_(max-height:860px)]:grid-cols-2 [@media(min-width:840px)_and_(max-height:860px)]:gap-x-6 [@media(min-width:840px)_and_(max-height:860px)]:gap-y-2"
+          // In a landscape window from 840 px the four values take two columns, so the list in the body role ends above
+          // the contact panel at every laptop and desktop size; portrait tablets keep one column.
+          className="mt-8 flex w-[max(38rem,480px)] flex-col gap-4 text-right medium:w-auto [@media(min-width:840px)_and_(max-height:800px)]:!mt-2 [@media(min-width:840px)_and_(max-height:800px)]:!gap-y-1 [@media(min-width:840px)_and_(orientation:landscape)]:mt-4 [@media(min-width:840px)_and_(orientation:landscape)]:grid [@media(min-width:840px)_and_(orientation:landscape)]:w-[max(48rem,min(600px,calc(62vw_-_120px)))] [@media(min-width:840px)_and_(orientation:landscape)]:grid-cols-2 [@media(min-width:840px)_and_(orientation:landscape)]:gap-x-6 [@media(min-width:840px)_and_(orientation:landscape)]:gap-y-2"
           titleClassName="text-label"
-          textClassName="mt-0.5 text-pretty font-text text-body-sm font-medium [@media(min-width:840px)_and_(max-height:860px)]:leading-snug"
+          textClassName="mt-0.5 text-pretty font-text text-body font-medium medium:leading-snug [@media(min-width:840px)_and_(max-height:800px)]:!leading-tight [@media(min-width:840px)_and_(max-height:940px)]:leading-snug"
         />
       </div>
     </div>

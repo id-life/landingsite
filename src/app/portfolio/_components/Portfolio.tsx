@@ -139,7 +139,9 @@ function Portfolio() {
             <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.secondRow}</div>
           </div>
         </div>
-        <div className="page2-contact">
+        {/* On short windows the column reaches the bottom of the window, where the section arrows sit at its centre:
+            there the contact pill moves to the right of them instead of under them. */}
+        <div className="page2-contact [@media(max-height:760px)]:relative [@media(max-height:760px)]:left-[140px]">
           <Contact />
         </div>
       </div>

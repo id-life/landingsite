@@ -56,20 +56,20 @@ export default function ScrollButton({ className }: ScrollButtonProps) {
   }, [reduced]);
 
   return (
-    // A real button (it was a clickable div); px floors so it stays a readable, tappable control on tablets (RWD-01,
-    // RWD-06), the same size as before from 1440 px up.
+    // A real button (it was a clickable div). On fine pointers wave 0's size and look (the owner asked for the original
+    // design); on touch screens px floors and a 44 px box, so it stays a tappable control (RWD-06).
     <button
       type="button"
-      className={cn('pointer-events-auto z-10 cursor-pointer tap-area', className)}
+      className={cn('pointer-events-auto z-10 cursor-pointer tap', className)}
       onClick={() => setNavigateTo(NAV_LIST[1])}
     >
-      <span className="relative block h-[max(2.5rem,40px)] w-[max(7.625rem,120px)]">
+      <span className="relative block h-10 w-[7.625rem] coarse:h-[max(2.5rem,40px)] coarse:w-[max(7.625rem,120px)]">
         <span ref={rippleRef1} className="scroll-button-ripple-init block" />
         <span ref={rippleRef2} className="scroll-button-ripple-init block" />
         <span ref={rippleRef3} className="scroll-button-ripple-init block" />
         <span className="flex-center absolute inset-0 gap-1.5 rounded-full bg-tone-750">
           <VisionDecorationBottomScrollSVG className="h-7.5 w-6 fill-white" />
-          <span className="font-button text-label font-bold uppercase text-white">SCROLL</span>
+          <span className="font-button text-base/4 font-bold uppercase text-white coarse:text-label">SCROLL</span>
         </span>
       </span>
     </button>

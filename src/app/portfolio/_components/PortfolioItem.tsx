@@ -82,10 +82,11 @@ const PortfolioItem = memo(
             />
           </h3>
           {/* The caption role: 12 px up to 1440 px, 13.8 at 1920, on both decks (the phone grid used 10 px, the desktop
-              tree 9 px at 1440 and 5.1 px at 820 under the old viewport-scaled root). */}
+              tree 9 px at 1440 and 5.1 px at 820 under the old viewport-scaled root); body-sm (14 px) in the four-column
+              tablet grid, whose columns have the room. */}
           <p
             className={cn(
-              'fund-desc mx-auto text-caption notMobile:max-w-full notMobile:px-3',
+              'fund-desc mx-auto text-caption notMobile:max-w-full notMobile:px-3 medium:text-body-sm',
               isGridMode
                 ? 'mt-3 line-clamp-3 min-h-8 w-full px-2 font-medium'
                 : 'mt-4 min-h-10 w-full max-w-72 mobile:mt-2 mobile:min-h-5',

@@ -40,26 +40,17 @@
   top: 1rem;
 }
 
-/* Visitors who ask the system for less motion get state changes without CSS animation (MOT-02): the OS setting, unless
-   the on-page Motion switch turned motion back on (.motion-full), and the switch itself (.motion-reduced, set by
-   src/motion/preference.ts). */
+/* Visitors who ask the system for less motion get state changes without CSS animation (MOT-02); src/motion/preference.ts
+   mirrors the same setting for JavaScript (and sets .motion-reduced on <html>). */
 @media (prefers-reduced-motion: reduce) {
-  :root:not(.motion-full) *,
-  :root:not(.motion-full) *::before,
-  :root:not(.motion-full) *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-:root.motion-reduced *,
-:root.motion-reduced *::before,
-:root.motion-reduced *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
 }
 
 @layer base {

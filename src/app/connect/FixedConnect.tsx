@@ -23,7 +23,11 @@ const MobileConnectSinglePage = () => {
         // invisible until Connect is entered (ConnectGL on the phone deck sets visibility), so this scroll box never catches
         // taps meant for the other sections.
         'invisible fixed inset-x-0 top-[80px] z-30 flex flex-col overflow-y-auto overscroll-contain px-4 opacity-0 transition-[bottom] duration-300 ease-out',
-        isContactShow ? 'bottom-[calc(var(--connect-panel-h,310px)+0.5rem)]' : 'bottom-[80px]',
+        // With the contact panel open the box ends at the panel and scrolls: its lower edge fades, so the line it
+        // clips reads as more text below rather than text under the panel.
+        isContactShow
+          ? 'bottom-[calc(var(--connect-panel-h,310px)+0.5rem)] [mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)]'
+          : 'bottom-[80px]',
       )}
     >
       <div className="my-auto font-display font-semibold uppercase tracking-[-4%]">
@@ -47,10 +51,8 @@ const MobileConnectSinglePage = () => {
           <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-accent opacity-0">
             {CONNECT_BRIDGE_CN}
           </span>
-          <p className="connect-text-en text-caption font-semibold normal-case tracking-normal">
-            Deep Roots in Both East & West, a Conduit that Bridges
-            <br />
-            Markets, Capital, Institutions and More
+          <p className="connect-text-en text-body font-semibold normal-case tracking-normal">
+            Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
           </p>
         </div>
 
@@ -61,7 +63,7 @@ const MobileConnectSinglePage = () => {
             MOONSHOT
           </span>
           <span className="connect-text-en ml-3 whitespace-nowrap text-title tracking-normal">VENTURES</span>
-          <p className="connect-text-en relative left-1 text-caption font-semibold normal-case tracking-normal">
+          <p className="connect-text-en relative left-1 text-body font-semibold normal-case tracking-normal">
             We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
           </p>
         </div>
@@ -71,12 +73,12 @@ const MobileConnectSinglePage = () => {
         <ConnectCriteria
           className="mt-8 normal-case tracking-normal"
           titleClassName="text-label"
-          listClassName="mt-2 gap-1.5 font-text text-body-sm font-semibold"
+          listClassName="mt-2 gap-1.5 font-text text-body font-semibold"
         />
         <ConnectValues
-          className="mt-6 flex flex-col gap-4 pb-2 normal-case tracking-normal"
+          className="mt-6 flex flex-col gap-4 pb-10 normal-case tracking-normal"
           titleClassName="text-label"
-          textClassName="mt-0.5 font-text text-body-sm font-medium"
+          textClassName="mt-0.5 font-text text-body font-medium"
         />
       </div>
     </div>

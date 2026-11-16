@@ -6,7 +6,7 @@ import { useReducedMotionPref } from '@/motion/preference';
 
 /**
  * motion (framer) components follow the site's motion preference (MOT-02). 'always' / 'never' from the preference,
- * not 'user': 'user' reads only the system setting and would ignore the on-page Motion switch.
+ * not 'user': the site's preference (src/motion/preference.ts) is the one reader of the setting.
  */
 export default function MotionPreferenceConfig({ children }: { children: ReactNode }) {
   const reduced = useReducedMotionPref();

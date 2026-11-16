@@ -1,5 +1,4 @@
 import { ORG_ADDRESS_TEXT, ORG_EMAIL, ORG_MAILTO } from '@/constants/contact';
-import { SiteFooterNav } from '@/components/site/SiteFooter';
 
 // The contact row and the About link at the bottom of the podcast pages, which have no page footer of their own (the
 // news, article and About pages show NewsFooter). Same content and style as the Contact column of the other footers
@@ -30,7 +29,6 @@ export default function ContentPageContact() {
           </a>
         </address>
         {/* The site links (NAV-04), as on every content page's footer. */}
-        <SiteFooterNav className="mt-8 mobile:mt-6" />
       </div>
     </footer>
   );

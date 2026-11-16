@@ -184,7 +184,7 @@ const desktopDriver: SectionDriver = {
 export function useDesktopSections() {
   useEffect(() => {
     const unregister = registerSectionDriver(desktopDriver);
-    // The Motion switch takes the smoother's glide away (and back) without a reload (MOT-02).
+    // A change of the system setting takes the smoother's glide away (and back) without a reload (MOT-02).
     const offPreference = onReducedMotionChange((reduced) =>
       ScrollSmoother.get()?.smooth(reduced ? SMOOTHER_LAG.reduced : SMOOTHER_LAG.full),
     );
