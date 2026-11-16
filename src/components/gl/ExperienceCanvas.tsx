@@ -44,9 +44,8 @@ export default function ExperienceCanvas() {
   preloadHeroAssets(variant);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const shownOnPhone = currentPage.id === NAV.vision_page.id || currentPage.id === NAV.connect_page.id;
-  // MOT-06: the tier sets the pixel ratio cap, MSAA, glass samples and fluid grid; PerformanceMonitor steps the pixel
-  // ratio down when the canvas cannot hold its frame rate. The composer does the antialiasing, so the canvas itself
-  // has no antialias, stencil or depth buffer (the composer's render target has its own depth).
+  // Every device starts at the original's quality (src/motion/gpuTier.ts); the pixel ratio steps down only after the
+  // canvas has failed to hold its frame rate for a sustained period (AdaptiveDpr). Context attributes as originally.
   const { tier, budget } = useGpuTier();
   const { dpr, decline, incline } = useAdaptiveDpr(budget);
   // Unknown before hydration: the deck is not mounted either.
@@ -62,7 +61,7 @@ export default function ExperienceCanvas() {
         style={{ position: 'fixed', zIndex: 1 }}
         data-tier={tier}
         data-dpr={dpr}
-        gl={{ alpha: true, antialias: false, stencil: false, depth: false, powerPreference: budget.powerPreference }}
+        gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
         dpr={dpr}
       >
         <FrameDriver />
@@ -83,7 +82,7 @@ export default function ExperienceCanvas() {
         <ModelBoundary key={`connect-${variant}`} canvas="vision" model="connect">
           <ConnectGL deck={variant} />
         </ModelBoundary>
-        <EffectComposer multisampling={budget.multisampling} stencilBuffer={false}>
+        <EffectComposer multisampling={budget.multisampling}>
           <>{budget.fluidSimRes !== null && <Fluid simRes={budget.fluidSimRes} />}</>
         </EffectComposer>
       </Canvas>

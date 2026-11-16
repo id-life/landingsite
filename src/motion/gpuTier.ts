@@ -3,7 +3,7 @@
 import { atom, useAtomValue } from 'jotai';
 
 /**
- * GPU quality tier of this device and the budget each tier gets (MOT-06). One probe per page, no network: the
+ * GPU quality tier of this device (MOT-06); since 2026-11-16 every tier gets the original's quality (TIER_BUDGETS). One probe per page, no network: the
  * capability probe in HeroPreloads records WebGL2, float render targets and the renderer string while the HTML is
  * parsed (window.__idlGpu); this module maps them, with Save-Data, device memory, cores and the pointer type, to:
  * - low:  a software renderer (SwiftShader, llvmpipe, ...), no float render target, Save-Data, <= 2 GB or <= 2 cores;
@@ -18,22 +18,40 @@ import { atom, useAtomValue } from 'jotai';
 export type GpuTier = 'low' | 'mid' | 'high';
 
 export type TierBudget = {
-  /** Highest device pixel ratio the 3D canvases render at (PerformanceMonitor may step it down to 1). */
+  /** Highest device pixel ratio the 3D canvases start at (the adaptive monitor may step it down to 1). */
   dprCap: number;
-  /** MSAA samples of the hero's post-processing composer (the canvas itself has no antialiasing). */
+  /** MSAA samples of the hero's post-processing composer. */
   multisampling: number;
-  /** MeshTransmissionMaterial samples of the glass dragon (one buffer size on every tier). */
+  /** MeshTransmissionMaterial samples of the glass dragon. */
   transmissionSamples: number;
   /** Simulation grid of the pointer fluid, or null for no fluid. */
   fluidSimRes: number | null;
   powerPreference: WebGLPowerPreference;
 };
 
+/**
+ * What the original site renders on every device: pixel ratio up to 2 (React Three Fiber's default on the phone
+ * canvas, Math.min(dpr, 2) on the desktop one), the composer's default MSAA 8, drei's default 10 glass samples, the
+ * fluid's 128 grid, a high-performance context.
+ */
+const ORIGINAL_QUALITY: TierBudget = {
+  dprCap: 2,
+  multisampling: 8,
+  transmissionSamples: 10,
+  fluidSimRes: 128,
+  powerPreference: 'high-performance',
+};
+
+/**
+ * Every tier starts at the original's quality (owner, 2026-11-16: "just keep the original glass effect", with no
+ * device named). A device pays less only adaptively: AdaptiveDpr steps the pixel ratio down after the canvas has
+ * failed to hold its frame rate for a sustained period, never in its first seconds. The tier itself is still
+ * detected, for analytics and error reports.
+ */
 export const TIER_BUDGETS: Record<GpuTier, TierBudget> = {
-  low: { dprCap: 1, multisampling: 0, transmissionSamples: 4, fluidSimRes: null, powerPreference: 'default' },
-  mid: { dprCap: 1.5, multisampling: 0, transmissionSamples: 6, fluidSimRes: 64, powerPreference: 'default' },
-  // The original design's values (the owner's reference for the hero, 2026-11-16): MSAA 8 was the composer's default.
-  high: { dprCap: 2, multisampling: 8, transmissionSamples: 10, fluidSimRes: 128, powerPreference: 'high-performance' },
+  low: ORIGINAL_QUALITY,
+  mid: ORIGINAL_QUALITY,
+  high: ORIGINAL_QUALITY,
 };
 
 /**

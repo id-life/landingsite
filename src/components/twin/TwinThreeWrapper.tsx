@@ -62,8 +62,7 @@ export default function TwinThreeWrapper() {
   // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
   // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
   const deferredReady = useDeferredAssets('twin');
-  // MOT-06: the twin renders its models straight to the screen (no composer), so it keeps its depth buffer; the tier
-  // caps its pixel ratio and gives antialiasing to the high tier only.
+  // The twin canvas renders as the original did on every device: pixel ratio up to 2, antialiased.
   const { tier, budget } = useGpuTier();
   const warm = useDeferredWarm('twin');
   useEffect(() => {
@@ -263,7 +262,7 @@ export default function TwinThreeWrapper() {
             dpr={[1, budget.dprCap]}
             data-tier={tier}
             data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
-            gl={{ alpha: true, antialias: tier === 'high', powerPreference: budget.powerPreference }}
+            gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
             style={{
               pointerEvents: 'none',
               position: 'absolute',
