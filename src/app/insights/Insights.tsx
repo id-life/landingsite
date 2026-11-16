@@ -100,24 +100,22 @@ export default function Insights() {
         id={PAGE_ID}
         className={cn('page-container-mobile mt-20 flex h-[calc(100svh-10rem)] flex-col', !isVisible && 'hidden')}
       >
-        {/* Content Area. Centred with auto margins, not justify-content: center: centring content that is
-            taller than the scroll box pushed the NEWS & TALKS row (and the only VIEW ALL to /news) above the
-            box's scroll origin, where neither scrolling nor tapping reached it. Auto margins centre when there
-            is room and start at the top when there is not, on every browser. */}
-        <div className="mobile-insights-content flex flex-1 flex-col overflow-y-auto px-5 pb-4">
-          <div className="my-auto flex flex-col gap-6">
-            <NewsAndTalksSection
-              items={insightItems}
-              isLoading={isInsightsLoading}
-              isError={isInsightsError}
-              onRetry={() => void refetch()}
-              isMobile
-              isVisible={isVisible}
-            />
-            {/* Podcast and weekly rows in compact mode: two cards per page. */}
-            <PodcastSection isMobile compact isVisible={isVisible} />
-            <LongevitySection isMobile isVisible={isVisible} compact />
-          </div>
+        {/* Content Area, as the original: the rows centred in the panel. Content taller than the panel starts above it,
+            so at rest the phone shows the news cards, the podcast row and the weekly row, without the NEWS & TALKS
+            heading (the owner's original first screen; it reverses the NAV-09 change that started the rows at the
+            top, at his reference). */}
+        <div className="mobile-insights-content flex flex-1 flex-col justify-center gap-6 overflow-y-auto px-5 pb-4">
+          <NewsAndTalksSection
+            items={insightItems}
+            isLoading={isInsightsLoading}
+            isError={isInsightsError}
+            onRetry={() => void refetch()}
+            isMobile
+            isVisible={isVisible}
+          />
+          {/* Podcast and weekly rows in compact mode: two cards per page. */}
+          <PodcastSection isMobile compact isVisible={isVisible} />
+          <LongevitySection isMobile isVisible={isVisible} compact />
         </div>
       </div>
     );
@@ -135,7 +133,10 @@ export default function Insights() {
             // A short laptop window (up to 760 px tall): the box starts below the header (126 px at 1366x641) and
             // content taller than it starts at its top rather than above it.
             '[@media(max-height:760px)]:mt-[132px] [@media(max-height:760px)]:h-[calc(100dvh-212px)] [@media(max-height:760px)]:[justify-content:safe_center]',
-            'medium:mt-[160px] medium:h-[calc(100dvh-250px)] medium:gap-[28px] medium:px-[64px]',
+            // Tablets in portrait: the rows start 40 px under the header's navigation (it ends at 147 px at 820 and
+            // 105 at 1024x1366) instead of floating in the middle of the window with an empty band above them.
+            'medium:mt-[188px] medium:h-[calc(100dvh-278px)] medium:justify-start medium:gap-[28px] medium:px-[64px]',
+            'expanded:portrait:mt-[148px] expanded:portrait:h-[calc(100dvh-238px)] expanded:portrait:justify-start',
             'expanded:mt-[132px] expanded:h-[calc(100dvh-212px)] expanded:gap-[20px] expanded:px-[80px]',
           )}
         >

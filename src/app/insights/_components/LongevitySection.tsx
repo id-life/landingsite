@@ -6,7 +6,7 @@ import ZhihuSVG from '@/../public/svgs/zhihu.svg?component';
 import { fetchLongevityWeeklyList } from '@/apis';
 import { MobileNavigationArrowButton, PCNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
-import ViewAllButton from '@/app/insights/_components/ViewAllButton';
+import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
 import { cn } from '@/utils';
@@ -59,8 +59,8 @@ function LongevityCard({ item }: { item: LongevityItem }) {
     <Root {...linkProps} className={cn('podcast-card-clip relative block bg-white p-0.5', href && 'cursor-pointer')}>
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
-          {/* Type roles (RWD-01), as the podcast cards. */}
-          <h3 className="line-clamp-1 flex-1 font-text text-body font-bold leading-snug mobile:line-clamp-2 mobile:text-body-sm mobile:leading-snug">
+          {/* As the podcast cards. */}
+          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5 medium:text-body medium:leading-snug expanded:text-body expanded:leading-snug">
             {item.title}
           </h3>
           <img
@@ -69,7 +69,9 @@ function LongevityCard({ item }: { item: LongevityItem }) {
             alt="Open"
           />
         </div>
-        <p className="line-clamp-1 text-body font-medium">{item.description}</p>
+        <p className="line-clamp-1 text-base font-medium mobile:text-caption medium:text-body-sm expanded:text-body-sm">
+          {item.description}
+        </p>
       </div>
     </Root>
   );
@@ -253,15 +255,15 @@ export default function LongevitySection({ isMobile = false, compact = false, is
       <div className={cn(isMobile && !compact && 'flex flex-1 flex-col overflow-hidden [justify-content:safe_center]')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="font-display text-title-sm font-semibold uppercase">长生周报</h2>
-            {/* Each a 44 px box on coarse pointers (RWD-06); the mouse layout is unchanged. */}
+            <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>长生周报</h2>
+            {/* Each grows its hit area to 44 px on coarse pointers (RWD-06, tap-area); the boxes keep the original's size, so the row fits beside its heading as drawn. */}
             <div className="flex items-center gap-1.5">
               <a
                 href={WECHAT_LINK}
                 aria-label="WeChat"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <WechatSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
@@ -270,7 +272,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
                 aria-label="Xiaohongshu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <RedbookSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
@@ -279,7 +281,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
                 aria-label="Zhihu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center opacity-100 transition-opacity tap hover:opacity-80"
+                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
                 <ZhihuSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
               </a>
@@ -288,9 +290,9 @@ export default function LongevitySection({ isMobile = false, compact = false, is
           <ViewAllButton href={WECHAT_LINK} external={!isMobile} onClick={handleViewAllClick} isMobile={isMobile} />
         </div>
 
-        {/* Phone deck (compact rows): the cards are inset by the arrows' width, so the 44 px arrows (RWD-06) sit beside
-            the cards instead of over their titles. */}
-        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'px-6')}>
+        {/* Phone deck: the original's 32 px arrows over the cards' edges; in landscape (four narrow cards) the cards are
+            inset by the arrows' width so the arrows do not cover their text. */}
+        <div className={cn('relative mt-3', !isMobile && 'pr-0', compact && totalCompactPages > 1 && 'shortScreen:px-6')}>
           {!isMobile && !compact && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" className="-left-5" />
           )}
