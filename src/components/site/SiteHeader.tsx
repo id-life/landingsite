@@ -17,9 +17,9 @@ type Variant = 'overlay' | 'solid';
 /**
  * The original menu (the owner's call, 2026-11-16): the seven sections, in capitals with their Chinese half, in the top
  * row between the logo and the action, as the wave-0 site had them; News, Podcast and About are not in the bar (they
- * are reached from the Insights section, the footer and the phone menu). From 1150 px the bar is that one row, the
+ * are reached from the Insights section, the footer and the phone menu). From 1240 px the bar is that one row, the
  * items placed where wave 0 placed them (from 16.67 % of the window, gaps of 1.67 %) but at 14 px instead of 10. Below
- * 1150 px the seven do not fit beside the logo at 14 px: they take a row of their own under it, and below 900 px that
+ * 1240 px the seven do not fit beside the logo at 14 px: they take a row of their own under it, and below 900 px that
  * row breaks after the fourth item (a full-width break whose height is the row gap). The tablet arrangement is a
  * proposal awaiting the owner.
  */
@@ -76,7 +76,7 @@ export default function SiteHeader({
       className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? // The experience: one row from 1150 px, with wave 0's padding (2.08 % of the window: 30 px at 1440, 40 at
+          ? // The experience: one row from 1240 px, with wave 0's padding (2.08 % of the window: 30 px at 1440, 40 at
             // 1920); below, the navigation takes its own row under the logo row.
             'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-[2.0833vw]'
           : // Content pages: the logo and the page's action, as their original headers had them.
@@ -106,12 +106,11 @@ export default function SiteHeader({
           aria-label="Main"
           className={clsx(
             'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
-            // Below 1150 px a row of its own (never a sideways scroller: its items would be cut by the window).
-            'order-last w-full flex-wrap navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
-            overlay
-              ? // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
-                clsx('gap-y-1 navRow:absolute navRow:left-[16.667vw] navRow:top-1/2 navRow:-translate-y-1/2', live)
-              : 'gap-y-3 navRow:ml-10',
+            // Below 1240 px a row of its own (never a sideways scroller: its items would be cut by the window).
+            'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
+            // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
+            'navRow:absolute navRow:left-[16.667vw] navRow:top-1/2 navRow:-translate-y-1/2',
+            live,
           )}
         >
           {SECTION_NAV.map((item, index) => {
