@@ -20,7 +20,7 @@ import useCurrentMusicControl, {
 } from '@/hooks/audio/useCurrentAudio';
 import { clsx } from 'clsx';
 import { useAtomValue, useSetAtom } from 'jotai';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DesktopMusicContent from './DesktopAudioContent';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { eventBus } from '@/components/event-bus/eventBus';
@@ -39,6 +39,10 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   // The player list is fetched on intent: touching or focusing the player, or opening its playlist (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
   const onIntent = () => requestAudioList(true);
+  // The play button sits beside the playlist button, outside the dialog: pressing it while the playlist is open plays
+  // or pauses and leaves the playlist open (the whole pill used to be the dialog's trigger, which never closes it).
+  const pillRef = useRef<HTMLDivElement>(null);
+  const closesPlaylist = useCallback((event: MouseEvent) => !pillRef.current?.contains(event.target as Node), []);
 
   useEffect(() => {
     if (!musicList.length) return;
@@ -68,6 +72,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
     // "Play music" and "Pause music", and the playlist, which opens the playlist dialog. Both have 44 px tall
     // touch targets through ::before. Sound starts only from the play button.
     <div
+      ref={pillRef}
       onPointerDown={onIntent}
       onFocus={onIntent}
       className={clsx('z-[101] flex h-8 items-center gap-1 rounded-full bg-tone-750 px-1.5 transition duration-300', className)}
@@ -100,6 +105,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         fixClassName="align-bottom items-end"
         showCloseButton={false}
         isDismiss={true}
+        outsidePress={closesPlaylist}
         anim="fade"
         render={() => (
           <div className="w-[calc(100vw_-_2rem)] rounded-lg bg-tone-950/80 p-4.5 before:absolute before:inset-0 before:bottom-[4.75rem] before:-z-10 before:block before:backdrop-blur">

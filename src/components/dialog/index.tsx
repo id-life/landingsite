@@ -28,6 +28,8 @@ type DialogProps = {
   isDismiss?: boolean;
   showCloseButton?: boolean;
   anim?: 'fade' | 'slide' | 'none';
+  /** Whether a press outside the dialog closes it (with isDismiss); return false for presses that should not. */
+  outsidePress?: (event: MouseEvent) => boolean;
 };
 
 function Dialog({
@@ -42,6 +44,7 @@ function Dialog({
   isDismiss = false,
   showCloseButton = true,
   anim = 'fade',
+  outsidePress,
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const onChange = (status: boolean) => {
@@ -51,7 +54,11 @@ function Dialog({
 
   const { refs, context } = useFloating({ open: isOpen, onOpenChange: onChange });
   const { setReference, setFloating } = refs;
-  const dismiss = useDismiss(context, { enabled: isDismiss, outsidePressEvent: 'mousedown' });
+  const dismiss = useDismiss(context, {
+    enabled: isDismiss,
+    outsidePressEvent: 'mousedown',
+    outsidePress: outsidePress ?? true,
+  });
 
   const getTransitionStyles = useCallback(() => {
     switch (anim) {
