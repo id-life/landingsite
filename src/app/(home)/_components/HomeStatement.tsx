@@ -27,7 +27,7 @@ export default function HomeStatement() {
       <StatementDoors className="mt-2 group-data-[hero-layout=wide]:order-last group-data-[hero-layout=wide]:mt-1.5 mobile:order-last mobile:mt-2 [@media(max-height:740px)]:mobile:mt-1" />
       <div
         data-hero-part="secondary"
-        className="mt-2 flex flex-col gap-y-0.5 group-data-[hero-layout=below]:flex-row group-data-[hero-layout=below]:flex-wrap group-data-[hero-layout=split]:items-end group-data-[hero-layout=below]:items-center group-data-[hero-layout=below]:gap-x-8 group-data-[hero-layout=split]:text-right mobile:mt-2"
+        className="mt-2 flex flex-col gap-y-0.5 group-data-[hero-layout=wide]:mt-1 group-data-[hero-layout=below]:flex-row group-data-[hero-layout=below]:flex-wrap group-data-[hero-layout=split]:items-end group-data-[hero-layout=below]:items-center group-data-[hero-layout=below]:gap-x-8 group-data-[hero-layout=split]:text-right mobile:mt-2"
       >
         <dl className="flex flex-wrap gap-x-5 gap-y-0.5 text-body-sm font-medium group-data-[hero-layout=split]:justify-end group-data-[hero-tight=true]:text-caption mobile:justify-center mobile:text-caption shortScreen:justify-start">
           {facts.map((fact) => (
