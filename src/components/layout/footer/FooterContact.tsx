@@ -82,9 +82,11 @@ export default function FooterContact() {
           {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
           <section
             aria-label="Contact and subscribe"
-            className="footer-contact-clip items mx-10 flex w-full justify-between gap-x-6 bg-white/40 p-10 backdrop-blur mobile:p-4 medium:flex-wrap medium:gap-y-6 notMobile:expanded:pb-24 coarse:py-6"
+            className="footer-contact-clip items mx-10 flex w-full justify-between gap-x-6 bg-white/40 p-10 backdrop-blur mobile:p-4 medium:flex-wrap medium:gap-y-6 notMobile:expanded:pb-24 coarse:py-6 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:800px)]:coarse:py-4"
           >
-            <div className="mb-7.5 font-display text-label font-bold uppercase coarse:mb-0">
+            {/* On a portrait tablet the media take the first row and Contact and Subscribe share the second, so the panel
+                is two rows tall, not three, and the section's text above it keeps room (RWD-01). */}
+            <div className="mb-7.5 font-display text-label font-bold uppercase medium:basis-full coarse:mb-0">
               <p className="text-tone-650">Media</p>
               <div className="mt-7 coarse:mt-3">
                 {mediaRows.map((row, rowIndex) => (
@@ -107,17 +109,17 @@ export default function FooterContact() {
                 ))}
               </div>
             </div>
-            <div className="font-display text-body-sm font-bold">
+            <div className="font-display text-body-sm font-bold medium:min-w-0 medium:flex-1">
               {/* The About link shares the label's row: a line of its own made the panel taller and put it under
                   the section arrows at the bottom of the screen. From 840 to 1199 px the column is too narrow for
                   both, and the link broke into three ragged lines, so there it takes the line under the label (the
                   media column stays the tallest, so the panel does not grow). */}
-              <div className="flex items-baseline justify-between gap-6 expanded:flex-col expanded:items-start expanded:gap-1">
+              <div className="flex items-baseline justify-between gap-6 medium:flex-col medium:items-start medium:gap-1 expanded:flex-col expanded:items-start expanded:gap-1">
                 <p className="text-label uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
                   <a
                     href="/about"
-                    className="inline-flex items-center transition duration-300 tap hover:text-accent expanded:whitespace-nowrap"
+                    className="inline-flex items-center transition duration-300 tap hover:text-accent medium:whitespace-nowrap expanded:whitespace-nowrap"
                   >
                     About Immortal Dragons <span aria-hidden="true">→</span>
                   </a>
@@ -128,7 +130,7 @@ export default function FooterContact() {
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
                   constants instead of repeated literals. */}
               <address className="not-italic">
-                <div className="mt-7 flex items-center justify-start gap-1.5 expanded:mt-1">
+                <div className="mt-7 flex items-center justify-start gap-1.5 medium:mt-1 expanded:mt-1">
                   <img src="/svgs/home.svg" alt="" />
                   {ORG_ADDRESS_TEXT}
                 </div>
@@ -142,7 +144,7 @@ export default function FooterContact() {
                 </a>
               </address>
             </div>
-            <div className="font-display text-body-sm font-bold">
+            <div className="font-display text-body-sm font-bold medium:min-w-0 medium:flex-[1.2]">
               <p className="text-label uppercase text-tone-650">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
@@ -166,7 +168,7 @@ export default function FooterContact() {
                 <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-accent' : 'border-black')}>
                   <input
                     id="connect-subscribe-email"
-                    className="w-[max(18rem,200px)] bg-transparent text-body-sm font-semibold mobile:text-xs/5"
+                    className="w-[max(18rem,200px)] bg-transparent text-body-sm font-semibold mobile:text-xs/5 medium:w-full"
                     placeholder="Please enter email"
                     type="email"
                     inputMode="email"
