@@ -5,7 +5,7 @@ export default function SpectrumSEO() {
     <section className="sr-only" aria-hidden="true">
       <h1>Spectrum 谱系</h1>
       <p>
-        Explore Immortal Dragon&apos;s variety of longevity initiatives on insight sharing, sponsorships, literature translation
+        Explore Immortal Dragons&apos; variety of longevity initiatives on insight sharing, sponsorships, literature translation
         and publication, research papers and reviews, podcast channel, digital twin and clinical intelligence.
       </p>
       {spectrumBaseData.map((section) => (

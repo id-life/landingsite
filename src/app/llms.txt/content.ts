@@ -85,7 +85,7 @@ Immortal Dragons and Boyang Wang have been covered or quoted by the Financial Ti
 
 - [Home](https://www.id.life/): Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore.
 - [Portfolio](https://www.id.life/portfolio): Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.
-- [Spectrum](https://www.id.life/spectrum): Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.
+- [Spectrum](https://www.id.life/spectrum): Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.
 - [Disease Management](https://www.id.life/spectrum/disease-management): 可治疗与可控制疾病列表 A list of curable and manageable diseases
 - [Influence Network](https://www.id.life/spectrum/influence-network): 长寿领域人物影响力与关系图 Longevity influencer network and relationship map
 - [Digital Twin](https://www.id.life/digitaltwin): Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.

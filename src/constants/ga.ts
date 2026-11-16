@@ -73,6 +73,8 @@ export const GA_EVENT_NAMES = {
   // podcast page
   PODCAST_PAGE_VIEW: 'podcast_page_view',
   ID_HOME_REDIRECT: 'id_home_redirect',
+  // news / insights cards that open in a new window
+  CONTENT_CLICK: 'content_click',
   EPISODE_ITEM_CLICK: 'episode_item_click',
   EPISODE_PAGE_VIEW: 'episode_page_view',
   SUBSCRIBE_VIEW: 'subscribe_view',
@@ -219,6 +221,7 @@ export const GA_EVENT_LABELS = {
   | 'USER_INTERACT'
   | 'PODCAST_PAGE_VIEW'
   | 'ID_HOME_REDIRECT'
+  | 'CONTENT_CLICK'
   | 'EPISODE_ITEM_CLICK'
   | 'EPISODE_PAGE_VIEW'
   | 'SUBSCRIBE_VIEW'

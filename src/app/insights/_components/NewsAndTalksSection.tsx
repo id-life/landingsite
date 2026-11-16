@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
+import { trackContentClick } from '@/utils/track-content-click';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -29,6 +30,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   const isYouTube = !!item.videoId;
 
   const handleClick = () => {
+    trackContentClick(isYouTube ? 'talk' : 'news', 'insights', item.title, item.url);
     if (isYouTube) {
       setIsModalOpen(true);
     } else if (item?.url) {

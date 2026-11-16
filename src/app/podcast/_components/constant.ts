@@ -6,7 +6,7 @@ export type PodcastNavItem = {
   link: string;
 };
 export const PODCAST_NAV_LIST: PodcastNavItem[] = [
-  { id: 'id', title: 'immortal dragons 不朽真龙', link: '/podcast' },
+  { id: 'id', title: 'Immortal Dragons 不朽真龙', link: '/podcast' },
   { id: 'lt', title: 'long talk 龙门阵', link: '/podcast?c=lt' },
 ] as const;
 
