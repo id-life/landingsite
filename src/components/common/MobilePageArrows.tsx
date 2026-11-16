@@ -42,8 +42,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   return (
     <div className={cn('pointer-events-auto z-40 flex flex-col items-center gap-5', className)}>
-      {/* 44 px buttons, 8 px apart (WCAG 2.5.8 / Apple's 44 pt minimum). */}
-      <div className="flex-center order-1 gap-2 mobile:order-2">
+      <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
         {!isConnectPage && <ArrowItem />}
       </div>
@@ -175,7 +174,8 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
       aria-label={label}
       className={cn(
         // 44 px visible circle; the ::before pseudo-element extends the touch target to 52 px.
-        'flex-center relative h-11 w-11 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm before:absolute before:-inset-1 before:content-[""]',
+        // The original's 40 px circles, 12 px apart; a 44 px hit area around each (tap-area), not a bigger circle.
+        'flex-center relative h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm tap-area',
         hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={() => step(Boolean(isUp))}
