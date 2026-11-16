@@ -49,10 +49,14 @@ const ReactSiriwave = (props: IReactSiriwaveProps) => {
         ratio: 2,
       });
       // Reduced motion (MOT-02): the visualiser holds still; start() does nothing until motion is back.
+      // A disposed wave ignores start(): a caller can still hold this instance after a prop change replaced it (the
+      // new one is created a moment later, when the import resolves), and the library's start() throws on a disposed
+      // instance. That exception, raised in an effect when the music player's play button was pressed, took the
+      // whole page to the error screen.
       const wave = siriwave;
       const start = wave.start.bind(wave);
       wave.start = () => {
-        if (!isReducedMotion()) start();
+        if (!disposed && !isReducedMotion()) start();
       };
       if (isReducedMotion()) wave.stop();
       if (typeof props.onInit === 'function') props.onInit(siriwave);
