@@ -1,4 +1,4 @@
-import { fetchNewsList, fetchPodcastList } from '@/apis';
+import { fetchInsightsWithGeo, fetchPodcastList } from '@/apis';
 import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioData';
 import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastNavItem } from '@/app/podcast/_components/constant';
 import { FUND_PRESS, PORTFOLIO_PRESS, pressMarkdownLines } from '@/constants/press';
@@ -12,15 +12,26 @@ const MAX_NEWS = 20;
 
 const section = (title: string, lines: string[]) => (lines.length ? `## ${title}\n\n${lines.join('\n')}\n` : '');
 
+// Same source as the /news page (/insights/with-geo), so the section follows whatever ops publish there.
+// Title, publisher, date and link are taken as-is from the API; nothing is written here.
 // API failures only drop the affected section; llms.txt itself must always render.
 async function newsLines() {
   try {
-    const res = await fetchNewsList();
+    const res = await fetchInsightsWithGeo();
     if (res.code !== 200 || !Array.isArray(res.data)) return [];
+    const time = (date: string | null) => (date ? Date.parse(date) : 0);
     return [...res.data]
-      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-      .slice(0, MAX_NEWS)
-      .map((item) => `- [${item.title}](${absoluteUrl(`/news/${item.id}`)}) — ${item.createdAt.slice(0, 10)}`);
+      .sort((a, b) => time(b.publishDate) - time(a.publishDate))
+      .flatMap((item) => {
+        const url = item.url ?? (item.id ? `/news/${item.id}` : null);
+        if (!url) return [];
+        const title = item.title.replace(/[[\]]/g, '\\$&');
+        const details = [item.publisher, item.publishDate?.slice(0, 10)].filter(Boolean);
+        return [
+          `- [${title}](${url.startsWith('/') ? absoluteUrl(url) : url})${details.map((detail) => ` — ${detail}`).join('')}`,
+        ];
+      })
+      .slice(0, MAX_NEWS);
   } catch {
     return [];
   }
