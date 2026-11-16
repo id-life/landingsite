@@ -4,6 +4,7 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
+import { trackContentClick } from '@/utils/track-content-click';
 
 export default function Topic({ data }: { data?: NewsPageItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
   const isYouTube = !!data.videoId;
 
   const handleClick = () => {
+    trackContentClick(isYouTube ? 'talk' : 'news', 'news_page', data.title, data.url);
     if (isYouTube) {
       setIsModalOpen(true);
     } else if (data.isExternal && data.url) {

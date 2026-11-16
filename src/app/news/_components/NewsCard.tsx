@@ -4,6 +4,7 @@ import { Fragment, useState } from 'react';
 import dayjs from 'dayjs';
 import { NewsPageItem } from '@/apis/types';
 import VideoModal from '@/app/insights/_components/VideoModal';
+import { trackContentClick } from '@/utils/track-content-click';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 
 export default function NewsCard({ data }: { data: NewsPageItem }) {
@@ -11,6 +12,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
   const isYouTube = !!data.videoId;
 
   const handleClick = () => {
+    trackContentClick(isYouTube ? 'talk' : 'news', 'news_page', data.title, data.url);
     if (isYouTube) {
       setIsModalOpen(true);
     } else if (data.isExternal && data.url) {

@@ -1,4 +1,5 @@
 import { useAtomValue } from 'jotai';
+import { trackContentClick } from '@/utils/track-content-click';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
 import { podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
 
@@ -15,6 +16,7 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
     const audioData = podcastIDList.find((p) => p.id === item.id) || podcastLTList.find((p) => p.id === item.id);
     if (!audioData) return;
 
+    trackContentClick('podcast', 'insights', audioData.title, `/podcast/${audioData.id}`);
     window.open(`/podcast/${audioData.id}`, '_blank', 'noopener,noreferrer');
   };
 

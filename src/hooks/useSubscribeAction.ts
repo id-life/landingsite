@@ -2,7 +2,7 @@ import { hasShownAutoSubscribeAtom } from '@/atoms';
 import { isSubscribeShowAtom, subscribeTypeAtom } from '@/atoms/footer';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import { GA_EVENT_LABELS, GA_EVENT_NAMES } from '@/constants/ga';
-import jsonp from '@/utils/jsonp';
+import { postSubscribe } from '@/utils/subscribe';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -161,7 +161,7 @@ export function useMobileSubscribeAction() {
     Object.entries(formData).forEach(([key, value]) => params.append(key, value));
     const querystring = params.toString();
     setIsSubmitting(true);
-    jsonp(`https://life.us11.list-manage.com/subscribe/post-json?${querystring}`).finally(() => {
+    postSubscribe(querystring, subscribeType ?? GA_EVENT_LABELS.SUBSCRIBE_LETTER.FOOTER).finally(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
     });

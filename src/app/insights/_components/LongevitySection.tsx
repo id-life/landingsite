@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import RedbookSVG from '@/../public/svgs/redbook.svg?component';
+import { trackContentClick } from '@/utils/track-content-click';
 import WechatSVG from '@/../public/svgs/wechat.svg?component';
 import ZhihuSVG from '@/../public/svgs/zhihu.svg?component';
 import { fetchLongevityWeeklyList } from '@/apis';
@@ -38,6 +39,7 @@ const ZHIHU_LINK = 'https://www.zhihu.com/column/c_2021919119344150153';
 function LongevityCard({ item }: { item: LongevityItem }) {
   const handleClick = () => {
     if (!item.link) return;
+    trackContentClick('longevity_weekly', 'insights', item.title, item.link);
     window.open(item.link, '_blank', 'noopener,noreferrer');
   };
 

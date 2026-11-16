@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/spectrum' },
   title: 'Spectrum 谱系',
   description:
-    "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
+    "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
   keywords: [
     'Longevity',
     'anti-aging',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: 'Spectrum 谱系',
     siteName: 'Immortal Dragons',
     description:
-      "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
+      "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
     images: [
       {
         url: 'https://resources.id.life/id-life-cover-2.webp',

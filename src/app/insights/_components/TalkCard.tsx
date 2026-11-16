@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { trackContentClick } from '@/utils/track-content-click';
 import dayjs from 'dayjs';
 import { TalkItem } from '@/app/insights/_components/TalksSection';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
@@ -10,6 +11,7 @@ export default function TalkCard({ item }: { item: TalkItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
+    trackContentClick('talk', 'insights', item.title, item.url);
     window.open(item.url, '_blank');
   };
 
