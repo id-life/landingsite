@@ -1,4 +1,4 @@
-import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
 import '@/styles/components/character-relation.css';
 
 // Page-level rules, as a plain <style> built from the device classes (RWD-02): the phone and desktop rules follow the
@@ -18,8 +18,22 @@ const CSS = `
     font-size: 100%;
   }
 
-  /* No viewport-scaled layout unit here (RWD-01): the tool pages are drawn at the 16 px root at every width, like
-     the content pages, so no text falls under 12 px on a tablet or a laptop. */
+  /* The layout unit (RWD-01): the original drew these pages at a root of 0.8333vw (12 px at 1440, 16 at 1920), so
+     on the desktop tree layout written in rem scales as it did from 1440 px up, with a fixed 12 px unit below it.
+     Type in the roles is real rem and keeps its floors. */
+  @media ${DESKTOP_TREE_QUERY} {
+    :root {
+      --u: max(12px, 0.8333vw);
+    }
+  }
+
+  /* A phone in landscape takes the laptop arrangement of the form (the original drew it with the laptop layout), at
+     the same fixed 12 px unit as a small laptop window. */
+  @media ${COMPACT_HEIGHT_QUERY} {
+    :root {
+      --u: 12px;
+    }
+  }
 
   @media ${PHONE_TREE_QUERY} {
     body {
