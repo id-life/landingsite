@@ -3,7 +3,7 @@ import { spectrumBaseData } from './spectrumData';
 export default function SpectrumSEO() {
   return (
     <section className="sr-only" aria-hidden="true">
-      <h1>Immortal Dragons Spectrum - Longevity Initiatives</h1>
+      <h1>Spectrum 谱系</h1>
       <p>
         Explore Immortal Dragon&apos;s variety of longevity initiatives on insight sharing, sponsorships, literature translation
         and publication, research papers and reviews, podcast channel, digital twin and clinical intelligence.

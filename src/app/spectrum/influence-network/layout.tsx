@@ -52,6 +52,7 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <h1 className="sr-only">{jsonLd.name as string}</h1>
       <INStyle />
       <div className="relative h-full w-full">
         <SpectrumHeader className="fixed left-0 top-0 w-full animate-fade-in" />
