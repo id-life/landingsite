@@ -14,7 +14,7 @@
   word-wrap: break-word;
 
   color: var(--color-tone-800);
-  /* Transcripts read at the body size on every width (RWD-09): the body role on the container (text-body, RWD-01). */
+  /* Size: the original's 14 px (12 on phones), set on the container (PodcastContentTab). */
   font-style: normal;
   font-weight: 500;
   line-height: 1.7;
