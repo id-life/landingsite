@@ -122,7 +122,8 @@ export default function FooterContact() {
               </div>
               {/* The email is a mailto link (it was plain text in capitals) and both lines come from the entity
                   constants instead of repeated literals. */}
-              <address className="not-italic">
+              {/* In capitals, as the original panel. */}
+              <address className="uppercase not-italic">
                 <div className="mt-7 flex items-center justify-start gap-1.5 medium:mt-1 expanded:mt-1">
                   <img src="/svgs/home.svg" alt="" />
                   {ORG_ADDRESS_TEXT}

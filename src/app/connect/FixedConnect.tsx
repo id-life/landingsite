@@ -3,14 +3,13 @@ import { CONNECT_BRIDGE_CN, CONNECT_EVANGELISM_CN } from '@/constants/display-st
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
-import { ConnectCriteria, ConnectValues } from './ConnectDetails';
 
 // New: Single-page mobile layout component
 const MobileConnectSinglePage = () => {
   const isContactShow = useAtomValue(isMobileFooterContactShowAtom);
 
   return (
-    // Scrolls on its own (a swipe past its end changes section): the criteria and values follow the headlines
+    // Scrolls on its own (a swipe past its end changes section): the headlines and their lines
     // in normal flow. The inner my-auto wrapper centres the content when it fits and starts it at the top when
     // it does not (justify-content: center would push the overflow above the scroll origin).
     <div
@@ -67,19 +66,6 @@ const MobileConnectSinglePage = () => {
             We Stand with Bold Unorthodox Ideas and Brave Contrarian Founders
           </p>
         </div>
-
-        {/* Investment criteria and values: visible live text in one language. They used to be fixed blocks at
-          opacity 0 (.page-connect-item, #connect-end-1, #connect-end-2) that overlapped if faded in. */}
-        <ConnectCriteria
-          className="mt-8 normal-case tracking-normal"
-          titleClassName="text-label"
-          listClassName="mt-2 gap-1.5 font-text text-body font-semibold"
-        />
-        <ConnectValues
-          className="mt-6 flex flex-col gap-4 pb-10 normal-case tracking-normal"
-          titleClassName="text-label"
-          textClassName="mt-0.5 font-text text-body font-medium"
-        />
       </div>
     </div>
   );
