@@ -7,7 +7,7 @@ import {
   mobileCurrentPageIndexAtom,
 } from '@/atoms';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
-import type { SectionSource } from '@/motion/sectionController';
+import { getSectionState, type SectionSource } from '@/motion/sectionController';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -102,15 +102,6 @@ export function useMobileSectionStep() {
   });
   stateRef.current = { currentPage, currentPageIndex, innerPageIndex, innerPageTotal, mobileNavChange, setInnerPageNavigateTo };
   const lastStepRef = useRef(0);
-  const pendingRef = useRef<boolean | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    },
-    [],
-  );
 
   return useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
     const run = (up: boolean) => {
@@ -126,22 +117,11 @@ export function useMobileSectionStep() {
       if (step.kind === 'inner') s.setInnerPageNavigateTo(step.index);
       else s.mobileNavChange(NAV_LIST[step.index], source);
     };
-    const wait = lastStepRef.current + STEP_SPACING_MS - performance.now();
-    if (wait <= 0 && !timerRef.current) {
-      run(isUp);
-      return;
-    }
-    pendingRef.current = isUp;
-    if (timerRef.current) return;
-    timerRef.current = setTimeout(
-      () => {
-        timerRef.current = null;
-        const pending = pendingRef.current;
-        pendingRef.current = null;
-        if (pending !== null) run(pending);
-      },
-      Math.max(0, wait),
-    );
+    // As the original: a tap while a step is still running (or within the spacing after one) is ignored, not
+    // queued, so two quick taps move one section on both decks.
+    if (getSectionState().phase === 'moving') return;
+    if (performance.now() - lastStepRef.current < STEP_SPACING_MS) return;
+    run(isUp);
   }, []);
 }
 
