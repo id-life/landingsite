@@ -125,11 +125,15 @@ function DesktopTwin() {
             alt={HEADLINE_ALT}
           />
         </h2>
+        {/* A list of features, not prose: list markup, set in body-sm (RWD-01 ruling: a sentence is body, a list item a
+            label or body-sm). The Chinese line is the same list, its items joined by slashes. */}
         <div className="twin-title absolute bottom-[max(5rem,60px)] right-[64px] text-right text-body-sm font-medium">
-          {TWIN_FEATURES.map((feature) => (
-            <p key={feature}>- {feature}</p>
-          ))}
-          <p>{TWIN_FEATURES_CN}</p>
+          <ul>
+            {TWIN_FEATURES.map((feature) => (
+              <li key={feature}>- {feature}</li>
+            ))}
+          </ul>
+          <p lang="zh-Hans">{TWIN_FEATURES_CN}</p>
         </div>
         <div className={cn(titleItem, 'twin-title-M0', titleTop)}>
           <img className="w-[325px] xl:w-[363px] 2xl:w-[403px]" src="/svgs/twin/title-ontology.svg" alt="" />
