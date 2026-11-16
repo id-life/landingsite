@@ -40,6 +40,46 @@ export function fitHeroScale(aspect: number, planeWidth: number, planeHeight: nu
   return Math.min(1, fit(planeWidth, WIDTH_SHARE, aspect), fit(planeHeight, HEIGHT_SHARE, 1));
 }
 
+/** The wordmark texture's aspect (logo-en: 277 x 58), as the poster and the WebGL plane draw it. */
+export const HERO_WORDMARK_ASPECT = 277 / 58;
+
+/**
+ * Where the desktop hero's art sits at rest on a width x height window, from the same fit the scene uses: its centre
+ * (cx, cy) and the wordmark's on-screen width W. The art never moves for the page's text; the home statement reads this
+ * to find the room the art leaves (HomeStatementFrame).
+ */
+export function heroArtBox(width: number, height: number) {
+  const planeWidth = LOGO_PLANE_HEIGHT * HERO_WORDMARK_ASPECT;
+  const s = fitHeroScale(width / height, planeWidth, LOGO_PLANE_HEIGHT);
+  const tan = Math.tan(THREE.MathUtils.degToRad(HERO_CAMERA.fov / 2));
+  const W = (s * planeWidth * height) / (2 * tan * (HERO_CAMERA.z - s * LOGO_GROUP_Z));
+  return { cx: width / 2, cy: height / 2, W };
+}
+
+/**
+ * The art's outline, in units of W, measured on masks of the 3D at rest with motion off (1180x820 to 2560x1440):
+ * the top of the ink at a horizontal distance d = |x - cx| / W from the centre. The dragon's head and mane reach 0.29 W
+ * above the centre between 0.11 W left and 0.21 W right of it; the ring's loops peak at 0.195 W and fall away towards
+ * their outer edges; past them only the wordmark (0.086 W). The tagline ends 0.245 W below the centre.
+ */
+const LOOP_TOP: [number, number][] = [
+  [0.3, 0.195],
+  [0.35, 0.178],
+  [0.4, 0.155],
+  [0.45, 0.095],
+];
+export const HERO_ART_BOTTOM = 0.245;
+export const HERO_DRAGON = { left: 0.11, right: 0.21, top: 0.29 } as const;
+
+/** The first row of ink at screen x (px from the top), for the art box from heroArtBox. */
+export function heroInkTop(x: number, art: { cx: number; cy: number; W: number }) {
+  const d = (x - art.cx) / art.W;
+  if (d >= -HERO_DRAGON.left && d <= HERO_DRAGON.right) return art.cy - HERO_DRAGON.top * art.W;
+  const a = Math.abs(d < 0 ? d : d - (HERO_DRAGON.right - HERO_DRAGON.left));
+  const step = LOOP_TOP.find(([edge]) => a <= edge);
+  return art.cy - (step ? step[1] : 0.086) * art.W;
+}
+
 /** Extent of the filled shapes of an SVG (what drei's Svg draws and Center centres), in SVG units. */
 export function svgInkSize(svg: SVGResult) {
   const box = new THREE.Box2();
