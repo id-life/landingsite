@@ -17,7 +17,7 @@ export function ConnectCriteria({
 }) {
   return (
     <div className={className}>
-      <p className={cn('font-display font-bold', titleClassName)}>{CONNECT_CRITERIA.title.en}</p>
+      <p className={cn('font-display font-bold uppercase', titleClassName)}>{CONNECT_CRITERIA.title.en}</p>
       <ul className={cn('list-mark-red-disc flex flex-col', listClassName)}>
         {CONNECT_CRITERIA.items.map((item) => (
           <li key={item.en}>{item.en}</li>
@@ -41,7 +41,7 @@ export function ConnectValues({
     <ul className={className}>
       {CONNECT_VALUES.map((item) => (
         <li key={item.id}>
-          <p className={cn('font-display font-bold', titleClassName)}>{item.title?.en}</p>
+          <p className={cn('font-display font-bold uppercase', titleClassName)}>{item.title?.en}</p>
           <p className={textClassName}>{item.text.en}</p>
         </li>
       ))}

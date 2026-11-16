@@ -48,9 +48,6 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="font-display text-title font-bold uppercase">CONNECT</h3>
         <div className="flex flex-col items-end gap-1">
-          <a href="/about" className="inline-flex items-center font-display text-caption font-bold tap">
-            About Immortal Dragons <span aria-hidden="true">→</span>
-          </a>
           <PrivacyChoicesLink className="font-display text-caption font-bold underline opacity-60" />
         </div>
       </div>

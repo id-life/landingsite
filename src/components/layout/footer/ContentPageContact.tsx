@@ -14,9 +14,6 @@ export default function ContentPageContact() {
         <div className="flex items-baseline justify-between gap-6">
           {/* 70%: at 60% the label measured 4.29:1 on white (axe color-contrast, WCAG AA needs 4.5:1 at this size). */}
           <p className="uppercase opacity-70">Contact</p>
-          <a href="/about" className="font-text font-semibold hover:text-accent">
-            About Immortal Dragons <span aria-hidden="true">→</span>
-          </a>
         </div>
         <address className="mt-5 flex flex-wrap gap-x-8 gap-y-2 font-text font-semibold not-italic mobile:mt-3 mobile:flex-col">
           <span className="flex items-center gap-1.5">
