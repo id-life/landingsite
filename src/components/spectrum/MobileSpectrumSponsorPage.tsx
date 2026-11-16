@@ -32,7 +32,8 @@ const SponsorLogoItem = memo(
       executeSpectrumRoute,
       onTrack: () => trackSpectrumLink({ key, label, link }, 'sponsor'),
     });
-    const className = 'flex items-center justify-center transition-opacity hover:opacity-80';
+    // Each logo link is at least a 44 px box on coarse pointers (RWD-06).
+    const className = 'flex items-center justify-center transition-opacity tap hover:opacity-80';
     const logo = icon && (
       <div className={cn('flex items-center justify-center', mobileSize || 'h-10')}>
         <img src={icon} alt={label} className="h-full w-auto object-contain" />
@@ -74,8 +75,8 @@ const MobileSpectrumSponsorPage = memo(
         {/* Header */}
         <div className="mb-8 flex items-center gap-2">
           {cloneElement(icon, { className: 'size-6 shrink-0 fill-white' })}
-          <h4 className="font-display text-base font-semibold">Proudly Supporting</h4>
-          <span className="bilingual-font text-sm font-bold">本机构赞助支持</span>
+          <h4 className="font-display text-body font-semibold">Proudly Supporting</h4>
+          <span className="bilingual-font text-body-sm font-bold">本机构赞助支持</span>
         </div>
 
         {/* Logo Wall - max-w locks layout across all phone sizes, released on ipad */}

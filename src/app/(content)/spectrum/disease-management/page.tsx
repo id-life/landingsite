@@ -2,7 +2,6 @@
 
 import { diseaseManagementStatusItems } from '@/constants/disease-management';
 import { DiseaseManagementStatusItem } from '@/components/disease-management/DiseaseManagementStatusItem';
-import { MobileDiseaseManagementStatusItem } from '@/components/disease-management/MobileDiseaseManagementStatusItem';
 
 export default function DiseaseManagementPage() {
   return (
@@ -11,9 +10,6 @@ export default function DiseaseManagementPage() {
     >
       {diseaseManagementStatusItems.map((item) => (
         <DiseaseManagementStatusItem key={item.title} {...item} />
-      ))}
-      {diseaseManagementStatusItems.map((item) => (
-        <MobileDiseaseManagementStatusItem key={item.title} {...item} />
       ))}
     </div>
   );

@@ -82,7 +82,8 @@ const CharacterRelation = () => {
     };
   }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer]);
 
-  const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
+  // Sentence case for the button label (RWD-01: at most 25 % of a screen's Latin text in capitals; labels go first).
+  const showBePartOfItBtnText = isMobile ? 'Join +' : 'Be part of it +';
 
   const handleBePartOfItClose = () => {
     setIsBePartOfItShow(false);
@@ -99,13 +100,13 @@ const CharacterRelation = () => {
         <div className={cn('h-full w-full px-10 py-[6.5rem]', 'mobile:px-0 mobile:pb-6 mobile:pt-20')}>
           {data && <CharacterRelationGraph data={data} />}
         </div>
-        <CharacterRelationLegend />
+        <CharacterRelationLegend hidden={isBePartOfItShow} />
       </div>
 
       <motion.button
         className={cn(
           'fixed bottom-10 left-1/2 z-[10] -translate-x-1/2',
-          'w-[11.625rem] rounded-full bg-accent py-3 text-center font-text text-base/5 font-bold tracking-normal text-white',
+          'w-[11.625rem] rounded-full bg-accent py-3 text-center font-text text-body font-bold leading-5 tracking-normal text-white',
           'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
         )}
         onClick={handleBePartOfItOpen}

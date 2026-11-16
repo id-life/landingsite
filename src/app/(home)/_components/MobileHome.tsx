@@ -2,7 +2,7 @@
 
 import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
 import Twin from '@/app/twin/Twin';
-import MobileInsights from '@/app/insights/MobileInsights';
+import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
@@ -13,7 +13,7 @@ import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
 import MobileFooter from '@/components/layout/footer/MobileFooter';
 import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
-import MobileSpectrum from '@/components/spectrum/MobileSpectrum';
+import Spectrum from '@/components/spectrum/Spectrum';
 import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
 import { useAtomValue } from 'jotai';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
@@ -51,8 +51,8 @@ export default function MobileHome() {
       <div id="wrapper" className="">
         <Vision />
         <MobilePortfolio />
-        <MobileInsights />
-        <MobileSpectrum />
+        <Insights />
+        <Spectrum />
         <Engagement deck="phone" />
         <Twin deck="phone" />
         <Connect />

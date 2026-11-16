@@ -13,9 +13,11 @@ interface ViewAllButtonProps {
 // A real link: it can be previewed, copied, middle-clicked and Cmd-clicked into a new tab.
 export default function ViewAllButton({ href, external = false, onClick, isMobile = false }: ViewAllButtonProps) {
   const className = cn(
-    // The 32 px pill has a 44 px tall touch target through its ::before pseudo-element (NAV-09).
-    'group relative flex h-8 cursor-pointer items-center justify-center gap-1 py-0.5 pl-2 pr-1 font-text text-base/5 font-semibold before:absolute before:inset-x-0 before:-inset-y-1.5 before:content-[""] hover:opacity-80',
-    isMobile && 'h-8 w-24 text-sm',
+    // The label is the label role (RWD-01) and the frame grows with it: at least 1.7 times the label's size, so the
+    // label never runs out of the frame where the scaled 2rem is shorter than the text (18 px at 820 px). The ::before
+    // pseudo-element extends the hit area at least 10 px above and below, so it is 44 px tall or more (NAV-09, RWD-06).
+    'group relative flex h-[max(2rem,1.7em)] cursor-pointer items-center justify-center gap-1 whitespace-nowrap py-0.5 pl-2 pr-1 font-text text-label font-semibold before:absolute before:inset-x-0 before:-inset-y-[max(0.375rem,10px)] before:content-[""] hover:opacity-80',
+    isMobile && 'h-8 min-w-24',
   );
   const content = (
     <>
@@ -23,9 +25,15 @@ export default function ViewAllButton({ href, external = false, onClick, isMobil
       <svg aria-hidden="true" className="absolute inset-0" viewBox="0 0 111 36" fill="none" preserveAspectRatio="none">
         <path d="M10 1H110V35H1V10L10 1Z" fill="var(--color-white)" stroke="var(--color-accent)" strokeWidth="2" />
       </svg>
-      <span className="relative text-sm/5 text-accent">VIEW ALL</span>
+      {/* Sentence case (RWD-01: at most 25 % of a screen's Latin text in capitals; labels go first). */}
+      <span className="relative text-accent">View all</span>
       {/* Right chevron arrow */}
-      <svg aria-hidden="true" className={cn('relative -mt-px size-4', isMobile && 'size-3')} viewBox="0 0 16 16" fill="none">
+      <svg
+        aria-hidden="true"
+        className={cn('relative -mt-px size-[max(1rem,0.9em)]', isMobile && 'size-3')}
+        viewBox="0 0 16 16"
+        fill="none"
+      >
         <path d="M6 4L10 8L6 12" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </>

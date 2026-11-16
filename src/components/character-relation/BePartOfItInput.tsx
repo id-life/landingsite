@@ -63,9 +63,11 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           type={type}
           ref={inputRef}
           className={cn(
-            'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-text text-xs/5 font-semibold tracking-normal',
+            // Type roles (RWD-01): the entry is body (16 px: iOS zooms into anything smaller on focus), the counter,
+            // errors and the First Impression row caption.
+            'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-text text-body font-semibold leading-5 tracking-normal',
             'disabled:cursor-not-allowed data-[error=true]:border-accent',
-            'mobile:w-full',
+            'mobile:w-full medium:w-full',
             className,
           )}
           autoComplete={autoComplete}
@@ -83,7 +85,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             isActive
           />
         )}
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-text select-none font-text text-xs/5 font-semibold tracking-normal">
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-text select-none font-text text-caption font-semibold tracking-normal">
           {value.length}/{maxLength}
         </span>
       </label>
@@ -91,7 +93,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
       {error && (
         <div
           className={cn(
-            'font-text text-xs/5 font-semibold tracking-normal text-accent',
+            'font-text text-caption font-semibold tracking-normal text-accent',
             'absolute -top-6 left-0',
             'mobile:left-2',
           )}
@@ -131,7 +133,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
           )}
         >
           <div className="relative flex items-center gap-2">
-            <span className="font-text text-xs/5 font-semibold tracking-normal">First Impression?</span>
+            <span className="font-text text-caption font-semibold tracking-normal">First Impression?</span>
             <BePartOfItTag
               impression={CHARACTER_RELATION_IMPRESSION.GOOD}
               isActive={isTagActive}
