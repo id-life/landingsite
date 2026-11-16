@@ -9,7 +9,7 @@ import type { TwinDeck } from '@/app/twin/twin-deck';
 /**
  * The DEMO link to the Digital Twin video, one component for both decks (RWD-02; it was YTBDemo and its mobile twin).
  * By deck: a framed 196 px button at the bottom left (desktop), or a text link under the headline (phone). The label
- * is the label role (RWD-01), in the original's capitals; on coarse pointers it is hit within 44 px (tap-area), its
+ * keeps the original's size and capitals; on coarse pointers it is hit within 44 px (tap-area), its
  * box is the original's (RWD-06).
  */
 export default function YTBDemo({ deck }: { deck: TwinDeck }) {
@@ -28,7 +28,7 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
           className="group relative flex h-[28px] items-center tap-area"
           onClick={handleClick}
         >
-          <div className="flex-center gap-2 text-label font-medium">
+          <div className="flex-center gap-2 text-sm font-medium">
             <YoutubeSVG className="w-4 fill-black" />
             DEMO
           </div>
@@ -39,21 +39,21 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
   }
 
   return (
-    // Bottom left, above the fixed slogan; sizes never under their 1440 px values on tablets, where the label has a floor.
+    // Bottom left, above the fixed slogan; sizes in the text unit (--t) where the original's were in layout units.
     <div
       id="ytb-demo"
-      className="absolute bottom-[max(10rem,120px)] left-10 z-20 grid cursor-pointer gap-5 expanded:bottom-40 large:bottom-40"
+      className="absolute bottom-[calc(var(--t)*10)] left-10 z-20 grid cursor-pointer gap-5 expanded:bottom-40 large:bottom-40"
     >
       <a
         href={DigitalTwinYoutubeLink}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="group relative flex h-[max(3.125rem,37.5px)] w-[max(12.25rem,147px)] items-center justify-between px-5 tap-area"
+        className="group relative flex h-[calc(var(--t)*3.125)] w-[calc(var(--t)*12.25)] items-center justify-between px-5 tap-area"
       >
         <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-accent" />
-        <div className="flex-center gap-2 text-label font-semibold group-hover:text-accent">
-          <YoutubeSVG key="ytb-demo" className="w-[max(1.25rem,15px)] fill-black group-hover:fill-accent" />
+        <div className="flex-center gap-2 text-base font-semibold group-hover:text-accent">
+          <YoutubeSVG key="ytb-demo" className="w-[calc(var(--t)*1.25)] fill-black group-hover:fill-accent" />
           DEMO
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-accent group-hover:stroke-accent" />

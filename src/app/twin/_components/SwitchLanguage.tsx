@@ -23,7 +23,7 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
   };
 
   return (
-    // Never smaller than 24 x 44 px (RWD-01). Its original size on coarse pointers too: it clips its overflow, so a hit
+    // Never smaller than 24 x 44 px. Its original size on coarse pointers too: it clips its overflow, so a hit
     // area outside the box would not take taps.
     <div
       className="relative h-[max(1.5rem,24px)] w-[max(2.75rem,44px)] cursor-pointer overflow-hidden rounded bg-white shadow-lg"
@@ -31,7 +31,7 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
     >
       <div
         className={clsx(
-          'absolute left-0 flex h-full w-[55%] items-center justify-center text-label font-semibold leading-[14px] [clip-path:polygon(0_0,80%_0,100%_100%,0_100%)]',
+          'absolute left-0 flex h-full w-[55%] items-center justify-center text-sm/3.5 font-semibold [clip-path:polygon(0_0,80%_0,100%_100%,0_100%)]',
           isChinese ? 'bg-white text-tone-800' : 'bg-accent-hover text-white',
         )}
       >
@@ -40,7 +40,7 @@ const SwitchLanguage = ({ isChineseActive, onChange }: LanguageSwitcherProps) =>
 
       <div
         className={clsx(
-          'absolute right-0 z-10 flex h-full w-[55%] items-center justify-center text-label font-semibold leading-[14px] [clip-path:polygon(0_0,100%_0,100%_100%,20%_100%)]',
+          'absolute right-0 z-10 flex h-full w-[55%] items-center justify-center text-sm/3.5 font-semibold [clip-path:polygon(0_0,100%_0,100%_100%,20%_100%)]',
           isChinese ? 'bg-accent-hover text-white' : 'bg-white text-black',
         )}
       >

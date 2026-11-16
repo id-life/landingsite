@@ -34,7 +34,7 @@ const twinNavItem = NAV_LIST[PAGE_INDEX];
 const HEADLINE_ALT = 'Digital Twin: Biomarker Visualization';
 
 /** Desktop: the skin switch's resting distance from the bottom: the original's 15 units from 1200 px, at least 190 px under
- * it, clear of the feature list (which has a type floor). */
+ * it, clear of the feature list (its text is the 1440 px size there). */
 const skinRestBottom = () => `${innerWidth >= 1200 ? 15 * layoutUnitPx() : Math.max(15 * layoutUnitPx(), 190)}px`;
 
 /**
@@ -44,8 +44,8 @@ const skinRestBottom = () => `${innerWidth >= 1200 ? 15 * layoutUnitPx() : Math.
  *
  * Placement: the original's layout units wherever the header (its published height, --site-header-h) leaves room, so
  * a laptop matches the original; on tablets the headline, titles and picker start below the header, and the headline
- * stops 160 px short of the right edge, where the model picker stands; hidden titles wait fully off stage; text and controls keep their 1440 px sizes as a
- * floor, so nothing with a type floor outgrows its box.
+ * stops 160 px short of the right edge, where the model picker stands; hidden titles wait fully off stage; text is the original's size
+ * (on tablets its 1440 px size) and the boxes around it are in the same text unit (--t).
  */
 function DesktopTwin() {
   const isResetDemo = useRef(false);
@@ -127,9 +127,8 @@ function DesktopTwin() {
             alt={HEADLINE_ALT}
           />
         </h2>
-        {/* A list of features, not prose: list markup, set in body-sm (RWD-01 ruling: a sentence is body, a list item a
-            label or body-sm). The Chinese line is the same list, its items joined by slashes. */}
-        <div className="twin-title absolute bottom-[max(5rem,60px)] right-[64px] text-right text-body-sm font-medium">
+        {/* A list of features: list markup, at the original's size. The Chinese line is the same list. */}
+        <div className="twin-title absolute bottom-[calc(var(--t)*5)] right-[64px] text-right text-base font-medium">
           <ul>
             {TWIN_FEATURES.map((feature) => (
               <li key={feature}>- {feature}</li>
@@ -143,12 +142,12 @@ function DesktopTwin() {
         <div
           className={cn(
             titleItem,
-            'twin-title-M0 bottom-[max(8rem,96px)] max-w-[max(31.25rem,375px)] expanded:bottom-32 large:bottom-32',
+            'twin-title-M0 bottom-[calc(var(--t)*8)] max-w-[calc(var(--t)*31.25)] expanded:bottom-32 large:bottom-32',
           )}
         >
-          <p className="text-title-sm font-semibold">{TWIN_ONTOLOGY.title}</p>
-          <p className="mt-5 text-body font-medium">{TWIN_ONTOLOGY.en}</p>
-          <p className="mt-2 text-body font-medium">{TWIN_ONTOLOGY.cn}</p>
+          <p className="text-xl/6 font-semibold">{TWIN_ONTOLOGY.title}</p>
+          <p className="mt-5 text-base font-medium">{TWIN_ONTOLOGY.en}</p>
+          <p className="mt-2 text-base font-medium">{TWIN_ONTOLOGY.cn}</p>
         </div>
         <div className={cn(titleItem, 'twin-title-M1', titleTop)}>
           <img className="w-[512px] xl:w-[576px] 2xl:w-[640px]" src="/svgs/twin/title-clone-01.svg" alt="" />

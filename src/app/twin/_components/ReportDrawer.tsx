@@ -10,7 +10,7 @@ import type { TwinDeck } from '@/app/twin/twin-deck';
  * A clone's full report (More >), one drawer for both decks (RWD-02; ReportM01..03 and their mobile twins each built
  * their own). Shared: the trigger, the language switch, the report text. By deck: a 42-unit side panel from the left
  * with the period as a badge (desktop), or a bottom sheet with the period and habits as tags (phone).
- * Type roles (RWD-01): the report text is body (16 px and up), the title title / title-sm, the period label.
+ * Text at the original's sizes on both decks.
  */
 export default function ReportDrawer({
   deck,
@@ -38,7 +38,7 @@ export default function ReportDrawer({
     <Drawer.Root direction={phone ? 'bottom' : 'left'} disablePreventScroll={phone ? true : undefined}>
       {/* An inline control in running text: a 44 px hit area on coarse pointers, the line keeps its height (RWD-06). */}
       <Drawer.Trigger
-        className={clsx('relative text-accent tap-area', phone && 'text-label font-semibold')}
+        className={clsx('relative text-accent tap-area', phone && 'text-xs/3 font-semibold')}
         onClick={() => trackTwin('report', code)}
       >
         {' '}
@@ -54,7 +54,9 @@ export default function ReportDrawer({
         >
           <div className={clsx('flex h-full w-full grow flex-col', phone ? 'flex-1 overflow-y-auto p-4' : 'p-10')}>
             <div className={phone ? 'flex-none' : 'contents'}>
-              <Drawer.Title className={clsx('font-semibold', phone ? 'flex items-center gap-3 text-title-sm' : 'text-title')}>
+              <Drawer.Title
+                className={clsx('font-semibold', phone ? 'flex items-center gap-3 text-xl/6' : 'text-[2.5rem]/[3rem]')}
+              >
                 {title}
                 {phone && <> {languageSwitch}</>}
               </Drawer.Title>
@@ -72,7 +74,7 @@ export default function ReportDrawer({
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-label font-semibold uppercase text-accent">
+                    <div className="flex items-center justify-center gap-0.5 bg-accent/20 p-1 text-xl/5 font-semibold uppercase text-accent">
                       <img src="/svgs/twin/time.svg" alt="" />
                       {isChinese ? period.zh : period.en}
                     </div>
@@ -82,7 +84,7 @@ export default function ReportDrawer({
               </div>
             </div>
             <div className="overflow-scroll">
-              <div className="mt-5 text-body font-medium">{children(isChinese)}</div>
+              <div className="mt-5 text-base font-medium">{children(isChinese)}</div>
             </div>
           </div>
         </Drawer.Content>
