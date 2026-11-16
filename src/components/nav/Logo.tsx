@@ -34,15 +34,15 @@ export default function Logo({
       aria-label="Immortal Dragons home"
       onClick={onClick}
       {...rest}
-      // `tap`: a 44 px box on touch screens (RWD-06); the wordmark keeps its own height, so it does not grow. px floors
-      // keep it a legible size on tablets, where the layout unit is small.
+      // The original's 55 x 10 unit box and wordmark height (in the tablet tiers its 1440 px size, 165 x 30, as the
+      // header's text there); a 44 px hit area on touch screens (tap-area).
       className={clsx(
-        'relative flex h-[max(2.5rem,24px)] w-[max(13.75rem,120px)] items-start tap mobile:w-auto mobile:items-center',
+        'relative flex h-10 w-55 items-start tap-area mobile:w-auto mobile:items-center [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[165px]',
         className,
       )}
     >
       {/* In flow (not absolute), so the link box holds the wordmark on phones too. */}
-      <LogoSVGen className="h-[max(2.5rem,24px)] w-auto mobile:h-5" />
+      <LogoSVGen className="h-10 w-auto mobile:h-5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px]" />
     </Link>
   );
 }

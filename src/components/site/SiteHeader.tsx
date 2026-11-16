@@ -16,12 +16,11 @@ type Variant = 'overlay' | 'solid';
 
 /**
  * The original menu (the owner's call, 2026-11-16): the seven sections, in capitals with their Chinese half, in the top
- * row between the logo and the action, as the wave-0 site had them; News, Podcast and About are not in the bar (they
- * are reached from the Insights section, the footer and the phone menu). From 1240 px the bar is that one row, the
- * items placed where wave 0 placed them (from 16.67 % of the window, gaps of 1.67 %) but at 14 px instead of 10. Below
- * 1240 px the seven do not fit beside the logo at 14 px: they take a row of their own under it, and below 900 px that
- * row breaks after the fourth item (a full-width break whose height is the row gap). The tablet arrangement is a
- * proposal awaiting the owner.
+ * row between the logo and the action; News, Podcast and About are not in the bar. From 1200 px the bar is the
+ * original's row at the original's sizes (the owner's rule on font sizes): the logo, the seven items at text-sm (10.5
+ * px at 1440), SUBSCRIBE in its 33 x 10 frame. Below 1200 px (the tablet tiers, text at its 1440 size) the seven take a
+ * row of their own under the logo, and below 700 px that row breaks after the fourth item (a full-width break whose
+ * height is the row gap); the tablet arrangement is a proposal awaiting the owner.
  */
 const SECTION_NAV = SITE_NAV.filter(isSection);
 export type SiteHeaderProps = {
@@ -82,9 +81,9 @@ export default function SiteHeader({
       className={clsx(
         'flex w-full items-center text-foreground',
         overlay
-          ? // The experience: one row from 1240 px, with wave 0's padding (2.08 % of the window: 30 px at 1440, 40 at
-            // 1920); below, the navigation takes its own row under the logo row.
-            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-[2.0833vw]'
+          ? // The experience: one row from 1200 px, with the original's padding and gaps; below, the navigation takes
+            // its own row under the logo row.
+            'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10'
           : // Content pages: the logo and the page's action, as their original headers had them.
             'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
         // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
@@ -108,11 +107,10 @@ export default function SiteHeader({
         <nav
           aria-label="Main"
           className={clsx(
-            'main-nav-links flex gap-x-8 text-label font-semibold mobile:hidden',
-            // Below 1240 px a row of its own (never a sideways scroller: its items would be cut by the window).
+            'main-nav-links flex gap-x-8 text-sm font-semibold mobile:hidden',
+            // Below 1200 px a row of its own (never a sideways scroller: its items would be cut by the window).
             'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
             // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
-            'navRow:absolute navRow:left-[16.667vw] navRow:top-1/2 navRow:-translate-y-1/2',
             live,
           )}
         >
@@ -138,7 +136,7 @@ export default function SiteHeader({
                 className={clsx(
                   // The e2e guards count the seven section items by this class.
                   'nav-item',
-                  'bilingual-font relative flex shrink-0 cursor-pointer items-center whitespace-nowrap text-center font-bold uppercase tap',
+                  'bilingual-font relative flex shrink-0 cursor-pointer items-center whitespace-nowrap text-center font-bold uppercase tap-area',
                   current && 'nav-active',
                 )}
               >
@@ -153,13 +151,13 @@ export default function SiteHeader({
       )}
       <div
         id={overlay ? 'subscribe-btn' : undefined}
-        className="flex h-[max(3rem,44px)] flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5"
+        className="flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5 navRow:items-start"
       >
         {action === 'exit' ? (
           <Link
             prefetch={false}
             href="/"
-            className="group pointer-events-auto relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center px-5 text-label font-semibold uppercase transition-colors duration-300 tap hover:stroke-accent hover:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-caption"
+            className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]"
           >
             <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
             ID.LIFE
@@ -167,7 +165,13 @@ export default function SiteHeader({
         ) : (
           <SubscribeTrigger
             className={clsx(
-              'group relative flex h-[max(2.5rem,40px)] min-w-[max(8.25rem,120px)] cursor-pointer items-center justify-center whitespace-nowrap px-5 text-label font-semibold uppercase duration-300 tap hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:min-w-24 mobile:px-0 mobile:text-caption',
+              // The original frame and weight: 33 units by 10 on the experience, 34 on the content pages, wider-spaced on the
+              // podcast pages; a 44 px hit area on touch screens (tap-area) instead of a bigger frame.
+              'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
+              overlay ? 'w-33' : 'w-34',
+              // The tablet tiers draw the header at its 1440 px size (text there is at its 1440 size too).
+              '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]',
+              currentId === 'podcast' && 'tracking-[0.1em] mobile:tracking-normal',
               live,
             )}
           >

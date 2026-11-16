@@ -50,11 +50,11 @@ const config: Config = {
         large: { raw: WIDTH_CLASS_QUERY.large },
         shortScreen: { raw: COMPACT_HEIGHT_QUERY },
         coarse: { raw: COARSE_POINTER_QUERY },
-        // The site header: one row (logo, the seven sections, the action) from 1240 px on the desktop deck, where
-        // the seven fit at 14 px beside the logo and Subscribe; below 900 px its navigation row breaks after the
+        // The site header: one row (logo, the seven sections, the action) from 1200 px on the desktop deck, at the original's sizes, where
+        // the seven fit at 14 px beside the logo and Subscribe; below 700 px its navigation row breaks after the
         // fourth item (SiteHeader).
-        navRow: { raw: '(min-width: 1240px) and (min-height: 480px)' },
-        navGrid: { raw: '(min-width: 600px) and (max-width: 899.98px) and (min-height: 480px)' },
+        navRow: { raw: '(min-width: 1200px) and (min-height: 480px)' },
+        navGrid: { raw: '(min-width: 600px) and (max-width: 699.98px) and (min-height: 480px)' },
         tablet: { min: '768px', max: '1540px' },
         middle: { min: '1200px' },
         desktop: { min: '1540px' },
