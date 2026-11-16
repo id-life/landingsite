@@ -25,8 +25,10 @@ export default function Contact({ onCopy }: ContactProps) {
   };
 
   return (
-    // Phones: the chip sizes to its content and must end left of the 44 px section arrows (bottom centre).
-    <div className="group relative w-auto min-w-52 bg-white/10 px-4 py-3.5 text-center text-body-sm font-semibold backdrop-blur duration-300 mobile:w-auto mobile:min-w-0 mobile:px-1 mobile:text-caption notMobile:hover:text-accent coarse:py-0">
+    // The original chip at the original's sizes: 13 units wide, the address and the copy icon on its right; on phones
+    // 7.125 units, the address at 10 px in capitals, clear of the section arrows. Touch targets are hit areas
+    // (tap-area), so the chip keeps its size.
+    <div className="group relative w-52 bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-accent">
       <SubscribeBorderSVG
         preserveAspectRatio="none"
         className="absolute inset-0 left-0 top-0 h-full w-full stroke-foreground duration-300 notMobile:group-hover:stroke-accent"
@@ -35,7 +37,7 @@ export default function Contact({ onCopy }: ContactProps) {
         <a
           href={ORG_MAILTO}
           data-track-placement="portfolio"
-          className="relative inline-flex items-center whitespace-nowrap tap"
+          className="relative inline-flex w-36 items-center justify-center whitespace-nowrap tap-area mobile:w-[5.625rem] mobile:text-[.625rem]/3.5 mobile:uppercase"
         >
           {ORG_EMAIL}
         </a>
@@ -45,9 +47,8 @@ export default function Contact({ onCopy }: ContactProps) {
           onClick={handleCopy}
           // Hidden on phones narrower than 386 px, where it would run into the section arrows; the address stays a
           // mailto link (and can be long-pressed to copy).
-          // tap: a 44 px box on touch screens (RWD-06). On phones the icon sits before the address, so its
-          // hit area stays clear of the section arrows' (both are 44 px; they overlapped by 6 px at 390 px).
-          className="relative z-10 flex cursor-pointer items-center justify-center tap mobile:order-first [@media(max-width:385px)]:hidden"
+          // tap-area: a 44 px hit area on touch screens (RWD-06), the icon at its drawn size, on the right as drawn.
+          className="relative z-10 flex cursor-pointer items-center justify-center tap-area [@media(max-width:385px)]:hidden"
         >
           {state.value ? (
             <CheckmarkSVG

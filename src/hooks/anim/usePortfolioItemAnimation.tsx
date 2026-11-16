@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import { RefObject } from 'react';
 import { useThrottle } from '../useThrottle';
 import { DURATION, EASE } from '@/motion/tokens';
-import { u } from '@/utils/layout-unit';
 
 export interface PortfolioItemAnimationConfig {
   /** 缁勪欢鏄惁鍚敤 */
@@ -52,10 +51,10 @@ export function usePortfolioItemAnimation(
       tl.to(selected, { opacity: 1 });
     }
 
-    // The one-liner is visible at rest on every device (it used to start at opacity 0 and appear only on
-    // hover, so touch tablets and keyboard users never read it); hover lifts it slightly.
+    // The one-liner appears on hover, as the original animates it; a tap or keyboard focus plays the same state
+    // (one tile at a time, below), so touch and keyboard visitors read it too, and the rest state is the original's.
     if (desc) {
-      tl.to(desc, { y: u(-0.25) }, '<50%');
+      tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
     }
 
     if (subtitle) {
@@ -121,11 +120,30 @@ export function usePortfolioItemAnimation(
           }
         };
 
+        // Touch and keyboard: the tapped or focused tile shows its one-liner, and the previous one closes.
+        const show = () => {
+          itemAnimations.forEach((other) => other !== animation && other.reverse());
+          animation.play();
+        };
+        const handlePointerDown = (event: PointerEvent) => {
+          if (event.pointerType !== 'mouse') show();
+        };
+        const handleFocusIn = () => show();
+        const handleFocusOut = (event: FocusEvent) => {
+          if (!div.contains(event.relatedTarget as Node | null)) animation.reverse();
+        };
+
         div.addEventListener('mouseenter', handleMouseEnter);
         div.addEventListener('mouseleave', handleMouseLeave);
+        div.addEventListener('pointerdown', handlePointerDown);
+        div.addEventListener('focusin', handleFocusIn);
+        div.addEventListener('focusout', handleFocusOut);
         removers.push(() => {
           div.removeEventListener('mouseenter', handleMouseEnter);
           div.removeEventListener('mouseleave', handleMouseLeave);
+          div.removeEventListener('pointerdown', handlePointerDown);
+          div.removeEventListener('focusin', handleFocusIn);
+          div.removeEventListener('focusout', handleFocusOut);
         });
       });
       return () => removers.forEach((remove) => remove());
