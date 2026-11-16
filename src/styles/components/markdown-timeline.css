@@ -14,8 +14,7 @@
   word-wrap: break-word;
 
   color: var(--color-tone-800);
-  /* Transcripts read at the body size on every width (RWD-09); they were 14 px, and 12 px on phones. */
-  font-size: var(--read-body);
+  /* Transcripts read at the body size on every width (RWD-09): the body role on the container (text-body, RWD-01). */
   font-style: normal;
   font-weight: 500;
   line-height: 1.7;

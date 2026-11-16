@@ -14,10 +14,10 @@ export default async function PodcastList(props: PodcastListProps) {
   if (!list) {
     const retry = PODCAST_NAV_LIST.find((item) => item.id === category)?.link ?? '/podcast';
     return (
-      <div role="status" className="py-16 text-center font-text text-base font-medium text-black/60 mobile:py-12">
+      <div role="status" className="py-16 text-center font-text text-body font-medium text-black/60 mobile:py-12">
         <p>节目列表暂时无法加载。The episode list could not be loaded right now.</p>
         {/* A full reload fetches the page again; it regenerates on the server every 5 minutes. */}
-        <a href={retry} className="mt-4 inline-block text-sm font-semibold uppercase text-accent underline">
+        <a href={retry} className="mt-4 inline-block text-label font-semibold uppercase text-accent underline">
           Try again 重试
         </a>
       </div>

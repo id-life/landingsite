@@ -50,8 +50,9 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
           />
         </div>
         <div className="p-4 mobile:p-3">
+          {/* Kept at its original 18 px: the lead role (23 at 1920) cut two-line titles that wave 0 shows whole. */}
           <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base">{data.title}</h3>
-          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-ink-muted mobile:mt-1.5 mobile:text-sm/4.5">
+          <div className="mt-4 flex items-center gap-2 text-label font-medium text-ink-muted mobile:mt-1.5 mobile:leading-[1.125rem]">
             {data?.source || data?.publishDate ? (
               <Fragment>
                 {data?.source && <span>{data.source}</span>}

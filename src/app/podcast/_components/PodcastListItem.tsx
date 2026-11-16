@@ -24,7 +24,7 @@ export default function PodcastListItem({ data }: PodcastListItemProps) {
             <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
           </div>
         </div>
-        <p className="mt-2 line-clamp-2 text-read-sm font-medium">{data.description}</p>
+        <p className="mt-2 line-clamp-2 text-body font-medium">{data.description}</p>
         <div className="mt-3 hidden text-read-xs text-tone-650 mobile:block">
           <span>{formatDuration(data.duration)}</span>
           <span>·</span>

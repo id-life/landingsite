@@ -30,12 +30,15 @@ export const SpectrumLink = memo(
     item,
     executeSpectrumRoute,
     loadImage = true,
+    textClassName,
   }: {
     item: SpectrumLinkItem;
     executeSpectrumRoute?: (key: string) => void;
     updateUrlAndExecute?: (key: string) => void;
     routeConfigs?: SpectrumRouteConfig[];
     loadImage?: boolean;
+    /** The label's type role and leading, from the list it sits in (a class on the label itself, RWD-01). */
+    textClassName?: string;
   }) => {
     const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
     const hasLink = Boolean(link);
@@ -58,6 +61,7 @@ export const SpectrumLink = memo(
             hasLink &&
               'after:absolute after:inset-x-0 after:bottom-0 after:block after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition after:duration-300 hover:after:scale-x-100',
             labelClassName,
+            textClassName,
           )}
         >
           {label}
