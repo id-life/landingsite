@@ -59,22 +59,21 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
           )}
           <div className="absolute bottom-0 left-0 right-0 p-6 mobile:p-5">
             {data.publishDate && (
-              <div className="mb-2 text-body font-medium text-white mobile:mb-1.5 mobile:text-caption">{data.publishLabel}</div>
+              <div className="mb-2 font-medium text-white mobile:mb-1.5 mobile:text-xs">{data.publishLabel}</div>
             )}
             <h2 className="flex items-center gap-3 font-semibold text-white">
-              {/* Title and source tag kept at their original 36 and 18 px (no role: title is 38 at 1440 and 44 at 1920, and cut this one-line title
-                  where wave 0 showed it whole). */}
-              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8 medium:text-lead expanded:text-title-sm">
+              {/* Tablets: the title wraps to two lines at the original's 1440 size instead of being cut. */}
+              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8 medium:line-clamp-2 medium:whitespace-normal expanded:line-clamp-2 expanded:whitespace-normal">
                 {data.title}
               </span>
               {data.source && (
-                <span className="shrink-0 rounded bg-data-yellow/20 px-2 py-0.5 font-display text-lg/8 font-bold uppercase text-data-yellow backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4 medium:text-caption expanded:text-label">
+                <span className="shrink-0 rounded bg-data-yellow/20 px-2 py-0.5 font-display text-lg/8 font-bold uppercase text-data-yellow backdrop-blur-md mobile:px-2.5 mobile:py-1 mobile:text-sm/4">
                   {data.source}
                 </span>
               )}
             </h2>
             {data.brief && (
-              <p className="mt-4 line-clamp-2 text-body font-medium text-white mobile:mt-2 mobile:text-body-sm">
+              <p className="mt-4 line-clamp-2 font-medium text-white mobile:mt-2 mobile:text-sm">
                 {data.brief.replace(/[#*]/g, '').trim()}
               </p>
             )}

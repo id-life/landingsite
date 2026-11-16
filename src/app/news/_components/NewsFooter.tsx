@@ -29,7 +29,7 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <YoutubeSVG className="size-6 fill-black" />
-              <span className="font-display text-body font-bold uppercase">Youtube</span>
+              <span className="font-display text-base font-bold uppercase">Youtube</span>
             </a>
             <a
               href={Links[MediaLinkType.Linkedin]}
@@ -41,7 +41,7 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <LinkedinSVG className="size-6 fill-black" />
-              <span className="font-display text-body font-bold uppercase">LinkedIn</span>
+              <span className="font-display text-base font-bold uppercase">LinkedIn</span>
             </a>
             <a
               href={Links[MediaLinkType.Media]}
@@ -53,17 +53,17 @@ export default function NewsFooter() {
             >
               <CornerBorder hoverColor="#000" size=".375rem" width=".125rem" />
               <MediaSVG className="size-6 fill-black" />
-              <span className="font-display text-body font-bold uppercase">MediaKit</span>
+              <span className="font-display text-base font-bold uppercase">MediaKit</span>
             </a>
           </div>
         </div>
-        <div className="font-display text-body font-bold leading-5">
+        <div className="font-display text-base/5 font-bold">
           {/* Only the label is set in capitals: the address and the email read as written (CON-20), and the email
               is a mailto link, as in the Connect footer. */}
           <div className="flex items-baseline justify-between gap-6">
             <p className="uppercase text-ink-muted">Contact</p>
             <div className="flex flex-col items-end gap-1">
-              <PrivacyChoicesLink className="font-text text-caption font-semibold underline opacity-60 hover:opacity-100" />
+              <PrivacyChoicesLink className="font-text text-xs font-semibold underline opacity-60 hover:opacity-100" />
             </div>
           </div>
           <address className="not-italic">
@@ -81,7 +81,7 @@ export default function NewsFooter() {
             </a>
           </address>
         </div>
-        <div className="font-display text-body leading-5">
+        <div className="font-display text-base/5">
           <p className="font-bold uppercase text-ink-muted">SUBSCRIBE</p>
           <NewsFooterForm />
         </div>

@@ -42,7 +42,7 @@ export default function NewsFooterForm() {
       <div className="border-2 border-black p-3">
         <input
           id="news-subscribe-email"
-          className="w-[min(25rem,30vw)] bg-transparent font-text text-body font-semibold"
+          className="w-[min(25rem,30vw)] bg-transparent font-text text-xs font-semibold coarse:text-[16px]"
           placeholder="Please enter email"
           type="email"
           inputMode="email"
@@ -55,11 +55,11 @@ export default function NewsFooterForm() {
         />
       </div>
       {submitError && (
-        <p id="news-subscribe-error" role="alert" className="mt-2 font-text text-caption font-semibold text-accent">
+        <p id="news-subscribe-error" role="alert" className="mt-2 font-text text-xs font-semibold text-accent">
           {submitError}
         </p>
       )}
-      <div className="mt-3 flex items-start gap-1.5 font-text text-caption font-semibold">
+      <div className="mt-3 flex items-start gap-1.5 font-text text-xs font-semibold">
         <InfoSVG className="size-4 shrink-0" />
         {SUBSCRIBE_PROMISE.priorityAccess}
       </div>
@@ -74,7 +74,7 @@ export default function NewsFooterForm() {
             <CheckedSVG className="w-6 stroke-white stroke-[3]" /> Success
           </div>
         ) : null}
-        <input className="h-full w-full cursor-pointer font-text text-body font-bold leading-5" type="submit" value="Submit" />
+        <input className="h-full w-full cursor-pointer font-text text-base/5 font-bold" type="submit" value="Submit" />
       </div>
     </form>
   );
