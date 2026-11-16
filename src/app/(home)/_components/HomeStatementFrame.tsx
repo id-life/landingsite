@@ -6,9 +6,8 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
 import { useNavigation } from '@/hooks/useNavigation';
 import { cn } from '@/utils';
-import { heroStatementBoxAtom } from '@/components/gl/model/vision/heroReserve';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { MouseEvent, ReactNode, useEffect, useRef } from 'react';
+import { useAtomValue } from 'jotai';
+import { MouseEvent, ReactNode } from 'react';
 
 /**
  * Shows the server-rendered home statement over the hero only. Without JavaScript (and before hydration) it is simply
@@ -22,36 +21,8 @@ export default function HomeStatementFrame({ children }: { children: ReactNode }
   const page = isMobile ? mobilePage : desktopPage;
   const onHero = page.id === NAV.vision_page.id;
 
-  // Publish the block's box (its bottom and right edge on screen) so the desktop hero keeps the ring and the dragon
-  // clear of it (heroFit.ts, fitHeroToReserve). It moves when its own size or the header's height changes.
-  const ref = useRef<HTMLElement>(null);
-  const setBox = useSetAtom(heroStatementBoxAtom);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const write = () => {
-      const r = el.getBoundingClientRect();
-      setBox((prev) =>
-        prev && Math.abs(prev.bottom - r.bottom) < 1 && Math.abs(prev.right - r.right) < 1
-          ? prev
-          : { bottom: Math.round(r.bottom), right: Math.round(r.right) },
-      );
-    };
-    write();
-    const observer = new ResizeObserver(write);
-    observer.observe(el);
-    const header = document.querySelector('header');
-    if (header) observer.observe(header);
-    window.addEventListener('resize', write);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', write);
-    };
-  }, [setBox]);
-
   return (
     <section
-      ref={ref}
       id="home-statement"
       aria-label="Immortal Dragons"
       className={cn(

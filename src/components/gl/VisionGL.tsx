@@ -10,8 +10,7 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { useGSAP } from '@gsap/react';
 import { useLogoTextures } from '@/hooks/useLogoTextures';
-import { fitHeroScale, fitHeroToReserve, LOGO_PLANE_HEIGHT, PHONE_LOGO, svgInkSize } from './model/vision/heroFit';
-import { heroStatementBoxAtom } from './model/vision/heroReserve';
+import { fitHeroScale, LOGO_PLANE_HEIGHT, PHONE_LOGO, svgInkSize } from './model/vision/heroFit';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useAtomValue } from 'jotai';
 import { SVGLoader } from 'three-stdlib';
@@ -22,12 +21,10 @@ function DesktopVisionGL() {
   const { logoEnAspectRatio } = useLogoTextures();
   const modelRef = useRef<THREE.Group>(null);
 
-  const statement = useAtomValue(heroStatementBoxAtom);
-  // The wordmark (and the dragon with it) fits the frustum with a clear margin on every screen, and moves down (or,
-  // on short windows, also shrinks) so the ring and the dragon stay clear of the home statement at rest.
-  const { scale, offsetY } = useMemo(
-    () => fitHeroToReserve(size.width, size.height, LOGO_PLANE_HEIGHT * logoEnAspectRatio, LOGO_PLANE_HEIGHT, statement),
-    [size.width, size.height, logoEnAspectRatio, statement],
+  // The wordmark (and the dragon with it) fits the frustum with a clear margin on every screen.
+  const scale = useMemo(
+    () => fitHeroScale(size.width / size.height, LOGO_PLANE_HEIGHT * logoEnAspectRatio, LOGO_PLANE_HEIGHT),
+    [size.width, size.height, logoEnAspectRatio],
   );
 
   useGSAP(() => {
@@ -49,11 +46,9 @@ function DesktopVisionGL() {
   }, []);
 
   return (
-    <group position={[0, offsetY, 0]}>
-      <group ref={modelRef} scale={scale}>
-        <CenterLogo deck="desktop" />
-        <DragonModel deck="desktop" />
-      </group>
+    <group ref={modelRef} scale={scale}>
+      <CenterLogo deck="desktop" />
+      <DragonModel deck="desktop" />
     </group>
   );
 }
