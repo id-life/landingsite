@@ -33,7 +33,7 @@ export default function PodcastNavTabs() {
           </Link>
         ))}
       </div>
-      <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center mobile:pt-5">
+      <div className="hidden mobile:grid mobile:grid-cols-2 mobile:justify-center">
         {PODCAST_NAV_LIST.map((item) => {
           const isActive = search === item.id;
           const [english, chinese] = item.title.split(' ').reduce(

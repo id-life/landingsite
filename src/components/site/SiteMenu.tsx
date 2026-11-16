@@ -63,6 +63,8 @@ export default function SiteMenu({
     <Dialog
       anim="slide"
       isDismiss
+      // Focus starts on the first menu item, inside the sheet (its Subscribe and Close come first in the tab order).
+      initialFocus={2}
       showCloseButton={false}
       overlayClassName="bg-black/60 backdrop-blur-sm"
       open={open}

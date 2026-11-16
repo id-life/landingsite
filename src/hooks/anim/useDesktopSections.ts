@@ -231,7 +231,13 @@ export function useDesktopSections() {
       else {
         let dir = KEY_STEPS[event.key];
         if (!dir && event.key === ' ') {
-          if (target?.closest(ACTIVATABLE)) return; // Space activates a focused control
+          // A key pressed on a focused control belongs to the control. Space activates a button; on a link it does
+          // nothing, as on the original (its default, scrolling the page, would move the deck).
+          if (target?.closest('a[href]')) {
+            event.preventDefault();
+            return;
+          }
+          if (target?.closest(ACTIVATABLE)) return;
           dir = event.shiftKey ? -1 : 1;
         }
         if (!dir) return;

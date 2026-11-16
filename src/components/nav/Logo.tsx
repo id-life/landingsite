@@ -21,10 +21,13 @@ export enum LogoType {
  */
 export default function Logo({
   className,
+  markClassName,
   onClick,
   ...rest
 }: {
   className?: string;
+  /** Classes for the wordmark itself (the podcast pages' original header set it by width: 12.5 units, 124 px on phones). */
+  markClassName?: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 } & { [key: `data-${string}`]: string | undefined }) {
   return (
@@ -42,7 +45,12 @@ export default function Logo({
       )}
     >
       {/* In flow (not absolute), so the link box holds the wordmark on phones too. */}
-      <LogoSVGen className="h-10 w-auto mobile:h-5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px]" />
+      <LogoSVGen
+        className={clsx(
+          markClassName ??
+            'h-10 w-auto mobile:h-5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px]',
+        )}
+      />
     </Link>
   );
 }

@@ -28,6 +28,8 @@ type DialogProps = {
   isDismiss?: boolean;
   showCloseButton?: boolean;
   anim?: 'fade' | 'slide' | 'none';
+  /** Which tabbable element inside the dialog takes focus when it opens (FloatingFocusManager's initialFocus). */
+  initialFocus?: number;
 };
 
 function Dialog({
@@ -42,6 +44,7 @@ function Dialog({
   isDismiss = false,
   showCloseButton = true,
   anim = 'fade',
+  initialFocus = 0,
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const onChange = (status: boolean) => {
@@ -99,7 +102,7 @@ function Dialog({
         {isMounted && (
           <>
             <FloatingOverlay className={cn('z-[100] bg-tone-400/50 backdrop-blur', overlayClassName)} style={styles} />
-            <FloatingFocusManager context={context}>
+            <FloatingFocusManager context={context} initialFocus={initialFocus}>
               <div className={cn('fixed inset-0 z-[100] grid place-items-center', fixClassName)} style={styles}>
                 <div
                   className={cn('overflow-visible border border-tone-800 bg-white', className)}

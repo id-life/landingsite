@@ -7,7 +7,7 @@ import {
   mobileCurrentPageIndexAtom,
 } from '@/atoms';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
-import type { SectionSource } from '@/motion/sectionController';
+import { getSectionState, type SectionSource } from '@/motion/sectionController';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -42,8 +42,7 @@ export default function MobilePageArrows({ className }: PageArrowsProps) {
 
   return (
     <div className={cn('pointer-events-auto z-40 flex flex-col items-center gap-5', className)}>
-      {/* 44 px buttons, 8 px apart (WCAG 2.5.8 / Apple's 44 pt minimum). */}
-      <div className="flex-center order-1 gap-2 mobile:order-2">
+      <div className="flex-center order-1 gap-3 mobile:order-2">
         <ArrowItem isUp />
         {!isConnectPage && <ArrowItem />}
       </div>
@@ -103,15 +102,6 @@ export function useMobileSectionStep() {
   });
   stateRef.current = { currentPage, currentPageIndex, innerPageIndex, innerPageTotal, mobileNavChange, setInnerPageNavigateTo };
   const lastStepRef = useRef(0);
-  const pendingRef = useRef<boolean | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    },
-    [],
-  );
 
   return useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
     const run = (up: boolean) => {
@@ -127,22 +117,11 @@ export function useMobileSectionStep() {
       if (step.kind === 'inner') s.setInnerPageNavigateTo(step.index);
       else s.mobileNavChange(NAV_LIST[step.index], source);
     };
-    const wait = lastStepRef.current + STEP_SPACING_MS - performance.now();
-    if (wait <= 0 && !timerRef.current) {
-      run(isUp);
-      return;
-    }
-    pendingRef.current = isUp;
-    if (timerRef.current) return;
-    timerRef.current = setTimeout(
-      () => {
-        timerRef.current = null;
-        const pending = pendingRef.current;
-        pendingRef.current = null;
-        if (pending !== null) run(pending);
-      },
-      Math.max(0, wait),
-    );
+    // As the original: a tap while a step is still running (or within the spacing after one) is ignored, not
+    // queued, so two quick taps move one section on both decks.
+    if (getSectionState().phase === 'moving') return;
+    if (performance.now() - lastStepRef.current < STEP_SPACING_MS) return;
+    run(isUp);
   }, []);
 }
 
@@ -175,7 +154,8 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
       aria-label={label}
       className={cn(
         // 44 px visible circle; the ::before pseudo-element extends the touch target to 52 px.
-        'flex-center relative h-11 w-11 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm before:absolute before:-inset-1 before:content-[""]',
+        // The original's 40 px circles, 12 px apart; a 44 px hit area around each (tap-area), not a bigger circle.
+        'flex-center relative h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm tap-area',
         hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={() => step(Boolean(isUp))}
