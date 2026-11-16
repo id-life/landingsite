@@ -253,7 +253,7 @@ export function WorldMapBookDotContent({
                 <h4
                   className={cn(
                     'text-balance text-center font-semibold capitalize text-white',
-                    phone ? 'text-label' : 'text-lead',
+                    phone ? 'text-caption leading-4' : 'text-lead',
                   )}
                 >
                   <span className={CARD_TEXT_BACKING}>{bookTitle}</span>
@@ -263,7 +263,11 @@ export function WorldMapBookDotContent({
                     className={cn(phone ? 'size-2' : 'size-[max(1rem,12px)]', 'fill-data-sky', { 'fill-tone-400': !link })}
                   />
                   <p
-                    className={cn('ml-1 whitespace-nowrap text-caption font-medium text-data-sky', { 'text-tone-400': !link })}
+                    // Phone: the 144 px card clips its overflow and the caption no longer fits on one line at its 12 px
+                    // floor (the original's was 8 px), so it wraps inside the card instead of being cut.
+                    className={cn('ml-1 text-caption font-medium text-data-sky', phone ? 'text-center' : 'whitespace-nowrap', {
+                      'text-tone-400': !link,
+                    })}
                   >
                     {desc}
                   </p>

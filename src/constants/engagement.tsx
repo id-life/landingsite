@@ -81,12 +81,13 @@ export const MOBILE_MAP_SCALE = {
   // Content max width
   contentMaxWidth: 'max-w-[12rem]', // 192px
 
-  // Card title: the label role (14 px; RWD-01)
-  contentTitleClass: 'text-label',
+  // Card title: the caption role at the original's 12 px on its 16 px line, so the card (whose width the title sets)
+  // sits where the original's does at every step of the tour.
+  contentTitleClass: 'text-caption leading-4',
 
   // Extra sponsor section dimensions
   extraSponsorWidth: 'w-[12rem]', // 192px
-  extraSponsorTitleClass: 'text-label', // 14 px (RWD-01)
+  extraSponsorTitleClass: 'text-caption leading-4', // 12 px, as the original
   extraSponsorLogoSize: 'size-[10rem]', // 160px
   extraSponsorMarginTop: '-mt-3',
 };
