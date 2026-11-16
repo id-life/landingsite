@@ -42,6 +42,7 @@ interface CharacterRelationGraphProps {
 const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
   const { data } = props;
   const graphRef = useRef<RelationGraphExpose | null>(null);
+  const redrawRef = useRef(0);
   const settleRef = useRef<{ frame: number; timer: ReturnType<typeof setTimeout> | undefined }>({
     frame: 0,
     timer: undefined,
@@ -87,9 +88,11 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
 
   useEffect(() => {
     const watch = settleRef.current;
+    const redraw = redrawRef;
     return () => {
       cancelAnimationFrame(watch.frame);
       clearTimeout(watch.timer);
+      cancelAnimationFrame(redraw.current);
     };
   }, []);
 
@@ -206,6 +209,8 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     backgroundColor: 'transparent',
     allowShowMiniToolBar: false,
     disableZoom: false,
+    // The original's wheel step: relation-graph 2.1 zoomed 5 % a notch; 2.2 defaults to 10.
+    mouseWheelSpeed: 5,
     disableNodeClickEffect: true,
     disableLineClickEffect: true,
     // isMoveByParentNode: true,
@@ -230,7 +235,27 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
     },
   };
 
-  return <RelationGraph ref={graphRef} options={options} nodeSlot={CustomNode} onNodeDragEnd={onNodeDragEnd} />;
+  // Touch pan and pinch (relation-graph-react 2.2): the library moves and zooms the canvas, but on a touch drag its
+  // view is not redrawn until the gesture ends. Ask for a redraw once a frame while the canvas moves (the original's
+  // 2.1 redrew on every move), so one finger pans and two zoom live, as on the original.
+  const onCanvasDragging = useCallback(() => {
+    if (redrawRef.current) return;
+    redrawRef.current = requestAnimationFrame(() => {
+      redrawRef.current = 0;
+      graphRef.current?.getInstance()?.dataUpdated();
+    });
+  }, []);
+
+  return (
+    <RelationGraph
+      ref={graphRef}
+      options={options}
+      nodeSlot={CustomNode}
+      onNodeDragEnd={onNodeDragEnd}
+      onCanvasDragging={onCanvasDragging}
+      onZoomEnd={onCanvasDragging}
+    />
+  );
 };
 export default memo(CharacterRelationGraph);
 
