@@ -6,7 +6,7 @@ import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import type { MouseEvent } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import LinkTracker from './LinkTracker';
 import MenuToggle from './MenuToggle';
 import { isSection, SITE_NAV, type SiteNavItem } from './site-nav';
@@ -41,6 +41,11 @@ export type SiteHeaderProps = {
   inExperience?: boolean;
   onLogoClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   onItemClick?: (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => void;
+  /**
+   * The page's own links beside the logo, as its original header had them (the podcast's two show tabs). On the
+   * desktop deck they sit in the bar's row; on phones they wrap to a row of their own under it, as on the original.
+   */
+  pageLinks?: ReactNode;
 };
 
 /**
@@ -63,6 +68,7 @@ export default function SiteHeader({
   inExperience = false,
   onLogoClick,
   onItemClick,
+  pageLinks,
 }: SiteHeaderProps) {
   const overlay = variant === 'overlay';
   // Without handlers (server-rendered pages) the tracker reads these attributes; with them the caller tracks.
@@ -95,6 +101,7 @@ export default function SiteHeader({
       <div className={live}>
         <Logo onClick={onLogoClick} {...trackNav(NAV.vision_page.id, 'logo')} />
       </div>
+      {pageLinks && <div className="flex items-center mobile:order-last mobile:basis-full">{pageLinks}</div>}
       {/* The menu is the experience's only: the original content pages (news, podcast, the tool pages) show the logo
           and their action, and no menu labels (the owner's rule: no label a page did not show). */}
       {overlay && (
@@ -168,14 +175,17 @@ export default function SiteHeader({
             Subscribe
           </SubscribeTrigger>
         )}
-        <MenuToggle
-          currentId={currentId}
-          inExperience={inExperience}
-          // 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px.
-          className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex"
-          openIcon={<MenuOpenSVG className="h-10" />}
-          closeIcon={<MenuCloseSVG aria-hidden="true" className="h-10" />}
-        />
+        {/* The phone menu; the original tool pages (action 'exit') show only the logo and ID.LIFE, so no menu there. */}
+        {action !== 'exit' && (
+          <MenuToggle
+            currentId={currentId}
+            inExperience={inExperience}
+            // 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px.
+            className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex"
+            openIcon={<MenuOpenSVG className="h-10" />}
+            closeIcon={<MenuCloseSVG aria-hidden="true" className="h-10" />}
+          />
+        )}
       </div>
     </header>
   );

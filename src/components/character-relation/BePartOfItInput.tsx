@@ -67,7 +67,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             // errors and the First Impression row caption.
             'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-text text-body font-semibold leading-5 tracking-normal',
             'disabled:cursor-not-allowed data-[error=true]:border-accent',
-            'mobile:w-full medium:w-full',
+            'mobile:w-full medium:w-full shortScreen:w-[20rem]',
             className,
           )}
           autoComplete={autoComplete}

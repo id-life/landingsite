@@ -11,7 +11,7 @@ import { playMenuItems } from '@/motion/menu';
 import { getSectionState, goToSection } from '@/motion/sectionController';
 import { useRouter } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
-import { ABOUT_LINK, isPlainClick, isSection, NEWS_LINK, PODCAST_LINK, SITE_NAV } from './site-nav';
+import { ABOUT_LINK, isPlainClick, isSection, SITE_NAV } from './site-nav';
 import SubscribeTrigger from './SubscribeTrigger';
 
 const ITEM = 'flex-center mobile-nav-item relative py-6 text-white opacity-0 [@media(max-height:740px)]:py-4';
@@ -58,7 +58,6 @@ export default function SiteMenu({
   };
 
   const sections = SITE_NAV.filter(isSection);
-  const pages = [NEWS_LINK, PODCAST_LINK, ABOUT_LINK];
 
   return (
     <Dialog
@@ -85,12 +84,9 @@ export default function SiteMenu({
               <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
             </button>
           </div>
+          {/* The seven sections only, as the original phone menus listed (no News, Podcast or About). */}
           <nav aria-label="Sections" className="mt-16 font-menu">
             {sections.map((item) => (
-              <MenuLink key={item.id} item={item} current={currentId === item.id} onClick={onItem} />
-            ))}
-            <div className="mx-auto my-2 h-px w-12 bg-white/30" />
-            {pages.map((item) => (
               <MenuLink key={item.id} item={item} current={currentId === item.id} onClick={onItem} />
             ))}
           </nav>
