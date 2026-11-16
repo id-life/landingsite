@@ -350,7 +350,7 @@ const SponsorItem = memo(
         <h4
           className={cn(
             '-mt-5 whitespace-pre-wrap text-center font-semibold capitalize text-white',
-            phone ? 'text-label' : 'text-balance text-lead',
+            phone ? 'text-caption leading-4' : 'text-balance text-lead',
           )}
         >
           <span className={CARD_TEXT_BACKING}>{alt}</span>
