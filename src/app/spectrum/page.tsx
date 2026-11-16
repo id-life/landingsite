@@ -1,5 +1,11 @@
 import HomeEntry from '@/app/(home)/_components/HomeEntry';
+import SpectrumSEO from './_components/SpectrumSEO';
 
 export default function Page() {
-  return <HomeEntry />;
+  return (
+    <>
+      <SpectrumSEO />
+      <HomeEntry />
+    </>
+  );
 }

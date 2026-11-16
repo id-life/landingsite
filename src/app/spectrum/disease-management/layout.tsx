@@ -54,6 +54,7 @@ export default function DiseaseManagementLayout({ children }: { children: ReactN
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumb]) }} />
+      <h1 className="sr-only">{jsonLd.name as string}</h1>
       <DMStyle />
       <SpectrumHeader className="animate-fade-in" />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">

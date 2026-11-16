@@ -17,10 +17,10 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/news/immortal-dragons-news-and-updates' },
-  title: 'Immortal Dragons News and Updates',
+  title: `${articleTitle} | Immortal Dragons`,
   description: articleDescription,
   openGraph: {
-    title: 'Immortal Dragons News and Updates',
+    title: `${articleTitle} | Immortal Dragons`,
     siteName: 'Immortal Dragons',
     description: articleDescription,
     url: articleUrl,
