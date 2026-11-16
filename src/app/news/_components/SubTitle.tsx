@@ -19,8 +19,12 @@ export default function SubTitle() {
         src="/imgs/news/news-logo.webp"
         alt=""
       />
-      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8">Join our longevity circle</h2>
-      <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5">
+      {/* Medium windows: smaller than the original's 1440 size (rule 2 allows it), so the heading and line keep the
+          left half and the dragon the right, as on the original. */}
+      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8 medium:text-2xl">
+        Join our longevity circle
+      </h2>
+      <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5 medium:text-sm/6">
         For <span className="text-accent">priority</span> access to pioneer research
       </p>
       <button

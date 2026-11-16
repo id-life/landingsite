@@ -143,16 +143,16 @@ function DeckSpectrum() {
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
-        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 [@media(max-height:860px)]:pb-2">
+        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
           <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
         </div>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
           <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
         </div>
-        {/* Up to 1100 px tall the gaps between the three blocks tighten (and the padding under 860), so the logo wall
-            clears the bottom controls. */}
-        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 [@media(max-height:860px)]:py-1">
-          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 [@media(max-height:1100px)]:gap-4">
+        {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
+            the padding under 860), so the logo wall clears the bottom controls. From 1200 px the original's spacing. */}
+        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
+          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
             <SpectrumInitiatives
               items={initiativeItems}
               onSelect={selectInitiative}
