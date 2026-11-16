@@ -8,7 +8,7 @@ export default function ReportM03({ deck }: { deck: TwinDeck }) {
       deck={deck}
       code="C03"
       title="Fitness Fitness Fitness "
-      period={{ en: '3 Months', zh: '3个月后' }}
+      period={{ en: '3 MONTHS', zh: '3个月后' }}
       tags={['3 Months', 'Structured fitness', 'Precision-Controlled']}
     >
       {(isChinese) =>

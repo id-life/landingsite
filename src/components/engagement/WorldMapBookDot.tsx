@@ -163,8 +163,7 @@ export function WorldMapBookDotPoint({
 }
 
 /**
- * The book card. On the scrolled deck it hangs centred under its dot (it used to start at the dot and run right, so the
- * open Network State cover sat over the dimmed "Abu Dhabi, UAE" label at 2.9:1); the phone card is unchanged.
+ * The book card: it hangs from its dot as on the original, a little right of it (scrolled deck) or at it (phone).
  */
 export function WorldMapBookDotContent({
   deck,
@@ -227,7 +226,7 @@ export function WorldMapBookDotContent({
               exit="hidden"
               className={cn(
                 'absolute flex flex-col items-center overflow-hidden font-display',
-                phone ? 'left-0 top-0 w-[9rem] pt-4' : 'left-3 top-5 w-[max(15.5rem,186px)] -translate-x-1/2 pt-6',
+                phone ? 'left-0 top-0 w-[9rem] pt-4' : 'left-2 top-5 w-[max(15.5rem,186px)] pt-6',
               )}
               onMouseLeave={handleContentMouseLeave}
             >

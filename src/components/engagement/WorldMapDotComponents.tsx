@@ -30,10 +30,10 @@ export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
 };
 
 /**
- * RWD-06: on coarse pointers a map point's box is at least 44x44. The box grows 12 px above the dot and the content is
- * padded back down by the same amount, so the dot and its label stay exactly on their coordinate.
+ * RWD-06: on coarse pointers a map point is hit within 44 x 44 px around it (tap-area); its box and look are the
+ * original's.
  */
-export const MAP_POINT_TAP_CLASS = 'coarse:-mt-[12px] coarse:min-h-[44px] coarse:min-w-[44px] coarse:pt-[12px]';
+export const MAP_POINT_TAP_CLASS = 'tap-area';
 
 /** A badge under an open dot's label (Conference, Sponsorship, Research, Translation) on the scrolled deck. */
 export const BADGE_CLASS =

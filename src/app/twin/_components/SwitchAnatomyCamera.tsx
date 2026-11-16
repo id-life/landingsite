@@ -46,7 +46,7 @@ const VIEWS: Partial<Record<PredictionModel, [Icon, AnatomyCamera][]>> = {
  * The anatomy camera picker, one component for both decks (RWD-02; it was SwitchAnatomyCamera and its mobile twin).
  * By deck: 32 px icons above the bottom edge (desktop) or 24 px icons higher up (phone). The desktop deck's 3D views
  * also move the camera (SWITCH_CAMERA); the phone's stills follow currentAnatomyCameraAtom. RWD-06: every icon has a
- * 44x44 box on coarse pointers.
+ * 44 x 44 px hit area on coarse pointers (tap-area); sizes and gaps are the original's.
  */
 export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
   const phone = deck === 'phone';
@@ -67,9 +67,13 @@ export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
       className={clsx('absolute left-1/2 z-20 -translate-x-1/2', phone ? 'bottom-44' : 'bottom-[max(8rem,96px)]')}
     >
       {currentModelType === ModelType.Anatomy && views && (
-        <div className={clsx('flex bg-white/10 backdrop-blur', phone ? 'gap-4 p-2' : 'gap-7 p-3', 'coarse:gap-2')}>
+        <div className={clsx('flex bg-white/10 backdrop-blur', phone ? 'gap-4 p-2' : 'gap-7 p-3')}>
           {views.map(([Icon, camera]) => (
-            <span key={camera} className="flex-center cursor-pointer tap" onClick={() => handleSwitchAnatomyCamera(camera)}>
+            <span
+              key={camera}
+              className="flex-center relative cursor-pointer tap-area"
+              onClick={() => handleSwitchAnatomyCamera(camera)}
+            >
               <Icon
                 className={clsx(
                   phone ? 'w-6' : 'h-[32px] w-[32px]',

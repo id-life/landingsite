@@ -13,7 +13,7 @@ export default function ModelReport() {
       <div
         className={`twin-title-item twin-title-M1 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
       >
-        <p className="text-title-sm font-semibold">30 Years</p>
+        <p className="text-title-sm font-semibold">30 YEARS</p>
         <div className="mt-5 text-body font-medium">
           Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s
           activities. Long-term irregular living patterns, often staying up until ... <ReportM01 deck="desktop" />
@@ -25,7 +25,7 @@ export default function ModelReport() {
       <div
         className={`twin-title-item twin-title-M2 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
       >
-        <p className="text-title-sm font-semibold">5 Years</p>
+        <p className="text-title-sm font-semibold">5 YEARS</p>
         <div className="mt-5 text-body font-medium">
           Balanced and healthy lifestyle. Starts the day at 7 AM with 500ml of warm water, followed by 15 minutes of room
           tidying and simple stretches before arriving at ...
@@ -38,7 +38,7 @@ export default function ModelReport() {
       <div
         className={`twin-title-item twin-title-M3 absolute bottom-[max(8rem,96px)] z-20 max-w-[max(31.25rem,375px)] ${TWIN_OFFSTAGE_CLASS}`}
       >
-        <p className="text-title-sm font-semibold">3 Months</p>
+        <p className="text-title-sm font-semibold">3 MONTHS</p>
         <div className="mt-5 text-body font-medium">
           Living State: Wakes up at 7 AM, starts with 10-minute posture assessment and weight recording,Performs 30 minutes of
           fasted cardio, mainly running (maintaining heart ...

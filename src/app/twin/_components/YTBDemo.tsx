@@ -9,8 +9,8 @@ import type { TwinDeck } from '@/app/twin/twin-deck';
 /**
  * The DEMO link to the Digital Twin video, one component for both decks (RWD-02; it was YTBDemo and its mobile twin).
  * By deck: a framed 196 px button at the bottom left (desktop), or a text link under the headline (phone). The label
- * is the label role, in title case rather than capitals (RWD-01's 25 % uppercase bar; same word); the link is at least
- * 44 px tall on coarse pointers (RWD-06).
+ * is the label role (RWD-01), in the original's capitals; on coarse pointers it is hit within 44 px (tap-area), its
+ * box is the original's (RWD-06).
  */
 export default function YTBDemo({ deck }: { deck: TwinDeck }) {
   const handleClick = (e: MouseEvent) => {
@@ -25,12 +25,12 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
           href={DigitalTwinYoutubeLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex h-[28px] items-center tap"
+          className="group relative flex h-[28px] items-center tap-area"
           onClick={handleClick}
         >
           <div className="flex-center gap-2 text-label font-medium">
             <YoutubeSVG className="w-4 fill-black" />
-            Demo
+            DEMO
           </div>
           <img src="/imgs/twin/arrow.webp" alt="" className="ml-1 h-2 w-3" />
         </a>
@@ -46,12 +46,12 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="group relative flex h-[max(3.125rem,37.5px)] w-[max(12.25rem,147px)] items-center justify-between px-5 tap"
+        className="group relative flex h-[max(3.125rem,37.5px)] w-[max(12.25rem,147px)] items-center justify-between px-5 tap-area"
       >
         <ClipBorderSVG className="absolute left-0 top-0 h-full w-full fill-black group-hover:fill-accent" />
         <div className="flex-center gap-2 text-label font-semibold group-hover:text-accent">
           <YoutubeSVG key="ytb-demo" className="w-[max(1.25rem,15px)] fill-black group-hover:fill-accent" />
-          Demo
+          DEMO
         </div>
         <RightSVG className="fill-black stroke-black group-hover:fill-accent group-hover:stroke-accent" />
       </a>

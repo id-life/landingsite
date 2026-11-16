@@ -27,12 +27,19 @@ const CARD_TEXT = ['h3', 'h4', 'p', 'img', 'video'].map((t) => `[class*="dot-con
  * labels at their 12 px floor ran into each other. Instead of shrinking text, each label takes a side:
  * 1. the open dot (its label, badges and Talk link) and the open card (its text, photos and logos) are placed first
  *    and never move;
- * 2. every other label, in data order (meetings, books, sponsors), keeps its place to the right of its dot if that
- *    box is free, else moves to the left of its dot if that box is free, else is hidden until its dot is tapped
- *    (an open dot always shows its label).
+ * 2. every other label, in data order (meetings, books, sponsors), takes the first free place among: right of its dot
+ *    (the original), left of it, a line above or below on the right, then on the left; with none free it is hidden
+ *    until its dot is tapped (an open dot always shows its label).
  * The dots themselves always show and stay tappable. Taller windows are left exactly as they were.
+ *
+ * mode 'desktop' (the scrolled deck's full map): nothing is hidden or moved, except a label that would run past the
+ * window's right edge, which takes the left of its dot. 'off': the panning strip, where the edge scrolls.
  */
-export function useCompactLabelRule(rootRef: RefObject<HTMLElement | null>, deps: readonly unknown[]) {
+export function useCompactLabelRule(
+  rootRef: RefObject<HTMLElement | null>,
+  deps: readonly unknown[],
+  mode: 'phone' | 'desktop' | 'off' = 'phone',
+) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -50,7 +57,12 @@ export function useCompactLabelRule(rootRef: RefObject<HTMLElement | null>, deps
       const points = [...root.querySelectorAll<HTMLElement>(POINTS)];
       const labels = points.map((p) => p.querySelector<HTMLElement>('.map-label'));
       labels.forEach((l) => l && reset(l));
-      if (!mq.matches) return;
+      // Phone deck at compact heights: no two labels collide. Desktop deck (not the panning strip): a label that
+      // would run past the window's right edge takes the left of its dot instead (it was cut at 1180 px, where the
+      // label's type role is larger than the original's scaled 10 px). Otherwise labels stay exactly as designed.
+      const collide = mode === 'phone' && mq.matches;
+      const edge = mode === 'desktop';
+      if (!collide && !edge) return;
 
       const placed: Box[] = [...root.querySelectorAll(CARD_TEXT)].filter(shown).map(box);
       const active = points.filter((p) => p.dataset.active === 'true');
@@ -64,23 +76,36 @@ export function useCompactLabelRule(rootRef: RefObject<HTMLElement | null>, deps
         const dot = p.querySelector('.pulse-dot');
         if (!label || !dot || p.dataset.active === 'true' || !shown(label)) return;
         const right = box(label);
-        if (!placed.some((b) => hits(b, right))) {
-          placed.push(right);
-          return;
-        }
         const d = box(dot);
         const pr = box(p);
-        const width = right.right - right.left;
-        const left: Box = { left: d.left - GAP - width, right: d.left - GAP, top: right.top, bottom: right.bottom };
-        if (!placed.some((b) => hits(b, left))) {
-          label.style.position = 'absolute';
-          label.style.left = `${left.left - pr.left}px`;
-          label.style.top = `${right.top - pr.top}px`;
-          label.style.alignItems = 'flex-end';
-          placed.push(left);
+        const w = right.right - right.left;
+        const h = right.bottom - right.top;
+        const leftX = d.left - GAP - w;
+        // Candidate places, in order: right of the dot (the original), left of it, then a line above or below on
+        // either side.
+        const candidates: [number, number][] = [
+          [right.left, right.top],
+          [leftX, right.top],
+          [right.left, right.top - h],
+          [right.left, right.top + h],
+          [leftX, right.top - h],
+          [leftX, right.top + h],
+        ];
+        const inView = (b: Box) => !edge || b.right <= innerWidth - 2;
+        for (const [x, y] of candidates) {
+          const b: Box = { left: x, top: y, right: x + w, bottom: y + h };
+          if ((collide && placed.some((o) => hits(o, b))) || !inView(b)) continue;
+          if (x !== right.left || y !== right.top) {
+            label.style.position = 'absolute';
+            label.style.left = `${x - pr.left}px`;
+            label.style.top = `${y - pr.top}px`;
+            if (x === leftX) label.style.alignItems = 'flex-end';
+          }
+          placed.push(b);
           return;
         }
-        label.style.visibility = 'hidden';
+        // Edge mode never hides; compact mode hides a label with no free place until its dot is tapped.
+        if (collide) label.style.visibility = 'hidden';
       });
     };
 

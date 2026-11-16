@@ -28,7 +28,7 @@ const BORDER_ANIMATION_CONFIG = { scaleDuration: 1.5, scaleValue: 1.1 };
  *   stage for the other model (SWITCH_MODEL), timing the load (modelLoadingItemAtom);
  * - phone: two 28 px icons stacked at the right edge, scaling with the model picker's border; switching sets the model
  *   type, which picks the clip or still.
- * RWD-06: each icon has a 44x44 box on coarse pointers.
+ * RWD-06: each icon is hit within 44 x 44 px on coarse pointers (tap-area); the icons keep their size and spacing.
  */
 export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
   const phone = deck === 'phone';
@@ -79,14 +79,14 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
       )}
     >
       <motion.div
-        className={phone ? 'grid grid-rows-2 gap-3 coarse:gap-0' : 'grid grid-cols-2 gap-10'}
+        className={phone ? 'grid grid-rows-2 gap-3' : 'grid grid-cols-2 gap-10'}
         initial={{ scale: 1 }}
         animate={borderControls}
       >
-        <div className="cursor-pointer tap" onClick={() => handleModelTypeChange(ModelType.Skin)}>
+        <div className="relative cursor-pointer tap-area" onClick={() => handleModelTypeChange(ModelType.Skin)}>
           <SkinSVG className={iconClass(ModelType.Skin)} />
         </div>
-        <div className="cursor-pointer tap" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
+        <div className="relative cursor-pointer tap-area" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
           <AnatomySVG className={iconClass(ModelType.Anatomy)} />
         </div>
       </motion.div>
