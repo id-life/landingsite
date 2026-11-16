@@ -73,7 +73,7 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
         ))}
       </div>
       {/* The email is a mailto link (it was the uppercase literal CONTACT@ID.LIFE in a span). */}
-      <address className="mt-4 flex flex-col gap-1.5 font-display text-caption font-bold not-italic">
+      <address className="mt-4 flex flex-col gap-1.5 font-display text-caption font-bold uppercase not-italic">
         <div className="flex items-center gap-1">
           <HomeSVG aria-hidden="true" className="size-5" />
           <span>{ORG_ADDRESS_TEXT}</span>

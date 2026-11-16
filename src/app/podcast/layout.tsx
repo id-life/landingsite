@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import SiteHeader from '@/components/site/SiteHeader';
 import PodcastNavTabs from '@/app/podcast/_components/PodcastNavTabs';
-import ContentPageContact from '@/components/layout/footer/ContentPageContact';
 import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 
 // A server component: it was a client layout (useIsMobile), which made every podcast page client code.
@@ -20,8 +19,6 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
           {children}
         </div>
       </div>
-      {/* The page footer: contact row and the About link (CON-01). Server-rendered; only the popup loads on first use. */}
-      <ContentPageContact />
       <SubscribePopup />
     </div>
   );
