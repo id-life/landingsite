@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useEffectEvent } from 'react';
 import * as THREE from 'three';
 import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM1';
@@ -127,12 +127,6 @@ const Model1In = forwardRef<ModelRef>(function ({}, ref) {
   };
 
   const moduleRun = useRef(0);
-  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
-  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed.
-  useEffect(() => {
-    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
-  }, []);
 
   const switchAnatomyModule = (index: AnatomyCamera) => {
     // A newer view stops this one's staged changes (one object per frame) instead of being overwritten by them.
@@ -159,6 +153,16 @@ const Model1In = forwardRef<ModelRef>(function ({}, ref) {
       changeArrayData(otherSystem, 'visible', false, 0, live);
     }
   };
+
+  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
+  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed.
+  // useEffectEvent: the effect runs once, on mount, and reads the latest switchAnatomyModule and marked view then.
+  const showMarkedView = useEffectEvent(() => {
+    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
+  });
+  useEffect(() => {
+    showMarkedView();
+  }, []);
 
   useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
     switchAnatomyModule(payload.index);

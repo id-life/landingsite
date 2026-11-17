@@ -1,3 +1,4 @@
+import { ACTIVE_DOT_SCALE } from '@/hooks/anim/cardFit';
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
@@ -27,7 +28,7 @@ import { DURATION, EASE } from '@/motion/tokens';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
-  active: { scale: 1.2 },
+  active: { scale: ACTIVE_DOT_SCALE },
 };
 
 /**

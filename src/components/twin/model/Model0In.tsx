@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useEffectEvent } from 'react';
 import * as THREE from 'three';
 import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM0';
@@ -92,23 +92,6 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
   };
 
   const moduleRun = useRef(0);
-  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
-  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed. This model is
-  // the one every view's camera is framed on (the stage fits the camera to its scenes), so it also frames the camera
-  // for that view if nothing has framed it yet (fittedTwinView): pressed before the mount, the view's own camera move
-  // found no scene to fit and did nothing, and the stage's late framing gives up if this model takes over a second. It
-  // waits two frames, until <Center> has placed the model; framed only once, from the camera a slow press starts from.
-  useEffect(() => {
-    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
-    let frame = requestAnimationFrame(() => {
-      frame = requestAnimationFrame(() => {
-        const view = jotaiStore.get(currentAnatomyCameraAtom);
-        if (fittedTwinView() !== view) eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: view } });
-      });
-    });
-    return () => cancelAnimationFrame(frame);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
-  }, []);
 
   const switchAnatomyModule = (index: AnatomyCamera) => {
     // A newer view stops this one's staged changes (one object per frame) instead of being overwritten by them.
@@ -207,6 +190,27 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
       changeArrayData(otherSystem, 'visible', false, 0, live);
     }
   };
+
+  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
+  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed. This model is
+  // the one every view's camera is framed on (the stage fits the camera to its scenes), so it also frames the camera
+  // for that view if nothing has framed it yet (fittedTwinView): pressed before the mount, the view's own camera move
+  // found no scene to fit and did nothing, and the stage's late framing gives up if this model takes over a second. It
+  // waits two frames, until <Center> has placed the model; framed only once, from the camera a slow press starts from.
+  // useEffectEvent: the effect runs once, on mount, and reads the latest switchAnatomyModule and marked view then.
+  const showMarkedView = useEffectEvent(() => {
+    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
+  });
+  useEffect(() => {
+    showMarkedView();
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        const view = jotaiStore.get(currentAnatomyCameraAtom);
+        if (fittedTwinView() !== view) eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: view } });
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEventBus(MessageType.SWITCH_ANATOMY_MODULE, (payload: { index: AnatomyCamera }) => {
     switchAnatomyModule(payload.index);

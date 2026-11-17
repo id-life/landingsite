@@ -3,7 +3,19 @@ import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
-import { createContext, MouseEvent, useContext, useLayoutEffect, useState, type Ref, type RefObject } from 'react';
+import {
+  createContext,
+  MouseEvent,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type Ref,
+  type RefObject,
+} from 'react';
+import { cutTapSquare, polygonClipPath, type Point } from './tapCut';
 import { createPortal } from 'react-dom';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
@@ -37,11 +49,20 @@ export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
  * point or label is always above any tap area and is hit where it is drawn; an area only takes the taps around a point
  * that land on nothing else.
  */
-export const MapHitLayerContext = createContext<HTMLElement | null>(null);
+export type MapHitLayer = {
+  /** The layer the tap areas are portalled into. */
+  layer: HTMLElement | null;
+  /** Every point's centre in the map, by tap area, so each area can be cut at the half-way line to its neighbours. */
+  centres: Readonly<Record<string, Point>>;
+  register: (id: string, centre: Point | null) => void;
+};
+export const MapHitLayerContext = createContext<MapHitLayer>({ layer: null, centres: {}, register: () => {} });
 
 /**
  * A point's 44 x 44 px tap area, centred on the drawn point, in the hit layer under every dot (coarse pointers only).
  * left/top are the dot's place in the map; pointRef is the point's box (PulseDot), read for its centre in the dot.
+ * Where a neighbour's square overlaps it, the square is cut at the half-way line to that neighbour (cutTapSquare), so a
+ * tap between two points goes to the nearer one instead of to the one drawn later.
  */
 export function MapPointHit({
   left,
@@ -54,19 +75,46 @@ export function MapPointHit({
   pointRef: RefObject<HTMLDivElement | null>;
   onClick: (e: MouseEvent) => void;
 }) {
-  const layer = useContext(MapHitLayerContext);
-  const [centre, setCentre] = useState<[number, number] | null>(null);
+  const { layer, centres, register } = useContext(MapHitLayerContext);
+  const id = useId();
+  const [centre, setCentre] = useState<Point | null>(null);
   useLayoutEffect(() => {
     const point = pointRef.current;
     if (!point) return;
+    // The drawn point's centre (its first circle), from the dot's own box: the point's box is 2 px off it on the phone.
+    // A dot scaled up while open would skew the reading, so the box is read only from a dot at rest (scale 1).
+    const dot = point.offsetParent as HTMLElement | null;
+    const circle = point.querySelector('circle');
+    const dotBox = dot?.getBoundingClientRect();
+    const circleBox = circle?.getBoundingClientRect();
+    const atRest = dot && dotBox && Math.abs(dotBox.width - dot.offsetWidth) < 0.5;
+    if (atRest && circleBox && circleBox.width > 0) {
+      setCentre([
+        left + circleBox.left + circleBox.width / 2 - dotBox.left,
+        top + circleBox.top + circleBox.height / 2 - dotBox.top,
+      ]);
+      return;
+    }
     setCentre([left + point.offsetLeft + point.offsetWidth / 2, top + point.offsetTop + point.offsetHeight / 2]);
   }, [left, top, pointRef]);
+  useEffect(() => {
+    register(id, centre);
+    return () => register(id, null);
+  }, [id, centre, register]);
+  const clipPath = useMemo(() => {
+    if (!centre) return undefined;
+    const others = Object.entries(centres)
+      .filter(([key]) => key !== id)
+      .map(([, c]) => c);
+    const cut = cutTapSquare(centre, others, 22);
+    return cut ? polygonClipPath(cut) : undefined;
+  }, [centre, centres, id]);
   if (!layer || !centre) return null;
   return createPortal(
     <span
       aria-hidden
       className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
-      style={{ left: `${centre[0]}px`, top: `${centre[1]}px` }}
+      style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, clipPath }}
       onClick={onClick}
     />,
     layer,

@@ -1,4 +1,11 @@
-import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, toggleDotIndex } from '@/atoms/engagement';
+import {
+  activeBookDotAtom,
+  activeMeetingDotAtom,
+  activeSponsorDotAtom,
+  toggleDotIndex,
+  tourOpenedDotAtom,
+} from '@/atoms/engagement';
+import { jotaiStore } from '@/atoms/store';
 import { useAtom } from 'jotai';
 import { useThrottle } from '../useThrottle';
 import { useCallback } from 'react';
@@ -46,35 +53,39 @@ export function useEngagementClickPoint(needTrack = true) {
 
   const handleClickPoint = useCallback(
     (type: EngagementClickPointType, index: number, openState?: boolean) => {
+      // The open card as it is now (the store), not as this render saw it: the tour may have opened or closed one since.
+      const store = jotaiStore;
+      const now = {
+        meeting: store.get(activeMeetingDotAtom),
+        book: store.get(activeBookDotAtom),
+        sponsor: store.get(activeSponsorDotAtom),
+      };
+      // A tap on the point of the card the tour opened keeps it open (the tour is stopped by the same touch).
+      const tour = store.get(tourOpenedDotAtom);
+      const keep = openState === undefined && tour?.type === type && tour.index === index;
+      if (tour) store.set(tourOpenedDotAtom, null);
+      const want = keep ? true : openState;
       if (type === 'meeting') {
-        const newState = openState === undefined ? toggleDotIndex(index, activeMeetingDot) : openState ? index : null;
+        const newState = want === undefined ? toggleDotIndex(index, now.meeting) : want ? index : null;
         setActiveMeetingDot(newState);
         setActiveBookDot(null);
         setActiveSponsorDot(null);
         newState !== null && trackEngagementEvent(type, newState, 'click');
       } else if (type === 'book') {
-        const newState = openState === undefined ? toggleDotIndex(index, activeBookDot) : openState ? index : null;
+        const newState = want === undefined ? toggleDotIndex(index, now.book) : want ? index : null;
         setActiveBookDot(newState);
         setActiveMeetingDot(null);
         setActiveSponsorDot(null);
         newState !== null && trackEngagementEvent(type, newState, 'click');
       } else if (type === 'sponsor') {
-        const newState = openState === undefined ? toggleDotIndex(index, activeSponsorDot) : openState ? index : null;
+        const newState = want === undefined ? toggleDotIndex(index, now.sponsor) : want ? index : null;
         setActiveSponsorDot(newState);
         setActiveMeetingDot(null);
         setActiveBookDot(null);
         newState !== null && trackEngagementEvent(type, newState, 'click');
       }
     },
-    [
-      activeMeetingDot,
-      activeBookDot,
-      activeSponsorDot,
-      setActiveMeetingDot,
-      setActiveBookDot,
-      setActiveSponsorDot,
-      trackEngagementEvent,
-    ],
+    [setActiveMeetingDot, setActiveBookDot, setActiveSponsorDot, trackEngagementEvent],
   );
 
   const handleMouseEnterCallback = useCallback(

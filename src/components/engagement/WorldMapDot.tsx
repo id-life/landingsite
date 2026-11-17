@@ -1,3 +1,4 @@
+import { ACTIVE_DOT_SCALE } from '@/hooks/anim/cardFit';
 import { activeMeetingDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
@@ -26,7 +27,7 @@ import { track, slugId, youtubeId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
-  active: { scale: 1.2 },
+  active: { scale: ACTIVE_DOT_SCALE },
 };
 
 /**
