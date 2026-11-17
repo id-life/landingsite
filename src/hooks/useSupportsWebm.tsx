@@ -1,6 +1,5 @@
 import { judgeIsWebView } from '@/utils';
 import { useMemo } from 'react';
-import { isIOS } from 'react-device-detect';
 import { useIsMounted } from './useIsMounted';
 
 /**
@@ -10,12 +9,15 @@ import { useIsMounted } from './useIsMounted';
 export const useSupportsWebm = (): boolean => {
   const isMounted = useIsMounted();
 
-  const isWebView = useMemo(() => {
-    if (isMounted) return judgeIsWebView();
-    return false;
+  // iOS and in-app web views do not play these webm files. iOS is read from the user agent as the device-detect
+  // package did (iPhone, iPad, iPod, and iPadOS, which reports a Mac with touch points), without the package.
+  const { isWebView, isIOS } = useMemo(() => {
+    if (!isMounted) return { isWebView: false, isIOS: false };
+    const ua = navigator.userAgent;
+    const ios = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    return { isWebView: judgeIsWebView(), isIOS: ios };
   }, [isMounted]);
 
-  // Safari 和 WebView 环境通常不支持 webm 格式
   const supportsWebm = !isIOS && !isWebView;
 
   return supportsWebm;

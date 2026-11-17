@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { Group } from 'three';
 import gsap from 'gsap';
 import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
-import { isMobile } from 'react-device-detect';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 import { u } from '@/utils/layout-unit';
 
 /** The hold after Connect's rest label (see restAndHold). */
@@ -96,7 +96,10 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.scroll-title');
 
-    gsap.to('.page-footer-contact', { bottom: isMobile ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
+    // The phone deck's panel floats 5 units above the bottom edge (it read the user agent before; the deck is the
+    // device profile's, RWD-02).
+    const phoneDeck = window.matchMedia(PHONE_TREE_QUERY).matches;
+    gsap.to('.page-footer-contact', { bottom: phoneDeck ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 0, duration: DURATION.moderate });
   };
 

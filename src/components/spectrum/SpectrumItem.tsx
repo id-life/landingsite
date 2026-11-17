@@ -51,7 +51,14 @@ export const SpectrumLink = memo(
         <img src={loadImage ? icon : NO_IMAGE} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
       </div>
     ) : (
-      <div className={cn('relative flex items-center gap-1', hasLink ? 'cursor-pointer' : 'cursor-default')}>
+      // A text link is its words: the blank part of its line takes no press (a paper's line is as wide as its column,
+      // and "more" moves away from a pointer that then sat on that blank). Only the words' own boxes take pointer
+      // events, with a little air above and below so that each line's band is whole (on touch screens each paper keeps
+      // 24 px of spacing to the next, its 44 px row: WCAG 2.5.8 spacing). The air stays small, since the browser snaps a
+      // finger to a link that lies within a few px. Nothing drawn changes, and the keyboard still focuses the whole link.
+      <div
+        className={cn('relative flex items-center gap-1', hasLink ? 'pointer-events-none cursor-pointer' : 'cursor-default')}
+      >
         <p
           className={cn(
             'spectrum-link-text group relative whitespace-nowrap font-text text-xs/5 font-medium capitalize',
@@ -60,7 +67,7 @@ export const SpectrumLink = memo(
             labelClassName,
           )}
         >
-          {label}
+          {hasLink ? <span className="pointer-events-auto py-[3px]">{label}</span> : label}
         </p>
         {isComingSoon && (
           <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-xs capitalize text-white/50 backdrop-blur-2xl">
@@ -72,7 +79,8 @@ export const SpectrumLink = memo(
 
     // A logo link keeps its box and grows its hit area to 44 px on coarse pointers (RWD-06).
     return anchorProps ? (
-      <a {...anchorProps} className={icon ? 'relative block tap-area' : undefined}>
+      // A text link's own box takes no press either (only its words do, above).
+      <a {...anchorProps} className={icon ? 'relative block tap-area' : 'pointer-events-none'}>
         {content}
       </a>
     ) : (

@@ -10,7 +10,9 @@ export type SpectrumPhonePage =
   | { kind: 'sponsors'; from: number; to: number };
 
 const INITIATIVE_PAGES = [[0], [1, 2]];
-const PAPERS_PAGE = [3];
+/** The papers' group, as an index into the main items. */
+export const PAPERS_GROUP = 3;
+const PAPERS_PAGE = [PAPERS_GROUP];
 const SPONSORS_PER_PAGE = 10;
 
 export function spectrumPhonePages(sponsorCount: number): SpectrumPhonePage[] {

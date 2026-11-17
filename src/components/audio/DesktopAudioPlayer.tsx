@@ -49,7 +49,7 @@ export const motionTransition = {
 } as const;
 
 function DesktopAudioPlayer({ className }: { className?: string }) {
-  useFetchAudioData();
+  const { retryIfFailed: retryAudioList } = useFetchAudioData();
   const musicList = useAtomValue(musicListAtom);
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const [isOpen, setIsOpen] = useState(false);
@@ -59,21 +59,27 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   // The player list is fetched on intent: pointing at, focusing or pressing the player (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
-  const onIntent = () => requestAudioList(true);
+  const onIntent = () => {
+    requestAudioList(true);
+    retryAudioList();
+  };
   // The play button is not the popover's trigger, so Radix counts a press on it as outside the playlist. It plays or
   // pauses and leaves the playlist open (the whole pill used to be the trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
 
+  // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
+  // the home page from another page of the site) keeps the track and playlist the visitor had.
   useEffect(() => {
     if (!musicList.length) return;
+    if (data) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom]);
+  }, [data, musicList, setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setHasInteracted(true);
-    requestAudioList(true);
+    onIntent();
     const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
       audioContext.resume();

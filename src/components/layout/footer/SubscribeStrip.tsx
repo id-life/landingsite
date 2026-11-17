@@ -25,11 +25,12 @@ type Inputs = {
 };
 
 /**
- * The desktop SUBSCRIBE popup. It opens only when the visitor asks (subscribePopupAtom) and is a modal
+ * The desktop deck's SUBSCRIBE popup, a strip that rises from the bottom edge (its phone counterpart is
+ * SubscribeSheet: a different drawing and motion, so two parts, chosen by deck in SubscribePopupHost). It opens only when the visitor asks (subscribePopupAtom) and is a modal
  * dialog: role="dialog" labelled by its heading, focus moves to the email field and stays inside, Escape,
  * the X or a click outside close it, and focus returns to the button that opened it.
  */
-export default function Footer() {
+export default function SubscribeStrip() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);

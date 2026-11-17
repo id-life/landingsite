@@ -23,6 +23,14 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
         // Medium and expanded windows: in the px margin beside the row, clear of the cards (a 44 px touch box
         // overlapping the first card covered its title).
         direction === 'prev' ? 'medium:-left-[54px] expanded:-left-[58px]' : 'medium:-right-[54px] expanded:-right-[58px]',
+        // The touch area grows away from the row's neighbour, never across its own drawn edge on that side: on a
+        // tablet lying on its side the PODCAST row's right arrow and the weekly row's left arrow sit 4 px apart, and
+        // two centred 44 px areas overlapped, the weekly one on top of the PODCAST arrow's centre. So a right arrow's
+        // area ends at its own right edge and grows left (and up and down), a left arrow's mirror-wise; both grow
+        // into the empty margin beside their row. Still 44 x 44.
+        direction === 'prev'
+          ? 'coarse:before:!left-0 coarse:before:![transform:translateY(-50%)]'
+          : 'coarse:before:!left-auto coarse:before:!right-0 coarse:before:![transform:translateY(-50%)]',
       )}
     >
       <ArrowDownSVG

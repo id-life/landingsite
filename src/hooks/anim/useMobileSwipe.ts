@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { mobileCurrentPageAtom, mobileNavOpenAtom } from '@/atoms';
-import { useMobileSectionStep } from '@/components/common/MobilePageArrows';
+import { useSectionStep } from '@/components/common/SectionPager';
 
 const IGNORE = '[data-no-swipe], input, textarea, select, [role="dialog"], [aria-modal="true"]';
 // Horizontal carousels (Swiper) and the Presence map (touch-none, scrolls sideways) keep horizontal
@@ -32,7 +32,7 @@ function verticalScroller(target: Element | null): Element | null {
  * swallowed.
  */
 export function useMobileSwipe() {
-  const step = useMobileSectionStep();
+  const step = useSectionStep();
   const stepRef = useRef(step);
   stepRef.current = step;
   const menuOpen = useAtomValue(mobileNavOpenAtom);
