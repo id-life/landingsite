@@ -30,6 +30,8 @@ type DialogProps = {
   anim?: 'fade' | 'slide' | 'none';
   /** Which tabbable element inside the dialog takes focus when it opens (FloatingFocusManager's initialFocus). */
   initialFocus?: number;
+  /** Whether a press outside the dialog closes it (with isDismiss); return false for presses that should not. */
+  outsidePress?: (event: MouseEvent) => boolean;
 };
 
 function Dialog({
@@ -45,6 +47,7 @@ function Dialog({
   showCloseButton = true,
   anim = 'fade',
   initialFocus = 0,
+  outsidePress,
 }: React.PropsWithChildren<DialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const onChange = (status: boolean) => {
@@ -54,7 +57,11 @@ function Dialog({
 
   const { refs, context } = useFloating({ open: isOpen, onOpenChange: onChange });
   const { setReference, setFloating } = refs;
-  const dismiss = useDismiss(context, { enabled: isDismiss, outsidePressEvent: 'mousedown' });
+  const dismiss = useDismiss(context, {
+    enabled: isDismiss,
+    outsidePressEvent: 'mousedown',
+    outsidePress: outsidePress ?? true,
+  });
 
   const getTransitionStyles = useCallback(() => {
     switch (anim) {

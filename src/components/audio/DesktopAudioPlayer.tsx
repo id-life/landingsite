@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import * as Popover from '@radix-ui/react-popover';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -60,6 +60,9 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   // The player list is fetched on intent: pointing at, focusing or pressing the player (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
   const onIntent = () => requestAudioList(true);
+  // The play button is not the popover's trigger, so Radix counts a press on it as outside the playlist. It plays or
+  // pauses and leaves the playlist open (the whole pill used to be the trigger, which never closes it).
+  const pillRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!musicList.length) return;
@@ -101,6 +104,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           play button's name switches between "Play music" and "Pause music" (no aria-pressed, per the APG
           button pattern). Sound starts only from this button. */}
       <div
+        ref={pillRef}
         onPointerEnter={onIntent}
         onPointerDown={onIntent}
         onFocus={onIntent}
@@ -139,7 +143,17 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
       <AnimatePresence>
         {isOpen && (
           <Popover.Portal forceMount key="playlist">
-            <Popover.Content forceMount asChild align="end" side="top" avoidCollisions={false} sideOffset={16}>
+            <Popover.Content
+              forceMount
+              asChild
+              align="end"
+              side="top"
+              avoidCollisions={false}
+              sideOffset={16}
+              onInteractOutside={(event) => {
+                if (pillRef.current?.contains(event.target as Node)) event.preventDefault();
+              }}
+            >
               <motion.div
                 variants={motionVariants}
                 transition={motionTransition}

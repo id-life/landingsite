@@ -17,6 +17,7 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import type { AudioDataItem } from '@/apis/types';
 
 // Created on first use, not at import: an AudioContext made before any user gesture starts
 // suspended and logs an autoplay warning on every page load.
@@ -54,6 +55,11 @@ export function cancelPlayWhenReady() {
   playWhenReady = false;
 }
 export const isPlayWhenReadyPending = () => playWhenReady;
+
+// The track the player last loaded, across both decks' players (only one is mounted at a time). The first track the
+// page loads stays silent and undownloaded until the visitor presses play; every later change of track (a playlist
+// row, the next track at the end of one) plays the new one, as the player always has.
+let lastLoadedTrackId: AudioDataItem['id'] | null = null;
 
 const RA = (f: number) =>
   (12194 ** 2 * f ** 4) /
@@ -109,6 +115,12 @@ export default function useCurrentAudio() {
     nextAudioRef.current = nextAudio;
   }, [determineNextTrack]);
 
+  // The play state when the track changes: the old element's pause below must not count as the visitor's.
+  const playStatusRef = useRef(playStatus);
+  useEffect(() => {
+    playStatusRef.current = playStatus;
+  });
+
   useEffect(() => {
     if (audioRef) {
       audioRef.pause();
@@ -122,6 +134,13 @@ export default function useCurrentAudio() {
     }
 
     if (!currentAudio) return;
+
+    // A new track chosen after the first one plays at once, whether or not music was playing (the visitor chose it).
+    // The same track loaded again (the player moving between the laptop and phone layouts) resumes only if it was
+    // playing. The very first track waits for the play button: sound is opt-in.
+    const isFirstTrack = lastLoadedTrackId === null;
+    const startOnLoad = !isFirstTrack && (lastLoadedTrackId !== currentAudio.id || playStatusRef.current);
+    lastLoadedTrackId = currentAudio.id;
 
     isPreloadingRef.current = false;
 
@@ -155,6 +174,10 @@ export default function useCurrentAudio() {
     if (playWhenReady) {
       playWhenReady = false;
       dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.TOGGLE });
+    } else if (startOnLoad) {
+      // play() starts the download of a preload="none" element; waiting for its metadata instead never ends, because
+      // such an element fetches nothing until it is asked to play.
+      dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.AUTO });
     }
 
     const setupAudio = () => {
