@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Html, useProgress } from '@react-three/drei';
@@ -14,7 +14,12 @@ export default function Loader() {
   const { progress, item, active } = useProgress();
   const isLoadingUI = useAtomValue(isLoadingUIAtom);
   const [loadingItem, setLoadingItem] = useAtom(modelLoadingItemAtom);
-  const [maxProgress, setMaxProgress] = useState(0);
+  // The bar never moves back: the furthest progress seen, kept in a ref. This loader is the twin canvas's Suspense
+  // fallback, so it mounts again every time the Views suspend; it used to copy progress into state from an effect,
+  // and every remount then set state during the canvas's commit. When the Views suspended and resumed in quick
+  // succession after an avatar switch, those updates passed React's limit of 50 nested updates and the page crashed
+  // (React error #185, found by the press-every-control sweep after pressing the C01 to C03 avatars).
+  const maxProgressRef = useRef(0);
   const isLoaded = useMemo(() => progress === 100 && !active, [active, progress]);
 
   const fillRef = useRef(null);
@@ -29,12 +34,11 @@ export default function Loader() {
     setLoadingItem(null);
   }, [isLoaded, isLoadingUI, loadingItem, setLoadingItem]);
 
-  useEffect(() => {
-    setMaxProgress((state) => (state > progress ? state : progress));
-  }, [progress]);
-
   useGSAP(() => {
     if (!fillRef.current || !inverseTextRef.current) return;
+    // drei's progress is 0/0 (NaN) or out of range at the start of a batch; only a real advance moves the bar.
+    if (Number.isFinite(progress)) maxProgressRef.current = Math.min(100, Math.max(maxProgressRef.current, progress));
+    const maxProgress = maxProgressRef.current;
     gsap.to(fillRef.current, {
       width: `${maxProgress}%`,
       duration: DURATION.camera,
