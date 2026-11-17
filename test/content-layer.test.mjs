@@ -14,7 +14,7 @@ vi.mock('@/components/svg', () => {
   return { BookSVG: Stub, DigitalTwinSVG: Stub, RelationSVG: Stub, ResearchSVG: Stub, SponsorSVG: Stub };
 });
 
-const { COMPANIES, FUND, LLMS_HEADER, PEOPLE, THEMES, keyFactLines } = content;
+const { COMPANIES, FUND, LLMS_HEADER, PEOPLE, THEMES } = content;
 
 describe('validation', () => {
   const company = {
@@ -92,16 +92,19 @@ describe('one source per fact', () => {
     expect(hits).toEqual([]);
   });
 
-  test('llms.txt lists every key fact from the fund record', () => {
-    for (const line of keyFactLines()) expect(LLMS_HEADER).toContain(`- ${line}\n`);
-    expect(LLMS_HEADER).toContain(`- ${FUND.fundSize.label.en}: ${FUND.fundSize.value.en}`);
+  // The owner's rule of 2026-11-18: hidden data states only what the site shows. llms.txt has no key facts list
+  // (the English renderings of the profile are shown nowhere), and the JSON-LD states no founding date.
+  test('llms.txt states no fact the site does not show', () => {
+    for (const text of ['Key facts', 'Founded', '2024', 'Investment stage', 'pre-seed', 'Series A', '15+', 'Yale', 'RK'])
+      expect(LLMS_HEADER, text).not.toContain(text);
   });
 
   test('the Organization JSON-LD repeats the fund record', () => {
     const founder = PEOPLE.find((person) => person.slug === FUND.founder);
     expect(ORGANIZATION.email).toBe(FUND.email);
-    expect(ORGANIZATION.legalName).toBe(FUND.legalName.value.en);
-    expect(ORGANIZATION.founder).toMatchObject({ name: founder.name.en, alternateName: founder.name.zh });
+    expect(ORGANIZATION).not.toHaveProperty('legalName');
+    expect(ORGANIZATION).not.toHaveProperty('foundingDate');
+    expect(ORGANIZATION.founder).toEqual({ '@type': 'Person', name: founder.name.en });
     expect(ORGANIZATION.knowsAbout).toEqual(THEMES.map((theme) => theme.name.en));
     expect(ORGANIZATION.address).toMatchObject({
       streetAddress: FUND.address.streetAddress,
@@ -126,7 +129,7 @@ describe('one source per fact', () => {
 describe('portfolio', () => {
   test('every company has a tile, a JSON-LD entry and a particle image, in order', () => {
     expect(portfolio.map((item) => item.slug)).toEqual(COMPANIES.map((company) => company.slug));
-    expect(getPortfolioJsonLd().numberOfItems).toBe(COMPANIES.length);
+    expect(getPortfolioJsonLd()).not.toHaveProperty('numberOfItems');
     for (const mobile of [false, true]) {
       const particles = portfolioGetSourceImgInfos(mobile);
       // Index 0 is the idle shape; tile i shows particle i + 1.

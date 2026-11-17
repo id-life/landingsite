@@ -24,15 +24,8 @@ const jsonLd: WithContext<SoftwareApplication> = {
   name: 'Digital Twin',
   description: PAGE_DESCRIPTION,
   url: 'https://www.id.life/digitaltwin',
-  applicationCategory: 'MedicalApplication',
-  operatingSystem: 'Web',
+  // No category, platform or price: the page states none (the owner's rule of 2026-11-18).
   creator: ORG_REF,
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    availability: 'https://schema.org/OnlineOnly',
-  },
 };
 
 export default function DigitalTwinLayout({ children }: { children: ReactNode }) {

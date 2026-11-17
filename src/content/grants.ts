@@ -94,7 +94,7 @@ export const GRANTS: Grant[] = [
     url: 'https://www.hlmconference.com/',
     inProfile: true,
     onSpectrum: true,
-    approval: live('conferenceName'),
+    approval: live(),
   },
   {
     slug: 'vitalist-bay-summit',
@@ -183,7 +183,7 @@ export const GRANTS: Grant[] = [
     url: 'https://biohackerdao.org/',
     inProfile: false,
     onSpectrum: true,
-    approval: live('sponsors'),
+    approval: live(),
   },
   {
     slug: 'vitalism',
@@ -236,7 +236,7 @@ export const GRANTS: Grant[] = [
     },
     inProfile: true,
     onSpectrum: false,
-    approval: live('sponsors'),
+    approval: live(),
   },
   {
     slug: 'china-alzheimer-association',
@@ -244,7 +244,7 @@ export const GRANTS: Grant[] = [
     description: { en: "China Association for Alzheimer's Disease (CAAD).", zh: '中国阿尔茨海默病防治协会（CAAD）。' },
     inProfile: true,
     onSpectrum: false,
-    approval: live('sponsors'),
+    approval: live(),
   },
 ];
 

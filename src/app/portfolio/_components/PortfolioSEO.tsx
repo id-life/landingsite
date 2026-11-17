@@ -7,7 +7,8 @@ export default function PortfolioSEO() {
   return (
     <>
       <section className="sr-only" aria-label="Portfolio Companies">
-        <h1>Immortal Dragons Investment Portfolio</h1>
+        {/* The section's own heading (the owner's rule of 2026-11-18: hidden text is words the page shows). */}
+        <h1>Portfolio</h1>
         <ul>
           {portfolio.map((item) => (
             <li key={item.title}>

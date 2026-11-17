@@ -64,7 +64,7 @@ describe('portfolio', () => {
 
   test('the portfolio JSON-LD and the llms.txt list come from the same data', () => {
     const jsonLd = getPortfolioJsonLd();
-    expect(jsonLd.numberOfItems).toBe(portfolio.length);
+    expect(jsonLd).not.toHaveProperty('numberOfItems');
     expect(jsonLd.itemListElement.map((entry) => entry.item.name)).toEqual(titles);
     expect(portfolioMarkdownLines()).toHaveLength(portfolio.length);
   });
@@ -75,6 +75,14 @@ describe('portfolio', () => {
     );
     expect(stated.length).toBeGreaterThan(0);
     for (const n of stated) expect(n).toBeLessThanOrEqual(portfolio.length);
+  });
+});
+
+describe("llms.txt's Chinese summary", () => {
+  test("is the article's own 概述 paragraphs, word for word", async () => {
+    const { ARTICLE_SUMMARY_ZH } = await import('@/content/profile');
+    for (const paragraph of ARTICLE_SUMMARY_ZH) expect(profile).toContain(paragraph);
+    for (const paragraph of ARTICLE_SUMMARY_ZH) expect(LLMS_CHINESE_SUMMARY).toContain(paragraph);
   });
 });
 

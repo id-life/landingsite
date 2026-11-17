@@ -13,7 +13,7 @@ export { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS } from './initiatives';
 export { PAGES, pageMeta } from './pages';
 export { PEOPLE, personBySlug } from './people';
 export { FUND_PRESS, PORTFOLIO_PRESS, PRESS } from './press';
-export { LLMS_CHINESE_SUMMARY, LLMS_HEADER, LLMS_SECTIONS, keyFactLines, llmsIntro, llmsSection } from './profile';
+export { LLMS_CHINESE_SUMMARY, LLMS_HEADER, LLMS_SECTIONS, llmsSection } from './profile';
 export { SLOGANS } from './slogans';
 export { SUBSCRIBE_PROMISE } from './subscribe';
 export { THEMES } from './themes';

@@ -82,7 +82,6 @@ export const FundFacts = z.object({
   lpPositions: Fact,
   /** The owner's own wording of the investment count ('15+'); the computed count comes from the portfolio. */
   statedInvestments: Fact,
-  foundingYear: Fact,
   // The Fund I launch month has no single published value (2025-07-16 release vs August 2025 in the milestones
   // article): it exists only as a draft (src/content/drafts/fund.ts) until the owner rules (CON-11 #1).
   /** Organization description used by metadata and JSON-LD (six areas; ruling pending on four themes vs six). */

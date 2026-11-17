@@ -46,5 +46,9 @@ export const FUND_PRESS = PRESS.filter((item) => item.subject === 'fund');
 /** News from portfolio companies. */
 export const PORTFOLIO_PRESS = PRESS.filter((item) => item.subject === 'portfolio');
 
-export const pressMarkdownLines = (items: PressItem[]) =>
-  items.map(({ title, source, url, date }) => `- [${title}](${url}) — ${[source, date].filter(Boolean).join(', ')}`);
+/**
+ * llms.txt lines: the headline as the site's news list shows it, with its link. No source or date: the list shows
+ * another date (a day later) or another source name for some, and no launch date is stated in hidden data (owner,
+ * 2026-11-18, questions 12a and 12b).
+ */
+export const pressMarkdownLines = (items: PressItem[]) => items.map(({ title, url }) => `- [${title}](${url})`);
