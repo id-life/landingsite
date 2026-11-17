@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
-import { getSectionState } from '@/motion/sectionController';
+import { getSectionState, goToSection } from '@/motion/sectionController';
 
 /**
  * Skip to content on the experience (both decks): the link's target, #content-start, sits after the header, and every
@@ -20,7 +20,33 @@ export function useSkipToSection() {
       section.addEventListener('blur', () => section.removeAttribute('tabindex'), { once: true });
       section.focus({ preventScroll: true });
     };
+    // Reached by the Tab key alone, a section other than the one in view is brought to its rest pose, so its
+    // focused control is drawn (it was left at the start of its entrance, its text at opacity 0). Only after a Tab
+    // key, so a press or a programmatic focus never moves the deck; through the controller's public goToSection.
+    let tabbing = false;
+    const onKeyDown = (event: KeyboardEvent) => {
+      tabbing = event.key === 'Tab';
+    };
+    const onPointerDown = () => {
+      tabbing = false;
+    };
+    const onTabFocus = (event: FocusEvent) => {
+      if (!tabbing || !(event.target instanceof Element)) return;
+      const state = getSectionState();
+      if (state.phase === 'moving') return;
+      const index = NAV_LIST.findIndex((item) => event.target instanceof Element && event.target.closest(`#${item.id}`));
+      if (index < 0 || index === state.index) return;
+      goToSection(index, 'key');
+    };
     document.addEventListener('focusin', onFocusIn);
-    return () => document.removeEventListener('focusin', onFocusIn);
+    document.addEventListener('focusin', onTabFocus);
+    document.addEventListener('keydown', onKeyDown, true);
+    document.addEventListener('pointerdown', onPointerDown, true);
+    return () => {
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusin', onTabFocus);
+      document.removeEventListener('keydown', onKeyDown, true);
+      document.removeEventListener('pointerdown', onPointerDown, true);
+    };
   }, []);
 }
