@@ -10,7 +10,7 @@ import { Props } from './types';
 import { OPTS } from './constant';
 import { usePointer } from './hooks/usePointer';
 import { BlendFunction } from 'postprocessing';
-import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
+import { onReducedMotionChange } from '@/motion/preference';
 
 /** Frames after the last splat until the dye has faded out (0.96^180 is below 0.1 %). */
 const SETTLE_FRAMES = 180;
@@ -60,7 +60,7 @@ export const Fluid = ({
 
   const FBOs = useFBOs(simRes);
   const materials = useMaterials();
-  const { splatStack } = usePointer({ force });
+  const { splatStack, clearSplats } = usePointer({ force });
 
   const setShaderMaterial = useCallback(
     (name: keyof ReturnType<typeof useMaterials>) => {
@@ -114,7 +114,7 @@ export const Fluid = ({
     () =>
       onReducedMotionChange((reduced) => {
         if (!reduced) return;
-        splatStack.length = 0;
+        clearSplats();
         for (const target of [FBOs.density.read, FBOs.density.write, FBOs.velocity.read, FBOs.velocity.write]) {
           gl.setRenderTarget(target);
           gl.clear();
@@ -122,12 +122,11 @@ export const Fluid = ({
         gl.setRenderTarget(null);
         quietFramesRef.current = SETTLE_FRAMES;
       }),
-    [FBOs, gl, splatStack],
+    [FBOs, gl, clearSplats],
   );
 
   useFrame(({ gl }) => {
     if (!meshRef.current || !postRef.current) return;
-    if (isReducedMotion()) splatStack.length = 0;
     if (splatStack.length) quietFramesRef.current = 0;
     else if (quietFramesRef.current >= SETTLE_FRAMES) return;
     quietFramesRef.current += 1;
