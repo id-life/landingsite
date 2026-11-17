@@ -1,6 +1,7 @@
 'use client';
 
 import CheckedSVG from '@/../public/svgs/checked.svg?component';
+import { NAV } from '@/components/nav/nav';
 import BilibiliSVG from '@/../public/svgs/bilibili.svg?component';
 import LinkedinSVG from '@/../public/svgs/linkedin.svg?component';
 import LoadingSVG from '@/../public/svgs/loading.svg?component';
@@ -78,7 +79,12 @@ export default function ContactBand() {
   return (
     <>
       <FloatingPortal>
-        <div className="page-footer-contact fixed bottom-[-100vh] z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto">
+        {/* Portalled out of the sections, the band says which section it belongs to: a control in it reached by Tab
+            brings the deck to Connect, where the band is shown (useSkipToSection). */}
+        <div
+          data-section-of={NAV.connect_page.id}
+          className="page-footer-contact fixed bottom-[-100vh] z-10 flex w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
+        >
           {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
           <section
             aria-label="Contact and subscribe"
