@@ -7,7 +7,7 @@ import { markdownRehypePlugins, markdownRemarkPlugins, remarkTimeline } from '@/
 import '@/styles/components/markdown-timeline.css';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
-import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { PODCAST_COVER, PODCAST_NAV_LIST, podcastFeedAlternate } from '@/app/podcast/_components/constant';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
@@ -60,13 +60,16 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
   }
 
   // The full show notes stay on the page; the meta description is cut at a sentence end (SEO-06).
-  return buildMetadata({
+  const metadata = buildMetadata({
     path: `/podcast/${canonicalId(id)}`,
     title: data.title,
     description: data.description,
     image: data.detailMedia || data.album,
     type: 'article',
   });
+  // An episode of the main show names the show's feed, as the show page does (question 22).
+  const types = podcastFeedAlternate(categoryOf(data));
+  return types ? { ...metadata, alternates: { ...metadata.alternates, types } } : metadata;
 }
 
 export default async function PodcastContentPage(props: PodcastPlayerProps) {

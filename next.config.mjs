@@ -140,6 +140,10 @@ const nextConfig = {
       { source: '/vision', destination: '/presence', permanent: true },
       { source: '/value', destination: '/connect', permanent: true },
       { source: '/mission', destination: '/', permanent: true },
+      // Question 22: /podcast/rss points to the main show's hosted feed (the one Apple Podcasts lists). Temporary
+      // (307), so a podcast app subscribed through this address keeps it and follows a later change of host; a
+      // permanent redirect would move the subscription onto the host's URL for good.
+      { source: '/podcast/rss', destination: 'https://feed.xyzfm.space/6cxxmuh36xcc', permanent: false },
     ];
   },
   async rewrites() {
