@@ -242,7 +242,7 @@ function Initiative({
           settling && 'pointer-events-none',
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
-            ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
             : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
           // Long titles (the phone's papers page) wrap over several lines: keep a gap between them.
           layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
@@ -301,7 +301,7 @@ function Initiative({
             className={cn(
               'mt-4',
               layout === 'publications'
-                ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
                 : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
             )}
           >
