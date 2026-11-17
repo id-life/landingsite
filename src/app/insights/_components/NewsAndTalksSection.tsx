@@ -17,6 +17,7 @@ import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { layoutUnitPx } from '@/utils/layout-unit';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
@@ -77,7 +78,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
             {/* The original's phone sizes: title 12 px, source and date 10 px. */}
             <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-text text-[10px]/3 text-black/60">
+            <div className="flex w-full flex-col text-left font-text text-[0.625rem]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
@@ -148,7 +149,10 @@ const SECTION_GAP = 24; // gap-6 between the three rows
 const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
-function calculateMobileItemCount(containerHeight: number, columns: number): number {
+function calculateMobileItemCount(containerPx: number, columns: number): number {
+  // The heights above are the phone's, at its 16 px unit; the phone deck scales up with the window above phone width
+  // (an upright tablet), so the column is measured in that unit before the rows are counted.
+  const containerHeight = containerPx / (layoutUnitPx() / 16 || 1);
   // Height left for the news cards once the three headings, the two other rows and the gaps are taken.
   const availableForNews =
     containerHeight -
@@ -254,7 +258,7 @@ export default function NewsAndTalksSection({
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: skeletonCount }).map((_, index) => (
               <div key={index} className="flex flex-col overflow-hidden">
-                <div className="h-[68px] w-full animate-pulse bg-tone-800/50" />
+                <div className="h-[4.25rem] w-full animate-pulse bg-tone-800/50" />
                 <div className="space-y-1 bg-white p-3">
                   <div className="h-4 w-3/4 animate-pulse bg-tone-800/30" />
                   <div className="h-3 w-1/2 animate-pulse bg-tone-800/20" />

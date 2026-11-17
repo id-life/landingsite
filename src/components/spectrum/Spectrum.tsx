@@ -468,8 +468,8 @@ function PhoneSpectrum() {
           title and the section arrows. */}
       {/* overflow: clip, not hidden: a clipped frame cannot be scrolled, so focusing the papers' "more" (which
           reaches into the padding) never shifts the page sideways. */}
-      <div className="relative flex h-[100svh] flex-col overflow-clip px-5 pb-24 pt-[88px] shortScreen:pb-[72px]">
-        <h2 className="mb-6 shrink-0 text-center font-title text-[26px]/[30px] font-bold uppercase shortScreen:mb-1">
+      <div className="relative flex h-[100svh] flex-col overflow-clip px-5 pb-24 pt-[5.5rem] shortScreen:pb-[4.5rem]">
+        <h2 className="mb-6 shrink-0 text-center font-title text-[1.625rem]/[1.875rem] font-bold uppercase shortScreen:mb-1">
           Spectrum
         </h2>
         <div

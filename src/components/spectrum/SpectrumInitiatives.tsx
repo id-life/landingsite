@@ -86,7 +86,7 @@ function MoreToggle({
       aria-controls={controls}
       aria-label={expanded ? 'Show fewer' : undefined}
       onClick={onToggle}
-      className="spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[13px] desktop2k:text-sm"
+      className="spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[0.8125rem] desktop2k:text-sm"
     >
       {!expanded && <span>more</span>}
       <svg
@@ -276,7 +276,7 @@ function Initiative({
                 className={cn(
                   // The original's link sizes. On a coarse pointer each link is a 44 px tall box (RWD-06); the
                   // mouse layout keeps its line boxes.
-                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
+                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
                 )}
               >
                 <SpectrumLink
@@ -307,7 +307,7 @@ function Initiative({
             {item.links.map((link) => (
               <li
                 key={link.label}
-                className="min-w-0 coarse:flex coarse:min-h-[44px] coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm"
+                className="min-w-0 coarse:flex coarse:min-h-[44px] coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
               >
                 <SpectrumLink item={{ ...link, link: undefined }} />
               </li>

@@ -12,7 +12,7 @@ interface ViewAllButtonProps {
 
 /** The Insights row headings (NEWS & TALKS, PODCAST, 长生周报) at the original's size. */
 export const HEADING = 'font-display text-[1.625rem]/9 font-semibold uppercase';
-export const HEADING_PHONE = 'text-[26px] leading-9';
+export const HEADING_PHONE = 'text-[1.625rem] leading-9';
 
 // A real link: it can be previewed, copied, middle-clicked and Cmd-clicked into a new tab.
 export default function ViewAllButton({ href, external = false, onClick, isMobile = false }: ViewAllButtonProps) {
