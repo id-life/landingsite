@@ -14,6 +14,7 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 import React, { cloneElement, useCallback, useEffect, useState } from 'react';
+import { useReturnFocusWithoutScroll } from '@/hooks/useReturnFocusWithoutScroll';
 import { pauseSmoother } from '@/utils/smoother';
 
 type DialogProps = {
@@ -102,6 +103,8 @@ function Dialog({
     pauseSmoother(isOpen);
   }, [isOpen]);
 
+  useReturnFocusWithoutScroll(isOpen);
+
   return (
     <>
       {children && cloneElement(children, getReferenceProps({ ref: setReference, ...children.props }))}
@@ -109,7 +112,7 @@ function Dialog({
         {isMounted && (
           <>
             <FloatingOverlay className={cn('z-[100] bg-tone-400/50 backdrop-blur', overlayClassName)} style={styles} />
-            <FloatingFocusManager context={context} initialFocus={initialFocus}>
+            <FloatingFocusManager context={context} initialFocus={initialFocus} returnFocus={false}>
               <div className={cn('fixed inset-0 z-[100] grid place-items-center', fixClassName)} style={styles}>
                 <div
                   className={cn('overflow-visible border border-tone-800 bg-white', className)}

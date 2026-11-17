@@ -6,6 +6,7 @@ import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import InfoSVG from '@/../public/svgs/info.svg?component';
 import { useMobileSubscribeAction } from '@/hooks/useSubscribeAction';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
+import { useReturnFocusWithoutScroll } from '@/hooks/useReturnFocusWithoutScroll';
 import { cn } from '@/utils';
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -29,6 +30,7 @@ type Inputs = {
 export default function MobileFooter() {
   const { onFormSubmit, isSubmitting, isSubmitted, submitError } = useMobileSubscribeAction();
   const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  useReturnFocusWithoutScroll(isSubscribeShow);
   // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
   const emailId = useId();
 
@@ -47,7 +49,7 @@ export default function MobileFooter() {
     <FloatingPortal>
       <AnimatePresence>
         {/* Focus starts on the close button (the first control), so no on-screen keyboard pops up. */}
-        <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={0}>
+        <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={0} returnFocus={false}>
           <motion.div
             {...getFloatingProps({ ref: refs.setFloating })}
             aria-labelledby={titleId}
