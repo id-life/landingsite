@@ -39,13 +39,15 @@ export function useResizeRefresh() {
       // 3. Refresh all ScrollTriggers
       ScrollTrigger.refresh();
 
-      // 4. Delay reset of resize flag to ensure callbacks have finished
+      // 4. The pins changed length: put the view back on the rest pose of the section it was on, in the same task as
+      // the refresh, so no frame is drawn in between (it waited two frames, showing whatever the refresh left).
+      resnapSection(settledOn);
+
+      // 5. Delay reset of resize flag to ensure callbacks have finished
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setLayoutRefreshing(false);
           isRefreshingRef.current = false;
-          // The pins changed length: put the view back on the rest pose of the section it was on.
-          resnapSection(settledOn);
         });
       });
     }, 200);
