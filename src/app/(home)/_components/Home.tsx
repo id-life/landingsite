@@ -98,7 +98,7 @@ export default function Home() {
       <div id="wrapper">
         <div id="content">
           <Vision />
-          <Portfolio />
+          <Portfolio deck="desktop" />
           <Insights />
           <Spectrum />
           <Engagement deck="desktop" />

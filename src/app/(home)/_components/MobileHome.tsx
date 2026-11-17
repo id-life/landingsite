@@ -1,6 +1,6 @@
 'use client';
 
-import MobilePortfolio from '@/app/portfolio/_components/MobilePortfolio';
+import Portfolio from '@/app/portfolio/_components/Portfolio';
 import Twin from '@/app/twin/Twin';
 import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
@@ -55,7 +55,7 @@ export default function MobileHome() {
       <span id="content-start" tabIndex={-1} className="sr-only" />
       <div id="wrapper" className="">
         <Vision />
-        <MobilePortfolio />
+        <Portfolio deck="phone" />
         <Insights />
         <Spectrum />
         <Engagement deck="phone" />
