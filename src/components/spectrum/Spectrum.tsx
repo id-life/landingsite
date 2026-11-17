@@ -105,10 +105,14 @@ function useFitScale(
   content: React.RefObject<HTMLDivElement | null>,
   active: boolean,
 ) {
-  const [fit, setFit] = useState<FitScale & { offset: number; room: number; constrained: boolean }>({
+  const [fit, setFit] = useState<
+    FitScale & { offset: number; room: number; constrained: boolean; fieldShift: number; fieldShiftHeld: number }
+  >({
     scale: 1,
     scrolls: false,
     offset: 0,
+    fieldShift: 0,
+    fieldShiftHeld: 0,
     room: 0,
     constrained: false,
   });
@@ -187,6 +191,11 @@ function useFitScale(
         box.dataset.fitNeeded = String(Math.round(needed));
         const next = fitScale(room, needed);
         const offset = Math.max(0, top - (colBox.top + parseFloat(cs.paddingTop)));
+        // The particle field is placed at the middle of the composition's box; the owner's picture has it at the middle
+        // of the whole column, whose padding is larger above than below. This shift puts it back there at scale 1.
+        const fieldShift = (parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop)) / 2;
+        // Held to the band at scale 1 (constrained): the box starts `offset` lower and is `room` tall.
+        const fieldShiftHeld = colBox.height / 2 - parseFloat(cs.paddingTop) - offset - room / 2;
         setFit((prev) => {
           // Held at scale 1 because of a prediction: it stands. Scaled: no hold needed once back at 1, predict again.
           const constrained = predicted ?? (prev.scale < 1 ? false : prev.constrained);
@@ -194,9 +203,11 @@ function useFitScale(
             next.scrolls === prev.scrolls &&
             constrained === prev.constrained &&
             Math.abs(room - prev.room) < 1 &&
-            Math.abs(offset - prev.offset) < 1
+            Math.abs(offset - prev.offset) < 1 &&
+            Math.abs(fieldShift - prev.fieldShift) < 0.5 &&
+            Math.abs(fieldShiftHeld - prev.fieldShiftHeld) < 0.5
             ? prev
-            : { ...next, offset, room, constrained };
+            : { ...next, offset, room, constrained, fieldShift, fieldShiftHeld };
         });
       });
     };
@@ -333,7 +344,16 @@ function DeckSpectrum() {
             <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
           </div>
           <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
-            <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
+            {/* At scale 1 the field keeps the owner's place, the middle of the whole column (fieldShift, or
+                fieldShiftHeld where the box is held to the band);
+                scaled, it is placed in and scaled with the composition, so it keeps its place relative to the lists. */}
+            <div
+              id="spectrum-particle-container"
+              className={cn('particle-container', { active })}
+              style={
+                fit.scale < 1 ? undefined : { top: `calc(50% + ${fit.constrained ? fit.fieldShiftHeld : fit.fieldShift}px)` }
+              }
+            ></div>
           </div>
           {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
             the padding under 860), so the logo wall clears the bottom controls. From 1200 px the original's spacing. */}
