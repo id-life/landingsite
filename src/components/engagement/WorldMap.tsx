@@ -308,9 +308,14 @@ export const WorldMap = memo(function WorldMapComponent({
     return (
       // The strip's height is --map-h: 55 % of the window, or on a phone in landscape (compact height) what is left
       // between the compact title and the arrows.
+      // overflow-x: clip. The card layer below follows the strip's scroll, so mid-pan a card reaches up to 176 px past the
+      // window's right edge (the original's too). The original locked zoom (maximum-scale=1), so the phone ignored it;
+      // with pinch zoom allowed (WCAG 1.4.4) a phone browser widens its layout viewport to fit it, which pushed the menu,
+      // SUBSCRIBE and the player off the screen. Clipping the x axis only keeps the cards' vertical overflow, creates no
+      // scroll container and hides nothing the screen showed: the part past the window was never on the screen.
       <div
         ref={phoneMapRef}
-        className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
+        className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
       >
         <div
           ref={mapContainerRef}
