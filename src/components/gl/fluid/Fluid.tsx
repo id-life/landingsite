@@ -1,6 +1,6 @@
 // remake from https://github.com/whatisjery/react-fluid-distortion
 import { createPortal, useFrame, useThree } from '@react-three/fiber';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Camera, Color, DoubleSide, Mesh, Scene, Texture, Vector2, Vector3 } from 'three';
 import { ShaderPass } from 'three/examples/jsm/Addons.js';
 import { Effect as FluidEffect } from './effect';
@@ -10,6 +10,7 @@ import { Props } from './types';
 import { OPTS } from './constant';
 import { usePointer } from './hooks/usePointer';
 import { BlendFunction } from 'postprocessing';
+import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 
 /** Frames after the last splat until the dye has faded out (0.96^180 is below 0.1 %). */
 const SETTLE_FRAMES = 180;
@@ -104,8 +105,29 @@ export const Fluid = ({
   // MOT-03: frames since the last pointer splat. The dye fades by densityDissipation per frame (0.96: under 0.1 % left
   // after SETTLE_FRAMES), so past that the solver's dozen passes per frame change nothing visible and are skipped.
   const quietFramesRef = useRef(SETTLE_FRAMES);
+
+  // Reduced motion (MOT-02): the pointer leaves no ink. Ink is motion that follows the pointer, and with reduced
+  // motion the canvas renders a still frame and stops once a section change has settled (FrameDriver), so the ink
+  // painted during the change never faded: a pale blotch behind the header on Connect and stains on the first screen
+  // after it. A switch to reduced motion also wipes the dye already there.
+  useEffect(
+    () =>
+      onReducedMotionChange((reduced) => {
+        if (!reduced) return;
+        splatStack.length = 0;
+        for (const target of [FBOs.density.read, FBOs.density.write, FBOs.velocity.read, FBOs.velocity.write]) {
+          gl.setRenderTarget(target);
+          gl.clear();
+        }
+        gl.setRenderTarget(null);
+        quietFramesRef.current = SETTLE_FRAMES;
+      }),
+    [FBOs, gl, splatStack],
+  );
+
   useFrame(({ gl }) => {
     if (!meshRef.current || !postRef.current) return;
+    if (isReducedMotion()) splatStack.length = 0;
     if (splatStack.length) quietFramesRef.current = 0;
     else if (quietFramesRef.current >= SETTLE_FRAMES) return;
     quietFramesRef.current += 1;

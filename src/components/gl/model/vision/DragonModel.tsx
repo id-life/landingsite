@@ -13,6 +13,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
 import gsap from 'gsap';
 import { DURATION } from '@/motion/tokens';
+import { isReducedMotion } from '@/motion/preference';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
@@ -97,7 +98,11 @@ function DesktopDragonModel() {
 
     // Auto swing animation
     if (autoSwingRef.current) {
-      swingPhaseRef.current += delta;
+      // Reduced motion (MOT-02): no idle swing. The canvas renders a few frames whenever something changes and then
+      // holds that still frame, so a swing advanced by the frames of a section change was held at whatever angle it
+      // had reached (the mark turned on the first screen after a visit to Connect, unlike a fresh load).
+      if (isReducedMotion()) swingPhaseRef.current = 0;
+      else swingPhaseRef.current += delta;
       modelRef.current.rotation.y = rotationRef.current.y + Math.sin(swingPhaseRef.current) * AUTO_SWING_AMPLITUDE;
     }
 
