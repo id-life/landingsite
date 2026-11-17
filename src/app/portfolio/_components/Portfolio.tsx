@@ -321,7 +321,9 @@ function PhonePortfolio() {
         />
       ))}
       {/* A short window (a phone in landscape, under 480 px of height) has room for one row of tiles: each page's
-          companies sit side by side there, instead of three rows printed over each other. */}
+          companies sit side by side there, instead of three rows printed over each other. The columns take the whole
+          width there (8 px edges, no padding of their own; only the logos keep a gap), so the longest word of a name,
+          "Biotechnologies", stays inside its column at 667 px. */}
       <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21 shortScreen:pb-16 shortScreen:pt-[68px]">
         <h2 className="page2-title relative top-10 font-title text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5 shortScreen:top-0">
           Portfolio
@@ -331,9 +333,11 @@ function PhonePortfolio() {
           <div
             id="particle-gl"
             className={cn(
-              'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4',
+              'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4 shortScreen:px-2',
               currentGridRows,
-              innerPageIndex >= 1 && currentGridRows === 'grid-rows-2' && 'py-24',
+              // Inner pages of four tiles sit in a narrower band, where the window has the height for it: under 700 px tall the
+              // band would be shorter than two rows of tiles and the second row was drawn over the first (375x667).
+              innerPageIndex >= 1 && currentGridRows === 'grid-rows-2' && 'py-24 [@media(max-height:699.98px)]:py-0',
               'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
             )}
             data-layout={currentGridRows === 'grid-rows-3' ? '2x3' : '2x2'}
@@ -357,9 +361,9 @@ function PhonePortfolio() {
               key={pageIdx}
               className={cn(
                 // The phone inner-page step (MOT-08): the same 0.25 s ease-out as Spectrum's pages.
-                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-page ease-token-out',
+                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-page ease-token-out shortScreen:px-2',
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
-                pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32',
+                pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32 [@media(max-height:699.98px)]:py-0',
                 'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
                 innerPageIndex === pageIdx
                   ? 'translate-y-0 opacity-100'
