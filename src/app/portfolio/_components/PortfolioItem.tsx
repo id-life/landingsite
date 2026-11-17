@@ -45,8 +45,10 @@ const PortfolioItem = memo(
         <div
           className={cn(
             'flex items-center justify-center notMobile:px-3 notMobile:[&>img]:max-h-full notMobile:[&>img]:max-w-full notMobile:[&>img]:object-contain',
+            // A phone window under 660 px tall (360x640) has three rows of 130 px for six tiles: the logo box is 48 px
+            // there instead of 60, or a one-liner reached 2 to 6 px into the next row's logos.
             isGridMode
-              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:px-1 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full'
+              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:px-1 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:h-12 [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:max-h-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:object-contain [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_svg]:max-h-full'
               : 'h-20 mobile:h-15',
           )}
         >

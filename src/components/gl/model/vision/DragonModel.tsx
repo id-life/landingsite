@@ -11,6 +11,7 @@ import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
+import { FIXED_UI_REVEAL } from '@/utils/ui';
 import gsap from 'gsap';
 import { DURATION } from '@/motion/tokens';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -86,7 +87,14 @@ function DesktopDragonModel() {
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 }, 0);
-    if (element) tl.fromTo(element, { opacity: 0 }, { opacity: 1 }, 0);
+    // Above the canvas while it fades, so SCROLL takes a press from its first frame (FIXED_UI_REVEAL).
+    if (element)
+      tl.fromTo(
+        element,
+        { opacity: 0 },
+        { opacity: 1, onStart: FIXED_UI_REVEAL.onStart, onComplete: () => FIXED_UI_REVEAL.clear(element) },
+        0,
+      );
     tl.play();
   });
 
@@ -273,7 +281,10 @@ function PhoneDragonModel(props: {}) {
         {
           opacity: 1,
           duration: DURATION.fast,
+          // Above the canvas while it fades, so START takes a press from its first frame (FIXED_UI_REVEAL).
+          onStart: FIXED_UI_REVEAL.onStart,
           onComplete: () => {
+            FIXED_UI_REVEAL.clear(element);
             setFadeInAnimCompleted(true);
           },
         },
