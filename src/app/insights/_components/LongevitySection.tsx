@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import SectionLoadError from '@/components/common/SectionLoadError';
@@ -176,6 +177,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     if (compact) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
             setIsCompactBeginning(swiper.isBeginning);
@@ -204,6 +206,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
     if (isMobile) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onBeforeInit={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
@@ -229,6 +232,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
 
     return (
       <Swiper
+        {...rowKeyboardProps}
         className="h-full w-full"
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {

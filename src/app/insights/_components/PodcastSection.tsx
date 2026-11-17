@@ -4,6 +4,7 @@ import { useState, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
@@ -128,6 +129,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     if (compact) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
             setIsCompactBeginning(swiper.isBeginning);
@@ -157,6 +159,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     if (isMobile) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onBeforeInit={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
@@ -183,6 +186,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     // Desktop layout: horizontal swiper
     return (
       <Swiper
+        {...rowKeyboardProps}
         className="h-full w-full"
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
