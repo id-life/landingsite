@@ -20,11 +20,12 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
+import { spectrumPhonePages } from './phonePages';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -55,8 +56,9 @@ function useLogosWanted() {
  * - Desktop deck: one pinned page of the scrolled deck with a scrubbed entrance ending on 'rest'; everything on one
  *   screen; hovering an initiative swaps the particle image; the institutions are one logo grid (SpectrumItem).
  * - Phone deck: a panel shown while current, paged through the inner-page contract shared with Portfolio (the section
- *   arrows step the pages: Translation & Publishing, Evangelism with Digital Twin, Papers & Reviews, then ten logos
- *   per page), with a page counter; no hover, so the particle image follows the page.
+ *   arrows step the pages, in the desktop's order: Translation & Publishing, Evangelism with Digital Twin, ten logos
+ *   per page, then Papers & Reviews; see phonePages), with a page counter; no hover, so the particle image follows
+ *   the page.
  */
 function Spectrum() {
   const phone = useDeviceProfile()?.tree === 'phone';
@@ -208,10 +210,6 @@ function DeckSpectrum() {
   );
 }
 
-// Keep each initiative together, pairing the two shorter sections.
-const INITIATIVE_PAGES = [[0], [1, 2], [3]];
-const SPONSORS_PER_PAGE = 10;
-
 function PhoneSpectrum() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
@@ -221,11 +219,10 @@ function PhoneSpectrum() {
   const [direction, setDirection] = useState(1);
   const reduceMotion = useReducedMotionPref();
   const { spectrumMainItems, spectrumSponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
-  const totalPages = INITIATIVE_PAGES.length + Math.ceil(spectrumSponsorItem.links.length / SPONSORS_PER_PAGE);
+  const pages = useMemo(() => spectrumPhonePages(spectrumSponsorItem.links.length), [spectrumSponsorItem.links.length]);
+  const totalPages = pages.length;
   const active = currentPage.id === PAGE_ID;
-  const isSponsor = pageIndex >= INITIATIVE_PAGES.length;
-  const itemIndices = INITIATIVE_PAGES[pageIndex] ?? [];
-  const sponsorStart = (pageIndex - INITIATIVE_PAGES.length) * SPONSORS_PER_PAGE;
+  const page = pages[pageIndex] ?? pages[0];
 
   // Use the same inner-page navigation contract as MobilePortfolio.
   useEffect(() => {
@@ -250,7 +247,7 @@ function PhoneSpectrum() {
       {active && (
         <ParticleGL
           isStatic
-          imageIdx={isSponsor ? 5 : (itemIndices[0] ?? 0) + 1}
+          imageIdx={page.kind === 'sponsors' ? 5 : page.items[0] + 1}
           activeAnim={!reduceMotion}
           id="spectrum-particle-container-mobile-pages"
           getSourceImgInfos={spectrumGetSourceImgInfos}
@@ -284,12 +281,9 @@ function PhoneSpectrum() {
               transition={reduceMotion ? MOTION.instant : MOTION.pageStep}
               className="absolute inset-0 flex flex-col [justify-content:safe_center]"
             >
-              {isSponsor ? (
+              {page.kind === 'sponsors' ? (
                 <MobileSpectrumSponsorPage
-                  sponsorItem={{
-                    ...spectrumSponsorItem,
-                    links: spectrumSponsorItem.links.slice(sponsorStart, sponsorStart + SPONSORS_PER_PAGE),
-                  }}
+                  sponsorItem={{ ...spectrumSponsorItem, links: spectrumSponsorItem.links.slice(page.from, page.to) }}
                   executeSpectrumRoute={executeSpectrumRoute}
                   updateUrlAndExecute={updateUrlAndExecute}
                   routeConfigs={routeConfigs}
@@ -297,7 +291,7 @@ function PhoneSpectrum() {
                 />
               ) : (
                 <SpectrumInitiatives
-                  items={itemIndices.map((index) => spectrumMainItems[index])}
+                  items={page.items.map((index) => spectrumMainItems[index])}
                   onSelect={() => {}}
                   executeSpectrumRoute={executeSpectrumRoute}
                   updateUrlAndExecute={updateUrlAndExecute}
