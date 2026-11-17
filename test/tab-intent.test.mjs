@@ -87,6 +87,16 @@ describe('tabIntent', () => {
     }
   });
 
+  test('a busy page: the key was pressed 300 ms before its handler ran, and the press still counts', () => {
+    // The hook passes the times its handlers run, never event.timeStamp (the time of the key press itself), so the
+    // input delay of a busy main thread is not counted against the press.
+    const rule = createTabIntent();
+    const event = { ...key('Tab'), timeStamp: 700 };
+    rule.keydown(event, 1000); // the handler runs at 1000, 300 ms after the press
+    expect(rule.focus(1000.4)).toBe(true);
+    expect(1000.4 - event.timeStamp).toBeGreaterThan(TAB_FOCUS_WINDOW_MS); // what the press time would have said
+  });
+
   test('without any Tab, no focus change moves the deck', () => {
     const rule = createTabIntent();
     expect(rule.focus(10)).toBe(false);

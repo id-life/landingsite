@@ -26,13 +26,15 @@ export function useSkipToSection() {
     // public goToSection. Only a focus change that is the direct result of a Tab press in this page moves the deck
     // (tabIntent): not the window coming back, a script's focus(), a dialog handing focus back, a press or the wheel.
     const intent = createTabIntent();
-    const onKeyDown = (event: KeyboardEvent) => intent.keydown(event, event.timeStamp);
+    // Both times are taken when the handlers run (not event.timeStamp, the time of the key press itself): the window
+    // then measures the keydown's dispatch to its focus change, which a busy main thread cannot stretch.
+    const onKeyDown = (event: KeyboardEvent) => intent.keydown(event, performance.now());
     const onKeyUp = (event: KeyboardEvent) => {
       if (event.key === 'Tab') intent.clear();
     };
     const clear = () => intent.clear();
     const onTabFocus = (event: FocusEvent) => {
-      if (!intent.focus(event.timeStamp) || !(event.target instanceof Element)) return;
+      if (!intent.focus(performance.now()) || !(event.target instanceof Element)) return;
       const state = getSectionState();
       const index = NAV_LIST.findIndex((item) => event.target instanceof Element && event.target.closest(`#${item.id}`));
       // During a move the deck is headed for its target: a Tab press back out of it retargets the move (the controller

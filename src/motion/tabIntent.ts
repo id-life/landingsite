@@ -9,7 +9,9 @@
  * - a keydown whose default was prevented (a focus trap) moved nothing, so it counts for nothing; it is read when the
  *   focus change arrives, after every listener has run, since the rule listens in the capture phase;
  * - it is dropped at that key's keyup, when the window loses focus and at a pointer press;
- * - and a focus change counts only within TAB_FOCUS_WINDOW_MS of the keydown. In Chrome (measured) and Safari
+ * - and a focus change counts only within TAB_FOCUS_WINDOW_MS of the keydown's handler. Both times are the moments the
+ *   handlers run (performance.now()), never event.timeStamp: that is the time of the key press itself, so on a busy
+ *   page it would add the keydown's whole input delay and drop a real Tab press. In Chrome (measured) and Safari
  *   (WebKit's EventHandler::defaultTabEventHandler) the focus moves inside the keydown's own task, before any timer;
  *   Firefox moves it on the keypress that follows an unprevented keydown (Gecko's EventStateManager::
  *   PostHandleKeyboardEvent), which can arrive as a separate message, so the bound is a short time rather than "the
@@ -33,11 +35,11 @@ export const isPlainTab = (event: Pick<TabKeyDown, 'key' | 'ctrlKey' | 'metaKey'
 export function createTabIntent() {
   let armed: { event: TabKeyDown; at: number } | null = null;
   return {
-    /** Any keydown: a plain Tab arms, every other key disarms. `at` is the event's timeStamp. */
+    /** Any keydown: a plain Tab arms, every other key disarms. `at` is when the keydown handler runs (performance.now()). */
     keydown(event: TabKeyDown, at: number) {
       armed = isPlainTab(event) ? { event, at } : null;
     },
-    /** A focus change at `at`: true when it is that Tab press's own. Consumes the press either way. */
+    /** A focus change, its handler running at `at`: true when it is that Tab press's own. Consumes the press either way. */
     focus(at: number) {
       const press = armed;
       armed = null;
