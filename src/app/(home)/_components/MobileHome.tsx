@@ -16,6 +16,7 @@ import MobileFooterContact from '@/components/layout/footer/MobileFooterContact'
 import Spectrum from '@/components/spectrum/Spectrum';
 import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
 import { useAtomValue } from 'jotai';
+import { useSkipToSection } from '@/hooks/useSkipToSection';
 import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
 import { useMobileSwipe } from '@/hooks/anim/useMobileSwipe';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
@@ -43,11 +44,15 @@ export default function MobileHome() {
   const initialRouteHandled = useAtomValue(initialRouteHandledAtom);
   useSectionUrlSync(mobileCurrentPage, initialRouteHandled, { replaceUrl: false });
 
+  useSkipToSection();
+
   return (
     // motion components follow the Motion preference (MOT-02)
     <MotionPreferenceConfig>
       <MotionRuntime />
       {webgl ? <OuterLoader /> : <StaticReveal />}
+      {/* The skip link's target: where the content begins, after the header. */}
+      <span id="content-start" tabIndex={-1} className="sr-only" />
       <div id="wrapper" className="">
         <Vision />
         <MobilePortfolio />

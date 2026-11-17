@@ -24,6 +24,7 @@ import { initialRouteHandledAtom } from '@/atoms';
 import { useGSAP } from '@gsap/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
+import { useSkipToSection } from '@/hooks/useSkipToSection';
 import { useNavigation } from '@/hooks/useNavigation';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
@@ -81,6 +82,8 @@ export default function Home() {
     initializeAnimations();
   });
 
+  useSkipToSection();
+
   return (
     // motion components follow the Motion preference (MOT-02)
     <MotionPreferenceConfig>
@@ -90,6 +93,8 @@ export default function Home() {
       {/* The Digital Twin's 3D stage (canvas + controls), mounted once outside the scrolled content (RWD-02). */}
       {webgl && <TwinThreeWrapper />}
       <PCAudioPlayer />
+      {/* The skip link's target: after the header and the player, so the next Tab is the section's first control. */}
+      <span id="content-start" tabIndex={-1} className="sr-only" />
       <div id="wrapper">
         <div id="content">
           <Vision />
