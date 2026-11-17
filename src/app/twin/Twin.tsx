@@ -1,6 +1,6 @@
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { TWIN_FEATURES, TWIN_FEATURES_CN, TWIN_ONTOLOGY } from '@/content/twin';
-import { currentModelAtom, currentModelTypeAtom, newTwinChoice, PredictionModel } from '@/atoms/twin';
+import { chooseTwinModel, currentModelAtom, currentModelTypeAtom, newTwinChoice, PredictionModel } from '@/atoms/twin';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -96,6 +96,7 @@ function DesktopTwin() {
     }
     if (isResetDemo.current) {
       showTwinOpening('desktop');
+      chooseTwinModel(PredictionModel.M0);
       setCurrentModel(PredictionModel.M0);
       setCurrentModelType(ModelType.Skin);
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });
@@ -174,6 +175,7 @@ function PhoneTwin({ avatar }: { avatar: TwinAvatar }) {
   const resetModel = useCallback(() => {
     newTwinChoice();
     showTwinOpening('phone');
+    chooseTwinModel(PredictionModel.M0);
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   }, [setCurrentModel, setCurrentModelType]);

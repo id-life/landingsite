@@ -29,13 +29,20 @@ const SETTLE_MIN_MS = 500;
 const settleMs = (extraLinks: number) => Math.max(SETTLE_MIN_MS, Math.round((DURATION.base + extraLinks * 0.05) * 1000) + 150);
 
 /** The place a press on the control was made: the control's box then, at least 44 px around its centre on touch. */
-type PressPlace = { left: number; top: number; right: number; bottom: number };
+type PressPlace = { left: number; top: number; right: number; bottom: number; until?: number };
+/**
+ * On touch the place also ends by time. The fault it guards against is a second tap within about a second and a half;
+ * a finger has no hover to leave the place with, and on a wide phone title words lie under part of the 44 px place,
+ * so after this long a tap there is a new intention and goes to what is drawn. A mouse keeps the place until it moves.
+ */
+const TOUCH_PLACE_MS = 3000;
 function pressPlace(button: HTMLElement, pointerType: string): PressPlace {
   const r = button.getBoundingClientRect();
   const half = pointerType === 'mouse' ? 0 : 22;
   const cx = r.left + r.width / 2;
   const cy = r.top + r.height / 2;
   return {
+    until: pointerType === 'mouse' ? undefined : performance.now() + TOUCH_PLACE_MS,
     left: Math.min(r.left, cx - half),
     right: Math.max(r.right, cx + half),
     top: Math.min(r.top, cy - half),
@@ -118,17 +125,25 @@ function Initiative({
   // 2026-11-17): the control moves when pressed and a paper, a logo or an initiative link slides under the pointer,
   // and a time limit alone cannot tell a second press there from a new one, since the visitor has not moved. So a
   // further press inside the control's box as it was when pressed goes to the control (ignored while the list settles,
-  // a toggle after it), never to what is under it now. It ends when a mouse leaves that box, or when a touch lands
-  // anywhere else, the page scrolls or wheels, or the group unmounts (the phone's page steps). Keyboard presses
-  // (detail 0) neither start nor meet it: no stop and nothing announced is added.
+  // a toggle after it), never to what is under it now. It ends when a mouse leaves that box; on touch 3 s after the
+  // press (TOUCH_PLACE_MS) or when a touch lands anywhere else; and when the page scrolls or wheels, the window is
+  // resized or loses focus, or the group unmounts (the phone's page steps). Keyboard presses (detail 0) neither start
+  // nor meet it: no stop and nothing announced is added.
   const pressedAt = useRef<PressPlace | null>(null);
   const toggleRef = useRef<() => void>(() => {});
 
   useEffect(() => {
+    // Only a group with a control can set a place.
+    if (!collapsible) return;
     // Where the last press went down, before the browser's touch adjustment may move the click onto a nearby link.
     let downInside = false;
-    const onClick = (event: MouseEvent) => {
+    const current = () => {
       const place = pressedAt.current;
+      if (place?.until !== undefined && performance.now() > place.until) pressedAt.current = null;
+      return pressedAt.current;
+    };
+    const onClick = (event: MouseEvent) => {
+      const place = current();
       if (!place || event.detail === 0 || !(downInside || inside(place, event.clientX, event.clientY))) return;
       event.preventDefault();
       event.stopPropagation();
@@ -139,7 +154,7 @@ function Initiative({
       if (place && event.pointerType === 'mouse' && !inside(place, event.clientX, event.clientY)) pressedAt.current = null;
     };
     const onPointerDown = (event: PointerEvent) => {
-      const place = pressedAt.current;
+      const place = current();
       downInside = Boolean(place && inside(place, event.clientX, event.clientY));
       if (place && !downInside) pressedAt.current = null;
     };
@@ -151,14 +166,20 @@ function Initiative({
     window.addEventListener('pointerdown', onPointerDown, true);
     window.addEventListener('wheel', leave, { capture: true, passive: true });
     window.addEventListener('scroll', leave, { capture: true, passive: true });
+    // The place is a box in window coordinates: a resize can move the layout under it, and a visitor who switches away
+    // has left it.
+    window.addEventListener('resize', leave);
+    window.addEventListener('blur', leave);
     return () => {
       window.removeEventListener('click', onClick, true);
       window.removeEventListener('pointermove', onPointerMove, true);
       window.removeEventListener('pointerdown', onPointerDown, true);
       window.removeEventListener('wheel', leave, true);
       window.removeEventListener('scroll', leave, true);
+      window.removeEventListener('resize', leave);
+      window.removeEventListener('blur', leave);
     };
-  }, []);
+  }, [collapsible]);
 
   const toggle = useCallback(() => {
     // A pending timer means the list is still moving: the press is not taken (see settleMs).
@@ -221,10 +242,16 @@ function Initiative({
           settling && 'pointer-events-none',
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
-            ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
             : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
           // Long titles (the phone's papers page) wrap over several lines: keep a gap between them.
           layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
+          // A short phone (375x667) with the six papers open: 8 px between them left the last line 5 px under the
+          // page's bottom edge; 4 px fits it whole. Only open, so the rest picture is unchanged.
+          layout === 'columns' &&
+            expanded &&
+            item.links.some((l) => l.label.length >= 60) &&
+            'mobile:[@media(max-height:700px)]:!gap-1',
           // A landscape tablet (coarse pointer, 840-1199 px): the 44 px link boxes would push the logo wall under
           // the bottom controls, so an initiative's links run in two columns there; a phone in landscape (under
           // 480 px tall) takes three, so the first page fits above the section arrows.
@@ -274,7 +301,7 @@ function Initiative({
             className={cn(
               'mt-4',
               layout === 'publications'
-                ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
                 : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
             )}
           >

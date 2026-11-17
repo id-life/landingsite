@@ -13,7 +13,7 @@ const SubscribeSheet = dynamic(() => import('@/components/layout/footer/Subscrib
 /**
  * Connects the SUBSCRIBE buttons (DOM events) to the popup's state (subscribePopupAtom): a request becomes an atom
  * action, every change of the open state is announced back, and a page scroll closes the popup without counting as
- * a dismissal. Used by the experience (Home, MobileHome) and by SubscribePopupHost on content pages.
+ * a dismissal. Used by the experience (Home) and by SubscribePopupHost on content pages.
  */
 export function useSubscribeBridge(first?: SubscribeRequest) {
   const dispatch = useSetAtom(subscribePopupAtom);

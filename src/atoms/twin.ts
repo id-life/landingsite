@@ -34,6 +34,29 @@ export const newTwinChoice = () => {
 };
 export const isLatestTwinChoice = (choice: number) => choice === twinChoice;
 
+/**
+ * The avatar the visitor chose last. currentModelAtom follows it only once the stage applies it (from anatomy, when the
+ * camera has come back), so a skin or anatomy press in between must not read currentModelAtom: it read the avatar before
+ * (C01, then ORG pressed in anatomy, then anatomy again 0.1 s later asked the stage for C01's anatomy, under ORG's text).
+ */
+let chosenTwinModel: PredictionModel = PredictionModel.M0;
+export const chooseTwinModel = (model: PredictionModel) => {
+  chosenTwinModel = model;
+};
+export const chosenModel = () => chosenTwinModel;
+
+/**
+ * The anatomy view the camera was last framed for, or null when it has not been framed since anatomy was entered. A
+ * view's framing depends on where the camera starts (a fit from the first view's camera differs from a fit from another
+ * view's), so the late framing after the anatomy models mount is applied only when the marked view has not been framed
+ * yet: once, from the same camera a slow press starts from.
+ */
+let fittedView: AnatomyCamera | null = null;
+export const setFittedTwinView = (view: AnatomyCamera | null) => {
+  fittedView = view;
+};
+export const fittedTwinView = () => fittedView;
+
 export const currentModelAtom = atom<PredictionModel | null>(PredictionModel.M0);
 export const currentModelTypeAtom = atom<ModelType>(ModelType.Skin);
 

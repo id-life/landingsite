@@ -5,6 +5,7 @@ import {
   currentModelTypeAtom,
   mobileBorderAnimationStateAtom,
   modelLoadingItemAtom,
+  chooseTwinModel,
   newTwinChoice,
   PredictionModel,
 } from '@/atoms/twin';
@@ -167,6 +168,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
 
   const handleSwitchModel = (model: PredictionModel) => {
     trackTwin('model', twinModelId(model) ?? String(model));
+    chooseTwinModel(model);
     if (phone) handleSwitchModelPhone(model);
     else handleSwitchModelDesktop(model);
   };

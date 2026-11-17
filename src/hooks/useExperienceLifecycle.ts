@@ -6,7 +6,7 @@ import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
 /**
- * Called by Home and MobileHome. The 3D experience can mount several times in one tab (soft navigation
+ * Called by Home (both decks). The 3D experience can mount several times in one tab (soft navigation
  * to /news or /podcast and Back), while HashRouter lives in the root layout and never unmounts.
  *
  * On every mount: scroll restoration is 'manual' (the experience positions itself from the URL, so the

@@ -46,7 +46,7 @@ scroll each tween takes is unchanged; those timelines set `defaults: { duration:
 GSAP's old 0.5 s default.
 
 Files changed by the codemod (116 duration literals in 41 files, 79 ease literals in 37 files at the start):
-src/app/insights/Insights.tsx, src/app/portfolio/\_components/{Portfolio,MobilePortfolio}.tsx,
+src/app/insights/Insights.tsx, src/app/portfolio/\_components/Portfolio.tsx,
 src/app/news/\_components/NewsNavDialog.tsx, src/app/podcast/\_components/PodcastNavDialog.tsx,
 src/app/twin/{Twin.tsx,\_components/SwitchModel.tsx,\_components/mobile/SwitchModel.tsx}, src/constants/engagement.tsx,
 src/constants/scroll-config.ts, src/utils/gsap-config.ts, src/components/engagement/{Engagement,WorldMap,WorldMapBookDot,
@@ -68,7 +68,7 @@ src/hooks/engagement/useEngagementJumpTo.tsx, src/hooks/useMobileThemeTransition
   (`useMobileHomeAnimations`) had duration, ease and stagger among the timeline's vars the same way.
 - Entrance tilts: Portfolio and Spectrum rose with 45 / 15 degrees on X / Y; now at most `MAX_TILT` with 16-24 px of
   travel. The Connect panel entrance tilted -30 degrees on X; now `-MAX_TILT`.
-- The phone inner-page step was built three ways (CSS 500 ms in MobilePortfolio, motion 200 ms in MobileSpectrum);
+- The phone inner-page step was built three ways (CSS 500 ms in the phone Portfolio, motion 200 ms in MobileSpectrum);
   both now play `PAGE_STEP`. (The phone Insights section has one page, so no Swiper step is involved.)
 - The three phone menus (experience, /news, /podcast) share one choreography, `playMenuItems` in `src/motion/menu.ts`.
 - `createPage2CrossAnim` and `createPage3CrossAnim` in `useConnectCrossAnimations` were never called; deleted.

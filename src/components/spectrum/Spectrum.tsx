@@ -71,6 +71,9 @@ function bottomControls(section: Element): DOMRect[] {
   const boxes: DOMRect[] = [];
   for (const el of document.body.querySelectorAll('*')) {
     if (section.contains(el)) continue;
+    // A dialog over the page (SUBSCRIBE, the newsletter prompt) is not a bottom control: it comes and goes, and the
+    // composition fitted above it stayed so after it closed.
+    if (el.closest('[role="dialog"], [role="alertdialog"], [aria-modal="true"], [data-floating-ui-portal]')) continue;
     const style = getComputedStyle(el);
     if (style.position !== 'fixed' || style.visibility === 'hidden' || style.display === 'none') continue;
     const box = el.getBoundingClientRect();
@@ -113,6 +116,7 @@ function useFitScale(
     offset: 0,
     fieldShift: 0,
     fieldShiftHeld: 0,
+    gapCut: 0,
     room: 0,
     constrained: false,
   });
@@ -187,9 +191,21 @@ function useFitScale(
             }
           }
         }
+        // The gaps between the rows of opened papers, whole: the cut in force (--paper-row-cut) is added back, so the
+        // decision does not feed on itself.
+        const appliedCut = parseFloat(box.style.getPropertyValue('--paper-row-cut')) || 0;
+        const paperCopy = box.querySelector<HTMLElement>('section[aria-label="Spectrum publications"] [data-open-measure]');
+        const paperRows = paperCopy
+          ? new Set([...paperCopy.children].map((li) => Math.round((li as HTMLElement).offsetTop))).size
+          : 0;
+        const gaps = {
+          count: Math.max(0, paperRows - 1),
+          gap: paperCopy ? (parseFloat(getComputedStyle(paperCopy).rowGap) || 0) + appliedCut : 0,
+        };
+        needed += appliedCut * gaps.count;
         box.dataset.fitRoom = String(Math.round(room));
         box.dataset.fitNeeded = String(Math.round(needed));
-        const next = fitScale(room, needed);
+        const next = fitScale(room, needed, gaps);
         const offset = Math.max(0, top - (colBox.top + parseFloat(cs.paddingTop)));
         // The particle field is placed at the middle of the composition's box; the owner's picture has it at the middle
         // of the whole column, whose padding is larger above than below. This shift puts it back there at scale 1.
@@ -198,8 +214,10 @@ function useFitScale(
         const fieldShiftHeld = colBox.height / 2 - parseFloat(cs.paddingTop) - offset - room / 2;
         setFit((prev) => {
           // Held at scale 1 because of a prediction: it stands. Scaled: no hold needed once back at 1, predict again.
-          const constrained = predicted ?? (prev.scale < 1 ? false : prev.constrained);
+          // With the gaps cut the opened composition fills the room exactly, so nothing lies under a control: no hold.
+          const constrained = next.gapCut > 0 ? false : (predicted ?? (prev.scale < 1 ? false : prev.constrained));
           return Math.abs(next.scale - prev.scale) < 0.01 &&
+            Math.abs(next.gapCut - prev.gapCut) < 0.1 &&
             next.scrolls === prev.scrolls &&
             constrained === prev.constrained &&
             Math.abs(room - prev.room) < 1 &&
@@ -252,7 +270,9 @@ function DeckSpectrum() {
         marginTop: fit.offset / fit.scale,
         overflowY: fit.scrolls ? 'auto' : 'hidden',
       }
-    : undefined;
+    : fit.gapCut > 0
+      ? ({ '--paper-row-cut': `${fit.gapCut}px` } as CSSProperties)
+      : undefined;
   const initiativeItems = spectrumData.slice(0, 3);
   const publicationItem = spectrumData[3];
   const sponsorItem = spectrumData[spectrumData.length - 1];

@@ -204,8 +204,10 @@ const desktopDriver: SectionDriver = {
   },
 };
 
-export function useDesktopSections() {
+/** The desktop deck's section driver and inputs. `enabled` is false on the other deck's mount of Home (one Home for both decks): the hook then does nothing. */
+export function useDesktopSections(enabled = true) {
   useEffect(() => {
+    if (!enabled) return;
     const unregister = registerSectionDriver(desktopDriver);
     // A change of the system setting takes the smoother's glide away (and back) without a reload (MOT-02).
     const offPreference = onReducedMotionChange((reduced) =>
@@ -345,5 +347,5 @@ export function useDesktopSections() {
       cover?.remove();
       cover = null;
     };
-  }, []);
+  }, [enabled]);
 }

@@ -7,7 +7,8 @@ import { Center, useGLTF } from '@react-three/drei';
 import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM2';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
-import { AnatomyCamera } from '@/atoms/twin';
+import { AnatomyCamera, currentAnatomyCameraAtom } from '@/atoms/twin';
+import { jotaiStore } from '@/atoms/store';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { BICEP_NAME, LIVER_NAME } from './Model0';
@@ -114,16 +115,28 @@ const Model2In = forwardRef<ModelRef>(function ({}, ref) {
     });
   }, [vascularSystemScene]);
 
+  const moduleRun = useRef(0);
+  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
+  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed.
+  useEffect(() => {
+    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
+  }, []);
+
   const switchAnatomyModule = (index: AnatomyCamera) => {
+    // A newer view stops this one's staged changes (one object per frame) instead of being overwritten by them.
+    moduleRun.current += 1;
+    const run = moduleRun.current;
+    const live = () => run === moduleRun.current;
     // 展示完全体
     if (index === AnatomyCamera.CAMERA7) {
-      changeArrayData(models, 'visible', true);
+      changeArrayData(models, 'visible', true, 0, live);
     }
     // 只展示肝脏
     if (index === AnatomyCamera.CAMERA8) {
       const organs = [models[2]];
       const otherSystem = models.filter((child) => !organs.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       organs[0].visible = true;
       organs[0].traverse((object: any) => {
         if (object.isMesh) {
@@ -135,7 +148,7 @@ const Model2In = forwardRef<ModelRef>(function ({}, ref) {
     if (index === AnatomyCamera.CAMERA9) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       muscleSystem[0].visible = true;
       muscleSystem[0].traverse((object: any) => {
         if (object.isMesh) {

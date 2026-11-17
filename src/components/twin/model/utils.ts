@@ -1,8 +1,13 @@
 import * as THREE from 'three';
 import { RefObject } from 'react';
 
-export const changeArrayData = (array: any[], key: string, value: any, index = 0) => {
+/**
+ * Sets a property on each object of an array, one object per frame. `live` (optional) is asked before each step: a
+ * later change of the same objects makes it false, so an older change stops instead of finishing over the newer one.
+ */
+export const changeArrayData = (array: any[], key: string, value: any, index = 0, live?: () => boolean) => {
   if (index >= array.length) return;
+  if (live && !live()) return;
 
   array[index][key] = value;
   array[index].traverse((object: any) => {
@@ -11,7 +16,7 @@ export const changeArrayData = (array: any[], key: string, value: any, index = 0
     }
   });
   requestAnimationFrame(() => {
-    changeArrayData(array, key, value, index + 1);
+    changeArrayData(array, key, value, index + 1, live);
   });
 };
 
@@ -24,7 +29,8 @@ type ComponentWithMethods = {
 export const pollComponentMethod = <T extends ComponentWithMethods>(
   componentRef: any,
   methodName: keyof T,
-  args: any[] = [],
+  // The arguments, or a function giving them when the method is finally called (the state of that moment).
+  args: any[] | (() => any[]) = [],
   maxAttempts: number = 10,
   interval: number = 100,
 ): Promise<any> => {
@@ -33,7 +39,7 @@ export const pollComponentMethod = <T extends ComponentWithMethods>(
 
     const tryExecute = (): boolean => {
       if (componentRef.current && typeof componentRef.current[methodName] === 'function') {
-        const result = componentRef.current[methodName](...args);
+        const result = componentRef.current[methodName](...(typeof args === 'function' ? args() : args));
         resolve(result);
         return true;
       }
