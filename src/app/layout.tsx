@@ -4,6 +4,7 @@ import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
 import ExperienceRouter from '@/components/common/ExperienceRouter';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
+import { color } from '@/styles/tokens';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
 import { ANALYTICS_ENABLED } from '@/constants/env';
@@ -34,11 +35,8 @@ export const metadata: Metadata = {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
     description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
+    // The link-preview image (src/lib/seo/metadata.ts); pages without metadata of their own get it too.
+    images: [{ url: '/og-image.png', width: 1200, height: 630, type: 'image/png' }],
   },
 };
 
@@ -46,6 +44,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  // The phone browser bar in the site's own colour (question 9): tone-100 (#f0f0f0), the page background (--background) and the
+  // header (--nav) of the first screen and the content pages.
+  themeColor: color['tone-100'],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

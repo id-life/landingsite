@@ -16,7 +16,12 @@ type Locale = keyof typeof BRAND;
 /** The title his site gives an address that does not exist (Next's default 404 title). */
 export const NOT_FOUND_TITLE = '404: This page could not be found.';
 
-export const DEFAULT_OG_IMAGE = 'https://resources.id.life/id-life-cover-2.webp';
+/**
+ * The link-preview image (question 9, 2026-11-18): the site's own logo (public/svgs/logo-en.svg) on the site's
+ * background colour, nothing else, at 1200x630 PNG (LinkedIn's minimum is 1200x627; WhatsApp wants 300 px or wider
+ * and under 600 KB; Apple's Messages 900 px or wider). It replaces the 800x400 WebP cover as the default.
+ */
+const DEFAULT_OG_IMAGE = { url: '/og-image.png', width: 1200, height: 630, type: 'image/png' };
 
 const CJK = /[㐀-鿿豈-﫿]/;
 
@@ -92,7 +97,7 @@ export function buildMetadata({ path, title, tabTitle, description, image, type 
       siteName: BRAND.en,
       url: path,
       type,
-      images: [{ url: image || DEFAULT_OG_IMAGE }],
+      images: [image ? { url: image } : DEFAULT_OG_IMAGE],
     },
   };
 }
