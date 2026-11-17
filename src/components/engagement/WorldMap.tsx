@@ -359,6 +359,7 @@ export const WorldMap = memo(function WorldMapComponent({
           </div>
           {/* Cards sit outside the scroller (so they are not clipped) and follow its scroll. */}
           <div
+            data-card-layer
             className="pointer-events-none absolute inset-0 overflow-visible"
             style={{ transform: `translateX(-${scrollLeft}px)` }}
           >

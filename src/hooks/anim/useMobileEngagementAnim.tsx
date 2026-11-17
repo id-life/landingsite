@@ -1,11 +1,13 @@
+import { fitStripStop, measureOpenCard } from './cardFit';
+import { jotaiStore } from '@/atoms/store';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, tourOpenedDotAtom } from '@/atoms/engagement';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useCallback, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
 import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 import { isMotionPaused } from '@/motion/runtime';
@@ -22,21 +24,19 @@ export function useMobileEngagementAnim() {
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const activateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const userInteractedRef = useRef(false);
+  // Where the strip is panning to (today's stop, or the stop fitted to the open card).
+  const intendedStopRef = useRef<number | null>(null);
+  // The pending fit of the open card (fitOpenCardSoon), cancelled when the section is left.
+  const fitFrameRef = useRef<number | null>(null);
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const setTourOpenedDot = useSetAtom(tourOpenedDotAtom);
+  const activeMeetingDot = useAtomValue(activeMeetingDotAtom);
+  const activeBookDot = useAtomValue(activeBookDotAtom);
+  const activeSponsorDot = useAtomValue(activeSponsorDotAtom);
 
   const { contextSafe } = useGSAP();
-
-  useEventBus(
-    MessageType.MOBILE_SCROLL_TO_ACTIVE_POINT,
-    ({ type, index }: { type: 'meeting' | 'book' | 'sponsor'; index: number }) => {
-      handleUserInteraction();
-      const dotInfo = getMobileDotShowInfo(type, index);
-      scrollToActivePoint(type, index, dotInfo?.offsetX ?? 0);
-    },
-  );
 
   const scrollToActivePoint = useCallback((type: 'meeting' | 'book' | 'sponsor', index: number, offsetX: number = 0) => {
     const scrollContainer = document.querySelector('.world-map-container');
@@ -51,9 +51,80 @@ export function useMobileEngagementAnim() {
       const eleEl = activeEle as HTMLDivElement;
       // Auto-center the element on screen, with custom offset
       const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2 + offsetX;
+      // Where it will really stop: the browser keeps a scroll inside the strip (Shanghai, Chiang Mai and Singapore are
+      // at its east end).
+      intendedStopRef.current = Math.max(0, Math.min(containerEl.scrollWidth - containerEl.clientWidth, targetScrollLeft));
       containerEl.scrollTo({ behavior: 'smooth', left: Math.max(0, targetScrollLeft) });
     }
   }, []);
+
+  // The card's own box, once it is open: the strip's stop moves only if the card or its place name is not whole there
+  // (fitStripStop). Two frames after the card mounts, so it is laid out; the pan already under way is retargeted.
+  const fitOpenCardSoon = useCallback(() => {
+    if (fitFrameRef.current !== null) cancelAnimationFrame(fitFrameRef.current);
+    fitFrameRef.current = requestAnimationFrame(() => {
+      fitFrameRef.current = requestAnimationFrame(() => {
+        fitFrameRef.current = null;
+        // The card open now (a tap may have opened another, or kept the tour's, since this was asked for).
+        const meeting = jotaiStore.get(activeMeetingDotAtom);
+        const book = jotaiStore.get(activeBookDotAtom);
+        const sponsor = jotaiStore.get(activeSponsorDotAtom);
+        const [type, index] =
+          meeting !== null
+            ? ['meeting', meeting]
+            : book !== null
+              ? ['book', book]
+              : sponsor !== null
+                ? ['sponsor', sponsor]
+                : [null, null];
+        if (type === null || index === null) return;
+        const scroller = document.querySelector<HTMLElement>('.world-map-container');
+        const prefix = type === 'meeting' ? '' : `${type}-`;
+        const dot = document.querySelector<HTMLElement>(`.world-map-dot-${prefix}${index}`);
+        const card = document.querySelector<HTMLElement>(`.world-map-dot-${prefix}content-${index}`);
+        const intended = intendedStopRef.current;
+        if (!scroller || !dot || !card || intended === null) return;
+        const measured = measureOpenCard(dot, card);
+        if (!measured) return;
+        const stop = fitStripStop({
+          intended,
+          viewport: scroller.clientWidth,
+          name: measured.name,
+          card: measured.card,
+          maxScroll: scroller.scrollWidth - scroller.clientWidth,
+        });
+        if (Math.abs(stop - intended) < 0.5) return;
+        intendedStopRef.current = stop;
+        scroller.scrollTo({ behavior: 'smooth', left: stop });
+      });
+    });
+  }, []);
+  useEffect(
+    () => () => {
+      if (fitFrameRef.current !== null) cancelAnimationFrame(fitFrameRef.current);
+    },
+    [],
+  );
+
+  // A card opened by a tap on its point (the tour is stopped by the touch): the strip stays where it is unless the card
+  // or its place name is not whole there. A card opened with a pan already asked for (the tour, a link from Spectrum)
+  // is fitted by that pan.
+  useEffect(() => {
+    if (!userInteractedRef.current || fitFrameRef.current !== null) return;
+    const open: ['meeting' | 'book' | 'sponsor', number] | null =
+      activeMeetingDot !== null
+        ? ['meeting', activeMeetingDot]
+        : activeBookDot !== null
+          ? ['book', activeBookDot]
+          : activeSponsorDot !== null
+            ? ['sponsor', activeSponsorDot]
+            : null;
+    if (!open) return;
+    const scroller = document.querySelector<HTMLElement>('.world-map-container');
+    if (!scroller) return;
+    intendedStopRef.current = scroller.scrollLeft;
+    fitOpenCardSoon();
+  }, [activeMeetingDot, activeBookDot, activeSponsorDot, fitOpenCardSoon]);
 
   const stopAutoShowDot = useCallback(() => {
     if (autoScrollRef.current) {
@@ -119,9 +190,22 @@ export function useMobileEngagementAnim() {
         }
         // The tour opened this card itself: a tap on its point keeps it open (useEngagementClickPoint).
         setTourOpenedDot({ type, index });
+        fitOpenCardSoon();
       }, AUTO_PLAY_CONFIG.activateDelay);
     },
-    [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setTourOpenedDot],
+    [scrollToActivePoint, fitOpenCardSoon, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setTourOpenedDot],
+  );
+
+  // A tap on a point (WorldMap) asks for its pan; declared after the functions it uses.
+  useEventBus(
+    MessageType.MOBILE_SCROLL_TO_ACTIVE_POINT,
+    ({ type, index }: { type: 'meeting' | 'book' | 'sponsor'; index: number }) => {
+      handleUserInteraction();
+      const dotInfo = getMobileDotShowInfo(type, index);
+      scrollToActivePoint(type, index, dotInfo?.offsetX ?? 0);
+      // A tap opens the card at once: fit it once it is laid out.
+      fitOpenCardSoon();
+    },
   );
 
   const setupEventListeners = contextSafe(() => {
@@ -246,6 +330,8 @@ export function useMobileEngagementAnim() {
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
       setTourOpenedDot(null);
+      if (fitFrameRef.current !== null) cancelAnimationFrame(fitFrameRef.current);
+      fitFrameRef.current = null;
     };
   }, [
     setActiveBookDot,
