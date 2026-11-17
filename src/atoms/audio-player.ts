@@ -108,6 +108,7 @@ export const audioControlsAtom = atom(
         if (audioRef) {
           // The control shows the visitor's intent at once; a refused or interrupted play() puts it back.
           set(currentPlayStatusAtom, true);
+          retryIfFailed(audioRef);
           audioRef
             .play()
             .then(() => {
@@ -237,11 +238,17 @@ export const determineNextTrackAtom = atom(null, (get, set) => {
 });
 
 /**
- * play() was refused (no gesture, decode error) or interrupted by a pause before it started (the visitor
- * pausing). Either way the control follows the element.
+ * play() was refused (no gesture), interrupted by a pause before it started (the visitor pausing), or the file
+ * could not be loaded. Either way the control follows the element: a file that failed leaves the element unpaused
+ * but unable to play, so its error counts as stopped.
  */
 function onPlayRejected(audio: HTMLAudioElement, set: (atom: typeof currentPlayStatusAtom, value: boolean) => void) {
-  if (audio.paused) set(currentPlayStatusAtom, false);
+  if (audio.paused || audio.error) set(currentPlayStatusAtom, false);
+}
+
+/** A file that failed to load is fetched again by the next play: an element keeps its error until load() is called. */
+function retryIfFailed(audio: HTMLAudioElement) {
+  if (audio.error) audio.load();
 }
 
 export const togglePlayAtom = atom(null, (get, set) => {
@@ -259,6 +266,7 @@ export const togglePlayAtom = atom(null, (get, set) => {
     set(currentPlayStatusAtom, false);
   } else {
     set(currentPlayStatusAtom, true);
+    retryIfFailed(audioRef);
     audioRef.play().catch((error) => {
       reportMediaError(error, { area: 'media', component: 'site_player' });
       onPlayRejected(audioRef, set);

@@ -127,6 +127,7 @@ export default function useCurrentAudio() {
       // Its pause event arrives after the next track is current and would pause that one.
       audioRef.onpause = null;
       audioRef.onplay = null;
+      audioRef.onerror = null;
     }
 
     if (!currentAudio) return;
@@ -275,6 +276,11 @@ export default function useCurrentAudio() {
       dispatch({ type: AUDIO_DISPATCH.PAUSE });
     };
 
+    // The file cannot be loaded (network, blocked, missing): nothing can play, so the control goes back to play.
+    audio.onerror = () => {
+      dispatch({ type: AUDIO_DISPATCH.PAUSE });
+    };
+
     return () => {
       if (audio) {
         leftAt = { id: currentAudio.id, time: audio.currentTime, playing: !audio.paused };
@@ -285,6 +291,7 @@ export default function useCurrentAudio() {
         audio.ondurationchange = null;
         audio.onpause = null;
         audio.onplay = null;
+        audio.onerror = null;
       }
     };
 
