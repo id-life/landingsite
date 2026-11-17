@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
 import { getSectionState, goToSection } from '@/motion/sectionController';
+import { createTabIntent } from '@/motion/tabIntent';
 
 /**
  * Skip to content on the experience (both decks): the link's target, #content-start, sits after the header, and every
@@ -20,33 +21,39 @@ export function useSkipToSection() {
       section.addEventListener('blur', () => section.removeAttribute('tabindex'), { once: true });
       section.focus({ preventScroll: true });
     };
-    // Reached by the Tab key alone, a section other than the one in view is brought to its rest pose, so its
-    // focused control is drawn (it was left at the start of its entrance, its text at opacity 0). Only after a Tab
-    // key, so a press or a programmatic focus never moves the deck; through the controller's public goToSection.
-    let tabbing = false;
-    const onKeyDown = (event: KeyboardEvent) => {
-      tabbing = event.key === 'Tab';
+    // Reached by the Tab key, a section other than the one in view is brought to its rest pose, so its focused
+    // control is drawn (it was left at the start of its entrance, its text at opacity 0); through the controller's
+    // public goToSection. Only a focus change that is the direct result of a Tab press in this page moves the deck
+    // (tabIntent): not the window coming back, a script's focus(), a dialog handing focus back, a press or the wheel.
+    const intent = createTabIntent();
+    const onKeyDown = (event: KeyboardEvent) => intent.keydown(event, event.timeStamp);
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Tab') intent.clear();
     };
-    const onPointerDown = () => {
-      tabbing = false;
-    };
+    const clear = () => intent.clear();
     const onTabFocus = (event: FocusEvent) => {
-      if (!tabbing || !(event.target instanceof Element)) return;
+      if (!intent.focus(event.timeStamp) || !(event.target instanceof Element)) return;
       const state = getSectionState();
-      if (state.phase === 'moving') return;
       const index = NAV_LIST.findIndex((item) => event.target instanceof Element && event.target.closest(`#${item.id}`));
-      if (index < 0 || index === state.index) return;
+      // During a move the deck is headed for its target: a Tab press back out of it retargets the move (the controller
+      // reverses it toward where it started, or goes on to the new section), so the deck ends where the focus is.
+      const headedFor = state.phase === 'moving' ? state.target : state.index;
+      if (index < 0 || index === headedFor) return;
       goToSection(index, 'key');
     };
     document.addEventListener('focusin', onFocusIn);
     document.addEventListener('focusin', onTabFocus);
     document.addEventListener('keydown', onKeyDown, true);
-    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('keyup', onKeyUp, true);
+    document.addEventListener('pointerdown', clear, true);
+    window.addEventListener('blur', clear);
     return () => {
       document.removeEventListener('focusin', onFocusIn);
       document.removeEventListener('focusin', onTabFocus);
       document.removeEventListener('keydown', onKeyDown, true);
-      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('keyup', onKeyUp, true);
+      document.removeEventListener('pointerdown', clear, true);
+      window.removeEventListener('blur', clear);
     };
   }, []);
 }
