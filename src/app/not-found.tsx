@@ -16,6 +16,8 @@ const MORE_LINKS = [
 export default function NotFound() {
   return (
     <>
+      {/* The skip link's target (this page has no site header). */}
+      <span id="content-start" tabIndex={-1} className="sr-only" />
       <ErrorState
         code="404"
         title="Page not found"
