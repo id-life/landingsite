@@ -18,6 +18,7 @@ import {
   PredictionModel,
 } from '@/atoms/twin';
 import SwitchSkin from '@/app/twin/_components/SwitchSkin';
+import { jotaiStore } from '@/atoms/store';
 import { ModelRef, ModelType } from './model/type';
 import { MessageType } from '../event-bus/messageType';
 import { useEventBus } from '../event-bus/useEventBus';
@@ -119,12 +120,16 @@ export default function TwinThreeWrapper() {
       }
       setCurrentAnatomyCamera(index);
       setCurrentModel(payload.model);
-      pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
+      // The anatomy models mount after this (the stage switches to them on this event), so a view pressed meanwhile
+      // must not be undone: each model is shown with the view marked when it is ready, not the one of this moment,
+      // and the camera follows that view (the marked icon is the drawn view, however fast the presses come).
+      const markedView = () => jotaiStore.get(currentAnatomyCameraAtom);
+      pollComponentMethod(modelRefs[0], 'switchModelShow', () => [payload.type, markedView()]).then(() => {
         if (!isLatestTwinChoice(choice)) return;
-        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: markedView() } });
       });
       if (payload.model !== PredictionModel.M0) {
-        pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
+        pollComponentMethod(modelRefs[1], 'switchModelShow', () => [payload.type, markedView()]).then();
       }
     }
     setCurrentModelType(payload.type);
