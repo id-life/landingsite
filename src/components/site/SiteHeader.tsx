@@ -82,9 +82,9 @@ export default function SiteHeader({
         className={clsx(
           'flex w-full items-center text-foreground',
           overlay
-            ? // The experience: one row from 1200 px, with the original's padding and gaps; below, the navigation takes
-              // its own row under the logo row.
-              'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:gap-y-[14px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:px-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:pt-[24px]'
+            ? // The experience: one row with the original's padding and gaps on every laptop-deck window, scaled with
+              // the window (two versions only, RWD-02); the phone deck's bar.
+              'fixed left-0 top-0 z-50 flex-nowrap gap-x-15 p-10 mobile:z-[60] mobile:gap-0 mobile:p-5'
             : // Content pages: the logo and the page's action, as their original headers had them.
               'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
           // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
@@ -117,24 +117,15 @@ export default function SiteHeader({
             aria-label="Main"
             className={clsx(
               'main-nav-links flex gap-x-8 text-sm font-semibold mobile:hidden',
-              // Below 1200 px a row of its own (never a sideways scroller: its items would be cut by the window).
-              'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
+              // In the logo's row, as on the original at every laptop width (it scales with the window).
+              'flex-nowrap',
               // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
               live,
             )}
           >
-            {SECTION_NAV.map((item, index) => {
+            {SECTION_NAV.map((item) => {
               const current = currentId === item.id;
               return [
-                index === 4 && (
-                  <span
-                    key="row-break"
-                    aria-hidden="true"
-                    // A flex line of its own that is the row gap (the nav has none here: a zero-height line would add
-                    // the gap twice, and a negative margin cannot shrink a flex line below zero).
-                    className="hidden h-1 basis-full navGrid:block"
-                  />
-                ),
                 <Link
                   key={item.id}
                   prefetch={false}
@@ -160,7 +151,10 @@ export default function SiteHeader({
         )}
         <div
           id={overlay ? 'subscribe-btn' : undefined}
-          className="flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5 navRow:items-start"
+          className={clsx(
+            'flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5',
+            overlay ? 'notMobile:items-start' : 'navRow:items-start',
+          )}
         >
           {action === 'exit' ? (
             <Link
@@ -178,8 +172,10 @@ export default function SiteHeader({
                 // podcast pages; a 44 px hit area on touch screens (tap-area) instead of a bigger frame.
                 'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
                 overlay ? 'w-33' : 'w-34',
-                // The tablet tiers draw the header at its 1440 px size (text there is at its 1440 size too).
-                '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]',
+                // Content pages keep their tablet-width frame for now (they are not in the decks); the experience's
+                // scales with the deck (two versions only, RWD-02).
+                !overlay &&
+                  '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]',
                 currentId === 'podcast' && 'tracking-[0.1em] mobile:tracking-normal',
                 live,
               )}

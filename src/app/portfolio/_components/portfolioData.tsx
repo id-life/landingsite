@@ -23,7 +23,9 @@ const mobileImageClassName = 'mobile:h-full mobile:w-auto mobile:object-contain'
 /** Logo classes per company (presentation only). */
 const LOGO_CLASS: Record<string, string> = {
   'healthspan-capital': cn('w-19.5', mobileImageClassName),
-  'frontier-bio': cn('w-68', mobileImageClassName, 'ipad:max-w-[230px]'),
+  // Frontier Bio's wide mark fills its column on a phone (179 px at 390 px); on an upright tablet its width keeps that
+  // phone proportion (11.1875 units), as the other marks keep theirs through the box's height.
+  'frontier-bio': cn('w-68', mobileImageClassName, 'phoneScaled:max-w-[11.1875rem]'),
   'unlimited-bio': cn('w-19.5', mobileImageClassName),
   'r3-bio': cn(mobileImageClassName, 'w-[8.75rem] mobile:w-[6.25rem]'),
   'immune-bridge': cn('w-[12.5rem]', mobileImageClassName),

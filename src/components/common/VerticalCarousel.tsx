@@ -3,7 +3,8 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
-import { ReactNode, useEffect, useMemo, useRef } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { layoutUnitPx } from '@/utils/layout-unit';
 import { NAV_LIST } from '../nav/nav';
 import { EASE } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
@@ -16,17 +17,32 @@ interface VerticalCarouselProps {
   transition?: number; // 过渡时间(秒)
   slideDown?: boolean; // 控制最后一个的时候是否向下滑动
   itemClassName?: string;
+  /**
+   * itemHeight is in px at a 16 px layout unit and follows the deck's unit (the phone deck grows above phone width,
+   * where a fixed box would cut its larger text). Off: plain px.
+   */
+  scaleWithUnit?: boolean;
 }
 
 export default function VerticalCarousel({
   children,
   className,
-  itemHeight = 45,
+  itemHeight: itemHeightAtUnit = 45,
   duration = 3,
   transition = 0.6,
   slideDown = false, // 添加新参数
   itemClassName,
+  scaleWithUnit = false,
 }: VerticalCarouselProps) {
+  const [unitScale, setUnitScale] = useState(1);
+  useEffect(() => {
+    if (!scaleWithUnit) return;
+    const read = () => setUnitScale(layoutUnitPx() / 16);
+    read();
+    window.addEventListener('resize', read);
+    return () => window.removeEventListener('resize', read);
+  }, [scaleWithUnit]);
+  const itemHeight = itemHeightAtUnit * unitScale;
   const containerRef = useRef<HTMLDivElement>(null);
   const itemClass = useMemo(() => {
     return cn('mobile:flex mobile:flex-col mobile:items-center mobile:justify-center', itemClassName);

@@ -175,7 +175,7 @@ export default function SubscribeStrip() {
                     Email
                   </label>
                   <input
-                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600"
+                    className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600 coarse:text-[16px]"
                     id={emailId}
                     placeholder="Please enter email"
                     type="email"

@@ -46,6 +46,11 @@ export const desktopTreeAnd = (condition: string) =>
  */
 export const PHONE_SCALE_REFERENCE = { width: 600, height: 740 } as const;
 export const PHONE_LAYOUT_UNIT = `max(1rem, min(${(1600 / PHONE_SCALE_REFERENCE.width).toFixed(5)}vw, ${(1600 / PHONE_SCALE_REFERENCE.height).toFixed(5)}svh))`;
+/**
+ * The part of the phone deck whose unit grows (from 600 px wide, at least 480 px tall): below 600 px, and on a phone on
+ * its side, the deck's unit is 16 px and its text exactly as before.
+ */
+export const PHONE_SCALED_QUERY = `(min-width: 600px) and (min-height: 480px) and (max-width: ${PHONE_TREE_MAX_WIDTH}px), (min-width: 600px) and (min-height: 480px) and (orientation: portrait) and (max-width: ${PHONE_TREE_UPRIGHT_MAX_WIDTH}px)`;
 /** The same function in px, for tests and for reasoning: the unit at a window of width x height. */
 export const phoneLayoutUnitPx = (width: number, height: number, rem = 16) =>
   Math.max(rem, Math.min((width * 16) / PHONE_SCALE_REFERENCE.width, (height * 16) / PHONE_SCALE_REFERENCE.height));

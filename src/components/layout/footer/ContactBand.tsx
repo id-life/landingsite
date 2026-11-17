@@ -88,15 +88,13 @@ export default function ContactBand() {
           {/* A named region: the panel sits outside <main>, so without a landmark axe counts each of its parts (region). */}
           <section
             aria-label="Contact and subscribe"
-            className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4 medium:flex-wrap medium:gap-x-6 medium:gap-y-6 notMobile:expanded:pb-24 coarse:py-6 [@media(min-width:840px)_and_(max-width:1199.98px)_and_(max-height:800px)]:coarse:py-4"
+            className="footer-contact-clip items mx-10 flex w-full justify-between bg-white/40 p-10 backdrop-blur mobile:p-4"
           >
-            {/* On a portrait tablet the media take the first row and Contact and Subscribe share the second, so the panel
-                is two rows tall, not three, and the section's text above it keeps room (RWD-01). */}
-            <div className="mb-7.5 font-display font-bold uppercase medium:basis-full coarse:mb-0">
+            <div className="mb-7.5 font-display font-bold uppercase">
               <p className="text-tone-650">Media</p>
-              <div className="mt-7 coarse:mt-3">
+              <div className="mt-7">
                 {mediaRows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4 coarse:mt-2')}>
+                  <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
                     {row.map(({ type, label, Icon, iconClassName }) => (
                       <a
                         key={type}
@@ -104,7 +102,7 @@ export default function ContactBand() {
                         href={Links[type]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap-area hover:text-accent expanded:w-[104px]"
+                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap-area hover:text-accent"
                       >
                         <CornerBorder />
                         <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-accent')} />
@@ -117,8 +115,8 @@ export default function ContactBand() {
             </div>
             {/* The original's sizes (the owner's rule on font sizes); the privacy-choices link (DATA-01) shares the
                 label's row so the column keeps the original's height. */}
-            <div className="font-display text-base/5 font-bold medium:min-w-0 medium:flex-1">
-              <div className="flex items-baseline justify-between gap-6 medium:flex-col medium:items-start medium:gap-1 expanded:flex-col expanded:items-start expanded:gap-1">
+            <div className="font-display text-base/5 font-bold">
+              <div className="flex items-baseline justify-between gap-6">
                 <p className="uppercase text-tone-650">Contact</p>
                 <div className="flex items-baseline gap-4">
                   <PrivacyChoicesLink className="text-xs normal-case underline opacity-60 hover:opacity-100" />
@@ -128,7 +126,7 @@ export default function ContactBand() {
                   constants instead of repeated literals. */}
               {/* In capitals, as the original panel. */}
               <address className="uppercase not-italic">
-                <div className="mt-7 flex items-center justify-start gap-1.5 medium:mt-1 expanded:mt-1">
+                <div className="mt-7 flex items-center justify-start gap-1.5">
                   <img src="/svgs/home.svg" alt="" />
                   {ORG_ADDRESS_TEXT}
                 </div>
@@ -142,7 +140,7 @@ export default function ContactBand() {
                 </a>
               </address>
             </div>
-            <div className="font-display text-base/5 font-bold medium:min-w-0 medium:flex-[1.2]">
+            <div className="font-display text-base/5 font-bold">
               <p className="uppercase text-tone-650">SUBSCRIBE</p>
               <form
                 id="subscribe-form"
@@ -166,7 +164,7 @@ export default function ContactBand() {
                 <div className={clsx('flex-1 border-2 p-2', errors.EMAIL ? 'border-accent' : 'border-black')}>
                   <input
                     id="connect-subscribe-email"
-                    className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5 medium:w-full coarse:text-[16px]"
+                    className="w-[18rem] bg-transparent text-sm font-semibold mobile:text-xs/5 coarse:text-[16px]"
                     placeholder="Please enter email"
                     type="email"
                     inputMode="email"
