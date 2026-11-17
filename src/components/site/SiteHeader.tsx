@@ -201,9 +201,10 @@ export default function SiteHeader({
           )}
         </div>
       </header>
-      {/* The skip link's target (Skip to content, in the root layout): where the page's content begins, after the bar.
-        A small element of its own, so a skip lands on the content and no large wrapper takes focus on a press. */}
-      <span id="content-start" tabIndex={-1} className="sr-only" />
+      {/* The skip link's target (Skip to content, in the root layout) on the content pages: where the page's content
+          begins, after the bar. A small element of its own, so a skip lands on the content and no large wrapper takes
+          focus on a press. The experience places its own after its music player (Home, MobileHome). */}
+      {!overlay && <span id="content-start" tabIndex={-1} className="sr-only" />}
     </>
   );
 }
