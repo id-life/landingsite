@@ -18,10 +18,12 @@ type Layout = 'columns' | 'publications';
 const openGroupsAtom = atom<Record<string, boolean>>({});
 
 /**
- * While a group's list opens or closes, its links take no press: "more" moves when it is pressed and a paper slides
- * under the pointer, so a double click (or a second tap up to a second later) opened that paper in a new tab. The
- * window covers the list's own animation (DURATION.base plus a 50 ms stagger per link) and never less than half a
- * second, reduced motion included.
+ * While a group's list opens or closes, a press on that group does nothing, its links and its own control alike: "more"
+ * moves when it is pressed and a paper slides under the pointer, so a double click (or a second tap up to a second
+ * later) opened that paper in a new tab; and a second press on the moving control turned the list straight back, so a
+ * double click could never close it. A double click therefore ends in the state its first press asked for, opening
+ * or closing. The window covers the list's own animation (DURATION.base plus a 50 ms stagger per link) and is never
+ * less than half a second, reduced motion included.
  */
 const SETTLE_MIN_MS = 500;
 const settleMs = (extraLinks: number) => Math.max(SETTLE_MIN_MS, Math.round((DURATION.base + extraLinks * 0.05) * 1000) + 150);
@@ -87,10 +89,17 @@ function Initiative({
   useEffect(() => () => clearTimeout(settleTimer.current), []);
 
   const toggle = useCallback(() => {
+    // A pending timer means the list is still moving: the press is not taken (see settleMs).
+    if (settleTimer.current !== undefined) return;
     setOpenGroups((groups) => ({ ...groups, [item.title]: !groups[item.title] }));
     setSettling(true);
-    clearTimeout(settleTimer.current);
-    settleTimer.current = setTimeout(() => setSettling(false), settleMs(item.links.length - restCount));
+    settleTimer.current = setTimeout(
+      () => {
+        settleTimer.current = undefined;
+        setSettling(false);
+      },
+      settleMs(item.links.length - restCount),
+    );
   }, [setOpenGroups, item.title, item.links.length, restCount]);
 
   return (
