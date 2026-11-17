@@ -22,6 +22,18 @@ export enum AnatomyCamera {
   CAMERA10 = 10,
 }
 
+/**
+ * The visitor's choices in the Digital Twin (an avatar, skin or anatomy, the reset on leaving), counted. Work that
+ * finishes later than the press that started it (the 3D stage applies a model once its camera has come to rest) applies
+ * its choice only while no newer choice has been made, so the last press wins whatever the speed of the presses.
+ */
+let twinChoice = 0;
+export const newTwinChoice = () => {
+  twinChoice += 1;
+  return twinChoice;
+};
+export const isLatestTwinChoice = (choice: number) => choice === twinChoice;
+
 export const currentModelAtom = atom<PredictionModel | null>(PredictionModel.M0);
 export const currentModelTypeAtom = atom<ModelType>(ModelType.Skin);
 

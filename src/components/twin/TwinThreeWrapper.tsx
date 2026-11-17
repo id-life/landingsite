@@ -8,7 +8,15 @@ import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
 import { useAtom, useSetAtom } from 'jotai';
-import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import {
+  AnatomyCamera,
+  currentAnatomyCameraAtom,
+  currentModelAtom,
+  currentModelTypeAtom,
+  isLatestTwinChoice,
+  newTwinChoice,
+  PredictionModel,
+} from '@/atoms/twin';
 import SwitchSkin from '@/app/twin/_components/SwitchSkin';
 import { ModelRef, ModelType } from './model/type';
 import { MessageType } from '../event-bus/messageType';
@@ -82,12 +90,17 @@ export default function TwinThreeWrapper() {
 
   // 切换模型
   useEventBus(MessageType.SWITCH_MODEL, (payload: { type: ModelType; model: PredictionModel }) => {
+    // A newer choice made before the camera comes to rest wins: the camera's promise resolves only when the camera
+    // rests, which after a far anatomy view takes longer than a visitor's next press, and applying this older choice
+    // then put the original avatar back under the clone's title (isLatestTwinChoice).
+    const choice = newTwinChoice();
     // 重制镜头
     let index = AnatomyCamera.CAMERA0;
     if (payload.type === ModelType.Skin) {
       const controls1 = controlRefs[0]?.current;
       const controls2 = controlRefs[1]?.current;
       controls1?.setLookAt(0, 0, 15, 0, 0, 0, true).then(() => {
+        if (!isLatestTwinChoice(choice)) return;
         setCurrentModel(payload.model);
         setCurrentAnatomyCamera(index);
         eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
@@ -107,6 +120,7 @@ export default function TwinThreeWrapper() {
       setCurrentAnatomyCamera(index);
       setCurrentModel(payload.model);
       pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
+        if (!isLatestTwinChoice(choice)) return;
         eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
       });
       if (payload.model !== PredictionModel.M0) {
