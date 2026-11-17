@@ -7,7 +7,7 @@ import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM0';
 import { SkeletonUtils } from 'three-stdlib';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
-import { AnatomyCamera, currentAnatomyCameraAtom } from '@/atoms/twin';
+import { AnatomyCamera, currentAnatomyCameraAtom, fittedTwinView } from '@/atoms/twin';
 import { jotaiStore } from '@/atoms/store';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
@@ -95,14 +95,15 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
   // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
   // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed. This model is
   // the one every view's camera is framed on (the stage fits the camera to its scenes), so it also frames the camera
-  // for that view: pressed before the mount, the view's own camera move found no scene to fit and did nothing. The
-  // camera waits two frames, until <Center> has placed the model and its world matrices are current; fitted at once it
-  // fits the unplaced model and the view is framed like the first one.
+  // for that view if nothing has framed it yet (fittedTwinView): pressed before the mount, the view's own camera move
+  // found no scene to fit and did nothing, and the stage's late framing gives up if this model takes over a second. It
+  // waits two frames, until <Center> has placed the model; framed only once, from the camera a slow press starts from.
   useEffect(() => {
     switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
     let frame = requestAnimationFrame(() => {
       frame = requestAnimationFrame(() => {
-        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: jotaiStore.get(currentAnatomyCameraAtom) } });
+        const view = jotaiStore.get(currentAnatomyCameraAtom);
+        if (fittedTwinView() !== view) eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: view } });
       });
     });
     return () => cancelAnimationFrame(frame);
