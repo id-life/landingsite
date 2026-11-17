@@ -2,6 +2,7 @@
 
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect } from 'react';
 import { currentPageAtom } from '@/atoms';
 import { jotaiStore } from '@/atoms/store';
@@ -10,10 +11,12 @@ import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 import {
   canStepSection,
   goToSection,
+  isSectionMoving,
   registerSectionDriver,
   type SectionDriver,
   stepSection,
 } from '@/motion/sectionController';
+import { sweepStops } from '@/motion/sweepStops';
 import { DURATION, EASE, REDUCED_FADE, SECTION_COVER } from '@/motion/tokens';
 import { SMOOTHER_LAG, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { getRestScroll } from '@/utils/section-step';
@@ -111,9 +114,24 @@ function themeColour(index: number) {
   return theme?.['--background'] ?? getComputedStyle(document.documentElement).getPropertyValue('--background').trim();
 }
 
-/** Put the view at y at once: the smoother's own setter moves the content with the scroll, with no lag. */
+/**
+ * Put the view at y at once: the smoother's own setter moves the content with the scroll, with no lag. Across
+ * several sections it passes through each rest on the way (sweepStops), in one synchronous run, so the scrubbed
+ * timelines that share the theme, the dotted background and the hero canvas are taken back in the order a scroll
+ * takes them: the destination's look at rest is the same from every origin.
+ */
 function jumpTo(y: number) {
-  ScrollSmoother.get()?.scrollTop(y);
+  const smoother = ScrollSmoother.get();
+  if (!smoother) return;
+  const rests = NAV_LIST.map((_, i) => restOf(i)).filter((rest): rest is number => rest !== null);
+  for (const stop of sweepStops(smoother.scrollTop(), y, rests)) {
+    // The native scroll first: scrollTop() updates the triggers before it moves the native scroll, which is where
+    // ScrollTrigger reads the direction from and where the smoother's own trigger reads its position. Moved after,
+    // the first update of a jump up was taken as going down, and the native scroll event that follows replayed the
+    // last range (with reduced motion every jump of two sections up was wrong).
+    window.scrollTo(0, stop);
+    smoother.scrollTop(stop);
+  }
 }
 
 const desktopDriver: SectionDriver = {
@@ -188,6 +206,17 @@ export function useDesktopSections() {
     const offPreference = onReducedMotionChange((reduced) =>
       ScrollSmoother.get()?.smooth(reduced ? SMOOTHER_LAG.reduced : SMOOTHER_LAG.full),
     );
+    // A refresh re-measures the page and the smoother then glides its content from where its own position was
+    // recorded to the scroll position. On a return with Back (or Forward) from a content page, the smoother's first
+    // refresh runs a frame after the address was applied, and its content stood at 0.81 of the page as measured
+    // before the pins were counted, the scroll at 0.30 of the page measured after: the content glided through
+    // Portfolio and Mission and back, repainting their themes and, through the sections' callbacks, the address,
+    // for up to a second. The deck at rest is already where it must be, so the glide is finished at once.
+    const onRefresh = () => {
+      if (isSectionMoving()) return;
+      ScrollSmoother.get()?.scrollTrigger?.getTween()?.progress(1);
+    };
+    ScrollTrigger.addEventListener('refresh', onRefresh);
 
     // ---- wheel: one gesture, one step ----
     let lastWheelAt = -Infinity;
@@ -305,6 +334,7 @@ export function useDesktopSections() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
+      ScrollTrigger.removeEventListener('refresh', onRefresh);
       unregister();
       offPreference();
       cover?.remove();
