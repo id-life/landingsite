@@ -1,5 +1,5 @@
 {
-  "total": 120,
+  "total": 119,
   "byRule": {
     "@typescript-eslint/no-unused-expressions": 3,
     "jsx-a11y/anchor-has-content": 2,
@@ -11,6 +11,6 @@
     "react-hooks/incompatible-library": 1,
     "react-hooks/preserve-manual-memoization": 1,
     "react-hooks/refs": 27,
-    "react-hooks/set-state-in-effect": 12
+    "react-hooks/set-state-in-effect": 11
   }
 }

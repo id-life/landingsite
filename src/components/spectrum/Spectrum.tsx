@@ -13,7 +13,7 @@ import { isLayoutRefreshing, sectionStateAtom } from '@/motion/sectionController
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { cn } from '@/utils';
-import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
+import { beats, DISTANCE, DURATION, EASE, MAX_TILT } from '@/motion/tokens';
 import { MOTION } from '@/motion/presets';
 import { useReducedMotionPref } from '@/motion/preference';
 import { useGSAP } from '@gsap/react';
@@ -44,15 +44,19 @@ function useLogosWanted() {
 
 /**
  * Spectrum, one component for both decks (RWD-02; it was Spectrum and MobileSpectrum). Both decks show the same
- * content from useSpectrumData: the section title, the three initiatives, the peer reviews and the supporting
- * institutions, with the same initiative lists (SpectrumInitiatives) and the same particle image behind them.
+ * content from useSpectrumData: the section title, the three initiatives, the supporting institutions and the papers,
+ * with the same initiative lists (SpectrumInitiatives) and the same particle image behind them.
+ *
+ * The owner's arrangement of 2026-11-17 for the desktop deck: the initiatives on top, the institutions' logos in the
+ * middle, the papers at the bottom, where only the three most cited show until "more" opens the rest in place (with six
+ * papers above them the logos were pushed under the bottom controls).
  *
  * Real differences, kept as the deck (two render paths in this one module):
  * - Desktop deck: one pinned page of the scrolled deck with a scrubbed entrance ending on 'rest'; everything on one
  *   screen; hovering an initiative swaps the particle image; the institutions are one logo grid (SpectrumItem).
  * - Phone deck: a panel shown while current, paged through the inner-page contract shared with Portfolio (the section
- *   arrows step the pages: Translation & Publishing, Evangelism with Digital Twin, Peer Reviews, then ten logos per
- *   page), with a page counter; no hover, so the particle image follows the page.
+ *   arrows step the pages: Translation & Publishing, Evangelism with Digital Twin, Papers & Reviews, then ten logos
+ *   per page), with a page counter; no hover, so the particle image follows the page.
  */
 function Spectrum() {
   const phone = useDeviceProfile()?.tree === 'phone';
@@ -73,6 +77,8 @@ function DeckSpectrum() {
   const selectInitiative = (index: number) => {
     setImageIdx(index + 1);
   };
+  const reduceMotion = useReducedMotionPref();
+  const bandTransition = reduceMotion ? MOTION.instant : { duration: DURATION.base, ease: EASE.out };
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -140,10 +146,12 @@ function DeckSpectrum() {
           // From 1200 px the original's composition: its padding, title gap and block spacing (the owner's rule: the
           // original is the reference; with the original's sizes the blocks fit as it drew them).
           'large:!pb-20 large:!pt-28',
+          // A wide, short window: the bands close up (below) and end clear of the bottom controls.
+          'wideShort:!pb-24',
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
-        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
+        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 wideShort:!pb-2 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
           <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
         </div>
         <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
@@ -151,24 +159,23 @@ function DeckSpectrum() {
         </div>
         {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
             the padding under 860), so the logo wall clears the bottom controls. From 1200 px the original's spacing. */}
-        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
-          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
-            <SpectrumInitiatives
-              items={initiativeItems}
-              onSelect={selectInitiative}
-              executeSpectrumRoute={executeSpectrumRoute}
-              updateUrlAndExecute={updateUrlAndExecute}
-              routeConfigs={routeConfigs}
-            />
-            <SpectrumInitiatives
-              items={[publicationItem]}
-              layout="publications"
-              onSelect={() => selectInitiative(3)}
-              executeSpectrumRoute={executeSpectrumRoute}
-              updateUrlAndExecute={updateUrlAndExecute}
-              routeConfigs={routeConfigs}
-            />
-            <div className="w-full pt-2 large:pb-4">
+        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 wideShort:!py-1 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
+          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 wideShort:!gap-3 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
+            <motion.div layout="position" transition={bandTransition} className="w-full">
+              <SpectrumInitiatives
+                items={initiativeItems}
+                onSelect={selectInitiative}
+                executeSpectrumRoute={executeSpectrumRoute}
+                updateUrlAndExecute={updateUrlAndExecute}
+                routeConfigs={routeConfigs}
+              />
+            </motion.div>
+            {/* The three bands glide to their new places when the papers open or close, instead of jumping. */}
+            <motion.div
+              layout="position"
+              transition={bandTransition}
+              className="w-full border-t border-white/15 pt-5 wideShort:pt-3"
+            >
               <SpectrumItem
                 key={sponsorItem.title}
                 item={sponsorItem}
@@ -183,7 +190,17 @@ function DeckSpectrum() {
                 }}
                 onHover={() => setImageIdx(5)}
               />
-            </div>
+            </motion.div>
+            <motion.div layout="position" transition={bandTransition} className="w-full large:pb-4 wideShort:pb-0">
+              <SpectrumInitiatives
+                items={[publicationItem]}
+                layout="publications"
+                onSelect={() => selectInitiative(3)}
+                executeSpectrumRoute={executeSpectrumRoute}
+                updateUrlAndExecute={updateUrlAndExecute}
+                routeConfigs={routeConfigs}
+              />
+            </motion.div>
           </div>
         </div>
       </div>

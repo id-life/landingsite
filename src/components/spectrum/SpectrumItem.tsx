@@ -230,7 +230,7 @@ const SpectrumItem = memo(
               <div
                 className={cn(
                   'spectrum-links-container flex flex-col',
-                  isSponsor ? 'mt-6 w-full [@media(max-width:1199.98px)_and_(max-height:1100px)]:mt-4' : 'mt-5',
+                  isSponsor ? 'mt-6 w-full wideShort:mt-3 [@media(max-width:1199.98px)_and_(max-height:1100px)]:mt-4' : 'mt-5',
                 )}
               >
                 <AnimatePresence mode="wait">
@@ -245,7 +245,7 @@ const SpectrumItem = memo(
                     >
                       {/* Seven logos a row, as the original. Below 1200 px wide only: ten (two rows) on a window under 860 px tall, where three rows ran under the
                           fixed bottom controls once the section's text was set in the type roles (RWD-01); rows closer up to 900 px; logos at most 3 units tall up to 1100 px, 2.5 under 860 (the peer reviews' running text is 16 px). */}
-                      <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain [@media(max-width:1199.98px)_and_(max-height:860px)]:grid-cols-10 [@media(max-width:1199.98px)_and_(max-height:860px)]:[&_img]:max-h-10 [@media(max-width:1199.98px)_and_(max-height:900px)]:gap-y-4 [@media(max-width:1199.98px)_and_(min-height:861px)_and_(max-height:1100px)]:[&_img]:max-h-12">
+                      <div className="grid w-full grid-cols-7 items-center justify-items-center gap-x-5 gap-y-6 wideShort:gap-y-3 [&_img]:max-h-14 [&_img]:max-w-full [&_img]:object-contain [@media(max-width:1199.98px)_and_(max-height:860px)]:grid-cols-10 [@media(max-width:1199.98px)_and_(max-height:860px)]:[&_img]:max-h-10 [@media(max-width:1199.98px)_and_(max-height:900px)]:gap-y-4 [@media(max-width:1199.98px)_and_(min-height:861px)_and_(max-height:1100px)]:[&_img]:max-h-12">
                         {sponsorFirstRowLinks}
                       </div>
                     </motion.div>
