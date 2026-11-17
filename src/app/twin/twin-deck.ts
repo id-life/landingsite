@@ -45,8 +45,8 @@ export function showTwinDemo(deck: TwinDeck, shown: boolean) {
 
 /**
  * The section's opening arrangement, as on a fresh load: the headline (and on the desktop the feature list) and DEMO
- * shown, every title off stage, the switches at their resting places. Leaving the section returns to it, and so does
- * choosing the original avatar (ORG): DEMO is there again, and the original's ORG summary, which DEMO would cover, is not.
+ * shown, every title off stage, the switches at their resting places. Leaving the section returns to it, as on the
+ * original.
  */
 export function showTwinOpening(deck: TwinDeck) {
   stopTwinTitleMoves();
