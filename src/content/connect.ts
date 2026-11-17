@@ -48,8 +48,8 @@ export const CONNECT_CRITERIA: CopyList = {
   title: { en: 'Promising Early-Stage Ventures', zh: '聚焦早期企业投资' },
   items: [
     {
-      en: 'Partnering with Pre-Seed to Series-A startups under $100m valuations.',
-      zh: '与估值1亿美元以下的种子轮至A轮企业合作',
+      en: 'Partnering with startups under $100m valuations.',
+      zh: '与估值1亿美元以下的企业合作',
     },
     {
       en: 'Prioritizing talents, bold visions and impactful human benefits.',
