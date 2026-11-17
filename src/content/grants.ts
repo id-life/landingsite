@@ -86,7 +86,7 @@ export const GRANTS: Grant[] = [
   {
     slug: 'healthy-longevity-medicine-conference',
     name: 'Healthy Longevity and Medicine Conference',
-    spectrumLabel: 'Health Longevity and Medicine Conference',
+    spectrumLabel: 'Healthy Longevity and Medicine Conference',
     description: {
       en: 'Healthy longevity and medicine conference co-hosted by the NUS Yong Loo Lin School of Medicine and others.',
       zh: '新加坡国立大学医学院等合办的健康长寿与医学会议。',

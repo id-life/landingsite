@@ -25,7 +25,6 @@ const PENDING_OWNER_RULING = {
 /** Different spellings of the same name across the copies (also an owner ask: pick one). */
 const SAME_NAME = {
   'Kind Biotechnology（KindBio）': 'KindBio',
-  'Healthy Longevity and Medicine Conference': 'Health Longevity and Medicine Conference',
 };
 
 const key = (name) =>
@@ -69,12 +68,13 @@ describe('portfolio', () => {
     expect(portfolioMarkdownLines()).toHaveLength(portfolio.length);
   });
 
-  test('every stated investment count is a lower bound the portfolio meets', () => {
-    const stated = [...`${LLMS_HEADER}\n${LLMS_CHINESE_SUMMARY}\n${profile}`.matchAll(/(\d+)\s*(?:\+|余项)/g)].map((m) =>
-      Number(m[1]),
-    );
+  // The owner, 2026-11-18 (question 12f): where a count is stated, it is 16, the portfolio.
+  test('every stated investment count is the portfolio count', () => {
+    const text = `${LLMS_HEADER}\n${LLMS_CHINESE_SUMMARY}\n${profile}`;
+    const stated = [...text.matchAll(/(\d+)\s*(?:\+|余项|项投资|项\s*\|)/g)].map((m) => Number(m[1]));
     expect(stated.length).toBeGreaterThan(0);
-    for (const n of stated) expect(n).toBeLessThanOrEqual(portfolio.length);
+    for (const n of stated) expect(n).toBe(portfolio.length);
+    expect(text).not.toMatch(/15\s*(?:\+|余项)/);
   });
 });
 

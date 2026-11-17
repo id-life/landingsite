@@ -4,7 +4,7 @@
 
 不朽真龙基金（Immortal Dragons）是一家总部位于新加坡、投资激进延寿领域、规模4000万美元的使命驱动基金，由朢舶洋（Boyang Wang）创立。基金致力于支持经济回报尚不明确，被主流资本所忽视，但具备长期价值的突破性项目，主要投资方向包括器官替换策略，3D生物打印，人造子宫等。
 
-基金已完成15余项投资，不限地域。投资之外，不朽真龙出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念信仰。
+基金已完成16项投资，不限地域。投资之外，不朽真龙出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念信仰。
 
 ![不朽真龙基金标志](/imgs/news/immortal-dragons-news-and-updates/image1.png)
 
@@ -15,7 +15,7 @@
 | 创始人       | 朢舶洋（Boyang Wang） |
 | 总部         | 新加坡Biopolis        |
 | 一期基金规模 | 约4000万美元          |
-| 投资数量     | 15余项                |
+| 投资数量     | 16项                  |
 | 官方网站     | <https://id.life>     |
 
 ## 一、基金介绍
@@ -57,7 +57,7 @@
 | 1    | Healthspan Capital            | 长寿生物科技风投基金                       |
 | 2    | Frontier Bio                  | 自体细胞3D组织工程                         |
 | 3    | Unlimited Bio                 | 组合型基因疗法                             |
-| 4    | R3 Bio                        | 全身替换（Wholebody Replacement）          |
+| 4    | R3 Bio                        | Stealth mode biotech                       |
 | 5    | ImmuneBridge                  | 异体免疫细胞疗法与扩增平台                 |
 | 6    | Cyclarity Therapeutics        | 小分子动脉斑块清除疗法                     |
 | 7    | Kind Biotechnology（KindBio） | 整合性器官网络（Integrated Organ Network） |
