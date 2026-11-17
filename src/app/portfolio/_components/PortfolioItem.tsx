@@ -36,7 +36,9 @@ const PortfolioItem = memo(
         // so a tile grows instead of spilling its one-liner over the next row.
         'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem] large:h-[15.5rem]',
         hasLink && 'cursor-pointer',
-        isGridMode ? 'mobile:h-full mobile:w-full mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
+        isGridMode
+          ? 'mobile:h-full mobile:w-full mobile:min-w-0 mobile:justify-center shortScreen:px-1'
+          : 'mobile:h-[30svh] mobile:w-[100dvw]',
         className,
       ),
     };
@@ -45,7 +47,9 @@ const PortfolioItem = memo(
         <div
           className={cn(
             'flex items-center justify-center notMobile:px-3 notMobile:[&>img]:max-h-full notMobile:[&>img]:max-w-full notMobile:[&>img]:object-contain',
-            isGridMode ? 'h-12 mobile:h-15' : 'h-20 mobile:h-15',
+            isGridMode
+              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full'
+              : 'h-20 mobile:h-15',
           )}
         >
           {image}
@@ -53,7 +57,7 @@ const PortfolioItem = memo(
         <div className={cn('text-center font-semibold', isGridMode ? 'mt-2 mobile:mt-3' : 'mt-7 mobile:mt-3')}>
           <h3
             className={cn(
-              'fund-title flex-center gap-2.5 font-display tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5',
+              'fund-title flex-center gap-2.5 font-display tracking-normal mobile:whitespace-nowrap notMobile:relative notMobile:min-h-12 notMobile:px-5.5 shortScreen:whitespace-normal shortScreen:leading-4',
               // The original's sizes (the owner's rule on font sizes): 20 units on the desktop deck, 14 px in the
               // phone grid.
               isGridMode ? 'text-sm/5 font-semibold' : 'text-xl/6',
@@ -85,7 +89,7 @@ const PortfolioItem = memo(
             className={cn(
               'fund-desc mx-auto text-xs/5 notMobile:max-w-full notMobile:px-3',
               isGridMode
-                ? 'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium'
+                ? 'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium shortScreen:mt-1 shortScreen:line-clamp-3 shortScreen:px-0'
                 : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5',
             )}
           >
