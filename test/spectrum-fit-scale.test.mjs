@@ -11,6 +11,11 @@ describe('fitScale', () => {
     expect(fitScale(800, 0)).toEqual({ scale: 1, scrolls: false });
   });
 
+  test('a shortfall under a pixel is rounding and keeps exactly 1', () => {
+    expect(fitScale(690, 690.6)).toEqual({ scale: 1, scrolls: false });
+    expect(fitScale(690, 691).scale).toBeLessThan(1);
+  });
+
   test('scales down to the room, never above it (rounded down)', () => {
     const { scale, scrolls } = fitScale(560, 600);
     expect(scrolls).toBe(false);
