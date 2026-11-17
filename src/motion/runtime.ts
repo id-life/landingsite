@@ -9,7 +9,15 @@ import { useSyncExternalStore } from 'react';
  *   experience is paused: the GSAP ticker sleeps (it also drives the WebGL canvases, see FrameDriver, and every
  *   tween, ScrollTrigger and ScrollSmoother), every p5 sketch stops looping, and registered loops (the audio
  *   visualiser) stop. Nothing requests an animation frame while paused.
- * - The next input (or the tab becoming visible again) resumes everything where it was.
+ * - The next input (or the tab becoming visible again) resumes everything where it was. So does anything else that
+ *   asks the page to show something new (wakeMotion): every section change the controller is asked for, whatever
+ *   its source (the browser's Back and Forward reach the page as none of the inputs above; after a minute of reading
+ *   they arrived on a page that had stopped drawing), and the browser's own events that change what is shown
+ *   without an input: popstate, pageshow (a page restored from the back/forward cache), resize and orientationchange
+ *   (the layout changes under the ticker), focusin (focus moved by a script or an assistive technology, which can
+ *   scroll the deck), and a track of the player starting or stopping. None of these is something the experience does
+ *   by itself while nobody looks (the smoother's scroll events, the hero's swing, the Presence tour and its videos'
+ *   own resize events are not counted), so the page still pauses a minute after the last of them.
  *
  * The browser already stops requestAnimationFrame in a background tab; the hidden-tab pause is for timers and audio
  * visualisers. Code that runs its own loop registers it with onMotionPause. This module imports nothing heavy (the
@@ -18,6 +26,22 @@ import { useSyncExternalStore } from 'react';
  */
 const IDLE_MS = 60_000;
 const INPUT_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart'] as const;
+/** The browser's own events that change what the page must show without one of the inputs above. */
+const SHOW_EVENTS = ['popstate', 'pageshow', 'resize', 'orientationchange', 'focusin'] as const;
+
+/**
+ * Whether one of SHOW_EVENTS, seen by the window's capture listener, wakes the page. Only the window's own popstate,
+ * pageshow, resize and orientationchange do: a <video> fires a 'resize' of its own whenever its picture size changes,
+ * and the capture phase brings it to the window too (the phone's Presence tour plays one every few seconds, which
+ * kept that section awake for good). focusin always targets an element.
+ */
+export function showEventWakes(event: Pick<Event, 'type' | 'target'>, win: unknown) {
+  return event.type === 'focusin' || event.target === win;
+}
+
+function onShowEvent(event: Event) {
+  if (showEventWakes(event, window)) onInput();
+}
 
 let paused = false;
 const listeners = new Set<(paused: boolean) => void>();
@@ -99,6 +123,15 @@ function onInput() {
   armIdleTimer();
 }
 
+/**
+ * Something is about to change what the page shows: resume at once (so it is drawn) and count a minute from now,
+ * exactly as an input does. A no-op until the experience has installed the runtime.
+ */
+export function wakeMotion() {
+  if (installs === 0) return;
+  onInput();
+}
+
 function onVisibility() {
   if (document.visibilityState === 'hidden') {
     clearTimeout(timer);
@@ -115,6 +148,7 @@ export function installMotionRuntime() {
   if (installs === 1) {
     // Capture phase: wake the ticker before the smoother or any handler reacts to the same input.
     for (const type of INPUT_EVENTS) window.addEventListener(type, onInput, { capture: true, passive: true });
+    for (const type of SHOW_EVENTS) window.addEventListener(type, onShowEvent, { capture: true, passive: true });
     document.addEventListener('visibilitychange', onVisibility);
     armIdleTimer();
   }
@@ -122,6 +156,7 @@ export function installMotionRuntime() {
     installs -= 1;
     if (installs > 0) return;
     for (const type of INPUT_EVENTS) window.removeEventListener(type, onInput, { capture: true });
+    for (const type of SHOW_EVENTS) window.removeEventListener(type, onShowEvent, { capture: true });
     document.removeEventListener('visibilitychange', onVisibility);
     clearTimeout(timer);
     setPaused(false);

@@ -18,6 +18,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import type { AudioDataItem } from '@/apis/types';
+import { wakeMotion } from '@/motion/runtime';
 
 // Created on first use, not at import: an AudioContext made before any user gesture starts
 // suspended and logs an autoplay warning on every page load.
@@ -262,11 +263,15 @@ export default function useCurrentAudio() {
       playNextTrack();
     };
 
+    // A track starting or stopping changes what the player shows, also when no input caused it (the next track of
+    // the playlist, a hardware media key): the experience's idle pause wakes for it (MOT-03).
     audio.onplay = () => {
       pausedByVisitor = false;
+      wakeMotion();
     };
 
     audio.onpause = () => {
+      wakeMotion();
       // The pause that precedes 'ended' is the track finishing, not the visitor.
       if (!audio.ended) pausedByVisitor = true;
       dispatch({ type: AUDIO_DISPATCH.PAUSE });
