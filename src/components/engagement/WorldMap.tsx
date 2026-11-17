@@ -18,7 +18,7 @@ import { WorldMapAnimBackground } from './WorldMapAnimBackground';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
-import type { MapDeck } from './WorldMapDotComponents';
+import { MapHitLayerContext, type MapDeck } from './WorldMapDotComponents';
 import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
@@ -74,6 +74,9 @@ export const WorldMap = memo(function WorldMapComponent({
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const [ref, { width: mapWidth, height: mapHeight }] = useMeasure<SVGSVGElement>();
   const [scrollLeft, setScrollLeft] = useState(0);
+  // The layer of the points' tap areas, first in the map so every dot is drawn above it (MapPointHit).
+  const [hitLayer, setHitLayer] = useState<HTMLDivElement | null>(null);
+  const hitLayerEl = <div ref={setHitLayer} className="pointer-events-none absolute left-0 top-0" />;
 
   const calcPoint = useCallback(
     (lat: number, lng: number) => {
@@ -313,83 +316,89 @@ export const WorldMap = memo(function WorldMapComponent({
       // with pinch zoom allowed (WCAG 1.4.4) a phone browser widens its layout viewport to fit it, which pushed the menu,
       // SUBSCRIBE and the player off the screen. Clipping the x axis only keeps the cards' vertical overflow, creates no
       // scroll container and hides nothing the screen showed: the part past the window was never on the screen.
-      <div
-        ref={phoneMapRef}
-        className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
-      >
+      <MapHitLayerContext.Provider value={hitLayer}>
         <div
-          ref={mapContainerRef}
-          className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
-          onClick={handleBackgroundClick}
-          onScroll={handleScroll}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          ref={phoneMapRef}
+          className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
         >
-          {/* The SVG is absolutely positioned; this spacer gives the strip its scroll width. */}
-          <div className="h-px shrink-0" style={{ width: 'calc(var(--map-h) * 63 / 30)' }} />
-          <WorldMapSVG
-            ref={ref}
-            className="world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]"
-          />
-          {regionDotsPoints}
-          {points}
-          {filterDefs}
+          <div
+            ref={mapContainerRef}
+            className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
+            onClick={handleBackgroundClick}
+            onScroll={handleScroll}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* The SVG is absolutely positioned; this spacer gives the strip its scroll width. */}
+            <div className="h-px shrink-0" style={{ width: 'calc(var(--map-h) * 63 / 30)' }} />
+            {hitLayerEl}
+            <WorldMapSVG
+              ref={ref}
+              className="world-map-img pointer-events-none absolute top-0 h-full select-none bg-top opacity-0 [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]"
+            />
+            {regionDotsPoints}
+            {points}
+            {filterDefs}
+          </div>
+          {/* Cards sit outside the scroller (so they are not clipped) and follow its scroll. */}
+          <div
+            className="pointer-events-none absolute inset-0 overflow-visible"
+            style={{ transform: `translateX(-${scrollLeft}px)` }}
+          >
+            {contents}
+          </div>
         </div>
-        {/* Cards sit outside the scroller (so they are not clipped) and follow its scroll. */}
-        <div
-          className="pointer-events-none absolute inset-0 overflow-visible"
-          style={{ transform: `translateX(-${scrollLeft}px)` }}
-        >
-          {contents}
-        </div>
-      </div>
+      </MapHitLayerContext.Provider>
     );
   }
 
   // One element tree for both layouts, so switching (a rotation) never remounts the dots the section timeline animates.
   return (
-    <div
-      ref={desktopMapRef}
-      className={cn(
-        'relative font-sans',
-        // Portrait strip: from just below the header to just above the bottom controls, so the map fills the screen
-        // as the original's does (it ended at 68 % of the window and left an empty band above the controls).
-        pan
-          ? 'absolute inset-x-0 bottom-[96px] top-[calc(var(--site-header-h,7.5rem)_+_1rem)]'
-          : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',
-      )}
-      onMouseMove={handleMouseMove}
-      style={{ perspective: pan ? undefined : '1000px' }}
-    >
+    <MapHitLayerContext.Provider value={hitLayer}>
       <div
-        ref={mapContainerRef}
+        ref={desktopMapRef}
         className={cn(
-          'size-full',
-          // Horizontal drags stay native in the desktop deck's touch driver; vertical ones still step sections.
-          pan && 'hide-scrollbar touch-pan-x overflow-x-auto overflow-y-hidden',
+          'relative font-sans',
+          // Portrait strip: from just below the header to just above the bottom controls, so the map fills the screen
+          // as the original's does (it ended at 68 % of the window and left an empty band above the controls).
+          pan
+            ? 'absolute inset-x-0 bottom-[96px] top-[calc(var(--site-header-h,7.5rem)_+_1rem)]'
+            : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',
         )}
-        onClick={handleBackgroundClick}
-        onScroll={pan ? handlePanScroll : undefined}
+        onMouseMove={handleMouseMove}
+        style={{ perspective: pan ? undefined : '1000px' }}
       >
-        <div ref={mapContentRef} className={cn('relative', pan ? 'aspect-[63/30] h-full' : '-left-14 size-full')}>
-          <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
-          {regionDotsPoints}
-          {points}
-          {!pan && contents}
-          {filterDefs}
-        </div>
-      </div>
-      {/* Portrait strip: the cards sit outside the scroller (which clips vertically) and follow its scroll. */}
-      {pan && (
         <div
-          className="pointer-events-none absolute inset-0 overflow-visible"
-          style={{ transform: `translateX(-${scrollLeft}px)` }}
+          ref={mapContainerRef}
+          className={cn(
+            'size-full',
+            // Horizontal drags stay native in the desktop deck's touch driver; vertical ones still step sections.
+            pan && 'hide-scrollbar touch-pan-x overflow-x-auto overflow-y-hidden',
+          )}
+          onClick={handleBackgroundClick}
+          onScroll={pan ? handlePanScroll : undefined}
         >
-          {contents}
+          <div ref={mapContentRef} className={cn('relative', pan ? 'aspect-[63/30] h-full' : '-left-14 size-full')}>
+            <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
+            {hitLayerEl}
+            {regionDotsPoints}
+            {points}
+            {!pan && contents}
+            {filterDefs}
+          </div>
         </div>
-      )}
-    </div>
+        {/* Portrait strip: the cards sit outside the scroller (which clips vertically) and follow its scroll. */}
+        {pan && (
+          <div
+            className="pointer-events-none absolute inset-0 overflow-visible"
+            style={{ transform: `translateX(-${scrollLeft}px)` }}
+          >
+            {contents}
+          </div>
+        )}
+      </div>
+    </MapHitLayerContext.Provider>
   );
 });
 WorldMap.displayName = 'WorldMap';

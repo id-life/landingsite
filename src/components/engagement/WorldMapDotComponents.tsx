@@ -3,7 +3,8 @@ import YoutubeSVG from '@/../public/svgs/twin/youtube.svg?component';
 import { MOBILE_MAP_SCALE } from '@/constants/engagement';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
-import { MouseEvent } from 'react';
+import { createContext, MouseEvent, useContext, useLayoutEffect, useState, type Ref, type RefObject } from 'react';
+import { createPortal } from 'react-dom';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
@@ -27,10 +28,50 @@ export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
 };
 
 /**
- * RWD-06: on coarse pointers a map point is hit within 44 x 44 px around it (tap-area); its box and look are the
- * original's.
+ * RWD-06: on coarse pointers a map point is hit within 44 x 44 px around it; its box and look are the original's. The
+ * 44 px area is not on the dot itself: an area on a dot lies on top of the dots drawn before it, and centred on the dot
+ * with its label (the tap-area utility it had) it ran the label's full width, so on the phone Berkeley's point was
+ * under Lifespan Research Institute's area (24 of 31 reads) and a tap on it opened the other card.
+ *
+ * The layer under the map's dots that holds their 44 px tap areas (MapPointHit): it comes before every dot, so a drawn
+ * point or label is always above any tap area and is hit where it is drawn; an area only takes the taps around a point
+ * that land on nothing else.
  */
-export const MAP_POINT_TAP_CLASS = 'tap-area';
+export const MapHitLayerContext = createContext<HTMLElement | null>(null);
+
+/**
+ * A point's 44 x 44 px tap area, centred on the drawn point, in the hit layer under every dot (coarse pointers only).
+ * left/top are the dot's place in the map; pointRef is the point's box (PulseDot), read for its centre in the dot.
+ */
+export function MapPointHit({
+  left,
+  top,
+  pointRef,
+  onClick,
+}: {
+  left: number;
+  top: number;
+  pointRef: RefObject<HTMLDivElement | null>;
+  onClick: (e: MouseEvent) => void;
+}) {
+  const layer = useContext(MapHitLayerContext);
+  const [centre, setCentre] = useState<[number, number] | null>(null);
+  useLayoutEffect(() => {
+    const point = pointRef.current;
+    if (!point) return;
+    setCentre([left + point.offsetLeft + point.offsetWidth / 2, top + point.offsetTop + point.offsetHeight / 2]);
+  }, [left, top, pointRef]);
+  if (!layer || !centre) return null;
+  return createPortal(
+    <span
+      aria-hidden
+      className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
+      style={{ left: `${centre[0]}px`, top: `${centre[1]}px` }}
+      onClick={onClick}
+    />,
+    layer,
+  );
+}
 
 /** A badge under an open dot's label (Conference, Sponsorship, Research, Translation) on the scrolled deck. */
 export const BADGE_CLASS =
@@ -62,6 +103,7 @@ export function PulseDot({
   isActive,
   containerClassName,
   svgClassName = 'absolute -left-full -top-full size-18',
+  ref,
 }: {
   svgSize: number;
   centerPoint: number;
@@ -72,11 +114,14 @@ export function PulseDot({
   isActive?: boolean;
   containerClassName?: string;
   svgClassName?: string;
+  /** The point's box, for its tap area (MapPointHit). */
+  ref?: Ref<HTMLDivElement>;
 }) {
   // Reduced motion (MOT-02): the pulse rings hold still.
   const reduced = useReducedMotionPref();
   return (
     <div
+      ref={ref}
       className={cn(
         'pulse-dot relative',
         containerClassName ?? MOBILE_MAP_SCALE.dotContainerSize,
