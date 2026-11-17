@@ -82,7 +82,7 @@
   }
 
   /* The phone tree query (PHONE_TREE_QUERY in src/styles/device-classes.ts; test/device-classes.test.mjs). */
-  @media (max-width: 599.98px), (max-height: 479.98px) {
+  @media (max-width: 768.98px), (max-height: 479.98px), (orientation: portrait) and (max-width: 1024.98px) {
     *::-webkit-scrollbar {
       width: 2px;
     }
@@ -462,7 +462,7 @@
     clip-path: polygon(var(--corner-size) 0, 100% 0, 100% 100%, 0 100%, 0 var(--corner-size));
   }
   /* The phone tree query (PHONE_TREE_QUERY in src/styles/device-classes.ts; test/device-classes.test.mjs). */
-  @media (max-width: 599.98px), (max-height: 479.98px) {
+  @media (max-width: 768.98px), (max-height: 479.98px), (orientation: portrait) and (max-width: 1024.98px) {
     .podcast-card-clip {
       --corner-size: 16px;
       --border-width: 1px;
