@@ -62,8 +62,8 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
               <div className="mb-2 font-medium text-white mobile:mb-1.5 mobile:text-xs">{data.publishLabel}</div>
             )}
             <h2 className="flex items-center gap-3 font-semibold text-white">
-              {/* Tablets: the title wraps to two lines at the original's 1440 size instead of being cut. */}
-              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8 medium:line-clamp-2 medium:whitespace-normal expanded:line-clamp-2 expanded:whitespace-normal">
+              {/* Tablets: the title wraps at the original's 1440 size instead of being cut. */}
+              <span className="truncate text-4xl/[2.75rem] mobile:text-lg/8 medium:line-clamp-none medium:whitespace-normal expanded:line-clamp-none expanded:whitespace-normal">
                 {data.title}
               </span>
               {data.source && (
