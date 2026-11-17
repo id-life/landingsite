@@ -5,6 +5,7 @@ import { sectionTitle } from '@/constants/section-titles';
 import { SPECTRUM_HASH_ROUTES } from '@/hooks/spectrum/spectrum-routes';
 import { noteSectionView } from '@/lib/analytics/section-view';
 import { isReducedMotion } from './preference';
+import { wakeMotion } from './runtime';
 
 /**
  * The one section controller of the experience (MOT-01). Every way of changing section (wheel, keys, touch,
@@ -189,6 +190,9 @@ function finish(index: number, source: SectionSource) {
 export function goToSection(target: number | string, source: SectionSource): boolean {
   const index = typeof target === 'string' ? sectionIndex(target) : target;
   if (!driver || index < 0 || index >= NAV_LIST.length) return false;
+  // Whatever asks for a section, the page must be drawing to show it (MOT-03): Back and Forward, a hash link and any
+  // later caller wake the idle pause here, by construction, not by a list of events.
+  wakeMotion();
   const state = read();
   if (running && state.phase === 'moving') {
     if (index === state.target) return true;
