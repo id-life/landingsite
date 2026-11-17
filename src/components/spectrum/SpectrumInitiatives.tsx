@@ -28,6 +28,22 @@ const openGroupsAtom = atom<Record<string, boolean>>({});
 const SETTLE_MIN_MS = 500;
 const settleMs = (extraLinks: number) => Math.max(SETTLE_MIN_MS, Math.round((DURATION.base + extraLinks * 0.05) * 1000) + 150);
 
+/** The place a press on the control was made: the control's box then, at least 44 px around its centre on touch. */
+type PressPlace = { left: number; top: number; right: number; bottom: number };
+function pressPlace(button: HTMLElement, pointerType: string): PressPlace {
+  const r = button.getBoundingClientRect();
+  const half = pointerType === 'mouse' ? 0 : 22;
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  return {
+    left: Math.min(r.left, cx - half),
+    right: Math.max(r.right, cx + half),
+    top: Math.min(r.top, cy - half),
+    bottom: Math.max(r.bottom, cy + half),
+  };
+}
+const inside = (p: PressPlace, x: number, y: number) => x >= p.left && x <= p.right && y >= p.top && y <= p.bottom;
+
 interface RouteProps {
   executeSpectrumRoute: (key: string) => void;
   updateUrlAndExecute: (key: string) => void;
@@ -47,7 +63,15 @@ interface SpectrumInitiativesProps extends RouteProps {
  * closes them again. Closed it reads "more" with a chevron; open it is the chevron alone, turned upward, so no label is
  * shown that the page does not otherwise use.
  */
-function MoreToggle({ expanded, controls, onToggle }: { expanded: boolean; controls: string; onToggle: () => void }) {
+function MoreToggle({
+  expanded,
+  controls,
+  onToggle,
+}: {
+  expanded: boolean;
+  controls: string;
+  onToggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}) {
   return (
     <button
       type="button"
@@ -90,6 +114,52 @@ function Initiative({
 
   useEffect(() => () => clearTimeout(settleTimer.current), []);
 
+  // The place where the control was pressed stays the control until the visitor leaves it (the lead's rule of
+  // 2026-11-17): the control moves when pressed and a paper, a logo or an initiative link slides under the pointer,
+  // and a time limit alone cannot tell a second press there from a new one, since the visitor has not moved. So a
+  // further press inside the control's box as it was when pressed goes to the control (ignored while the list settles,
+  // a toggle after it), never to what is under it now. It ends when a mouse leaves that box, or when a touch lands
+  // anywhere else, the page scrolls or wheels, or the group unmounts (the phone's page steps). Keyboard presses
+  // (detail 0) neither start nor meet it: no stop and nothing announced is added.
+  const pressedAt = useRef<PressPlace | null>(null);
+  const toggleRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    // Where the last press went down, before the browser's touch adjustment may move the click onto a nearby link.
+    let downInside = false;
+    const onClick = (event: MouseEvent) => {
+      const place = pressedAt.current;
+      if (!place || event.detail === 0 || !(downInside || inside(place, event.clientX, event.clientY))) return;
+      event.preventDefault();
+      event.stopPropagation();
+      toggleRef.current();
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      const place = pressedAt.current;
+      if (place && event.pointerType === 'mouse' && !inside(place, event.clientX, event.clientY)) pressedAt.current = null;
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const place = pressedAt.current;
+      downInside = Boolean(place && inside(place, event.clientX, event.clientY));
+      if (place && !downInside) pressedAt.current = null;
+    };
+    const leave = () => {
+      pressedAt.current = null;
+    };
+    window.addEventListener('click', onClick, true);
+    window.addEventListener('pointermove', onPointerMove, true);
+    window.addEventListener('pointerdown', onPointerDown, true);
+    window.addEventListener('wheel', leave, { capture: true, passive: true });
+    window.addEventListener('scroll', leave, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener('click', onClick, true);
+      window.removeEventListener('pointermove', onPointerMove, true);
+      window.removeEventListener('pointerdown', onPointerDown, true);
+      window.removeEventListener('wheel', leave, true);
+      window.removeEventListener('scroll', leave, true);
+    };
+  }, []);
+
   const toggle = useCallback(() => {
     // A pending timer means the list is still moving: the press is not taken (see settleMs).
     if (settleTimer.current !== undefined) return;
@@ -103,6 +173,16 @@ function Initiative({
       settleMs(item.links.length - restCount),
     );
   }, [setOpenGroups, item.title, item.links.length, restCount]);
+
+  useEffect(() => {
+    toggleRef.current = toggle;
+  }, [toggle]);
+
+  const onControl = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const native = event.nativeEvent as PointerEvent;
+    if (event.detail > 0) pressedAt.current = pressPlace(event.currentTarget, native.pointerType || 'mouse');
+    toggle();
+  };
 
   return (
     <article className="relative min-w-0" onMouseEnter={onSelect} onFocus={onSelect}>
@@ -123,7 +203,7 @@ function Initiative({
             {item.titleCn}
           </p>
         </div>
-        {collapsible && <MoreToggle expanded={expanded} controls={listId} onToggle={toggle} />}
+        {collapsible && <MoreToggle expanded={expanded} controls={listId} onToggle={onControl} />}
       </div>
       <ul
         id={listId}
