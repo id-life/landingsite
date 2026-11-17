@@ -30,7 +30,10 @@ export default async function InsightsSummary({ title, description }: { title: s
       title={title}
       intro={[description]}
       sections={[
-        { heading: 'News & Talks', items: await newsItems() },
+        // The NEWS & TALKS row shows these same items, in the same order, as real links (the cards past its first page
+        // through its arrows): kept from screen readers here so none is announced twice. The podcast shows named below
+        // appear nowhere else on the page, so that section stays announced.
+        { heading: 'News & Talks', items: await newsItems(), shownOnPage: true },
         {
           heading: 'Podcast',
           items: PODCAST_NAV_LIST.map(({ id, link }) => ({

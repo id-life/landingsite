@@ -37,6 +37,8 @@ interface RouteProps {
 interface SpectrumInitiativesProps extends RouteProps {
   items: SpectrumItemInfo[];
   layout?: Layout;
+  /** The region's name, where the layout does not say it (the phone's papers page uses the column layout). */
+  label?: string;
   onSelect: (index: number) => void;
 }
 
@@ -214,6 +216,7 @@ function Initiative({
 function SpectrumInitiatives({
   items,
   layout = 'columns',
+  label,
   onSelect,
   executeSpectrumRoute,
   updateUrlAndExecute,
@@ -221,7 +224,7 @@ function SpectrumInitiatives({
 }: SpectrumInitiativesProps) {
   return (
     <section
-      aria-label={layout === 'publications' ? 'Spectrum publications' : 'Spectrum initiatives'}
+      aria-label={label ?? (layout === 'publications' ? 'Spectrum publications' : 'Spectrum initiatives')}
       className={cn(
         'grid gap-x-10 gap-y-7 mobile:grid-cols-1 medium:gap-x-[24px] expanded:gap-x-[32px]',
         layout === 'publications' ? 'grid-cols-1 border-t border-white/15 pt-5 wideShort:pt-3' : 'grid-cols-3',
