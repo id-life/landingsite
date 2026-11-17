@@ -14,6 +14,8 @@ import { EASE } from '@/motion/tokens';
 import MergedSvg from './MergedSvg';
 
 const POINTER_DAMPING = 2.5;
+/** Where the group sits at the top of the page (its z at scroll 0, as mounted). */
+const REST_Z = -5;
 
 function DesktopCenterLogo() {
   const { pointer, size } = useThree();
@@ -80,14 +82,21 @@ function DesktopCenterLogo() {
     const scrollY = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 0, 10);
     if (scrollY) {
       group.position.y = scrollY;
-      group.position.z = -5 - scrollY;
+      group.position.z = REST_Z - scrollY;
+    } else if (group.position.z < REST_Z - 1) {
+      // At the top, but the group is still where a frame far down left it. A scroll reaches the top through frames
+      // a few pixels apart (z within a few hundredths of REST_Z), but the canvas draws nothing while it is hidden
+      // (FrameDriver), so after a far jump from Connect its last frame was Connect's: the wordmark and the tagline
+      // stayed 200 units back, out of sight. Put the group where a fresh load has it.
+      group.position.y = positionY;
+      group.position.z = REST_Z;
     } else {
       group.position.y = THREE.MathUtils.damp(group.position.y, positionY, POINTER_DAMPING, dt);
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -5]}>
+    <group ref={groupRef} position={[0, 0, REST_Z]}>
       {/* Logo Plane - Use correct aspect ratio */}
       <Center>
         <mesh ref={logoMeshRef}>
