@@ -36,7 +36,7 @@ export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
           </h3>
           <img
             src="/imgs/podcast/podcast-play-white.svg"
-            className="size-10 shrink-0 duration-300 group-hover:scale-110 mobile:size-8 medium:size-[32px] expanded:size-[32px]"
+            className="size-10 shrink-0 duration-300 group-hover:scale-110 mobile:size-8"
             alt=""
             aria-hidden="true"
           />

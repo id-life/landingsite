@@ -4,6 +4,7 @@ import { useState, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
@@ -128,6 +129,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     if (compact) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
             setIsCompactBeginning(swiper.isBeginning);
@@ -157,6 +159,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     if (isMobile) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onBeforeInit={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
@@ -183,6 +186,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
     // Desktop layout: horizontal swiper
     return (
       <Swiper
+        {...rowKeyboardProps}
         className="h-full w-full"
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
@@ -217,11 +221,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_xyz_fill.svg"
-                  alt="Xiaoyuzhou FM"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
               </a>
               <a
                 href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
@@ -229,11 +229,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_spotify_fill.svg"
-                  alt="Spotify"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
               </a>
               <a
                 href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
@@ -241,11 +237,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_podcast_fill.svg"
-                  alt="Apple Podcasts"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
               </a>
             </div>
           </div>

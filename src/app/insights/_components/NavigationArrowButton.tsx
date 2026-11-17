@@ -15,25 +15,20 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
       disabled={disabled}
       aria-label={direction === 'prev' ? 'Previous' : 'Next'}
       className={cn(
-        // A 44 px box on coarse pointers (RWD-06); the mouse layout keeps its scaled size.
-        'absolute top-1/2 z-10 flex size-7.5 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity tap hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
+        // The original's circle on every pointer; on a touch screen its hit area grows to 44 px through ::before
+        // (tap-area, RWD-06), so the control is no bigger than the owner drew it.
+        'absolute top-1/2 z-10 flex size-7.5 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity tap-area hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
         direction === 'prev' ? '-left-16' : '-right-16',
         className,
         // Medium and expanded windows: in the px margin beside the row, clear of the cards (a 44 px touch box
         // overlapping the first card covered its title).
         direction === 'prev' ? 'medium:-left-[54px] expanded:-left-[58px]' : 'medium:-right-[54px] expanded:-right-[58px]',
-        // and drawn in px there, as the cards beside them (the scaled circle was 20 px at 820 px).
-        'medium:size-[32px] expanded:size-[32px]',
       )}
     >
       <ArrowDownSVG
-        className={cn(
-          'size-5 fill-black medium:size-[20px] expanded:size-[20px]',
-          direction === 'prev' ? 'rotate-90' : '-rotate-90',
-          {
-            'fill-tone-350': disabled,
-          },
-        )}
+        className={cn('size-5 fill-black', direction === 'prev' ? 'rotate-90' : '-rotate-90', {
+          'fill-tone-350': disabled,
+        })}
       />
     </button>
   );
