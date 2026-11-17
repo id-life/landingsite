@@ -106,7 +106,7 @@ describe('page descriptions', async () => {
     const listed = PAGES.filter((page) => page.llmsLabel);
     expect(lines.map((m) => m[2])).toEqual(listed.map((page) => page.path));
     for (const [, , path, line] of lines) expect(line).toBe(metaDescription(PAGES.find((page) => page.path === path)));
-    expect(lines.map((m) => m[2])).toContain('/about');
+    expect(lines.map((m) => m[2])).not.toContain('/about');
   });
 
   test("the article openings are the articles' own first paragraphs", () => {

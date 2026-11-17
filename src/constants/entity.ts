@@ -16,7 +16,7 @@ export const ORG_NAME = FUND.name.en;
 export const ORG_ALTERNATE_NAME = FUND.name.zh;
 export const ORG_LEGAL_NAME = FUND.legalName.value.en;
 export const ORG_EMAIL = FUND.email;
-export const ORG_LOGO = 'https://resources.id.life/logo.png';
+const ORG_LOGO = 'https://resources.id.life/logo.png';
 export const ORG_COVER = 'https://resources.id.life/id-life-cover-2.webp';
 
 export const ORG_DESCRIPTION = FUND.description.text.en;

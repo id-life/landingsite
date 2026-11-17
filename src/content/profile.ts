@@ -27,15 +27,6 @@ export const PROFILE_TEXT: Copy[] = [
     approval: live(),
   },
   {
-    // The About page's two-sentence summary: the home page description and the second sentence of the intro above,
-    // both live at the baseline, joined. No new wording; it leaves out the facts that wait on a ruling.
-    id: 'about-summary',
-    text: {
-      en: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. The fund backs underfunded moonshot projects: breakthroughs whose economic returns are not yet clear and that are overlooked by mainstream capital, but that hold long-term value.',
-    },
-    approval: live(),
-  },
-  {
     id: 'investment-areas',
     text: {
       en: 'Specific investment areas include organ replacement strategy, 3D bioprinting, gene therapy and artificial womb, and the fund also invests as an LP in other longbio funds.',

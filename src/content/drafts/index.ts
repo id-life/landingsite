@@ -2,7 +2,6 @@
 // Only that page and this folder may import drafts (ESLint), and ./guard throws in a production build (CON-10).
 import './guard';
 import type { DraftRecord } from '../schema';
-import { ABOUT_DRAFTS } from './about';
 import { COMPANY_DRAFTS } from './companies';
 import { COPY_EDIT_DRAFTS } from './copy-edits';
 import { EPISODE_DRAFTS } from './episodes';
@@ -13,10 +12,9 @@ import { SUBSCRIBE_DRAFTS } from './subscribe';
 import { TAGLINE_DRAFTS } from './taglines';
 import { THESIS_DRAFTS } from './thesis';
 
-export { ABOUT_DRAFTS, HOME_DRAFTS };
+export { HOME_DRAFTS };
 
 export const DRAFT_GROUPS: { id: string; title: string; drafts: DraftRecord[] }[] = [
-  { id: 'about', title: 'About page (CON-01)', drafts: ABOUT_DRAFTS },
   { id: 'home', title: 'Home statement (CON-05)', drafts: HOME_DRAFTS },
   { id: 'slogans', title: 'Hero slogans (CON-05, CON-20)', drafts: SLOGAN_DRAFTS },
   { id: 'copy', title: 'Copy edits that change wording (CON-20)', drafts: COPY_EDIT_DRAFTS },

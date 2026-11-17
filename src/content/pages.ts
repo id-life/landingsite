@@ -34,14 +34,6 @@ export const PAGES: PageMeta[] = [
     approval: live(),
   },
   {
-    id: 'about',
-    path: '/about',
-    title: 'About',
-    description: FUND.statement.text.en,
-    llmsLabel: 'About',
-    approval: live(),
-  },
-  {
     id: 'portfolio',
     path: '/portfolio',
     title: 'Portfolio',

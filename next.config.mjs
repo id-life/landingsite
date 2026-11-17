@@ -135,8 +135,8 @@ const nextConfig = {
         destination: 'https://www.id.life/:path*',
         permanent: true,
       },
-      // ENG-07: retired section URLs answer 308 to the section that took over their content (/about is a page now,
-      // CON-01). The mapping is the plan's (ENG-07, folded SEO-status-codes-urls and NAV-404-errors).
+      // ENG-07: retired section URLs answer 308 to the section that took over their content (no /about: the owner
+      // removed the page, question 2). The mapping is the plan's (ENG-07, folded SEO-status-codes-urls and NAV-404-errors).
       { source: '/vision', destination: '/presence', permanent: true },
       { source: '/value', destination: '/connect', permanent: true },
       { source: '/mission', destination: '/', permanent: true },

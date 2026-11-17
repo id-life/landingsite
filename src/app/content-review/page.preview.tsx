@@ -2,11 +2,10 @@
 // extension only when the build is not for production, so production has no such route and no chunk of it.
 // It is noindex and linked from nowhere. See docs/content-approval.md.
 import type { Metadata } from 'next';
-import AboutView from '@/app/about/_components/AboutView';
 import NewsStyle from '@/app/news/_components/NewsStyle';
 import { PENDING_RULINGS } from '@/content/approval';
 import * as content from '@/content';
-import { ABOUT_DRAFTS, DRAFT_GROUPS } from '@/content/drafts';
+import { DRAFT_GROUPS } from '@/content/drafts';
 import type { DraftRecord } from '@/content/schema';
 
 export const metadata: Metadata = {
@@ -112,8 +111,8 @@ export default function ContentReviewPage() {
           </p>
           <h2 className="mt-10 text-xl font-semibold">Facts waiting on a ruling</h2>
           <p className="mt-2 text-sm text-black/60">
-            They keep rendering where they were live at the baseline; new placements (About, the home statement) leave them out
-            until the ruling is recorded.
+            They keep rendering where they were live at the baseline; new placements (the home statement) leave them out until
+            the ruling is recorded.
           </p>
           <ul className="mt-3 list-disc pl-5 text-base/7">
             {Object.entries(PENDING_RULINGS).map(([key, ruling]) => (
@@ -126,20 +125,12 @@ export default function ContentReviewPage() {
             ))}
           </ul>
           <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
-            <a href="#about-in-context" className="underline">
-              About page with its drafts
-            </a>
             {DRAFT_GROUPS.map((group) => (
               <a key={group.id} href={`#group-${group.id}`} className="underline">
                 {group.title} ({group.drafts.length})
               </a>
             ))}
           </nav>
-        </section>
-
-        <section id="about-in-context" className="mt-10">
-          <h2 className="text-xl font-semibold">The About page as it would read with its drafts approved</h2>
-          <AboutView drafts={ABOUT_DRAFTS} />
         </section>
 
         {DRAFT_GROUPS.map((group) => (

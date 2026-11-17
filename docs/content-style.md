@@ -50,34 +50,33 @@ Machine-readable dates go in `<time dateTime="2025-07-16">`.
 
 ## Glossary (canonical names)
 
-| English                                          | Chinese                         | Where used                  | Note                                                                           |
-| ------------------------------------------------ | ------------------------------- | --------------------------- | ------------------------------------------------------------------------------ |
-| Immortal Dragons                                 | 不朽真龙                        | everywhere                  |                                                                                |
-| Boyang Wang                                      | 朢舶洋                          | profile, JSON-LD, articles  | sole founder: owner ruling CON-11 #3                                           |
-| Mission                                          | 使命                            | nav, hero section           |                                                                                |
-| Portfolio                                        | 投资                            | nav, section                |                                                                                |
-| Insights                                         | 洞见                            | nav, section                |                                                                                |
-| Spectrum                                         | 谱系                            | nav, section                | CON-04 proposes Ecosystem                                                      |
-| Presence                                         | 印迹                            | nav, route title            | owner decision 印迹 or 印记 (CON-16 acceptance); 印迹 is live in nav and title |
-| Digital Twin                                     | 孪生 (nav), 数字孪生 (Spectrum) | nav, section, Spectrum      | two Chinese forms live; pick one                                               |
-| Connect                                          | 联结                            | nav, section                | CON-04 proposes Contact                                                        |
-| About                                            | 关于                            | header, phone menu, footers | new page (CON-01)                                                              |
-| Replacement Strategy                             | 替换策略                        | themes                      |                                                                                |
-| Neuro & Brain Rejuvenation                       | 神经与脑年轻化                  | themes                      |                                                                                |
-| Cells and Gene Therapy                           | 细胞与基因疗法                  | themes                      |                                                                                |
-| Reproduction Technology                          | 生殖技术                        | themes                      |                                                                                |
-| Translation & Publishing                         | 翻译与出版                      | Spectrum group              |                                                                                |
-| Evangelism                                       | 布道者 (live)                   | Spectrum group              | draft: 布道 (activity) or rename the group                                     |
-| Papers & Reviews                                 | 论文与综述                      | Spectrum group              | the owner's wording, 2026-11-17 (was "Peer Reviews")                           |
-| Proudly Supporting                               | 本机构赞助支持                  | Spectrum group              |                                                                                |
-| Influence Network                                | 长寿领域人物影响力与关系图      | Spectrum tool               |                                                                                |
-| Disease Management                               | 可治疗与可控制疾病列表          | Spectrum tool               |                                                                                |
-| Longevity Trend Radar                            |                                 | Spectrum tool               |                                                                                |
-| Immortal Dragons Podcast                         | 不朽真龙                        | podcast                     |                                                                                |
-| Long Talk Podcast                                | 龙门阵                          | podcast                     |                                                                                |
-| Healthy Longevity and Medicine Conference        |                                 | grants                      | the Spectrum label says "Health": owner ruling CON-11 #8                       |
-| ARDD (Aging Research and Drug Discovery Meeting) | 衰老研究与药物发现会议          | grants                      |                                                                                |
-| Vitalist Bay Summit                              |                                 | grants, talks               |                                                                                |
+| English                                          | Chinese                         | Where used                 | Note                                                                           |
+| ------------------------------------------------ | ------------------------------- | -------------------------- | ------------------------------------------------------------------------------ |
+| Immortal Dragons                                 | 不朽真龙                        | everywhere                 |                                                                                |
+| Boyang Wang                                      | 朢舶洋                          | profile, JSON-LD, articles | sole founder: owner ruling CON-11 #3                                           |
+| Mission                                          | 使命                            | nav, hero section          |                                                                                |
+| Portfolio                                        | 投资                            | nav, section               |                                                                                |
+| Insights                                         | 洞见                            | nav, section               |                                                                                |
+| Spectrum                                         | 谱系                            | nav, section               | CON-04 proposes Ecosystem                                                      |
+| Presence                                         | 印迹                            | nav, route title           | owner decision 印迹 or 印记 (CON-16 acceptance); 印迹 is live in nav and title |
+| Digital Twin                                     | 孪生 (nav), 数字孪生 (Spectrum) | nav, section, Spectrum     | two Chinese forms live; pick one                                               |
+| Connect                                          | 联结                            | nav, section               | CON-04 proposes Contact                                                        |
+| Replacement Strategy                             | 替换策略                        | themes                     |                                                                                |
+| Neuro & Brain Rejuvenation                       | 神经与脑年轻化                  | themes                     |                                                                                |
+| Cells and Gene Therapy                           | 细胞与基因疗法                  | themes                     |                                                                                |
+| Reproduction Technology                          | 生殖技术                        | themes                     |                                                                                |
+| Translation & Publishing                         | 翻译与出版                      | Spectrum group             |                                                                                |
+| Evangelism                                       | 布道者 (live)                   | Spectrum group             | draft: 布道 (activity) or rename the group                                     |
+| Papers & Reviews                                 | 论文与综述                      | Spectrum group             | the owner's wording, 2026-11-17 (was "Peer Reviews")                           |
+| Proudly Supporting                               | 本机构赞助支持                  | Spectrum group             |                                                                                |
+| Influence Network                                | 长寿领域人物影响力与关系图      | Spectrum tool              |                                                                                |
+| Disease Management                               | 可治疗与可控制疾病列表          | Spectrum tool              |                                                                                |
+| Longevity Trend Radar                            |                                 | Spectrum tool              |                                                                                |
+| Immortal Dragons Podcast                         | 不朽真龙                        | podcast                    |                                                                                |
+| Long Talk Podcast                                | 龙门阵                          | podcast                    |                                                                                |
+| Healthy Longevity and Medicine Conference        |                                 | grants                     | the Spectrum label says "Health": owner ruling CON-11 #8                       |
+| ARDD (Aging Research and Drug Discovery Meeting) | 衰老研究与药物发现会议          | grants                     |                                                                                |
+| Vitalist Bay Summit                              |                                 | grants, talks              |                                                                                |
 
 ## Subscribe promise
 
