@@ -6,7 +6,7 @@ import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { mobileCurrentPageAtom } from '@/atoms';
-import MobileFixedUI from '@/components/common/MobileFixedUI';
+import FixedUI from '@/components/common/FixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
@@ -64,7 +64,7 @@ export default function MobileHome() {
         <MobileFooter />
         <MobileFooterContact />
       </div>
-      <MobileFixedUI />
+      <FixedUI deck="phone" />
       {/* Channel links of the contact panel are tracked by one delegated listener (data-channel). */}
       <LinkTracker />
     </MotionPreferenceConfig>

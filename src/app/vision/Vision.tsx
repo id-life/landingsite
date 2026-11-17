@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 import { useRef } from 'react';
 import { mobileCurrentPageAtom } from '@/atoms';
 import { globalLoadedAtom } from '@/atoms/geo';
-import { CarouselItem } from '@/components/common/PCFixedUI';
+import { CarouselItem } from '@/components/common/FixedUI';
 import VerticalCarousel from '@/components/common/VerticalCarousel';
 import { NAV } from '@/components/nav/nav';
 import { CAROUSEL_ITEMS } from '@/constants/config';
@@ -17,7 +17,7 @@ import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 /**
  * Mission, one component for both decks (RWD-02; it was Vision and MobileVision). Section changes are the section
  * controller's (src/motion/sectionController.ts). On the desktop deck it is the first page of the scrolled deck and
- * rests at the top; the slogan carousel there is part of the fixed UI (PCFixedUI, every section). On the phone deck it
+ * rests at the top; the slogan carousel there is part of the fixed UI (FixedUI, every section). On the phone deck it
  * is a panel shown while current, with the carousel under the wordmark.
  */
 export default function Vision() {

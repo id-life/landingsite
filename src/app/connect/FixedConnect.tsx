@@ -78,7 +78,7 @@ const MobileConnectSinglePage = () => {
 export default function FixedConnect() {
   const isMobile = useIsMobile();
 
-  // Phones only (MobileFixedUI). The language timer is gone (CON-12), and so are the fixed, opacity-0 value and
+  // Phones only (FixedUI, phone deck). The language timer is gone (CON-12), and so are the fixed, opacity-0 value and
   // criteria blocks: MobileConnectSinglePage renders that text in flow.
   return <>{isMobile && <MobileConnectSinglePage />}</>;
 }

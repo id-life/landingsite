@@ -6,7 +6,7 @@ import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
-import PCFixedUI, { PCAudioPlayer } from '@/components/common/PCFixedUI';
+import FixedUI, { AudioPlayer } from '@/components/common/FixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
@@ -92,7 +92,7 @@ export default function Home() {
       {webgl ? <OuterLoader /> : <StaticReveal />}
       {/* The Digital Twin's 3D stage (canvas + controls), mounted once outside the scrolled content (RWD-02). */}
       {webgl && <TwinThreeWrapper />}
-      <PCAudioPlayer />
+      <AudioPlayer />
       {/* The skip link's target: after the header and the player, so the next Tab is the section's first control. */}
       <span id="content-start" tabIndex={-1} className="sr-only" />
       <div id="wrapper">
@@ -108,7 +108,7 @@ export default function Home() {
           <FooterContact />
         </div>
       </div>
-      <PCFixedUI />
+      <FixedUI deck="desktop" />
     </MotionPreferenceConfig>
   );
 }
