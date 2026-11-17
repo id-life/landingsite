@@ -27,14 +27,15 @@ export const metadata: Metadata = {
       'baidu-site-verification': 'codeva-3t6o5pvEVk',
     },
   },
-  // Defaults for pages without their own metadata (error pages). Routes build theirs with src/lib/seo/metadata.ts:
+  // Defaults for pages without their own metadata (error pages). The description is the one the owner's site serves
+  // by default, word for word (question 12g). Routes build theirs with src/lib/seo/metadata.ts:
   // the owner's tab titles, no keywords (SEO-06).
   title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons' },
-  description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
+  description: ORG_DESCRIPTION,
   openGraph: {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
-    description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
+    description: ORG_DESCRIPTION,
     // The link-preview image (src/lib/seo/metadata.ts); pages without metadata of their own get it too.
     images: [{ url: '/og-image.png', width: 1200, height: 630, type: 'image/png' }],
   },

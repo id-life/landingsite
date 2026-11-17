@@ -10,9 +10,8 @@ import PageSEOContent from '@/components/seo/PageSEOContent';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
-// The home title is the owner's own, "Immortal Dragons 不朽真龙" (question 5i); the description is the fund's one-sentence statement, the first
-// sentence of ORG_DESCRIPTION, which stays whole in the page summary and JSON-LD (SEO-06). From the content layer
-// (src/content/pages.ts), shared with llms.txt.
+// The home title is the owner's own, "Immortal Dragons 不朽真龙" (question 5i); the description is the one his site serves
+// for the home page, whole (question 12g). From the content layer (src/content/pages.ts), shared with llms.txt.
 export const metadata: Metadata = buildMetadata(pageMeta('home'));
 
 const jsonLd: Graph = {
@@ -30,9 +29,14 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
         titleAs="h2"
-        // The Chinese intro of the 不朽真龙介绍 article is no longer repeated here: the home page does not show it (the
-        // owner's rule of 2026-11-18). The organisation description stays: it is the focus text (question 12g).
-        intro={[{ text: ORG_DESCRIPTION, lang: 'en' }]}
+        // Only the two focus statements his site serves in this summary, word for word ("Don't change the text regarding
+        // this", question 12g). The rest of the Chinese intro his site served here (the fund's mission, its advocacy)
+        // the home page does not show, so it comes out ("if I never put it in the website, then you shouldn't put it
+        // in", question 12b).
+        intro={[
+          { text: '不朽真龙的主要投资方向包括器官替换策略、3D 生物打印、基因疗法、人造子宫等。', lang: 'zh-CN' },
+          { text: ORG_DESCRIPTION, lang: 'en' },
+        ]}
       />
       <HeroPreloads />
       <JsonLd data={jsonLd} />

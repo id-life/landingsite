@@ -25,12 +25,14 @@ export const DISEASE_MANAGEMENT_HEADINGS = ['How Many Diseases Are Curable?', 'H
 
 export const PAGES: PageMeta[] = [
   {
-    // The home title is the brand alone; the description is the fund's one-sentence statement.
+    // The description is the one the owner's site serves for its home page, word for word and uncut: it states the
+    // focus, which stays as it is (question 12g, 2026-11-18).
     id: 'home',
     path: '/',
     title: FUND.name.en,
     tabTitle: 'Immortal Dragons 不朽真龙',
-    description: FUND.statement.text.en,
+    description: FUND.description.text.en,
+    whole: true,
     llmsLabel: 'Home',
     approval: live(),
   },
@@ -41,6 +43,8 @@ export const PAGES: PageMeta[] = [
     tabTitle: 'Portfolio 投资',
     description:
       "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
+    // The owner's own description, served whole as his site does: it states the focus (question 12g).
+    whole: true,
     llmsLabel: 'Portfolio',
     approval: live(),
   },
@@ -168,11 +172,12 @@ export const PAGES: PageMeta[] = [
 ];
 
 /** The meta description a page carries: its description as buildMetadata cuts it. llms.txt quotes this. */
-export const metaDescription = (page: Pick<PageMeta, 'description'>) => snippet(page.description);
+export const metaDescription = (page: Pick<PageMeta, 'description' | 'whole'>) =>
+  page.whole ? page.description : snippet(page.description);
 
 /** One route's path, title topic, tab title and description, ready for buildMetadata. */
 export function pageMeta(id: string) {
   const page = PAGES.find((item) => item.id === id);
   if (!page) throw new Error(`content/pages.ts: no page "${id}"`);
-  return { path: page.path, title: page.title, tabTitle: page.tabTitle, description: page.description };
+  return { path: page.path, title: page.title, tabTitle: page.tabTitle, description: page.description, whole: page.whole };
 }

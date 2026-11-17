@@ -80,12 +80,14 @@ export type MetadataInput = {
    */
   tabTitle?: string;
   description: string;
+  /** Serve the description uncut (the owner's own text, question 12g). */
+  whole?: boolean;
   image?: string;
   type?: 'website' | 'article';
 };
 
-export function buildMetadata({ path, title, tabTitle, description, image, type = 'website' }: MetadataInput): Metadata {
-  const text = snippet(description);
+export function buildMetadata({ path, title, tabTitle, description, whole, image, type = 'website' }: MetadataInput): Metadata {
+  const text = whole ? description.replace(/\s+/g, ' ').trim() : snippet(description);
   const full = tabTitle ?? `${title} | ${BRAND.en}`;
   return {
     title: { absolute: full },
