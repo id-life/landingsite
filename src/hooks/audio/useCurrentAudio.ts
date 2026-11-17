@@ -56,10 +56,12 @@ export function cancelPlayWhenReady() {
 }
 export const isPlayWhenReadyPending = () => playWhenReady;
 
-// The track the player last loaded, across both decks' players (only one is mounted at a time). The first track the
-// page loads stays silent and undownloaded until the visitor presses play; every later change of track (a playlist
-// row, the next track at the end of one) plays the new one, as the player always has.
-let lastLoadedTrackId: AudioDataItem['id'] | null = null;
+// Where the player was when its element was last let go: the player unmounts when the visitor goes to another page of
+// the site (and when it moves between the laptop and phone layouts), and the next player to mount picks up the same
+// track at the same place, playing only if it was playing. hasLoadedTrack: the first track the page loads stays
+// silent and undownloaded until the visitor presses play.
+let leftAt: { id: AudioDataItem['id']; time: number; playing: boolean } | null = null;
+let hasLoadedTrack = false;
 
 const RA = (f: number) =>
   (12194 ** 2 * f ** 4) /
@@ -115,12 +117,6 @@ export default function useCurrentAudio() {
     nextAudioRef.current = nextAudio;
   }, [determineNextTrack]);
 
-  // The play state when the track changes: the old element's pause below must not count as the visitor's.
-  const playStatusRef = useRef(playStatus);
-  useEffect(() => {
-    playStatusRef.current = playStatus;
-  });
-
   useEffect(() => {
     if (audioRef) {
       audioRef.pause();
@@ -135,12 +131,14 @@ export default function useCurrentAudio() {
 
     if (!currentAudio) return;
 
-    // A new track chosen after the first one plays at once, whether or not music was playing (the visitor chose it).
-    // The same track loaded again (the player moving between the laptop and phone layouts) resumes only if it was
-    // playing. The very first track waits for the play button: sound is opt-in.
-    const isFirstTrack = lastLoadedTrackId === null;
-    const startOnLoad = !isFirstTrack && (lastLoadedTrackId !== currentAudio.id || playStatusRef.current);
-    lastLoadedTrackId = currentAudio.id;
+    // The same track as when the player was let go (the visitor back from another page, or the layout changed):
+    // it resumes where it was, and plays only if it was playing. Any other change of track after the first one is the
+    // visitor's choice (a playlist row) or the next track at the end of one, and plays at once, as the player always
+    // has. The very first track waits for the play button: sound is opt-in.
+    const resume = leftAt && leftAt.id === currentAudio.id ? leftAt : null;
+    const startOnLoad = resume ? resume.playing : hasLoadedTrack;
+    hasLoadedTrack = true;
+    leftAt = null;
 
     isPreloadingRef.current = false;
 
@@ -167,6 +165,11 @@ export default function useCurrentAudio() {
     }
 
     audio.volume = 0.3;
+    if (resume && resume.time > 0) {
+      // Honoured once the element loads (the default playback start position), so nothing is downloaded early.
+      audio.currentTime = resume.time;
+      setCurrentTime(resume.time);
+    }
     // Set when the visitor pauses this track; the start-on-ready below must not undo it. (A pause between
     // pressing play and the metadata arriving used to be overridden when the metadata came in.)
     let pausedByVisitor = false;
@@ -274,6 +277,7 @@ export default function useCurrentAudio() {
 
     return () => {
       if (audio) {
+        leftAt = { id: currentAudio.id, time: audio.currentTime, playing: !audio.paused };
         audio.pause();
         audio.src = '';
         audio.oncanplay = null;

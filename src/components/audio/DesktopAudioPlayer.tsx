@@ -64,11 +64,14 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   // pauses and leaves the playlist open (the whole pill used to be the trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
 
+  // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
+  // the home page from another page of the site) keeps the track and playlist the visitor had.
   useEffect(() => {
     if (!musicList.length) return;
+    if (data) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom]);
+  }, [data, musicList, setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
