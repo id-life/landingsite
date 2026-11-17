@@ -1,7 +1,7 @@
 import { CharacterRelationImpression } from '@/apis/types';
-import { isBePartOfItShowAtom, isBePartOfItSubmittedAtom } from '@/atoms/character-relation';
-import { useAtom, useAtomValue } from 'jotai';
-import { useCallback, useEffect, useRef } from 'react';
+import { isBePartOfItShowAtom } from '@/atoms/character-relation';
+import { useAtom } from 'jotai';
+import { useEffect, useRef } from 'react';
 import BePartOfIt from './BePartOfIt';
 import gsap from 'gsap';
 import CharacterRelationGraph from './CharacterRelationGraph';
@@ -38,9 +38,7 @@ const CharacterRelation = () => {
   const isMobile = useIsMobile();
 
   const [isBePartOfItShow, setIsBePartOfItShow] = useAtom(isBePartOfItShowAtom);
-  const isBePartOfItSubmitted = useAtomValue(isBePartOfItSubmittedAtom);
 
-  const bePartOfItTimerRef = useRef<NodeJS.Timeout | null>(null);
   const bePartOfItTimelineRef = useRef(gsap.timeline({ paused: true }));
   const bePartOfItRef = useRef<HTMLDivElement>(null);
 
@@ -59,28 +57,9 @@ const CharacterRelation = () => {
     }
   }, [isBePartOfItShow, bePartOfItRef, isMobile]);
 
-  const resetBePartOfItTimer = useCallback(() => {
-    if (bePartOfItTimerRef.current) {
-      clearTimeout(bePartOfItTimerRef.current);
-      bePartOfItTimerRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isBePartOfItSubmitted) {
-      // show BePartOfIt after 3 seconds when character relation is shown
-      bePartOfItTimerRef.current = setTimeout(() => {
-        setIsBePartOfItShow(true);
-      }, 3000);
-    } else {
-      resetBePartOfItTimer();
-    }
-
-    return () => {
-      resetBePartOfItTimer();
-      setIsBePartOfItShow(false);
-    };
-  }, [isBePartOfItSubmitted, setIsBePartOfItShow, resetBePartOfItTimer]);
+  // The form opens only on its own control (the owner's answer 6b, 2026-11-18): his site opened it by itself 3 s after
+  // the graph mounted. Leaving the page closes it, so it is closed on the next visit.
+  useEffect(() => () => setIsBePartOfItShow(false), [setIsBePartOfItShow]);
 
   const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
 
