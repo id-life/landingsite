@@ -10,7 +10,7 @@ type Inputs = {
   website: string;
 };
 
-/** Form state of the phone SUBSCRIBE popup (MobileFooter). Opening and closing go through subscribePopupAtom. */
+/** Form state of the phone SUBSCRIBE popup (SubscribeSheet). Opening and closing go through subscribePopupAtom. */
 export function useMobileSubscribeAction() {
   const isSubscribeShow = useAtomValue(isSubscribeShowAtom);
   const placement = useAtomValue(subscribeTypeAtom);

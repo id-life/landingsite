@@ -53,7 +53,7 @@ src/constants/scroll-config.ts, src/utils/gsap-config.ts, src/components/engagem
 WorldMapSponsorDot,MobileWorldMapBookDot,MobileWorldMapSponsorDot,WorldMapDotComponents,VideoWithPoster}.tsx,
 src/components/gl/{MobileConnectGL,MobileVisionGL,ProgressLoader,ConnectGL}.tsx,
 src/components/gl/model/vision/{DragonModel,MobileDragonModel,CenterLogo}.tsx, src/components/layout/footer/{Footer,
-MobileFooter,MobileFooterContact}.tsx, src/components/compare/{compare,sparkles}.tsx,
+SubscribeSheet,ContactPanel}.tsx, src/components/compare/{compare,sparkles}.tsx,
 src/components/spectrum/{Spectrum,SpectrumItem,MobileSpectrum}.tsx, src/components/common/{ScrollButton,
 StartButton,VerticalCarousel}.tsx, src/components/character-relation/CharacterRelation.tsx,
 src/components/audio/AudioTitle.tsx, src/components/twin/Loader.tsx, src/components/dialog/MobileNavDialog.tsx,

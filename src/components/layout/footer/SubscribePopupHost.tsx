@@ -7,8 +7,8 @@ import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { announceSubscribeState, SUBSCRIBE_REQUEST_EVENT, type SubscribeRequest } from '@/components/site/subscribe-events';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
-const Footer = dynamic(() => import('@/components/layout/footer/Footer'), { ssr: false });
-const MobileFooter = dynamic(() => import('@/components/layout/footer/MobileFooter'), { ssr: false });
+const SubscribeStrip = dynamic(() => import('@/components/layout/footer/SubscribeStrip'), { ssr: false });
+const SubscribeSheet = dynamic(() => import('@/components/layout/footer/SubscribeSheet'), { ssr: false });
 
 /**
  * Connects the SUBSCRIBE buttons (DOM events) to the popup's state (subscribePopupAtom): a request becomes an atom
@@ -43,5 +43,5 @@ export function useSubscribeBridge(first?: SubscribeRequest) {
 export default function SubscribePopupHost({ first }: { first: SubscribeRequest }) {
   useSubscribeBridge(first);
   const [variant] = useState<'phone' | 'desktop'>(() => (window.matchMedia(PHONE_TREE_QUERY).matches ? 'phone' : 'desktop'));
-  return variant === 'phone' ? <MobileFooter /> : <Footer />;
+  return variant === 'phone' ? <SubscribeSheet /> : <SubscribeStrip />;
 }

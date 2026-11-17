@@ -11,8 +11,8 @@ import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
-import Footer from '@/components/layout/footer/Footer';
-import FooterContact from '@/components/layout/footer/FooterContact';
+import SubscribeStrip from '@/components/layout/footer/SubscribeStrip';
+import ContactBand from '@/components/layout/footer/ContactBand';
 import Spectrum from '@/components/spectrum/Spectrum';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
 import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
@@ -104,8 +104,8 @@ export default function Home() {
           <Engagement deck="desktop" />
           <Twin deck="desktop" />
           <Connect />
-          <Footer />
-          <FooterContact />
+          <SubscribeStrip />
+          <ContactBand />
         </div>
       </div>
       <FixedUI deck="desktop" />

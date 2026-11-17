@@ -11,8 +11,8 @@ import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
-import MobileFooter from '@/components/layout/footer/MobileFooter';
-import MobileFooterContact from '@/components/layout/footer/MobileFooterContact';
+import SubscribeSheet from '@/components/layout/footer/SubscribeSheet';
+import ContactPanel from '@/components/layout/footer/ContactPanel';
 import Spectrum from '@/components/spectrum/Spectrum';
 import { useMobileHomeAnimateInit } from '@/hooks/anim/useMobileHomeAnimations';
 import { useAtomValue } from 'jotai';
@@ -61,8 +61,8 @@ export default function MobileHome() {
         <Engagement deck="phone" />
         <Twin deck="phone" />
         <Connect />
-        <MobileFooter />
-        <MobileFooterContact />
+        <SubscribeSheet />
+        <ContactPanel />
       </div>
       <FixedUI deck="phone" />
       {/* Channel links of the contact panel are tracked by one delegated listener (data-channel). */}
