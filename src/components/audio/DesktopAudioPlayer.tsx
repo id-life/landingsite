@@ -108,7 +108,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
     >
       {/* Two buttons (they were clickable divs, unreachable by keyboard): play / pause, and the playlist. The
           play button's name switches between "Play music" and "Pause music" (no aria-pressed, per the APG
-          button pattern). Sound starts only from this button. */}
+          button pattern). Sound also starts at the first click anywhere on the page (useCurrentAudio). */}
       <div
         ref={pillRef}
         onPointerEnter={onIntent}

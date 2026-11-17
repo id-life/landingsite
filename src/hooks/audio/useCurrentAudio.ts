@@ -18,6 +18,8 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import type { AudioDataItem } from '@/apis/types';
+import { firstClickStarts, isOnMedia, otherSoundInPage } from '@/hooks/audio/firstClick';
+import { NAV_LIST } from '@/components/nav/nav';
 import { wakeMotion } from '@/motion/runtime';
 
 // Created on first use, not at import: an AudioContext made before any user gesture starts
@@ -63,6 +65,30 @@ export const isPlayWhenReadyPending = () => playWhenReady;
 // silent and undownloaded until the visitor presses play.
 let leftAt: { id: AudioDataItem['id']; time: number; playing: boolean } | null = null;
 let hasLoadedTrack = false;
+
+// The first click anywhere on the home page starts the music (firstClick.ts). Once per page load: the module lives as
+// long as the page, so coming back to the home page from another page of the site does not count a new first click.
+let firstClickHandled = false;
+let playerUsed = false;
+
+/**
+ * The visitor came to the home page from another page of the site and had already clicked or typed in this page load
+ * (on the news list, an article, an episode): that earlier press was the first click, and the music starts as the
+ * home page's player gets its first track, as on the owner's site. Landing on the home page itself (any of its
+ * sections) does not count: there only a click starts it, not a key.
+ */
+function arrivedAfterAPress() {
+  if (firstClickHandled || playerUsed) return false;
+  const entry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  let landedOn = '';
+  try {
+    landedOn = entry ? new URL(entry.name).pathname : '';
+  } catch {
+    return false;
+  }
+  const landedOnHome = NAV_LIST.some((item) => item.href === landedOn);
+  return !!landedOn && !landedOnHome && !!navigator.userActivation?.hasBeenActive;
+}
 
 const RA = (f: number) =>
   (12194 ** 2 * f ** 4) /
@@ -136,9 +162,11 @@ export default function useCurrentAudio() {
     // The same track as when the player was let go (the visitor back from another page, or the layout changed):
     // it resumes where it was, and plays only if it was playing. Any other change of track after the first one is the
     // visitor's choice (a playlist row) or the next track at the end of one, and plays at once, as the player always
-    // has. The very first track waits for the play button: sound is opt-in.
+    // has. The very first track waits for the first click (below), unless that click came on another page of the site.
     const resume = leftAt && leftAt.id === currentAudio.id ? leftAt : null;
-    const startOnLoad = resume ? resume.playing : hasLoadedTrack;
+    const firstClickBefore = !resume && !hasLoadedTrack && arrivedAfterAPress() && !otherSoundInPage(document);
+    if (firstClickBefore) firstClickHandled = true;
+    const startOnLoad = resume ? resume.playing : hasLoadedTrack || firstClickBefore;
     hasLoadedTrack = true;
     leftAt = null;
 
@@ -303,13 +331,41 @@ export default function useCurrentAudio() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAudio, isMobile]);
 
-  // Sound is opt-in: music starts only from the player's own play control. (It used to start on
-  // the visitor's first click anywhere on the page, which counts as autoplay under WCAG 1.4.2.)
-  // The first-click user_interact event was noise and is gone (DATA-11).
-
-  // Pause while the tab is hidden; resume on return only if it was playing.
   const audioRefRef = useRef(audioRef);
   audioRefRef.current = audioRef;
+
+  // The music starts at the visitor's first click anywhere on the page, as the owner's site does (his answer 5a): a
+  // press on empty page, a link, the menu or the playlist button (the play button starts it by itself). Keys, the
+  // wheel and swipes are not clicks. The first-click user_interact event was noise and stays gone (DATA-11).
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
+  useEffect(() => {
+    const onFirstClick = (event: MouseEvent) => {
+      if (firstClickHandled) return;
+      firstClickHandled = true;
+      const audio = audioRefRef.current;
+      const start = firstClickStarts({
+        handled: false,
+        playerUsed,
+        musicPlaying: (!!audio && !audio.paused) || isPlayWhenReadyPending(),
+        otherMediaPlaying: otherSoundInPage(document),
+        onMedia: isOnMedia(event.target),
+      });
+      if (!start) return;
+      const audioContext = getAudioContext();
+      if (audioContext.state === 'suspended') void audioContext.resume();
+      if (audio) dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.INTERACT });
+      else {
+        // The list has not arrived yet: the element is primed inside this click and plays when it does.
+        requestPlayWhenReady();
+        setPlayStatus(true);
+      }
+    };
+    document.addEventListener('click', onFirstClick);
+    return () => document.removeEventListener('click', onFirstClick);
+  }, [dispatch, setPlayStatus]);
+
+  // Pause while the tab is hidden; resume on return only if it was playing (the owner's answer 5f). A pause by the
+  // visitor is kept: nothing resumes it, neither showing the tab again nor a later click.
   useEffect(() => {
     let resumeOnShow = false;
     const onVisibilityChange = () => {
@@ -339,7 +395,10 @@ export default function useCurrentAudio() {
     };
   }, []);
 
-  useEventBus(MessageType.CHANGE_PLAY_STATUS, () => (hasInteractedRef.current = true));
+  useEventBus(MessageType.CHANGE_PLAY_STATUS, () => {
+    hasInteractedRef.current = true;
+    playerUsed = true;
+  });
 
   return useMemo(
     () => ({
