@@ -34,9 +34,6 @@ type NewsAndTalksSectionProps = {
 };
 
 const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
-// Medium windows (600-839 px) show the cards three across (RWD-01): four role-sized cards in a 700 px row cut titles
-// to a few words. Two rows of three per page.
-const ITEMS_PER_PAGE_MEDIUM = 6;
 
 function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -111,15 +108,13 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         className="group flex cursor-pointer flex-col overflow-hidden"
       >
         {/* Image */}
-        {/* Medium windows: the picture keeps a 16:9 shape in the wider three-across card (the scaled height made a
-            strip 63 px tall at 820 px); so does a portrait expanded window (1024x1366). */}
-        <div className="relative h-[9.25rem] w-full overflow-hidden medium:aspect-video medium:h-auto expanded:portrait:aspect-video expanded:portrait:h-auto">
+        <div className="relative h-[9.25rem] w-full overflow-hidden">
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
-        {/* The original's sizes at every width (the owner's rule on font sizes; tablets take its 1440 px size through the
-            layout unit). The source and date never truncate: where they do not fit one line the date moves to the next. */}
-        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm medium:gap-[8px] medium:p-[12px] expanded:gap-[8px] expanded:p-[12px]">
+        {/* The original's sizes (the owner's rule on font sizes), scaled with the window. The source and date never
+            truncate: where they do not fit one line the date moves to the next. */}
+        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
           <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
           <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60">
             {item.publisher && <span>{item.publisher}</span>}
@@ -190,7 +185,7 @@ export default function NewsAndTalksSection({
   const mobileSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const profile = useDeviceProfile();
-  const itemsPerPage = profile?.width === 'medium' ? ITEMS_PER_PAGE_MEDIUM : ITEMS_PER_PAGE_DESKTOP;
+  const itemsPerPage = ITEMS_PER_PAGE_DESKTOP;
   // Phone deck in landscape (a compact-height window): four cards across instead of two wide strips.
   const mobileColumns = profile?.height === 'compact' ? 4 : 2;
 
@@ -271,7 +266,7 @@ export default function NewsAndTalksSection({
       }
       // Desktop loading: 4x2 grid skeleton
       return (
-        <div className="grid grid-cols-4 gap-6 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
+        <div className="grid grid-cols-4 gap-6">
           {Array.from({ length: itemsPerPage }).map((_, index) => (
             <div key={index} className="flex flex-col">
               <div className="h-[148px] animate-pulse bg-tone-800/50" />
@@ -333,7 +328,7 @@ export default function NewsAndTalksSection({
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="grid grid-cols-4 gap-4 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
+              <div className="grid grid-cols-4 gap-4">
                 {pageItems.map((item) => (
                   <NewsCard key={item.id} item={item} />
                 ))}
@@ -358,13 +353,7 @@ export default function NewsAndTalksSection({
         {/* Content with arrow navigation */}
         {/* Phone deck in landscape: the cards are inset by the arrows' width (four across, the 44 px arrows would cover
             the first and last card's text). */}
-        <div
-          className={cn(
-            'relative mt-5',
-            !isMobile && 'flex-1 medium:mt-[16px] expanded:mt-[12px]',
-            isMobile && totalMobilePages > 1 && 'shortScreen:px-6',
-          )}
-        >
+        <div className={cn('relative mt-5', !isMobile && 'flex-1', isMobile && totalMobilePages > 1 && 'shortScreen:px-6')}>
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />

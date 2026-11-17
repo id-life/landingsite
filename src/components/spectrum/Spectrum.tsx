@@ -337,22 +337,17 @@ function DeckSpectrum() {
         id="spectrum-particle-container"
         getSourceImgInfos={spectrumGetSourceImgInfos}
       />
-      {/* The title starts below the site header's box (measured bottoms: 129 px at 1440, 156 at 1920, 122 at 1280,
-          126 at 1366x641, 142 at 1180, 151 at a coarse 1366x1024, 171 at 820, 168 at 744, 181 at 1024x1366) and the
-          last logo row ends above the fixed bottom controls; the side margins on tablets are the page grid's. */}
+      {/* The laptop deck, one layout at every width it gets (the owner's rule of 2026-11-18: two versions, phone and
+          laptop; a tablet on its side is a laptop window of that width): the original's padding, title gap and block
+          spacing, scaled with the window through the layout unit. The composition is fitted between the site header and
+          the fixed bottom controls (useFitScale). */}
       <div
         ref={columnRef}
         className={cn(
           // The column never scrolls (one wheel notch is one section): the composition is fitted to its band below, and
           // at the scale floor it scrolls inside that band. (The particle canvas reached past the column's end and made
           // it scroll by 10 to 20 px on short windows.)
-          'relative flex h-[100svh] flex-col overflow-clip px-10 pb-[max(5rem,88px)] pt-[max(10rem,136px)] xl:px-20',
-          // A large touch screen (1366x1024): the header's 44 px nav boxes make it taller (labels end at 122 px).
-          '[@media(min-width:1200px)_and_(pointer:coarse)]:pt-[max(10rem,156px)]',
-          'medium:px-[var(--grid-margin)] medium:pt-[176px] expanded:px-[var(--grid-margin)] expanded:pt-[148px] expanded:portrait:pt-[188px]',
-          // From 1200 px the original's composition: its padding, title gap and block spacing (the owner's rule: the
-          // original is the reference; with the original's sizes the blocks fit as it drew them).
-          'large:!pb-20 large:!pt-28',
+          'relative flex h-[100svh] flex-col overflow-clip px-10 pb-20 pt-28 xl:px-20',
           // A wide, short window: the bands close up (below) and end clear of the bottom controls.
           'wideShort:!pb-24',
         )}
@@ -360,7 +355,7 @@ function DeckSpectrum() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
         {/* The composition (title and the three bands), scaled to fit when the window is too short for it OPEN. */}
         <div ref={contentRef} className="relative flex min-h-0 flex-1 flex-col" style={contentStyle}>
-          <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 wideShort:!pb-2 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
+          <div className="spectrum-title relative z-10 pb-5 text-center wideShort:!pb-2">
             <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
           </div>
           <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
@@ -375,10 +370,8 @@ function DeckSpectrum() {
               }
             ></div>
           </div>
-          {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
-            the padding under 860), so the logo wall clears the bottom controls. From 1200 px the original's spacing. */}
-          <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 wideShort:!py-1 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
-            <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 wideShort:!gap-3 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
+          <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 wideShort:!py-1">
+            <div className="flex flex-1 flex-col justify-evenly gap-6 wideShort:!gap-3">
               <motion.div layout="position" transition={bandTransition} className="w-full">
                 <SpectrumInitiatives
                   items={initiativeItems}
@@ -409,7 +402,7 @@ function DeckSpectrum() {
                   onHover={() => setImageIdx(5)}
                 />
               </motion.div>
-              <motion.div layout="position" transition={bandTransition} className="w-full large:pb-4 wideShort:pb-0">
+              <motion.div layout="position" transition={bandTransition} className="w-full pb-4 wideShort:pb-0">
                 <SpectrumInitiatives
                   items={[publicationItem]}
                   layout="publications"

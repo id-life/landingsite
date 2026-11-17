@@ -209,7 +209,7 @@ function Initiative({
     <article className="relative min-w-0" onMouseEnter={onSelect} onFocus={onSelect}>
       <div className="flex items-start gap-2.5">
         {cloneElement(item.icon, {
-          className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white medium:size-[20px] expanded:size-[20px]'),
+          className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white'),
         })}
         <div
           className={cn(
@@ -242,7 +242,7 @@ function Initiative({
           settling && 'pointer-events-none',
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
-            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
             : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
           // Long titles (the phone's papers page) wrap over several lines: keep a gap between them.
           layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
@@ -252,11 +252,10 @@ function Initiative({
             expanded &&
             item.links.some((l) => l.label.length >= 60) &&
             'mobile:[@media(max-height:700px)]:!gap-1',
-          // A landscape tablet (coarse pointer, 840-1199 px): the 44 px link boxes would push the logo wall under
-          // the bottom controls, so an initiative's links run in two columns there; a phone in landscape (under
-          // 480 px tall) takes three, so the first page fits above the section arrows.
+          // A phone in landscape (under 480 px tall): an initiative's links run in three columns 16 px apart, so the
+          // first page fits above the section arrows (the column gap came from the removed tablet rule before).
           layout === 'columns' &&
-            'expanded:landscape:coarse:grid expanded:landscape:coarse:grid-cols-2 expanded:landscape:coarse:gap-x-4 [@media(max-height:479.98px)]:grid [@media(max-height:479.98px)]:grid-cols-3',
+            '[@media(max-height:479.98px)]:grid [@media(max-height:479.98px)]:grid-cols-3 [@media(max-height:479.98px)_and_(pointer:coarse)]:!gap-x-4',
         )}
       >
         <AnimatePresence initial={false}>
@@ -301,7 +300,7 @@ function Initiative({
             className={cn(
               'mt-4',
               layout === 'publications'
-                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
                 : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
             )}
           >
@@ -333,7 +332,7 @@ function SpectrumInitiatives({
     <section
       aria-label={label ?? (layout === 'publications' ? 'Spectrum publications' : 'Spectrum initiatives')}
       className={cn(
-        'grid gap-x-10 gap-y-7 mobile:grid-cols-1 medium:gap-x-[24px] expanded:gap-x-[32px]',
+        'grid gap-x-10 gap-y-7 mobile:grid-cols-1',
         layout === 'publications' ? 'grid-cols-1 border-t border-white/15 pt-5 wideShort:pt-3' : 'grid-cols-3',
       )}
     >
