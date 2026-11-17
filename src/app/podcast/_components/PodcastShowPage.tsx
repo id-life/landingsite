@@ -14,8 +14,8 @@ const navOf = (category: PodcastCategory) => PODCAST_NAV_LIST.find((item) => ite
 
 /** Each show has its own path (/podcast, /podcast/long-talk), so each page is static and its own canonical. */
 export function podcastShowMetadata(category: PodcastCategory): Metadata {
-  const { title, description } = pageMeta(PODCAST_PAGE_ID[category]);
-  return buildMetadata({ path: navOf(category).link, title, description, image: PODCAST_COVER[category].cover });
+  const { title, tabTitle, description } = pageMeta(PODCAST_PAGE_ID[category]);
+  return buildMetadata({ path: navOf(category).link, title, tabTitle, description, image: PODCAST_COVER[category].cover });
 }
 
 async function seriesJsonLd(category: PodcastCategory) {

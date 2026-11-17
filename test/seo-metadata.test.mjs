@@ -1,41 +1,40 @@
-// SEO-06: one title rule (topic | brand in the page's language), og:title without the brand, no keywords, and
-// descriptions cut at a sentence end. The seo-wire-check probe applies the same rules to the built HTML.
+// SEO-06: the owner's tab titles (og:title the same), no keywords, and descriptions cut at a sentence end.
 import { describe, expect, test } from 'vitest';
-import { brandTitle, buildMetadata, localeOf, snippet } from '@/lib/seo/metadata';
+import { buildMetadata, snippet } from '@/lib/seo/metadata';
 
-// The rule of the seo-wire-check probe: a bilingual label (an English word or phrase next to its Chinese
-// translation) or a brand suffix in the other script. Latin proper names inside a Chinese title are allowed.
-const mixesScripts = (title) => {
-  const [topic, brand] = title.split(' | ');
-  const label = /^[A-Za-z][A-Za-z &]*\s+[一-鿿]+$/.test(topic) || /^[一-鿿]+\s+[A-Za-z][A-Za-z &]*$/.test(topic);
-  const brandMismatch = brand !== undefined && localeOf(brand) !== localeOf(topic);
-  const bilingualBrand = /Immortal Dragons/.test(title) && /不朽真龙/.test(title);
-  return label || brandMismatch || bilingualBrand;
+// The owner's tab titles (question 5i, 2026-11-18), as his site (the original production build) titles each page.
+const HIS_TITLES = {
+  home: 'Immortal Dragons 不朽真龙',
+  portfolio: 'Portfolio 投资',
+  insights: 'Insights 洞见',
+  spectrum: 'Spectrum 谱系',
+  presence: 'Presence 印记',
+  digitaltwin: 'DigitalTwin 孪生',
+  connect: 'CONNECT 联结',
+  news: 'News 新闻 | Immortal Dragons',
+  podcast: 'Podcast 播客 | Immortal Dragons 不朽真龙',
+  'podcast-long-talk': '龙门阵 Long Talk Podcast | Immortal Dragons',
+  'disease-management': 'Disease Management & Cure Status | Immortal Dragons',
+  'influence-network': 'Influence Network | Immortal Dragons',
+  'article-profile': 'Immortal Dragons News and Updates',
+  'article-milestones': 'Immortal Dragons: Milestones and Portfolio',
 };
 
 describe('titles', () => {
-  test('English topics carry the English brand, Chinese topics the Chinese one', () => {
-    expect(brandTitle('Portfolio')).toBe('Portfolio | Immortal Dragons');
-    expect(brandTitle('播客')).toBe('播客 | 不朽真龙');
-    expect(brandTitle('E17 所谓的“延寿”可能只是假象 Brian Kennedy')).toBe(
-      'E17 所谓的“延寿”可能只是假象 Brian Kennedy | 不朽真龙',
-    );
+  test("every page's tab title and og:title are the owner's own", async () => {
+    const { PAGES, pageMeta } = await import('@/content/pages');
+    expect(Object.keys(HIS_TITLES).sort()).toEqual(PAGES.map((page) => page.id).sort());
+    for (const [id, title] of Object.entries(HIS_TITLES)) {
+      const m = buildMetadata(pageMeta(id));
+      expect(m.title, id).toEqual({ absolute: title });
+      expect(m.openGraph?.title, id).toBe(title);
+    }
   });
 
-  test('a topic that names the brand is not suffixed twice', () => {
-    expect(brandTitle('不朽真龙介绍')).toBe('不朽真龙介绍');
-    expect(brandTitle('Immortal Dragons')).toBe('Immortal Dragons');
-  });
-
-  test('the rule the wire check uses passes the new titles and flags the old ones', () => {
-    for (const t of ['Portfolio | Immortal Dragons', '龙门阵 | 不朽真龙', 'E15 攻克衰老 Aubrey de Grey: 损伤修复 | 不朽真龙'])
-      expect(mixesScripts(t), t).toBe(false);
-    for (const t of [
-      'Portfolio 投资 | Immortal Dragons 不朽真龙',
-      'CONNECT 联结',
-      '龙门阵 Long Talk Podcast | Immortal Dragons',
-    ])
-      expect(mixesScripts(t), t).toBe(true);
+  test('a page without a tab title of its own is "<topic> | Immortal Dragons" (an episode, on his site)', () => {
+    const m = buildMetadata({ path: '/podcast/54', title: 'E19 避孕药', description: 'x'.repeat(40) });
+    expect(m.title).toEqual({ absolute: 'E19 避孕药 | Immortal Dragons' });
+    expect(m.openGraph?.title).toBe('E19 避孕药 | Immortal Dragons');
   });
 });
 
@@ -46,10 +45,14 @@ describe('metadata', () => {
     description: 'A short description of the page that is long enough to be a description.',
   });
 
-  test('absolute title, canonical, og:title without the brand, site name, no keywords', () => {
+  test('absolute title, canonical, og:title the same as the title, site name, no keywords', () => {
     expect(m.title).toEqual({ absolute: 'Portfolio | Immortal Dragons' });
     expect(m.alternates).toEqual({ canonical: '/portfolio' });
-    expect(m.openGraph).toMatchObject({ title: 'Portfolio', siteName: 'Immortal Dragons', url: '/portfolio' });
+    expect(m.openGraph).toMatchObject({
+      title: 'Portfolio | Immortal Dragons',
+      siteName: 'Immortal Dragons',
+      url: '/portfolio',
+    });
     expect(m).not.toHaveProperty('keywords');
   });
 });

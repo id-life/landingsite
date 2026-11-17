@@ -2,23 +2,23 @@ import type { Metadata } from 'next';
 
 /**
  * Titles, descriptions and Open Graph tags for every route (SEO-06). One rule set:
- * - the <title> is "<topic> | <brand>" in the page's language: "Immortal Dragons" after an English topic,
- *   "不朽真龙" after a Chinese one; a topic that already names the brand stands alone;
- * - og:title is the topic alone (the brand is og:site_name);
+ * - the <title> is the owner's own tab title for the page (question 5i, 2026-11-18: his titles exactly, e.g.
+ *   "Portfolio 投资", "News 新闻 | Immortal Dragons"); pages his site titles by rule get "<topic> | Immortal Dragons";
+ * - og:title is the same text, as on his site;
  * - no keywords meta (search engines ignore it; one 9-word list was pasted into eleven files);
  * - descriptions that run long are cut at a sentence end (snippet), never rewritten.
  * Wording beyond these mechanical rules is the owner's: drafts are not shipped from here.
  */
 
-export const BRAND = { en: 'Immortal Dragons', zh: '不朽真龙' } as const;
-export type Locale = keyof typeof BRAND;
+const BRAND = { en: 'Immortal Dragons', zh: '不朽真龙' } as const;
+type Locale = keyof typeof BRAND;
+
+/** The title his site gives an address that does not exist (Next's default 404 title). */
+export const NOT_FOUND_TITLE = '404: This page could not be found.';
 
 export const DEFAULT_OG_IMAGE = 'https://resources.id.life/id-life-cover-2.webp';
 
 const CJK = /[㐀-鿿豈-﫿]/;
-
-/** The language a piece of text is written in, by script: Chinese when it contains any CJK character. */
-export const localeOf = (text: string): Locale => (CJK.test(text) ? 'zh' : 'en');
 
 /**
  * The language a description is cut by: Chinese when CJK characters are at least a third of it. A bilingual show
@@ -27,11 +27,6 @@ export const localeOf = (text: string): Locale => (CJK.test(text) ? 'zh' : 'en')
  */
 const descriptionLocale = (text: string): Locale =>
   (text.match(new RegExp(CJK.source, 'g'))?.length ?? 0) * 3 >= [...text].length ? 'zh' : 'en';
-
-/** "<topic> | <brand in the topic's language>", or the topic alone when it already names that brand. */
-export function brandTitle(topic: string, locale: Locale = localeOf(topic)): string {
-  return topic.includes(BRAND[locale]) ? topic : `${topic} | ${BRAND[locale]}`;
-}
 
 // Longest description kept whole, and the shortest cut accepted, per language: 110-160 Latin or 70-80 CJK
 // characters (the plan's bounds; Google shows about 155 Latin characters).
@@ -73,22 +68,26 @@ export type MetadataInput = {
   path: string;
   /** The topic, in the page's language, without the brand. */
   title: string;
+  /**
+   * The browser tab title exactly as the owner's site has it (owner, question 5i, 2026-11-18). Default: "<topic> |
+   * Immortal Dragons", his site's rule for an episode. og:title (and so twitter:title, which Next derives from it)
+   * carries the same text, as on his site.
+   */
+  tabTitle?: string;
   description: string;
-  /** Defaults to the language of the title. */
-  locale?: Locale;
   image?: string;
   type?: 'website' | 'article';
 };
 
-export function buildMetadata({ path, title, description, locale, image, type = 'website' }: MetadataInput): Metadata {
-  const lang = locale ?? localeOf(title);
+export function buildMetadata({ path, title, tabTitle, description, image, type = 'website' }: MetadataInput): Metadata {
   const text = snippet(description);
+  const full = tabTitle ?? `${title} | ${BRAND.en}`;
   return {
-    title: { absolute: brandTitle(title, lang) },
+    title: { absolute: full },
     description: text,
     alternates: { canonical: path },
     openGraph: {
-      title,
+      title: full,
       description: text,
       siteName: BRAND.en,
       url: path,

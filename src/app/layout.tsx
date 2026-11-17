@@ -27,11 +27,11 @@ export const metadata: Metadata = {
     },
   },
   // Defaults for pages without their own metadata (error pages). Routes build theirs with src/lib/seo/metadata.ts:
-  // one language per title, no keywords (SEO-06).
-  title: { default: 'Immortal Dragons', template: '%s | Immortal Dragons' },
+  // the owner's tab titles, no keywords (SEO-06).
+  title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons' },
   description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
   openGraph: {
-    title: 'Immortal Dragons',
+    title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
     description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
     images: [

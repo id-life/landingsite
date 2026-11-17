@@ -11,7 +11,7 @@ import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/const
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
-import { buildMetadata } from '@/lib/seo/metadata';
+import { buildMetadata, NOT_FOUND_TITLE } from '@/lib/seo/metadata';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
@@ -54,7 +54,7 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: { absolute: 'Episode not found | Immortal Dragons' },
+      title: { absolute: NOT_FOUND_TITLE },
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
     };
   }

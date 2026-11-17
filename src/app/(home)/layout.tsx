@@ -17,7 +17,7 @@ const HOME_INTRO_CN = [
   '除投资之外，不朽真龙也翻译出版书籍、资助行业会议与学术机构、制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念与信仰。',
 ];
 
-// The home title is the brand alone (one language); the description is the fund's one-sentence statement, the first
+// The home title is the owner's own, "Immortal Dragons 不朽真龙" (question 5i); the description is the fund's one-sentence statement, the first
 // sentence of ORG_DESCRIPTION, which stays whole in the page summary and JSON-LD (SEO-06). From the content layer
 // (src/content/pages.ts), shared with llms.txt.
 export const metadata: Metadata = buildMetadata(pageMeta('home'));

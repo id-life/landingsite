@@ -221,6 +221,8 @@ export const PageMeta = z.object({
   /** The canonical path, e.g. '/portfolio'. */
   path: z.string().regex(/^\/[a-z0-9/-]*$/, 'expected a root-relative path'),
   title: z.string().min(1),
+  /** The browser tab title (and og:title) exactly as the owner's site has it (question 5i, 2026-11-18). */
+  tabTitle: z.string().min(1),
   description: z.string().min(1),
   /** The link text of the route in llms.txt's Pages list; absent leaves the route out of that list. */
   llmsLabel: z.string().min(1).optional(),

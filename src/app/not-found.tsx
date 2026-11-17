@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import ErrorState from '@/components/common/ErrorState';
 import { NAV_LIST } from '@/components/nav/nav';
+import { NOT_FOUND_TITLE } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = {
-  title: { absolute: 'Page not found | Immortal Dragons' },
+  // His site's title for an unknown address (question 5i); og:title stays the site default, as on his site.
+  title: { absolute: NOT_FOUND_TITLE },
   robots: { index: false, follow: true },
 };
 

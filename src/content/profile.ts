@@ -69,7 +69,7 @@ export const PROFILE_TEXT: Copy[] = [
 ];
 
 /** One profile text by id. */
-export function profileText(id: string) {
+function profileText(id: string) {
   const entry = PROFILE_TEXT.find((item) => item.id === id);
   if (!entry) throw new Error(`content/profile.ts: no text "${id}"`);
   return entry.text;
