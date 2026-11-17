@@ -1,9 +1,17 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { fetchAudioData } from '@/apis';
 import { AudioDataItem } from '@/apis/types';
 import { useQuery } from '@tanstack/react-query';
-import { audioListRequestedAtom, musicListAtom, PlayList, podcastIDAtom, podcastLTAtom } from '@/atoms/audio-player';
+import {
+  audioListRequestedAtom,
+  currentPlayStatusAtom,
+  musicListAtom,
+  PlayList,
+  podcastIDAtom,
+  podcastLTAtom,
+} from '@/atoms/audio-player';
+import { cancelPlayWhenReady, isPlayWhenReadyPending } from '@/hooks/audio/useCurrentAudio';
 
 export function useFetchAudioData() {
   const setMusicList = useSetAtom(musicListAtom);
@@ -33,7 +41,7 @@ export function useFetchAudioData() {
     };
   }, [enabled, requestList]);
 
-  const { data } = useQuery({
+  const { data, isError, isFetching, refetch } = useQuery({
     queryKey: ['fetch_audio_data'],
     queryFn: () => fetchAudioData(),
     select: (res) => (res.code === 200 ? res.data : []),
@@ -63,4 +71,20 @@ export function useFetchAudioData() {
     setPodcastLT(podcastLTList);
     setMusicList(musicList);
   }, [data, setMusicList, setPodcastID, setPodcastLT]);
+
+  // The list could not be fetched (it is cancelled after 15 s, and retried once): a play pressed while it was on its
+  // way can no longer happen, so the control goes back to play rather than showing pause with nothing to play.
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
+  useEffect(() => {
+    if (!isError || isFetching || !isPlayWhenReadyPending()) return;
+    cancelPlayWhenReady();
+    setPlayStatus(false);
+  }, [isError, isFetching, setPlayStatus]);
+
+  /** Ask for the list again if the last request failed: a press on the player, or opening its playlist. */
+  const retryIfFailed = useCallback(() => {
+    if (isError && !isFetching) void refetch();
+  }, [isError, isFetching, refetch]);
+
+  return { retryIfFailed };
 }
