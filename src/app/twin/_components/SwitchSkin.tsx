@@ -5,6 +5,7 @@ import SkinSVG from '@/../public/svgs/twin/skin.svg?component';
 import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
+  chosenModel,
   currentModelAtom,
   currentModelTypeAtom,
   mobileBorderAnimationStateAtom,
@@ -17,7 +18,7 @@ import { motion, useAnimation } from 'motion/react';
 import { useEffect } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { u } from '@/utils/layout-unit';
-import { showTwinDemo, stopTwinTitleMoves, type TwinDeck } from '@/app/twin/twin-deck';
+import { showTwinDemo, stopTwinTitleMoves, twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
 
 // Phone deck: the pair of icons breathes with the model picker's border (mobileBorderAnimationStateAtom).
 const BORDER_ANIMATION_CONFIG = { scaleDuration: 1.5, scaleValue: 1.1 };
@@ -53,15 +54,20 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
       setCurrentModelType(type);
       return;
     }
-    setModelLoadingItem({ view: label, model: twinModelId(currentModel) ?? '', at: performance.now() });
-    if (currentModel === PredictionModel.M0) {
+    // The avatar chosen last, which the stage may not have applied yet (chosenModel).
+    const model = chosenModel();
+    setModelLoadingItem({ view: label, model: twinModelId(model) ?? '', at: performance.now() });
+    if (model === PredictionModel.M0) {
       stopTwinTitleMoves();
+      // The other avatars' titles out too: an ORG press in anatomy moves them out only after a delay, which this press
+      // has just stopped, so a clone's title stayed beside ORG's.
+      gsap.to('.twin-title-item:not(.twin-title-M0)', { left: twinOffstage() });
       gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
       showTwinDemo('desktop', false);
       gsap.to('#switch-skin', { bottom: u(8), overwrite: 'auto' });
       gsap.to('.twin-title-M0', { left: u(5), delay: 0.3 });
     }
-    eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
+    eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model } });
   };
 
   const iconClass = (type: ModelType) =>

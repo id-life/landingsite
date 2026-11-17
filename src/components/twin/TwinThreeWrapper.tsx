@@ -13,11 +13,14 @@ import {
   currentAnatomyCameraAtom,
   currentModelAtom,
   currentModelTypeAtom,
+  fittedTwinView,
   isLatestTwinChoice,
   newTwinChoice,
+  setFittedTwinView,
   PredictionModel,
 } from '@/atoms/twin';
 import SwitchSkin from '@/app/twin/_components/SwitchSkin';
+import { jotaiStore } from '@/atoms/store';
 import { ModelRef, ModelType } from './model/type';
 import { MessageType } from '../event-bus/messageType';
 import { useEventBus } from '../event-bus/useEventBus';
@@ -119,12 +122,23 @@ export default function TwinThreeWrapper() {
       }
       setCurrentAnatomyCamera(index);
       setCurrentModel(payload.model);
-      pollComponentMethod(modelRefs[0], 'switchModelShow', [payload.type, index]).then(() => {
-        if (!isLatestTwinChoice(choice)) return;
-        eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
+      // The anatomy models mount after this (the stage switches to them on this event), so a view pressed meanwhile
+      // must not be undone: each model is shown with the view marked when it is ready, not the one of this moment,
+      // and the camera follows that view (the marked icon is the drawn view, however fast the presses come).
+      const markedView = () => jotaiStore.get(currentAnatomyCameraAtom);
+      setFittedTwinView(null);
+      pollComponentMethod(modelRefs[0], 'switchModelShow', () => [payload.type, markedView()]).then(() => {
+        // Two frames, until <Center> has placed the model; then the marked view's framing, unless it has been framed
+        // already (a view pressed once the models were there, or the model's own mount).
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            if (!isLatestTwinChoice(choice) || fittedTwinView() === markedView()) return;
+            eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: markedView() } });
+          }),
+        );
       });
       if (payload.model !== PredictionModel.M0) {
-        pollComponentMethod(modelRefs[1], 'switchModelShow', [payload.type, index]).then();
+        pollComponentMethod(modelRefs[1], 'switchModelShow', () => [payload.type, markedView()]).then();
       }
     }
     setCurrentModelType(payload.type);
@@ -170,6 +184,11 @@ export default function TwinThreeWrapper() {
   useEventBus(MessageType.SWITCH_CAMERA, (payload: { index: AnatomyCamera }) => {
     const controls1 = controlRefs[0]?.current;
     const controls2 = controlRefs[1]?.current;
+    // Framed now, unless the view is fitted to an anatomy scene that is not mounted yet (then this call does nothing).
+    const fitsAScene = ![AnatomyCamera.CAMERA0, AnatomyCamera.CAMERA1, AnatomyCamera.CAMERA2, AnatomyCamera.CAMERA10].includes(
+      payload.index,
+    );
+    if (controls1 && (!fitsAScene || modelRefs[0].current?.scenes)) setFittedTwinView(payload.index);
     if (payload.index === AnatomyCamera.CAMERA0) {
       controls1?.setLookAt(0, 0, 15, 0, 0, 0, true);
       controls2?.setLookAt(0, 0, 15, 0, 0, 0, true);

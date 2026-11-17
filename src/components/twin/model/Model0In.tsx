@@ -7,9 +7,11 @@ import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM0';
 import { SkeletonUtils } from 'three-stdlib';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
-import { AnatomyCamera } from '@/atoms/twin';
+import { AnatomyCamera, currentAnatomyCameraAtom, fittedTwinView } from '@/atoms/twin';
+import { jotaiStore } from '@/atoms/store';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
+import { eventBus } from '@/components/event-bus/eventBus';
 
 export const LIVER_NAME = ['liver_left', 'liver_right'];
 export const BICEP_NAME = ['R_bicep_brachii_long_head', 'R_bicep_brachii_short_head', 'R_bicipital_aponeurosis'];
@@ -89,30 +91,53 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
     switchAnatomyModule(index);
   };
 
+  const moduleRun = useRef(0);
+  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
+  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed. This model is
+  // the one every view's camera is framed on (the stage fits the camera to its scenes), so it also frames the camera
+  // for that view if nothing has framed it yet (fittedTwinView): pressed before the mount, the view's own camera move
+  // found no scene to fit and did nothing, and the stage's late framing gives up if this model takes over a second. It
+  // waits two frames, until <Center> has placed the model; framed only once, from the camera a slow press starts from.
+  useEffect(() => {
+    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        const view = jotaiStore.get(currentAnatomyCameraAtom);
+        if (fittedTwinView() !== view) eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: view } });
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
+  }, []);
+
   const switchAnatomyModule = (index: AnatomyCamera) => {
+    // A newer view stops this one's staged changes (one object per frame) instead of being overwritten by them.
+    moduleRun.current += 1;
+    const run = moduleRun.current;
+    const live = () => run === moduleRun.current;
     // 展示完全体
     if (index === AnatomyCamera.CAMERA0) {
-      changeArrayData(models, 'visible', true);
+      changeArrayData(models, 'visible', true, 0, live);
     }
     // 去除肌肉
     if (index === AnatomyCamera.CAMERA1) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
-      changeArrayData(muscleSystem, 'visible', false);
-      changeArrayData(otherSystem, 'visible', true);
+      changeArrayData(muscleSystem, 'visible', false, 0, live);
+      changeArrayData(otherSystem, 'visible', true, 0, live);
     }
     // 只保留血管
     if (index === AnatomyCamera.CAMERA2) {
       const vascularSystem = [models[4]];
       const otherSystem = models.filter((child) => !vascularSystem.includes(child));
-      changeArrayData(vascularSystem, 'visible', true);
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(vascularSystem, 'visible', true, 0, live);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
     }
     // 只展示心脏
     if (index === AnatomyCamera.CAMERA3) {
       const vascularSystem = [models[4]];
       const otherSystem = models.filter((child) => !vascularSystem.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       vascularSystem[0].visible = true;
       vascularSystem[0].traverse((object: any) => {
         if (object.isMesh) {
@@ -124,7 +149,7 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
     if (index === AnatomyCamera.CAMERA4) {
       const nervousSystem = [models[5]];
       const otherSystem = models.filter((child) => !nervousSystem.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       nervousSystem[0].visible = true;
       nervousSystem[0].traverse((object: any) => {
         if (object.isMesh) {
@@ -136,25 +161,25 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
     if (index === AnatomyCamera.CAMERA5) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
-      changeArrayData(muscleSystem, 'visible', false);
-      changeArrayData(otherSystem, 'visible', true);
+      changeArrayData(muscleSystem, 'visible', false, 0, live);
+      changeArrayData(otherSystem, 'visible', true, 0, live);
     }
     // 只保留骨骼
     if (index === AnatomyCamera.CAMERA6) {
       const skeletalSystem = [models[7]];
       const otherSystem = models.filter((child) => !skeletalSystem.includes(child));
-      changeArrayData(skeletalSystem, 'visible', true);
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(skeletalSystem, 'visible', true, 0, live);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
     }
     // 展示完全体
     if (index === AnatomyCamera.CAMERA7) {
-      changeArrayData(models, 'visible', true);
+      changeArrayData(models, 'visible', true, 0, live);
     }
     // 只展示肝脏
     if (index === AnatomyCamera.CAMERA8) {
       const organs = [models[2]];
       const otherSystem = models.filter((child) => !organs.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       organs[0].visible = true;
       organs[0].traverse((object: any) => {
         if (object.isMesh) {
@@ -166,7 +191,7 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
     if (index === AnatomyCamera.CAMERA9) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
       muscleSystem[0].visible = true;
       muscleSystem[0].traverse((object: any) => {
         if (object.isMesh) {
@@ -178,8 +203,8 @@ const Model0In = forwardRef<ModelRef>(function ({}, ref) {
     if (index === AnatomyCamera.CAMERA10) {
       const vascularSystem = [models[4]];
       const otherSystem = models.filter((child) => !vascularSystem.includes(child));
-      changeArrayData(vascularSystem, 'visible', true);
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(vascularSystem, 'visible', true, 0, live);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
     }
   };
 

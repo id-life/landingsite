@@ -7,7 +7,8 @@ import AnimationGroup, { AnimationGroupHandle } from './AnimationGroupM1';
 import { SkeletonUtils } from 'three-stdlib';
 import { ModelRef, ModelType } from './type';
 import { changeArrayData } from './utils';
-import { AnatomyCamera } from '@/atoms/twin';
+import { AnatomyCamera, currentAnatomyCameraAtom } from '@/atoms/twin';
+import { jotaiStore } from '@/atoms/store';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 
@@ -125,25 +126,37 @@ const Model1In = forwardRef<ModelRef>(function ({}, ref) {
     switchAnatomyModule(index);
   };
 
+  const moduleRun = useRef(0);
+  // On mount (the anatomy view is entered), the view marked now: a view pressed before this model was mounted has no
+  // listener yet, and the stage's call below may still carry the view of the moment anatomy was pressed.
+  useEffect(() => {
+    switchAnatomyModule(jotaiStore.get(currentAnatomyCameraAtom));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
+  }, []);
+
   const switchAnatomyModule = (index: AnatomyCamera) => {
+    // A newer view stops this one's staged changes (one object per frame) instead of being overwritten by them.
+    moduleRun.current += 1;
+    const run = moduleRun.current;
+    const live = () => run === moduleRun.current;
     // 展示完全体
     if (index === AnatomyCamera.CAMERA0) {
-      changeArrayData(models, 'visible', true);
+      changeArrayData(models, 'visible', true, 0, live);
     }
     // 去除肌肉
     if (index === AnatomyCamera.CAMERA5) {
       const muscleSystem = [models[0]];
       const otherSystem = models.filter((child) => !muscleSystem.includes(child));
-      changeArrayData(muscleSystem, 'visible', false);
-      changeArrayData(otherSystem, 'visible', true);
+      changeArrayData(muscleSystem, 'visible', false, 0, live);
+      changeArrayData(otherSystem, 'visible', true, 0, live);
     }
 
     // 只保留骨骼
     if (index === AnatomyCamera.CAMERA6) {
       const skeletalSystem = [models[7]];
       const otherSystem = models.filter((child) => !skeletalSystem.includes(child));
-      changeArrayData(skeletalSystem, 'visible', true);
-      changeArrayData(otherSystem, 'visible', false);
+      changeArrayData(skeletalSystem, 'visible', true, 0, live);
+      changeArrayData(otherSystem, 'visible', false, 0, live);
     }
   };
 
