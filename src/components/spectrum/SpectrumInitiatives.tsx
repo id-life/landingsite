@@ -243,9 +243,9 @@ function Initiative({
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
             ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
-            : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+            : 'flex flex-col gap-2 mobile:gap-0',
           // Long titles (the phone's papers page) wrap over several lines: keep a gap between them.
-          layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
+          layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2',
           // A short phone (375x667) with the six papers open: 8 px between them left the last line 5 px under the
           // page's bottom edge; 4 px fits it whole. Only open, so the rest picture is unchanged.
           layout === 'columns' &&
@@ -274,9 +274,13 @@ function Initiative({
                     : { duration: DURATION.base, delay: extra ? (index - restCount) * 0.05 : 0, ease: EASE.out }
                 }
                 className={cn(
-                  // The original's link sizes. On a coarse pointer each link is a 44 px tall box (RWD-06); the
-                  // mouse layout keeps its line boxes.
-                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
+                  // The original's link sizes. On the phone deck with a touch screen each link is a 44 px tall box
+                  // (RWD-06); the laptop deck keeps its line boxes on every pointer.
+                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center mobile:coarse:[&_a]:flex mobile:coarse:[&_a]:min-h-[44px] mobile:coarse:[&_a]:items-center',
+                  // The laptop deck with a touch screen (a tablet on its side): the picture stays exactly the laptop's.
+                  // Each link only gets an invisible touch area reaching a quarter of a unit above and below its row,
+                  // no more than half the gap to the next row, so two areas never meet.
+                  'notMobile:coarse:[&_a]:relative notMobile:coarse:[&_a]:before:absolute notMobile:coarse:[&_a]:before:-inset-y-1 notMobile:coarse:[&_a]:before:inset-x-0 notMobile:coarse:[&_a]:before:content-[""]',
                 )}
               >
                 <SpectrumLink
@@ -301,13 +305,13 @@ function Initiative({
               'mt-4',
               layout === 'publications'
                 ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
-                : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+                : 'flex flex-col gap-2 mobile:gap-0',
             )}
           >
             {item.links.map((link) => (
               <li
                 key={link.label}
-                className="min-w-0 coarse:flex coarse:min-h-[44px] coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
+                className="min-w-0 mobile:coarse:flex mobile:coarse:min-h-[44px] mobile:coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
               >
                 <SpectrumLink item={{ ...link, link: undefined }} />
               </li>

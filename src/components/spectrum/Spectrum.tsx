@@ -348,6 +348,9 @@ function DeckSpectrum() {
           // at the scale floor it scrolls inside that band. (The particle canvas reached past the column's end and made
           // it scroll by 10 to 20 px on short windows.)
           'relative flex h-[100svh] flex-col overflow-clip px-10 pb-20 pt-28 xl:px-20',
+          // The title stays clear of the site header where the header is taller than the original's top space (a
+          // header in two rows on a narrow laptop window); elsewhere 7 units, the original's, is the larger and wins.
+          'pt-[max(7rem,calc(var(--site-header-h,0px)+1rem))]',
           // A wide, short window: the bands close up (below) and end clear of the bottom controls.
           'wideShort:!pb-24',
         )}
