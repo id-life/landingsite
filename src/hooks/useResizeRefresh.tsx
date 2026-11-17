@@ -17,12 +17,19 @@ export function useResizeRefresh() {
   useEffect(() => {
     setLayoutRefreshing(false);
 
+    // The section the view is on, read at the first resize event of a burst, while the rests still match the
+    // scroll. It used to be read when the debounced refresh ran, by which time ScrollTrigger's own resize refresh had
+    // moved every rest while the scroll stayed where it was, so the old position could belong to a neighbour
+    // (Spectrum went to Presence when a 1440x900 window became 1536x730).
+    let section: number | null = null;
+
     const handleResize = debounce(() => {
       if (isRefreshingRef.current) return;
       isRefreshingRef.current = true;
+      const settledOn = section ?? currentSection();
+      section = null;
 
       // 1. Set resize flag to prevent ScrollTrigger callbacks from executing
-      const section = currentSection();
       setLayoutRefreshing(true);
 
       // 2. Refresh ScrollSmoother
@@ -38,14 +45,20 @@ export function useResizeRefresh() {
           setLayoutRefreshing(false);
           isRefreshingRef.current = false;
           // The pins changed length: put the view back on the rest pose of the section it was on.
-          resnapSection(section);
+          resnapSection(settledOn);
         });
       });
     }, 200);
 
-    window.addEventListener('resize', handleResize);
+    const onResize = () => {
+      if (section === null) section = currentSection();
+      handleResize();
+    };
+
+    // Capture phase, so the section is read before any other resize handler moves anything.
+    window.addEventListener('resize', onResize, { capture: true });
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', onResize, { capture: true });
       handleResize.cancel();
     };
   }, []);

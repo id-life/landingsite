@@ -51,6 +51,16 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* The deck's scrolled content and its pins take no transition at all. The rule above gives every element a 0.01 ms
+     transition of every property (the default transition-property is all), so a transform GSAP sets was still the old
+     one when ScrollTrigger measured right after setting it: a refresh measured every section shifted by the scroll,
+     and a 1 px resize on Spectrum put the deck on Connect. */
+  #content,
+  .pin-spacer,
+  .pin-spacer > * {
+    transition: none !important;
+  }
 }
 
 @layer base {
