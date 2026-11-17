@@ -71,15 +71,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://id-platform.id.life" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.id.life" />
         <link rel="dns-prefetch" href="https://resources.id.life" />
-        <a href="#main-content" className="skip-link">
+        <a href="#content-start" className="skip-link">
           Skip to content
         </a>
         <Providers>
           {ANALYTICS_ENABLED && <AnalyticsBootLazy />}
           <ExperienceRouter />
-          <main id="main-content" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
+          <main id="main-content">{children}</main>
           <Background />
         </Providers>
         {VERCEL_INSIGHTS_ENABLED && <VercelInsightsLazy />}

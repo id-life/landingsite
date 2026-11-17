@@ -154,11 +154,13 @@ function MobilePortfolio() {
           getSourceImgInfos={portfolioGetSourceImgInfos}
         />
       ))}
-      <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21">
-        <h2 className="page2-title relative top-10 font-title text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5">
+      {/* A short window (a phone in landscape, under 480 px of height) has room for one row of tiles: each page's
+          companies sit side by side there, instead of three rows printed over each other. */}
+      <div className="relative flex h-[100svh] flex-col items-center pb-20 pt-21 shortScreen:pb-16 shortScreen:pt-[68px]">
+        <h2 className="page2-title relative top-10 font-title text-[2.5rem]/[4.5rem] font-bold uppercase mobile:text-[1.625rem]/7.5 shortScreen:top-0">
           Portfolio
         </h2>
-        <div className="page2-fund relative top-10 flex-1 overflow-hidden px-4 mobile:w-full">
+        <div className="page2-fund relative top-10 flex-1 overflow-hidden px-4 mobile:w-full shortScreen:top-0">
           {/* Background layer: particle grid - absolute positioned behind portfolio items */}
           <div
             id="particle-gl"
@@ -166,6 +168,7 @@ function MobilePortfolio() {
               'particle-gl-mobile-bg absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 px-4',
               currentGridRows,
               innerPageIndex >= 1 && currentGridRows === 'grid-rows-2' && 'py-24',
+              'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
             )}
             data-layout={currentGridRows === 'grid-rows-3' ? '2x3' : '2x2'}
           >
@@ -191,6 +194,7 @@ function MobilePortfolio() {
                 'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-page ease-token-out',
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
                 pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32',
+                'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
                 innerPageIndex === pageIdx
                   ? 'translate-y-0 opacity-100'
                   : innerPageIndex > pageIdx

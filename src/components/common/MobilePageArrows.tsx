@@ -76,14 +76,15 @@ function resolveStep(
   return section >= 0 && section < NAV_LIST.length ? { kind: 'section', index: section } : null;
 }
 
-/** Minimum time between two executed steps; a step asked for sooner waits instead of being dropped. */
-const STEP_SPACING_MS = 400;
-
 /**
- * One step through the phone experience, shared by the arrow buttons and the swipe gesture. Taps that
- * arrive while a step is still settling are queued (one pending step, the latest wins) instead of being
- * dropped: two taps 300 ms apart advance two steps. (A 700 ms throttle used to drop the second tap.)
+ * Minimum time between two steps; a step asked for sooner is ignored, as on the original. Shared by every arrow
+ * and the swipe (module scope): on Connect a tap on the one arrow brings in a second arrow under the finger, and a
+ * second quick tap must not be taken by a control that was not there when it began.
  */
+const STEP_SPACING_MS = 500;
+let lastStepAt = 0;
+
+/** One step through the phone experience, shared by the arrow buttons and the swipe gesture. */
 export function useMobileSectionStep() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
@@ -101,12 +102,11 @@ export function useMobileSectionStep() {
     setInnerPageNavigateTo,
   });
   stateRef.current = { currentPage, currentPageIndex, innerPageIndex, innerPageTotal, mobileNavChange, setInnerPageNavigateTo };
-  const lastStepRef = useRef(0);
 
   return useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
     const run = (up: boolean) => {
       const s = stateRef.current;
-      lastStepRef.current = performance.now();
+      lastStepAt = performance.now();
       const step = resolveStep(up, {
         pageId: s.currentPage.id,
         pageIndex: s.currentPageIndex,
@@ -120,7 +120,7 @@ export function useMobileSectionStep() {
     // As the original: a tap while a step is still running (or within the spacing after one) is ignored, not
     // queued, so two quick taps move one section on both decks.
     if (getSectionState().phase === 'moving') return;
-    if (performance.now() - lastStepRef.current < STEP_SPACING_MS) return;
+    if (performance.now() - lastStepAt < STEP_SPACING_MS) return;
     run(isUp);
   }, []);
 }
