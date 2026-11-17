@@ -6,6 +6,7 @@ import LoadingSVG from '@/../public/svgs/loading.svg?component';
 import { subscribeTypeAtom } from '@/atoms/footer';
 import InfoSVG from '@/../public/svgs/info.svg?component';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
+import { useReturnFocusWithoutScroll } from '@/hooks/useReturnFocusWithoutScroll';
 import { cn } from '@/utils';
 import { submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
@@ -33,6 +34,7 @@ export default function Footer() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);
   const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  useReturnFocusWithoutScroll(isSubscribeShow);
   // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
   const emailId = useId();
   const footerRef = useRef<HTMLDivElement>(null);
@@ -121,7 +123,7 @@ export default function Footer() {
           ref={footerRef}
           className="page-footer pointer-events-none fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={-1}>
+          <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={-1} returnFocus={false}>
             <div
               {...getFloatingProps({ ref: boxMergedRef })}
               aria-labelledby={titleId}
