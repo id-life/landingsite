@@ -7,13 +7,14 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
 import HeroPoster from '@/components/gl/HeroPoster';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
-import { type ComponentType, createElement, lazy, Suspense, useEffect } from 'react';
+import { type ComponentType, createElement, lazy, Suspense } from 'react';
 import '@/utils/gsap-plugins';
+import type { Deck } from './Home';
 
 type Chunk = { default: ComponentType };
+// One Home for both decks (RWD-02): a change of deck needs no other code.
 const loaders = {
-  desktop: () => import('./Home') as Promise<Chunk>,
-  phone: () => import('./MobileHome') as Promise<Chunk>,
+  home: () => import('./Home') as Promise<Chunk>,
   canvas: () => import('@/components/gl/ExperienceCanvas') as Promise<Chunk>,
 };
 // Once a chunk has loaded it renders directly, so switching decks later never suspends (a suspension would show the
@@ -25,8 +26,7 @@ const load = (key: keyof typeof loaders) =>
     return chunk;
   });
 const lazies = {
-  desktop: lazy(() => load('desktop')),
-  phone: lazy(() => load('phone')),
+  home: lazy(() => load('home')),
   canvas: lazy(() => load('canvas')),
 };
 // The component used for a chunk is fixed at its first render (a changing type would remount it): the lazy wrapper if
@@ -39,14 +39,7 @@ export default function HomeEntry() {
   const isMobile = useIsMobile();
   // ENG-02: without WebGL no canvas, loader or model mounts; the server-rendered poster is the hero.
   const webgl = useExperienceMode() !== 'static';
-  const deck = isMobile ? 'phone' : 'desktop';
-
-  // After the first screen, load the other deck's code, so a resize or rotation into it is instant.
-  useEffect(() => {
-    if (isNull(isMobile)) return;
-    const id = window.setTimeout(() => void load(isMobile ? 'desktop' : 'phone').catch(() => undefined), 8000);
-    return () => window.clearTimeout(id);
-  }, [isMobile]);
+  const deck: Deck = isMobile ? 'phone' : 'desktop';
 
   return (
     <>
@@ -61,7 +54,8 @@ export default function HomeEntry() {
             <Suspense fallback={null}>
               {/* Module-level components (pick() returns the same one for a chunk on every render). */}
               {webgl && createElement(pick('canvas'))}
-              {createElement(pick(deck))}
+              {/* Keyed by deck: a change of deck mounts Home afresh, so nothing of one deck survives into the other. */}
+              {createElement(pick('home') as ComponentType<{ deck: Deck }>, { deck, key: deck })}
             </Suspense>
           </ClientChunkBoundary>
         </ReactQueryProvider>

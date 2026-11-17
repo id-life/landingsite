@@ -13,7 +13,7 @@ export const navigateToAtom = atom<NavItem | null>(null);
 /** True once HashRouter has applied the URL (deep link) to the currently mounted experience. */
 export const initialRouteHandledAtom = atom<boolean>(false);
 
-/** Incremented each time the experience (Home or MobileHome) mounts; HashRouter maps the URL once per mount. */
+/** Incremented each time the experience (Home, on either deck) mounts; HashRouter maps the URL once per mount. */
 export const experienceMountIdAtom = atom<number>(0);
 
 /** True while the experience is mounted (false on /news, /podcast and the other content pages). */

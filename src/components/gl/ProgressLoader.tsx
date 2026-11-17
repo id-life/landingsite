@@ -46,7 +46,7 @@ export function useRevealExperienceUI() {
  * committed (heroReadyAtom). Later-section 3D assets load on approach and never hold it.
  */
 // memo: the loader takes no props, so the experience's own re-renders (section and atom changes in
-// Home / MobileHome) do not re-render it; it renders on mount, when the hero is ready and on exit.
+// Home) do not re-render it; it renders on mount, when the hero is ready and on exit.
 export const OuterLoader = memo(function OuterLoader() {
   const heroReady = useAtomValue(heroReadyAtom);
   const mode = useAtomValue(experienceModeAtom);
