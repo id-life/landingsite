@@ -10,7 +10,7 @@ export const ABOUT_DRAFTS = defineDrafts('about.ts', [
     body: {
       en: [
         '- Founder: Boyang Wang (朢舶洋), educated at the National University of Singapore and Yale University',
-        '- Investment stage: pre-seed to Series A, geographically agnostic',
+        '- geographically agnostic',
         '- Investments (owner wording): 15+',
         '- Legal name: IMMORTAL DRAGONS PRIVATE LIMITED',
         '- Founded: 2024',
@@ -20,14 +20,13 @@ export const ABOUT_DRAFTS = defineDrafts('about.ts', [
     approval: {
       status: 'draft',
       sources: [
-        { ref: 'src/content/profile.ts (llms.txt key facts: founder, education, stage, 15+)' },
+        { ref: 'src/content/profile.ts (llms.txt key facts: founder, education, 15+)' },
         { ref: 'src/constants/entity.ts (JSON-LD legalName, foundingDate 2024)' },
         { ref: 'src/content/press.ts: Yahoo Finance launch release, 2025-07-16' },
         { ref: 'src/content/articles/immortal-dragons-milestones-and-portfolio.md:5 ("2025 年 8 月：基金正式发布")' },
       ],
       questions: [
         'CON-11 #3: is Boyang Wang the sole founder?',
-        'CON-11 #10: is the first stage pre-seed (profile) or seed (种子轮, Connect)?',
         "CON-11 #6: the portfolio lists 16 companies; keep '15+' anywhere, or use the computed count only?",
         'ENG-10 / CON-02: is IMMORTAL DRAGONS PRIVATE LIMITED the exact legal name?',
         'CON-11 #2: is 2024 the year the company was founded, separate from the Fund I launch?',
@@ -42,7 +41,7 @@ export const ABOUT_DRAFTS = defineDrafts('about.ts', [
     body: {
       en: [
         'Immortal Dragons (不朽真龙) is a US$40 million purpose-driven longevity and radical life extension fund headquartered in Singapore, founded by Boyang Wang (朢舶洋). The fund backs underfunded moonshot projects: breakthroughs whose economic returns are not yet clear and that are overlooked by mainstream capital, but that hold long-term value. Its main investment themes include organ replacement strategy, 3D bioprinting and artificial womb, among others.',
-        'The fund has made 15+ investments ranging from pre-seed to Series A, and is geographically agnostic. Beyond conventional capital investment, Immortal Dragons engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects, in order to support anti-aging research and advocate for longevity.',
+        'The fund has made 15+ investments, and is geographically agnostic. Beyond conventional capital investment, Immortal Dragons engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects, in order to support anti-aging research and advocate for longevity.',
       ].join('\n'),
     },
     approval: {

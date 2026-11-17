@@ -56,8 +56,7 @@ export const CONNECT_CRITERIA: CopyList = {
       zh: '重点关注优秀人才、远大愿景和积极的社会影响',
     },
   ],
-  // The Chinese line says 种子轮 (seed) where the English and the profile say pre-seed (CON-11 #10).
-  approval: live('stage'),
+  approval: live(),
 };
 
 export const CONNECT_STRENGTHS: Copy[] = [

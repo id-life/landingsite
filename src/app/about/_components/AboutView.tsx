@@ -69,7 +69,7 @@ function keyFactRows(): Row[] {
       ),
       approval: live,
     },
-    { label: FUND.stage.label.en, value: `${FUND.stage.value.en}, ${FUND.geography.value.en}`, approval: FUND.stage.approval },
+    { label: FUND.geography.label.en, value: FUND.geography.value.en, approval: FUND.geography.approval },
     { label: 'Investment themes', value: THEMES.map((theme) => theme.name.en).join(', '), approval: live },
     { label: FUND.lpPositions.label.en, value: FUND.lpPositions.value.en, approval: FUND.lpPositions.approval },
     { label: FUND.legalName.label.en, value: FUND.legalName.value.en, approval: FUND.legalName.approval },

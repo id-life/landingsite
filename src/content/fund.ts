@@ -30,11 +30,6 @@ export const FUND: FundFacts = {
     asOf: '2025-07-16',
     approval: live(),
   },
-  stage: {
-    label: { en: 'Investment stage', zh: '投资阶段' },
-    value: { en: 'pre-seed to Series A', zh: '前种子轮至A轮' },
-    approval: live('stage'),
-  },
   geography: {
     label: { en: 'Geography' },
     value: { en: 'geographically agnostic', zh: '不限地域' },

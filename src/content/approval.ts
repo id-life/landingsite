@@ -19,7 +19,6 @@ export const PENDING_RULINGS = {
   themes: 'CON-11 #7: the four named themes or the six areas of the organisation description?',
   conferenceName: 'CON-11 #8: "Health" or "Healthy" Longevity and Medicine Conference?',
   oxfordForum: 'CON-11 #9: is the Oxford Future Innovation Forum a sponsored body?',
-  stage: 'CON-11 #10: seed (种子轮, Connect) or pre-seed (前种子轮, profile) as the first stage?',
   legalName: 'ENG-10 / CON-02: confirm the legal entity name IMMORTAL DRAGONS PRIVATE LIMITED',
 } as const;
 

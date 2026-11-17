@@ -38,7 +38,7 @@ describe('shippable content', () => {
   });
 
   test('a record awaiting a ruling is not confirmed for new placements', () => {
-    expect(isConfirmed(content.FUND.stage)).toBe(false);
+    expect(isConfirmed(content.FUND.legalName)).toBe(false);
     expect(isConfirmed(content.FUND.fundSize)).toBe(true);
     expect(isConfirmed({ approval: { status: 'approved', approvedBy: 'Owner', approvedAt: '2026-11-20' } })).toBe(true);
   });

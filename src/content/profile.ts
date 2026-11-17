@@ -17,11 +17,11 @@ export const PROFILE_TEXT: Copy[] = [
     text: {
       en: [
         'Immortal Dragons (不朽真龙) is a US$40 million purpose-driven longevity and radical life extension fund headquartered in Singapore, founded by Boyang Wang (朢舶洋). The fund backs underfunded moonshot projects: breakthroughs whose economic returns are not yet clear and that are overlooked by mainstream capital, but that hold long-term value. Its main investment themes include organ replacement strategy, 3D bioprinting and artificial womb, among others.',
-        'The fund has made 15+ investments ranging from pre-seed to Series A, and is geographically agnostic. Beyond conventional capital investment, Immortal Dragons engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects, in order to support anti-aging research and advocate for longevity.',
+        'The fund has made 15+ investments, and is geographically agnostic. Beyond conventional capital investment, Immortal Dragons engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects, in order to support anti-aging research and advocate for longevity.',
       ].join('\n'),
       zh: [
         '不朽真龙基金（Immortal Dragons）是一家总部位于新加坡、投资激进延寿领域、规模4000万美元的使命驱动基金，由朢舶洋（Boyang Wang）创立。基金致力于支持经济回报尚不明确，被主流资本所忽视，但具备长期价值的突破性项目，主要投资方向包括器官替换策略，3D生物打印，人造子宫等。',
-        '基金已完成15余项投资，投资阶段覆盖前种子轮至A轮，不限地域。投资之外，不朽真龙出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念信仰。',
+        '基金已完成15余项投资，不限地域。投资之外，不朽真龙出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念信仰。',
       ].join('\n'),
     },
     approval: live(),
@@ -100,7 +100,7 @@ export const keyFactLines = () => [
   `Headquarters: ${FUND.address.area}, ${FUND.address.addressLocality} (${FUND_ADDRESS_LINE})`,
   `${FUND.fundSize.label.en}: ${FUND.fundSize.value.en}`,
   `${FUND.statedInvestments.label.en}: ${FUND.statedInvestments.value.en}`,
-  `${FUND.stage.label.en}: ${FUND.stage.value.en}, ${FUND.geography.value.en}`,
+  FUND.geography.value.en,
   FUND.lpPositions.value.en,
   `Website: ${FUND.website}`,
   `Contact: ${FUND.email}`,

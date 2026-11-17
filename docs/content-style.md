@@ -31,10 +31,10 @@ grammar and consistency are applied to live copy (listed under "Applied"); every
   Code comments may use either.
 - Possessive of the fund: **Immortal Dragons'** (never "Immortal Dragon's").
 - Hyphenate compound adjectives before a noun: early-stage, AI-powered, AI-driven, small-molecule (therapy),
-  whole-body (replacement), multi-target, pre-seed. No hyphen in "Series A".
+  whole-body (replacement), multi-target.
 - Standard terms: allogeneic (not allogenic), neuromodulation, xenotransplantation, 3D bioprinting, ex utero.
 - "Longevity biotech" in prose; "longbio" only where quoting the owner's own term ("other longbio funds").
-- No em dash in copy; use a comma, a colon or "to" for ranges ("pre-seed to Series A").
+- No em dash in copy; use a comma, a colon or "to" for ranges.
 - Money: "US$40 million" in prose, "US$40M" only where space is tight; "approximately" when the source says "about".
 
 ## Dates and durations
