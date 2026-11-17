@@ -137,6 +137,16 @@ function useFitScale(
         const controlsTop = Math.min(window.innerHeight, ...controls.map((c) => c.top));
         const bottom = Math.min(controlsTop, colBox.bottom - parseFloat(cs.paddingBottom));
         const room = bottom - top;
+        // A column held to the band (constrained: an opened paper was predicted under a control) cannot predict again
+        // while held, so a hold decided against a room that has since changed outlived it: after the window was made
+        // 40 px lower and set back, the first measure ran before the fixed bottom controls had moved, predicted with
+        // the old room, and 1440x900 stayed held 13 px higher than a fresh load. When the room no longer equals the
+        // held height, the hold is let go; the box's own resize brings the next measure, which predicts afresh.
+        const heldAt = parseFloat(box.style.height);
+        if (heldAt && (parseFloat(box.style.zoom) || 1) === 1 && Math.abs(heldAt - room) >= 1) {
+          setFit((prev) => (prev.constrained && prev.scale === 1 ? { ...prev, constrained: false } : prev));
+          return;
+        }
         // Height needed at scale 1: the content's own children (title, bands), plus what the closed groups add open.
         // Layout sizes (offsetHeight), not boxes: they are unscaled under the zoom and ignore the entrance's tilt.
         const fund = box.querySelector<HTMLElement>('.spectrum-fund');
@@ -234,15 +244,24 @@ function useFitScale(
     const late = [setTimeout(measure, 1000), setTimeout(measure, 3000)];
     const observer = new ResizeObserver(measure);
     observer.observe(col);
+    observer.observe(box);
     for (const el of box.querySelectorAll('.spectrum-fund > div > *, [data-open-measure], .spectrum-title'))
       observer.observe(el);
-    window.addEventListener('resize', measure);
+    // After a resize the fixed bottom controls settle a moment later than the window: measure again then too.
+    let afterResize: ReturnType<typeof setTimeout>[] = [];
+    const onResize = () => {
+      measure();
+      afterResize.forEach(clearTimeout);
+      afterResize = [setTimeout(measure, 400), setTimeout(measure, 1200)];
+    };
+    window.addEventListener('resize', onResize);
     void document.fonts?.ready.then(measure);
     return () => {
       cancelAnimationFrame(frame);
       late.forEach(clearTimeout);
       observer.disconnect();
-      window.removeEventListener('resize', measure);
+      afterResize.forEach(clearTimeout);
+      window.removeEventListener('resize', onResize);
     };
   }, [column, content, active]);
 
