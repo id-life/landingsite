@@ -143,7 +143,18 @@ export const Talk = z.object({
   ...shippable,
 });
 
-export const Paper = z.object({ slug, title: z.string().min(1), url, ...shippable });
+/** A published paper. `citations` (a count read from Crossref, see scripts/paper-citations.mjs) orders the Spectrum list. */
+export const Paper = z.object({
+  slug,
+  title: z.string().min(1),
+  url,
+  doi: z
+    .string()
+    .regex(/^10\.\d{4,9}\/\S+$/)
+    .optional(),
+  citations: z.number().int().nonnegative().optional(),
+  ...shippable,
+});
 export type Paper = z.infer<typeof Paper>;
 
 export const WeeklyIssue = z.object({ id: z.string(), title: Text, publishedAt: isoDate, url, ...shippable });

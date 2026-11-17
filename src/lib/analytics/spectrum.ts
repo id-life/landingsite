@@ -6,18 +6,18 @@ import { slugId } from './track';
 
 type LinkType = (typeof OUTBOUND_LINK_TYPES)[number];
 
-/** Spectrum groups by what their links lead to. */
+/** Spectrum groups (by their slug, not their label: a label is copy and may be reworded) by what their links lead to. */
 const GROUP_LINK_TYPE: Record<string, LinkType> = {
-  'Translation & Publishing': 'book',
-  Evangelism: 'talk',
-  'Digital Twin': 'other',
-  'Peer Reviews': 'research',
-  'Proudly Supporting': 'sponsor',
+  'translation-publishing': 'book',
+  evangelism: 'talk',
+  'digital-twin': 'other',
+  'papers-reviews': 'research',
+  'proudly-supporting': 'sponsor',
 };
 
 const typeByLabel = new Map<string, LinkType>();
 for (const group of spectrumBaseData) {
-  for (const link of group.links) typeByLabel.set(link.label, GROUP_LINK_TYPE[group.title] ?? 'other');
+  for (const link of group.links) typeByLabel.set(link.label, GROUP_LINK_TYPE[group.id] ?? 'other');
 }
 
 /**

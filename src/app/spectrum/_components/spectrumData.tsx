@@ -9,7 +9,7 @@ import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import { absoluteUrl } from '@/constants/site';
 import { SPECTRUM_GRANTS } from '@/content/grants';
-import { BOOKS, LABS, PAPERS, SPECTRUM_GROUPS, bySlug } from '@/content/initiatives';
+import { BOOKS, LABS, PAPERS_BY_CITATIONS, SPECTRUM_GROUPS, bySlug } from '@/content/initiatives';
 import { CollectionPage, WithContext } from 'schema-dts';
 
 import type { JSX } from 'react';
@@ -26,22 +26,28 @@ export type SpectrumLinkData = {
 };
 
 export type SpectrumItemData = {
+  /** The group's slug in the content layer (SPECTRUM_GROUPS). */
+  id: string;
   title: string;
   titleCn: string;
   icon: JSX.Element;
   links: SpectrumLinkData[];
   linksClassName?: string;
   className?: string;
+  /** Show only this many links at rest; a "more" control reveals the others in place. */
+  collapsedCount?: number;
 };
 
 /** Group presentation, in display order. */
-const GROUP_VIEW: Record<string, Pick<SpectrumItemData, 'icon' | 'linksClassName' | 'className'>> = {
+const GROUP_VIEW: Record<string, Pick<SpectrumItemData, 'icon' | 'linksClassName' | 'className' | 'collapsedCount'>> = {
   'translation-publishing': { icon: <BookSVG />, linksClassName: 'grid grid-cols-2' },
   evangelism: { icon: <RelationSVG />, linksClassName: 'grid grid-cols-2 gap-x-6' },
   'digital-twin': { icon: <DigitalTwinSVG />, className: 'mobile:pt-4' },
-  'peer-reviews': {
+  // The three most cited papers show at rest; "more" opens the others in place (the owner's arrangement, 2026-11-17).
+  'papers-reviews': {
     icon: <ResearchSVG className="[&_path]:fill-white" />,
     linksClassName: 'flex max-w-[15rem] flex-col gap-1',
+    collapsedCount: 3,
   },
   'proudly-supporting': { icon: <SponsorSVG />, className: 'mobile:text-xl' },
 };
@@ -120,7 +126,7 @@ const LINKS: Record<string, SpectrumLinkData[]> = {
   'translation-publishing': BOOKS.map(({ slug, title, url }) => ({ label: title, link: url, ...BOOK_VIEW[slug] })),
   evangelism: ['influence-network', 'disease-management', 'longevity-trend-radar'].map(lab),
   'digital-twin': [lab('digital-twin')],
-  'peer-reviews': PAPERS.map(({ title, url }) => ({ label: title, link: url })),
+  'papers-reviews': PAPERS_BY_CITATIONS.map(({ title, url }) => ({ label: title, link: url })),
   'proudly-supporting': SPECTRUM_GRANTS.map((grant) => ({
     label: grant.spectrumLabel ?? grant.name,
     link: grant.url ?? '',
@@ -129,6 +135,7 @@ const LINKS: Record<string, SpectrumLinkData[]> = {
 };
 
 export const spectrumBaseData: SpectrumItemData[] = SPECTRUM_GROUPS.map(({ id, text }) => ({
+  id,
   title: text.en,
   titleCn: text.zh ?? '',
   ...GROUP_VIEW[id],

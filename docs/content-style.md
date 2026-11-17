@@ -68,7 +68,7 @@ Machine-readable dates go in `<time dateTime="2025-07-16">`.
 | Reproduction Technology                          | 生殖技术                        | themes                      |                                                                                |
 | Translation & Publishing                         | 翻译与出版                      | Spectrum group              |                                                                                |
 | Evangelism                                       | 布道者 (live)                   | Spectrum group              | draft: 布道 (activity) or rename the group                                     |
-| Peer Reviews                                     | 论文与综述                      | Spectrum group              | draft: "Papers"                                                                |
+| Papers & Reviews                                 | 论文与综述                      | Spectrum group              | the owner's wording, 2026-11-17 (was "Peer Reviews")                           |
 | Proudly Supporting                               | 本机构赞助支持                  | Spectrum group              |                                                                                |
 | Influence Network                                | 长寿领域人物影响力与关系图      | Spectrum tool               |                                                                                |
 | Disease Management                               | 可治疗与可控制疾病列表          | Spectrum tool               |                                                                                |

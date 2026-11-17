@@ -54,18 +54,6 @@ export const COPY_EDIT_DRAFTS = defineDrafts('copy-edits.ts', [
     },
   },
   {
-    id: 'spectrum-group-papers',
-    item: 'CON-20',
-    title: 'Spectrum group label "Peer Reviews 论文与综述"',
-    body: { en: 'Papers', zh: '论文与综述' },
-    approval: {
-      status: 'draft',
-      replaces: 'Peer Reviews 论文与综述',
-      sources: [{ ref: 'src/content/initiatives.ts (group peer-reviews; the six entries are published papers)' }, FIGURE],
-      questions: ['The group lists published papers, not peer reviews. Approve "Papers" (or "Research")?'],
-    },
-  },
-  {
     id: 'twin-scenario-titles',
     item: 'CON-20',
     title: 'Digital Twin drawer titles',

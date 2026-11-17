@@ -140,25 +140,35 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   );
 }
 
-// Constants for dynamic calculation (in pixels)
-const NEWS_HEADER_HEIGHT = 44; // Header text height
+// The phone column, measured (in pixels): this row, the podcast row and the weekly row share the screen between the
+// header and the bottom controls. The weekly row was once left out of this sum, so a row of cards too many was drawn
+// and the column, centred, pushed this row's heading and its VIEW ALL up under the header where nobody could reach them
+// (the news list then had no way in on a phone).
+const NEWS_HEADER_HEIGHT = 36; // the heading's line box (26 px text on a 36 px line)
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 128; // Header (44px) + gap (12px) + 1 row of cards (72px)
-const SECTION_GAP = 24; // gap-6 between News and Podcast sections
+const PODCAST_SECTION_HEIGHT = 128; // heading (36) + gap (12) + one row of cards (80)
+const LONGEVITY_SECTION_HEIGHT = 144; // heading (36) + gap (12) + one row of cards with two-line titles (96)
+const SECTION_GAP = 24; // gap-6 between the three rows
 const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
 function calculateMobileItemCount(containerHeight: number, columns: number): number {
-  // Available height for news content (cards area only)
-  const availableForNews = containerHeight - NEWS_HEADER_HEIGHT - NEWS_CONTENT_GAP - SECTION_GAP - PODCAST_SECTION_HEIGHT;
+  // Height left for the news cards once the three headings, the two other rows and the gaps are taken.
+  const availableForNews =
+    containerHeight -
+    NEWS_HEADER_HEIGHT -
+    NEWS_CONTENT_GAP -
+    2 * SECTION_GAP -
+    PODCAST_SECTION_HEIGHT -
+    LONGEVITY_SECTION_HEIGHT;
 
   // Calculate how many rows fit: first row is just row height, each additional adds gap + row
   // Formula: availableForNews >= rows * NEWS_CARD_ROW_HEIGHT + (rows - 1) * NEWS_CARD_GAP
   // Simplified: availableForNews >= rows * (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP) - NEWS_CARD_GAP
   const rows = Math.floor((availableForNews + NEWS_CARD_GAP) / (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP));
 
-  // Clamp between 2 and 4 rows
-  const clampedRows = Math.max(2, Math.min(4, rows));
+  // At least one row (a short phone scrolls the column), at most four.
+  const clampedRows = Math.max(1, Math.min(4, rows));
   return clampedRows * columns;
 }
 
@@ -189,7 +199,8 @@ export default function NewsAndTalksSection({
   const containerResizeCallback = useCallback(
     (entry: ResizeObserverEntry) => {
       if (!isMobile) return;
-      const containerHeight = entry.contentRect.height;
+      // The column's whole box: its bottom padding is room the last row may use.
+      const containerHeight = (entry.target as HTMLElement).clientHeight || entry.contentRect.height;
       const count = calculateMobileItemCount(containerHeight, mobileColumns);
       setMobileItemCount(count);
     },
@@ -335,9 +346,8 @@ export default function NewsAndTalksSection({
     <div ref={containerRef} className="flex h-full flex-col mobile:h-auto">
       {/* Mobile: wrap header + content for vertical centering */}
       <div className={cn(isMobile ? 'flex flex-col' : 'flex flex-1 flex-col')}>
-        {/* Header. On the phone deck the original paints no NEWS & TALKS heading or VIEW ALL here: the row keeps its
-            place (so the rows sit where the original's do) but is never painted or announced. */}
-        <div className={cn('flex items-center justify-between', isMobile && 'invisible')} aria-hidden={isMobile || undefined}>
+        {/* Header. On the phone deck too: its VIEW ALL is the phone's only way to the news list. */}
+        <div className="flex items-center justify-between">
           <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>NEWS & TALKS</h2>
           <ViewAllButton href="/news" onClick={handleViewAllClick} isMobile={isMobile} />
         </div>

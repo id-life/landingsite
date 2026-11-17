@@ -60,6 +60,10 @@ const config: Config = {
         desktop: { min: '1540px' },
         desktop2k: { min: '1920px' },
         ipad: { min: '500px', max: '768px' },
+        // A wide and short desktop window (1536x730, 1920x960: a laptop screen less the browser's bars) or simply a low
+        // one (1280x720). The desktop deck's lengths follow the width, so a section that fills a 16:10 window is too
+        // tall here; Spectrum closes its gaps. Defined after `large` so that its utilities win over `large:` ones.
+        wideShort: { raw: '(min-width: 1200px) and (min-aspect-ratio: 9/5), (min-width: 1200px) and (max-height: 740px)' },
       },
       // Font roles (tokens.ts fontRoles): components name a role, never a typeface. FONT_PALETTE picks the faces.
       fontFamily: {
