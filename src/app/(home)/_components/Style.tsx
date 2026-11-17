@@ -1,4 +1,15 @@
-import { DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_SCALED_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { roleSizePx, typeRoles } from '@/styles/tokens';
+
+// The type roles on the phone deck follow its unit above phone width (RWD-02; the owner's rule on font sizes: his
+// sizes on the phone, scaled): each role is its size at 600 px times the deck's factor, continuous at 600 px. The
+// laptop deck keeps the roles as they are: each text there must have the size the original draws at the same window
+// (some of its texts scale with the window, some are fixed), which the roles already give. Content pages do not load
+// this style.
+const roleRules = (reference: number, unitAtReference: number) =>
+  (Object.keys(typeRoles) as (keyof typeof typeRoles)[])
+    .map((role) => `--type-${role}: calc(var(--t) * ${(roleSizePx(role, reference) / unitAtReference).toFixed(5)});`)
+    .join(' ');
 import 'swiper/css';
 import '@/styles/webgl.css';
 import '@/styles/loading.css';
@@ -35,6 +46,12 @@ const CSS = `
     body {
       height: 100%;
       overflow: hidden;
+    }
+  }
+
+  @media ${PHONE_SCALED_QUERY} {
+    :root {
+      ${roleRules(600, 16)}
     }
   }
     `;
