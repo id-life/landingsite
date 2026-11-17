@@ -5,7 +5,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import BookSVG from '@/../public/svgs/engagement/book.svg?component';
 import LinkSVG from '@/../public/svgs/engagement/link.svg?component';
@@ -16,7 +16,7 @@ import {
   BadgeBlurBg,
   CARD_TEXT_BACKING,
   MAP_LABEL_CLASS,
-  MAP_POINT_TAP_CLASS,
+  MapPointHit,
   PulseDot,
   type CalcPoint,
   type MapDeck,
@@ -82,6 +82,7 @@ export function WorldMapBookDotPoint({
   }, [phone, activeBookDot, setActiveBookDotClickOpen]);
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const pointRef = useRef<HTMLDivElement>(null);
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
     () => pulseConfig || DEFAULT_PULSE_CONFIG,
     [pulseConfig],
@@ -92,7 +93,6 @@ export function WorldMapBookDotPoint({
       className={cn(
         `world-map-dot-book world-map-dot-book-${index}`,
         'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
-        MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
       data-active={isActive ? 'true' : undefined}
@@ -120,7 +120,9 @@ export function WorldMapBookDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
         <PulseDot
+          ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}
           svgSize={svgSize}
           centerPoint={svgSize / 2}

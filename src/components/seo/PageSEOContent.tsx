@@ -16,6 +16,12 @@ export type SEOSection = {
   heading: string;
   text?: SEOText[];
   items?: SEOItem[];
+  /**
+   * The visible page already gives a screen reader everything in this section (as real links, text or logos): hide the
+   * section from assistive technology so nothing is announced twice. Crawlers still read it. Leave it unset where the
+   * summary is the only place a reader would meet the text.
+   */
+  shownOnPage?: boolean;
 };
 
 type PageSEOContentProps = {
@@ -53,7 +59,7 @@ export default function PageSEOContent({ title, titleAs: Title = 'h1', intro, se
       <Title>{title}</Title>
       <Paragraphs text={intro} />
       {sections?.map((section) => (
-        <section key={section.heading}>
+        <section key={section.heading} aria-hidden={section.shownOnPage || undefined}>
           <h2>{section.heading}</h2>
           <Paragraphs text={section.text} />
           {section.items?.length ? (

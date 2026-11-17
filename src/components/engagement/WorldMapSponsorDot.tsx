@@ -5,7 +5,7 @@ import { useEngagementDotInfo } from '@/hooks/engagement/useEngagementDotInfo';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue } from 'jotai';
 import { AnimatePresence, motion, Variants } from 'motion/react';
-import { memo, useEffect, useMemo, type ReactNode } from 'react';
+import { memo, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import ResearchSVG from '@/../public/svgs/engagement/research.svg?component';
 import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
@@ -16,7 +16,7 @@ import {
   BadgeBlurBg,
   CARD_TEXT_BACKING,
   MAP_LABEL_CLASS,
-  MAP_POINT_TAP_CLASS,
+  MapPointHit,
   PulseDot,
   type CalcPoint,
   type MapDeck,
@@ -145,6 +145,7 @@ export function WorldMapSponsorDotPoint({
   const pLat = phone ? (mobileLat ?? lat) : lat;
   const pLng = phone ? (mobileLng ?? lng) : lng;
   const { left, top } = useMemo(() => calcPoint(pLat, pLng), [calcPoint, pLat, pLng]);
+  const pointRef = useRef<HTMLDivElement>(null);
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
     () => pulseConfig || DEFAULT_PULSE_CONFIG,
     [pulseConfig],
@@ -156,7 +157,6 @@ export function WorldMapSponsorDotPoint({
       className={cn(
         `world-map-dot-sponsor world-map-dot-sponsor-${index}`,
         'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
-        MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
       data-active={isActive ? 'true' : undefined}
@@ -184,7 +184,9 @@ export function WorldMapSponsorDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
         <PulseDot
+          ref={pointRef}
           containerClassName={phone ? MOBILE_MAP_SCALE.dotContainerSize : 'size-6'}
           svgSize={svgSize}
           centerPoint={svgSize / 2}
