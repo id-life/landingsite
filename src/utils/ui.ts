@@ -41,3 +41,18 @@ export function ensureUIVisibleIfHidden(isMobile: boolean) {
     }
   }
 }
+
+/**
+ * While the fixed UI fades in, its wrapper's opacity is below 1, which makes it a stacking context painted under the
+ * hero canvas (z-index 1): a press on START or SCROLL as they appeared reached the canvas and did nothing (seen under
+ * load, when the fade lasts longer). For the length of the fade the wrapper is lifted above the canvas; the lift is
+ * cleared when the fade ends, so the controls' own stacking at rest is unchanged.
+ */
+export const FIXED_UI_REVEAL = {
+  onStart(this: gsap.core.Tween) {
+    gsap.set(this.targets(), { position: 'relative', zIndex: 2 });
+  },
+  clear(element: Element) {
+    gsap.set(element, { clearProps: 'position,zIndex' });
+  },
+};
