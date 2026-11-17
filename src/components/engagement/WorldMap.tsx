@@ -19,6 +19,7 @@ import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot'
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
 import { WorldMapSponsorDotContent, WorldMapSponsorDotPoint } from './WorldMapSponsorDot';
 import { MapHitLayerContext, type MapDeck } from './WorldMapDotComponents';
+import type { Point } from './tapCut';
 import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
@@ -76,6 +77,21 @@ export const WorldMap = memo(function WorldMapComponent({
   const [scrollLeft, setScrollLeft] = useState(0);
   // The layer of the points' tap areas, first in the map so every dot is drawn above it (MapPointHit).
   const [hitLayer, setHitLayer] = useState<HTMLDivElement | null>(null);
+  const [hitCentres, setHitCentres] = useState<Record<string, Point>>({});
+  const registerHit = useCallback((id: string, centre: Point | null) => {
+    setHitCentres((prev) => {
+      const old = prev[id];
+      if (centre ? old && old[0] === centre[0] && old[1] === centre[1] : !old) return prev;
+      const next = { ...prev };
+      if (centre) next[id] = centre;
+      else delete next[id];
+      return next;
+    });
+  }, []);
+  const hitContext = useMemo(
+    () => ({ layer: hitLayer, centres: hitCentres, register: registerHit }),
+    [hitLayer, hitCentres, registerHit],
+  );
   const hitLayerEl = <div ref={setHitLayer} className="pointer-events-none absolute left-0 top-0" />;
 
   const calcPoint = useCallback(
@@ -316,7 +332,7 @@ export const WorldMap = memo(function WorldMapComponent({
       // with pinch zoom allowed (WCAG 1.4.4) a phone browser widens its layout viewport to fit it, which pushed the menu,
       // SUBSCRIBE and the player off the screen. Clipping the x axis only keeps the cards' vertical overflow, creates no
       // scroll container and hides nothing the screen showed: the part past the window was never on the screen.
-      <MapHitLayerContext.Provider value={hitLayer}>
+      <MapHitLayerContext.Provider value={hitContext}>
         <div
           ref={phoneMapRef}
           className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
@@ -355,7 +371,7 @@ export const WorldMap = memo(function WorldMapComponent({
 
   // One element tree for both layouts, so switching (a rotation) never remounts the dots the section timeline animates.
   return (
-    <MapHitLayerContext.Provider value={hitLayer}>
+    <MapHitLayerContext.Provider value={hitContext}>
       <div
         ref={desktopMapRef}
         className={cn(
