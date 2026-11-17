@@ -193,8 +193,14 @@ function MobileConnectGL() {
       gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'hidden', opacity: 0 });
       // Hide footer
       setIsSubscribeShow(false);
-      // Reverse entry animation
-      startAnimTLRef.current?.reverse();
+      // Reverse entry animation. The canvas's opacity set on entry is cleared once it has run back: the class hides
+      // the canvas off Mission and Connect, and an inline opacity left from Connect is a state a fresh load of the
+      // section never has (the stylesheet's, so the next section that shows the canvas starts from its own).
+      const tl = startAnimTLRef.current;
+      if (tl) {
+        tl.eventCallback('onReverseComplete', () => gsap.set('#vision-canvas', { clearProps: 'opacity' }));
+        tl.reverse();
+      } else gsap.set('#vision-canvas', { clearProps: 'opacity' });
     }
   }, [currentPage, setIsSubscribeShow]);
 

@@ -8,6 +8,7 @@ import { useSetAtom } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
+import { isMotionPaused } from '@/motion/runtime';
 
 // 自动播放配置
 const AUTO_PLAY_CONFIG = {
@@ -157,6 +158,10 @@ export function useMobileEngagementAnim() {
     showPoint(currentIndex);
     currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
     dotShowIntervalRef.current = setInterval(() => {
+      // MOT-03: no step while the experience is paused (each step pans the map and opens a card with Motion
+      // animations, whose frame loop does not go through the paused one: 9 to 10 frames a second on an untouched
+      // page). The tour goes on from the same card after the wake.
+      if (isMotionPaused()) return;
       showPoint(currentIndex);
       currentIndex = (currentIndex + 1) % MOBILE_DOT_SHOW_ORDER.length;
     }, AUTO_PLAY_CONFIG.interval);
@@ -227,7 +232,16 @@ export function useMobileEngagementAnim() {
 
     const cleanup = setupEventListeners();
 
-    return cleanup || (() => {});
+    // Leaving the section stops the tour and closes its card. The tour used to run on behind the hidden panel, so a
+    // return (by Back, Forward or the menu) showed the card it had reached for a moment before the entrance closed it.
+    return () => {
+      cleanup?.();
+      enterTL.kill();
+      stopAutoShowDot();
+      setActiveBookDot(null);
+      setActiveMeetingDot(null);
+      setActiveSponsorDot(null);
+    };
   }, [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setupEventListeners, startAutoDotShow, stopAutoShowDot]);
 
   return {

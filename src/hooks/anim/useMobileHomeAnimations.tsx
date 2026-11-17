@@ -4,7 +4,8 @@ import { useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { useMobileThemeTransition } from '../useMobileThemeTransition';
 
-export function useMobileHomeAnimateInit() {
+/** The phone deck's background theme per section. `enabled` is false on the other deck's mount of Home (one Home for both decks): the hook then does nothing. */
+export function useMobileHomeAnimateInit(enabled = true) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const { transitionToTheme } = useMobileThemeTransition();
   // The first theme is set on mount, under the loader: no transition. An animated one would block
@@ -13,6 +14,7 @@ export function useMobileHomeAnimateInit() {
   const mountedRef = useRef(false);
 
   useEffect(() => {
+    if (!enabled) return;
     const options = { instant: !mountedRef.current };
     mountedRef.current = true;
     if (currentPage.id === 'portfolio_page') {
@@ -26,5 +28,5 @@ export function useMobileHomeAnimateInit() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [enabled, currentPage]);
 }

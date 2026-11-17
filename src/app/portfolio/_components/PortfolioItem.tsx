@@ -36,9 +36,7 @@ const PortfolioItem = memo(
         // so a tile grows instead of spilling its one-liner over the next row.
         'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem] large:h-[15.5rem]',
         hasLink && 'cursor-pointer',
-        isGridMode
-          ? 'mobile:h-full mobile:w-full mobile:min-w-0 mobile:justify-center shortScreen:px-1'
-          : 'mobile:h-[30svh] mobile:w-[100dvw]',
+        isGridMode ? 'mobile:h-full mobile:w-full mobile:min-w-0 mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
         className,
       ),
     };
@@ -47,8 +45,10 @@ const PortfolioItem = memo(
         <div
           className={cn(
             'flex items-center justify-center notMobile:px-3 notMobile:[&>img]:max-h-full notMobile:[&>img]:max-w-full notMobile:[&>img]:object-contain',
+            // A phone window under 660 px tall (360x640) has three rows of 130 px for six tiles: the logo box is 48 px
+            // there instead of 60, or a one-liner reached 2 to 6 px into the next row's logos.
             isGridMode
-              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full'
+              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:px-1 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:h-12 [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:max-h-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:object-contain [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_svg]:max-h-full'
               : 'h-20 mobile:h-15',
           )}
         >

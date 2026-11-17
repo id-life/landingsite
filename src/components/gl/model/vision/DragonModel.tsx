@@ -11,8 +11,10 @@ import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGesture } from '@use-gesture/react';
+import { FIXED_UI_REVEAL } from '@/utils/ui';
 import gsap from 'gsap';
 import { DURATION } from '@/motion/tokens';
+import { isReducedMotion } from '@/motion/preference';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
@@ -86,7 +88,14 @@ function DesktopDragonModel() {
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
     if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 }, 0);
-    if (element) tl.fromTo(element, { opacity: 0 }, { opacity: 1 }, 0);
+    // Above the canvas while it fades, so SCROLL takes a press from its first frame (FIXED_UI_REVEAL).
+    if (element)
+      tl.fromTo(
+        element,
+        { opacity: 0 },
+        { opacity: 1, onStart: FIXED_UI_REVEAL.onStart, onComplete: () => FIXED_UI_REVEAL.clear(element) },
+        0,
+      );
     tl.play();
   });
 
@@ -97,7 +106,11 @@ function DesktopDragonModel() {
 
     // Auto swing animation
     if (autoSwingRef.current) {
-      swingPhaseRef.current += delta;
+      // Reduced motion (MOT-02): no idle swing. The canvas renders a few frames whenever something changes and then
+      // holds that still frame, so a swing advanced by the frames of a section change was held at whatever angle it
+      // had reached (the mark turned on the first screen after a visit to Connect, unlike a fresh load).
+      if (isReducedMotion()) swingPhaseRef.current = 0;
+      else swingPhaseRef.current += delta;
       modelRef.current.rotation.y = rotationRef.current.y + Math.sin(swingPhaseRef.current) * AUTO_SWING_AMPLITUDE;
     }
 
@@ -273,7 +286,10 @@ function PhoneDragonModel(props: {}) {
         {
           opacity: 1,
           duration: DURATION.fast,
+          // Above the canvas while it fades, so START takes a press from its first frame (FIXED_UI_REVEAL).
+          onStart: FIXED_UI_REVEAL.onStart,
           onComplete: () => {
+            FIXED_UI_REVEAL.clear(element);
             setFadeInAnimCompleted(true);
           },
         },

@@ -8,8 +8,9 @@ import { useCallback, useEffect } from 'react';
  * Desktop section changes from the nav, the arrows (navigateToAtom) and in-page links go through the section
  * controller (MOT-01): it retargets a running transition, lands on the section's rest pose and writes the URL.
  * There is no throttle: a second click while moving retargets instead of being swallowed.
+ * `enabled` is false on the other deck's mount of Home (one Home for both decks): the hook then does nothing.
  */
-export function useNavigation() {
+export function useNavigation(enabled = true) {
   const [navigateTo, setNavigateTo] = useAtom(navigateToAtom);
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
@@ -24,10 +25,10 @@ export function useNavigation() {
   );
 
   useEffect(() => {
-    if (!navigateTo) return;
+    if (!enabled || !navigateTo) return;
     handleNavClick(navigateTo, 'arrow');
     setNavigateTo(null);
-  }, [handleNavClick, navigateTo, setNavigateTo]);
+  }, [enabled, handleNavClick, navigateTo, setNavigateTo]);
 
   return { handleNavClick };
 }

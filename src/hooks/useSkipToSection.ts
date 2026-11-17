@@ -36,13 +36,29 @@ export function useSkipToSection() {
     const onTabFocus = (event: FocusEvent) => {
       if (!intent.focus(performance.now()) || !(event.target instanceof Element)) return;
       const state = getSectionState();
-      const index = NAV_LIST.findIndex((item) => event.target instanceof Element && event.target.closest(`#${item.id}`));
+      // A part drawn for a section but rendered outside it (Connect's contact band, portalled to the end of the page)
+      // names its section with data-section-of.
+      const target = event.target;
+      const owner = target.closest('[data-section-of]')?.getAttribute('data-section-of');
+      const index = NAV_LIST.findIndex((item) => (owner ? item.id === owner : target.closest(`#${item.id}`)));
       // During a move the deck is headed for its target: a Tab press back out of it retargets the move (the controller
       // reverses it toward where it started, or goes on to the new section), so the deck ends where the focus is.
       const headedFor = state.phase === 'moving' ? state.target : state.index;
       if (index < 0 || index === headedFor) return;
       goToSection(index, 'key');
     };
+    // The skip link on the experience: its native anchor jump scrolled the window to #content-start (near the top of
+    // the page) and the smoother glided back, so the first wheel notch read the gliding position and stepped to the
+    // section already in view (it did nothing; the second notch moved). Here the link focuses its target without
+    // scrolling; content pages keep the native link.
+    const onSkipClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Element) || !event.target.closest('a[href="#content-start"]')) return;
+      const start = document.getElementById('content-start');
+      if (!start) return;
+      event.preventDefault();
+      start.focus({ preventScroll: true });
+    };
+    document.addEventListener('click', onSkipClick, true);
     document.addEventListener('focusin', onFocusIn);
     document.addEventListener('focusin', onTabFocus);
     document.addEventListener('keydown', onKeyDown, true);
@@ -50,6 +66,7 @@ export function useSkipToSection() {
     document.addEventListener('pointerdown', clear, true);
     window.addEventListener('blur', clear);
     return () => {
+      document.removeEventListener('click', onSkipClick, true);
       document.removeEventListener('focusin', onFocusIn);
       document.removeEventListener('focusin', onTabFocus);
       document.removeEventListener('keydown', onKeyDown, true);

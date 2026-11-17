@@ -30,8 +30,10 @@ function verticalScroller(target: Element | null): Element | null {
  * on a page a couple of pixels taller than the viewport (iOS Safari's toolbars do this routinely):
  * the body cannot scroll (overflow hidden) but the check said it could, and every swipe up was
  * swallowed.
+ *
+ * `enabled` is false on the other deck's mount of Home (one Home for both decks): the hook then does nothing.
  */
-export function useMobileSwipe() {
+export function useMobileSwipe(enabled = true) {
   const step = useSectionStep();
   const stepRef = useRef(step);
   stepRef.current = step;
@@ -43,6 +45,7 @@ export function useMobileSwipe() {
   pageRef.current = currentPage;
 
   useEffect(() => {
+    if (!enabled) return;
     let startX = 0;
     let startY = 0;
     let scroller: Element | null = null;
@@ -89,5 +92,5 @@ export function useMobileSwipe() {
       window.removeEventListener('touchstart', onStart);
       window.removeEventListener('touchend', onEnd);
     };
-  }, []);
+  }, [enabled]);
 }

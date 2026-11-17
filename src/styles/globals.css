@@ -51,6 +51,23 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* The deck's page, its scrolled content and everything in it take no transition at all. The rule above gives every
+     element a 0.01 ms transition of every property (the default transition-property is all), so whatever GSAP set and
+     measured at once was still the old value when it was read: a ScrollTrigger refresh measured every section shifted
+     by the scroll, the body kept its old height (the native scroll was clamped short of Connect's new rest), and a
+     1 px resize on Spectrum put the deck on Connect. Swiper's rows keep their 0.01 ms transition: Swiper waits for
+     its transitionend to take the next page. */
+  html,
+  body,
+  #wrapper,
+  #content,
+  #content * {
+    transition: none !important;
+  }
+  #content .swiper-wrapper {
+    transition: transform 0.01ms !important;
+  }
 }
 
 @layer base {
