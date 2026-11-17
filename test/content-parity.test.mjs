@@ -127,6 +127,36 @@ describe('page descriptions', async () => {
     }
   });
 
+  // The owner's answer to question 11 (2026-11-18): each description only from words the same page shows.
+  test('every description is words its page shows', async () => {
+    const src = (file) =>
+      readFileSync(file, 'utf8')
+        .replace(/\{' '\}/g, ' ')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ');
+    const byId = Object.fromEntries(PAGES.map((page) => [page.id, page.description]));
+    const { PRESENCE_EVENTS } = await import('@/content/pages');
+    const engagement = readFileSync('src/constants/engagement.tsx', 'utf8').replace(/\\n/g, ' ');
+    for (const event of PRESENCE_EVENTS) expect(engagement, event).toContain(`'${event}'`);
+    expect(byId.presence).toBe(PRESENCE_EVENTS.join(', '));
+    const influence = src('src/components/character-relation/BePartOfIt.tsx');
+    expect(influence).toContain('This page is a derived work from');
+    expect(influence).toContain('For more comprehensive information, please visit the original website.');
+    for (const heading of ['NEWS & TALKS', 'PODCAST', '长生周报'])
+      expect(
+        src('src/app/insights/_components/NewsAndTalksSection.tsx') +
+          src('src/app/insights/_components/PodcastSection.tsx') +
+          src('src/app/insights/_components/LongevitySection.tsx'),
+        heading,
+      ).toContain(heading);
+    expect(src('src/app/news/_components/SubTitle.tsx')).toMatch(/For priority access to pioneer research/);
+    expect(byId['disease-management']).toBe(DISEASE_MANAGEMENT_HEADINGS.join(' '));
+    const { CONNECT_LINES } = await import('@/content/pages');
+    for (const line of CONNECT_LINES) expect(src('src/app/connect/FixedConnectPage1.tsx'), line).toContain(line);
+    expect(byId['article-profile']).toBe(ARTICLE_OPENINGS.profile);
+    expect(byId['article-milestones']).toBe(ARTICLE_OPENINGS.milestones);
+  });
+
   test("the Disease Management headings are the page's own", () => {
     expect(DISEASE_MANAGEMENT_HEADINGS).toEqual(diseaseManagementStatusItems.map((item) => item.title));
   });

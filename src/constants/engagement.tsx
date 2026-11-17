@@ -209,37 +209,37 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     secondImgs: [
       {
         src: 'https://resources.id.life/engagement/Shanghai-01.webp',
-        alt: 'Shanghai-01.webp',
+        alt: 'The 5th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/Shanghai-02.webp',
-        alt: 'Shanghai-02.webp',
+        alt: 'The 5th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/Shanghai-03.webp',
-        alt: 'Shanghai-03.webp',
+        alt: 'The 5th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/Shanghai-04.webp',
-        alt: 'Shanghai-04.webp',
+        alt: 'The 5th TIMEPIE LONGEVITY FORUM',
       },
     ],
     imgs: [
       {
         src: 'https://resources.id.life/engagement/timepie-2025-01.webp',
-        alt: 'timepie-2025-01.webp',
+        alt: 'The 6th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/timepie-2025-02.webp',
-        alt: 'timepie-2025-02.webp',
+        alt: 'The 6th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/timepie-2025-03.webp',
-        alt: 'timepie-2025-03.webp',
+        alt: 'The 6th TIMEPIE LONGEVITY FORUM',
       },
       {
         src: 'https://resources.id.life/engagement/timepie-2025-04.webp',
-        alt: 'timepie-2025-04.webp',
+        alt: 'The 6th TIMEPIE LONGEVITY FORUM',
       },
     ],
   },
@@ -260,15 +260,15 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/Chiangmai-1.webp',
-        alt: 'Chiangmai-1.webp',
+        alt: 'Edge City Lanna',
       },
       {
         src: 'https://resources.id.life/engagement/Chiangmai-2.webp',
-        alt: 'Chiangmai-2.webp',
+        alt: 'Edge City Lanna',
       },
       {
         src: 'https://resources.id.life/engagement/Chiangmai-3.webp',
-        alt: 'Chiangmai-3.webp',
+        alt: 'Edge City Lanna',
       },
     ],
   },
@@ -294,23 +294,23 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/Singapore-1.webp',
-        alt: 'Singapore-1.webp',
+        alt: 'Founders Longevity Forum Singapore',
       },
       {
         src: 'https://resources.id.life/engagement/Singapore-2.webp',
-        alt: 'Singapore-2.webp',
+        alt: 'Founders Longevity Forum Singapore',
       },
       {
         src: 'https://resources.id.life/engagement/Singapore-3.webp',
-        alt: 'Singapore-3.webp',
+        alt: 'Founders Longevity Forum Singapore',
       },
       {
         src: 'https://resources.id.life/engagement/Singapore-4.webp',
-        alt: 'Singapore-4.webp',
+        alt: 'Founders Longevity Forum Singapore',
       },
       {
         src: 'https://resources.id.life/engagement/Singapore-5.webp',
-        alt: 'Singapore-5.webp',
+        alt: 'Founders Longevity Forum Singapore',
       },
     ],
     extraSponsor: [
@@ -339,23 +339,23 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/Honduras-5.webp',
-        alt: 'Honduras-5.webp',
+        alt: 'Vitalia @ Roatan, Honduras',
       },
       {
         src: 'https://resources.id.life/engagement/Honduras-1.webp',
-        alt: 'Honduras-1.webp',
+        alt: 'Vitalia @ Roatan, Honduras',
       },
       {
         src: 'https://resources.id.life/engagement/Honduras-2.webp',
-        alt: 'Honduras-2.webp',
+        alt: 'Vitalia @ Roatan, Honduras',
       },
       {
         src: 'https://resources.id.life/engagement/Honduras-3.webp',
-        alt: 'Honduras-3.webp',
+        alt: 'Vitalia @ Roatan, Honduras',
       },
       {
         src: 'https://resources.id.life/engagement/Honduras-4.webp',
-        alt: 'Honduras-4.webp',
+        alt: 'Vitalia @ Roatan, Honduras',
       },
     ],
   },
@@ -378,27 +378,27 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/Berkeley-1.webp',
-        alt: 'vitalistbay-1.webp',
+        alt: 'Vitalist Bay Summit',
       },
       {
         src: 'https://resources.id.life/engagement/Berkeley-2.webp',
-        alt: 'vitalistbay-2.webp',
+        alt: 'Vitalist Bay Summit',
       },
       {
         src: 'https://resources.id.life/engagement/Berkeley-3.webp',
-        alt: 'vitalistbay-3.webp',
+        alt: 'Vitalist Bay Summit',
       },
       {
         src: 'https://resources.id.life/engagement/Berkeley-4.webp',
-        alt: 'vitalistbay-4.webp',
+        alt: 'Vitalist Bay Summit',
       },
       {
         src: 'https://resources.id.life/engagement/Berkeley-5.webp',
-        alt: 'vitalistbay-5.webp',
+        alt: 'Vitalist Bay Summit',
       },
       {
         src: 'https://resources.id.life/engagement/Berkeley-6.webp',
-        alt: 'vitalistbay-6.webp',
+        alt: 'Vitalist Bay Summit',
       },
     ],
     extraSponsor: [
@@ -446,29 +446,29 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     secondImgs: [
       {
         src: 'https://resources.id.life/engagement/London-1.webp',
-        alt: 'London-1.webp',
+        alt: 'Founders Forum Global',
       },
       {
         src: 'https://resources.id.life/engagement/London-2.webp',
-        alt: 'London-21.webp',
+        alt: 'Founders Forum Global',
       },
       {
         src: 'https://resources.id.life/engagement/London-3.webp',
-        alt: 'London-3.webp',
+        alt: 'Founders Forum Global',
       },
     ],
     imgs: [
       {
         src: 'https://resources.id.life/engagement/London-Global-1.webp',
-        alt: 'London-Global-1.webp',
+        alt: 'Founders Longevity Forum London',
       },
       {
         src: 'https://resources.id.life/engagement/London-Global-2.webp',
-        alt: 'London-Global-2.webp',
+        alt: 'Founders Longevity Forum London',
       },
       {
         src: 'https://resources.id.life/engagement/London-Global-3.webp',
-        alt: 'London-Global-3.webp',
+        alt: 'Founders Longevity Forum London',
       },
     ],
   },
@@ -497,19 +497,19 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/ardd-2025-1.webp',
-        alt: 'ardd-2025-1.webp',
+        alt: 'ARDD',
       },
       {
         src: 'https://resources.id.life/engagement/ardd-2025-2.webp',
-        alt: 'ardd-2025-2.webp',
+        alt: 'ARDD',
       },
       {
         src: 'https://resources.id.life/engagement/ardd-2025-3.webp',
-        alt: 'ardd-2025-3.webp',
+        alt: 'ARDD',
       },
       {
         src: 'https://resources.id.life/engagement/ardd-2025-4.webp',
-        alt: 'ardd-2025-4.webp',
+        alt: 'ARDD',
       },
     ],
     extraSponsor: [
@@ -549,19 +549,19 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
     imgs: [
       {
         src: 'https://resources.id.life/engagement/2060lf-2025-1.webp',
-        alt: '2060lf-2025-1.webp',
+        alt: '2060 Longevity Forum',
       },
       {
         src: 'https://resources.id.life/engagement/2060lf-2025-2.webp',
-        alt: '2060lf-2025-2.webp',
+        alt: '2060 Longevity Forum',
       },
       {
         src: 'https://resources.id.life/engagement/2060lf-2025-3.webp',
-        alt: '2060lf-2025-3.webp',
+        alt: '2060 Longevity Forum',
       },
       {
         src: 'https://resources.id.life/engagement/2060lf-2025-4.webp',
-        alt: '2060lf-2025-4.webp',
+        alt: '2060 Longevity Forum',
       },
     ],
   },
