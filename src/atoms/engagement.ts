@@ -11,6 +11,13 @@ export const activeSponsorDotClickOpenAtom = atom<boolean>(false);
 export const activeMeetingDotAtom = atom<number | null>(null);
 export const activeMeetingDotClickOpenAtom = atom<boolean>(false);
 
+/**
+ * The card the phone's tour opened itself, while it is still the open one and the visitor has not tapped since. A tap
+ * on that card's point keeps it open (the tour stops) instead of closing it: the visitor did not open it, and the tour
+ * may open it in the very instant of the tap (taps on Oxford, London and Aix, the tour's 2nd to 4th cards, were lost).
+ */
+export const tourOpenedDotAtom = atom<{ type: 'meeting' | 'book' | 'sponsor'; index: number } | null>(null);
+
 // 移动端地图滚动进度 (0-1)
 export const mobileMapScrollProgressAtom = atom<number>(0);
 

@@ -1,4 +1,4 @@
-import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom } from '@/atoms/engagement';
+import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, tourOpenedDotAtom } from '@/atoms/engagement';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
@@ -25,6 +25,7 @@ export function useMobileEngagementAnim() {
   const setActiveBookDot = useSetAtom(activeBookDotAtom);
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
+  const setTourOpenedDot = useSetAtom(tourOpenedDotAtom);
 
   const { contextSafe } = useGSAP();
 
@@ -100,6 +101,7 @@ export function useMobileEngagementAnim() {
       setActiveBookDot(null);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
+      setTourOpenedDot(null);
 
       // 第二步：开始滚动
       scrollToActivePoint(type, index, offsetX);
@@ -115,9 +117,11 @@ export function useMobileEngagementAnim() {
         } else if (type === 'sponsor') {
           setActiveSponsorDot(index);
         }
+        // The tour opened this card itself: a tap on its point keeps it open (useEngagementClickPoint).
+        setTourOpenedDot({ type, index });
       }, AUTO_PLAY_CONFIG.activateDelay);
     },
-    [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot],
+    [scrollToActivePoint, setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setTourOpenedDot],
   );
 
   const setupEventListeners = contextSafe(() => {
@@ -241,8 +245,17 @@ export function useMobileEngagementAnim() {
       setActiveBookDot(null);
       setActiveMeetingDot(null);
       setActiveSponsorDot(null);
+      setTourOpenedDot(null);
     };
-  }, [setActiveBookDot, setActiveMeetingDot, setActiveSponsorDot, setupEventListeners, startAutoDotShow, stopAutoShowDot]);
+  }, [
+    setActiveBookDot,
+    setActiveMeetingDot,
+    setActiveSponsorDot,
+    setTourOpenedDot,
+    setupEventListeners,
+    startAutoDotShow,
+    stopAutoShowDot,
+  ]);
 
   return {
     enterAnimate,
