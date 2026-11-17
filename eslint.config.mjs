@@ -136,7 +136,7 @@ export default defineConfig([
       'src/app/vision/_components/MobileVision.tsx',
       'src/atoms/nav.ts',
       'src/components/common/MobileFixedUI.tsx',
-      'src/components/common/MobileScrollButton.tsx',
+      'src/components/common/StartButton.tsx',
       'src/components/common/PCFixedUI.tsx',
       'src/components/common/ScrollButton.tsx',
       'src/components/common/VerticalCarousel.tsx',

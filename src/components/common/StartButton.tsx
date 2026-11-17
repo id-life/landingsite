@@ -10,11 +10,15 @@ import { NAV_LIST } from '../nav/nav';
 import { EASE, LOOP } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
 
-interface ScrollButtonProps {
+interface StartButtonProps {
   className?: string;
 }
 
-export default function MobileScrollButton({ className }: ScrollButtonProps) {
+/**
+ * START on the first screen of the paged deck (phones): it enters the deck at its next section. The desktop deck's
+ * first screen has SCROLL (ScrollButton) instead, with its own label and drawing, so they stay two parts (RWD-02).
+ */
+export default function StartButton({ className }: StartButtonProps) {
   const setNavigateTo = useSetAtom(navigateToAtom);
   const reduced = useReducedMotionPref();
   const rippleRef1 = useRef<HTMLDivElement>(null);

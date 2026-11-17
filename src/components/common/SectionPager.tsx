@@ -13,11 +13,16 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { hasBlackArrow, hasInnerPage, NAV_LIST } from '../nav/nav';
 
-interface PageArrowsProps {
+interface SectionPagerProps {
   className?: string;
 }
 
-export default function MobilePageArrows({ className }: PageArrowsProps) {
+/**
+ * The section pager of the paged deck (phones): an up and a down button that step through the sections and through
+ * the inner pages of Portfolio, Insights and Spectrum, one tap one step. A different control from the desktop
+ * deck's PageArrows, which scroll a continuous deck, so it stays its own part (RWD-02).
+ */
+export default function SectionPager({ className }: SectionPagerProps) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const [, setInnerPageTotal] = useAtom(innerPageTotalAtom);
 
@@ -85,7 +90,7 @@ const STEP_SPACING_MS = 500;
 let lastStepAt = 0;
 
 /** One step through the phone experience, shared by the arrow buttons and the swipe gesture. */
-export function useMobileSectionStep() {
+export function useSectionStep() {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const currentPageIndex = useAtomValue(mobileCurrentPageIndexAtom);
   const setInnerPageNavigateTo = useSetAtom(innerPageNavigateToAtom);
@@ -145,7 +150,7 @@ function useArrowLabel(isUp: boolean) {
 
 function ArrowItem({ isUp }: { isUp?: boolean }) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
-  const step = useMobileSectionStep();
+  const step = useSectionStep();
   const label = useArrowLabel(Boolean(isUp));
 
   return (
