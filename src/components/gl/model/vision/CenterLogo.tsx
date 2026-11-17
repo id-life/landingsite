@@ -11,6 +11,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { INTRO, shouldSkipIntro } from './intro';
 import { EASE } from '@/motion/tokens';
+import { isReducedMotion } from '@/motion/preference';
 import MergedSvg from './MergedSvg';
 
 const POINTER_DAMPING = 2.5;
@@ -65,18 +66,28 @@ function DesktopCenterLogo() {
   useFrame((_, delta) => {
     if (!groupRef.current || !smootherRef.current) return;
 
-    const positionX = THREE.MathUtils.mapLinear(pointer.x, -1, 1, -0.15, 0.15);
-    const positionY = THREE.MathUtils.mapLinear(pointer.y, -1, 1, -0.15, 0.15);
-    const rotationX = THREE.MathUtils.mapLinear(pointer.y, -1, 1, Math.PI / 32, -Math.PI / 32);
-    const rotationY = THREE.MathUtils.mapLinear(pointer.x, -1, 1, Math.PI / 32, -Math.PI / 32);
+    // Reduced motion (MOT-02): the wordmark does not follow the pointer. The canvas holds a still frame once a change
+    // has settled, so the parallax was held wherever the frames of a section change had damped it to (the wordmark
+    // stood off its place on the first screen after a visit to Connect).
+    const still = isReducedMotion();
+    const positionX = still ? 0 : THREE.MathUtils.mapLinear(pointer.x, -1, 1, -0.15, 0.15);
+    const positionY = still ? 0 : THREE.MathUtils.mapLinear(pointer.y, -1, 1, -0.15, 0.15);
+    const rotationX = still ? 0 : THREE.MathUtils.mapLinear(pointer.y, -1, 1, Math.PI / 32, -Math.PI / 32);
+    const rotationY = still ? 0 : THREE.MathUtils.mapLinear(pointer.x, -1, 1, Math.PI / 32, -Math.PI / 32);
 
     // Pointer parallax with frame-rate independent damping. This used to start two new GSAP tweens
     // on every frame (about 96 live tweens at 60 Hz); lambda 2.5 reproduces the same easing.
     const group = groupRef.current;
     const dt = Math.min(delta, 0.1);
-    group.position.x = THREE.MathUtils.damp(group.position.x, positionX, POINTER_DAMPING, dt);
-    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, rotationX, POINTER_DAMPING, dt);
-    group.rotation.y = THREE.MathUtils.damp(group.rotation.y, rotationY, POINTER_DAMPING, dt);
+    if (still) {
+      group.position.x = positionX;
+      group.rotation.x = rotationX;
+      group.rotation.y = rotationY;
+    } else {
+      group.position.x = THREE.MathUtils.damp(group.position.x, positionX, POINTER_DAMPING, dt);
+      group.rotation.x = THREE.MathUtils.damp(group.rotation.x, rotationX, POINTER_DAMPING, dt);
+      group.rotation.y = THREE.MathUtils.damp(group.rotation.y, rotationY, POINTER_DAMPING, dt);
+    }
 
     const scrollTop = smootherRef.current.scrollTop();
     const scrollY = THREE.MathUtils.mapLinear(scrollTop, 0, size.height, 0, 10);
@@ -91,7 +102,7 @@ function DesktopCenterLogo() {
       group.position.y = positionY;
       group.position.z = REST_Z;
     } else {
-      group.position.y = THREE.MathUtils.damp(group.position.y, positionY, POINTER_DAMPING, dt);
+      group.position.y = still ? positionY : THREE.MathUtils.damp(group.position.y, positionY, POINTER_DAMPING, dt);
     }
   });
 

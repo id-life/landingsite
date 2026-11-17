@@ -152,6 +152,11 @@ const desktopDriver: SectionDriver = {
     if (y === null || !smoother) return null;
     gsap.killTweensOf([window, smoother]);
     if (source === 'deeplink' || source === 'layout') {
+      // After a resize ScrollTrigger's refresh has re-rendered every section timeline in its own order, and the ones
+      // that share the theme can be left with another section's look (Digital Twin and Connect came out black-red
+      // after 1440x900 became 1280x720). The re-snap therefore runs the deck up to the top and down to the section,
+      // stop by stop, as a deep link does from the top: one synchronous run, before anything is drawn.
+      if (source === 'layout') jumpTo(0);
       jumpTo(y);
       return null;
     }

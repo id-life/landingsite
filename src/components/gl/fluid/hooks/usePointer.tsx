@@ -2,6 +2,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useThree } from '@react-three/fiber';
 import { useCallback, useRef, useEffect } from 'react';
 import { Vector2 } from 'three';
+import { isReducedMotion } from '@/motion/preference';
 
 type SplatStack = {
   mouseX?: number;
@@ -20,6 +21,8 @@ export const usePointer = ({ force }: { force: number }) => {
 
   const createRadialSplats = useCallback(
     (x: number, y: number, numSplats = 8, forceRatio = 8) => {
+      // Reduced motion (MOT-02): the pointer leaves no ink.
+      if (isReducedMotion()) return;
       const baseRadius = force * forceRatio;
       const numLayers = 2;
       splatStack.push({
@@ -62,7 +65,7 @@ export const usePointer = ({ force }: { force: number }) => {
 
       lastMouse.current.set(event.clientX, event.clientY);
 
-      if (!hasMoved.current) return;
+      if (!hasMoved.current || isReducedMotion()) return;
 
       splatStack.push({
         mouseX: event.clientX / size.width,
@@ -94,7 +97,7 @@ export const usePointer = ({ force }: { force: number }) => {
 
       lastMouse.current.set(touch.clientX, touch.clientY);
 
-      if (!hasMoved.current) return;
+      if (!hasMoved.current || isReducedMotion()) return;
 
       splatStack.push({
         mouseX: touch.clientX / size.width,
@@ -132,5 +135,10 @@ export const usePointer = ({ force }: { force: number }) => {
     }
   }, [onPointerDown, onPointerMove, onTouchMove, isMobile, onTouchStart]);
 
-  return { splatStack };
+  /** Drops the splats not yet painted (a switch to reduced motion wipes the ink, MOT-02). */
+  const clearSplats = useCallback(() => {
+    splatStack.length = 0;
+  }, [splatStack]);
+
+  return { splatStack, clearSplats };
 };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useReducedMotionPref } from '@/motion/preference';
+import { isMotionPaused } from '@/motion/runtime';
 
 interface UseStaggerAnimationOptions {
   enabled: boolean;
@@ -24,8 +25,11 @@ export function useStaggerAnimation({ enabled: wanted, interval, onAnimate }: Us
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
+    // MOT-03: while the experience is paused (a minute without input) a cycle is skipped: each one starts Motion
+    // animations, whose own frame loop does not go through the paused one (the Digital Twin kept requesting about 60
+    // frames a second). The next cycle after the wake runs as usual.
     intervalRef.current = setInterval(() => {
-      if (mountedRef.current && enabled) {
+      if (mountedRef.current && enabled && !isMotionPaused()) {
         onAnimate();
       }
     }, interval);

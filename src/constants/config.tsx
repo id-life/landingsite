@@ -85,9 +85,12 @@ export type ValueOf<T> = T[keyof T];
 
 export type BackgroundTheme = ValueOf<typeof BACKGROUND_THEME>;
 
+// Every theme sets every property any of them sets: the phone deck tweens from whatever the last theme left on <html>,
+// so a property one theme omits keeps the previous section's value (Spectrum's 300deg stayed on Insights, Portfolio
+// and the rest after leaving it, where a fresh load draws the gradient at the stylesheet's 90deg).
 export const BACKGROUND_COLORS = {
-  [BACKGROUND_THEME.LIGHT]: { ...themes.light, '--gradient-via-percent': '50%' },
-  [BACKGROUND_THEME.BLACK]: { ...themes.black, '--gradient-via-percent': '50%' },
-  [BACKGROUND_THEME.BLACK_RED]: { ...themes.blackRed, '--gradient-via-percent': '50%' },
+  [BACKGROUND_THEME.LIGHT]: { ...themes.light, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
+  [BACKGROUND_THEME.BLACK]: { ...themes.black, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
+  [BACKGROUND_THEME.BLACK_RED]: { ...themes.blackRed, '--gradient-via-percent': '50%', '--gradient-rotate': '90deg' },
   [BACKGROUND_THEME.BLACK_RED_2]: { ...themes.blackRed2, '--gradient-via-percent': '80%', '--gradient-rotate': '300deg' },
 } as const;
