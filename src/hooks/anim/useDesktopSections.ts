@@ -2,6 +2,7 @@
 
 import gsap from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect } from 'react';
 import { currentPageAtom } from '@/atoms';
 import { jotaiStore } from '@/atoms/store';
@@ -10,6 +11,7 @@ import { isReducedMotion, onReducedMotionChange } from '@/motion/preference';
 import {
   canStepSection,
   goToSection,
+  isSectionMoving,
   registerSectionDriver,
   type SectionDriver,
   stepSection,
@@ -204,6 +206,17 @@ export function useDesktopSections() {
     const offPreference = onReducedMotionChange((reduced) =>
       ScrollSmoother.get()?.smooth(reduced ? SMOOTHER_LAG.reduced : SMOOTHER_LAG.full),
     );
+    // A refresh re-measures the page and the smoother then glides its content from where its own position was
+    // recorded to the scroll position. On a return with Back (or Forward) from a content page, the smoother's first
+    // refresh runs a frame after the address was applied, and its content stood at 0.81 of the page as measured
+    // before the pins were counted, the scroll at 0.30 of the page measured after: the content glided through
+    // Portfolio and Mission and back, repainting their themes and, through the sections' callbacks, the address,
+    // for up to a second. The deck at rest is already where it must be, so the glide is finished at once.
+    const onRefresh = () => {
+      if (isSectionMoving()) return;
+      ScrollSmoother.get()?.scrollTrigger?.getTween()?.progress(1);
+    };
+    ScrollTrigger.addEventListener('refresh', onRefresh);
 
     // ---- wheel: one gesture, one step ----
     let lastWheelAt = -Infinity;
@@ -321,6 +334,7 @@ export function useDesktopSections() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
+      ScrollTrigger.removeEventListener('refresh', onRefresh);
       unregister();
       offPreference();
       cover?.remove();
