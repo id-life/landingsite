@@ -1,4 +1,4 @@
-import { DESKTOP_TREE_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
 import 'swiper/css';
 import '@/styles/webgl.css';
 import '@/styles/loading.css';
@@ -17,24 +17,21 @@ const CSS = `
     background: var(--background);
   }
 
-  /* The layout unit: what the root used to be (0.8333vw above the phone tree), so layout and text in rem draw as
-     before (scripts/postcss-layout-unit.js). */
+  /* The layout unit (scripts/postcss-layout-unit.js), one per deck (RWD-02, two versions only). The laptop deck
+     scales with the window as the original does: his sizes at 1440 px, proportionally at every other width, a tablet
+     on its side included (text follows: --t is --u). */
   @media ${DESKTOP_TREE_QUERY} {
     :root {
       --u: 0.8333vw;
     }
   }
 
-  /* The tablet tiers (desktop experience below 1200 px): text at the original's 1440 px size, a 12 px type unit,
-     while the layout keeps scaling (the owner's rule on font sizes). From 1200 px text follows the layout unit, as
-     in the original. */
-  @media ${DESKTOP_TREE_QUERY} and (max-width: 1199.98px) {
-    :root {
-      --t: 12px;
-    }
-  }
-
+  /* The phone deck: 16 px at phone widths; above, proportionally larger with the window (PHONE_LAYOUT_UNIT), so an
+     upright tablet shows the phone version at its size. */
   @media ${PHONE_TREE_QUERY} {
+    :root {
+      --u: ${PHONE_LAYOUT_UNIT};
+    }
     body {
       height: 100%;
       overflow: hidden;

@@ -1,4 +1,4 @@
-import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, desktopTreeAnd, PHONE_TREE_QUERY } from '@/styles/device-classes';
 import '@/styles/components/character-relation.css';
 
 // Page-level rules, as a plain <style> built from the device classes (RWD-02): the phone and desktop rules follow the
@@ -29,7 +29,7 @@ const CSS = `
   }
 
   /* Below 1200 px (the tablet tier) the unit holds the original's 1440 size: 12 px. */
-  @media ${DESKTOP_TREE_QUERY} and (max-width: 1199.98px) {
+  @media ${desktopTreeAnd('(max-width: 1199.98px)')} {
     :root {
       --u: 12px;
     }
