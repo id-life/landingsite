@@ -28,7 +28,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { PLAY_TRIGGER } from '@/atoms/audio-player';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
-  useFetchAudioData();
+  const { retryIfFailed: retryAudioList } = useFetchAudioData();
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,22 +38,28 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   // The player list is fetched on intent: touching or focusing the player, or opening its playlist (PERF-07).
   const requestAudioList = useSetAtom(audioListRequestedAtom);
-  const onIntent = () => requestAudioList(true);
+  const onIntent = () => {
+    requestAudioList(true);
+    retryAudioList();
+  };
   // The play button sits beside the playlist button, outside the dialog: pressing it while the playlist is open plays
   // or pauses and leaves the playlist open (the whole pill used to be the dialog's trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
   const closesPlaylist = useCallback((event: MouseEvent) => !pillRef.current?.contains(event.target as Node), []);
 
+  // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
+  // the home page from another page of the site) keeps the track and playlist the visitor had.
   useEffect(() => {
     if (!musicList.length) return;
+    if (data) return;
     setCurrentMusic(musicList[0]);
     setPlaylistAtom(musicList);
-  }, [musicList, setCurrentMusic, setPlaylistAtom]);
+  }, [data, musicList, setCurrentMusic, setPlaylistAtom]);
 
   const handleChangePlayStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setHasInteracted(true);
-    requestAudioList(true);
+    onIntent();
     const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
       audioContext.resume();
