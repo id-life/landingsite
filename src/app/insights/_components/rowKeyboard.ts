@@ -14,9 +14,20 @@ import type { Swiper as SwiperType } from 'swiper';
  * after every settle, resize and change of slides.
  */
 function syncInert(swiper: SwiperType) {
+  const focused = document.activeElement;
+  let focusLeaves = false;
   for (const slide of swiper.slides) {
     const inView = slide.classList.contains('swiper-slide-fully-visible');
+    if (!inView && focused && slide.contains(focused)) focusLeaves = true;
     slide.inert = !inView;
+  }
+  // A drag or a swipe carried the focused card's page out of view: the card became inert and the focus would fall to
+  // the page body. Keep it in the row, on the first card of the page now in view (without scrolling anything).
+  if (focusLeaves) {
+    const first = swiper.slides
+      .find((slide) => !slide.inert)
+      ?.querySelector<HTMLElement>('a[href], button:not([disabled]), [tabindex="0"]');
+    first?.focus({ preventScroll: true });
   }
 }
 

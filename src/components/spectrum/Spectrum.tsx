@@ -71,6 +71,9 @@ function bottomControls(section: Element): DOMRect[] {
   const boxes: DOMRect[] = [];
   for (const el of document.body.querySelectorAll('*')) {
     if (section.contains(el)) continue;
+    // A dialog over the page (SUBSCRIBE, the newsletter prompt) is not a bottom control: it comes and goes, and the
+    // composition fitted above it stayed so after it closed.
+    if (el.closest('[role="dialog"], [role="alertdialog"], [aria-modal="true"], [data-floating-ui-portal]')) continue;
     const style = getComputedStyle(el);
     if (style.position !== 'fixed' || style.visibility === 'hidden' || style.display === 'none') continue;
     const box = el.getBoundingClientRect();

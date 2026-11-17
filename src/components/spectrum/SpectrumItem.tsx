@@ -51,13 +51,17 @@ export const SpectrumLink = memo(
         <img src={loadImage ? icon : NO_IMAGE} alt={`${label} logo`} className={cn('duration-300 hover:scale-110', size)} />
       </div>
     ) : (
-      // A text link is its words: the blank part of its line takes no press (a paper's line is as wide as its column,
-      // and "more" moves away from a pointer that then sat on that blank). Only the words' own boxes take pointer
-      // events, with a little air above and below so that each line's band is whole (on touch screens each paper keeps
-      // 24 px of spacing to the next, its 44 px row: WCAG 2.5.8 spacing). The air stays small, since the browser snaps a
-      // finger to a link that lies within a few px. Nothing drawn changes, and the keyboard still focuses the whole link.
+      // With a mouse (a fine pointer) a text link is its words: the blank part of its line takes no press (a paper's
+      // line is as wide as its column, and "more" moves away from a pointer that then rests on that blank). Only the
+      // words' own boxes take pointer events, with 3 px of air above and below (whole px: a fractional padding moved
+      // the text's rendering). On a touch screen the whole row is the link again, as the owner's build has it: a finger
+      // aims at a row, and the place rule in SpectrumInitiatives already protects the spot where "more" was. Nothing
+      // drawn changes, and the keyboard still focuses the whole link.
       <div
-        className={cn('relative flex items-center gap-1', hasLink ? 'pointer-events-none cursor-pointer' : 'cursor-default')}
+        className={cn(
+          'relative flex items-center gap-1',
+          hasLink ? 'pointer-events-none cursor-pointer coarse:pointer-events-auto' : 'cursor-default',
+        )}
       >
         <p
           className={cn(
@@ -79,8 +83,8 @@ export const SpectrumLink = memo(
 
     // A logo link keeps its box and grows its hit area to 44 px on coarse pointers (RWD-06).
     return anchorProps ? (
-      // A text link's own box takes no press either (only its words do, above).
-      <a {...anchorProps} className={icon ? 'relative block tap-area' : 'pointer-events-none'}>
+      // With a mouse, a text link's own box takes no press either (only its words do, above).
+      <a {...anchorProps} className={icon ? 'relative block tap-area' : 'pointer-events-none coarse:pointer-events-auto'}>
         {content}
       </a>
     ) : (
