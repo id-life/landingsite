@@ -100,11 +100,11 @@ export default function Insights() {
         id={PAGE_ID}
         className={cn('page-container-mobile mt-20 flex h-[calc(100svh-10rem)] flex-col', !isVisible && 'hidden')}
       >
-        {/* Content Area, as the original: the rows centred in the panel. Content taller than the panel starts above it,
-            so at rest the phone shows the news cards, the podcast row and the weekly row, without the NEWS & TALKS
-            heading (the owner's original first screen; it reverses the NAV-09 change that started the rows at the
-            top, at his reference). */}
-        <div className="mobile-insights-content flex flex-1 flex-col justify-center gap-6 overflow-y-auto px-5 pb-4">
+        {/* Content Area: the three rows centred in the panel, each with its heading and VIEW ALL. The news row draws only
+            the card rows that fit (NewsAndTalksSection), and "safe" centring keeps the top of a column that is still
+            too tall on screen, so the NEWS & TALKS heading can never again sit under the header out of reach (the
+            owner's decision of 2026-11-17: the phone must have a way to the news list). */}
+        <div className="mobile-insights-content flex flex-1 flex-col gap-6 overflow-y-auto px-5 pb-4 [justify-content:safe_center]">
           <NewsAndTalksSection
             items={insightItems}
             isLoading={isInsightsLoading}
