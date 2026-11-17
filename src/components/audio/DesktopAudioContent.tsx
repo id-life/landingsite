@@ -55,6 +55,16 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
 
   const handleChangeAudio = (audio: AudioDataItem) => {
     track('player_control', { control: 'track', value: String(audio.id) });
+    // The current row while it is silent: a row is a way to play, so it plays (choosing another row already does).
+    // While it plays, a press on its row changes nothing.
+    if (audio.id === currentMusic?.id) {
+      if (!isPlaying) {
+        const audioContext = getAudioContext();
+        if (audioContext.state === 'suspended') audioContext.resume();
+        dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.TOGGLE });
+      }
+      return;
+    }
     setCurrentMusic(audio);
     if (audio.category === playlist[0].category) return;
     if (audio.category === PlayList.MUSIC) {
