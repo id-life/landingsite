@@ -217,11 +217,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_xyz_fill.svg"
-                  alt="Xiaoyuzhou FM"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
               </a>
               <a
                 href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
@@ -229,11 +225,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_spotify_fill.svg"
-                  alt="Spotify"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
               </a>
               <a
                 href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
@@ -241,11 +233,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <img
-                  src="/svgs/podcast/fm_podcast_fill.svg"
-                  alt="Apple Podcasts"
-                  className="size-6 medium:size-[22px] expanded:size-[22px]"
-                />
+                <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
               </a>
             </div>
           </div>

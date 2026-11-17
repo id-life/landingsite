@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import RedbookSVG from '@/../public/svgs/redbook.svg?component';
 import WechatSVG from '@/../public/svgs/wechat.svg?component';
@@ -65,7 +65,7 @@ function LongevityCard({ item }: { item: LongevityItem }) {
           </h3>
           <img
             src="/imgs/podcast/podcast-play-white.svg"
-            className="invisible size-10 shrink-0 duration-300 hover:scale-110 mobile:size-8 medium:size-[32px] expanded:size-[32px]"
+            className="invisible size-10 shrink-0 duration-300 hover:scale-110 mobile:size-8"
             alt="Open"
           />
         </div>
@@ -263,7 +263,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <WechatSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
+                <WechatSVG className="size-6 fill-black" />
               </a>
               <a
                 href={REDBOOK_LINK}
@@ -272,7 +272,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <RedbookSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
+                <RedbookSVG className="size-6 fill-black" />
               </a>
               <a
                 href={ZHIHU_LINK}
@@ -281,7 +281,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
                 rel="noopener noreferrer"
                 className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
               >
-                <ZhihuSVG className="size-6 fill-black medium:size-[22px] expanded:size-[22px]" />
+                <ZhihuSVG className="size-6 fill-black" />
               </a>
             </div>
           </div>
