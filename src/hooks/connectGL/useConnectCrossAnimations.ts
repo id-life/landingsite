@@ -9,6 +9,9 @@ import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
 import { isMobile } from 'react-device-detect';
 import { u } from '@/utils/layout-unit';
 
+/** The hold after Connect's rest label (see restAndHold). */
+export const CONNECT_REST_HOLD = beats(0.25);
+
 export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObject<Group | null> }) => {
   const { camera } = useThree();
   const page1Config = useMemo(() => CONNECT_GL_CONFIG[0], []);
@@ -17,14 +20,21 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
   const getTitle3CnElements = () => gsap.utils.toArray('.connect-title3cn path, .connect-title3cn-text');
 
   // The Connect section's scrubbed timeline (lengths in beats: shares of its scroll distance). It ends on the
-  // 'rest' label, where the section controller lands every arrival (MOT-01).
+  // 'rest' label, where the section controller lands every arrival (MOT-01). A short hold follows it, so the rest
+  // sits inside the trigger rather than on its last pixel: there a read a fraction of a pixel short (the smoother's
+  // own float, 21239.998 of 21240) re-entered the trigger, fired onEnterBack and brought the slogan back over the
+  // contact footer. beats(0.25), as Portfolio's hold: 0.8 % of the trigger, 7 px at 900 px of height.
+  const restAndHold = (tl: GSAPTimeline) => {
+    tl.addLabel('rest');
+    tl.to({}, { duration: CONNECT_REST_HOLD });
+  };
   const createPage1CrossAnim = (tl: GSAPTimeline) => {
     tl.to(camera.position, { ...page1Config.from.camera.position, duration: beats(0.5) });
     tl.to(camera.rotation, { ...page1Config.from.camera.rotation, duration: beats(0.5) }, '<');
     tl.to('#fixed-connect', { opacity: 1, duration: beats(0.5) }, '<');
     tl.to('#vision-canvas', { zIndex: 1, opacity: 1, duration: beats(0.5) });
     if (!modelRef.current) {
-      tl.addLabel('rest');
+      restAndHold(tl);
       return;
     }
     tl.to(camera.position, {
@@ -74,7 +84,7 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
         '0',
       );
     });
-    tl.addLabel('rest');
+    restAndHold(tl);
   };
 
   // Footer 动画 - 只显示底栏，不包含 EN→CN 动画

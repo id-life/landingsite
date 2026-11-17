@@ -20,17 +20,19 @@ const REST_TRIGGER: Record<SectionId, string | null> = {
 };
 
 /**
- * Connect's trigger is created inside the 3D canvas (ConnectGL), which mounts after the sections. Its rest is the
- * end of that trigger ('rest' is the timeline's last label, the trigger ends at 'bottom bottom' of #connect-page1),
- * which the smoother can measure from the element alone. On a return to /connect with Back from a content page the
- * address is applied before the canvas has mounted: without this the deck stayed on Mission's first screen under
- * the address /connect.
+ * Connect's trigger is created inside the 3D canvas (ConnectGL), which mounts after the sections. On a return to
+ * /connect with Back from a content page the address is applied before the canvas has mounted: without a rest the
+ * deck stayed on Mission's first screen under the address /connect. Until the trigger exists the rest is taken just
+ * inside the trigger's end ('bottom bottom' of #connect-page1, measured by the smoother from the element): the
+ * timeline's rest label is followed by a short hold (CONNECT_REST_HOLD, at least 3.8 px on a 480 px high window),
+ * and anywhere in that hold the section looks as at its rest, inside the trigger, never on its last pixel.
  */
+const INSIDE_END_PX = 2;
 const REST_BEFORE_TRIGGER: Partial<Record<SectionId, () => number | null>> = {
   connect_page: () => {
     const el = document.getElementById('connect-page1');
     const smoother = ScrollSmoother.get();
-    return el && smoother ? smoother.offset(el, 'bottom bottom') : null;
+    return el && smoother ? smoother.offset(el, 'bottom bottom') - INSIDE_END_PX : null;
   },
 };
 
