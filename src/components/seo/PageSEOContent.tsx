@@ -16,6 +16,12 @@ export type SEOSection = {
   heading: string;
   text?: SEOText[];
   items?: SEOItem[];
+  /**
+   * The visible page already gives a screen reader everything in this section (as real links, text or logos): hide the
+   * section from assistive technology so nothing is announced twice. Crawlers still read it. Leave it unset where the
+   * summary is the only place a reader would meet the text.
+   */
+  shownOnPage?: boolean;
 };
 
 type PageSEOContentProps = {
@@ -24,12 +30,6 @@ type PageSEOContentProps = {
   titleAs?: 'h1' | 'h2';
   intro?: SEOText[];
   sections?: SEOSection[];
-  /**
-   * The sections repeat what the page itself shows to everyone, in the accessibility tree too (its links are real): hide
-   * them from assistive technology so each item is announced once. Crawlers still read them; the title and the intro
-   * stay announced (the title is the page's one h1).
-   */
-  sectionsShownOnPage?: boolean;
 };
 
 // Copy often stores "English\n中文" in one string; render each line as its own paragraph.
@@ -53,45 +53,37 @@ function Paragraphs({ text }: { text?: SEOText[] }) {
   );
 }
 
-export default function PageSEOContent({
-  title,
-  titleAs: Title = 'h1',
-  intro,
-  sections,
-  sectionsShownOnPage = false,
-}: PageSEOContentProps) {
+export default function PageSEOContent({ title, titleAs: Title = 'h1', intro, sections }: PageSEOContentProps) {
   return (
     <section className="sr-only" aria-label={title}>
       <Title>{title}</Title>
       <Paragraphs text={intro} />
-      <div aria-hidden={sectionsShownOnPage || undefined}>
-        {sections?.map((section) => (
-          <section key={section.heading}>
-            <h2>{section.heading}</h2>
-            <Paragraphs text={section.text} />
-            {section.items?.length ? (
-              <ul>
-                {section.items.map((item) => (
-                  <li key={`${item.title}-${item.href ?? ''}`}>
-                    <h3>
-                      {/* Hidden layer: only internal links, kept out of the keyboard tab order. External
+      {sections?.map((section) => (
+        <section key={section.heading} aria-hidden={section.shownOnPage || undefined}>
+          <h2>{section.heading}</h2>
+          <Paragraphs text={section.text} />
+          {section.items?.length ? (
+            <ul>
+              {section.items.map((item) => (
+                <li key={`${item.title}-${item.href ?? ''}`}>
+                  <h3>
+                    {/* Hidden layer: only internal links, kept out of the keyboard tab order. External
                         targets render as text — hidden outbound links read as link spam. */}
-                      {isInternalHref(item.href) ? (
-                        <a href={item.href} tabIndex={-1}>
-                          {item.title}
-                        </a>
-                      ) : (
-                        item.title
-                      )}
-                    </h3>
-                    <Paragraphs text={item.text} />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </section>
-        ))}
-      </div>
+                    {isInternalHref(item.href) ? (
+                      <a href={item.href} tabIndex={-1}>
+                        {item.title}
+                      </a>
+                    ) : (
+                      item.title
+                    )}
+                  </h3>
+                  <Paragraphs text={item.text} />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ))}
     </section>
   );
 }

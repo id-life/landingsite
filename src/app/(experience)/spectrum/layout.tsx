@@ -32,10 +32,10 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
       <PageSEOContent
         title={PAGE_TITLE}
         intro={[PAGE_DESCRIPTION]}
-        sectionsShownOnPage
         sections={spectrumBaseData.map((item) => ({
           heading: `${item.title} ${item.titleCn}`,
           items: item.links.map((link) => ({ title: link.label })),
+          shownOnPage: true,
         }))}
       />
       <Style />
