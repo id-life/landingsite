@@ -6,8 +6,9 @@
 //
 // The Chinese display face is subset by scripts/build-cjk-subset.mjs (VIS-07), not here.
 //
-// Xirod, Migrena and TT Lakes are deliberately not converted here: whether those faces stay is the
-// owner's decision (Oxanium + Poppins palette, see the master plan's ENG-repo-exposure / VIS-font-palette).
+// The committed Xirod, Migrena and TT Lakes WOFF2 files were made with Google's reference encoder
+// (woff2_compress 1.0.2, https://github.com/google/woff2), which writes about 0.4 to 0.9 KB less than ttf2woff2
+// for these three faces; both are lossless.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 
