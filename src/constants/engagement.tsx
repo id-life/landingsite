@@ -405,14 +405,14 @@ export const WORLD_MAP_DOTS: MapDotData[] = [
       {
         alt: 'Research Project:\nBrain Resilience Mechanism',
         coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-1.webp',
-        videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-1.webm',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-1.webm',
         link: '',
         classNameMobile: '-right-[135%]',
       },
       {
         alt: '',
         coverUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-2.webp',
-        videoUrl: 'https://resources.id.life/engagement/sponsorsponsor-brain-resilience-2.webm',
+        videoUrl: 'https://resources.id.life/engagement/sponsor/sponsor-brain-resilience-2.webm',
         link: '',
         classNamePc: 'top-60',
         classNameMobile: 'top-40 -right-[135%]',
