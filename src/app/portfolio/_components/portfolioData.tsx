@@ -91,7 +91,7 @@ type ParticleConfig = {
 };
 
 export const portfolioGetSourceImgInfos = (isMobile: boolean) => {
-  // The idle shape (index 0) and one image per company: tile i shows particle i + 1 (MobilePortfolio, usePortfolioItemAnimation).
+  // The idle shape (index 0) and one image per company: tile i shows particle i + 1 (the phone Portfolio, usePortfolioItemAnimation).
   const idle: ParticleConfig = { url: '/imgs/particle/0.png', resize: [512, 300], baseScale: 2.2 };
   const bySlug: Record<string, ParticleConfig> = {
     'healthspan-capital': {

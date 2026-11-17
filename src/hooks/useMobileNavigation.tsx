@@ -74,9 +74,9 @@ const phoneDriver: SectionDriver = {
   },
 };
 
-/** The phone tree's driver for the section controller (MOT-01). Mounted once, in MobileHome. */
-export function usePhoneSectionDriver() {
-  useEffect(() => registerSectionDriver(phoneDriver), []);
+/** The phone tree's driver for the section controller (MOT-01). Mounted once, in Home. `enabled` is false on the other deck's mount of Home (one Home for both decks): the hook then does nothing. */
+export function usePhoneSectionDriver(enabled = true) {
+  useEffect(() => (enabled ? registerSectionDriver(phoneDriver) : undefined), [enabled]);
 }
 
 /**
