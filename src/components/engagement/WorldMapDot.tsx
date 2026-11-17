@@ -116,7 +116,7 @@ export function WorldMapDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
-        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
           ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}

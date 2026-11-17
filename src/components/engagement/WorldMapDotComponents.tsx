@@ -52,11 +52,23 @@ export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
 export type MapHitLayer = {
   /** The layer the tap areas are portalled into. */
   layer: HTMLElement | null;
+  /**
+   * The phone strip's layer above every dot and label and below every card (z 25: an open dot is z 20, a card z 30):
+   * each drawn point's own circle is a tap target there, so a tap on a drawn point reaches that point even in the
+   * instant the tour opens a neighbour, whose dot rises (z 20, scale 1.2) and whose icon or label then lies over the
+   * point (London's icon over Aix's and Oxford's points, Aix's label over Lustica's). Null on the laptop deck.
+   */
+  pointLayer?: HTMLElement | null;
   /** Every point's centre in the map, by tap area, so each area can be cut at the half-way line to its neighbours. */
   centres: Readonly<Record<string, Point>>;
   register: (id: string, centre: Point | null) => void;
 };
-export const MapHitLayerContext = createContext<MapHitLayer>({ layer: null, centres: {}, register: () => {} });
+export const MapHitLayerContext = createContext<MapHitLayer>({
+  layer: null,
+  pointLayer: null,
+  centres: {},
+  register: () => {},
+});
 
 /**
  * A point's 44 x 44 px tap area, centred on the drawn point, in the hit layer under every dot (coarse pointers only).
@@ -69,15 +81,20 @@ export function MapPointHit({
   top,
   pointRef,
   onClick,
+  open = false,
 }: {
   left: number;
   top: number;
   pointRef: RefObject<HTMLDivElement | null>;
   onClick: (e: MouseEvent) => void;
+  /** The dot is open: it is drawn above every other dot, so its own point needs no target above it. */
+  open?: boolean;
 }) {
-  const { layer, centres, register } = useContext(MapHitLayerContext);
+  const { layer, pointLayer, centres, register } = useContext(MapHitLayerContext);
   const id = useId();
   const [centre, setCentre] = useState<Point | null>(null);
+  // The drawn circle's radius, for the point target (the circle itself, not more).
+  const [radius, setRadius] = useState(0);
   useLayoutEffect(() => {
     const point = pointRef.current;
     if (!point) return;
@@ -89,6 +106,7 @@ export function MapPointHit({
     const circleBox = circle?.getBoundingClientRect();
     const atRest = dot && dotBox && Math.abs(dotBox.width - dot.offsetWidth) < 0.5;
     if (atRest && circleBox && circleBox.width > 0) {
+      setRadius(circleBox.width / 2);
       setCentre([
         left + circleBox.left + circleBox.width / 2 - dotBox.left,
         top + circleBox.top + circleBox.height / 2 - dotBox.top,
@@ -110,14 +128,30 @@ export function MapPointHit({
     return cut ? polygonClipPath(cut) : undefined;
   }, [centre, centres, id]);
   if (!layer || !centre) return null;
-  return createPortal(
-    <span
-      aria-hidden
-      className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
-      style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, clipPath }}
-      onClick={onClick}
-    />,
-    layer,
+  return (
+    <>
+      {createPortal(
+        <span
+          aria-hidden
+          className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
+          style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, clipPath }}
+          onClick={onClick}
+        />,
+        layer,
+      )}
+      {pointLayer &&
+        radius > 0 &&
+        !open &&
+        createPortal(
+          <span
+            aria-hidden
+            className="pointer-events-auto absolute hidden -translate-x-1/2 -translate-y-1/2 rounded-full coarse:block"
+            style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, width: `${2 * radius}px`, height: `${2 * radius}px` }}
+            onClick={onClick}
+          />,
+          pointLayer,
+        )}
+    </>
   );
 }
 
