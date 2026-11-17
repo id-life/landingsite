@@ -96,7 +96,7 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
   and title (push for explicit navigation, replace for scrolling, nothing for deep links) and calls
   `noteSectionView` exactly once; Back and Forward record one view. `useNavigation` and `useMobileNavigation` are thin
   wrappers. Never tween the window or change `smoother.smooth()` from a section.
-- **Phone.** No document scroll: sections switch through the controller from the arrows (`MobilePageArrows.tsx`,
+- **Phone.** No document scroll: sections switch through the controller from the arrows (`SectionPager.tsx`,
   which also owns the inner pages), the menu and `useMobileSwipe` (a swipe counts only if nothing scrolled).
 - **URL and history.** `HashRouter` (loaded by `ExperienceRouter` in the root layout on the first experience URL, then
   never unmounted) applies the URL once per mount of the experience

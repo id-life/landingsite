@@ -29,7 +29,7 @@ type Inputs = {
   website: string;
 };
 
-export default function FooterContact() {
+export default function ContactBand() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 

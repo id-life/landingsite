@@ -6,13 +6,13 @@ import Insights from '@/app/insights/Insights';
 import Connect from '@/app/connect/Connect';
 import Vision from '@/app/vision/Vision';
 import { currentPageAtom } from '@/atoms';
-import PCFixedUI, { PCAudioPlayer } from '@/components/common/PCFixedUI';
+import FixedUI, { AudioPlayer } from '@/components/common/FixedUI';
 import Engagement from '@/components/engagement/Engagement';
 import { OuterLoader, StaticReveal } from '@/components/gl/ProgressLoader';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
 import MotionRuntime from '@/components/gl/MotionRuntime';
-import Footer from '@/components/layout/footer/Footer';
-import FooterContact from '@/components/layout/footer/FooterContact';
+import SubscribeStrip from '@/components/layout/footer/SubscribeStrip';
+import ContactBand from '@/components/layout/footer/ContactBand';
 import Spectrum from '@/components/spectrum/Spectrum';
 import TwinThreeWrapper from '@/components/twin/TwinThreeWrapper';
 import { useHomeAnimations } from '@/hooks/anim/useHomeAnimations';
@@ -92,7 +92,7 @@ export default function Home() {
       {webgl ? <OuterLoader /> : <StaticReveal />}
       {/* The Digital Twin's 3D stage (canvas + controls), mounted once outside the scrolled content (RWD-02). */}
       {webgl && <TwinThreeWrapper />}
-      <PCAudioPlayer />
+      <AudioPlayer />
       {/* The skip link's target: after the header and the player, so the next Tab is the section's first control. */}
       <span id="content-start" tabIndex={-1} className="sr-only" />
       <div id="wrapper">
@@ -104,11 +104,11 @@ export default function Home() {
           <Engagement deck="desktop" />
           <Twin deck="desktop" />
           <Connect />
-          <Footer />
-          <FooterContact />
+          <SubscribeStrip />
+          <ContactBand />
         </div>
       </div>
-      <PCFixedUI />
+      <FixedUI deck="desktop" />
     </MotionPreferenceConfig>
   );
 }

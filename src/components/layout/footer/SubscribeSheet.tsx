@@ -22,12 +22,13 @@ type Inputs = {
 };
 
 /**
- * The phone SUBSCRIBE popup. It opens only from a SUBSCRIBE button and is a modal dialog: role="dialog"
+ * The paged deck's SUBSCRIBE popup, a sheet over the bottom of the screen (its desktop counterpart is
+ * SubscribeStrip). It opens only from a SUBSCRIBE button and is a modal dialog: role="dialog"
  * labelled by its heading, focus moves to its close button (no keyboard pops up) and stays inside, and the
  * X, Escape or a tap outside close it. A tap with the popup closed does nothing: the old window-level
  * mousedown handler ran on every tap anywhere, logged a close and marked the popup as dismissed.
  */
-export default function MobileFooter() {
+export default function SubscribeSheet() {
   const { onFormSubmit, isSubmitting, isSubmitted, submitError } = useMobileSubscribeAction();
   const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
   useReturnFocusWithoutScroll(isSubscribeShow);

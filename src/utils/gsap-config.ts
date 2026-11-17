@@ -40,8 +40,9 @@ export const SCROLL_SMOOTHER_DEFAULTS: ScrollSmoother.Vars = {
   },
   effects: false,
   smoothTouch: 0.1,
-  // ScrollSmoother scrolls any focused element that is off-screen into view. For focus outside the scrolled
-  // content (the fixed nav, the SUBSCRIBE dialog animating in, the contact footer) that only jumps the page
-  // to another section, so it is limited to elements inside #content.
-  onFocusIn: (_smoother, event) => event.target instanceof Element && event.target.closest('#content') !== null,
+  // ScrollSmoother scrolls any focused element that is off-screen into view, whoever set the focus: a script, a
+  // dialog returning focus, the browser. On the experience only a visitor's own navigation may move the deck, so
+  // it never does: a Tab into another section moves the deck through the section controller instead
+  // (useSkipToSection), and the sections are one screen each.
+  onFocusIn: () => false,
 };

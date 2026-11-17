@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import FooterContactContent from './FooterContactContent';
 import { DURATION, EASE } from '@/motion/tokens';
 
-export default function MobileFooterContact() {
+export default function ContactPanel() {
   const subscribeRef = useRef<HTMLDivElement | null>(null);
   const [isSubscribeShow, setIsSubscribeShow] = useAtom(isMobileFooterContactShowAtom);
   const pathname = usePathname();

@@ -2,7 +2,6 @@ import { useSupportsWebm } from '@/hooks/useSupportsWebm';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import { CustomView } from 'react-device-detect';
 import { DURATION, EASE } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
 
@@ -47,19 +46,17 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
         {coverUrl && (!videoLoaded || reduced) && (
           <img src={coverUrl} alt={title} className={cn('size-[calc(var(--t)*15.5)] object-contain', coverClass)} />
         )}
-        <CustomView condition={supportsWebm && !reduced}>
-          {videoUrl && (
-            <video
-              src={videoUrl}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className={cn('size-[calc(var(--t)*15.5)] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
-              onLoadedData={() => setVideoLoaded(true)}
-            />
-          )}
-        </CustomView>
+        {supportsWebm && !reduced && videoUrl && (
+          <video
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={cn('size-[calc(var(--t)*15.5)] object-contain', videoLoaded ? 'block' : 'hidden', videoClass)}
+            onLoadedData={() => setVideoLoaded(true)}
+          />
+        )}
       </div>
     </motion.div>
   );
