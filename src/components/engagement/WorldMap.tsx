@@ -7,6 +7,7 @@ import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, mobileMapScrollProgressAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
+import { useKeptMapCard } from '@/hooks/engagement/useKeptMapCard';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
@@ -60,6 +61,8 @@ export const WorldMap = memo(function WorldMapComponent({
   lineColor = color.accent,
 }: MapProps) {
   const phone = deck === 'phone';
+  // The card the visitor opened is kept in the history entry (NAV-02).
+  useKeptMapCard(phone);
   const svgRef = useRef<SVGSVGElement>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapContentRef = useRef<HTMLDivElement>(null);

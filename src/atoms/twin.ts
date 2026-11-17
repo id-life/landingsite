@@ -46,6 +46,19 @@ export const chooseTwinModel = (model: PredictionModel) => {
 export const chosenModel = () => chosenTwinModel;
 
 /**
+ * Whether the visitor has pressed a Twin control since the section last showed its opening arrangement: the start of
+ * the section is not kept in the history entry, a pressed avatar (ORG included, which hides DEMO) is (NAV-02).
+ */
+let twinPressed = false;
+export const markTwinPressed = () => {
+  twinPressed = true;
+};
+export const forgetTwinPress = () => {
+  twinPressed = false;
+};
+export const twinWasPressed = () => twinPressed;
+
+/**
  * The anatomy view the camera was last framed for, or null when it has not been framed since anatomy was entered. A
  * view's framing depends on where the camera starts (a fit from the first view's camera differs from a fit from another
  * view's), so the late framing after the anatomy models mount is applied only when the marked view has not been framed

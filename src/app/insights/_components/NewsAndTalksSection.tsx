@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
@@ -188,6 +189,9 @@ export default function NewsAndTalksSection({
   const [mobileItemCount, setMobileItemCount] = useState(8); // Default to max
   const swiperRef = useRef<SwiperType>(undefined);
   const mobileSwiperRef = useRef<SwiperType>(undefined);
+  // The page each row shows is kept in the history entry (NAV-02).
+  useKeptRowPage('news', swiperRef, !isMobile);
+  useKeptRowPage('news-phone', mobileSwiperRef, isMobile);
   const containerRef = useRef<HTMLDivElement>(null);
   const profile = useDeviceProfile();
   const itemsPerPage = profile?.width === 'medium' ? ITEMS_PER_PAGE_MEDIUM : ITEMS_PER_PAGE_DESKTOP;
@@ -292,6 +296,7 @@ export default function NewsAndTalksSection({
           {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
+            noteRowPage();
             setIsMobileBeginning(swiper.isBeginning);
             setIsMobileEnd(swiper.isEnd);
           }}
@@ -321,6 +326,7 @@ export default function NewsAndTalksSection({
         {...rowKeyboardProps}
         className="h-full w-full"
         onSlideChange={(swiper) => {
+          noteRowPage();
           setIsBeginning(swiper.isBeginning);
           setIsEnd(swiper.isEnd);
         }}

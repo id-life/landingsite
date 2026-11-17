@@ -4,6 +4,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { sectionTitle } from '@/constants/section-titles';
 import { SPECTRUM_HASH_ROUTES } from '@/hooks/spectrum/spectrum-routes';
 import { noteSectionView } from '@/lib/analytics/section-view';
+import { applyInnerRestore, dropInnerRestore, setRestingSectionReader } from './innerPages';
 import { isReducedMotion } from './preference';
 import { wakeMotion } from './runtime';
 
@@ -97,6 +98,15 @@ let lastStepAt = -Infinity;
 const REDUCED_STEP_GAP_MS = 400;
 
 const read = () => jotaiStore.get(sectionStateAtom);
+
+// The section the view rests on, for the inner pages kept in history (NAV-02): none while a transition runs.
+setRestingSectionReader(() => {
+  if (!driver || read().phase !== 'idle') return null;
+  return NAV_LIST[driver.current()]?.id ?? null;
+});
+
+/** Moves that bring a history entry back or only re-lay the deck out keep a pending inner-page restore (NAV-02). */
+const KEEPS_RESTORE = new Set<SectionSource>(['history', 'deeplink', 'layout']);
 const write = (next: SectionState) => {
   jotaiStore.set(sectionStateAtom, next);
   // Readable from outside React (the e2e suite, probes, CSS): <html data-section-phase data-section-target>.
@@ -181,6 +191,9 @@ function finish(index: number, source: SectionSource) {
   write({ index, target: index, phase: 'idle', direction: 0, source });
   driver?.settle?.(index);
   commitUrl(index, source);
+  // The inner pages: put back what the entry kept (Back, Forward, reload), or keep what the view now shows.
+  const id = NAV_LIST[index]?.id;
+  if (id) applyInnerRestore(id);
 }
 
 /**
@@ -193,6 +206,7 @@ export function goToSection(target: number | string, source: SectionSource): boo
   // Whatever asks for a section, the page must be drawing to show it (MOT-03): Back and Forward, a hash link and any
   // later caller wake the idle pause here, by construction, not by a list of events.
   wakeMotion();
+  if (!KEEPS_RESTORE.has(source)) dropInnerRestore();
   const state = read();
   if (running && state.phase === 'moving') {
     if (index === state.target) return true;

@@ -4,6 +4,7 @@ import { useState, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
@@ -43,6 +44,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
   const [currentPage, setCurrentPage] = useState(0);
   const swiperRef = useRef<SwiperType>(undefined);
   const compactSwiperRef = useRef<SwiperType>(undefined);
+  // The page each row shows is kept in the history entry (NAV-02).
+  useKeptRowPage('podcast', swiperRef, !isMobile && !compact);
+  useKeptRowPage('podcast-phone-list', swiperRef, isMobile && !compact);
+  useKeptRowPage('podcast-phone', compactSwiperRef, compact);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible); // 播客卡片106 + 间距20 + 30
 
@@ -132,6 +137,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
           {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
+            noteRowPage();
             setIsCompactBeginning(swiper.isBeginning);
             setIsCompactEnd(swiper.isEnd);
           }}
@@ -162,7 +168,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
           {...rowKeyboardProps}
           className="h-full w-full"
           onBeforeInit={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
+          onSlideChange={(swiper) => {
+            setCurrentPage(swiper.activeIndex);
+            noteRowPage();
+          }}
           slidesPerView={1}
           spaceBetween={16}
         >
@@ -190,6 +199,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         className="h-full w-full"
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
+          noteRowPage();
           setIsBeginning(swiper.isBeginning);
           setIsEnd(swiper.isEnd);
         }}

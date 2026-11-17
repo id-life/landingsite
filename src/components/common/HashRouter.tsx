@@ -7,6 +7,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { goToSection, type SectionSource } from '@/motion/sectionController';
+import { beginInnerRestore } from '@/motion/innerPages';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { experienceMountIdAtom, experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { useCallback, useEffect, useRef } from 'react';
@@ -82,6 +83,8 @@ export default function HashRouter() {
   useEffect(() => {
     if (!globalLoaded || isMobile === null || mountId === 0 || handledMountRef.current === mountId) return;
     handledMountRef.current = mountId;
+    // A reload or a return by Back brings this entry back with the inner pages it kept (NAV-02); a new address has none.
+    beginInnerRestore(NAV_LIST.find((item) => item.href === window.location.pathname)?.id ?? null);
     handleHashNavigation('deeplink');
     setInitialRouteHandled(true);
     // The fixed UI is revealed from fadeInAnimCompletedAtom. The intro tween (DragonModel) reveals it on a
@@ -104,6 +107,8 @@ export default function HashRouter() {
     // The controller records the view (DATA-05) and moves without touching the address.
     const handlePopState = () => {
       const item = NAV_LIST.find((navItem) => navItem.href === window.location.pathname);
+      // The entry brought back keeps the section's inner pages (NAV-02); they are applied once the view rests there.
+      beginInnerRestore(item?.id ?? null);
       if (item) goToSection(item.id, 'history');
     };
     window.addEventListener('popstate', handlePopState);

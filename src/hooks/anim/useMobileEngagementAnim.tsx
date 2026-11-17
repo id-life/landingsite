@@ -19,6 +19,13 @@ const AUTO_PLAY_CONFIG = {
   interval: 2500, // 自动播放间隔（毫秒）
 } as const;
 
+/**
+ * True once the phone's Presence has run its entrance (which closes every card and starts the tour) and until it is
+ * left: a card put back from the history entry (NAV-02) is opened only then, so the entrance cannot close it again.
+ */
+let presenceEntered = false;
+export const phonePresenceEntered = () => presenceEntered;
+
 export function useMobileEngagementAnim() {
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -319,10 +326,12 @@ export function useMobileEngagementAnim() {
     }, '+=0.3');
 
     const cleanup = setupEventListeners();
+    presenceEntered = true;
 
     // Leaving the section stops the tour and closes its card. The tour used to run on behind the hidden panel, so a
     // return (by Back, Forward or the menu) showed the card it had reached for a moment before the entrance closed it.
     return () => {
+      presenceEntered = false;
       cleanup?.();
       enterTL.kill();
       stopAutoShowDot();

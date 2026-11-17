@@ -1,10 +1,20 @@
 import clsx from 'clsx';
 import { useAtom, useAtomValue } from 'jotai';
-import type { ComponentType, SVGProps } from 'react';
+import { useEffect, useRef, type ComponentType, type SVGProps } from 'react';
+import { jotaiStore } from '@/atoms/store';
+import { registerInnerPage } from '@/motion/innerPages';
 import { ModelType } from '@/components/twin/model/type';
 import { MessageType } from '@/components/event-bus/messageType';
 import { eventBus } from '@/components/event-bus/eventBus';
-import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import {
+  AnatomyCamera,
+  currentAnatomyCameraAtom,
+  currentModelAtom,
+  currentModelTypeAtom,
+  markTwinPressed,
+  modelLoadingItemAtom,
+  PredictionModel,
+} from '@/atoms/twin';
 import AnatomyM01 from '@/../public/svgs/twin/anatomy-m0-1.svg?component';
 import AnatomyM02 from '@/../public/svgs/twin/anatomy-m0-2.svg?component';
 import AnatomyM03 from '@/../public/svgs/twin/anatomy-m0-3.svg?component';
@@ -53,13 +63,43 @@ export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
   const currentModel = useAtomValue(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const [currentAnatomyCamera, setCurrentAnatomyCamera] = useAtom(currentAnatomyCameraAtom);
-  const handleSwitchAnatomyCamera = (index: AnatomyCamera) => {
-    trackTwin('anatomy_camera', String(index), currentModel);
+  const handleSwitchAnatomyCamera = (index: AnatomyCamera) => pressView(index, true);
+  // A press, or the same press put back from the history entry (NAV-02), which is not counted as a press.
+  const pressView = (index: AnatomyCamera, counted: boolean) => {
+    if (counted) trackTwin('anatomy_camera', String(index), currentModel);
+    markTwinPressed();
     setCurrentAnatomyCamera(index);
     eventBus.next({ type: MessageType.SWITCH_ANATOMY_MODULE, payload: { index } });
     eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index } });
   };
   const views = currentModel ? VIEWS[currentModel] : undefined;
+
+  // The anatomy view is the Twin's third inner page (NAV-02): put back once anatomy is on stage.
+  const pressViewRef = useRef(pressView);
+  useEffect(() => {
+    pressViewRef.current = pressView;
+  });
+  useEffect(
+    () =>
+      registerInnerPage(
+        'twin_page',
+        'view',
+        () =>
+          jotaiStore.get(currentModelTypeAtom) === ModelType.Anatomy ? jotaiStore.get(currentAnatomyCameraAtom) : undefined,
+        (value) => {
+          if (typeof value !== 'number') return true;
+          if (jotaiStore.get(currentModelTypeAtom) !== ModelType.Anatomy || jotaiStore.get(modelLoadingItemAtom) !== null) {
+            return false;
+          }
+          const model = jotaiStore.get(currentModelAtom);
+          const known = model ? VIEWS[model]?.some(([, camera]) => camera === value) : false;
+          if (known && jotaiStore.get(currentAnatomyCameraAtom) !== value) pressViewRef.current(value as AnatomyCamera, false);
+          return true;
+        },
+        2,
+      ),
+    [],
+  );
 
   return (
     <div

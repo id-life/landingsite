@@ -12,6 +12,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import Contact from '@/components/portfolio/Contact';
 import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimation';
 import { useRetimer } from '@/hooks/useRetimer';
+import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 import { isLayoutRefreshing } from '@/motion/sectionController';
 import { beats, DISTANCE, DURATION, EASE, MAX_TILT } from '@/motion/tokens';
 import { cn } from '@/utils';
@@ -281,6 +282,8 @@ function PhonePortfolio() {
     return tl;
   }, []);
 
+  useKeptInnerPage(PAGE_ID, currentPage.id === PAGE_ID, totalPages);
+
   // Handle inner page navigation
   useEffect(() => {
     if (innerPageNavigateTo === null || currentPage.id !== PAGE_ID) return;
@@ -292,7 +295,8 @@ function PhonePortfolio() {
   useEffect(() => {
     if (currentPage.id === PAGE_ID) {
       setParticleActive(true);
-      setInnerPageIndex(0);
+      // The first page, or the page this history entry kept when Back, Forward or a reload brought it back (NAV-02).
+      setInnerPageIndex(keptStartPage(PAGE_ID, totalPages));
       setInnerPageTotal(totalPages);
       createEnterAnimation();
     } else {
