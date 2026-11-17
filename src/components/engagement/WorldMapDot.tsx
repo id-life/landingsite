@@ -17,7 +17,7 @@ import {
   MobileContentSection,
   MobileExtraSponsorSection,
   MAP_LABEL_CLASS,
-  MAP_POINT_TAP_CLASS,
+  MapPointHit,
   type CalcPoint,
   type MapDeck,
 } from './WorldMapDotComponents';
@@ -56,6 +56,7 @@ export function WorldMapDotPoint({
   });
 
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
+  const pointRef = useRef<HTMLDivElement>(null);
   const { svgSize, centerRadius, color, pulse1, pulse2 }: PulseConfig = useMemo(
     () => pulseConfig || DEFAULT_PULSE_CONFIG,
     [pulseConfig],
@@ -87,7 +88,6 @@ export function WorldMapDotPoint({
       className={cn(
         `world-map-dot world-map-dot-${index}`,
         'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
-        MAP_POINT_TAP_CLASS,
         isActive && 'z-20',
       )}
       data-active={isActive ? 'true' : undefined}
@@ -116,7 +116,9 @@ export function WorldMapDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
         <PulseDot
+          ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}
           svgSize={svgSize}
           centerPoint={centerPoint}
