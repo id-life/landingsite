@@ -52,14 +52,21 @@
     scroll-behavior: auto !important;
   }
 
-  /* The deck's scrolled content and its pins take no transition at all. The rule above gives every element a 0.01 ms
-     transition of every property (the default transition-property is all), so a transform GSAP sets was still the old
-     one when ScrollTrigger measured right after setting it: a refresh measured every section shifted by the scroll,
-     and a 1 px resize on Spectrum put the deck on Connect. */
+  /* The deck's page, its scrolled content and everything in it take no transition at all. The rule above gives every
+     element a 0.01 ms transition of every property (the default transition-property is all), so whatever GSAP set and
+     measured at once was still the old value when it was read: a ScrollTrigger refresh measured every section shifted
+     by the scroll, the body kept its old height (the native scroll was clamped short of Connect's new rest), and a
+     1 px resize on Spectrum put the deck on Connect. Swiper's rows keep their 0.01 ms transition: Swiper waits for
+     its transitionend to take the next page. */
+  html,
+  body,
+  #wrapper,
   #content,
-  .pin-spacer,
-  .pin-spacer > * {
+  #content * {
     transition: none !important;
+  }
+  #content .swiper-wrapper {
+    transition: transform 0.01ms !important;
   }
 }
 
