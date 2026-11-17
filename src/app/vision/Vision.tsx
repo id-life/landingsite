@@ -54,6 +54,7 @@ export default function Vision() {
           <VerticalCarousel
             slideDown
             itemHeight={40}
+            scaleWithUnit
             duration={5}
             transition={0.6}
             // In landscape (compact height) the slogans move to the bottom left, clear of START and the tagline.

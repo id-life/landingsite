@@ -32,9 +32,8 @@ const PortfolioItem = memo(
       onPointerLeave: cancelInspect,
       className: cn(
         hasLink && 'block',
-        // The original tile, 15.5 units tall from 1200 px; in the tablet tiers (text at its 1440 size) at least that,
-        // so a tile grows instead of spilling its one-liner over the next row.
-        'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:min-h-[15.5rem] large:h-[15.5rem]',
+        // The original tile, 15.5 units tall on every laptop-deck window (scaled with it, two versions only RWD-02).
+        'mobile:flex-center relative w-[23.75rem] pt-3 text-foreground mobile:flex-col mobile:pt-0 notMobile:h-[15.5rem]',
         hasLink && 'cursor-pointer',
         isGridMode ? 'mobile:h-full mobile:w-full mobile:min-w-0 mobile:justify-center' : 'mobile:h-[30svh] mobile:w-[100dvw]',
         className,
