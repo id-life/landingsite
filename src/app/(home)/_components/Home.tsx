@@ -67,11 +67,16 @@ export default function Home() {
   useSectionUrlSync(currentPage, initialRouteHandled);
   // The arrows and the SCROLL cue ask for a section through navigateToAtom (this used to live in the desktop nav).
   useNavigation();
-  // A reload starts at the top, where the deep link is applied from (this used to live in the desktop nav).
+  // A reload starts at the top, where the deep link is applied from (this used to live in the desktop nav). Only when
+  // the page is really unloaded: a page the browser keeps in its back/forward cache (pagehide with persisted) comes
+  // back exactly as it was left, and the scroll moved to the top on the way out made the smoother glide the deck up
+  // to the first screen as soon as it was restored (and the address follow it to /).
   useEffect(() => {
-    const toTop = () => window.scrollTo({ top: 0 });
-    window.addEventListener('beforeunload', toTop);
-    return () => window.removeEventListener('beforeunload', toTop);
+    const toTop = (event: PageTransitionEvent) => {
+      if (!event.persisted) window.scrollTo({ top: 0 });
+    };
+    window.addEventListener('pagehide', toTop);
+    return () => window.removeEventListener('pagehide', toTop);
   }, []);
 
   // Section views are counted by GA4 from the URL (one page_view per pushState / replaceState, DATA-05); there is no
