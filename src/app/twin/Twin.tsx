@@ -1,6 +1,6 @@
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { TWIN_FEATURES, TWIN_FEATURES_CN, TWIN_ONTOLOGY } from '@/content/twin';
-import { currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
+import { currentModelAtom, currentModelTypeAtom, newTwinChoice, PredictionModel } from '@/atoms/twin';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -9,7 +9,6 @@ import { useSectionNear } from '@/hooks/useDeferredAssets';
 import { isLayoutRefreshing } from '@/motion/sectionController';
 import { beats, EASE } from '@/motion/tokens';
 import { cn } from '@/utils';
-import { layoutUnitPx } from '@/utils/layout-unit';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { useAtom, useSetAtom } from 'jotai';
@@ -21,7 +20,7 @@ import SwitchAnatomyCamera from './_components/SwitchAnatomyCamera';
 import SwitchModel from './_components/SwitchModel';
 import SwitchSkin from './_components/SwitchSkin';
 import YTBDemo from './_components/YTBDemo';
-import { TWIN_AVATAR, TWIN_OFFSTAGE_CLASS, twinOffstage, type TwinAvatar } from './twin-deck';
+import { showTwinOpening, TWIN_AVATAR, TWIN_OFFSTAGE_CLASS, type TwinAvatar } from './twin-deck';
 
 const PAGE_ID = 'twin_page';
 const PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === PAGE_ID);
@@ -32,10 +31,6 @@ const twinNavItem = NAV_LIST[PAGE_INDEX];
  * server summary), named by the image's alt text: the words the image shows, once per deck.
  */
 const HEADLINE_ALT = 'Digital Twin: Biomarker Visualization';
-
-/** Desktop: the skin switch's resting distance from the bottom: the original's 15 units from 1200 px, at least 190 px under
- * it, clear of the feature list (its text is the 1440 px size there). */
-const skinRestBottom = () => `${innerWidth >= 1200 ? 15 * layoutUnitPx() : Math.max(15 * layoutUnitPx(), 190)}px`;
 
 /**
  * Desktop deck: a pinned page whose scrubbed timeline reveals the 3D stage (#twin-three-wrapper, the twin canvas and
@@ -100,10 +95,7 @@ function DesktopTwin() {
       return;
     }
     if (isResetDemo.current) {
-      gsap.to(gsap.utils.toArray('.twin-title-item'), { left: twinOffstage() });
-      gsap.to('.twin-title', { opacity: 1 });
-      gsap.to('#ytb-demo', { opacity: 1 });
-      gsap.to('#switch-skin', { bottom: skinRestBottom() });
+      showTwinOpening('desktop');
       setCurrentModel(PredictionModel.M0);
       setCurrentModelType(ModelType.Skin);
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model: PredictionModel.M0 } });
@@ -180,13 +172,8 @@ function PhoneTwin({ avatar }: { avatar: TwinAvatar }) {
   // or the one before it; the wrapper and the GSAP targets stay mounted.
   const mediaNear = useSectionNear(PAGE_INDEX);
   const resetModel = useCallback(() => {
-    gsap.to(gsap.utils.toArray('.twin-title-item'), { left: '-80rem' });
-    gsap.to('.twin-title', { opacity: 1 });
-    gsap.to('#ytb-demo', { opacity: 1, left: '1.25rem' });
-    // 32rem / 30rem down a tall phone; on a phone in landscape (390 px tall) that is below the window, so at most 60 %.
-    gsap.to('#switch-model', { top: () => `${Math.min(512, innerHeight * 0.6)}px`, y: '-50%' });
-    gsap.to('#switch-skin', { top: () => `${Math.min(480, innerHeight * 0.57)}px`, y: '-50%' });
-    gsap.to('#switch-anatomy-camera', { bottom: '11rem' });
+    newTwinChoice();
+    showTwinOpening('phone');
     setCurrentModel(PredictionModel.M0);
     setCurrentModelType(ModelType.Skin);
   }, [setCurrentModel, setCurrentModelType]);

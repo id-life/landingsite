@@ -5,6 +5,7 @@ import {
   currentModelTypeAtom,
   mobileBorderAnimationStateAtom,
   modelLoadingItemAtom,
+  newTwinChoice,
   PredictionModel,
 } from '@/atoms/twin';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -23,7 +24,7 @@ import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { reportError } from '@/lib/report';
 import { DURATION, EASE } from '@/motion/tokens';
 import { u } from '@/utils/layout-unit';
-import { twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
+import { showTwinDemo, stopTwinTitleMoves, twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
 
 // The avatars' attention cycle: each scales up and down in turn (useStaggerAnimation; never with reduced motion).
 const ANIMATION_CONFIG = { interval: 4000, staggerDelay: 400, scaleDuration: 0.5, scaleValue: 1.1 };
@@ -123,40 +124,44 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
   useStaggerAnimation({ enabled: onTwin, interval: BORDER_ANIMATION_CONFIG.interval, onAnimate: runBorderAnimation });
   useStaggerAnimation({ enabled: onTwin, interval: ANIMATION_CONFIG.interval, onAnimate: runStaggeredAnimation });
 
+  // Each press first stops the title moves still pending from earlier presses (stopTwinTitleMoves): a title arrives after a
+  // delay, so a quick second press used to be followed by the first press's title (on the phone, every title at once).
+  // Every avatar, ORG included, shows its own title and summary, as on the original; DEMO, once hidden, stays hidden.
   const handleSwitchModelDesktop = (model: PredictionModel) => {
     setModelLoadingItem({ view: 'model', model: twinModelId(model) ?? String(model), at: performance.now() });
-    gsap.to('.twin-title', { opacity: 0 });
-    gsap.to('#ytb-demo', { opacity: 0 });
-    gsap.to('#switch-skin', { bottom: u(8) });
+    stopTwinTitleMoves();
+    gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
+    showTwinDemo('desktop', false);
+    gsap.to('#switch-skin', { bottom: u(8), overwrite: 'auto' });
     const list = gsap.utils.toArray('.twin-title-item');
-    gsap.killTweensOf(list);
+    const showTitle = () => gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
     if (currentModelType === ModelType.Skin) {
-      gsap.to(list, { left: twinOffstage(), duration: DURATION.moderate }).then(() => {
-        gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
-      });
+      gsap.to(list, { left: twinOffstage(), duration: DURATION.moderate }).then(showTitle);
+      newTwinChoice();
       setCurrentModel(model);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
       eventBus.next({ type: MessageType.RESET_ANIMATION });
     }
     if (currentModelType === ModelType.Anatomy) {
-      gsap.to(list, { left: twinOffstage(), delay: 0.5, duration: DURATION.moderate }).then(() => {
-        gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
-      });
+      gsap.to(list, { left: twinOffstage(), delay: 0.5, duration: DURATION.moderate }).then(showTitle);
+      // The stage applies the model once its camera is at rest, unless a newer choice has been made (newTwinChoice).
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }
   };
 
   const handleSwitchModelPhone = (model: PredictionModel) => {
+    newTwinChoice();
+    stopTwinTitleMoves();
     const list = gsap.utils.toArray('.twin-title-item');
-    gsap.to('.twin-title', { opacity: 0 });
-    gsap.to('#ytb-demo', { opacity: 0, left: '-80rem' });
+    gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
+    showTwinDemo('phone', false);
     gsap.to(list, { left: '-80rem' });
     gsap.to(`.twin-title-${model}`, { left: '1.25rem', delay: 0.5 });
     setCurrentModel(model);
     gsap.to('.twin-tag', { left: '-80rem' });
     if (model !== PredictionModel.M0) gsap.to('.twin-tag', { left: '0rem', delay: 0.5 });
-    gsap.to('#switch-model', { top: '50%', y: '-50%' });
-    gsap.to('#switch-skin', { top: '50%', y: '-50%' });
+    gsap.to('#switch-model', { top: '50%', y: '-50%', overwrite: 'auto' });
+    gsap.to('#switch-skin', { top: '50%', y: '-50%', overwrite: 'auto' });
     setCurrentAnatomyCamera(ANATOMY_START[model]);
   };
 

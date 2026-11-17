@@ -20,12 +20,13 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { AnimatePresence, motion } from 'motion/react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 import { spectrumPhonePages } from './phonePages';
+import { fitScale, type FitScale } from './fitScale';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -65,6 +66,160 @@ function Spectrum() {
   return phone ? <PhoneSpectrum /> : <DeckSpectrum />;
 }
 
+/** The boxes of the fixed bottom controls (slogan, section arrows, player); the composition may not reach under them. */
+function bottomControls(section: Element): DOMRect[] {
+  const boxes: DOMRect[] = [];
+  for (const el of document.body.querySelectorAll('*')) {
+    if (section.contains(el)) continue;
+    const style = getComputedStyle(el);
+    if (style.position !== 'fixed' || style.visibility === 'hidden' || style.display === 'none') continue;
+    const box = el.getBoundingClientRect();
+    if (box.width < 2 || box.height < 2 || box.top < window.innerHeight / 2 || box.height > window.innerHeight / 3) continue;
+    boxes.push(box);
+  }
+  return boxes;
+}
+
+/** An element's layout position inside a positioned ancestor (offsets: untouched by transforms such as the entrance). */
+function layoutOffset(el: HTMLElement, root: HTMLElement): { x: number; y: number } | null {
+  let x = 0;
+  let y = 0;
+  let node: Element | null = el;
+  while (node instanceof HTMLElement && node !== root) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent;
+  }
+  return node === root ? { x, y } : null;
+}
+
+/**
+ * The fit scale of the desktop composition (fitScale.ts): measured from the page, never from fixed numbers. The room is
+ * the band between the site header's bottom (--site-header-h, published by ExperienceHeader) and the top of the bottom
+ * controls, inside the column's own padding; the height needed is the composition's with every group open (the hidden
+ * open copies of the collapsible lists, SpectrumInitiatives). Remeasured on resize and whenever the content's size
+ * changes (fonts, logos); the result changes only by more than a rounding step, so applying it cannot loop.
+ */
+function useFitScale(
+  column: React.RefObject<HTMLDivElement | null>,
+  content: React.RefObject<HTMLDivElement | null>,
+  active: boolean,
+) {
+  const [fit, setFit] = useState<FitScale & { offset: number; room: number; constrained: boolean }>({
+    scale: 1,
+    scrolls: false,
+    offset: 0,
+    room: 0,
+    constrained: false,
+  });
+
+  useEffect(() => {
+    const col = column.current;
+    const box = content.current;
+    if (!col || !box) return;
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const colBox = col.getBoundingClientRect();
+        const cs = getComputedStyle(col);
+        const headerBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--site-header-h')) || 0;
+        const top = Math.max(headerBottom, colBox.top + parseFloat(cs.paddingTop));
+        const controls = bottomControls(col);
+        const controlsTop = Math.min(window.innerHeight, ...controls.map((c) => c.top));
+        const bottom = Math.min(controlsTop, colBox.bottom - parseFloat(cs.paddingBottom));
+        const room = bottom - top;
+        // Height needed at scale 1: the content's own children (title, bands), plus what the closed groups add open.
+        // Layout sizes (offsetHeight), not boxes: they are unscaled under the zoom and ignore the entrance's tilt.
+        const fund = box.querySelector<HTMLElement>('.spectrum-fund');
+        const title = box.querySelector<HTMLElement>('.spectrum-title');
+        const bands = fund?.firstElementChild as HTMLElement | null;
+        if (!fund || !title || !bands) return;
+        const fundStyle = getComputedStyle(fund);
+        const children = [...bands.children] as HTMLElement[];
+        let needed =
+          title.offsetHeight +
+          parseFloat(fundStyle.marginTop) +
+          parseFloat(fundStyle.paddingTop) +
+          parseFloat(fundStyle.paddingBottom) +
+          children.reduce((sum, child) => sum + child.offsetHeight, 0) +
+          (parseFloat(getComputedStyle(bands).rowGap) || 0) * Math.max(0, children.length - 1);
+        let openExtra = 0;
+        const copies: { copy: HTMLElement; list: HTMLElement }[] = [];
+        for (const copy of box.querySelectorAll<HTMLElement>('[data-open-measure]')) {
+          const list = copy.parentElement?.previousElementSibling as HTMLElement | null;
+          if (!list) continue;
+          openExtra += Math.max(0, copy.offsetHeight - list.offsetHeight);
+          copies.push({ copy, list });
+        }
+        needed += openExtra;
+        // At scale 1 the bands are spread over the column's whole height (justify-content: space-evenly), which can
+        // put an opened link under a bottom control even when the composition fits. Predict where every link of an
+        // opened group would be drawn at the column's natural height (the hidden open copy gives each link's place in
+        // its list; opening moves every band up by n/(n+1) of the height it adds, since the even spaces shrink), and
+        // where one would lie under a control or below the window, hold the column to the room instead (the bands
+        // spread over the room). Predicted for the natural height, so holding it does not undo the decision.
+        // Positions come from layout offsets inside the column, so the entrance's rise and tilt cannot skew them. While
+        // the column is held (or scaled) nothing is predicted and the previous decision stands (see setFit below).
+        let predicted: boolean | null = null;
+        if (!box.style.height) {
+          predicted = false;
+          const lift = (children.length * openExtra) / (children.length + 1);
+          const clear = 4; // a link's line box reaches a pixel or two past its rounded edge
+          for (const { copy, list } of copies) {
+            const listAt = layoutOffset(list, col);
+            const copyAt = layoutOffset(copy, col);
+            if (!listAt || !copyAt) continue;
+            for (const item of copy.children as HTMLCollectionOf<HTMLElement>) {
+              const at = layoutOffset(item, col);
+              if (!at) continue;
+              const left = colBox.left + at.x;
+              const right = left + item.offsetWidth;
+              const linkTop = colBox.top + at.y + (listAt.y - copyAt.y) - lift;
+              const linkBottom = linkTop + item.offsetHeight + clear;
+              if (linkBottom > window.innerHeight) predicted = true;
+              for (const c of controls)
+                if (left < c.right && right > c.left && linkTop < c.bottom && linkBottom > c.top) predicted = true;
+            }
+          }
+        }
+        box.dataset.fitRoom = String(Math.round(room));
+        box.dataset.fitNeeded = String(Math.round(needed));
+        const next = fitScale(room, needed);
+        const offset = Math.max(0, top - (colBox.top + parseFloat(cs.paddingTop)));
+        setFit((prev) => {
+          // Held at scale 1 because of a prediction: it stands. Scaled: no hold needed once back at 1, predict again.
+          const constrained = predicted ?? (prev.scale < 1 ? false : prev.constrained);
+          return Math.abs(next.scale - prev.scale) < 0.01 &&
+            next.scrolls === prev.scrolls &&
+            constrained === prev.constrained &&
+            Math.abs(room - prev.room) < 1 &&
+            Math.abs(offset - prev.offset) < 1
+            ? prev
+            : { ...next, offset, room, constrained };
+        });
+      });
+    };
+    measure();
+    // The fixed bottom controls fade in after the loader and on arrival: measure again once they are in place.
+    const late = [setTimeout(measure, 1000), setTimeout(measure, 3000)];
+    const observer = new ResizeObserver(measure);
+    observer.observe(col);
+    for (const el of box.querySelectorAll('.spectrum-fund > div > *, [data-open-measure], .spectrum-title'))
+      observer.observe(el);
+    window.addEventListener('resize', measure);
+    void document.fonts?.ready.then(measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      late.forEach(clearTimeout);
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [column, content, active]);
+
+  return fit;
+}
+
 function DeckSpectrum() {
   const setCurrentPage = useSetAtom(currentPageAtom);
   const [active, setActive] = useState<boolean>(false);
@@ -72,6 +227,21 @@ function DeckSpectrum() {
 
   const { spectrumData, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const logosWanted = useLogosWanted();
+  const columnRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const fit = useFitScale(columnRef, contentRef, active);
+  // Scale 1: nothing changes (the owner's picture). Otherwise the composition is zoomed to fit the band between the
+  // header and the bottom controls, or at the floor scrolls inside that band; the column itself never scrolls then.
+  const scaled = fit.scale < 1 || fit.constrained;
+  const contentStyle: CSSProperties | undefined = scaled
+    ? {
+        zoom: fit.scale,
+        flex: 'none',
+        height: fit.room / fit.scale,
+        marginTop: fit.offset / fit.scale,
+        overflowY: fit.scrolls ? 'auto' : 'hidden',
+      }
+    : undefined;
   const initiativeItems = spectrumData.slice(0, 3);
   const publicationItem = spectrumData[3];
   const sponsorItem = spectrumData[spectrumData.length - 1];
@@ -140,8 +310,12 @@ function DeckSpectrum() {
           126 at 1366x641, 142 at 1180, 151 at a coarse 1366x1024, 171 at 820, 168 at 744, 181 at 1024x1366) and the
           last logo row ends above the fixed bottom controls; the side margins on tablets are the page grid's. */}
       <div
+        ref={columnRef}
         className={cn(
-          'relative flex h-[100svh] flex-col overflow-y-auto px-10 pb-[max(5rem,88px)] pt-[max(10rem,136px)] xl:px-20',
+          // The column never scrolls (one wheel notch is one section): the composition is fitted to its band below, and
+          // at the scale floor it scrolls inside that band. (The particle canvas reached past the column's end and made
+          // it scroll by 10 to 20 px on short windows.)
+          'relative flex h-[100svh] flex-col overflow-clip px-10 pb-[max(5rem,88px)] pt-[max(10rem,136px)] xl:px-20',
           // A large touch screen (1366x1024): the header's 44 px nav boxes make it taller (labels end at 122 px).
           '[@media(min-width:1200px)_and_(pointer:coarse)]:pt-[max(10rem,156px)]',
           'medium:px-[var(--grid-margin)] medium:pt-[176px] expanded:px-[var(--grid-margin)] expanded:pt-[148px] expanded:portrait:pt-[188px]',
@@ -153,56 +327,59 @@ function DeckSpectrum() {
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_51%_52%,rgba(138,168,181,0.07),transparent_30%),linear-gradient(125deg,rgba(117,11,19,0.12),transparent_22%)]" />
-        <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 wideShort:!pb-2 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
-          <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
-        </div>
-        <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
-          <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
-        </div>
-        {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
+        {/* The composition (title and the three bands), scaled to fit when the window is too short for it OPEN. */}
+        <div ref={contentRef} className="relative flex min-h-0 flex-1 flex-col" style={contentStyle}>
+          <div className="spectrum-title relative z-10 pb-3 text-center large:!pb-5 wideShort:!pb-2 [@media(max-width:1199.98px)_and_(max-height:860px)]:pb-2">
+            <h2 className="font-title text-[2.75rem]/none uppercase text-white">Spectrum</h2>
+          </div>
+          <div id="spectrum-particle-gl" className="pointer-events-none opacity-30">
+            <div id="spectrum-particle-container" className={cn('particle-container', { active })}></div>
+          </div>
+          {/* Below 1200 px wide only (the tablet tiers): up to 1100 px tall the gaps between the three blocks tighten (and
             the padding under 860), so the logo wall clears the bottom controls. From 1200 px the original's spacing. */}
-        <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 wideShort:!py-1 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
-          <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 wideShort:!gap-3 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
-            <motion.div layout="position" transition={bandTransition} className="w-full">
-              <SpectrumInitiatives
-                items={initiativeItems}
-                onSelect={selectInitiative}
-                executeSpectrumRoute={executeSpectrumRoute}
-                updateUrlAndExecute={updateUrlAndExecute}
-                routeConfigs={routeConfigs}
-              />
-            </motion.div>
-            {/* The three bands glide to their new places when the papers open or close, instead of jumping. */}
-            <motion.div
-              layout="position"
-              transition={bandTransition}
-              className="w-full border-t border-white/15 pt-5 wideShort:pt-3"
-            >
-              <SpectrumItem
-                key={sponsorItem.title}
-                item={sponsorItem}
-                isSponsor
-                loadImages={logosWanted}
-                className="!p-0"
-                executeSpectrumRoute={executeSpectrumRoute}
-                updateUrlAndExecute={updateUrlAndExecute}
-                routeConfigs={routeConfigs}
-                onClick={(e) => {
-                  sponsorItem.onClick?.(e);
-                }}
-                onHover={() => setImageIdx(5)}
-              />
-            </motion.div>
-            <motion.div layout="position" transition={bandTransition} className="w-full large:pb-4 wideShort:pb-0">
-              <SpectrumInitiatives
-                items={[publicationItem]}
-                layout="publications"
-                onSelect={() => selectInitiative(3)}
-                executeSpectrumRoute={executeSpectrumRoute}
-                updateUrlAndExecute={updateUrlAndExecute}
-                routeConfigs={routeConfigs}
-              />
-            </motion.div>
+          <div className="spectrum-fund relative z-10 mx-auto mt-2 flex w-full max-w-[1400px] flex-1 flex-col py-3 large:!py-3 wideShort:!py-1 [@media(max-width:1199.98px)_and_(max-height:860px)]:py-1">
+            <div className="flex flex-1 flex-col justify-evenly gap-6 large:!gap-6 wideShort:!gap-3 [@media(max-width:1199.98px)_and_(max-height:1100px)]:gap-4">
+              <motion.div layout="position" transition={bandTransition} className="w-full">
+                <SpectrumInitiatives
+                  items={initiativeItems}
+                  onSelect={selectInitiative}
+                  executeSpectrumRoute={executeSpectrumRoute}
+                  updateUrlAndExecute={updateUrlAndExecute}
+                  routeConfigs={routeConfigs}
+                />
+              </motion.div>
+              {/* The three bands glide to their new places when the papers open or close, instead of jumping. */}
+              <motion.div
+                layout="position"
+                transition={bandTransition}
+                className="w-full border-t border-white/15 pt-5 wideShort:pt-3"
+              >
+                <SpectrumItem
+                  key={sponsorItem.title}
+                  item={sponsorItem}
+                  isSponsor
+                  loadImages={logosWanted}
+                  className="!p-0"
+                  executeSpectrumRoute={executeSpectrumRoute}
+                  updateUrlAndExecute={updateUrlAndExecute}
+                  routeConfigs={routeConfigs}
+                  onClick={(e) => {
+                    sponsorItem.onClick?.(e);
+                  }}
+                  onHover={() => setImageIdx(5)}
+                />
+              </motion.div>
+              <motion.div layout="position" transition={bandTransition} className="w-full large:pb-4 wideShort:pb-0">
+                <SpectrumInitiatives
+                  items={[publicationItem]}
+                  layout="publications"
+                  onSelect={() => selectInitiative(3)}
+                  executeSpectrumRoute={executeSpectrumRoute}
+                  updateUrlAndExecute={updateUrlAndExecute}
+                  routeConfigs={routeConfigs}
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -256,7 +433,9 @@ function PhoneSpectrum() {
       {/* The title starts below the phone header's box (84 px). A phone in landscape (compact height): a tighter bottom
           and title margin, so an initiative and its links fit between the
           title and the section arrows. */}
-      <div className="relative flex h-[100svh] flex-col overflow-hidden px-5 pb-24 pt-[88px] shortScreen:pb-[72px]">
+      {/* overflow: clip, not hidden: a clipped frame cannot be scrolled, so focusing the papers' "more" (which
+          reaches into the padding) never shifts the page sideways. */}
+      <div className="relative flex h-[100svh] flex-col overflow-clip px-5 pb-24 pt-[88px] shortScreen:pb-[72px]">
         <h2 className="mb-6 shrink-0 text-center font-title text-[26px]/[30px] font-bold uppercase shortScreen:mb-1">
           Spectrum
         </h2>
@@ -265,7 +444,7 @@ function PhoneSpectrum() {
           className="pointer-events-none absolute inset-0 overflow-hidden opacity-20 [&_canvas]:absolute [&_canvas]:left-1/2 [&_canvas]:top-1/2 [&_canvas]:-translate-x-1/2 [&_canvas]:-translate-y-1/2 [&_canvas]:scale-[0.56]"
           aria-hidden="true"
         />
-        <div className="relative min-h-0 flex-1 overflow-hidden">
+        <div className="relative min-h-0 flex-1 overflow-clip">
           <AnimatePresence initial={false} mode="wait" custom={direction}>
             <motion.div
               key={pageIndex}

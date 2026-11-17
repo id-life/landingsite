@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
@@ -288,6 +289,7 @@ export default function NewsAndTalksSection({
     if (isMobile) {
       return (
         <Swiper
+          {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
             setIsMobileBeginning(swiper.isBeginning);
@@ -316,6 +318,7 @@ export default function NewsAndTalksSection({
     // Desktop layout: 4x2 grid per page
     return (
       <Swiper
+        {...rowKeyboardProps}
         className="h-full w-full"
         onSlideChange={(swiper) => {
           setIsBeginning(swiper.isBeginning);

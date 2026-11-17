@@ -5,10 +5,28 @@ import { MOTION } from '@/motion/presets';
 import { DURATION, EASE } from '@/motion/tokens';
 import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import { cloneElement, memo, useId, useState } from 'react';
+import { atom, useAtom } from 'jotai';
+import { cloneElement, memo, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { SpectrumLink } from './SpectrumItem';
 
 type Layout = 'columns' | 'publications';
+
+/**
+ * Which groups are open, by group title, for the visit: one piece of state outside the page components, so the
+ * desktop deck and the phone's papers page keep it alike (the phone page remounts on every step).
+ */
+const openGroupsAtom = atom<Record<string, boolean>>({});
+
+/**
+ * While a group's list opens or closes, a press on that group does nothing, its links and its own control alike: "more"
+ * moves when it is pressed and a paper slides under the pointer, so a double click (or a second tap up to a second
+ * later) opened that paper in a new tab; and a second press on the moving control turned the list straight back, so a
+ * double click could never close it. A double click therefore ends in the state its first press asked for, opening
+ * or closing. The window covers the list's own animation (DURATION.base plus a 50 ms stagger per link) and is never
+ * less than half a second, reduced motion included.
+ */
+const SETTLE_MIN_MS = 500;
+const settleMs = (extraLinks: number) => Math.max(SETTLE_MIN_MS, Math.round((DURATION.base + extraLinks * 0.05) * 1000) + 150);
 
 interface RouteProps {
   executeSpectrumRoute: (key: string) => void;
@@ -59,14 +77,33 @@ function Initiative({
   routeConfigs,
 }: RouteProps & { item: SpectrumItemInfo; layout: Layout; onSelect: () => void }) {
   const listId = useId();
-  const [expanded, setExpanded] = useState(false);
+  const [openGroups, setOpenGroups] = useAtom(openGroupsAtom);
+  const expanded = Boolean(openGroups[item.title]);
+  const [settling, setSettling] = useState(false);
+  const settleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const reduceMotion = useReducedMotionPref();
   const restCount = item.collapsedCount ?? item.links.length;
   const collapsible = item.links.length > restCount;
   const links = collapsible && !expanded ? item.links.slice(0, restCount) : item.links;
 
+  useEffect(() => () => clearTimeout(settleTimer.current), []);
+
+  const toggle = useCallback(() => {
+    // A pending timer means the list is still moving: the press is not taken (see settleMs).
+    if (settleTimer.current !== undefined) return;
+    setOpenGroups((groups) => ({ ...groups, [item.title]: !groups[item.title] }));
+    setSettling(true);
+    settleTimer.current = setTimeout(
+      () => {
+        settleTimer.current = undefined;
+        setSettling(false);
+      },
+      settleMs(item.links.length - restCount),
+    );
+  }, [setOpenGroups, item.title, item.links.length, restCount]);
+
   return (
-    <article className="min-w-0" onMouseEnter={onSelect} onFocus={onSelect}>
+    <article className="relative min-w-0" onMouseEnter={onSelect} onFocus={onSelect}>
       <div className="flex items-start gap-2.5">
         {cloneElement(item.icon, {
           className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white medium:size-[20px] expanded:size-[20px]'),
@@ -84,12 +121,22 @@ function Initiative({
             {item.titleCn}
           </p>
         </div>
-        {collapsible && <MoreToggle expanded={expanded} controls={listId} onToggle={() => setExpanded((open) => !open)} />}
+        {collapsible && <MoreToggle expanded={expanded} controls={listId} onToggle={toggle} />}
       </div>
       <ul
         id={listId}
+        // While the list opens or closes its links take no press (see settleMs).
+        onClickCapture={
+          settling
+            ? (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            : undefined
+        }
         className={cn(
           'mt-4',
+          settling && 'pointer-events-none',
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
             ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
@@ -135,6 +182,31 @@ function Initiative({
           })}
         </AnimatePresence>
       </ul>
+      {/* The group's list with every link, never painted or announced, so the desktop deck can measure the height the
+          composition needs OPEN while it is closed (Spectrum's fit scale). Plain text, no links. */}
+      {collapsible && (
+        // A zero-height clip around it, so the copy never adds to the page's scrollable area.
+        <div aria-hidden="true" className="pointer-events-none invisible absolute inset-x-0 top-0 h-0 overflow-hidden">
+          <ul
+            data-open-measure=""
+            className={cn(
+              'mt-4',
+              layout === 'publications'
+                ? 'grid grid-cols-3 gap-x-10 gap-y-4 mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
+                : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+            )}
+          >
+            {item.links.map((link) => (
+              <li
+                key={link.label}
+                className="min-w-0 coarse:flex coarse:min-h-[44px] coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm"
+              >
+                <SpectrumLink item={{ ...link, link: undefined }} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </article>
   );
 }
