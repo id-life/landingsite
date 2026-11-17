@@ -17,7 +17,7 @@ import { motion, useAnimation } from 'motion/react';
 import { useEffect } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { u } from '@/utils/layout-unit';
-import type { TwinDeck } from '@/app/twin/twin-deck';
+import { showTwinDemo, stopTwinTitleMoves, type TwinDeck } from '@/app/twin/twin-deck';
 
 // Phone deck: the pair of icons breathes with the model picker's border (mobileBorderAnimationStateAtom).
 const BORDER_ANIMATION_CONFIG = { scaleDuration: 1.5, scaleValue: 1.1 };
@@ -55,9 +55,10 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
     }
     setModelLoadingItem({ view: label, model: twinModelId(currentModel) ?? '', at: performance.now() });
     if (currentModel === PredictionModel.M0) {
-      gsap.to('.twin-title', { opacity: 0 });
-      gsap.to('#ytb-demo', { opacity: 0 });
-      gsap.to('#switch-skin', { bottom: u(8) });
+      stopTwinTitleMoves();
+      gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
+      showTwinDemo('desktop', false);
+      gsap.to('#switch-skin', { bottom: u(8), overwrite: 'auto' });
       gsap.to('.twin-title-M0', { left: u(5), delay: 0.3 });
     }
     eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model: currentModel } });
