@@ -26,10 +26,13 @@ export default function SpectrumLayout({ children }: { children: ReactNode }) {
       <JsonLd data={jsonLd} />
       {/* Same summary as the other section routes: one h1, the page description, the section's five headings
           and the item names it shows, with no links. The hidden link list that stood here (31 links, 28 of
-          them external, aria-hidden) read as hidden link spam. */}
+          them external, aria-hidden) read as hidden link spam. The section itself shows each of these items as
+          a real link or logo (three papers behind "more"), so the list is kept from screen readers, as the
+          original kept its own, or each would be announced twice; the h1 and the description stay announced. */}
       <PageSEOContent
         title={PAGE_TITLE}
         intro={[PAGE_DESCRIPTION]}
+        sectionsShownOnPage
         sections={spectrumBaseData.map((item) => ({
           heading: `${item.title} ${item.titleCn}`,
           items: item.links.map((link) => ({ title: link.label })),

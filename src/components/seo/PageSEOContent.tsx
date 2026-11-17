@@ -24,6 +24,12 @@ type PageSEOContentProps = {
   titleAs?: 'h1' | 'h2';
   intro?: SEOText[];
   sections?: SEOSection[];
+  /**
+   * The sections repeat what the page itself shows to everyone, in the accessibility tree too (its links are real): hide
+   * them from assistive technology so each item is announced once. Crawlers still read them; the title and the intro
+   * stay announced (the title is the page's one h1).
+   */
+  sectionsShownOnPage?: boolean;
 };
 
 // Copy often stores "English\n中文" in one string; render each line as its own paragraph.
@@ -47,37 +53,45 @@ function Paragraphs({ text }: { text?: SEOText[] }) {
   );
 }
 
-export default function PageSEOContent({ title, titleAs: Title = 'h1', intro, sections }: PageSEOContentProps) {
+export default function PageSEOContent({
+  title,
+  titleAs: Title = 'h1',
+  intro,
+  sections,
+  sectionsShownOnPage = false,
+}: PageSEOContentProps) {
   return (
     <section className="sr-only" aria-label={title}>
       <Title>{title}</Title>
       <Paragraphs text={intro} />
-      {sections?.map((section) => (
-        <section key={section.heading}>
-          <h2>{section.heading}</h2>
-          <Paragraphs text={section.text} />
-          {section.items?.length ? (
-            <ul>
-              {section.items.map((item) => (
-                <li key={`${item.title}-${item.href ?? ''}`}>
-                  <h3>
-                    {/* Hidden layer: only internal links, kept out of the keyboard tab order. External
+      <div aria-hidden={sectionsShownOnPage || undefined}>
+        {sections?.map((section) => (
+          <section key={section.heading}>
+            <h2>{section.heading}</h2>
+            <Paragraphs text={section.text} />
+            {section.items?.length ? (
+              <ul>
+                {section.items.map((item) => (
+                  <li key={`${item.title}-${item.href ?? ''}`}>
+                    <h3>
+                      {/* Hidden layer: only internal links, kept out of the keyboard tab order. External
                         targets render as text — hidden outbound links read as link spam. */}
-                    {isInternalHref(item.href) ? (
-                      <a href={item.href} tabIndex={-1}>
-                        {item.title}
-                      </a>
-                    ) : (
-                      item.title
-                    )}
-                  </h3>
-                  <Paragraphs text={item.text} />
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </section>
-      ))}
+                      {isInternalHref(item.href) ? (
+                        <a href={item.href} tabIndex={-1}>
+                          {item.title}
+                        </a>
+                      ) : (
+                        item.title
+                      )}
+                    </h3>
+                    <Paragraphs text={item.text} />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
+        ))}
+      </div>
     </section>
   );
 }

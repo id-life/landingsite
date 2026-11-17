@@ -25,7 +25,7 @@ import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
-import { spectrumPhonePages } from './phonePages';
+import { PAPERS_GROUP, spectrumPhonePages } from './phonePages';
 import { fitScale, type FitScale } from './fitScale';
 
 const PAGE_ID = 'spectrum_page';
@@ -471,6 +471,7 @@ function PhoneSpectrum() {
               ) : (
                 <SpectrumInitiatives
                   items={page.items.map((index) => spectrumMainItems[index])}
+                  label={page.items.includes(PAPERS_GROUP) ? 'Spectrum publications' : undefined}
                   onSelect={() => {}}
                   executeSpectrumRoute={executeSpectrumRoute}
                   updateUrlAndExecute={updateUrlAndExecute}
