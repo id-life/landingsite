@@ -32,33 +32,18 @@ export default function SubscribePopup({ openOnArrival = false }: { openOnArriva
     return () => window.removeEventListener(SUBSCRIBE_REQUEST_EVENT, onRequest);
   }, [first]);
 
-  // Never ahead of the page: once it has loaded and the browser is idle (at most 50 ms later). The strip's own chunk is
-  // fetched together with the host's, not after it.
+  // As soon as the page has hydrated (this effect) and painted (the next frame), not after the load event and an idle
+  // moment: never ahead of the page's first paint. The strip's own chunk is fetched together with the host's.
   useEffect(() => {
     if (!openOnArrival) return;
-    let idle = 0;
-    let cancelled = false;
-    const arrive = () => {
+    const frame = requestAnimationFrame(() => {
       // The laptop deck only (the original's phone opens nothing by itself here), until a close is remembered, and
       // not with the reduced-motion preference.
-      if (cancelled || !window.matchMedia(DESKTOP_TREE_QUERY).matches || !mayOpenSubscribeByItself(isReducedMotion())) return;
+      if (!window.matchMedia(DESKTOP_TREE_QUERY).matches || !mayOpenSubscribeByItself(isReducedMotion())) return;
       void import('./SubscribeStrip');
       setFirst((current) => current ?? { type: 'open', placement: 'auto' });
-    };
-    const whenIdle = () => {
-      idle =
-        typeof window.requestIdleCallback === 'function'
-          ? window.requestIdleCallback(arrive, { timeout: 50 })
-          : window.setTimeout(arrive, 0);
-    };
-    if (document.readyState === 'complete') whenIdle();
-    else window.addEventListener('load', whenIdle, { once: true });
-    return () => {
-      cancelled = true;
-      window.removeEventListener('load', whenIdle);
-      if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
-      window.clearTimeout(idle);
-    };
+    });
+    return () => cancelAnimationFrame(frame);
   }, [openOnArrival]);
 
   return first ? <SubscribePopupHost first={first} /> : null;
