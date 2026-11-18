@@ -27,6 +27,7 @@ import SpectrumItem from './SpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 import { PAPERS_GROUP, spectrumPhonePages } from './phonePages';
 import { fitScale, type FitScale } from './fitScale';
+import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -456,10 +457,13 @@ function PhoneSpectrum() {
   // Use the same inner-page navigation contract as MobilePortfolio.
   useEffect(() => {
     if (!active) return;
-    setPageIndex(0);
-    setInnerPageIndex(0);
+    // The first page, or the page this history entry kept when Back, Forward or a reload brought it back (NAV-02).
+    const start = keptStartPage(PAGE_ID, totalPages);
+    setPageIndex(start);
+    setInnerPageIndex(start);
     setInnerPageTotal(totalPages);
   }, [active, totalPages, setInnerPageIndex, setInnerPageTotal]);
+  useKeptInnerPage(PAGE_ID, active, totalPages);
 
   useEffect(() => {
     if (!active || innerPageNavigateTo === null) return;

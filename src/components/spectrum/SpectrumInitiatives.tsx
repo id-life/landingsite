@@ -1,5 +1,7 @@
 import { SpectrumItemInfo } from '@/hooks/spectrum/useSpectrumData';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
+import { jotaiStore } from '@/atoms/store';
+import { noteInnerPage, registerInnerPage } from '@/motion/innerPages';
 import { useReducedMotionPref } from '@/motion/preference';
 import { MOTION } from '@/motion/presets';
 import { DURATION, EASE } from '@/motion/tokens';
@@ -16,6 +18,27 @@ type Layout = 'columns' | 'publications';
  * desktop deck and the phone's papers page keep it alike (the phone page remounts on every step).
  */
 const openGroupsAtom = atom<Record<string, boolean>>({});
+
+// The open groups are one of Spectrum's inner pages (NAV-02): kept in the history entry while Spectrum is the section in
+// view, and opened again when Back, Forward or a reload brings the entry back. All closed is the start.
+if (typeof window !== 'undefined') {
+  registerInnerPage(
+    'spectrum_page',
+    'papers',
+    () => {
+      const open = Object.keys(jotaiStore.get(openGroupsAtom)).filter((title) => jotaiStore.get(openGroupsAtom)[title]);
+      return open.length ? open.sort() : undefined;
+    },
+    (value) => {
+      if (Array.isArray(value)) {
+        const titles = value.filter((title): title is string => typeof title === 'string');
+        jotaiStore.set(openGroupsAtom, Object.fromEntries(titles.map((title) => [title, true])));
+      }
+      return true;
+    },
+  );
+  jotaiStore.sub(openGroupsAtom, () => noteInnerPage('spectrum_page'));
+}
 
 /**
  * While a group's list opens or closes, a press on that group does nothing, its links and its own control alike: "more"

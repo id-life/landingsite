@@ -6,16 +6,19 @@ import AnatomySVG from '@/../public/svgs/twin/anatomy.svg?component';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   chosenModel,
+  markTwinPressed,
   currentModelAtom,
   currentModelTypeAtom,
   mobileBorderAnimationStateAtom,
   modelLoadingItemAtom,
   PredictionModel,
 } from '@/atoms/twin';
+import { jotaiStore } from '@/atoms/store';
+import { registerInnerPage } from '@/motion/innerPages';
 import clsx from 'clsx';
 import { gsap } from 'gsap';
 import { motion, useAnimation } from 'motion/react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { u } from '@/utils/layout-unit';
 import { showTwinDemo, stopTwinTitleMoves, twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
@@ -47,9 +50,12 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
     });
   }, [phone, borderAnimationState, borderControls]);
 
-  const handleModelTypeChange = (type: ModelType) => {
+  const handleModelTypeChange = (type: ModelType) => pressType(type, true);
+  // A press, or the same press put back from the history entry (NAV-02), which is not counted as a press.
+  const pressType = (type: ModelType, counted: boolean) => {
     const label = type === ModelType.Skin ? 'skin' : 'anatomy';
-    trackTwin('skin', label, currentModel);
+    if (counted) trackTwin('skin', label, currentModel);
+    markTwinPressed();
     if (phone) {
       setCurrentModelType(type);
       return;
@@ -69,6 +75,30 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
     }
     eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type, model } });
   };
+
+  // Anatomy is the Twin's second inner page (NAV-02): put back once the model before it is on stage (its load done).
+  const pressTypeRef = useRef(pressType);
+  useEffect(() => {
+    pressTypeRef.current = pressType;
+  });
+  useEffect(
+    () =>
+      registerInnerPage(
+        'twin_page',
+        'type',
+        () => (jotaiStore.get(currentModelTypeAtom) === ModelType.Anatomy ? 'anatomy' : undefined),
+        (value) => {
+          if (value !== 'anatomy') return true;
+          if (jotaiStore.get(currentModelTypeAtom) === ModelType.Anatomy) return true;
+          if (jotaiStore.get(modelLoadingItemAtom) !== null) return false;
+          if (!phone && jotaiStore.get(currentModelAtom) !== chosenModel()) return false;
+          pressTypeRef.current(ModelType.Anatomy, false);
+          return true;
+        },
+        1,
+      ),
+    [phone],
+  );
 
   const iconClass = (type: ModelType) =>
     clsx(

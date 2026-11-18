@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
@@ -84,6 +85,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
   const [currentPage, setCurrentPage] = useState(0);
   const swiperRef = useRef<SwiperType>(undefined);
   const compactSwiperRef = useRef<SwiperType>(undefined);
+  // The page each row shows is kept in the history entry (NAV-02).
+  useKeptRowPage('longevity', swiperRef, !isMobile && !compact);
+  useKeptRowPage('longevity-phone-list', swiperRef, isMobile && !compact);
+  useKeptRowPage('longevity-phone', compactSwiperRef, compact);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerPage = useMobileItemsPerPage(containerRef, isMobile, 156, isVisible);
   const pageSize = Math.max(1, itemsPerPage);
@@ -180,6 +185,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
           {...rowKeyboardProps}
           className="h-full w-full"
           onSlideChange={(swiper) => {
+            noteRowPage();
             setIsCompactBeginning(swiper.isBeginning);
             setIsCompactEnd(swiper.isEnd);
           }}
@@ -209,7 +215,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
           {...rowKeyboardProps}
           className="h-full w-full"
           onBeforeInit={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex)}
+          onSlideChange={(swiper) => {
+            setCurrentPage(swiper.activeIndex);
+            noteRowPage();
+          }}
           slidesPerView={1}
           spaceBetween={16}
         >
@@ -236,6 +245,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
         className="h-full w-full"
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
+          noteRowPage();
           setIsBeginning(swiper.isBeginning);
           setIsEnd(swiper.isEnd);
         }}

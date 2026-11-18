@@ -1,5 +1,6 @@
 import { layoutUnitPx } from '@/utils/layout-unit';
 import { gsap } from 'gsap';
+import { forgetTwinPress } from '@/atoms/twin';
 
 /** Which deck the Digital Twin section is drawn for (RWD-02): the scrolled desktop/tablet deck or the paged phone deck. */
 export type TwinDeck = 'desktop' | 'phone';
@@ -49,6 +50,7 @@ export function showTwinDemo(deck: TwinDeck, shown: boolean) {
  * original.
  */
 export function showTwinOpening(deck: TwinDeck) {
+  forgetTwinPress();
   stopTwinTitleMoves();
   const items = gsap.utils.toArray('.twin-title-item');
   gsap.to('.twin-title', { opacity: 1, overwrite: 'auto' });

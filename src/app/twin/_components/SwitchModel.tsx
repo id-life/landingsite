@@ -6,9 +6,14 @@ import {
   mobileBorderAnimationStateAtom,
   modelLoadingItemAtom,
   chooseTwinModel,
+  chosenModel,
+  markTwinPressed,
   newTwinChoice,
   PredictionModel,
+  twinWasPressed,
 } from '@/atoms/twin';
+import { jotaiStore } from '@/atoms/store';
+import { noteInnerPage, registerInnerPage } from '@/motion/innerPages';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import SelectSVG from '@/../public/svgs/twin/select.svg?component';
 import clsx from 'clsx';
@@ -18,7 +23,7 @@ import { ModelType } from '@/components/twin/model/type';
 import { gsap } from 'gsap';
 import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
@@ -166,12 +171,45 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     setCurrentAnatomyCamera(ANATOMY_START[model]);
   };
 
-  const handleSwitchModel = (model: PredictionModel) => {
-    trackTwin('model', twinModelId(model) ?? String(model));
+  // A press, or the same press put back from the history entry (NAV-02), which is not counted as a press.
+  const pressModel = (model: PredictionModel, counted: boolean) => {
+    if (counted) trackTwin('model', twinModelId(model) ?? String(model));
+    markTwinPressed();
     chooseTwinModel(model);
     if (phone) handleSwitchModelPhone(model);
     else handleSwitchModelDesktop(model);
+    noteInnerPage('twin_page');
   };
+  const handleSwitchModel = (model: PredictionModel) => pressModel(model, true);
+
+  // The avatar pressed is the Twin's first inner page (NAV-02): the model, then the skin or anatomy (SwitchSkin), then
+  // the anatomy view (SwitchAnatomyCamera) are put back in that order when Back, Forward or a reload brings the entry back.
+  const pressModelRef = useRef(pressModel);
+  useEffect(() => {
+    pressModelRef.current = pressModel;
+  });
+  useEffect(() => {
+    const unregister = registerInnerPage(
+      'twin_page',
+      'model',
+      () => (twinWasPressed() ? chosenModel() : undefined),
+      (value) => {
+        if (typeof value !== 'string' || !(Object.values(PredictionModel) as string[]).includes(value)) return true;
+        // Already showing it (a return by the deck's own Back, where the section was not left long enough to reset):
+        // pressing it again would take anatomy back to the skin.
+        if (twinWasPressed() && chosenModel() === value && jotaiStore.get(currentModelAtom) === value) return true;
+        pressModelRef.current(value as PredictionModel, false);
+        return true;
+      },
+      0,
+    );
+    const note = () => noteInnerPage('twin_page');
+    const off = [currentModelAtom, currentModelTypeAtom, currentAnatomyCameraAtom].map((atom) => jotaiStore.sub(atom, note));
+    return () => {
+      unregister();
+      off.forEach((stop) => stop());
+    };
+  }, []);
 
   const corner = phone
     ? '[--corner-border-size:6px] [--corner-border-width:1.5px]'

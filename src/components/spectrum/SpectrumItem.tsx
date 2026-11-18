@@ -1,12 +1,41 @@
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo, useState } from 'react';
+import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo } from 'react';
+import { atom, useAtom } from 'jotai';
+import { jotaiStore } from '@/atoms/store';
+import { noteInnerPage, registerInnerPage } from '@/motion/innerPages';
 import { spectrumLinkProps } from './spectrumLinkProps';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { trackSpectrumLink } from '@/lib/analytics/spectrum';
 import { DURATION, EASE } from '@/motion/tokens';
+
+/**
+ * The page of each group's links ("more" steps through them, 21 at a time), by group title: one of Spectrum's inner
+ * pages (NAV-02), kept in the history entry and put back when Back, Forward or a reload brings it back. Every group on
+ * its first page is the start.
+ */
+const linkPagesAtom = atom<Record<string, number>>({});
+if (typeof window !== 'undefined') {
+  registerInnerPage(
+    'spectrum_page',
+    'more',
+    () => {
+      const pages = Object.entries(jotaiStore.get(linkPagesAtom)).filter(([, page]) => page > 0);
+      return pages.length ? Object.fromEntries(pages) : undefined;
+    },
+    (value) => {
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const pages: Record<string, number> = {};
+        for (const [title, page] of Object.entries(value)) if (typeof page === 'number' && page > 0) pages[title] = page;
+        jotaiStore.set(linkPagesAtom, pages);
+      }
+      return true;
+    },
+  );
+  jotaiStore.sub(linkPagesAtom, () => noteInnerPage('spectrum_page'));
+}
 
 interface SpectrumItemProps {
   item: SpectrumItemInfo;
@@ -112,7 +141,8 @@ const SpectrumItem = memo(
       ref,
     ) => {
       const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
-      const [currentPage, setCurrentPage] = useState(0);
+      const [linkPages, setLinkPages] = useAtom(linkPagesAtom);
+      const currentPage = linkPages[title] ?? 0;
       const linksPerPage = 21;
       const onMouseEnter = () => {
         onHover?.();
@@ -127,9 +157,9 @@ const SpectrumItem = memo(
           e.preventDefault();
           e.stopPropagation();
           if (totalPages === 0) return;
-          setCurrentPage((prev) => (prev + 1) % totalPages);
+          setLinkPages((pages) => ({ ...pages, [title]: ((pages[title] ?? 0) + 1) % totalPages }));
         },
-        [totalPages],
+        [totalPages, setLinkPages, title],
       );
 
       const { visibleLinks, showMoreButton, buttonText } = useMemo(() => {
