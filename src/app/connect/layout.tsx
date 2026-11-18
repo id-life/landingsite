@@ -31,6 +31,8 @@ const jsonLd: Graph = {
       isPartOf: { '@id': WEBSITE_ID },
       about: { '@id': ORG_ID },
       mainEntity: { '@id': ORG_ID },
+      // His site's own description of this page, word for word.
+      description: 'Contact Immortal Dragons for partnerships, media, and community connections.',
     },
     {
       ...ORGANIZATION,

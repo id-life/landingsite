@@ -23,7 +23,10 @@ function generateNewsJsonLd(news: NewsPageItem[]): WithContext<ItemList> {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    // No name, description or count: the list shows none (the owner's rule of 2026-11-18).
+    // His site's own name and description of the list, word for word. No count (2026-11-18: no count beyond the
+    // portfolio's 16 and the sponsored bodies' 21 is stated).
+    name: 'Immortal Dragons News',
+    description: 'Latest news and insights from Immortal Dragons',
     url: 'https://www.id.life/news',
     itemListElement: news.map((item, index) => ({
       '@type': 'ListItem',
