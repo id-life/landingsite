@@ -1,5 +1,8 @@
 'use client';
 
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { layoutUnitPx } from '@/utils/layout-unit';
+
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import RelationGraph, { RelationGraphInstance } from 'relation-graph-react';
 import type {
@@ -189,7 +192,10 @@ const CharacterRelationGraph = (props: CharacterRelationGraphProps) => {
         // instance.setZoom(78);
         instance.setZoom(0);
         settle();
-        await instance.animateToZoom(75, 800);
+        // 75 %, as the original; on the phone deck above phone width the graph grows with the deck's unit like the
+        // rest of the page (its names are drawn at fixed px inside the graph's zoom).
+        const unitScale = window.matchMedia(PHONE_TREE_QUERY).matches ? layoutUnitPx() / 16 : 1;
+        await instance.animateToZoom(75 * unitScale, 800);
       });
     }
 

@@ -46,9 +46,9 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
     // A named region (the phone panel is portalled outside <main>): axe region rule. Not "Connect": the section already has that name.
     <section aria-label="Contact and subscribe" className="text-black">
       <div className="flex items-baseline justify-between gap-4">
-        <h3 className="font-display text-2xl/[30px] font-bold uppercase">CONNECT</h3>
+        <h3 className="font-display text-2xl/[1.875rem] font-bold uppercase">CONNECT</h3>
         <div className="flex flex-col items-end gap-1">
-          <PrivacyChoicesLink className="font-display text-[10px]/3 font-bold underline opacity-60" />
+          <PrivacyChoicesLink className="font-display text-[0.625rem]/3 font-bold underline opacity-60" />
         </div>
       </div>
       <div className="mt-3">
@@ -62,18 +62,18 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
                 href={Links[type]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-center relative h-[25px] w-[77px] cursor-pointer gap-1 tap-area"
+                className="flex-center relative h-[1.5625rem] w-[4.8125rem] cursor-pointer gap-1 tap-area"
               >
                 <CornerBorder hoverColor="#000" size="4px" color="#666" />
                 <Icon className={clsx(iconClassName, 'fill-black')} />
-                <span className="whitespace-nowrap font-display text-[10px]/3 font-bold">{label}</span>
+                <span className="whitespace-nowrap font-display text-[0.625rem]/3 font-bold">{label}</span>
               </a>
             ))}
           </div>
         ))}
       </div>
       {/* The email is a mailto link (it was the uppercase literal CONTACT@ID.LIFE in a span). */}
-      <address className="mt-4 flex flex-col gap-1.5 font-display text-xs/[15px] font-bold uppercase not-italic">
+      <address className="mt-4 flex flex-col gap-1.5 font-display text-xs/[0.9375rem] font-bold uppercase not-italic">
         <div className="flex items-center gap-1">
           <HomeSVG aria-hidden="true" className="size-5" />
           <span>{ORG_ADDRESS_TEXT}</span>

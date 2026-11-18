@@ -82,8 +82,13 @@ export default function SiteMenu({
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-white duration-300 group-data-[open=true]:stroke-accent" />
               Subscribe
             </SubscribeTrigger>
-            <button type="button" aria-label="Close menu" onClick={close} className="flex items-center justify-center tap">
-              <MenuCloseSVG aria-hidden="true" className="h-10 cursor-pointer" />
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={close}
+              className="flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center tap"
+            >
+              <MenuCloseSVG aria-hidden="true" className="size-10 cursor-pointer" />
             </button>
           </div>
           {/* The seven sections only, as the original phone menus listed (no News, Podcast or About). */}

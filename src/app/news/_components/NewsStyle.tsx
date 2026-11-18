@@ -34,6 +34,13 @@ const NEWS_CSS = `
       --u: ${PHONE_LAYOUT_UNIT};
     }
 
+    /* The article body: github-markdown-css sets it in px (16 px, its headings in em of that), so it stayed at its
+       phone size on an upright tablet while the page around it grew. In the deck's unit it grows with the rest; on
+       the laptop deck it keeps the original's fixed 16 px. */
+    .markdown-body {
+      font-size: calc(var(--t) * 1);
+    }
+
     body {
       /* Allow scrolling on mobile for news page */
       overflow: auto;
