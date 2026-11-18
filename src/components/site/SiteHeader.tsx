@@ -203,10 +203,12 @@ export default function SiteHeader({
               currentId={currentId}
               inExperience={inExperience}
               experiencePage={overlay}
-              // 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px.
-              className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex"
-              openIcon={<MenuOpenSVG className="h-10" />}
-              closeIcon={<MenuCloseSVG aria-hidden="true" className="h-10" />}
+              // A 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px. Both
+              // in the deck's unit (2.5 and 2.75), so on an upright tablet the round button grows with the bar and SUBSCRIBE
+              // beside it keeps its place; 40 and 44 px wherever the unit is 16.
+              className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
+              openIcon={<MenuOpenSVG className="size-10" />}
+              closeIcon={<MenuCloseSVG aria-hidden="true" className="size-10" />}
             />
           )}
         </div>
