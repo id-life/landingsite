@@ -3,8 +3,7 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import LogoSVGcn from '@/components/svg/LogoSVGcn';
-import LogoSVGen from '@/components/svg/LogoSVGen';
+import type { ReactNode } from 'react';
 import { useReducedMotionPref } from '@/motion/preference';
 
 /** The original's period and cross-fade (the owner's answer 1A: as on his site). */
@@ -26,10 +25,18 @@ const SWAP_MS = 8000;
  * gives way and the mark is drawn smaller inside it rather than over SUBSCRIBE.
  */
 export default function AlternatingLogo({
+  en,
+  cn,
   toggle = false,
   className,
   ...rest
-}: { toggle?: boolean; className?: string } & { [key: `data-${string}`]: string | undefined }) {
+}: {
+  /** The two marks, from alternatingMarks() (built by the caller, on the server for the content pages). */
+  en: ReactNode;
+  cn: ReactNode;
+  toggle?: boolean;
+  className?: string;
+} & { [key: `data-${string}`]: string | undefined }) {
   const [mark, setMark] = useState<'cn' | 'en'>('cn');
   const reduced = useReducedMotionPref();
   const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
@@ -52,32 +59,22 @@ export default function AlternatingLogo({
 
   const marks = (
     <>
-      <LogoSVGen
-        className={clsx(
-          'h-10 w-auto max-w-full transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
-          mark === 'en' ? 'opacity-100' : 'opacity-0',
-        )}
-      />
-      <LogoSVGcn
-        className={clsx(
-          'h-8 w-auto max-w-full transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
-          mark === 'cn' ? 'opacity-100' : 'opacity-0',
-        )}
-      />
+      {en}
+      {cn}
     </>
   );
   const box = clsx(
-    'relative grid h-10 w-55 min-w-0 cursor-pointer grid-cols-[minmax(0,1fr)] items-center justify-items-start tap-area mobile:w-auto',
+    'group relative grid h-10 w-55 min-w-0 cursor-pointer grid-cols-[minmax(0,1fr)] items-center justify-items-start tap-area mobile:w-auto',
     className,
   );
 
   return toggle ? (
     // The name is the two names the original's title gives the site; the marks themselves are pictures.
-    <button type="button" aria-label="Immortal Dragons 不朽真龙" onClick={onPress} className={box} {...rest}>
+    <button type="button" aria-label="Immortal Dragons 不朽真龙" onClick={onPress} className={box} data-mark={mark} {...rest}>
       {marks}
     </button>
   ) : (
-    <Link prefetch={false} href="/" aria-label="Immortal Dragons home" className={box} {...rest}>
+    <Link prefetch={false} href="/" aria-label="Immortal Dragons home" className={box} data-mark={mark} {...rest}>
       {marks}
     </Link>
   );

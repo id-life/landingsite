@@ -131,7 +131,7 @@ export default function Home({ deck }: { deck: Deck }) {
       <Engagement deck={deck} />
       <Twin deck={deck} />
       <Connect />
-      {desktop ? <SubscribeStrip /> : <SubscribeSheet />}
+      {desktop ? <SubscribeStrip ease="token" /> : <SubscribeSheet />}
       {desktop ? <ContactBand /> : <ContactPanel />}
     </>
   );

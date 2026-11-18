@@ -21,20 +21,45 @@ const SubscribePopupHost = dynamic(() => import('./SubscribePopupHost'), { ssr: 
  */
 export default function SubscribePopup({ openOnArrival = false }: { openOnArrival?: boolean }) {
   const [first, setFirst] = useState<SubscribeRequest | null>(null);
+
   useEffect(() => {
     if (first) return;
-    // The laptop deck only: on the phone the original opens nothing by itself on these pages.
-    if (openOnArrival && window.matchMedia(DESKTOP_TREE_QUERY).matches && mayOpenSubscribeByItself(isReducedMotion())) {
-      const arrive = setTimeout(() => setFirst({ type: 'open', placement: 'auto' }), 0);
-      return () => clearTimeout(arrive);
-    }
     const onRequest = (event: Event) => {
       const request = (event as CustomEvent<SubscribeRequest>).detail;
       if (request.type !== 'close') setFirst(request);
     };
     window.addEventListener(SUBSCRIBE_REQUEST_EVENT, onRequest);
     return () => window.removeEventListener(SUBSCRIBE_REQUEST_EVENT, onRequest);
-  }, [first, openOnArrival]);
+  }, [first]);
+
+  // Never ahead of the page: once it has loaded and the browser is idle (at most 50 ms later). The strip's own chunk is
+  // fetched together with the host's, not after it.
+  useEffect(() => {
+    if (!openOnArrival) return;
+    let idle = 0;
+    let cancelled = false;
+    const arrive = () => {
+      // The laptop deck only (the original's phone opens nothing by itself here), until a close is remembered, and
+      // not with the reduced-motion preference.
+      if (cancelled || !window.matchMedia(DESKTOP_TREE_QUERY).matches || !mayOpenSubscribeByItself(isReducedMotion())) return;
+      void import('./SubscribeStrip');
+      setFirst((current) => current ?? { type: 'open', placement: 'auto' });
+    };
+    const whenIdle = () => {
+      idle =
+        typeof window.requestIdleCallback === 'function'
+          ? window.requestIdleCallback(arrive, { timeout: 50 })
+          : window.setTimeout(arrive, 0);
+    };
+    if (document.readyState === 'complete') whenIdle();
+    else window.addEventListener('load', whenIdle, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener('load', whenIdle);
+      if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
+      window.clearTimeout(idle);
+    };
+  }, [openOnArrival]);
 
   return first ? <SubscribePopupHost first={first} /> : null;
 }

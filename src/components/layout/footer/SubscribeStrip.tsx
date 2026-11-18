@@ -7,17 +7,18 @@ import { subscribeTypeAtom } from '@/atoms/footer';
 import InfoSVG from '@/../public/svgs/info.svg?component';
 import { useSubscribeDialog } from '@/hooks/useSubscribeDialog';
 import { useReturnFocusWithoutScroll } from '@/hooks/useReturnFocusWithoutScroll';
-import { cn } from '@/utils';
+import { clsx } from 'clsx';
 import { submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
-import gsap from 'gsap';
 import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { DURATION } from '@/motion/tokens';
-import { u } from '@/utils/layout-unit';
+
+const QUAD_OUT = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+const QUAD_IN = 'cubic-bezier(0.55, 0.085, 0.68, 0.53)';
 
 type Inputs = {
   EMAIL: string;
@@ -30,7 +31,16 @@ type Inputs = {
  * dialog: role="dialog" labelled by its heading, focus moves to the email field and stays inside, Escape,
  * the X or a click outside close it, and focus returns to the button that opened it.
  */
-export default function SubscribeStrip() {
+export default function SubscribeStrip({
+  ease = 'quad',
+}: {
+  /**
+   * The curve of the GSAP timeline this replaces, fitted to its frames on both kinds of page: on the experience the
+   * motion token 'out' that src/motion/gsap.ts makes GSAP's default (0.3 s; reversed, its mirror 'in'); on the content
+   * pages, where those defaults are not loaded, GSAP's own power1.out (a quadratic ease-out) and its mirror.
+   */
+  ease?: 'token' | 'quad';
+} = {}) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);
@@ -50,7 +60,6 @@ export default function SubscribeStrip() {
   const footerRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   // True once the portal content exists. Content pages mount this popup on its first open (SubscribePopup), so
   // the open state arrives before the portal has rendered the box; the open effect waits for it.
   const [portalReady, setPortalReady] = useState(false);
@@ -75,25 +84,26 @@ export default function SubscribeStrip() {
   const boxMergedRef = useMergeRefs([refs.setFloating, boxRef, trackPortal]);
   const emailMergedRef = useMergeRefs([emailFieldRef, emailRef]);
 
-  // Built on first open: the popup lives in a portal that mounts after this component, so its elements
-  // do not exist yet when this component's effects first run.
-  const getTimeline = () => {
-    if (!timelineRef.current && footerRef.current && boxRef.current) {
-      const tl = gsap.timeline({ paused: true });
-      tl.to(footerRef.current, { bottom: u(2.25), duration: DURATION.base });
-      tl.to(boxRef.current, { width: u(40), height: u(13), duration: DURATION.base }, '<');
-      timelineRef.current = tl;
+  // Opened, the strip rises and grows by CSS transitions of its bottom, width and height (it was a GSAP timeline:
+  // 26 kB of GSAP on pages that load nothing else of it, and a popup that opens by itself there, PERF-09). Drawn
+  // open one frame after the portal exists, so the transition starts from the closed box.
+  const [drawn, setDrawn] = useState(false);
+  useEffect(() => {
+    if (!isSubscribeShow || !portalReady) {
+      const frame = requestAnimationFrame(() => setDrawn(false));
+      return () => cancelAnimationFrame(frame);
     }
-    return timelineRef.current;
+    const frame = requestAnimationFrame(() => setDrawn(true));
+    return () => cancelAnimationFrame(frame);
+  }, [isSubscribeShow, portalReady]);
+  // Up on the timeline's ease, down on the same run backwards (its mirror), as the timeline played and reversed.
+  const motionStyle = {
+    transitionDuration: `${DURATION.base}s`,
+    transitionTimingFunction: ease === 'token' ? (drawn ? 'var(--ease-out)' : 'var(--ease-in)') : drawn ? QUAD_OUT : QUAD_IN,
   };
-  useEffect(() => () => void timelineRef.current?.kill(), []);
 
   useEffect(() => {
-    if (!isSubscribeShow) {
-      timelineRef.current?.reverse();
-      return;
-    }
-    getTimeline()?.play();
+    if (!isSubscribeShow) return;
     if (auto) return;
     // Focus the email field once the popup is on screen, without scrolling: a plain focus() on the
     // still-offscreen field scrolled the page, and on the experience a scroll changes the section. (The
@@ -132,7 +142,11 @@ export default function SubscribeStrip() {
       <FloatingPortal>
         <div
           ref={footerRef}
-          className="page-footer pointer-events-none fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
+          style={motionStyle}
+          className={clsx(
+            'page-footer pointer-events-none fixed z-[52] flex h-52 w-full items-center justify-center transition-[bottom] mobile:inset-x-5 mobile:h-auto mobile:w-auto',
+            drawn ? 'bottom-9' : '-bottom-40',
+          )}
         >
           <FloatingFocusManager context={context} disabled={!isSubscribeShow || auto} initialFocus={-1} returnFocus={false}>
             <div
@@ -140,7 +154,13 @@ export default function SubscribeStrip() {
               aria-labelledby={titleId}
               aria-modal={isSubscribeShow && !auto ? 'true' : undefined}
               {...closedProps}
-              className="footer-box-clip pointer-events-auto relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5"
+              style={motionStyle}
+              className={clsx(
+                'footer-box-clip pointer-events-auto relative overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md transition-[width,height] mobile:px-4 mobile:py-7.5',
+                // Closed, the box is its padding and border (what h-0 w-0 drew): the transition runs from that size, as
+                // the timeline did from the computed size, and not from a zero the padding hides.
+                drawn ? 'h-[13rem] w-[40rem]' : 'h-[calc(4.5rem_+_4px)] w-[calc(3.75rem_+_4px)]',
+              )}
             >
               <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
               <span className="absolute bottom-0 right-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-b-transparent border-l-transparent" />
@@ -176,7 +196,7 @@ export default function SubscribeStrip() {
                 <HoneypotField {...register('website')} />
                 <div className="relative flex h-11 flex-1 items-center justify-center p-2">
                   <div
-                    className={cn(
+                    className={clsx(
                       'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
                       errors.EMAIL && 'border-accent opacity-100',
                     )}
