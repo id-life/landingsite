@@ -12,7 +12,14 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
  * transmission pass renders the scene again). Same output as <Svg> for fill-only artwork: flipped Y, MeshBasic
  * fill colour and opacity, transparent, double-sided, no depth write, in document order.
  */
-export default function MergedSvg({ src, ...props }: { src: string } & ThreeElements['object3D']) {
+export default function MergedSvg({
+  src,
+  opacity = 1,
+  ...props
+}: {
+  src: string;
+  /** Multiplies each fill's own opacity (0: drawn invisible, as the original's hidden lockups). */ opacity?: number;
+} & ThreeElements['object3D']) {
   const svg = useLoader(SVGLoader, src);
   const layers = useMemo(() => {
     const byFill = new Map<string, { color: string; opacity: number; parts: THREE.BufferGeometry[] }>();
@@ -43,7 +50,8 @@ export default function MergedSvg({ src, ...props }: { src: string } & ThreeElem
           <mesh key={i} geometry={layer.geometry} renderOrder={i}>
             <meshBasicMaterial
               color={layer.color}
-              opacity={layer.opacity}
+              opacity={layer.opacity * opacity}
+              userData={{ fillOpacity: layer.opacity }}
               transparent
               side={THREE.DoubleSide}
               depthWrite={false}

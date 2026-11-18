@@ -7,7 +7,7 @@ import { GLTF, GLTFLoader, MeshoptDecoder, SVGLoader } from 'three-stdlib';
 import { heroReadyAtom } from '@/atoms/loading';
 import { jotaiStore } from '@/atoms/store';
 import { heroSceneFailedAtom } from '@/hooks/useExperienceMode';
-import { HERO_MODEL_URL, HERO_SVG_URLS } from './heroAssetUrls';
+import { HERO_CN_SVG_URLS, HERO_MODEL_URL, HERO_SVG_URLS } from './heroAssetUrls';
 
 /**
  * The first screen's own assets (the dragon model and the four wordmark textures) load through this
@@ -33,11 +33,7 @@ export type SvgImage = { image: HTMLImageElement; aspect: number };
  * without width and height has no reliable natural size). A fetch through three's FileLoader, like SVGLoader's, so
  * both trees share one preloaded response.
  */
-class HeroSvgImageLoader extends THREE.Loader<SvgImage> {
-  constructor() {
-    super(heroLoadingManager);
-  }
-
+class SvgImageLoader extends THREE.Loader<SvgImage> {
   load(
     url: string,
     onLoad: (svg: SvgImage) => void,
@@ -64,6 +60,25 @@ class HeroSvgImageLoader extends THREE.Loader<SvgImage> {
       onError,
     );
   }
+}
+
+class HeroSvgImageLoader extends SvgImageLoader {
+  constructor() {
+    super(heroLoadingManager);
+  }
+}
+
+/**
+ * The Chinese wordmark and tagline (the language swap on a click, as on the original site), loaded off the hero's
+ * manager and after it: they never hold the loader. Resolves to [wordmark, tagline].
+ */
+let cnImages: Promise<SvgImage[]> | null = null;
+export function loadHeroCnSvgImages(): Promise<SvgImage[]> {
+  cnImages ??= Promise.all(HERO_CN_SVG_URLS.map((url) => new SvgImageLoader().loadAsync(url))).catch((error: unknown) => {
+    cnImages = null;
+    throw error;
+  });
+  return cnImages;
 }
 
 // The hero model is Meshopt-compressed (scripts/encode-hero-model.mjs): its decoder ships inside

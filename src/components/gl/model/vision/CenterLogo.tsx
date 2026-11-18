@@ -1,20 +1,25 @@
 'use client';
 
-import { useLogoTextures } from '@/hooks/useLogoTextures';
+import { useCnLogoTextures, useLogoTextures } from '@/hooks/useLogoTextures';
+import { useThrottle } from '@/hooks/useThrottle';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { Center } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { gsap } from 'gsap';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useAtom } from 'jotai';
-import { useEffect, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { INTRO, shouldSkipIntro } from './intro';
-import { EASE } from '@/motion/tokens';
+import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 import MergedSvg from './MergedSvg';
 
 const POINTER_DAMPING = 2.5;
+/** A click within this many ms of the last swap is ignored (the original's throttle). */
+const SWAP_THROTTLE_MS = 800;
+
+type Lang = 'en' | 'cn';
 /** Where the group sits at the top of the page (its z at scroll 0, as mounted). */
 const REST_Z = -5;
 
@@ -24,21 +29,56 @@ function DesktopCenterLogo() {
   const smootherRef = useRef(ScrollSmoother.get());
   const logoMeshRef = useRef<THREE.Mesh>(null);
   const descMeshRef = useRef<THREE.Mesh>(null);
-  // English only: a click used to swap the logo and tagline to Chinese (CON-12); the Chinese files are no longer loaded.
   const [globalLoaded] = useAtom(globalLoadedAtom);
   const hasAnimatedRef = useRef(false);
 
   // Use custom hook for texture management
   const { logoEnTexture, descEnTexture, logoEnAspectRatio, descEnAspectRatio } = useLogoTextures();
+  // A click on the wordmark swaps it and the tagline to Chinese and back (owner's answer 1A: as on his site). The
+  // Chinese pair loads once the hero is on screen, never with the loader.
+  const cn = useCnLogoTextures(globalLoaded);
+  const [lang, setLang] = useState<Lang>('en');
+  const showCn = lang === 'cn' && cn !== null;
 
   // Calculate optimal plane sizes based on current language aspect ratios
   const logoScale = 3.1; // Base scaling size
   const descScale = 0.25; // Description much smaller
 
-  const logoWidth = logoScale * logoEnAspectRatio;
+  const logoWidth = logoScale * (showCn ? cn.logoCnAspectRatio : logoEnAspectRatio);
   const logoHeight = logoScale;
-  const descWidth = descScale * descEnAspectRatio;
+  const descWidth = descScale * (showCn ? cn.descCnAspectRatio : descEnAspectRatio);
   const descHeight = descScale;
+
+  // The swap, as the original's: both planes fade out (DURATION.base), take the other language's texture and width,
+  // and fade back in. Under reduced motion the tokens read 0, so the click still swaps, at once.
+  const fadeTo = useCallback((next: Lang) => {
+    const materials = [logoMeshRef.current, descMeshRef.current]
+      .map((mesh) => mesh?.material as THREE.MeshBasicMaterial | undefined)
+      .filter((material): material is THREE.MeshBasicMaterial => !!material);
+    gsap.to(materials, {
+      opacity: 0,
+      duration: DURATION.base,
+      onComplete: () => {
+        setLang(next);
+        gsap.fromTo(materials, { opacity: 0 }, { opacity: 1, duration: DURATION.base });
+      },
+    });
+  }, []);
+  // A click before the Chinese files have arrived swaps as soon as they do.
+  const pendingRef = useRef<Lang | null>(null);
+  const langRef = useRef<Lang>('en');
+  const handleClick = useThrottle(() => {
+    const next: Lang = langRef.current === 'en' ? 'cn' : 'en';
+    langRef.current = next;
+    if (cn) fadeTo(next);
+    else pendingRef.current = next;
+  }, SWAP_THROTTLE_MS);
+  useEffect(() => {
+    if (!cn || !pendingRef.current) return;
+    const next = pendingRef.current;
+    pendingRef.current = null;
+    fadeTo(next);
+  }, [cn, fadeTo]);
 
   // Fade in animation when globalLoaded becomes true
   useEffect(() => {
@@ -108,38 +148,119 @@ function DesktopCenterLogo() {
 
   return (
     <group ref={groupRef} position={[0, 0, REST_Z]}>
-      {/* Logo Plane - Use correct aspect ratio */}
-      <Center>
+      {/* Logo Plane - Use correct aspect ratio; a click on it swaps the language (the tagline is not a target) */}
+      <Center onClick={handleClick}>
         <mesh ref={logoMeshRef}>
           <planeGeometry args={[logoWidth, logoHeight]} />
-          <meshBasicMaterial map={logoEnTexture} transparent opacity={0} side={THREE.FrontSide} />
+          <meshBasicMaterial map={showCn ? cn.logoCnTexture : logoEnTexture} transparent opacity={0} side={THREE.FrontSide} />
         </mesh>
       </Center>
       {/* Description Plane - Use correct aspect ratio */}
       <Center position={[0, -3.5, 0]}>
         <mesh ref={descMeshRef}>
           <planeGeometry args={[descWidth, descHeight]} />
-          <meshBasicMaterial map={descEnTexture} transparent opacity={0} side={THREE.FrontSide} />
+          <meshBasicMaterial map={showCn ? cn.descCnTexture : descEnTexture} transparent opacity={0} side={THREE.FrontSide} />
         </mesh>
       </Center>
     </group>
   );
 }
 
+/** Fades every material under `root` to `share` of its own fill opacity. */
+function fadeLockup(root: THREE.Object3D | null, share: number, delay: number) {
+  root?.traverse((object) => {
+    const material = (object as THREE.Mesh).material as THREE.MeshBasicMaterial | undefined;
+    if (!material || !('opacity' in material)) return;
+    const full = Number(material.userData?.fillOpacity ?? 1);
+    gsap.to(material, { opacity: full * share, duration: DURATION.base + DURATION.fast, delay });
+  });
+}
+
+/** The Chinese lockups, mounted (invisible) once the hero is on screen; `onReady` once their files have arrived. */
+function PhoneCnLockups({
+  logoRef,
+  descRef,
+  onReady,
+  onClick,
+}: {
+  logoRef: React.RefObject<THREE.Object3D | null>;
+  descRef: React.RefObject<THREE.Object3D | null>;
+  onReady: () => void;
+  onClick: () => void;
+}) {
+  useEffect(onReady, [onReady]);
+  return (
+    <>
+      <group onClick={onClick}>
+        <Center scale={0.7} position={[0, 0, -5]}>
+          <MergedSvg ref={logoRef} scale={0.025} src="/svgs/logo-cn.svg" opacity={0} />
+        </Center>
+      </group>
+      <Center position={[0, -2.6, 0]}>
+        <MergedSvg ref={descRef} scale={0.01} src="/svgs/main-description-cn.svg" opacity={0} />
+      </Center>
+    </>
+  );
+}
+
 /**
- * The phone wordmark and tagline, one mesh per fill colour each (MergedSvg). English only: the Chinese lockups were
- * drawn at opacity 0 (CON-12 retired the tap-to-switch) and still cost their draw calls; a /zh locale would swap the
- * src here instead.
+ * The phone wordmark and tagline, one mesh per fill colour each (MergedSvg). A tap on the wordmark's ink swaps both to
+ * Chinese and back (owner's answer 1A, as on his site: the old lockup fades out over 0.5 s while the other fades in
+ * after 0.3 s; the Chinese ones sit in the scene invisible and catch taps too, as on his site). The Chinese pair loads
+ * once the hero is on screen, never with the loader; under reduced motion the tokens read 0 and a tap swaps at once.
  */
 function PhoneCenterLogo() {
+  const [globalLoaded] = useAtom(globalLoadedAtom);
+  const enLogoRef = useRef<THREE.Object3D>(null);
+  const enDescRef = useRef<THREE.Object3D>(null);
+  const cnLogoRef = useRef<THREE.Object3D>(null);
+  const cnDescRef = useRef<THREE.Object3D>(null);
+  const langRef = useRef<Lang>('en');
+  const readyRef = useRef(false);
+  const pendingRef = useRef(false);
+
+  const swap = useCallback((next: Lang) => {
+    const [from, to] =
+      next === 'cn'
+        ? [
+            [enLogoRef, enDescRef],
+            [cnLogoRef, cnDescRef],
+          ]
+        : [
+            [cnLogoRef, cnDescRef],
+            [enLogoRef, enDescRef],
+          ];
+    from.forEach((ref) => fadeLockup(ref.current, 0, 0));
+    to.forEach((ref) => fadeLockup(ref.current, 1, DURATION.base));
+  }, []);
+  const onCnReady = useCallback(() => {
+    readyRef.current = true;
+    if (pendingRef.current) {
+      pendingRef.current = false;
+      swap(langRef.current);
+    }
+  }, [swap]);
+  const handleClick = useThrottle(() => {
+    langRef.current = langRef.current === 'en' ? 'cn' : 'en';
+    if (readyRef.current) swap(langRef.current);
+    else pendingRef.current = !pendingRef.current;
+  }, SWAP_THROTTLE_MS);
+
   return (
     <group>
-      <Center scale={0.7} position={[0, 0, -5]}>
-        <MergedSvg scale={0.06} src="/svgs/logo-en.svg" />
-      </Center>
+      <group onClick={handleClick}>
+        <Center scale={0.7} position={[0, 0, -5]}>
+          <MergedSvg ref={enLogoRef} scale={0.06} src="/svgs/logo-en.svg" />
+        </Center>
+      </group>
       <Center position={[0, -2.6, 0]}>
-        <MergedSvg scale={0.01} src="/svgs/main-description.svg" />
+        <MergedSvg ref={enDescRef} scale={0.01} src="/svgs/main-description.svg" />
       </Center>
+      {globalLoaded && (
+        <Suspense fallback={null}>
+          <PhoneCnLockups logoRef={cnLogoRef} descRef={cnDescRef} onReady={onCnReady} onClick={handleClick} />
+        </Suspense>
+      )}
     </group>
   );
 }

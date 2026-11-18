@@ -12,3 +12,9 @@ export const HERO_MODEL_URL = MODELS.hero;
  * with a fetch (three's FileLoader), so one preload serves either tree.
  */
 export const HERO_SVG_URLS = ['/svgs/logo-en.svg', '/svgs/main-description.svg'] as const;
+
+/**
+ * The Chinese wordmark and tagline that a click on the hero wordmark swaps to (as on the original site; the original's
+ * phone tree loads these same two files). Loaded once the hero is on screen, never by the loader.
+ */
+export const HERO_CN_SVG_URLS = ['/svgs/logo-cn.svg', '/svgs/main-description-cn.svg'] as const;

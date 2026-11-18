@@ -1,7 +1,7 @@
 import { useThree } from '@react-three/fiber';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
-import { type SvgImage, useHeroSvgImages } from '@/components/gl/heroAssets';
+import { loadHeroCnSvgImages, type SvgImage, useHeroSvgImages } from '@/components/gl/heroAssets';
 import { LOGO_PLANE_HEIGHT } from '@/components/gl/model/vision/heroFit';
 
 /**
@@ -32,17 +32,25 @@ function rasterise(svg: SvgImage, height: number) {
   return texture;
 }
 
+/** The wordmark texture's height in device pixels for the current drawing buffer (its 128 px bucket). */
+function useLogoTextureHeight() {
+  // Drawing-buffer height (CSS height x pixel ratio): the 128 px bucket is the dependency, not every resize.
+  const bufferHeight = useThree((state) => state.size.height * state.viewport.dpr);
+  return Math.min(MAX_TEXTURE, Math.ceil((PLANE_SHARE * bufferHeight) / BUCKET) * BUCKET);
+}
+
+const descHeightFor = (logoHeight: number) =>
+  Math.min(MAX_TEXTURE, (logoHeight * DESC_PLANE_HEIGHT * DESC_OVERSAMPLE) / LOGO_PLANE_HEIGHT);
+
 export function useLogoTextures() {
   const [logoEn, descEn] = useHeroSvgImages();
   const gl = useThree((state) => state.gl);
-  // Drawing-buffer height (CSS height x pixel ratio): the 128 px bucket is the dependency, not every resize.
-  const bufferHeight = useThree((state) => state.size.height * state.viewport.dpr);
-  const logoHeight = Math.min(MAX_TEXTURE, Math.ceil((PLANE_SHARE * bufferHeight) / BUCKET) * BUCKET);
+  const logoHeight = useLogoTextureHeight();
 
-  const textures = useMemo(() => {
-    const descHeight = Math.min(MAX_TEXTURE, (logoHeight * DESC_PLANE_HEIGHT * DESC_OVERSAMPLE) / LOGO_PLANE_HEIGHT);
-    return { logoEnTexture: rasterise(logoEn, logoHeight), descEnTexture: rasterise(descEn, descHeight) };
-  }, [logoEn, descEn, logoHeight]);
+  const textures = useMemo(
+    () => ({ logoEnTexture: rasterise(logoEn, logoHeight), descEnTexture: rasterise(descEn, descHeightFor(logoHeight)) }),
+    [logoEn, descEn, logoHeight],
+  );
 
   useEffect(() => {
     gl.initTexture(textures.logoEnTexture);
@@ -56,4 +64,47 @@ export function useLogoTextures() {
   }, [gl, textures]);
 
   return { ...textures, logoEnAspectRatio: logoEn.aspect, descEnAspectRatio: descEn.aspect };
+}
+
+/**
+ * The Chinese wordmark and tagline (the swap on a click), drawn the same way as the English ones, once `enabled` (the
+ * hero is on screen): null until their files have arrived.
+ */
+export function useCnLogoTextures(enabled: boolean) {
+  const gl = useThree((state) => state.gl);
+  const logoHeight = useLogoTextureHeight();
+  const [images, setImages] = useState<SvgImage[] | null>(null);
+  useEffect(() => {
+    if (!enabled) return;
+    let live = true;
+    loadHeroCnSvgImages()
+      .then((loaded) => live && setImages(loaded))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [enabled]);
+
+  const textures = useMemo(() => {
+    if (!images) return null;
+    const [logoCn, descCn] = images;
+    return {
+      logoCnTexture: rasterise(logoCn, logoHeight),
+      descCnTexture: rasterise(descCn, descHeightFor(logoHeight)),
+      logoCnAspectRatio: logoCn.aspect,
+      descCnAspectRatio: descCn.aspect,
+    };
+  }, [images, logoHeight]);
+
+  useEffect(() => {
+    if (!textures) return;
+    gl.initTexture(textures.logoCnTexture);
+    gl.initTexture(textures.descCnTexture);
+    return () => {
+      textures.logoCnTexture.dispose();
+      textures.descCnTexture.dispose();
+    };
+  }, [gl, textures]);
+
+  return textures;
 }
