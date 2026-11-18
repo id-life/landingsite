@@ -2,6 +2,7 @@ import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import BilingualText from '@/components/common/BilingualText';
 import AlternatingLogo from '@/components/nav/AlternatingLogo';
+import { alternatingMarks } from '@/components/nav/AlternatingMarks';
 import Logo from '@/components/nav/Logo';
 import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
@@ -103,11 +104,15 @@ export default function SiteHeader({
               Spectrum tool pages show the still lockup on the laptop deck and alternate on the phone deck; the
               podcast pages show the still wordmark on both. */}
           {overlay || currentId === 'news' ? (
-            <AlternatingLogo toggle={overlay} {...(overlay ? {} : trackNav(NAV.vision_page.id, 'logo'))} />
+            <AlternatingLogo
+              {...alternatingMarks()}
+              toggle={overlay}
+              {...(overlay ? {} : trackNav(NAV.vision_page.id, 'logo'))}
+            />
           ) : action === 'exit' ? (
             <>
               <Logo mark="cn" className="mobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
-              <AlternatingLogo className="notMobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
+              <AlternatingLogo {...alternatingMarks()} className="notMobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
             </>
           ) : (
             <Logo
