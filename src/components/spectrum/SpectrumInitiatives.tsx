@@ -242,7 +242,11 @@ function Initiative({
           )}
         >
           {/* Type roles (RWD-01): initiative title-sm, its Chinese name caption, the links body-sm. */}
-          <h2 className="bilingual-font text-[clamp(19px,1.6vw,30px)]/tight font-semibold text-white">{item.title}</h2>
+          {/* The laptop deck: the original's clamp. The phone deck: its 19 px in the deck's unit, so an upright tablet
+              draws it at the same factor as every other text of the deck. */}
+          <h2 className="bilingual-font text-[clamp(19px,1.6vw,30px)]/tight font-semibold text-white mobile:text-[1.1875rem]">
+            {item.title}
+          </h2>
           <p className={cn('bilingual-font text-sm/5 font-medium text-white/65', layout === 'columns' && 'mt-2')}>
             {item.titleCn}
           </p>
