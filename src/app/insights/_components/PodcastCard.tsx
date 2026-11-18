@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { STORAGE_KEY } from '@/constants/storage';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
 
 type PodcastCardProps = {
@@ -15,17 +14,16 @@ type PodcastCardProps = {
  * of the title alone fails WCAG 2.5.3, label in name, as on the news cards).
  * No prefetch: the cards sit in a section the visitor may never reach, and each prefetch is a request on the hero.
  */
-export function PodcastCard({ item, isMobile = false }: PodcastCardProps) {
-  // Same tab: the episode page is part of this site. On the phone, mark the return page so Back restores Insights.
-  const onNavigate = () => {
-    if (isMobile) sessionStorage.setItem(STORAGE_KEY.MOBILE_RETURN_PAGE, 'insights_page');
-  };
+export function PodcastCard({ item }: PodcastCardProps) {
+  // A new tab, as on the owner's site (his answer of 2026-11-18, "open new tab", reverses wave 0's same-tab episode
+  // links); rel noopener noreferrer, which his window.open lacked. Insights stays where it was, so no return mark.
 
   return (
     <Link
       href={`/podcast/${item.id}`}
       prefetch={false}
-      onClick={onNavigate}
+      target="_blank"
+      rel="noopener noreferrer"
       className="podcast-card-clip group relative block bg-white p-0.5"
     >
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">

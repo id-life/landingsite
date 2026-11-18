@@ -27,7 +27,8 @@ export default async function PodcastList(props: PodcastListProps) {
   return (
     <div className="grid gap-12 mobile:gap-9">
       {list.map((item) => (
-        <Link className="overflow-hidden" key={item.id} href={`/podcast/${item.id}`}>
+        // A new tab, as on the owner's site (his answer of 2026-11-18, "open new tab"); his links lacked noopener.
+        <Link className="overflow-hidden" key={item.id} href={`/podcast/${item.id}`} target="_blank" rel="noopener noreferrer">
           <PodcastListItem key={item.id} data={item} />
         </Link>
       ))}
