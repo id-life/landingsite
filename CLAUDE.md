@@ -35,19 +35,20 @@ Each job is its own status check. Run the same commands locally before pushing.
 
 **Pages:**
 
-- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast, about
+- home, portfolio, insights, spectrum, presence, digitaltwin, connect (the seven experience sections), news, podcast
 
 - `/` and the six section URLs render the same client-only experience (`src/app/(home)/_components/HomeEntry.tsx`);
   the URL selects the section. Section layouts carry metadata, JSON-LD and the server-rendered summary.
 - `src/app/(experience)/spectrum` is the Spectrum section; `src/app/(content)/spectrum/disease-management` and
   `influence-network` are standalone tool pages with their own layout (no experience nav).
-- `/about` (CON-01): the fund profile as visible server-rendered text from the content layer, in the content pages'
-  header and footer. `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
+- There is no `/about` (the owner removed it, 2026-11-18): it answers 404 like any unknown address.
+  `src/app/content-review/page.preview.tsx` is the owner's draft review page: a route only in
   non-production builds (`pageExtensions` in `next.config.mjs`), noindex, linked from nowhere.
 - `/news`, `/news/[id]` and two fixed articles; `/podcast` and `/podcast/long-talk` (the two shows, static with ISR;
   `/podcast?c=lt` answers 308 from `src/proxy.ts`, as do any other `?c=` (to `/podcast`) and leading-zero ids such
   as `/podcast/056`) and `/podcast/[id]`. Unknown ids return 404. The retired `/vision`, `/value` and `/mission` answer
-  308 to `/presence`, `/connect` and `/` (`redirects()` in `next.config.mjs`).
+  308 to `/presence`, `/connect` and `/` (`redirects()` in `next.config.mjs`). `/podcast/rss` answers 307 to the main show's
+  hosted feed, which the show and its episodes also name in the head (`PODCAST_FEED_URL`, `podcast/_components/constant.ts`).
 - Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
   `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
   `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,

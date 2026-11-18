@@ -78,12 +78,10 @@ export const FundFacts = z.object({
   }),
   founder: slug,
   fundSize: Fact,
-  stage: Fact,
   geography: Fact,
   lpPositions: Fact,
   /** The owner's own wording of the investment count ('15+'); the computed count comes from the portfolio. */
   statedInvestments: Fact,
-  foundingYear: Fact,
   // The Fund I launch month has no single published value (2025-07-16 release vs August 2025 in the milestones
   // article): it exists only as a draft (src/content/drafts/fund.ts) until the owner rules (CON-11 #1).
   /** Organization description used by metadata and JSON-LD (six areas; ruling pending on four themes vs six). */
@@ -222,6 +220,8 @@ export const PageMeta = z.object({
   /** The canonical path, e.g. '/portfolio'. */
   path: z.string().regex(/^\/[a-z0-9/-]*$/, 'expected a root-relative path'),
   title: z.string().min(1),
+  /** The browser tab title (and og:title) exactly as the owner's site has it (question 5i, 2026-11-18). */
+  tabTitle: z.string().min(1),
   description: z.string().min(1),
   /** The link text of the route in llms.txt's Pages list; absent leaves the route out of that list. */
   llmsLabel: z.string().min(1).optional(),

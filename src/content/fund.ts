@@ -30,11 +30,6 @@ export const FUND: FundFacts = {
     asOf: '2025-07-16',
     approval: live(),
   },
-  stage: {
-    label: { en: 'Investment stage', zh: '投资阶段' },
-    value: { en: 'pre-seed to Series A', zh: '前种子轮至A轮' },
-    approval: live('stage'),
-  },
   geography: {
     label: { en: 'Geography' },
     value: { en: 'geographically agnostic', zh: '不限地域' },
@@ -48,18 +43,13 @@ export const FUND: FundFacts = {
   statedInvestments: {
     label: { en: 'Investments', zh: '投资数量' },
     value: { en: '15+', zh: '15余项' },
-    approval: live('portfolioCount'),
-  },
-  foundingYear: {
-    label: { en: 'Founded' },
-    value: { en: '2024' },
-    approval: live('foundingYear'),
+    approval: live(),
   },
   description: {
     text: {
       en: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore. Its investment themes include replacement strategy, 3D bioprinting, gene therapy, artificial womb, longevity special economic zones, and LP positions in other long-bio funds. Beyond conventional capital investment, Immortal Dragons also engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects.',
     },
-    approval: live('themes'),
+    approval: live(),
   },
   statement: {
     text: { en: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore.' },

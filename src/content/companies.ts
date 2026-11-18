@@ -41,7 +41,7 @@ export const COMPANIES: Company[] = [
     tagline: { en: 'Stealth mode biotech' },
     logo: '/imgs/investments/r3.webp',
     logoAlt: 'R3 Bio logo - Stealth mode biotech',
-    approval: live('r3Bio'),
+    approval: live(),
   },
   {
     slug: 'immune-bridge',

@@ -7,11 +7,11 @@ import { markdownRehypePlugins, markdownRemarkPlugins, remarkTimeline } from '@/
 import '@/styles/components/markdown-timeline.css';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
-import { PODCAST_COVER, PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
+import { PODCAST_COVER, PODCAST_NAV_LIST, podcastFeedAlternate } from '@/app/podcast/_components/constant';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
-import { buildMetadata } from '@/lib/seo/metadata';
+import { buildMetadata, NOT_FOUND_TITLE } from '@/lib/seo/metadata';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
@@ -54,19 +54,23 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
   const data = await getCachePodcastDetail(id);
   if (!data) {
     return {
-      title: { absolute: 'Episode not found | Immortal Dragons' },
+      title: { absolute: NOT_FOUND_TITLE },
       description: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Biopolis, Singapore.',
     };
   }
 
-  // The full show notes stay on the page; the meta description is cut at a sentence end (SEO-06).
-  return buildMetadata({
+  // The meta description is the episode's own notes, whole, as the owner's site serves them (2026-11-18).
+  const metadata = buildMetadata({
     path: `/podcast/${canonicalId(id)}`,
     title: data.title,
     description: data.description,
-    image: data.detailMedia || data.album,
+    // The episode's own picture, as his site declares it; none when it has none (no fallback to the show's).
+    image: data.detailMedia || null,
     type: 'article',
   });
+  // An episode of the main show names the show's feed, as the show page does (question 22).
+  const types = podcastFeedAlternate(categoryOf(data));
+  return types ? { ...metadata, alternates: { ...metadata.alternates, types } } : metadata;
 }
 
 export default async function PodcastContentPage(props: PodcastPlayerProps) {

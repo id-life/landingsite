@@ -145,10 +145,11 @@ export const spectrumBaseData: SpectrumItemData[] = SPECTRUM_GROUPS.map(({ id, t
 export const getSpectrumJsonLd = (): WithContext<CollectionPage> => ({
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
+  // The name and description his site serves here, word for word (2026-11-18: what his site serves stays).
   name: 'IMMORTAL DRAGONS Spectrum - Longevity Initiatives',
   url: absoluteUrl('/spectrum'),
   description:
-    "Immortal Dragons' variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
+    "Immortal Dragon's variety of longevity initiatives including translation, publishing, research papers, reviews, sponsorships, and digital twin projects.",
   hasPart: spectrumBaseData.map((item) => ({
     '@type': 'WebPageElement',
     name: `${item.title} (${item.titleCn})`,

@@ -11,7 +11,7 @@ import { playMenuItems } from '@/motion/menu';
 import { getSectionState, goToSection } from '@/motion/sectionController';
 import { useRouter } from 'next/navigation';
 import { useEffect, type MouseEvent } from 'react';
-import { ABOUT_LINK, isPlainClick, isSection, SITE_NAV } from './site-nav';
+import { isPlainClick, isSection, SITE_NAV } from './site-nav';
 import SubscribeTrigger from './SubscribeTrigger';
 
 const ITEM = 'flex-center mobile-nav-item relative py-6 text-white opacity-0 [@media(max-height:740px)]:py-4';
@@ -42,7 +42,7 @@ export default function SiteMenu({
 
   // Navigation starts on the tap; the menu's exit animation runs at the same time (it used to wait 600 ms, and a
   // tap during a theme transition was dropped).
-  const onItem = (event: MouseEvent<HTMLAnchorElement>, item: (typeof SITE_NAV)[number] | typeof ABOUT_LINK) => {
+  const onItem = (event: MouseEvent<HTMLAnchorElement>, item: (typeof SITE_NAV)[number]) => {
     if (!isPlainClick(event)) return;
     event.preventDefault();
     playMenuItems('.mobile-nav-item', false);
@@ -103,9 +103,9 @@ function MenuLink({
   current,
   onClick,
 }: {
-  item: (typeof SITE_NAV)[number] | typeof ABOUT_LINK;
+  item: (typeof SITE_NAV)[number];
   current: boolean;
-  onClick: (event: MouseEvent<HTMLAnchorElement>, item: (typeof SITE_NAV)[number] | typeof ABOUT_LINK) => void;
+  onClick: (event: MouseEvent<HTMLAnchorElement>, item: (typeof SITE_NAV)[number]) => void;
 }) {
   return (
     <a href={item.href} aria-current={current ? 'page' : undefined} onClick={(event) => onClick(event, item)} className={ITEM}>

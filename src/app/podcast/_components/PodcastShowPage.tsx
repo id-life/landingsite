@@ -3,7 +3,13 @@ import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
 import PodcastList from '@/app/podcast/_components/PodcastList';
 import PodcastCover from '@/app/podcast/_components/PodcastCover';
-import { PODCAST_COVER, PODCAST_NAV_LIST, PODCAST_PAGE_ID, PodcastCategory } from '@/app/podcast/_components/constant';
+import {
+  PODCAST_COVER,
+  PODCAST_NAV_LIST,
+  PODCAST_PAGE_ID,
+  PodcastCategory,
+  podcastFeedAlternate,
+} from '@/app/podcast/_components/constant';
 import { pageMeta } from '@/content/pages';
 import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
 import { podcastSeriesJsonLd } from '@/app/podcast/_components/jsonLd';
@@ -14,8 +20,16 @@ const navOf = (category: PodcastCategory) => PODCAST_NAV_LIST.find((item) => ite
 
 /** Each show has its own path (/podcast, /podcast/long-talk), so each page is static and its own canonical. */
 export function podcastShowMetadata(category: PodcastCategory): Metadata {
-  const { title, description } = pageMeta(PODCAST_PAGE_ID[category]);
-  return buildMetadata({ path: navOf(category).link, title, description, image: PODCAST_COVER[category].cover });
+  const { title, tabTitle, description } = pageMeta(PODCAST_PAGE_ID[category]);
+  const metadata = buildMetadata({
+    path: navOf(category).link,
+    title,
+    tabTitle,
+    description,
+    image: PODCAST_COVER[category].cover,
+  });
+  const types = podcastFeedAlternate(category);
+  return types ? { ...metadata, alternates: { ...metadata.alternates, types } } : metadata;
 }
 
 async function seriesJsonLd(category: PodcastCategory) {

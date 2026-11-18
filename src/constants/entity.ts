@@ -6,17 +6,18 @@ import { FUND_PRESS } from '@/content/press';
 import { THEMES } from '@/content/themes';
 import { SITE_URL, absoluteUrl } from '@/constants/site';
 
-// JSON-LD builders for the Immortal Dragons entity. The facts come from the content layer (src/content/fund.ts),
-// which llms.txt and the About page read too, so the copies cannot drift apart.
+// JSON-LD builders for the Immortal Dragons entity. The facts come from the content layer (src/content/fund.ts).
+// What the owner's site itself serves here stays word for word (2026-11-18), except the facts he ruled out that day:
+// no founding or launch date (questions 12a and 12b).
 
 export const ORG_ID = `${SITE_URL}/#org`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 export const ORG_NAME = FUND.name.en;
 export const ORG_ALTERNATE_NAME = FUND.name.zh;
-export const ORG_LEGAL_NAME = FUND.legalName.value.en;
+const ORG_LEGAL_NAME = FUND.legalName.value.en;
 export const ORG_EMAIL = FUND.email;
-export const ORG_LOGO = 'https://resources.id.life/logo.png';
+const ORG_LOGO = 'https://resources.id.life/logo.png';
 export const ORG_COVER = 'https://resources.id.life/id-life-cover-2.webp';
 
 export const ORG_DESCRIPTION = FUND.description.text.en;
@@ -44,12 +45,16 @@ export const ORG_SAME_AS = [
   Links[MediaLinkType.Wechat],
 ];
 
-/** Press coverage about the organization, for Organization.subjectOf. */
+/**
+ * Press coverage about the organization, for Organization.subjectOf, as the owner's site serves it, except the date of
+ * the launch release: no launch date is stated in hidden data (owner, 2026-11-18, question 12a). The launch release is
+ * the one dated as the fund size's source (src/content/fund.ts, fundSize.asOf).
+ */
 export const ORG_PRESS = FUND_PRESS.map(({ title, source, url, date }) => ({
   '@type': 'NewsArticle' as const,
   headline: title,
   url,
-  ...(date && { datePublished: date }),
+  ...(date && date !== FUND.fundSize.asOf && { datePublished: date }),
   publisher: { '@type': 'Organization' as const, name: source },
 }));
 
@@ -74,7 +79,6 @@ export const ORGANIZATION: Exclude<Organization, string> = {
   image: ORG_COVER,
   description: ORG_DESCRIPTION,
   email: ORG_EMAIL,
-  foundingDate: FUND.foundingYear.value.en,
   founder: {
     '@type': 'Person',
     name: FOUNDER.name.en,

@@ -4,8 +4,10 @@ import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
 import ExperienceRouter from '@/components/common/ExperienceRouter';
 import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/styles/fonts';
+import { color } from '@/styles/tokens';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo/metadata';
 import { ANALYTICS_ENABLED } from '@/constants/env';
 import HeadScript from '@/lib/analytics/HeadScript';
 import { AnalyticsBootLazy, VercelInsightsLazy } from '@/lib/analytics/lazy';
@@ -26,19 +28,18 @@ export const metadata: Metadata = {
       'baidu-site-verification': 'codeva-3t6o5pvEVk',
     },
   },
-  // Defaults for pages without their own metadata (error pages). Routes build theirs with src/lib/seo/metadata.ts:
-  // one language per title, no keywords (SEO-06).
-  title: { default: 'Immortal Dragons', template: '%s | Immortal Dragons' },
-  description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
+  // Defaults for pages without their own metadata (error pages). The description is the one the owner's site serves
+  // by default, word for word (question 12g). Routes build theirs with src/lib/seo/metadata.ts:
+  // the owner's tab titles, no keywords (SEO-06).
+  title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons' },
+  description: ORG_DESCRIPTION,
   openGraph: {
-    title: 'Immortal Dragons',
+    title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
-    description: ORG_DESCRIPTION.slice(0, ORG_DESCRIPTION.indexOf('.') + 1),
-    images: [
-      {
-        url: 'https://resources.id.life/id-life-cover-2.webp',
-      },
-    ],
+    description: ORG_DESCRIPTION,
+    // The owner's cover as the link-preview image (src/lib/seo/metadata.ts); pages without metadata of their own
+    // get it too, as on his site.
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -46,6 +47,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  // The phone browser bar in the site's own colour (question 9): tone-100 (#f0f0f0), the page background (--background) and the
+  // header (--nav) of the first screen and the content pages.
+  themeColor: color['tone-100'],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

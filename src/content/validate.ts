@@ -12,7 +12,6 @@ import { FEED_OVERRIDES } from './overrides';
 import { PAGES } from './pages';
 import { PEOPLE } from './people';
 import { PRESS } from './press';
-import { PROFILE_TEXT } from './profile';
 import {
   Book,
   Company,
@@ -49,7 +48,6 @@ export const CONTENT_ENTRIES: ContentEntry[] = [
   ['content/initiatives.ts#books', z.array(Book), BOOKS],
   ['content/initiatives.ts#labs', z.array(Lab), LABS],
   ['content/initiatives.ts#papers', z.array(Paper), PAPERS],
-  ['content/profile.ts', z.array(Copy), PROFILE_TEXT],
   ['content/pages.ts', z.array(PageMeta), PAGES],
   ['content/slogans.ts', z.array(Slogan), SLOGANS],
   ['content/connect.ts#values', z.array(Copy), CONNECT_VALUES],

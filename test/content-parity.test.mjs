@@ -25,7 +25,6 @@ const PENDING_OWNER_RULING = {
 /** Different spellings of the same name across the copies (also an owner ask: pick one). */
 const SAME_NAME = {
   'Kind Biotechnology（KindBio）': 'KindBio',
-  'Healthy Longevity and Medicine Conference': 'Health Longevity and Medicine Conference',
 };
 
 const key = (name) =>
@@ -69,12 +68,21 @@ describe('portfolio', () => {
     expect(portfolioMarkdownLines()).toHaveLength(portfolio.length);
   });
 
-  test('every stated investment count is a lower bound the portfolio meets', () => {
-    const stated = [...`${LLMS_HEADER}\n${LLMS_CHINESE_SUMMARY}\n${profile}`.matchAll(/(\d+)\s*(?:\+|余项)/g)].map((m) =>
-      Number(m[1]),
-    );
+  // The owner, 2026-11-18 (question 12f): where a count is stated, it is 16, the portfolio.
+  test('every stated investment count is the portfolio count', () => {
+    const text = `${LLMS_HEADER}\n${LLMS_CHINESE_SUMMARY}\n${profile}`;
+    const stated = [...text.matchAll(/(\d+)\s*(?:\+|余项|项投资|项\s*\|)/g)].map((m) => Number(m[1]));
     expect(stated.length).toBeGreaterThan(0);
-    for (const n of stated) expect(n).toBeLessThanOrEqual(portfolio.length);
+    for (const n of stated) expect(n).toBe(portfolio.length);
+    expect(text).not.toMatch(/15\s*(?:\+|余项)/);
+  });
+});
+
+describe("llms.txt's Chinese summary", () => {
+  test("is the article's own 概述 paragraphs, word for word", async () => {
+    const { ARTICLE_SUMMARY_ZH } = await import('@/content/profile');
+    for (const paragraph of ARTICLE_SUMMARY_ZH) expect(profile).toContain(paragraph);
+    for (const paragraph of ARTICLE_SUMMARY_ZH) expect(LLMS_CHINESE_SUMMARY).toContain(paragraph);
   });
 });
 
@@ -94,32 +102,29 @@ describe('sponsored bodies', () => {
   });
 });
 
-// CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description, and a description continued with a
-// page's own text quotes that text word for word.
+// CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description; every description is the owner's own,
+// as his site serves it (2026-11-18), word for word.
 describe('page descriptions', async () => {
-  const { ARTICLE_OPENINGS, DISEASE_MANAGEMENT_HEADINGS, PAGES, metaDescription } = await import('@/content/pages');
-  const { diseaseManagementStatusItems } = await import('@/constants/disease-management');
-  const flat = (text) => text.replace(/\\([._-])/g, '$1').replace(/\s+/g, ' ');
+  const { PAGES, metaDescription } = await import('@/content/pages');
+  const HIS = {
+    portfolio:
+      "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
+    spectrum:
+      "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
+    presence:
+      "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
+    news: "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
+    'article-profile': '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。',
+  };
 
-  test("every Pages line of llms.txt is that page's meta description", () => {
+  test("llms.txt's Pages list is the owner's, without /about", () => {
     const lines = [...llmsSection('Pages').matchAll(/^- \[([^\]]+)\]\(https:\/\/www\.id\.life([^)]*)\): (.*)$/gm)];
-    const listed = PAGES.filter((page) => page.llmsLabel);
-    expect(lines.map((m) => m[2])).toEqual(listed.map((page) => page.path));
-    for (const [, , path, line] of lines) expect(line).toBe(metaDescription(PAGES.find((page) => page.path === path)));
-    expect(lines.map((m) => m[2])).toContain('/about');
+    expect(lines).toHaveLength(13);
+    expect(lines.map((m) => m[2])).not.toContain('/about');
   });
 
-  test("the article openings are the articles' own first paragraphs", () => {
-    for (const [slug, key] of [
-      ['immortal-dragons-news-and-updates', 'profile'],
-      ['immortal-dragons-milestones-and-portfolio', 'milestones'],
-    ]) {
-      const md = flat(readFileSync(`src/content/articles/${slug}.md`, 'utf8'));
-      expect(md).toContain(flat(ARTICLE_OPENINGS[key]));
-    }
-  });
-
-  test("the Disease Management headings are the page's own", () => {
-    expect(DISEASE_MANAGEMENT_HEADINGS).toEqual(diseaseManagementStatusItems.map((item) => item.title));
+  test("the descriptions are the owner's own, word for word and uncut", () => {
+    for (const [id, text] of Object.entries(HIS)) expect(PAGES.find((page) => page.id === id).description, id).toBe(text);
+    for (const page of PAGES) expect(metaDescription(page)).toBe(page.description);
   });
 });

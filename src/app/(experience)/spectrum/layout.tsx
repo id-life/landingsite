@@ -14,7 +14,7 @@ const PAGE = pageMeta('spectrum');
 const PAGE_TITLE = 'Spectrum 谱系';
 const PAGE_DESCRIPTION = PAGE.description;
 
-// Title "<topic> | Immortal Dragons" in one language, og:title without the brand, no keywords (SEO-06).
+// The owner's own tab title (src/content/pages.ts tabTitle), og:title the same, no keywords (SEO-06).
 export const metadata: Metadata = buildMetadata(PAGE);
 
 export default function SpectrumLayout({ children }: { children: ReactNode }) {

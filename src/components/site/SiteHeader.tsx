@@ -26,7 +26,7 @@ type Variant = 'overlay' | 'solid';
 const SECTION_NAV = SITE_NAV.filter(isSection);
 export type SiteHeaderProps = {
   variant: Variant;
-  /** The navigation item of the page in view (a section id, 'news', 'podcast' or 'about'), or null. */
+  /** The navigation item of the page in view (a section id, 'news' or 'podcast'), or null. */
   currentId: string | null;
   /** 'page' when the item is this page; 'true' when the page sits under it (the Spectrum tool pages). */
   currentKind?: 'page' | 'true';

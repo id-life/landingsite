@@ -7,6 +7,7 @@ export default function PortfolioSEO() {
   return (
     <>
       <section className="sr-only" aria-label="Portfolio Companies">
+        {/* His site's own heading for this summary, word for word. */}
         <h1>Immortal Dragons Investment Portfolio</h1>
         <ul>
           {portfolio.map((item) => (

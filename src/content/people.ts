@@ -9,7 +9,7 @@ export const PEOPLE: Person[] = [
     name: { en: 'Boyang Wang', zh: '朢舶洋' },
     role: { en: 'Founder', zh: '创始人' },
     alumniOf: ['National University of Singapore', 'Yale University'],
-    approval: live('founders'),
+    approval: live(),
   },
 ];
 

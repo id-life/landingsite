@@ -8,17 +8,17 @@ export const HOME_DRAFTS = defineDrafts('home.ts', [
     item: 'CON-05',
     title: 'Home: one sentence that says what the fund invests in',
     body: {
-      en: 'Immortal Dragons is a Singapore longevity fund backing moonshot replacement, neuro, gene and reproductive technologies from pre-seed to Series A.',
-      zh: '不朽真龙是总部位于新加坡的长寿基金，从种子前到 A 轮投资替换、神经、基因与生殖等登月型技术。',
+      en: 'Immortal Dragons is a Singapore longevity fund backing moonshot replacement, neuro, gene and reproductive technologies.',
+      zh: '不朽真龙是总部位于新加坡的长寿基金，投资替换、神经、基因与生殖等登月型技术。',
     },
     approval: {
       status: 'draft',
       replaces: 'Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore.',
       sources: [
         { ref: 'master-plan CON-05 proposal (draft sentence, en and zh)' },
-        { ref: 'src/content/themes.ts (the four themes); src/content/fund.ts (stage)' },
+        { ref: 'src/content/themes.ts (the four themes)' },
       ],
-      questions: ['Approve the sentence; it names the stage, which waits on CON-11 #10 (pre-seed or seed).'],
+      questions: ['Approve the sentence.'],
     },
   },
   {

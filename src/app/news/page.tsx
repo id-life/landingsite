@@ -23,6 +23,8 @@ function generateNewsJsonLd(news: NewsPageItem[]): WithContext<ItemList> {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
+    // His site's own name, description and count of the list, as his site serves them (the count is the list's own
+    // length, not a fact he ruled on).
     name: 'Immortal Dragons News',
     description: 'Latest news and insights from Immortal Dragons',
     url: 'https://www.id.life/news',

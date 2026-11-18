@@ -48,16 +48,15 @@ export const CONNECT_CRITERIA: CopyList = {
   title: { en: 'Promising Early-Stage Ventures', zh: '聚焦早期企业投资' },
   items: [
     {
-      en: 'Partnering with Pre-Seed to Series-A startups under $100m valuations.',
-      zh: '与估值1亿美元以下的种子轮至A轮企业合作',
+      en: 'Partnering with startups under $100m valuations.',
+      zh: '与估值1亿美元以下的企业合作',
     },
     {
       en: 'Prioritizing talents, bold visions and impactful human benefits.',
       zh: '重点关注优秀人才、远大愿景和积极的社会影响',
     },
   ],
-  // The Chinese line says 种子轮 (seed) where the English and the profile say pre-seed (CON-11 #10).
-  approval: live('stage'),
+  approval: live(),
 };
 
 export const CONNECT_STRENGTHS: Copy[] = [

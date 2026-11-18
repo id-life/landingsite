@@ -16,7 +16,6 @@ export const revalidate = 3600;
 // the sitemap's dates. `changeFrequency` / `priority` are omitted because Google ignores them.
 const STATIC_PATHS = [
   '/',
-  '/about',
   '/portfolio',
   '/spectrum',
   '/spectrum/disease-management',

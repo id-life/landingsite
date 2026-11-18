@@ -1,50 +1,26 @@
-// Each route's metadata topic and meta description (SEO-06 rules in src/lib/seo/metadata.ts). The layouts pass these
-// to buildMetadata and their JSON-LD, and llms.txt's Pages list quotes the same descriptions through metaDescription(),
-// the cut buildMetadata applies, so the two cannot drift (CON-16). Every description is the page's live meta
-// description at the baseline, with two punctuation corrections (CON-20): the fund's possessive on Spectrum (the
-// apostrophe sat before the s) and a missing comma before "bridging" on Presence. Where the baseline description is
-// under SEO-06's floor (35 Chinese or 70 Latin characters), it continues with text the same page already publishes
-// (named beside each record; test/content-parity.test.mjs checks it word for word), never with new copy.
+// Each route's metadata topic, tab title and meta description. The layouts pass these to buildMetadata and their
+// JSON-LD and server summaries. (llms.txt keeps its own Pages list, as the owner's file has it: src/content/profile.ts.) Every description is the one the owner's site serves for that page, word for word and uncut
+// (2026-11-18: a description his site serves is text he put on his website, so it stays as it is).
 import { live } from './approval';
 import { FUND } from './fund';
 import type { PageMeta } from './schema';
-import { snippet } from '@/lib/seo/metadata';
-
-/**
- * The opening paragraph of each long article (src/content/articles/*.md), as published there: the article's own words
- * continue its summary, which alone is 29 and 34 characters.
- */
-export const ARTICLE_OPENINGS = {
-  profile:
-    '不朽真龙基金（Immortal Dragons）是一家总部位于新加坡、投资激进延寿领域、规模4000万美元的使命驱动基金，由朢舶洋（Boyang Wang）创立。',
-  milestones: '不朽真龙宣布设立 4000 万美元首期基金，投向生命延长（life extension）相关技术。',
-} as const;
-
-/** The headings the Disease Management page shows above its two tables (src/constants/disease-management.ts). */
-export const DISEASE_MANAGEMENT_HEADINGS = ['How Many Diseases Are Curable?', 'How Many Rare Diseases Are Manageable?'];
 
 export const PAGES: PageMeta[] = [
   {
-    // The home title is the brand alone; the description is the fund's one-sentence statement.
     id: 'home',
     path: '/',
     title: FUND.name.en,
-    description: FUND.statement.text.en,
+    tabTitle: 'Immortal Dragons 不朽真龙',
+    // His site's own description, word for word (question 12g: the focus text stays as his site serves it).
+    description: FUND.description.text.en,
     llmsLabel: 'Home',
-    approval: live(),
-  },
-  {
-    id: 'about',
-    path: '/about',
-    title: 'About',
-    description: FUND.statement.text.en,
-    llmsLabel: 'About',
     approval: live(),
   },
   {
     id: 'portfolio',
     path: '/portfolio',
     title: 'Portfolio',
+    tabTitle: 'Portfolio 投资',
     description:
       "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
     llmsLabel: 'Portfolio',
@@ -54,8 +30,9 @@ export const PAGES: PageMeta[] = [
     id: 'spectrum',
     path: '/spectrum',
     title: 'Spectrum',
+    tabTitle: 'Spectrum 谱系',
     description:
-      "Explore Immortal Dragons' variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
+      "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
     llmsLabel: 'Spectrum',
     approval: live(),
   },
@@ -63,8 +40,8 @@ export const PAGES: PageMeta[] = [
     id: 'disease-management',
     path: '/spectrum/disease-management',
     title: 'Disease Management & Cure Status',
-    // Continues with the page's two table headings.
-    description: `可治疗与可控制疾病列表 A list of curable and manageable diseases. ${DISEASE_MANAGEMENT_HEADINGS.join(' ')}`,
+    tabTitle: 'Disease Management & Cure Status | Immortal Dragons',
+    description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
     llmsLabel: 'Disease Management',
     approval: live(),
   },
@@ -72,6 +49,7 @@ export const PAGES: PageMeta[] = [
     id: 'influence-network',
     path: '/spectrum/influence-network',
     title: 'Influence Network',
+    tabTitle: 'Influence Network | Immortal Dragons',
     description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
     llmsLabel: 'Influence Network',
     approval: live(),
@@ -80,6 +58,7 @@ export const PAGES: PageMeta[] = [
     id: 'digitaltwin',
     path: '/digitaltwin',
     title: 'Digital Twin',
+    tabTitle: 'DigitalTwin 孪生',
     description:
       'Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.',
     llmsLabel: 'Digital Twin',
@@ -89,8 +68,9 @@ export const PAGES: PageMeta[] = [
     id: 'presence',
     path: '/presence',
     title: 'Presence',
+    tabTitle: 'Presence 印记',
     description:
-      "A global map of Immortal Dragons' presence, bridging East and West to advance longevity through events, partnerships, and community.",
+      "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
     llmsLabel: 'Presence',
     approval: live(),
   },
@@ -98,6 +78,7 @@ export const PAGES: PageMeta[] = [
     id: 'insights',
     path: '/insights',
     title: 'Insights',
+    tabTitle: 'Insights 洞见',
     description:
       'Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.',
     llmsLabel: 'Insights',
@@ -107,6 +88,7 @@ export const PAGES: PageMeta[] = [
     id: 'news',
     path: '/news',
     title: 'News',
+    tabTitle: 'News 新闻 | Immortal Dragons',
     description:
       "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
     llmsLabel: 'News',
@@ -117,6 +99,7 @@ export const PAGES: PageMeta[] = [
     id: 'podcast',
     path: '/podcast',
     title: '播客',
+    tabTitle: 'Podcast 播客 | Immortal Dragons 不朽真龙',
     description:
       '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
     llmsLabel: 'Podcast',
@@ -126,6 +109,7 @@ export const PAGES: PageMeta[] = [
     id: 'podcast-long-talk',
     path: '/podcast/long-talk',
     title: '龙门阵',
+    tabTitle: '龙门阵 Long Talk Podcast | Immortal Dragons',
     description:
       '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
     llmsLabel: 'Long Talk Podcast',
@@ -135,6 +119,7 @@ export const PAGES: PageMeta[] = [
     id: 'connect',
     path: '/connect',
     title: 'Connect',
+    tabTitle: 'CONNECT 联结',
     description:
       "Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.",
     llmsLabel: 'Connect',
@@ -145,8 +130,8 @@ export const PAGES: PageMeta[] = [
     id: 'article-profile',
     path: '/news/immortal-dragons-news-and-updates',
     title: '不朽真龙介绍',
-    // Continues with the article's opening paragraph.
-    description: `介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。${ARTICLE_OPENINGS.profile}`,
+    tabTitle: 'Immortal Dragons News and Updates',
+    description: '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。',
     llmsLabel: '不朽真龙介绍',
     approval: live(),
   },
@@ -154,19 +139,19 @@ export const PAGES: PageMeta[] = [
     id: 'article-milestones',
     path: '/news/immortal-dragons-milestones-and-portfolio',
     title: '不朽真龙公司资讯',
-    // Continues with the article's opening paragraph.
-    description: `不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。${ARTICLE_OPENINGS.milestones}`,
+    tabTitle: 'Immortal Dragons: Milestones and Portfolio',
+    description: '不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。',
     llmsLabel: 'Immortal Dragons: Milestones and Portfolio',
     approval: live(),
   },
 ];
 
-/** The meta description a page carries: its description as buildMetadata cuts it. llms.txt quotes this. */
-export const metaDescription = (page: Pick<PageMeta, 'description'>) => snippet(page.description);
+/** The meta description a page carries: its description, whole, as the owner's site serves it. llms.txt quotes this. */
+export const metaDescription = (page: Pick<PageMeta, 'description'>) => page.description;
 
-/** One route's path, title topic and description, ready for buildMetadata. */
+/** One route's path, title topic, tab title and description, ready for buildMetadata. */
 export function pageMeta(id: string) {
   const page = PAGES.find((item) => item.id === id);
   if (!page) throw new Error(`content/pages.ts: no page "${id}"`);
-  return { path: page.path, title: page.title, description: page.description };
+  return { path: page.path, title: page.title, tabTitle: page.tabTitle, description: page.description };
 }

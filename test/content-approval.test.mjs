@@ -1,8 +1,6 @@
 // CON-10: nothing unapproved ships. Each rule of docs/content-approval.md is proven here with a fixture or a scan.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { createElement } from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import * as content from '@/content';
 import { isConfirmed } from '@/content/approval';
@@ -38,7 +36,7 @@ describe('shippable content', () => {
   });
 
   test('a record awaiting a ruling is not confirmed for new placements', () => {
-    expect(isConfirmed(content.FUND.stage)).toBe(false);
+    expect(isConfirmed(content.FUND.legalName)).toBe(false);
     expect(isConfirmed(content.FUND.fundSize)).toBe(true);
     expect(isConfirmed({ approval: { status: 'approved', approvedBy: 'Owner', approvedAt: '2026-11-20' } })).toBe(true);
   });
@@ -65,7 +63,7 @@ describe('drafts never reach production', () => {
     process.env.NEXT_PUBLIC_DEPLOY_ENV = 'production';
     vi.resetModules();
     await expect(import('@/content/drafts')).rejects.toThrow(/Drafts never ship/);
-    await expect(import('@/content/drafts/about')).rejects.toThrow(/Drafts never ship/);
+    await expect(import('@/content/drafts/home')).rejects.toThrow(/Drafts never ship/);
   });
 
   test('outside the review page and the drafts folder, no source file imports a draft', () => {
@@ -94,29 +92,5 @@ describe('drafts never reach production', () => {
     };
     expect(await extensions('production')).not.toContain('preview.tsx');
     expect(await extensions('preview')).toContain('preview.tsx');
-  });
-});
-
-describe('new placements show only confirmed facts', () => {
-  // The facts that wait on a ruling, as they would render (the founder line, the stated count, the stage, the legal
-  // name, the founding year). "Boyang Wang" alone may appear: the media line says he has been quoted, not who founded.
-  const PENDING_TEXT = ['founded by', 'Founder</dt>', '朢舶洋', '15+', 'pre-seed', 'PRIVATE LIMITED', '>Founded<', '>2024<'];
-
-  test('the About page renders the confirmed facts and none that wait on a ruling', async () => {
-    const { default: AboutView } = await import('@/app/about/_components/AboutView');
-    const html = renderToStaticMarkup(createElement(AboutView));
-    expect(html).toContain('approximately US$40 million');
-    expect(html).toContain(`${content.PORTFOLIO_COUNT} companies in the portfolio`);
-    expect(html).toContain(content.FUND.email);
-    expect(html.match(/<h1/g)).toHaveLength(1);
-    for (const text of PENDING_TEXT) expect(html, `pending fact "${text}" on /about`).not.toContain(text);
-  });
-
-  test('the About page with its drafts (review page) contains the pending facts, marked as drafts', async () => {
-    const { default: AboutView } = await import('@/app/about/_components/AboutView');
-    const { ABOUT_DRAFTS } = await import('@/content/drafts');
-    const html = renderToStaticMarkup(createElement(AboutView, { drafts: ABOUT_DRAFTS }));
-    expect(html).toContain('Boyang Wang (朢舶洋) is the founder');
-    expect(html).toContain('Draft, not in production');
   });
 });

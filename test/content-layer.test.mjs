@@ -14,7 +14,7 @@ vi.mock('@/components/svg', () => {
   return { BookSVG: Stub, DigitalTwinSVG: Stub, RelationSVG: Stub, ResearchSVG: Stub, SponsorSVG: Stub };
 });
 
-const { COMPANIES, FUND, LLMS_HEADER, PEOPLE, THEMES, keyFactLines } = content;
+const { COMPANIES, FUND, LLMS_HEADER, PEOPLE, THEMES } = content;
 
 describe('validation', () => {
   const company = {
@@ -92,16 +92,22 @@ describe('one source per fact', () => {
     expect(hits).toEqual([]);
   });
 
-  test('llms.txt lists every key fact from the fund record', () => {
-    for (const line of keyFactLines()) expect(LLMS_HEADER).toContain(`- ${line}\n`);
-    expect(LLMS_HEADER).toContain(`- ${FUND.fundSize.label.en}: ${FUND.fundSize.value.en}`);
+  // llms.txt is the owner's own file minus what his rulings of 2026-11-18 remove: no investment stage (12j), the count
+  // 16 where a count is stated (12f), no founding date (12b), no /about (2A).
+  test('llms.txt carries none of the facts the owner ruled out', () => {
+    for (const text of ['pre-seed', 'Series A', '种子轮', '15+', '15余项', 'Founded', '2024', '/about'])
+      expect(`${LLMS_HEADER}${content.LLMS_CHINESE_SUMMARY}`, text).not.toContain(text);
+    expect(LLMS_HEADER).toContain('- Investments: 16\n');
   });
 
   test('the Organization JSON-LD repeats the fund record', () => {
     const founder = PEOPLE.find((person) => person.slug === FUND.founder);
     expect(ORGANIZATION.email).toBe(FUND.email);
     expect(ORGANIZATION.legalName).toBe(FUND.legalName.value.en);
+    expect(ORGANIZATION).not.toHaveProperty('foundingDate');
     expect(ORGANIZATION.founder).toMatchObject({ name: founder.name.en, alternateName: founder.name.zh });
+    // No launch date (question 12a): the launch release carries no datePublished.
+    expect(ORGANIZATION.subjectOf.map((item) => item.datePublished)).not.toContain(FUND.fundSize.asOf);
     expect(ORGANIZATION.knowsAbout).toEqual(THEMES.map((theme) => theme.name.en));
     expect(ORGANIZATION.address).toMatchObject({
       streetAddress: FUND.address.streetAddress,
@@ -126,7 +132,7 @@ describe('one source per fact', () => {
 describe('portfolio', () => {
   test('every company has a tile, a JSON-LD entry and a particle image, in order', () => {
     expect(portfolio.map((item) => item.slug)).toEqual(COMPANIES.map((company) => company.slug));
-    expect(getPortfolioJsonLd().numberOfItems).toBe(COMPANIES.length);
+    expect(getPortfolioJsonLd().numberOfItems).toBe(16);
     for (const mobile of [false, true]) {
       const particles = portfolioGetSourceImgInfos(mobile);
       // Index 0 is the idle shape; tile i shows particle i + 1.

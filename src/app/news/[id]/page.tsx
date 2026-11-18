@@ -8,6 +8,7 @@ import Markdown from 'react-markdown';
 import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent } from '@/apis';
+import { NOT_FOUND_TITLE } from '@/lib/seo/metadata';
 import { isApiNotFound } from '@/apis/request';
 import 'github-markdown-css/github-markdown-light.css';
 import '@/styles/markdown.css';
@@ -43,10 +44,12 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   const params = await props.params;
   const { id } = params;
   const data = await getCacheNewsContent(id);
-  if (!data) return { title: { absolute: 'Article not found | Immortal Dragons' } };
+  if (!data) return { title: { absolute: NOT_FOUND_TITLE } };
   return buildMetadata({
     path: `/news/${id}`,
     title: data.title,
+    // His site titles an article "<title> - Immortal Dragons" (title and og:title).
+    tabTitle: `${data.title} - Immortal Dragons`,
     description: data.description || data.content.slice(0, 200),
     type: 'article',
   });

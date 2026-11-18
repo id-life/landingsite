@@ -19,12 +19,7 @@ export const TAGLINE_DRAFTS = defineDrafts('taglines.ts', [
   tagline('healthspan-capital', 'Active early stage LongBio fund', 'Active early-stage longevity biotech fund'),
   tagline('frontier-bio', '3D Biofabrication', '3D biofabrication'),
   tagline('unlimited-bio', 'Combinatorial Gene Therapy', 'Combinatorial gene therapy'),
-  tagline(
-    'r3-bio',
-    'Stealth mode biotech',
-    'Stealth-mode biotech',
-    'CON-11 #4: the 不朽真龙介绍 article (line 61) describes R3 Bio as 全身替换 (whole-body replacement) and cites MIT Technology Review. What may the tagline say?',
-  ),
+  tagline('r3-bio', 'Stealth mode biotech', 'Stealth-mode biotech'),
   tagline('immune-bridge', 'Allogenic Cell Therapies Platform', 'Allogeneic cell therapy platform'),
   tagline('cyclarity-therapeutics', 'Small molecules atherosclerosis solution', 'Small-molecule therapy for atherosclerosis'),
   tagline('kindbio', 'Integrated Organ Network', 'Integrated organ network'),

@@ -29,7 +29,11 @@ async function newsLines() {
 
 // The two shows restart their episode numbering (both have an E01), so each gets its own heading.
 // Titles, descriptions and links come from the podcast page's own constants and the content layer: no separate copy.
-async function podcastSeriesBlock({ id, link }: PodcastNavItem) {
+// The show's address as the owner's file writes it (his Long Talk address, /podcast?c=lt, answers 308 to its page).
+const LLMS_SHOW_LINK: Record<string, string> = { [PODCAST_NAV_LIST[1].id]: '/podcast?c=lt' };
+
+async function podcastSeriesBlock({ id, link: pageLink }: PodcastNavItem) {
+  const link = LLMS_SHOW_LINK[id] ?? pageLink;
   const { title, enTitle } = PODCAST_COVER[id];
   const { description } = pageMeta(PODCAST_PAGE_ID[id]);
   try {

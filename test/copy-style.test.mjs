@@ -22,6 +22,12 @@ const hits = (pattern) => corpus.filter(({ text }) => pattern.test(text)).map(({
 // The owner's published text stays as he wrote it (his rule of 2026-11-16: no wording of his is changed for a style
 // rule). His article gives the website as https://id.life, so that one file is exempt from the apex-domain rule.
 const OWNER_TEXT = {
+  // The owner's own Spectrum descriptions (meta and JSON-LD), served word for word as his site serves them (2026-11-18).
+  "Immortal Dragon's (possessive of the fund is Immortal Dragons')": [
+    'src/app/spectrum/_components/spectrumData.tsx',
+    'src/content/pages.ts',
+    'src/content/profile.ts',
+  ],
   'apex-domain URL (canonical host is www.id.life)': ['src/content/articles/immortal-dragons-news-and-updates.md'],
 };
 
@@ -32,11 +38,11 @@ const BANNED = {
   'email in capitals': /['">]\s*CONTACT@ID\.LIFE/,
   'second contact address (removed with src/app/_about)': /dragons@id\.life/,
   'broken Tailwind class from the slogan list': /w-\[17\.375rem w-/,
+  // The owner, 2026-11-18 (question 12h): "Healthy".
+  '"Health" for "Healthy" Longevity and Medicine Conference': /\bHealth Longevity and Medicine\b/,
 };
 
 const PENDING = {
-  // CON-11 #8: "Health" or "Healthy" Longevity and Medicine Conference.
-  'Health Longevity and Medicine': { pattern: /Health Longevity and Medicine/, files: ['src/content/grants.ts'] },
   // CON-15 tagline drafts (src/content/drafts/taglines.ts).
   Allogenic: { pattern: /\bAllogenic\b/, files: ['src/content/companies.ts'] },
   LongBio: { pattern: /\bLongBio\b/, files: ['src/content/companies.ts'] },

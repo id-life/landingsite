@@ -58,12 +58,9 @@ export const COMPANY_DRAFTS = defineDrafts('companies.ts', [
   outline(
     'r3-bio',
     'R3 Bio',
-    [
-      "Whole-body replacement (全身替换), per the fund's own profile article.",
-      'MIT Technology Review (March 2026) listed Immortal Dragons among its investors.',
-    ],
-    [TABLE, 'src/content/articles/immortal-dragons-news-and-updates.md:61, :107'],
-    ['CON-11 #4: the tile says "Stealth mode biotech". What may the company page disclose?'],
+    // The owner, 2026-11-18 (question 12d): R3 Bio is "Stealth mode biotech" wherever it is described.
+    ['Stealth mode biotech'],
+    ['src/content/companies.ts (r3-bio tagline)'],
   ),
   outline(
     'immune-bridge',
