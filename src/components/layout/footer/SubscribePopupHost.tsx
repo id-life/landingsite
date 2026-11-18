@@ -1,16 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { type ComponentType, useEffect, useRef } from 'react';
 import { mayOpenSubscribeByItself } from '@/atoms/auto-subscribe';
 import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
 import { isReducedMotion } from '@/motion/preference';
 import { announceSubscribeState, SUBSCRIBE_REQUEST_EVENT, type SubscribeRequest } from '@/components/site/subscribe-events';
-import { PHONE_TREE_QUERY } from '@/styles/device-classes';
-
-const SubscribeStrip = dynamic(() => import('@/components/layout/footer/SubscribeStrip'), { ssr: false });
-const SubscribeSheet = dynamic(() => import('@/components/layout/footer/SubscribeSheet'), { ssr: false });
 
 /**
  * Connects the SUBSCRIBE buttons (DOM events) to the popup's state (subscribePopupAtom): a request becomes an atom
@@ -56,9 +51,11 @@ export function useSubscribeOnArrival(arrived: boolean) {
   }, [arrived, dispatch]);
 }
 
-/** The content pages' popup, loaded on the first request: the phone or desktop popup by the phone tree query. */
-export default function SubscribePopupHost({ first }: { first: SubscribeRequest }) {
+/**
+ * The content pages' popup host: it owns the popup's state and renders the popup its caller loaded (SubscribePopup:
+ * the phone sheet or the desktop strip, by the phone tree query).
+ */
+export default function SubscribePopupHost({ first, Popup }: { first: SubscribeRequest; Popup: ComponentType }) {
   useSubscribeBridge(first);
-  const [variant] = useState<'phone' | 'desktop'>(() => (window.matchMedia(PHONE_TREE_QUERY).matches ? 'phone' : 'desktop'));
-  return variant === 'phone' ? <SubscribeSheet /> : <SubscribeStrip />;
+  return <Popup />;
 }

@@ -1,14 +1,12 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { type ComponentType, useEffect, useState } from 'react';
 import { mayOpenSubscribeByItself } from '@/atoms/auto-subscribe';
 import { SUBSCRIBE_REQUEST_EVENT, type SubscribeRequest } from '@/components/site/subscribe-events';
 import { isReducedMotion } from '@/motion/preference';
-import { DESKTOP_TREE_QUERY } from '@/styles/device-classes';
+import { DESKTOP_TREE_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
 
-// The popup, its state (jotai) and its animation code load only when the visitor first asks for it (PERF-10).
-const SubscribePopupHost = dynamic(() => import('./SubscribePopupHost'), { ssr: false });
+type Loaded = { Host: typeof import('./SubscribePopupHost').default; Popup: ComponentType };
 
 /**
  * The SUBSCRIBE popup of the content pages (news, podcast, About, the Spectrum tools, 404). It opens only from a
@@ -21,6 +19,25 @@ const SubscribePopupHost = dynamic(() => import('./SubscribePopupHost'), { ssr: 
  */
 export default function SubscribePopup({ openOnArrival = false }: { openOnArrival?: boolean }) {
   const [first, setFirst] = useState<SubscribeRequest | null>(null);
+  // The popup, its state (jotai) and its code load only on the first request (PERF-10), by a plain import() rendered
+  // once loaded: next/dynamic's Suspense boundary held the loaded popup back a fixed 300 ms (React's reveal throttle)
+  // after its code had arrived. A load that fails leaves the page as it is, and the next SUBSCRIBE tries again.
+  const [loaded, setLoaded] = useState<Loaded | null>(null);
+  useEffect(() => {
+    if (!first || loaded) return;
+    let live = true;
+    const phone = window.matchMedia(PHONE_TREE_QUERY).matches;
+    Promise.all([import('./SubscribePopupHost'), phone ? import('./SubscribeSheet') : import('./SubscribeStrip')])
+      .then(([host, popup]) => {
+        if (live) setLoaded({ Host: host.default, Popup: popup.default });
+      })
+      .catch(() => {
+        if (live) setFirst(null);
+      });
+    return () => {
+      live = false;
+    };
+  }, [first, loaded]);
 
   useEffect(() => {
     if (first) return;
@@ -33,18 +50,17 @@ export default function SubscribePopup({ openOnArrival = false }: { openOnArriva
   }, [first]);
 
   // As soon as the page has hydrated (this effect) and painted (the next frame), not after the load event and an idle
-  // moment: never ahead of the page's first paint. The strip's own chunk is fetched together with the host's.
+  // moment: never ahead of the page's first paint.
   useEffect(() => {
     if (!openOnArrival) return;
     const frame = requestAnimationFrame(() => {
       // The laptop deck only (the original's phone opens nothing by itself here), until a close is remembered, and
       // not with the reduced-motion preference.
       if (!window.matchMedia(DESKTOP_TREE_QUERY).matches || !mayOpenSubscribeByItself(isReducedMotion())) return;
-      void import('./SubscribeStrip');
       setFirst((current) => current ?? { type: 'open', placement: 'auto' });
     });
     return () => cancelAnimationFrame(frame);
   }, [openOnArrival]);
 
-  return first ? <SubscribePopupHost first={first} /> : null;
+  return first && loaded ? <loaded.Host first={first} Popup={loaded.Popup} /> : null;
 }
