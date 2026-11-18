@@ -53,19 +53,17 @@ export function usePortfolioItemAnimation(
 
     // The one-liner appears on hover, as the original animates it; a tap or keyboard focus plays the same state
     // (one tile at a time, below), so touch and keyboard visitors read it too, and the rest state is the original's.
+    // Hidden by a set, then shown by a tween: a from() tween hid them only while its duration was above zero, and
+    // with the reduced-motion preference (every DURATION 0) the one-liners stood shown at rest on the laptop deck,
+    // where the original shows none until a hover or a tap.
     if (desc) {
-      tl.from(desc, { opacity: 0, translateY: '50%' }, '<50%');
+      gsap.set(desc, { opacity: 0, translateY: '50%' });
+      tl.to(desc, { opacity: 1, translateY: 0 }, '<50%');
     }
 
     if (subtitle) {
-      tl.from(
-        subtitle,
-        {
-          opacity: 0,
-          translateY: '50%',
-        },
-        '<50%',
-      );
+      gsap.set(subtitle, { opacity: 0, translateY: '50%' });
+      tl.to(subtitle, { opacity: 1, translateY: 0 }, '<50%');
     }
 
     return tl;
