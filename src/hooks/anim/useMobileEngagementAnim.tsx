@@ -125,7 +125,9 @@ export function useMobileEngagementAnim() {
   );
 
   const setupEventListeners = contextSafe(() => {
-    const mapContainer = document.querySelector('.world-map-container');
+    // The whole strip, the map and the card layer above it: a touch on an open card stops the tour too, so the card the
+    // visitor is using stays open (the cards lie outside the scroller, whose touches alone stopped it before).
+    const mapContainer = document.querySelector('.world-map-container')?.parentElement ?? null;
     if (mapContainer) {
       const events = ['click', 'touchstart', 'wheel', 'mousedown'] as const;
       const options = { passive: true };
