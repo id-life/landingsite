@@ -26,6 +26,10 @@ const jsonLd: WithContext<MedicalWebPage> = {
   name: PAGE_TITLE,
   url: 'https://www.id.life/spectrum/disease-management',
   description: PAGE_DESCRIPTION,
+  medicalAudience: {
+    '@type': 'MedicalAudience',
+    audienceType: 'Patient',
+  },
   isPartOf: { '@id': WEBSITE_ID },
 };
 

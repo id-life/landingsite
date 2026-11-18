@@ -7,7 +7,7 @@ import { pageMeta } from '@/content/pages';
 import ConnectSummary from '@/app/connect/_components/ConnectSummary';
 import { Graph } from 'schema-dts';
 import { Links, MediaLinkType } from '@/constants/links';
-import { ORG_ID, ORG_PRESS, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
+import { ORG_EMAIL, ORG_ID, ORG_PRESS, ORGANIZATION, WEBSITE, WEBSITE_ID } from '@/constants/entity';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
@@ -36,12 +36,20 @@ const jsonLd: Graph = {
     },
     {
       ...ORGANIZATION,
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          contactType: 'general inquiries',
+          email: ORG_EMAIL,
+          availableLanguage: ['en', 'zh'],
+          url: 'https://www.id.life/connect',
+        },
+      ],
       subjectOf: [
         ...ORG_PRESS,
-        // The footer's MEDIAKIT link, under the name it shows.
         {
           '@type': 'CreativeWork',
-          name: 'MEDIAKIT',
+          name: 'Immortal Dragons Media Kit',
           url: Links[MediaLinkType.Media],
         },
       ],

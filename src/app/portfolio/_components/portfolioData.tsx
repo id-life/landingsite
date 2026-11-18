@@ -56,9 +56,10 @@ export const portfolioMarkdownLines = () =>
 export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  // His site's own name for the list, word for word; no count (the page states none: owner, 2026-11-18, question 12f).
+  // His site's own name and count for the list, word for word (the count is the portfolio's 16: question 12f).
   name: 'IMMORTAL DRAGONS Portfolio',
   url: absoluteUrl('/portfolio'),
+  numberOfItems: portfolio.length,
   itemListElement: portfolio.map((item, index) => ({
     '@type': 'ListItem',
     position: index + 1,

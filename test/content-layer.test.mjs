@@ -102,9 +102,11 @@ describe('one source per fact', () => {
   test('the Organization JSON-LD repeats the fund record', () => {
     const founder = PEOPLE.find((person) => person.slug === FUND.founder);
     expect(ORGANIZATION.email).toBe(FUND.email);
-    expect(ORGANIZATION).not.toHaveProperty('legalName');
+    expect(ORGANIZATION.legalName).toBe(FUND.legalName.value.en);
     expect(ORGANIZATION).not.toHaveProperty('foundingDate');
-    expect(ORGANIZATION.founder).toEqual({ '@type': 'Person', name: founder.name.en });
+    expect(ORGANIZATION.founder).toMatchObject({ name: founder.name.en, alternateName: founder.name.zh });
+    // No launch date (question 12a): the launch release carries no datePublished.
+    expect(ORGANIZATION.subjectOf.map((item) => item.datePublished)).not.toContain(FUND.fundSize.asOf);
     expect(ORGANIZATION.knowsAbout).toEqual(THEMES.map((theme) => theme.name.en));
     expect(ORGANIZATION.address).toMatchObject({
       streetAddress: FUND.address.streetAddress,
@@ -129,7 +131,7 @@ describe('one source per fact', () => {
 describe('portfolio', () => {
   test('every company has a tile, a JSON-LD entry and a particle image, in order', () => {
     expect(portfolio.map((item) => item.slug)).toEqual(COMPANIES.map((company) => company.slug));
-    expect(getPortfolioJsonLd()).not.toHaveProperty('numberOfItems');
+    expect(getPortfolioJsonLd().numberOfItems).toBe(16);
     for (const mobile of [false, true]) {
       const particles = portfolioGetSourceImgInfos(mobile);
       // Index 0 is the idle shape; tile i shows particle i + 1.

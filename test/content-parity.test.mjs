@@ -63,7 +63,7 @@ describe('portfolio', () => {
 
   test('the portfolio JSON-LD and the llms.txt list come from the same data', () => {
     const jsonLd = getPortfolioJsonLd();
-    expect(jsonLd).not.toHaveProperty('numberOfItems');
+    expect(jsonLd.numberOfItems).toBe(portfolio.length);
     expect(jsonLd.itemListElement.map((entry) => entry.item.name)).toEqual(titles);
     expect(portfolioMarkdownLines()).toHaveLength(portfolio.length);
   });
