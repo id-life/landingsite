@@ -13,6 +13,7 @@ import { NAV } from '@/components/nav/nav';
 import { CAROUSEL_ITEMS } from '@/constants/config';
 import { PAGE_IDS } from '@/constants/pages';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
+import HeroWordmarkButton from './HeroWordmarkButton';
 
 /**
  * Mission, one component for both decks (RWD-02; it was Vision and MobileVision). Section changes are the section
@@ -50,6 +51,7 @@ export default function Vision() {
         id={NAV.vision_page.id}
         className={clsx('page-container-mobile', current.id !== NAV.vision_page.id && 'hidden')}
       >
+        <HeroWordmarkButton fixed />
         {globalLoaded && (
           <VerticalCarousel
             slideDown
@@ -70,6 +72,7 @@ export default function Vision() {
 
   return (
     <div ref={wrapperRef} id={NAV.vision_page.id} className="page-container">
+      <HeroWordmarkButton />
       <div className="group pointer-events-none absolute inset-0 -z-10 select-none"></div>
     </div>
   );

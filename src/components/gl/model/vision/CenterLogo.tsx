@@ -14,12 +14,61 @@ import { INTRO, shouldSkipIntro } from './intro';
 import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 import MergedSvg from './MergedSvg';
+import { HERO_WORDMARK_TOGGLE, registerHeroWordmarkMeasure, type ViewportBox } from './heroWordmarkControl';
 
 const POINTER_DAMPING = 2.5;
 /** A click within this many ms of the last swap is ignored (the original's throttle). */
 const SWAP_THROTTLE_MS = 800;
 
 type Lang = 'en' | 'cn';
+
+const corner = new THREE.Vector3();
+/** The box an object's drawn geometry covers on screen, in viewport pixels (for the keyboard focus ring). */
+function viewportBox(object: THREE.Object3D | null, camera: THREE.Camera, canvas: HTMLCanvasElement): ViewportBox | null {
+  if (!object) return null;
+  object.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(object);
+  if (box.isEmpty()) return null;
+  const rect = canvas.getBoundingClientRect();
+  let left = Infinity;
+  let top = Infinity;
+  let right = -Infinity;
+  let bottom = -Infinity;
+  for (let i = 0; i < 8; i++) {
+    corner.set(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z).project(camera);
+    const x = rect.left + ((corner.x + 1) / 2) * rect.width;
+    const y = rect.top + ((1 - corner.y) / 2) * rect.height;
+    left = Math.min(left, x);
+    right = Math.max(right, x);
+    top = Math.min(top, y);
+    bottom = Math.max(bottom, y);
+  }
+  return { left, top, width: right - left, height: bottom - top };
+}
+
+/**
+ * The keyboard's way to the swap (HeroWordmarkButton): the button's Enter or Space arrives as HERO_WORDMARK_TOGGLE and
+ * runs the click's own handler (same 800 ms rule); `measure` tells the button where the wordmark is drawn.
+ */
+function useWordmarkControl(onToggle: () => void, drawn: () => THREE.Object3D | null) {
+  const camera = useThree((state) => state.camera);
+  const canvas = useThree((state) => state.gl.domElement);
+  const toggleRef = useRef(onToggle);
+  const drawnRef = useRef(drawn);
+  useEffect(() => {
+    toggleRef.current = onToggle;
+    drawnRef.current = drawn;
+  });
+  useEffect(() => {
+    const toggle = () => toggleRef.current();
+    window.addEventListener(HERO_WORDMARK_TOGGLE, toggle);
+    const unregister = registerHeroWordmarkMeasure(() => viewportBox(drawnRef.current(), camera, canvas));
+    return () => {
+      window.removeEventListener(HERO_WORDMARK_TOGGLE, toggle);
+      unregister();
+    };
+  }, [camera, canvas]);
+}
 /** Where the group sits at the top of the page (its z at scroll 0, as mounted). */
 const REST_Z = -5;
 
@@ -79,6 +128,7 @@ function DesktopCenterLogo() {
     pendingRef.current = null;
     fadeTo(next);
   }, [cn, fadeTo]);
+  useWordmarkControl(handleClick, () => logoMeshRef.current);
 
   // Fade in animation when globalLoaded becomes true
   useEffect(() => {
@@ -245,6 +295,9 @@ function PhoneCenterLogo() {
     if (readyRef.current) swap(langRef.current);
     else pendingRef.current = !pendingRef.current;
   }, SWAP_THROTTLE_MS);
+  useWordmarkControl(handleClick, () =>
+    langRef.current === 'cn' && readyRef.current && !pendingRef.current ? cnLogoRef.current : enLogoRef.current,
+  );
 
   return (
     <group>
