@@ -38,23 +38,22 @@ describe('the state kept in a history entry', () => {
   });
 });
 
-/** A window with a history whose state replaceState writes, and frames run by hand. */
+/** A window with a history whose state replaceState writes, and its input listeners. */
 function fakeWindow(state) {
-  const frames = [];
+  const listeners = {};
   const history = {
     state,
     replaceState: vi.fn((next) => {
       history.state = next;
     }),
   };
-  globalThis.window = { history, location: { href: 'http://site/portfolio', hash: '' } };
-  globalThis.requestAnimationFrame = (fn) => frames.push(fn);
-  return {
+  globalThis.window = {
     history,
-    runFrames(n = 1) {
-      for (let i = 0; i < n; i++) frames.splice(0).forEach((fn) => fn());
-    },
+    location: { href: 'http://site/portfolio', hash: '' },
+    addEventListener: (type, fn) => (listeners[type] = fn),
+    removeEventListener: (type) => delete listeners[type],
   };
+  return { history, listeners };
 }
 
 describe('writing and restoring', () => {
@@ -68,9 +67,9 @@ describe('writing and restoring', () => {
   });
   afterEach(() => {
     offs.splice(0).forEach((off) => off());
+    dropInnerRestore();
     vi.useRealTimers();
     delete globalThis.window;
-    delete globalThis.requestAnimationFrame;
   });
 
   test('a change is written for the section the view rests on, never for another one', () => {
@@ -135,11 +134,12 @@ describe('writing and restoring', () => {
     expect(takeInnerPage('portfolio_page', 'page')).toBeUndefined();
   });
 
-  test('parts are applied in order, a later one waiting until the one before it is ready', () => {
-    const { runFrames } = fakeWindow({ [STATE_KEY]: { twin_page: { model: 'M2', type: 'anatomy', view: 3 } } });
+  test('parts are applied in order, a later one waiting until what it depends on reports a change', async () => {
+    fakeWindow({ [STATE_KEY]: { twin_page: { model: 'M2', type: 'anatomy', view: 3 } } });
     resting = 'twin_page';
     const done = [];
     let modelOnStage = false;
+    let stageChanged = () => {};
     offs.push(
       registerInnerPage(
         'twin_page',
@@ -161,20 +161,55 @@ describe('writing and restoring', () => {
         () => undefined,
         (v) => (modelOnStage ? (done.push(`type ${v}`), true) : false),
         1,
+        (onChange) => {
+          stageChanged = onChange;
+          return () => {};
+        },
       ),
     );
     beginInnerRestore('twin_page');
     applyInnerRestore('twin_page');
-    runFrames(3);
+    await Promise.resolve();
     expect(done).toEqual(['model M2']);
     modelOnStage = true;
-    runFrames(1);
+    stageChanged();
+    await Promise.resolve();
     expect(done).toEqual(['model M2', 'type anatomy', 'view 3']);
     expect(innerRestorePending('twin_page')).toBe(false);
   });
 
-  test('parts of one order do not wait for each other (one Insights row still loading)', () => {
-    const { runFrames } = fakeWindow({ [STATE_KEY]: { insights_page: { news: 2, podcast: 1 } } });
+  test('a part that is slow to be ready is never given up on a timer (the Twin view lost on a slow load)', async () => {
+    fakeWindow({ [STATE_KEY]: { twin_page: { view: 3 } } });
+    resting = 'twin_page';
+    let ready = false;
+    let changed = () => {};
+    const done = [];
+    offs.push(
+      registerInnerPage(
+        'twin_page',
+        'view',
+        () => undefined,
+        (v) => (ready ? (done.push(v), true) : false),
+        0,
+        (onChange) => {
+          changed = onChange;
+          return () => {};
+        },
+      ),
+    );
+    beginInnerRestore('twin_page');
+    applyInnerRestore('twin_page');
+    await Promise.resolve();
+    vi.advanceTimersByTime(60000);
+    expect(innerRestorePending('twin_page')).toBe(true);
+    ready = true;
+    changed();
+    await Promise.resolve();
+    expect(done).toEqual([3]);
+  });
+
+  test('parts of one order do not wait for each other (one Insights row still loading)', async () => {
+    fakeWindow({ [STATE_KEY]: { insights_page: { news: 2, podcast: 1 } } });
     resting = 'insights_page';
     const done = [];
     offs.push(
@@ -193,8 +228,17 @@ describe('writing and restoring', () => {
     );
     beginInnerRestore('insights_page');
     applyInnerRestore('insights_page');
-    runFrames(1);
+    await Promise.resolve();
     expect(done).toEqual(['podcast 1']);
     expect(innerRestorePending('insights_page')).toBe(true);
+  });
+
+  test("an input of the visitor's own drops a restore still waiting", () => {
+    const { listeners } = fakeWindow({ [STATE_KEY]: { twin_page: { view: 3 } } });
+    beginInnerRestore('twin_page');
+    expect(innerRestorePending('twin_page')).toBe(true);
+    listeners.pointerdown();
+    expect(innerRestorePending('twin_page')).toBe(false);
+    expect(listeners.pointerdown).toBeUndefined();
   });
 });

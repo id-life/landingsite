@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
+import { noteRowPage, rowSwiperCreated, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
@@ -189,7 +189,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
             setIsCompactBeginning(swiper.isBeginning);
             setIsCompactEnd(swiper.isEnd);
           }}
-          onBeforeInit={(swiper) => (compactSwiperRef.current = swiper)}
+          onBeforeInit={(swiper) => {
+            compactSwiperRef.current = swiper;
+            rowSwiperCreated(swiper);
+          }}
           slidesPerView={1}
           spaceBetween={16}
         >
@@ -214,7 +217,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
         <Swiper
           {...rowKeyboardProps}
           className="h-full w-full"
-          onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+            rowSwiperCreated(swiper);
+          }}
           onSlideChange={(swiper) => {
             setCurrentPage(swiper.activeIndex);
             noteRowPage();
@@ -243,7 +249,10 @@ export default function LongevitySection({ isMobile = false, compact = false, is
       <Swiper
         {...rowKeyboardProps}
         className="h-full w-full"
-        onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+        onBeforeInit={(swiper) => {
+          swiperRef.current = swiper;
+          rowSwiperCreated(swiper);
+        }}
         onSlideChange={(swiper) => {
           noteRowPage();
           setIsBeginning(swiper.isBeginning);

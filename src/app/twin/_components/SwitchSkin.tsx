@@ -90,12 +90,15 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
         (value) => {
           if (value !== 'anatomy') return true;
           if (jotaiStore.get(currentModelTypeAtom) === ModelType.Anatomy) return true;
-          if (jotaiStore.get(modelLoadingItemAtom) !== null) return false;
+          // Ready when the stage holds the chosen model (on the laptop a model chosen in anatomy is applied once its camera
+          // rests). Not the load-timing flag (modelLoadingItemAtom): it is cleared only when a load suspends the stage, so
+          // after a press that needed no load it stays set, and waiting on it lost the restore.
           if (!phone && jotaiStore.get(currentModelAtom) !== chosenModel()) return false;
           pressTypeRef.current(ModelType.Anatomy, false);
           return true;
         },
         1,
+        (onChange) => jotaiStore.sub(currentModelAtom, onChange),
       ),
     [phone],
   );

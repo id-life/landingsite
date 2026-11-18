@@ -4,7 +4,7 @@ import { useState, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
+import { noteRowPage, rowSwiperCreated, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
@@ -141,7 +141,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
             setIsCompactBeginning(swiper.isBeginning);
             setIsCompactEnd(swiper.isEnd);
           }}
-          onBeforeInit={(swiper) => (compactSwiperRef.current = swiper)}
+          onBeforeInit={(swiper) => {
+            compactSwiperRef.current = swiper;
+            rowSwiperCreated(swiper);
+          }}
           slidesPerView={1}
           spaceBetween={16}
         >
@@ -167,7 +170,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         <Swiper
           {...rowKeyboardProps}
           className="h-full w-full"
-          onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+            rowSwiperCreated(swiper);
+          }}
           onSlideChange={(swiper) => {
             setCurrentPage(swiper.activeIndex);
             noteRowPage();
@@ -197,7 +203,10 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
       <Swiper
         {...rowKeyboardProps}
         className="h-full w-full"
-        onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+        onBeforeInit={(swiper) => {
+          swiperRef.current = swiper;
+          rowSwiperCreated(swiper);
+        }}
         onSlideChange={(swiper) => {
           noteRowPage();
           setIsBeginning(swiper.isBeginning);

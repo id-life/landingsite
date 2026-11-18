@@ -11,8 +11,8 @@ import {
   currentAnatomyCameraAtom,
   currentModelAtom,
   currentModelTypeAtom,
+  chosenModel,
   markTwinPressed,
-  modelLoadingItemAtom,
   PredictionModel,
 } from '@/atoms/twin';
 import AnatomyM01 from '@/../public/svgs/twin/anatomy-m0-1.svg?component';
@@ -88,15 +88,21 @@ export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
           jotaiStore.get(currentModelTypeAtom) === ModelType.Anatomy ? jotaiStore.get(currentAnatomyCameraAtom) : undefined,
         (value) => {
           if (typeof value !== 'number') return true;
-          if (jotaiStore.get(currentModelTypeAtom) !== ModelType.Anatomy || jotaiStore.get(modelLoadingItemAtom) !== null) {
-            return false;
-          }
+          // Ready when anatomy is on the stage with the chosen model: the stage sets both as it takes the anatomy request
+          // (SWITCH_MODEL), before the anatomy models mount; a view marked then is the one those models show when they
+          // mount (their mount effects and the stage read the marked view). Not the load-timing flag
+          // (modelLoadingItemAtom), which stays set after a press that needed no load.
           const model = jotaiStore.get(currentModelAtom);
+          if (jotaiStore.get(currentModelTypeAtom) !== ModelType.Anatomy || model !== chosenModel()) return false;
           const known = model ? VIEWS[model]?.some(([, camera]) => camera === value) : false;
           if (known && jotaiStore.get(currentAnatomyCameraAtom) !== value) pressViewRef.current(value as AnatomyCamera, false);
           return true;
         },
         2,
+        (onChange) => {
+          const off = [currentModelTypeAtom, currentModelAtom].map((atom) => jotaiStore.sub(atom, onChange));
+          return () => off.forEach((stop) => stop());
+        },
       ),
     [],
   );
