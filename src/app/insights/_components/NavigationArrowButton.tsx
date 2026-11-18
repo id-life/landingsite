@@ -56,7 +56,8 @@ function fitTouchArea(button: HTMLButtonElement, direction: 'prev' | 'next') {
   button.style.setProperty('--touch-right', `${(right - b.right).toFixed(1)}px`);
 }
 
-export function PCNavigationArrowButton({ onClick, disabled, direction, className }: NavigationArrowButtonProps) {
+/** Keeps an arrow's touch area fitted to the space that is nobody's (fitTouchArea), on both decks. */
+function useFittedTouchArea(direction: 'prev' | 'next') {
   const ref = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const button = ref.current;
@@ -78,6 +79,15 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
       window.removeEventListener('resize', fit);
     };
   }, [direction]);
+  return ref;
+}
+
+/** The touch area classes: only into space that is nobody's (fitTouchArea), 44 px tall, on touch screens only. */
+const FITTED_TOUCH_AREA =
+  'coarse:before:!w-auto coarse:before:![left:calc(-1*var(--touch-left,0px))] coarse:before:![right:calc(-1*var(--touch-right,0px))] coarse:before:![transform:translateY(-50%)]';
+
+export function PCNavigationArrowButton({ onClick, disabled, direction, className }: NavigationArrowButtonProps) {
+  const ref = useFittedTouchArea(direction);
   return (
     <button
       ref={ref}
@@ -91,11 +101,7 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
         'absolute top-1/2 z-10 flex size-7.5 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white/50 backdrop-blur-sm transition-opacity tap-area hover:bg-white/80 disabled:opacity-80 disabled:hover:bg-white/50',
         direction === 'prev' ? '-left-16' : '-right-16',
         className,
-        // Medium and expanded windows: in the px margin beside the row, clear of the cards (a 44 px touch box
-        // overlapping the first card covered its title).
-        direction === 'prev' ? 'medium:-left-[54px] expanded:-left-[58px]' : 'medium:-right-[54px] expanded:-right-[58px]',
-        // The touch area: only into space that is nobody's (fitTouchArea), 44 px tall.
-        'coarse:before:!w-auto coarse:before:![left:calc(-1*var(--touch-left,0px))] coarse:before:![right:calc(-1*var(--touch-right,0px))] coarse:before:![transform:translateY(-50%)]',
+        FITTED_TOUCH_AREA,
       )}
     >
       <ArrowDownSVG
@@ -108,8 +114,14 @@ export function PCNavigationArrowButton({ onClick, disabled, direction, classNam
 }
 
 export function MobileNavigationArrowButton({ onClick, disabled, direction, className }: NavigationArrowButtonProps) {
+  // The phone's arrow is drawn over the edge of its row's first or last card (the owner's place, in the deck's unit
+  // at every phone-deck width): its touch area reaches only outside the cards, so a tap on a card's edge opens the
+  // card and a tap on the drawn arrow pages the row.
+  const ref = useFittedTouchArea(direction);
   return (
     <button
+      ref={ref}
+      data-row-arrow=""
       onClick={onClick}
       disabled={disabled}
       aria-label={direction === 'prev' ? 'Previous' : 'Next'}
@@ -118,6 +130,7 @@ export function MobileNavigationArrowButton({ onClick, disabled, direction, clas
         'absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-black/20 bg-white fill-white tap-area disabled:bg-tone-50 disabled:fill-tone-350',
         direction === 'prev' ? '-left-5' : '-right-5',
         className,
+        FITTED_TOUCH_AREA,
       )}
     >
       <ArrowDownSVG

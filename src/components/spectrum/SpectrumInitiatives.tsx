@@ -86,7 +86,7 @@ function MoreToggle({
       aria-controls={controls}
       aria-label={expanded ? 'Show fewer' : undefined}
       onClick={onToggle}
-      className="spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[13px] desktop2k:text-sm"
+      className="spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[0.8125rem] desktop2k:text-sm"
     >
       {!expanded && <span>more</span>}
       <svg
@@ -209,7 +209,7 @@ function Initiative({
     <article className="relative min-w-0" onMouseEnter={onSelect} onFocus={onSelect}>
       <div className="flex items-start gap-2.5">
         {cloneElement(item.icon, {
-          className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white medium:size-[20px] expanded:size-[20px]'),
+          className: cn(item.icon.props.className, 'mt-0.5 size-5 shrink-0 fill-white'),
         })}
         <div
           className={cn(
@@ -242,21 +242,20 @@ function Initiative({
           settling && 'pointer-events-none',
           // Papers: two columns on a medium window, where three put four or five lines in each title.
           layout === 'publications'
-            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
-            : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+            ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
+            : 'flex flex-col gap-2 mobile:gap-0',
           // Long titles (the phone's papers page) wrap over several lines: keep a gap between them.
-          layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2 coarse:gap-2',
+          layout === 'columns' && item.links.some((l) => l.label.length >= 60) && 'mobile:gap-2',
           // A short phone (375x667) with the six papers open: 8 px between them left the last line 5 px under the
           // page's bottom edge; 4 px fits it whole. Only open, so the rest picture is unchanged.
           layout === 'columns' &&
             expanded &&
             item.links.some((l) => l.label.length >= 60) &&
             'mobile:[@media(max-height:700px)]:!gap-1',
-          // A landscape tablet (coarse pointer, 840-1199 px): the 44 px link boxes would push the logo wall under
-          // the bottom controls, so an initiative's links run in two columns there; a phone in landscape (under
-          // 480 px tall) takes three, so the first page fits above the section arrows.
+          // A phone in landscape (under 480 px tall): an initiative's links run in three columns 16 px apart, so the
+          // first page fits above the section arrows (the column gap came from the removed tablet rule before).
           layout === 'columns' &&
-            'expanded:landscape:coarse:grid expanded:landscape:coarse:grid-cols-2 expanded:landscape:coarse:gap-x-4 [@media(max-height:479.98px)]:grid [@media(max-height:479.98px)]:grid-cols-3',
+            '[@media(max-height:479.98px)]:grid [@media(max-height:479.98px)]:grid-cols-3 [@media(max-height:479.98px)_and_(pointer:coarse)]:!gap-x-4',
         )}
       >
         <AnimatePresence initial={false}>
@@ -275,9 +274,13 @@ function Initiative({
                     : { duration: DURATION.base, delay: extra ? (index - restCount) * 0.05 : 0, ease: EASE.out }
                 }
                 className={cn(
-                  // The original's link sizes. On a coarse pointer each link is a 44 px tall box (RWD-06); the
-                  // mouse layout keeps its line boxes.
-                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center coarse:[&_a]:flex coarse:[&_a]:min-h-[44px] coarse:[&_a]:items-center',
+                  // The original's link sizes. On the phone deck with a touch screen each link is a 44 px tall box
+                  // (RWD-06); the laptop deck keeps its line boxes on every pointer.
+                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center mobile:coarse:[&_a]:flex mobile:coarse:[&_a]:min-h-[44px] mobile:coarse:[&_a]:items-center',
+                  // The laptop deck with a touch screen (a tablet on its side): the picture stays exactly the laptop's.
+                  // Each link only gets an invisible touch area reaching a quarter of a unit above and below its row,
+                  // no more than half the gap to the next row, so two areas never meet.
+                  'notMobile:coarse:[&_a]:relative notMobile:coarse:[&_a]:before:absolute notMobile:coarse:[&_a]:before:-inset-y-1 notMobile:coarse:[&_a]:before:inset-x-0 notMobile:coarse:[&_a]:before:content-[""]',
                 )}
               >
                 <SpectrumLink
@@ -301,14 +304,14 @@ function Initiative({
             className={cn(
               'mt-4',
               layout === 'publications'
-                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1 medium:grid-cols-2 medium:gap-x-[24px] expanded:gap-x-[32px]'
-                : 'flex flex-col gap-2 mobile:gap-0 coarse:gap-0',
+                ? 'grid grid-cols-3 gap-x-10 gap-y-[calc(1rem-var(--paper-row-cut,0px))] mobile:grid-cols-1'
+                : 'flex flex-col gap-2 mobile:gap-0',
             )}
           >
             {item.links.map((link) => (
               <li
                 key={link.label}
-                className="min-w-0 coarse:flex coarse:min-h-[44px] coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[13px] desktop2k:[&_.spectrum-link-text]:!text-sm"
+                className="min-w-0 mobile:coarse:flex mobile:coarse:min-h-[44px] mobile:coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
               >
                 <SpectrumLink item={{ ...link, link: undefined }} />
               </li>
@@ -333,7 +336,7 @@ function SpectrumInitiatives({
     <section
       aria-label={label ?? (layout === 'publications' ? 'Spectrum publications' : 'Spectrum initiatives')}
       className={cn(
-        'grid gap-x-10 gap-y-7 mobile:grid-cols-1 medium:gap-x-[24px] expanded:gap-x-[32px]',
+        'grid gap-x-10 gap-y-7 mobile:grid-cols-1',
         layout === 'publications' ? 'grid-cols-1 border-t border-white/15 pt-5 wideShort:pt-3' : 'grid-cols-3',
       )}
     >

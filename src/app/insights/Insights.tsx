@@ -27,9 +27,8 @@ const insightsNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
  * deck it is a panel shown while current, entering with a short tween (useMobileInsightsAnim, which under reduced
  * motion sets the end state at once), with the rows stacked in a scroll box and two-up podcast and weekly rows.
  *
- * Medium and expanded windows (600-1199 px, the tablet tier, RWD-01): the desktop deck's text is set in the type
- * roles, so the column the rows sit in is sized in px there (it scaled with the window and squeezed role-sized text
- * into a 550 px column at 820 px). Medium shows the news cards three across and the two bottom rows stacked.
+ * Two layouts only (the owner's rule of 2026-11-18): the laptop deck at every width it gets, scaled with the window,
+ * and the phone deck. A tablet on its side is a laptop window of that width; a tablet held upright gets the phone deck.
  */
 export default function Insights() {
   const phone = useDeviceProfile()?.tree === 'phone';
@@ -96,9 +95,11 @@ export default function Insights() {
 
   if (phone) {
     return (
+      // The column starts at the header's bottom (84 px on a phone, in the deck's unit) and ends above the bottom
+      // controls: with the owner's six news cards it is taller than the screen and scrolls inside these bounds.
       <div
         id={PAGE_ID}
-        className={cn('page-container-mobile mt-20 flex h-[calc(100svh-10rem)] flex-col', !isVisible && 'hidden')}
+        className={cn('page-container-mobile mt-[5.25rem] flex h-[calc(100svh-10.25rem)] flex-col', !isVisible && 'hidden')}
       >
         {/* Content Area: the three rows centred in the panel, each with its heading and VIEW ALL. The news row draws only
             the card rows that fit (NewsAndTalksSection), and "safe" centring keeps the top of a column that is still
@@ -124,24 +125,17 @@ export default function Insights() {
   return (
     <div id={PAGE_ID} className="page-container insights h-screen">
       <div className="desktop:scale-[0.95] desktop2k:origin-center desktop2k:scale-[0.85]">
-        {/* From 1200 px the column keeps its scaled margins (unchanged). Medium and expanded windows: px margins
-            wide enough for the 44 px carousel arrows beside the cards, and a box that starts below the site header
-            (three rows of navigation at 820 px, two at 1180) and ends above the fixed bottom controls. */}
+        {/* The column keeps its scaled margins at every width of the laptop deck. */}
         <div
           className={cn(
             'insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]',
             // A short laptop window (up to 760 px tall): the box starts below the header (126 px at 1366x641) and
             // content taller than it starts at its top rather than above it.
             '[@media(max-height:760px)]:mt-[132px] [@media(max-height:760px)]:h-[calc(100dvh-212px)] [@media(max-height:760px)]:[justify-content:safe_center]',
-            // Tablets in portrait: the rows start 40 px under the header's navigation (it ends at 147 px at 820 and
-            // 105 at 1024x1366) instead of floating in the middle of the window with an empty band above them.
-            'medium:mt-[188px] medium:h-[calc(100dvh-278px)] medium:justify-start medium:gap-[28px] medium:px-[64px]',
-            'expanded:portrait:mt-[148px] expanded:portrait:h-[calc(100dvh-238px)] expanded:portrait:justify-start',
-            'expanded:mt-[132px] expanded:h-[calc(100dvh-212px)] expanded:gap-[20px] expanded:px-[80px]',
           )}
         >
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
-          <div className="-mt-10 medium:mt-0 expanded:mt-0 [@media(max-height:760px)]:mt-0">
+          <div className="-mt-10 [@media(max-height:760px)]:mt-0">
             <NewsAndTalksSection
               items={insightItems}
               isLoading={isInsightsLoading}
@@ -149,10 +143,8 @@ export default function Insights() {
               onRetry={() => void refetch()}
             />
           </div>
-          {/* Bottom sections: side by side; stacked on a medium (portrait tablet) window, where each row then gets
-              the full width for its two cards. Expanded windows keep them side by side with room between the
-              columns for both rows' carousel arrows; a portrait expanded window (1024x1366) stacks them as medium. */}
-          <div className="grid shrink-0 grid-cols-2 gap-12 medium:grid-cols-1 medium:gap-[24px] expanded:gap-[120px] expanded:portrait:grid-cols-1 expanded:portrait:gap-[24px]">
+          {/* Bottom sections: side by side. */}
+          <div className="grid shrink-0 grid-cols-2 gap-12">
             <PodcastSection />
             <LongevitySection />
           </div>

@@ -59,62 +59,62 @@ const BOOK_VIEW: Record<string, Partial<SpectrumLinkData>> = {
 };
 
 const SPONSOR_VIEW: Record<string, Required<Pick<SpectrumLinkData, 'icon' | 'size' | 'mobileSize'>>> = {
-  ardd: { icon: '/imgs/investments/sponsors/ardd.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-15' },
-  'nakauchi-lab': { icon: '/imgs/investments/sponsors/nakauchi-lab.png', size: 'h-18', mobileSize: 'h-9 ipad:h-11' },
-  xprize: { icon: '/imgs/investments/sponsors/xprize.png', size: 'h-9', mobileSize: 'h-6 ipad:h-9' },
-  'lifespan-research-institute': { icon: '/imgs/investments/sponsors/lifespan.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  ardd: { icon: '/imgs/investments/sponsors/ardd.png', size: 'h-15', mobileSize: 'h-10.5' },
+  'nakauchi-lab': { icon: '/imgs/investments/sponsors/nakauchi-lab.png', size: 'h-18', mobileSize: 'h-9' },
+  xprize: { icon: '/imgs/investments/sponsors/xprize.png', size: 'h-9', mobileSize: 'h-6' },
+  'lifespan-research-institute': { icon: '/imgs/investments/sponsors/lifespan.png', size: 'h-12', mobileSize: 'h-8' },
   'public-longevity-group': {
     icon: '/imgs/investments/sponsors/public-longevity.png',
     size: 'h-15',
-    mobileSize: 'h-10.5 ipad:h-15',
+    mobileSize: 'h-10.5',
   },
-  '2060-longevity-forum': { icon: '/imgs/investments/sponsors/2060-longevity.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
-  'revive-me': { icon: '/imgs/investments/sponsors/revive-me.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  '2060-longevity-forum': { icon: '/imgs/investments/sponsors/2060-longevity.png', size: 'h-12', mobileSize: 'h-8' },
+  'revive-me': { icon: '/imgs/investments/sponsors/revive-me.png', size: 'h-12', mobileSize: 'h-8' },
   'healthy-longevity-medicine-conference': {
     icon: '/imgs/investments/sponsors/healthy-longevity.png',
     size: 'h-15',
-    mobileSize: 'h-10.5 ipad:h-15',
+    mobileSize: 'h-10.5',
   },
-  'vitalist-bay-summit': { icon: '/imgs/investments/sponsors/vitalist-bay.png', size: 'h-12', mobileSize: 'h-8 ipad:h-13' },
+  'vitalist-bay-summit': { icon: '/imgs/investments/sponsors/vitalist-bay.png', size: 'h-12', mobileSize: 'h-8' },
   'copenhagen-aging-brain-rejuvenation': {
     icon: '/imgs/investments/sponsors/aging-brain.png',
     size: 'h-18',
-    mobileSize: 'h-14 ipad:h-18',
+    mobileSize: 'h-14',
   },
   'oxford-heart-aging-metabolism': {
     icon: '/imgs/investments/sponsors/heart-aging.png',
     size: 'h-18',
-    mobileSize: 'h-14 ipad:h-18',
+    mobileSize: 'h-14',
   },
   'stanford-brain-resilience': {
     icon: '/imgs/investments/sponsors/brain-resilience.png',
     size: 'h-18',
-    mobileSize: 'h-14 ipad:h-18',
+    mobileSize: 'h-14',
   },
   'cornerstone-foundation': {
     icon: '/imgs/investments/sponsors/cornerstone.png',
     size: 'h-6.5',
-    mobileSize: 'h-4.5 ipad:h-6.5',
+    mobileSize: 'h-4.5',
   },
   'beyond-tomorrow-podcast': {
     icon: '/imgs/investments/sponsors/beyond-tomorrow.png',
     size: 'h-5',
-    mobileSize: 'h-3.5 ipad:h-4.5',
+    mobileSize: 'h-3.5',
   },
-  'hackaging-ai': { icon: '/imgs/investments/sponsors/hackaging.png', size: 'h-5', mobileSize: 'h-3.5 ipad:h-4.5' },
-  biohackerdao: { icon: '/imgs/investments/sponsors/biohackerdao.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-15' },
-  vitalism: { icon: '/imgs/investments/sponsors/vitalism.png', size: 'h-10', mobileSize: 'h-7.5 ipad:h-10' },
+  'hackaging-ai': { icon: '/imgs/investments/sponsors/hackaging.png', size: 'h-5', mobileSize: 'h-3.5' },
+  biohackerdao: { icon: '/imgs/investments/sponsors/biohackerdao.png', size: 'h-15', mobileSize: 'h-10.5' },
+  vitalism: { icon: '/imgs/investments/sponsors/vitalism.png', size: 'h-10', mobileSize: 'h-7.5' },
   'longevity-science-foundation': {
     icon: '/imgs/investments/sponsors/longevity-science.png',
     size: 'h-12',
-    mobileSize: 'h-8 ipad:h-12',
+    mobileSize: 'h-8',
   },
   'sundial-initiative': {
     icon: '/imgs/investments/sponsors/sundial-initiative.webp',
     size: 'h-12',
-    mobileSize: 'h-8 ipad:h-12',
+    mobileSize: 'h-8',
   },
-  'timepie-longevity-forum': { icon: '/imgs/investments/sponsors/time-pie.png', size: 'h-15', mobileSize: 'h-10.5 ipad:h-14' },
+  'timepie-longevity-forum': { icon: '/imgs/investments/sponsors/time-pie.png', size: 'h-15', mobileSize: 'h-10.5' },
 };
 
 const lab = (slug: string): SpectrumLinkData => {

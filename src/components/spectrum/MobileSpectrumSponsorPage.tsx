@@ -79,8 +79,8 @@ const MobileSpectrumSponsorPage = memo(
           <span className="bilingual-font text-sm font-bold">本机构赞助支持</span>
         </div>
 
-        {/* Logo Wall - max-w locks layout across all phone sizes, released on ipad */}
-        <div className="flex w-full max-w-[342px] flex-wrap items-center justify-center gap-4 ipad:max-w-none">
+        {/* Logo Wall - max-w (in the deck unit) locks the layout at every phone-deck width */}
+        <div className="flex w-full max-w-[21.375rem] flex-wrap items-center justify-center gap-4">
           {links?.map((item, index) => (
             <SponsorLogoItem
               key={item.label || index}

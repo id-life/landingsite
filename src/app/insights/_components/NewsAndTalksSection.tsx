@@ -17,6 +17,7 @@ import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { layoutUnitPx } from '@/utils/layout-unit';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
@@ -34,9 +35,6 @@ type NewsAndTalksSectionProps = {
 };
 
 const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
-// Medium windows (600-839 px) show the cards three across (RWD-01): four role-sized cards in a 700 px row cut titles
-// to a few words. Two rows of three per page.
-const ITEMS_PER_PAGE_MEDIUM = 6;
 
 function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,7 +78,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
             {/* The original's phone sizes: title 12 px, source and date 10 px. */}
             <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
-            <div className="flex w-full flex-col text-left font-text text-[10px]/3 text-black/60">
+            <div className="flex w-full flex-col text-left font-text text-[0.625rem]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
             </div>
@@ -111,15 +109,13 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         className="group flex cursor-pointer flex-col overflow-hidden"
       >
         {/* Image */}
-        {/* Medium windows: the picture keeps a 16:9 shape in the wider three-across card (the scaled height made a
-            strip 63 px tall at 820 px); so does a portrait expanded window (1024x1366). */}
-        <div className="relative h-[9.25rem] w-full overflow-hidden medium:aspect-video medium:h-auto expanded:portrait:aspect-video expanded:portrait:h-auto">
+        <div className="relative h-[9.25rem] w-full overflow-hidden">
           <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
         </div>
         {/* Card content */}
-        {/* The original's sizes at every width (the owner's rule on font sizes; tablets take its 1440 px size through the
-            layout unit). The source and date never truncate: where they do not fit one line the date moves to the next. */}
-        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm medium:gap-[8px] medium:p-[12px] expanded:gap-[8px] expanded:p-[12px]">
+        {/* The original's sizes (the owner's rule on font sizes), scaled with the window. The source and date never
+            truncate: where they do not fit one line the date moves to the next. */}
+        <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
           <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
           <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60">
             {item.publisher && <span>{item.publisher}</span>}
@@ -141,35 +137,28 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   );
 }
 
-// The phone column, measured (in pixels): this row, the podcast row and the weekly row share the screen between the
-// header and the bottom controls. The weekly row was once left out of this sum, so a row of cards too many was drawn
-// and the column, centred, pushed this row's heading and its VIEW ALL up under the header where nobody could reach them
-// (the news list then had no way in on a phone).
-const NEWS_HEADER_HEIGHT = 36; // the heading's line box (26 px text on a 36 px line)
+// The phone column: the owner's rule for how many rows of news cards a page holds, exactly as on his site (his answer
+// of 2026-11-18, "Keep 6": six at 390x844, four at 375x667 and 360x740, eight at 430x932), which reverses wave 1's
+// stricter count (it took the weekly row into the sum and drew four at 390x844). His count leaves the column taller
+// than the screen; on his site the column was centred and the NEWS & TALKS heading went under the header. Here the
+// column is a scroll box between the header and the bottom controls with its top kept in view ("safe" centring,
+// Insights.tsx), so nothing lies under either and the weekly row is reached by scrolling the column.
+const NEWS_HEADER_HEIGHT = 44; // his: the heading's height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 128; // heading (36) + gap (12) + one row of cards (80)
-const LONGEVITY_SECTION_HEIGHT = 144; // heading (36) + gap (12) + one row of cards with two-line titles (96)
-const SECTION_GAP = 24; // gap-6 between the three rows
+const PODCAST_SECTION_HEIGHT = 128; // heading (44) + gap (12) + one row of cards (72)
+const SECTION_GAP = 24; // gap-6 between the news and podcast rows
 const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
-function calculateMobileItemCount(containerHeight: number, columns: number): number {
-  // Height left for the news cards once the three headings, the two other rows and the gaps are taken.
-  const availableForNews =
-    containerHeight -
-    NEWS_HEADER_HEIGHT -
-    NEWS_CONTENT_GAP -
-    2 * SECTION_GAP -
-    PODCAST_SECTION_HEIGHT -
-    LONGEVITY_SECTION_HEIGHT;
-
-  // Calculate how many rows fit: first row is just row height, each additional adds gap + row
-  // Formula: availableForNews >= rows * NEWS_CARD_ROW_HEIGHT + (rows - 1) * NEWS_CARD_GAP
-  // Simplified: availableForNews >= rows * (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP) - NEWS_CARD_GAP
+function calculateMobileItemCount(containerPx: number, columns: number): number {
+  // The heights above are the phone's, at its 16 px unit; the phone deck scales up with the window above phone width
+  // (an upright tablet), so the column is measured in that unit before the rows are counted.
+  const containerHeight = containerPx / (layoutUnitPx() / 16 || 1);
+  const availableForNews = containerHeight - NEWS_HEADER_HEIGHT - NEWS_CONTENT_GAP - SECTION_GAP - PODCAST_SECTION_HEIGHT;
+  // Rows that fit: the first is a row, each further one a gap and a row.
   const rows = Math.floor((availableForNews + NEWS_CARD_GAP) / (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP));
-
-  // At least one row (a short phone scrolls the column), at most four.
-  const clampedRows = Math.max(1, Math.min(4, rows));
+  // His clamp: two rows at least, four at most.
+  const clampedRows = Math.max(2, Math.min(4, rows));
   return clampedRows * columns;
 }
 
@@ -190,7 +179,7 @@ export default function NewsAndTalksSection({
   const mobileSwiperRef = useRef<SwiperType>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const profile = useDeviceProfile();
-  const itemsPerPage = profile?.width === 'medium' ? ITEMS_PER_PAGE_MEDIUM : ITEMS_PER_PAGE_DESKTOP;
+  const itemsPerPage = ITEMS_PER_PAGE_DESKTOP;
   // Phone deck in landscape (a compact-height window): four cards across instead of two wide strips.
   const mobileColumns = profile?.height === 'compact' ? 4 : 2;
 
@@ -259,7 +248,7 @@ export default function NewsAndTalksSection({
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: skeletonCount }).map((_, index) => (
               <div key={index} className="flex flex-col overflow-hidden">
-                <div className="h-[68px] w-full animate-pulse bg-tone-800/50" />
+                <div className="h-[4.25rem] w-full animate-pulse bg-tone-800/50" />
                 <div className="space-y-1 bg-white p-3">
                   <div className="h-4 w-3/4 animate-pulse bg-tone-800/30" />
                   <div className="h-3 w-1/2 animate-pulse bg-tone-800/20" />
@@ -271,7 +260,7 @@ export default function NewsAndTalksSection({
       }
       // Desktop loading: 4x2 grid skeleton
       return (
-        <div className="grid grid-cols-4 gap-6 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
+        <div className="grid grid-cols-4 gap-6">
           {Array.from({ length: itemsPerPage }).map((_, index) => (
             <div key={index} className="flex flex-col">
               <div className="h-[148px] animate-pulse bg-tone-800/50" />
@@ -333,7 +322,7 @@ export default function NewsAndTalksSection({
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="grid grid-cols-4 gap-4 medium:grid-cols-3 medium:gap-[16px] expanded:gap-[16px]">
+              <div className="grid grid-cols-4 gap-4">
                 {pageItems.map((item) => (
                   <NewsCard key={item.id} item={item} />
                 ))}
@@ -358,13 +347,7 @@ export default function NewsAndTalksSection({
         {/* Content with arrow navigation */}
         {/* Phone deck in landscape: the cards are inset by the arrows' width (four across, the 44 px arrows would cover
             the first and last card's text). */}
-        <div
-          className={cn(
-            'relative mt-5',
-            !isMobile && 'flex-1 medium:mt-[16px] expanded:mt-[12px]',
-            isMobile && totalMobilePages > 1 && 'shortScreen:px-6',
-          )}
-        >
+        <div className={cn('relative mt-5', !isMobile && 'flex-1', isMobile && totalMobilePages > 1 && 'shortScreen:px-6')}>
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />
