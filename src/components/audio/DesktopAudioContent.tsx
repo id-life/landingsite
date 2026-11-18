@@ -108,31 +108,31 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
           </div>
         </div>
         <div className="flex items-center gap-2.5">
-          <div className="z-[101] flex h-[26px] cursor-pointer items-center gap-[8px] rounded-full bg-white/10 px-[8px] transition duration-300">
-            <div onClick={handleChangePlayStatus} className="flex items-center gap-[8px]">
-              <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[22px]" />
-              <div className="size-[22px]">
+          <div className="z-[101] flex h-[26px] cursor-pointer items-center gap-[8px] rounded-full bg-white/10 px-[8px] transition duration-300 mobile:h-[1.625rem] mobile:gap-[0.5rem] mobile:px-[0.5rem]">
+            <div onClick={handleChangePlayStatus} className="flex items-center gap-[8px] mobile:gap-[0.5rem]">
+              <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[1.375rem] mobile:w-[2.0625rem]" />
+              <div className="size-[22px] mobile:size-[1.375rem]">
                 {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
               </div>
             </div>
           </div>
           <div
             onClick={handleChangePlayMode}
-            className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-xs/[14px] font-semibold"
+            className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-xs/[14px] font-semibold mobile:h-[1.625rem] mobile:gap-[0.125rem] mobile:px-[0.5rem] mobile:text-xs/[0.875rem]"
           >
-            {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white" />}
-            {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white" />}
-            {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white" />}
-            {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white" />}
+            {playMode === PlayMode.ORDER && <PlayOrderSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
+            {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
+            {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
+            {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
           </div>
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (
-        <div className="mt-[16px] flex items-center justify-start">
+        <div className="mt-[16px] flex items-center justify-start mobile:mt-[1rem]">
           <PodcastSelected />
         </div>
       )}
-      <div className="hide-scrollbar mt-[20px] grid max-h-[272px] grid-cols-1 gap-[20px] overflow-y-auto overflow-x-hidden">
+      <div className="hide-scrollbar mt-[20px] grid max-h-[272px] grid-cols-1 gap-[20px] overflow-y-auto overflow-x-hidden mobile:mt-[1.25rem] mobile:max-h-[17rem] mobile:gap-[1.25rem]">
         {musicList.map((item) => (
           <DesktopMusicItem
             key={item.id}

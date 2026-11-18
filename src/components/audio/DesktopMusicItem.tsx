@@ -61,12 +61,12 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between gap-[2px]">
-        {isCurrent ? <img className="w-[16px]" src="/svgs/player/play_status.svg" alt="" /> : null}
+      <div className="flex items-center justify-between gap-[2px] mobile:gap-[0.125rem]">
+        {isCurrent ? <img className="w-[16px] mobile:w-[1rem]" src="/svgs/player/play_status.svg" alt="" /> : null}
         <div
           onClick={onClick}
           className={clsx(
-            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-accent',
+            'flex-1 cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-accent mobile:text-[0.75rem]/[1.25rem]',
             isCurrent && 'text-accent',
           )}
         >
@@ -75,7 +75,10 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
       </div>
       <div
         ref={containerRef}
-        className={clsx('relative mt-[4px] h-[20px] cursor-pointer overflow-hidden', !isCurrent && 'hidden')}
+        className={clsx(
+          'relative mt-[4px] h-[20px] cursor-pointer overflow-hidden mobile:mt-[0.25rem] mobile:h-[1.25rem]',
+          !isCurrent && 'hidden',
+        )}
       />
     </div>
   );
