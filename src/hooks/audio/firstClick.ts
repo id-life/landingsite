@@ -46,3 +46,13 @@ export function isOnMedia(target: EventTarget | null): boolean {
 export function otherSoundInPage(doc: ParentNode): boolean {
   return isSounding(doc.querySelectorAll<HTMLMediaElement>('video, audio')) || !!doc.querySelector('iframe[src*="youtube"]');
 }
+
+/**
+ * The try at load, as on the owner's site (it starts where the browser allows sound without a click): once per page
+ * load, with the first track; not when something else already starts it (a play pressed early, the visitor arriving
+ * after a press on another page); in a tab opened in the background, not until the tab is first shown.
+ */
+export function startAtLoad(state: { firstOfPageLoad: boolean; alreadyStarting: boolean; hidden: boolean }) {
+  if (!state.firstOfPageLoad || state.alreadyStarting) return 'never' as const;
+  return state.hidden ? ('when-shown' as const) : ('now' as const);
+}

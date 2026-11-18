@@ -1,7 +1,15 @@
 // 5a (the owner's answer): the music starts at the first click anywhere on the home page, once per page load, and
-// never over another sound, never twice, never after the visitor has used the player.
+// never over another sound, never twice, never after the visitor has used the player. Where the browser allows sound
+// without a click, his site also starts at load: once per page load, and never in a tab opened in the background.
 import { describe, expect, test } from 'vitest';
-import { firstClickStarts, isOnMedia, isSounding, MEDIA_TARGETS, otherSoundInPage } from '@/hooks/audio/firstClick';
+import {
+  firstClickStarts,
+  isOnMedia,
+  isSounding,
+  MEDIA_TARGETS,
+  otherSoundInPage,
+  startAtLoad,
+} from '@/hooks/audio/firstClick';
 
 const fresh = { handled: false, playerUsed: false, musicPlaying: false, otherMediaPlaying: false, onMedia: false };
 
@@ -55,5 +63,27 @@ describe('other sound in the page', () => {
     expect(isOnMedia(elsewhere)).toBe(false);
     expect(isOnMedia(null)).toBe(false);
     expect(isOnMedia({})).toBe(false);
+  });
+});
+
+describe('the try at load (where the browser allows sound without a click)', () => {
+  const base = { firstOfPageLoad: true, alreadyStarting: false, hidden: false };
+  test('the first track of the page load, the tab in view: try now', () => {
+    expect(startAtLoad(base)).toBe('now');
+  });
+  test('a tab opened in the background: not before it is first shown', () => {
+    expect(startAtLoad({ ...base, hidden: true })).toBe('when-shown');
+  });
+  test('once per page load: a player mounting again (back from another page) does not try', () => {
+    expect(startAtLoad({ ...base, firstOfPageLoad: false })).toBe('never');
+  });
+  test('something else already starts it (play pressed early, a press on another page): no second start', () => {
+    expect(startAtLoad({ ...base, alreadyStarting: true })).toBe('never');
+  });
+  test('the try itself obeys the first-click rule: after a click, a pause, or over another sound it does nothing', () => {
+    const fresh = { handled: false, playerUsed: false, musicPlaying: false, otherMediaPlaying: false, onMedia: false };
+    expect(firstClickStarts({ ...fresh, handled: true })).toBe(false);
+    expect(firstClickStarts({ ...fresh, playerUsed: true })).toBe(false);
+    expect(firstClickStarts({ ...fresh, otherMediaPlaying: true })).toBe(false);
   });
 });

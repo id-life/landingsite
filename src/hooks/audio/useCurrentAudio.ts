@@ -18,7 +18,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import type { AudioDataItem } from '@/apis/types';
-import { firstClickStarts, isOnMedia, otherSoundInPage } from '@/hooks/audio/firstClick';
+import { firstClickStarts, isOnMedia, otherSoundInPage, startAtLoad } from '@/hooks/audio/firstClick';
 import { NAV_LIST } from '@/components/nav/nav';
 import { wakeMotion } from '@/motion/runtime';
 
@@ -117,6 +117,7 @@ export default function useCurrentAudio() {
   const setProgress = useSetAtom(progressAtom);
   const setCurrentTime = useSetAtom(currentTimeAtom);
   const setDuration = useSetAtom(durationAtom);
+  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
 
   const [controls, dispatch] = useAtom(audioControlsAtom);
   const playNextTrack = useSetAtom(playNextTrackAtom);
@@ -164,6 +165,7 @@ export default function useCurrentAudio() {
     // visitor's choice (a playlist row) or the next track at the end of one, and plays at once, as the player always
     // has. The very first track waits for the first click (below), unless that click came on another page of the site.
     const resume = leftAt && leftAt.id === currentAudio.id ? leftAt : null;
+    const firstOfPageLoad = !resume && !hasLoadedTrack;
     const firstClickBefore = !resume && !hasLoadedTrack && arrivedAfterAPress() && !otherSoundInPage(document);
     if (firstClickBefore) firstClickHandled = true;
     const startOnLoad = resume ? resume.playing : hasLoadedTrack || firstClickBefore;
@@ -204,6 +206,7 @@ export default function useCurrentAudio() {
     // pressing play and the metadata arriving used to be overridden when the metadata came in.)
     let pausedByVisitor = false;
     setAudioRef(audio);
+    const playPressedEarly = playWhenReady;
     if (playWhenReady) {
       playWhenReady = false;
       dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.TOGGLE });
@@ -211,6 +214,46 @@ export default function useCurrentAudio() {
       // play() starts the download of a preload="none" element; waiting for its metadata instead never ends, because
       // such an element fetches nothing until it is asked to play.
       dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.AUTO });
+    }
+
+    // The start at load, as on the owner's site: once per page load, when the first track arrives, the player tries
+    // to play. A browser that allows sound without a click (it has played this site for the visitor before) lets it
+    // start; the usual browser refuses at once, nothing is downloaded, the button stays on play, nothing retries it,
+    // and the first click starts it (above). Never in a tab nobody is looking at (opened in the background): the try
+    // waits until the tab is first shown. Never over another sound, and never once the visitor has clicked or used
+    // the player.
+    let stopWaitingForShow = () => {};
+    const atLoad = startAtLoad({ firstOfPageLoad, alreadyStarting: startOnLoad || playPressedEarly, hidden: document.hidden });
+    if (atLoad !== 'never') {
+      const attempt = () => {
+        const allowed = firstClickStarts({
+          handled: firstClickHandled,
+          playerUsed,
+          musicPlaying: !audio.paused || isPlayWhenReadyPending(),
+          otherMediaPlaying: otherSoundInPage(document),
+          onMedia: false,
+        });
+        if (!allowed) return;
+        audio
+          .play()
+          .then(() => {
+            firstClickHandled = true;
+            setPlayStatus(true);
+          })
+          .catch(() => {
+            // Refused (no permission to play without a click): the first click starts it.
+          });
+      };
+      if (atLoad === 'now') attempt();
+      else {
+        const onShow = () => {
+          if (document.hidden) return;
+          stopWaitingForShow();
+          attempt();
+        };
+        document.addEventListener('visibilitychange', onShow);
+        stopWaitingForShow = () => document.removeEventListener('visibilitychange', onShow);
+      }
     }
 
     const setupAudio = () => {
@@ -315,6 +358,7 @@ export default function useCurrentAudio() {
     };
 
     return () => {
+      stopWaitingForShow();
       if (audio) {
         leftAt = { id: currentAudio.id, time: audio.currentTime, playing: !audio.paused };
         audio.pause();
@@ -337,7 +381,6 @@ export default function useCurrentAudio() {
   // The music starts at the visitor's first click anywhere on the page, as the owner's site does (his answer 5a): a
   // press on empty page, a link, the menu or the playlist button (the play button starts it by itself). Keys, the
   // wheel and swipes are not clicks. The first-click user_interact event was noise and stays gone (DATA-11).
-  const setPlayStatus = useSetAtom(currentPlayStatusAtom);
   useEffect(() => {
     const onFirstClick = (event: MouseEvent) => {
       if (firstClickHandled) return;
