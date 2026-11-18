@@ -16,11 +16,13 @@ const BRAND = { en: 'Immortal Dragons', zh: '不朽真龙' } as const;
 export const NOT_FOUND_TITLE = '404: This page could not be found.';
 
 /**
- * The link-preview image (question 9, 2026-11-18): the site's own logo (public/svgs/logo-en.svg) on the site's
- * background colour, nothing else, at 1200x630 PNG (LinkedIn's minimum is 1200x627; WhatsApp wants 300 px or wider
- * and under 600 KB; Apple's Messages 900 px or wider). It replaces the 800x400 WebP cover as the default.
+ * The link-preview image (question 9, 2026-11-18): the owner's own cover, the one his site declares
+ * (https://resources.id.life/id-life-cover-2.webp, 800x400 WebP), as a 1200x630 JPEG served from the site: enlarged
+ * 1.5x (Lanczos) to 1200x600 and extended by its own top and bottom rows to 1200x630, nothing cropped or drawn.
+ * LinkedIn needs at least 1200x627 and Apple's Messages 900 px wide, which the 800x400 original is not; some
+ * previewers do not take WebP.
  */
-const DEFAULT_OG_IMAGE = { url: '/og-image.png', width: 1200, height: 630, type: 'image/png' };
+export const DEFAULT_OG_IMAGE = { url: '/og-cover.jpg', width: 1200, height: 630, type: 'image/jpeg' };
 
 const CJK = /[㐀-鿿豈-﫿]/;
 
@@ -36,7 +38,8 @@ export type MetadataInput = {
    */
   tabTitle?: string;
   description: string;
-  image?: string;
+  /** The page's own image; null for a page his site gives none (no image is declared). */
+  image?: string | null;
   type?: 'website' | 'article';
 };
 
@@ -53,7 +56,7 @@ export function buildMetadata({ path, title, tabTitle, description, image, type 
       siteName: BRAND.en,
       url: path,
       type,
-      images: [image ? { url: image } : DEFAULT_OG_IMAGE],
+      images: image === null ? [] : [image ? { url: image } : DEFAULT_OG_IMAGE],
     },
   };
 }

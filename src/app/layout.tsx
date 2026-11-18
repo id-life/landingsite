@@ -7,6 +7,7 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import { color } from '@/styles/tokens';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
+import { DEFAULT_OG_IMAGE } from '@/lib/seo/metadata';
 import { ANALYTICS_ENABLED } from '@/constants/env';
 import HeadScript from '@/lib/analytics/HeadScript';
 import { AnalyticsBootLazy, VercelInsightsLazy } from '@/lib/analytics/lazy';
@@ -36,8 +37,9 @@ export const metadata: Metadata = {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',
     description: ORG_DESCRIPTION,
-    // The link-preview image (src/lib/seo/metadata.ts); pages without metadata of their own get it too.
-    images: [{ url: '/og-image.png', width: 1200, height: 630, type: 'image/png' }],
+    // The owner's cover as the link-preview image (src/lib/seo/metadata.ts); pages without metadata of their own
+    // get it too, as on his site.
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

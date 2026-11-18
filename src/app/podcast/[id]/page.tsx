@@ -64,7 +64,8 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
     path: `/podcast/${canonicalId(id)}`,
     title: data.title,
     description: data.description,
-    image: data.detailMedia || data.album,
+    // The episode's own picture, as his site declares it; none when it has none (no fallback to the show's).
+    image: data.detailMedia || null,
     type: 'article',
   });
   // An episode of the main show names the show's feed, as the show page does (question 22).
