@@ -15,12 +15,13 @@ import { useExperienceMode } from '@/hooks/useExperienceMode';
 import { sectionStateAtom } from '@/motion/sectionController';
 
 /**
- * The accessible name is the lockup the canvas draws, wordmark and tagline, letter for letter as drawn (the tagline
- * assets are set in capitals): it differs from the header logo's name, and it changes with each swap, so a
- * screen-reader user hears what the press did.
+ * The accessible name is the lockup the canvas draws, wordmark and tagline, in the words it shows. The English tagline
+ * is drawn in capitals; the name is not, because some screen readers spell an all-capitals word out letter by letter.
+ * It differs from the header logo's name, and it changes with each swap, so a screen-reader user hears what the press
+ * did.
  */
 const NAME = {
-  en: 'Immortal Dragons, A PURPOSE-DRIVEN LONGEVITY FUND',
+  en: 'Immortal Dragons, A Purpose-Driven Longevity Fund',
   cn: '不朽真龙, 长寿使命驱动基金',
 } as const;
 
