@@ -135,17 +135,17 @@ export function Model({ active }: { active: boolean }) {
             secondImage={imgUrl?.[1] || ''}
             firstImageClassName="object-cover object-center"
             secondImageClassname="object-cover object-center"
-            className="h-[500px] w-[200px]"
+            className="h-[31.25rem] w-[12.5rem]"
             slideMode="hover"
           />
         )
       ) : currentModel === PredictionModel.M0 ? (
         !supportsWebm ? (
-          <div className="relative h-[500px] w-[200px]">
+          <div className="relative h-[31.25rem] w-[12.5rem]">
             <Image src={imgUrl?.[0] ?? ''} alt="" fill sizes="200px" className="object-contain object-center" />
           </div>
         ) : (
-          <div className="relative h-[500px] w-[220px]">
+          <div className="relative h-[31.25rem] w-[13.75rem]">
             <video
               ref={videoRef}
               src={imgUrl?.[0]}
@@ -164,9 +164,9 @@ export function Model({ active }: { active: boolean }) {
           secondImage={imgUrl?.[1] || ''}
           firstImageClassName={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
           secondImageClassname={supportsWebm ? 'object-cover object-center' : 'object-center object-contain'}
-          className={cn('h-[500px]', {
-            'w-[220px]': supportsWebm,
-            'w-[200px]': !supportsWebm,
+          className={cn('h-[31.25rem]', {
+            'w-[13.75rem]': supportsWebm,
+            'w-[12.5rem]': !supportsWebm,
           })}
           slideMode="hover"
           isVideo={supportsWebm}

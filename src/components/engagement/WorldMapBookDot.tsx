@@ -260,9 +260,13 @@ export function WorldMapBookDotContent({
                     className={cn(phone ? 'size-2' : 'size-[calc(var(--t)*1)]', 'fill-data-sky', { 'fill-tone-400': !link })}
                   />
                   <p
-                    className={cn('ml-1 font-medium text-data-sky', phone ? 'whitespace-nowrap text-[8px]/3' : 'text-xs/3', {
-                      'text-tone-400': !link,
-                    })}
+                    className={cn(
+                      'ml-1 font-medium text-data-sky',
+                      phone ? 'whitespace-nowrap text-[8px]/3 phoneScaled:text-[0.5rem]/3' : 'text-xs/3',
+                      {
+                        'text-tone-400': !link,
+                      },
+                    )}
                   >
                     {desc}
                   </p>

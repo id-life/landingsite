@@ -25,7 +25,7 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
           href={DigitalTwinYoutubeLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex h-[28px] items-center tap-area"
+          className="group relative flex h-[1.75rem] items-center tap-area"
           onClick={handleClick}
         >
           <div className="flex-center gap-2 text-sm font-medium">
@@ -40,10 +40,7 @@ export default function YTBDemo({ deck }: { deck: TwinDeck }) {
 
   return (
     // Bottom left, above the fixed slogan; sizes in the text unit (--t) where the original's were in layout units.
-    <div
-      id="ytb-demo"
-      className="absolute bottom-[calc(var(--t)*10)] left-10 z-20 grid cursor-pointer gap-5 expanded:bottom-40 large:bottom-40"
-    >
+    <div id="ytb-demo" className="absolute bottom-40 left-10 z-20 grid cursor-pointer gap-5">
       <a
         href={DigitalTwinYoutubeLink}
         target="_blank"

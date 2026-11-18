@@ -28,15 +28,8 @@ import { isReducedMotion } from '@/motion/preference';
 const svgViewBox = { w: 756, h: 360 };
 const parallaxFactor = 20; // largest parallax shift in px (mouse deck)
 
-/**
- * Portrait and square windows on the scrolled deck (iPad portrait, 1024x1366): drawn at the laptop composition the map
- * is two to three window widths wide and only Europe shows. There the map becomes a strip that pans sideways, like the
- * phone map, tall enough that neighbouring labels (London and Oxford) stay a line apart. (RWD-02 medium tier.)
- */
-const MAP_PAN_QUERY = '(max-aspect-ratio: 1/1)';
-
 interface MapProps {
-  /** The deck the map is drawn for: 'desktop' (scrolled deck: hover, parallax; pans on portrait windows) or 'phone'. */
+  /** The deck the map is drawn for: 'desktop' (scrolled deck: hover, parallax) or 'phone'. */
   deck: MapDeck;
   dots?: Array<MapDotData>;
   regionDots?: Array<MapRegionDotData>;
@@ -48,8 +41,7 @@ interface MapProps {
 /**
  * The Presence world map, one component for both decks (RWD-02; it was WorldMap and MobileWorldMap). Shared: the dots,
  * their cards, the coordinates, closing every card on a background tap or when the visitor leaves the section. By deck:
- * - desktop: the map fills 88 % of the window height with pointer parallax; on portrait windows (MAP_PAN_QUERY) it
- *   is a sideways-panning strip and an opened dot is scrolled into view;
+ * - desktop: the map fills 88 % of the window height with pointer parallax, as on the original at every laptop window;
  * - phone: a 55 % tall strip panned by touch, with a progress bar (Engagement) and an automatic tour.
  */
 export const WorldMap = memo(function WorldMapComponent({
@@ -375,56 +367,11 @@ export const WorldMap = memo(function WorldMapComponent({
     isDraggingRef.current = false;
   };
 
-  // ---------------------------------------------------------------- desktop deck: parallax, or a panning strip
-  // The decks mount on the client only (HomeEntry), so the first render can read the query.
-  const [pan, setPan] = useState(() => !phone && typeof window !== 'undefined' && window.matchMedia(MAP_PAN_QUERY).matches);
-  useEffect(() => {
-    if (phone) return;
-    const mq = window.matchMedia(MAP_PAN_QUERY);
-    const update = () => setPan(mq.matches);
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, [phone]);
-  const handlePanScroll = useMemo(
-    () =>
-      throttle(() => {
-        if (mapContainerRef.current) setScrollLeft(mapContainerRef.current.scrollLeft);
-      }, 16),
-    [],
-  );
-  useEffect(() => () => handlePanScroll.cancel(), [handlePanScroll]);
-
-  // Portrait strip: start on Europe and Asia (as the phone map does), and bring an opened dot to 40 % of the width, so
-  // its badges (to the right) and a card hanging to the left both fit.
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (phone || !pan || !container) return;
-    gsap.set(mapContentRef.current, { clearProps: 'transform' });
-    container.scrollLeft = container.scrollWidth * 0.35;
-  }, [phone, pan, mapWidth]);
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (phone || !pan || !container) return;
-    const active =
-      activeMeetingDot !== null
-        ? `.world-map-dot-${activeMeetingDot}`
-        : activeBookDot !== null
-          ? `.world-map-dot-book-${activeBookDot}`
-          : activeSponsorDot !== null
-            ? `.world-map-dot-sponsor-${activeSponsorDot}`
-            : null;
-    const el = active ? container.querySelector<HTMLElement>(active) : null;
-    if (!el) return;
-    container.scrollTo({
-      left: Math.max(0, el.offsetLeft - container.clientWidth * 0.4),
-      behavior: isReducedMotion() ? 'auto' : 'smooth',
-    });
-  }, [phone, pan, activeMeetingDot, activeBookDot, activeSponsorDot]);
-
+  // ---------------------------------------------------------------- desktop deck: parallax
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      // No parallax on the panning strip, while a card is open, or with reduced motion (MOT-02).
-      if (pan || !mapContainerRef.current || !mapContentRef.current || isAnyActive || isReducedMotion()) return;
+      // No parallax while a card is open, or with reduced motion (MOT-02).
+      if (!mapContainerRef.current || !mapContentRef.current || isAnyActive || isReducedMotion()) return;
       const rect = mapContainerRef.current.getBoundingClientRect();
       const normalizedX = (e.clientX - rect.left) / rect.width - 0.5;
       const normalizedY = (e.clientY - rect.top) / rect.height - 0.5;
@@ -438,19 +385,13 @@ export const WorldMap = memo(function WorldMapComponent({
         overwrite: 'auto',
       });
     },
-    [pan, isAnyActive],
+    [isAnyActive],
   );
 
   // Compact heights: each phone label takes a free side of its dot, or waits until its dot is tapped (RWD-02 A3).
   useCompactLabelRule(phoneMapRef, [phone, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot]);
-  // Desktop deck: a label at the edge of the window (or of the panning strip's visible part) takes the other side of
-  // its dot.
-  useCompactLabelRule(
-    desktopMapRef,
-    [phone, pan, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot],
-    pan ? 'pan' : 'desktop',
-    mapContainerRef,
-  );
+  // Desktop deck: a label at the edge of the window takes the other side of its dot.
+  useCompactLabelRule(desktopMapRef, [phone, calcPoint, activeMeetingDot, activeBookDot, activeSponsorDot], 'desktop');
 
   if (phone) {
     return (
@@ -464,7 +405,7 @@ export const WorldMap = memo(function WorldMapComponent({
       <MapHitLayerContext.Provider value={hitContext}>
         <div
           ref={phoneMapRef}
-          className="absolute inset-x-0 top-[5dvh] mt-[180px] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[136px] shortScreen:[--map-h:calc(100svh_-_196px)]"
+          className="absolute inset-x-0 top-[5dvh] mt-[11.25rem] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[8.5rem] shortScreen:[--map-h:calc(100svh_-_12.25rem)]"
         >
           <div
             ref={mapContainerRef}
@@ -507,45 +448,20 @@ export const WorldMap = memo(function WorldMapComponent({
     <MapHitLayerContext.Provider value={hitContext}>
       <div
         ref={desktopMapRef}
-        className={cn(
-          'relative font-sans',
-          // Portrait strip: from just below the header to just above the bottom controls, so the map fills the screen
-          // as the original's does (it ended at 68 % of the window and left an empty band above the controls).
-          pan
-            ? 'absolute inset-x-0 bottom-[96px] top-[calc(var(--site-header-h,7.5rem)_+_1rem)]'
-            : 'mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden',
-        )}
+        className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
         onMouseMove={handleMouseMove}
-        style={{ perspective: pan ? undefined : '1000px' }}
+        style={{ perspective: '1000px' }}
       >
-        <div
-          ref={mapContainerRef}
-          className={cn(
-            'size-full',
-            // Horizontal drags stay native in the desktop deck's touch driver; vertical ones still step sections.
-            pan && 'hide-scrollbar touch-pan-x overflow-x-auto overflow-y-hidden',
-          )}
-          onClick={handleBackgroundClick}
-          onScroll={pan ? handlePanScroll : undefined}
-        >
-          <div ref={mapContentRef} className={cn('relative', pan ? 'aspect-[63/30] h-full' : '-left-14 size-full')}>
+        <div ref={mapContainerRef} className="size-full" onClick={handleBackgroundClick}>
+          <div ref={mapContentRef} className="relative -left-14 size-full">
             <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
             {hitLayerEl}
             {regionDotsPoints}
             {points}
-            {!pan && contents}
+            {contents}
             {filterDefs}
           </div>
         </div>
-        {/* Portrait strip: the cards sit outside the scroller (which clips vertically) and follow its scroll. */}
-        {pan && (
-          <div
-            className="pointer-events-none absolute inset-0 overflow-visible"
-            style={{ transform: `translateX(-${scrollLeft}px)` }}
-          >
-            {contents}
-          </div>
-        )}
       </div>
     </MapHitLayerContext.Provider>
   );

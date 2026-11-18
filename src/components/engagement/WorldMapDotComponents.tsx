@@ -36,7 +36,8 @@ export type CalcPoint = (lat: number, lng: number) => { x: number; y: number; le
 /** Map labels at the original's sizes: scaled with the layout on the scrolled deck, 8 px on the phone map. */
 export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
   desktop: 'map-label -ml-1.5 whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white',
-  phone: 'map-label whitespace-nowrap font-display text-[8px]/[12px] font-semibold capitalize text-white',
+  phone:
+    'map-label whitespace-nowrap font-display text-[8px]/[12px] phoneScaled:text-[0.5rem]/[0.75rem] font-semibold capitalize text-white',
 };
 
 /**
@@ -608,10 +609,10 @@ export function MobileConferenceBadgesWithVideo({
           exit={{ opacity: 0, scale: 0.5 }}
           className="pointer-events-auto flex cursor-pointer flex-col"
         >
-          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
-            <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
+          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:0.375rem]">
+            <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:0.375rem]">
               <YoutubeSVG className="size-3 fill-white" />
-              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <span className="inline-block text-[10px]/3 font-semibold text-white phoneScaled:text-[0.625rem]/3">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>

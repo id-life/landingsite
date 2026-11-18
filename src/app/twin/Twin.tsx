@@ -37,10 +37,9 @@ const HEADLINE_ALT = 'Digital Twin: Biomarker Visualization';
  * its controls, mounted once by the deck shell outside the scrolled content because ScrollSmoother's transform would
  * break position: fixed inside it). The page holds the headline, the feature list and the clone titles.
  *
- * Placement: the original's layout units wherever the header (its published height, --site-header-h) leaves room, so
- * a laptop matches the original; on tablets the headline, titles and picker start below the header, and the headline
- * stops 160 px short of the right edge, where the model picker stands; hidden titles wait fully off stage; text is the original's size
- * (on tablets its 1440 px size) and the boxes around it are in the same text unit (--t).
+ * Placement: the original's classes and layout units at every laptop window (the deck scales as the original does);
+ * the headline, titles and picker start no higher than just below the header (its published height, --site-header-h),
+ * and hidden titles wait fully off stage.
  */
 function DesktopTwin() {
   const isResetDemo = useRef(false);
@@ -114,11 +113,7 @@ function DesktopTwin() {
       </div>
       <div className="twin-title-wrapper relative h-screen">
         <h2 className="twin-title absolute left-10 top-[max(10rem,calc(var(--site-header-h,7.5rem)_+_1rem))] w-screen">
-          <img
-            className="w-[min(964px,calc(100vw_-_5rem_-_160px))] xl:w-[min(1084px,calc(100vw_-_5rem_-_160px))] 2xl:w-[min(1205px,calc(100vw_-_5rem_-_160px))]"
-            src="/svgs/twin/title-page.svg"
-            alt={HEADLINE_ALT}
-          />
+          <img className="w-[964px] xl:w-[1084px] 2xl:w-[1205px]" src="/svgs/twin/title-page.svg" alt={HEADLINE_ALT} />
         </h2>
         {/* A list of features: list markup, at the original's size. The Chinese line is the same list. */}
         <div className="twin-title absolute bottom-[calc(var(--t)*5)] right-[64px] text-right text-base font-medium">
@@ -132,12 +127,7 @@ function DesktopTwin() {
         <div className={cn(titleItem, 'twin-title-M0', titleTop)}>
           <img className="w-[325px] xl:w-[363px] 2xl:w-[403px]" src="/svgs/twin/title-ontology.svg" alt="" />
         </div>
-        <div
-          className={cn(
-            titleItem,
-            'twin-title-M0 bottom-[calc(var(--t)*8)] max-w-[calc(var(--t)*31.25)] expanded:bottom-32 large:bottom-32',
-          )}
-        >
+        <div className={cn(titleItem, 'twin-title-M0 bottom-32 max-w-[31.25rem]')}>
           <p className="text-xl/6 font-semibold">{TWIN_ONTOLOGY.title}</p>
           <p className="mt-5 text-base font-medium">{TWIN_ONTOLOGY.en}</p>
           <p className="mt-2 text-base font-medium">{TWIN_ONTOLOGY.cn}</p>
@@ -149,11 +139,7 @@ function DesktopTwin() {
           <img className="w-[455px] xl:w-[512px] 2xl:w-[569px]" src="/svgs/twin/title-clone-02.svg" alt="" />
         </div>
         <div className={cn(titleItem, 'twin-title-M3', titleTop)}>
-          <img
-            className="w-[min(720px,calc(100vw_-_5rem))] xl:w-[810px] 2xl:w-[900px]"
-            src="/svgs/twin/title-clone-03.svg"
-            alt=""
-          />
+          <img className="w-[720px] xl:w-[810px] 2xl:w-[900px]" src="/svgs/twin/title-clone-03.svg" alt="" />
         </div>
       </div>
     </div>
@@ -191,22 +177,22 @@ function PhoneTwin({ avatar }: { avatar: TwinAvatar }) {
         <img className="relative right-0 top-0 h-screen w-screen" src="/svgs/twin-bg.svg" alt="" />
       </div>
 
-      <div className="twin-title-wrapper relative h-[500px]">
+      <div className="twin-title-wrapper relative h-[31.25rem]">
         <YTBDemo deck="phone" />
         <h2 className="twin-title absolute left-5 top-20 w-screen">
-          <img src="/svgs/twin/mobile/title-page.svg" alt={HEADLINE_ALT} />
+          <img src="/svgs/twin/mobile/title-page.svg" alt={HEADLINE_ALT} className="w-[20.9375rem]" />
         </h2>
         <div className={cn(titleItem, 'twin-title-M0')}>
-          <img src="/svgs/twin/title-ontology.svg" alt="" className="h-[116px] w-auto" />
+          <img src="/svgs/twin/title-ontology.svg" alt="" className="h-[7.25rem] w-auto" />
         </div>
         <div className={cn(titleItem, 'twin-title-M1')}>
-          <img src="/svgs/twin/title-clone-01.svg" alt="" className="h-[116px] w-auto" />
+          <img src="/svgs/twin/title-clone-01.svg" alt="" className="h-[7.25rem] w-auto" />
         </div>
         <div className={cn(titleItem, 'twin-title-M2')}>
-          <img src="/svgs/twin/title-clone-02.svg" alt="" className="h-[116px] w-auto" />
+          <img src="/svgs/twin/title-clone-02.svg" alt="" className="h-[7.25rem] w-auto" />
         </div>
         <div className={cn(titleItem, 'twin-title-M3')}>
-          <img src="/svgs/twin/title-clone-03.svg" alt="" className="h-[116px] w-auto" />
+          <img src="/svgs/twin/title-clone-03.svg" alt="" className="h-[7.25rem] w-auto" />
         </div>
       </div>
 

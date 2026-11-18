@@ -113,9 +113,8 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
       id="switch-skin"
       className={clsx(
         'absolute z-20 grid gap-5',
-        // Desktop: never closer to the bottom than 190 px, so the feature list under it (its text is the 1440 px size there) does
-        // not reach it on tablets. GSAP moves it (bottom) when a model is shown.
-        phone ? 'right-5 top-1/2 -translate-y-1/2' : 'bottom-[max(15rem,190px)] right-[64px] large:bottom-60',
+        // Desktop: the original's place; GSAP moves it (bottom) when a model is shown.
+        phone ? 'right-5 top-1/2 -translate-y-1/2' : 'bottom-60 right-[64px]',
       )}
     >
       <motion.div

@@ -161,11 +161,12 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     const list = gsap.utils.toArray('.twin-title-item');
     gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
     showTwinDemo('phone', false);
-    gsap.to(list, { left: '-80rem' });
-    gsap.to(`.twin-title-${model}`, { left: '1.25rem', delay: 0.5 });
+    // In the phone deck's unit, so an upright tablet places them as a phone does, proportionally.
+    gsap.to(list, { left: u(-80) });
+    gsap.to(`.twin-title-${model}`, { left: u(1.25), delay: 0.5 });
     setCurrentModel(model);
-    gsap.to('.twin-tag', { left: '-80rem' });
-    if (model !== PredictionModel.M0) gsap.to('.twin-tag', { left: '0rem', delay: 0.5 });
+    gsap.to('.twin-tag', { left: u(-80) });
+    if (model !== PredictionModel.M0) gsap.to('.twin-tag', { left: 0, delay: 0.5 });
     gsap.to('#switch-model', { top: '50%', y: '-50%', overwrite: 'auto' });
     gsap.to('#switch-skin', { top: '50%', y: '-50%', overwrite: 'auto' });
     setCurrentAnatomyCamera(ANATOMY_START[model]);
@@ -212,7 +213,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
   }, []);
 
   const corner = phone
-    ? '[--corner-border-size:6px] [--corner-border-width:1.5px]'
+    ? '[--corner-border-size:0.375rem] [--corner-border-width:0.09375rem]'
     : '[--corner-border-size:8px] [--corner-border-width:2.5px]';
   const select = phone
     ? 'absolute -right-6 bottom-0 top-0 my-auto animate-move-right'
@@ -256,7 +257,8 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
           </div>
         )}
       </motion.div>
-      <img className={phone ? undefined : 'mx-auto'} src="/svgs/twin/avatar-divider.svg" alt="" />
+      {/* Phone: its own 40 px in the deck's unit, so it grows with the deck on an upright tablet. */}
+      <img className={phone ? 'w-10' : 'mx-auto'} src="/svgs/twin/avatar-divider.svg" alt="" />
       <motion.div
         className={phone ? 'relative grid w-10 gap-2.5 p-1' : 'group relative flex flex-col gap-2 p-2.5'}
         initial={{ scale: 1 }}
@@ -285,7 +287,9 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
             animate={avatarControls[i]}
           >
             <img src={img} alt="" className={phone ? undefined : 'size-[56px] object-contain'} />
-            {currentModel === model && <div className="absolute bottom-0 h-[3px] w-full bg-accent" />}
+            {currentModel === model && (
+              <div className={cn('absolute bottom-0 w-full bg-accent', phone ? 'h-[0.1875rem]' : 'h-[3px]')} />
+            )}
             {!phone && <div className={cn(codeOverlay, 'left-0 top-0')}>{code}</div>}
             {currentModel === model && <SelectSVG className={select} />}
           </motion.div>
