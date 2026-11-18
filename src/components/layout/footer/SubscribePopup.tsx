@@ -25,8 +25,26 @@ export default function SubscribePopup({ openOnArrival = false }: { openOnArriva
     if (first) return;
     // The laptop deck only: on the phone the original opens nothing by itself on these pages.
     if (openOnArrival && window.matchMedia(DESKTOP_TREE_QUERY).matches && mayOpenSubscribeByItself(isReducedMotion())) {
-      const arrive = setTimeout(() => setFirst({ type: 'open', placement: 'auto' }), 0);
-      return () => clearTimeout(arrive);
+      // Never ahead of the page: once it has loaded and the browser is idle (at most 50 ms later). The strip's own
+      // chunk is fetched together with the host's, not after it.
+      let idle = 0;
+      const open = () => {
+        void import('./SubscribeStrip');
+        setFirst({ type: 'open', placement: 'auto' });
+      };
+      const whenIdle = () => {
+        idle =
+          typeof window.requestIdleCallback === 'function'
+            ? window.requestIdleCallback(open, { timeout: 50 })
+            : window.setTimeout(open, 0);
+      };
+      if (document.readyState === 'complete') whenIdle();
+      else window.addEventListener('load', whenIdle, { once: true });
+      return () => {
+        window.removeEventListener('load', whenIdle);
+        if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
+        window.clearTimeout(idle);
+      };
     }
     const onRequest = (event: Event) => {
       const request = (event as CustomEvent<SubscribeRequest>).detail;
