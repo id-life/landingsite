@@ -1,4 +1,4 @@
-import { useSupportsWebm } from '@/hooks/useSupportsWebm';
+import { useAlphaClips } from '@/hooks/useSupportsWebm';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ interface VideoWithPosterProps {
 
 export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, coverClass, videoClass }: VideoWithPosterProps) {
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const supportsWebm = useSupportsWebm();
+  const { playable: supportsWebm, url: clip } = useAlphaClips();
   // Reduced motion (MOT-02): the still cover instead of a looping clip.
   const reduced = useReducedMotionPref();
 
@@ -48,7 +48,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
         )}
         {supportsWebm && !reduced && videoUrl && (
           <video
-            src={videoUrl}
+            src={clip(videoUrl)}
             autoPlay
             loop
             muted

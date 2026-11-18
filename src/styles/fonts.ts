@@ -6,25 +6,26 @@ import { Oxanium } from 'next/font/google';
 // screen). next/font preloads every file of a family it is asked to preload, on every route, at the
 // highest priority, in competition with the JavaScript and the hero; the other faces load when text
 // using them is laid out (display: swap, metric-adjusted fallbacks).
-// Xirod, Migrena and TT Lakes keep their files and declared weights until the owner decides whether
-// they stay (Oxanium + Poppins palette); they paint three words, three button labels and the phone
-// menu, and /news and /podcast use none of them, so they are no longer preloaded.
+// Xirod, Migrena and TT Lakes stay (the owner's decision of 2026-11-18). Each is served as WOFF2, a lossless
+// conversion of the original TTF/OTF (every table but head.flags bit 11, which WOFF2 sets, decompiles identically),
+// with the same declared weights, so the text they set renders exactly as before. They paint section titles, three
+// button labels and the phone menu, and /news and /podcast use none of them, so they are not preloaded.
 const xirod = localFont({
-  src: './fonts/Xirod.ttf',
+  src: './fonts/Xirod.woff2',
   variable: '--font-xirod',
   weight: '100 900',
   preload: false,
 });
 
 const migrena = localFont({
-  src: './fonts/Migrena_Grotesque.ttf',
+  src: './fonts/Migrena_Grotesque.woff2',
   variable: '--font-migrena',
   weight: '100 900',
   preload: false,
 });
 
 const ttLakes = localFont({
-  src: './fonts/TTLakes-DemiBold.otf',
+  src: './fonts/TTLakes-DemiBold.woff2',
   variable: '--font-tt',
   weight: '100 900',
   preload: false,

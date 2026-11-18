@@ -1,7 +1,7 @@
 import { AnatomyCamera, currentAnatomyCameraAtom, currentModelAtom, currentModelTypeAtom, PredictionModel } from '@/atoms/twin';
 import { Compare } from '@/components/compare/compare';
 import { ModelType } from '@/components/twin/model/type';
-import { useSupportsWebm } from '@/hooks/useSupportsWebm';
+import { useAlphaClips } from '@/hooks/useSupportsWebm';
 import { cn } from '@/utils';
 import { useAtomValue } from 'jotai';
 import Image, { getImageProps } from 'next/image';
@@ -27,7 +27,8 @@ export function Model({ active }: { active: boolean }) {
   const currentModel = useAtomValue(currentModelAtom);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const currentAnatomyCamera = useAtomValue(currentAnatomyCameraAtom);
-  const supportsWebm = useSupportsWebm();
+  // The clips play where the browser draws them with their transparency (useAlphaClips); elsewhere the stills stand in.
+  const { playable: supportsWebm, url: clip } = useAlphaClips();
   const imgUrl = useMemo(() => {
     if (currentModelType === ModelType.Anatomy) {
       if (currentModel === PredictionModel.M0) {
@@ -88,17 +89,17 @@ export function Model({ active }: { active: boolean }) {
         }
       } else {
         if (!currentModel || currentModel === PredictionModel.M0) {
-          return ['https://resources.id.life/twin/M0-1.webm'];
+          return [clip('https://resources.id.life/twin/M0-1.webm')];
         } else if (currentModel === PredictionModel.M1) {
-          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M1-1.webm'];
+          return [clip('https://resources.id.life/twin/M0-1.webm'), clip('https://resources.id.life/twin/M1-1.webm')];
         } else if (currentModel === PredictionModel.M2) {
-          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M2-1.webm'];
+          return [clip('https://resources.id.life/twin/M0-1.webm'), clip('https://resources.id.life/twin/M2-1.webm')];
         } else if (currentModel === PredictionModel.M3) {
-          return ['https://resources.id.life/twin/M0-1.webm', 'https://resources.id.life/twin/M3-1.webm'];
+          return [clip('https://resources.id.life/twin/M0-1.webm'), clip('https://resources.id.life/twin/M3-1.webm')];
         }
       }
     }
-  }, [currentAnatomyCamera, currentModel, currentModelType, supportsWebm]);
+  }, [clip, currentAnatomyCamera, currentModel, currentModelType, supportsWebm]);
 
   useEffect(() => {
     const video = videoRef.current;

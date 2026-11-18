@@ -7,7 +7,8 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
 import HeroPoster from '@/components/gl/HeroPoster';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
-import { type ComponentType, createElement, lazy, Suspense } from 'react';
+import { type ComponentType, createElement, lazy, Suspense, useEffect } from 'react';
+import { loadBrandFace } from '@/lib/brand-fonts';
 import '@/utils/gsap-plugins';
 import type { Deck } from './Home';
 
@@ -20,11 +21,20 @@ const loaders = {
 // Once a chunk has loaded it renders directly, so switching decks later never suspends (a suspension would show the
 // fallback and unmount the canvas).
 const loaded: Partial<Record<keyof typeof loaders, ComponentType>> = {};
+// One request per chunk, shared by the early start below and the lazy wrapper. A failed load is forgotten, so the
+// lazy wrapper's own call retries it exactly as before.
+const pending: Partial<Record<keyof typeof loaders, Promise<Chunk>>> = {};
 const load = (key: keyof typeof loaders) =>
-  retryImport(loaders[key]).then((chunk) => {
-    loaded[key] = chunk.default;
-    return chunk;
-  });
+  (pending[key] ??= retryImport(loaders[key]).then(
+    (chunk) => {
+      loaded[key] = chunk.default;
+      return chunk;
+    },
+    (error: unknown) => {
+      delete pending[key];
+      throw error;
+    },
+  ));
 const lazies = {
   home: lazy(() => load('home')),
   canvas: lazy(() => load('canvas')),
@@ -40,6 +50,16 @@ export default function HomeEntry() {
   // ENG-02: without WebGL no canvas, loader or model mounts; the server-rendered poster is the hero.
   const webgl = useExperienceMode() !== 'static';
   const deck: Deck = isMobile ? 'phone' : 'desktop';
+  // 7A: request both chunks together. Rendered as siblings in one Suspense boundary, React 19 suspends on the canvas
+  // and calls Home's import only in a later pass, once the canvas chunks have arrived: on a slow phone link the two
+  // downloads ran one after the other (2.4 s apart). Starting them here changes nothing that renders or its order.
+  if (!isNull(isMobile)) {
+    if (webgl) void load('canvas').catch(() => {});
+    void load('home').catch(() => {});
+  }
+  // START (phone) and SCROLL / BACK (desktop) are set in Migrena and appear as the intro ends; the browser would request
+  // the face only once they are laid out, so they were drawn in the fallback first. Request it with the experience.
+  useEffect(() => loadBrandFace('--font-migrena'), []);
 
   return (
     <>
