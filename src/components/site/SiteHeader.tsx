@@ -98,14 +98,20 @@ export default function SiteHeader({
       >
         {!onItemClick && <LinkTracker />}
         <div className={live}>
-          {/* As on the original (the owner's answer 1A): the experience and /news alternate the Chinese lockup and the
-              English wordmark (on the experience a press only swaps them); the podcast pages show the wordmark and
-              the Spectrum tool pages the lockup, still. */}
+          {/* As on the original (the owner's answer 1A), per page kind and deck: the experience and /news alternate the
+              Chinese lockup and the English wordmark on both decks (on the experience a press only swaps them); the
+              Spectrum tool pages show the still lockup on the laptop deck and alternate on the phone deck; the
+              podcast pages show the still wordmark on both. */}
           {overlay || currentId === 'news' ? (
             <AlternatingLogo toggle={overlay} {...(overlay ? {} : trackNav(NAV.vision_page.id, 'logo'))} />
+          ) : action === 'exit' ? (
+            <>
+              <Logo mark="cn" className="mobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
+              <AlternatingLogo className="notMobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
+            </>
           ) : (
             <Logo
-              mark={action === 'exit' ? 'cn' : 'en'}
+              mark="en"
               {...trackNav(NAV.vision_page.id, 'logo')}
               {...(currentId === 'podcast'
                 ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' }
