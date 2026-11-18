@@ -137,15 +137,16 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
   );
 }
 
-// The phone column, measured (in pixels): this row, the podcast row and the weekly row share the screen between the
-// header and the bottom controls. The weekly row was once left out of this sum, so a row of cards too many was drawn
-// and the column, centred, pushed this row's heading and its VIEW ALL up under the header where nobody could reach them
-// (the news list then had no way in on a phone).
-const NEWS_HEADER_HEIGHT = 36; // the heading's line box (26 px text on a 36 px line)
+// The phone column: the owner's rule for how many rows of news cards a page holds, exactly as on his site (his answer
+// of 2026-11-18, "Keep 6": six at 390x844, four at 375x667 and 360x740, eight at 430x932), which reverses wave 1's
+// stricter count (it took the weekly row into the sum and drew four at 390x844). His count leaves the column taller
+// than the screen; on his site the column was centred and the NEWS & TALKS heading went under the header. Here the
+// column is a scroll box between the header and the bottom controls with its top kept in view ("safe" centring,
+// Insights.tsx), so nothing lies under either and the weekly row is reached by scrolling the column.
+const NEWS_HEADER_HEIGHT = 44; // his: the heading's height
 const NEWS_CONTENT_GAP = 20; // mt-5 gap between header and content
-const PODCAST_SECTION_HEIGHT = 128; // heading (36) + gap (12) + one row of cards (80)
-const LONGEVITY_SECTION_HEIGHT = 144; // heading (36) + gap (12) + one row of cards with two-line titles (96)
-const SECTION_GAP = 24; // gap-6 between the three rows
+const PODCAST_SECTION_HEIGHT = 128; // heading (44) + gap (12) + one row of cards (72)
+const SECTION_GAP = 24; // gap-6 between the news and podcast rows
 const NEWS_CARD_ROW_HEIGHT = 124; // Card: image (68px) + content padding + text (56px)
 const NEWS_CARD_GAP = 10; // gap-y-2.5 between rows
 
@@ -153,22 +154,11 @@ function calculateMobileItemCount(containerPx: number, columns: number): number 
   // The heights above are the phone's, at its 16 px unit; the phone deck scales up with the window above phone width
   // (an upright tablet), so the column is measured in that unit before the rows are counted.
   const containerHeight = containerPx / (layoutUnitPx() / 16 || 1);
-  // Height left for the news cards once the three headings, the two other rows and the gaps are taken.
-  const availableForNews =
-    containerHeight -
-    NEWS_HEADER_HEIGHT -
-    NEWS_CONTENT_GAP -
-    2 * SECTION_GAP -
-    PODCAST_SECTION_HEIGHT -
-    LONGEVITY_SECTION_HEIGHT;
-
-  // Calculate how many rows fit: first row is just row height, each additional adds gap + row
-  // Formula: availableForNews >= rows * NEWS_CARD_ROW_HEIGHT + (rows - 1) * NEWS_CARD_GAP
-  // Simplified: availableForNews >= rows * (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP) - NEWS_CARD_GAP
+  const availableForNews = containerHeight - NEWS_HEADER_HEIGHT - NEWS_CONTENT_GAP - SECTION_GAP - PODCAST_SECTION_HEIGHT;
+  // Rows that fit: the first is a row, each further one a gap and a row.
   const rows = Math.floor((availableForNews + NEWS_CARD_GAP) / (NEWS_CARD_ROW_HEIGHT + NEWS_CARD_GAP));
-
-  // At least one row (a short phone scrolls the column), at most four.
-  const clampedRows = Math.max(1, Math.min(4, rows));
+  // His clamp: two rows at least, four at most.
+  const clampedRows = Math.max(2, Math.min(4, rows));
   return clampedRows * columns;
 }
 

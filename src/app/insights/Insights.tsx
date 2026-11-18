@@ -95,9 +95,11 @@ export default function Insights() {
 
   if (phone) {
     return (
+      // The column starts at the header's bottom (84 px on a phone, in the deck's unit) and ends above the bottom
+      // controls: with the owner's six news cards it is taller than the screen and scrolls inside these bounds.
       <div
         id={PAGE_ID}
-        className={cn('page-container-mobile mt-20 flex h-[calc(100svh-10rem)] flex-col', !isVisible && 'hidden')}
+        className={cn('page-container-mobile mt-[5.25rem] flex h-[calc(100svh-10.25rem)] flex-col', !isVisible && 'hidden')}
       >
         {/* Content Area: the three rows centred in the panel, each with its heading and VIEW ALL. The news row draws only
             the card rows that fit (NewsAndTalksSection), and "safe" centring keeps the top of a column that is still
