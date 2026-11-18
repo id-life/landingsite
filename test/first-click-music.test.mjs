@@ -2,6 +2,7 @@
 // never over another sound, never twice, never after the visitor has used the player. Where the browser allows sound
 // without a click, his site also starts at load: once per page load, and never in a tab opened in the background.
 import { describe, expect, test } from 'vitest';
+import { controlShowsPause } from '@/hooks/audio/controlState';
 import {
   firstClickStarts,
   isOnMedia,
@@ -85,5 +86,18 @@ describe('the try at load (where the browser allows sound without a click)', () 
     expect(firstClickStarts({ ...fresh, handled: true })).toBe(false);
     expect(firstClickStarts({ ...fresh, playerUsed: true })).toBe(false);
     expect(firstClickStarts({ ...fresh, otherMediaPlaying: true })).toBe(false);
+  });
+});
+
+describe('the state the control reads', () => {
+  test('pause while the element plays or is about to (accepted, still loading)', () => {
+    expect(controlShowsPause({ paused: false, ended: false, error: null })).toBe(true);
+  });
+  test('play when the element is paused (refused start, the visitor paused, the tab hidden)', () => {
+    expect(controlShowsPause({ paused: true, ended: false, error: null })).toBe(false);
+  });
+  test('play when the track has ended or its file failed', () => {
+    expect(controlShowsPause({ paused: false, ended: true, error: null })).toBe(false);
+    expect(controlShowsPause({ paused: false, ended: false, error: { code: 4 } })).toBe(false);
   });
 });

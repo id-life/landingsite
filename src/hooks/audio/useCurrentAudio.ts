@@ -20,6 +20,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import type { AudioDataItem } from '@/apis/types';
 import { firstClickStarts, isOnMedia, otherSoundInPage, startAtLoad } from '@/hooks/audio/firstClick';
 import { NAV_LIST } from '@/components/nav/nav';
+import { controlShowsPause } from '@/hooks/audio/controlState';
 import { wakeMotion } from '@/motion/runtime';
 
 // Created on first use, not at import: an AudioContext made before any user gesture starts
@@ -234,15 +235,17 @@ export default function useCurrentAudio() {
           onMedia: false,
         });
         if (!allowed) return;
-        audio
-          .play()
-          .then(() => {
-            firstClickHandled = true;
-            setPlayStatus(true);
-          })
-          .catch(() => {
-            // Refused (no permission to play without a click): the first click starts it.
-          });
+        const started = audio.play();
+        // A browser that allows it unpauses the element at once (the file may still be loading); one that refuses
+        // leaves it paused. The control follows at once, not when the sound begins.
+        if (controlShowsPause(audio)) {
+          firstClickHandled = true;
+          setPlayStatus(true);
+        }
+        started.catch(() => {
+          // Refused (no permission to play without a click): the first click starts it.
+          setPlayStatus(controlShowsPause(audio));
+        });
       };
       if (atLoad === 'now') attempt();
       else {
@@ -342,6 +345,8 @@ export default function useCurrentAudio() {
     // the playlist, a hardware media key): the experience's idle pause wakes for it (MOT-03).
     audio.onplay = () => {
       pausedByVisitor = false;
+      // Whatever started it (a press, a hardware media key, the next track), the control shows it.
+      setPlayStatus(controlShowsPause(audio));
       wakeMotion();
     };
 
