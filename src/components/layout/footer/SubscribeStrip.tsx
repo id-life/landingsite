@@ -34,7 +34,16 @@ export default function SubscribeStrip() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);
-  const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  const {
+    open: isSubscribeShow,
+    auto,
+    refs,
+    context,
+    getFloatingProps,
+    titleId,
+    closeWithX,
+    closedProps,
+  } = useSubscribeDialog();
   useReturnFocusWithoutScroll(isSubscribeShow);
   // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
   const emailId = useId();
@@ -85,6 +94,7 @@ export default function SubscribeStrip() {
       return;
     }
     getTimeline()?.play();
+    if (auto) return;
     // Focus the email field once the popup is on screen, without scrolling: a plain focus() on the
     // still-offscreen field scrolled the page, and on the experience a scroll changes the section. (The
     // focus manager's own initial focus is off, initialFocus -1; it still traps Tab and returns focus.)
@@ -96,7 +106,7 @@ export default function SubscribeStrip() {
       cancelAnimationFrame(outer);
       cancelAnimationFrame(inner);
     };
-  }, [isSubscribeShow, portalReady]);
+  }, [isSubscribeShow, portalReady, auto]);
 
   useEffect(() => {
     if (isSubscribeShow) {
@@ -124,11 +134,11 @@ export default function SubscribeStrip() {
           ref={footerRef}
           className="page-footer pointer-events-none fixed -bottom-40 z-[52] flex h-52 w-full items-center justify-center mobile:inset-x-5 mobile:h-auto mobile:w-auto"
         >
-          <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={-1} returnFocus={false}>
+          <FloatingFocusManager context={context} disabled={!isSubscribeShow || auto} initialFocus={-1} returnFocus={false}>
             <div
               {...getFloatingProps({ ref: boxMergedRef })}
               aria-labelledby={titleId}
-              aria-modal={isSubscribeShow ? 'true' : undefined}
+              aria-modal={isSubscribeShow && !auto ? 'true' : undefined}
               {...closedProps}
               className="footer-box-clip pointer-events-auto relative h-0 w-0 overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md mobile:px-4 mobile:py-7.5"
             >

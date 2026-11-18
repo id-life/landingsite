@@ -30,7 +30,16 @@ type Inputs = {
  */
 export default function SubscribeSheet() {
   const { onFormSubmit, isSubmitting, isSubmitted, submitError } = useMobileSubscribeAction();
-  const { open: isSubscribeShow, refs, context, getFloatingProps, titleId, closeWithX, closedProps } = useSubscribeDialog();
+  const {
+    open: isSubscribeShow,
+    auto,
+    refs,
+    context,
+    getFloatingProps,
+    titleId,
+    closeWithX,
+    closedProps,
+  } = useSubscribeDialog();
   useReturnFocusWithoutScroll(isSubscribeShow);
   // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
   const emailId = useId();
@@ -50,11 +59,11 @@ export default function SubscribeSheet() {
     <FloatingPortal>
       <AnimatePresence>
         {/* Focus starts on the close button (the first control), so no on-screen keyboard pops up. */}
-        <FloatingFocusManager context={context} disabled={!isSubscribeShow} initialFocus={0} returnFocus={false}>
+        <FloatingFocusManager context={context} disabled={!isSubscribeShow || auto} initialFocus={0} returnFocus={false}>
           <motion.div
             {...getFloatingProps({ ref: refs.setFloating })}
             aria-labelledby={titleId}
-            aria-modal={isSubscribeShow ? 'true' : undefined}
+            aria-modal={isSubscribeShow && !auto ? 'true' : undefined}
             {...closedProps}
             animate={isSubscribeShow ? 'open' : 'close'}
             variants={{
