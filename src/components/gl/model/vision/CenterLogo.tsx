@@ -14,7 +14,12 @@ import { INTRO, shouldSkipIntro } from './intro';
 import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 import MergedSvg from './MergedSvg';
-import { HERO_WORDMARK_TOGGLE, registerHeroWordmarkMeasure, type ViewportBox } from './heroWordmarkControl';
+import {
+  HERO_WORDMARK_TOGGLE,
+  registerHeroWordmarkMeasure,
+  setHeroWordmarkLang,
+  type ViewportBox,
+} from './heroWordmarkControl';
 
 const POINTER_DAMPING = 2.5;
 /** A click within this many ms of the last swap is ignored (the original's throttle). */
@@ -63,6 +68,8 @@ function useWordmarkControl(onToggle: () => void, drawn: () => THREE.Object3D | 
     const toggle = () => toggleRef.current();
     window.addEventListener(HERO_WORDMARK_TOGGLE, toggle);
     const unregister = registerHeroWordmarkMeasure(() => viewportBox(drawnRef.current(), camera, canvas));
+    // A wordmark mounted afresh (a change of deck) draws English.
+    setHeroWordmarkLang('en');
     return () => {
       window.removeEventListener(HERO_WORDMARK_TOGGLE, toggle);
       unregister();
@@ -109,6 +116,7 @@ function DesktopCenterLogo() {
       duration: DURATION.base,
       onComplete: () => {
         setLang(next);
+        setHeroWordmarkLang(next);
         gsap.fromTo(materials, { opacity: 0 }, { opacity: 1, duration: DURATION.base });
       },
     });
@@ -270,6 +278,7 @@ function PhoneCenterLogo() {
   const pendingRef = useRef(false);
 
   const swap = useCallback((next: Lang) => {
+    setHeroWordmarkLang(next);
     const [from, to] =
       next === 'cn'
         ? [

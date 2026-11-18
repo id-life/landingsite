@@ -21,3 +21,26 @@ export function registerHeroWordmarkMeasure(fn: () => ViewportBox | null) {
 export function measureHeroWordmark(): ViewportBox | null {
   return measure?.() ?? null;
 }
+
+/** Which lockup the hero draws: the button's accessible name follows it. */
+export type HeroLang = 'en' | 'cn';
+let drawnLang: HeroLang = 'en';
+const langListeners = new Set<() => void>();
+
+/** CenterLogo reports the lockup it now draws (after a swap, or 'en' when it mounts afresh). */
+export function setHeroWordmarkLang(lang: HeroLang) {
+  if (drawnLang === lang) return;
+  drawnLang = lang;
+  langListeners.forEach((listener) => listener());
+}
+
+export function getHeroWordmarkLang(): HeroLang {
+  return drawnLang;
+}
+
+export function subscribeHeroWordmarkLang(listener: () => void) {
+  langListeners.add(listener);
+  return () => {
+    langListeners.delete(listener);
+  };
+}
