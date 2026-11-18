@@ -50,11 +50,7 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
           />
         </div>
         <div className="p-4 mobile:p-3">
-          {/* Tablets (600-1199 px): no clamp, so every title shows whole at the original's 1440 size; the cards of a row
-              share one height (grid rows stretch). */}
-          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base medium:line-clamp-none expanded:line-clamp-none">
-            {data.title}
-          </h3>
+          <h3 className="line-clamp-2 text-lg font-semibold mobile:text-base">{data.title}</h3>
           {/* The source and the date never squeeze into columns: the date moves to the next line whole where both do not fit. */}
           <div className="mt-4 flex flex-wrap items-center gap-x-2 text-sm font-medium text-ink-muted mobile:mt-1.5 mobile:text-sm/4.5">
             {data?.source || data?.publishDate ? (

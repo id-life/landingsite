@@ -13,18 +13,12 @@ export default function SubTitle() {
   return (
     <div className="relative isolate border-2 border-white bg-[url(/imgs/news/news-logo-bg.webp)] bg-cover px-6 py-7.5 mobile:overflow-hidden mobile:p-3">
       <img
-        // Tablets: the dragon keeps the right half and its height, as in the original, so the text and the art each keep
-        // their own half (the taller banner made it larger and pushed it under the text).
-        className="absolute right-0 top-0 z-0 h-full mobile:-bottom-2.5 mobile:-right-1/3 mobile:top-auto mobile:h-[5rem] medium:h-auto medium:max-h-full medium:w-1/2 medium:object-contain medium:object-right expanded:h-auto expanded:max-h-full expanded:w-1/2 expanded:object-contain expanded:object-right"
+        className="absolute right-0 top-0 z-0 h-full mobile:-bottom-2.5 mobile:-right-1/3 mobile:top-auto mobile:h-[5rem]"
         src="/imgs/news/news-logo.webp"
         alt=""
       />
-      {/* Medium windows: smaller than the original's 1440 size (rule 2 allows it), so the heading and line keep the
-          left half and the dragon the right, as on the original. */}
-      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8 medium:text-2xl">
-        Join our longevity circle
-      </h2>
-      <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5 medium:text-sm/6">
+      <h2 className="relative z-10 text-4xl font-bold uppercase text-accent mobile:text-lg/8">Join our longevity circle</h2>
+      <p className="relative z-10 text-lg/7.5 font-semibold mobile:text-xs/4.5">
         For <span className="text-accent">priority</span> access to pioneer research
       </p>
       <button

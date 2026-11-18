@@ -85,7 +85,7 @@ export default function SiteHeader({
               // the window (two versions only, RWD-02); the phone deck's bar.
               'fixed left-0 top-0 z-50 flex-nowrap gap-x-15 p-10 mobile:z-[60] mobile:gap-0 mobile:p-5'
             : // Content pages: the logo and the page's action, as their original headers had them.
-              'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
+              'flex-wrap gap-x-6 gap-y-4 notMobile:flex-nowrap',
           // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
           // On phones the bar lets taps through to the page (its controls take them).
           // It fades in; it hides at once (a fade-out from the server-painted bar would read as "visible" for 300 ms).
@@ -165,14 +165,14 @@ export default function SiteHeader({
           id={overlay ? 'subscribe-btn' : undefined}
           className={clsx(
             'flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5',
-            overlay ? 'notMobile:items-start' : 'navRow:items-start',
+            'notMobile:items-start',
           )}
         >
           {action === 'exit' ? (
             <Link
               prefetch={false}
               href="/"
-              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]"
+              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
               ID.LIFE
@@ -184,10 +184,6 @@ export default function SiteHeader({
                 // podcast pages; a 44 px hit area on touch screens (tap-area) instead of a bigger frame.
                 'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
                 overlay ? 'w-33' : 'w-34',
-                // Content pages keep their tablet-width frame for now (they are not in the decks); the experience's
-                // scales with the deck (two versions only, RWD-02).
-                !overlay &&
-                  '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]',
                 currentId === 'podcast' && 'tracking-[0.1em] mobile:tracking-normal',
                 live,
               )}

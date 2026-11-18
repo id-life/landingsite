@@ -96,15 +96,7 @@ const CharacterRelation = () => {
   return (
     <>
       <div className="h-full w-full">
-        {/* Below 1440 px the graph keeps the original's margins (a share of the window), so it reaches as far down as
-            the original's and no name is cut at the window's edge. */}
-        <div
-          className={cn(
-            'h-full w-full px-10 py-[6.5rem]',
-            '[@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:px-[2.083vw] [@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:py-[5.417vw]',
-            'mobile:px-0 mobile:pb-6 mobile:pt-20',
-          )}
-        >
+        <div className={cn('h-full w-full px-10 py-[6.5rem]', 'mobile:px-0 mobile:pb-6 mobile:pt-20')}>
           {data && <CharacterRelationGraph data={data} />}
         </div>
         <CharacterRelationLegend />

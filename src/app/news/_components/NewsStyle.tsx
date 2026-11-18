@@ -1,5 +1,5 @@
 import React from 'react';
-import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { desktopTreeAnd, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 import 'swiper/css';
 import '@/styles/webgl.css';
@@ -13,10 +13,10 @@ const NEWS_CSS = `
     font-size: 16px;
   }
 
-  /* The owner's rule on font sizes: from 1200 px every text has the original's size, and the original scaled these
-     pages down between 769 and 1320 px. The layout unit follows it from 1200 to 1320 px (text and layout in rem
-     scale together, as they did); below 1200 px the tablet tier keeps the original's 1440 size (16 px). */
-  @media (min-width: 1200px) and (max-width: 1320.98px) {
+  /* Two versions (RWD-02) and the owner's rule on font sizes: on the laptop deck every text is the original's size
+     at the same window, and the original scaled these pages down from 1320 px to the deck's edge. The layout unit
+     follows it there (text and layout in rem scale together, as they did). */
+  @media ${desktopTreeAnd('(max-width: 1320.98px)')} {
     :root {
       --u: calc(1.25vw - 0.5px);
     }
@@ -27,9 +27,11 @@ const NEWS_CSS = `
     background: var(--background);
   }
 
+  /* The phone deck: the phone layout in the deck's unit (16 px up to 599 px, then growing with the window). */
   @media ${PHONE_TREE_QUERY} {
     :root {
       font-size: 16px;
+      --u: ${PHONE_LAYOUT_UNIT};
     }
 
     body {
