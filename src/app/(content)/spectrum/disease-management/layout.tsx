@@ -11,6 +11,7 @@ import { breadcrumbJsonLd, WEBSITE_ID } from '@/constants/entity';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { MedicalWebPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
+import { getSpectrumJsonLd } from '@/app/spectrum/_components/spectrumData';
 
 // Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('disease-management');
@@ -41,7 +42,8 @@ const breadcrumb = breadcrumbJsonLd([
 export default function DiseaseManagementLayout({ children }: { children: ReactNode }) {
   return (
     <div className="disease-management-page relative z-[100] flex h-screen flex-col overflow-y-auto bg-black">
-      <JsonLd data={[jsonLd, breadcrumb]} />
+      {/* His site serves the Spectrum section's own JSON-LD on this page too (it was nested in that section). */}
+      <JsonLd data={[getSpectrumJsonLd(), jsonLd, breadcrumb]} />
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
       <DMStyle />
