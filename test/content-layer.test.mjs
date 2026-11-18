@@ -92,11 +92,12 @@ describe('one source per fact', () => {
     expect(hits).toEqual([]);
   });
 
-  // The owner's rule of 2026-11-18: hidden data states only what the site shows. llms.txt has no key facts list
-  // (the English renderings of the profile are shown nowhere), and the JSON-LD states no founding date.
-  test('llms.txt states no fact the site does not show', () => {
-    for (const text of ['Key facts', 'Founded', '2024', 'Investment stage', 'pre-seed', 'Series A', '15+', 'Yale', 'RK'])
-      expect(LLMS_HEADER, text).not.toContain(text);
+  // llms.txt is the owner's own file minus what his rulings of 2026-11-18 remove: no investment stage (12j), the count
+  // 16 where a count is stated (12f), no founding date (12b), no /about (2A).
+  test('llms.txt carries none of the facts the owner ruled out', () => {
+    for (const text of ['pre-seed', 'Series A', '种子轮', '15+', '15余项', 'Founded', '2024', '/about'])
+      expect(`${LLMS_HEADER}${content.LLMS_CHINESE_SUMMARY}`, text).not.toContain(text);
+    expect(LLMS_HEADER).toContain('- Investments: 16\n');
   });
 
   test('the Organization JSON-LD repeats the fund record', () => {

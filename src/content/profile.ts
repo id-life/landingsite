@@ -1,100 +1,34 @@
-// The fund's written profile: the text of /llms.txt. The owner's rule (2026-11-18, question 12b): "if I never put it
-// in the website, then you shouldn't put it in", hidden data included. So llms.txt says only what the site shows: the
-// names, the Chinese summary of the 不朽真龙介绍 article (src/content/articles/immortal-dragons-news-and-updates.md,
-// shown on that page), the sponsored bodies as that article's table names them, and the pages. The investment themes
-// stay as they were: on the focus the owner ruled "Don't change the text regarding this" (question 12g).
-import { live } from './approval';
-import { FUND } from './fund';
-import { PROFILE_GRANTS } from './grants';
-import { PAGES, metaDescription } from './pages';
-import type { Copy } from './schema';
-import { THEMES } from './themes';
+// /llms.txt: the owner's own file, as his site serves it, word for word (2026-11-18: what his site serves stays),
+// minus only what his rulings of that day remove: no investment stage (question 12j), and where his file states the
+// count of investments it is 16 (question 12f). His file states no founding or launch date and no second founder, does
+// not list /about, and already reads "Healthy" and "Stealth mode biotech". src/app/llms.txt/route.ts adds the
+// portfolio, the press items, the news and the podcast episodes as his route does.
 
 /**
  * The two paragraphs under 概述 of the 不朽真龙介绍 article, word for word as the article page shows them
- * (test/content-parity.test.mjs checks it). llms.txt's Chinese summary.
+ * (test/content-parity.test.mjs checks it): his file's Chinese summary, after the same two rulings.
  */
 export const ARTICLE_SUMMARY_ZH = [
   '不朽真龙基金（Immortal Dragons）是一家总部位于新加坡、投资激进延寿领域、规模4000万美元的使命驱动基金，由朢舶洋（Boyang Wang）创立。基金致力于支持经济回报尚不明确，被主流资本所忽视，但具备长期价值的突破性项目，主要投资方向包括器官替换策略，3D生物打印，人造子宫等。',
   '基金已完成16项投资，不限地域。投资之外，不朽真龙出版翻译书籍，资助行业会议和学术机构，制作播客和媒体内容，从而支持抗衰科学研究，布道长寿理念信仰。',
 ];
 
-/** The investment themes' English text (question 12g: unchanged). */
-export const PROFILE_TEXT: Copy[] = [
-  {
-    id: 'investment-areas',
-    text: {
-      en: 'Specific investment areas include organ replacement strategy, 3D bioprinting, gene therapy and artificial womb, and the fund also invests as an LP in other longbio funds.',
-    },
-    approval: live(),
-  },
-  {
-    id: 'replacement-strategy',
-    text: {
-      en: 'The Replacement Strategy rests on the fund\'s view that aging is the systemic wear of the body\'s "hardware": damage that is still reversible can be repaired, but irreversible damage can only be addressed by replacing tissues or organs with new ones. This area covers xenotransplantation, 3D bioprinting, tissue engineering and cryopreservation.',
-    },
-    approval: live(),
-  },
-  {
-    id: 'criteria',
-    text: {
-      en: 'The fund treats scientific validity as the first threshold, requiring reproducible animal data and well-designed early-stage human studies. It prioritizes areas with clear regulatory pathways, sufficient technical validation and irreplaceable clinical need, rather than chasing trends. Because it views aging as a simultaneous imbalance across multiple pathways, organs and levels, it favors safe, multi-target combination interventions.',
-    },
-    approval: live(),
-  },
-];
-
-/** One profile text by id. */
-function profileText(id: string) {
-  const entry = PROFILE_TEXT.find((item) => item.id === id);
-  if (!entry) throw new Error(`content/profile.ts: no text "${id}"`);
-  return entry.text;
-}
-
 export const LLMS_SECTIONS = {
+  keyFacts: 'Key facts',
   themes: 'Investment themes',
+  advocacy: 'Advocacy',
   sponsorships: 'Sponsorships & grants',
 } as const;
 
-/**
- * llms.txt's Pages list: every route with an llms label, in ./pages.ts order, each followed by that page's meta
- * description exactly (metaDescription), so the list and the pages say the same thing.
- */
-function llmsPageLines() {
-  return PAGES.filter((page) => page.llmsLabel).map(
-    (page) => `- [${page.llmsLabel}](${FUND.website}${page.path}): ${metaDescription(page)}`,
-  );
-}
-
-export const LLMS_HEADER = `# ${FUND.name.en} (${FUND.name.zh})
-
-## ${LLMS_SECTIONS.themes}
-
-The fund's four investment themes are:
-
-${THEMES.map((theme) => `${theme.order}. ${theme.name.en}`).join('\n')}
-
-${profileText('investment-areas').en}
-
-${profileText('replacement-strategy').en}
-
-${profileText('criteria').en}
-
-## ${LLMS_SECTIONS.sponsorships}
-
-${PROFILE_GRANTS.map((grant) => `- **${grant.name}**`).join('\n')}
-
-## Pages
-
-${llmsPageLines().join('\n')}
-`;
+/** His file up to its Pages list (the dynamic sections follow in the route). */
+export const LLMS_HEADER =
+  "# Immortal Dragons (不朽真龙)\n\n> Immortal Dragons (不朽真龙) is a US$40 million purpose-driven longevity and radical life extension fund headquartered in Singapore, founded by Boyang Wang (朢舶洋). The fund backs underfunded moonshot projects: breakthroughs whose economic returns are not yet clear and that are overlooked by mainstream capital, but that hold long-term value. Its main investment themes include organ replacement strategy, 3D bioprinting and artificial womb, among others.\n>\n> The fund has made 16 investments, and is geographically agnostic. Beyond conventional capital investment, Immortal Dragons engages in book translation and publishing, delivers talks and produces podcasts, sponsors events and initiatives, and collaborates on research projects, in order to support anti-aging research and advocate for longevity.\n\n## Key facts\n\n- Name: Immortal Dragons (Chinese: 不朽真龙)\n- Founder: Boyang Wang (朢舶洋), who received his education from the National University of Singapore and Yale University\n- Headquarters: Biopolis, Singapore (3 Biopolis Dr, #01-15, Singapore 138623)\n- Fund I size: approximately US$40 million\n- Investments: 16\n- geographically agnostic\n- Also invests as an LP in other longbio funds\n- Website: https://www.id.life\n- Contact: contact@id.life\n\n## Investment themes\n\nThe fund's four investment themes are:\n\n1. Replacement Strategy\n2. Neuro & Brain Rejuvenation\n3. Cells and Gene Therapy\n4. Reproduction Technology\n\nSpecific investment areas include organ replacement strategy, 3D bioprinting, gene therapy and artificial womb, and the fund also invests as an LP in other longbio funds.\n\nThe Replacement Strategy rests on the fund's view that aging is the systemic wear of the body's \"hardware\": damage that is still reversible can be repaired, but irreversible damage can only be addressed by replacing tissues or organs with new ones. This area covers xenotransplantation, 3D bioprinting, tissue engineering and cryopreservation.\n\nThe fund treats scientific validity as the first threshold, requiring reproducible animal data and well-designed early-stage human studies. It prioritizes areas with clear regulatory pathways, sufficient technical validation and irreplaceable clinical need, rather than chasing trends. Because it views aging as a simultaneous imbalance across multiple pathways, organs and levels, it favors safe, multi-target combination interventions.\n\n## Advocacy\n\n- Talks and podcasts: investor fireside chat at Vitalist Bay, founder interview on Beyond Tomorrow, panel discussion at Founders Longevity Forum in Singapore, investor keynote at LW3 in Singapore, keynote at Longevity Biotech Exchange in Shenzhen, among others.\n- Book translation and publishing: The Case Against Death by Swedish philosopher Ingemar Patrick Linden, Chinese edition 《死亡批判》; Better With Age, Chinese edition 《乐龄：健康老龄化的积极心理学》; The Network State by former Coinbase CTO Balaji Srinivasan, Chinese online translation 《网络国家》; the Bio/Acc Manifesto; and Chapter 14 of Frontiers of Longevity Science, Vol. 3, published by Springer Nature.\n- Translation of talks by longevity leaders: e.g. Aubrey de Grey (President of the LEV Foundation) and Brian Kennedy (head of the Healthy Longevity Translational Research Programme at the National University of Singapore).\n- Chinese longevity podcast: a Chinese-language longevity podcast published on Xiaoyuzhou, Bilibili, Spotify and other platforms.\n\n## Sponsorships & grants\n\n- **ARDD**: Aging Research and Drug Discovery Meeting, held annually in Copenhagen; Immortal Dragons sponsored ARDD 2025.\n- **Nakauchi Lab – Stem Cell Research**: Hiromitsu Nakauchi's stem cell laboratory at Stanford University.\n- **XPRIZE**: Prize-competition foundation; Immortal Dragons is a partner of XPRIZE Healthspan and sponsored the 2026 finalist awards ceremony.\n- **Lifespan Research Institute**: US longevity nonprofit; Immortal Dragons is one of the inaugural sponsors of its Lifespan Alliance.\n- **Public Longevity Group**: A Lifespan Research Institute project studying public attitudes toward longevity science.\n- **2060 Longevity Forum**: Longevity forum hosted by France's 2060 Foundation.\n- **REVIVE ME**: Longevity and health-tech summit in Abu Dhabi.\n- **Healthy Longevity and Medicine Conference**: Healthy longevity and medicine conference co-hosted by the NUS Yong Loo Lin School of Medicine and others.\n- **Vitalist Bay Summit**: Longevity pop-up city and summit in Berkeley, California; Immortal Dragons was a founding sponsor.\n- **University of Copenhagen Project: Aging Brain Rejuvenation**: Center for Healthy Aging at the University of Copenhagen, developing compounds that clear senescent astrocytes.\n- **University of Oxford Project: Heart Aging and Metabolism**: University of Oxford research on the metabolic mechanisms of heart aging and dietary interventions.\n- **Stanford University Project: Brain Resilience Mechanism**: Research on brain and neural aging at the Wyss-Coray Lab, Stanford University.\n- **Cornerstone Non-profit Foundation**: Policy advocacy supporting New Hampshire's \"Right to Try\" bill, HB 701.\n- **Beyond Tomorrow Podcast**: Podcast on AI and longevity hosted by Julian Issa.\n- **HackAging.ai Hackathon**: 2025 global online hackathon on using AI agents to fight aging.\n- **Vitalism**: Advocacy organization dedicated to ending aging; organizer of Vitalist Bay.\n- **Longevity Science Foundation**: Swiss nonprofit funding early-stage longevity research.\n- **Sundial Initiative**: California nonprofit studying aging and resilience genes.\n- **TimePie Longevity Forum**: Aging-intervention forum hosted by TimePie in Shanghai.\n- **American Alzheimer Association**: The largest nonprofit funder of Alzheimer's research in the United States (Alzheimer's Association).\n- **China Alzheimer Association**: China Association for Alzheimer's Disease (CAAD).\n\n## Media coverage (selected)\n\nImmortal Dragons and Boyang Wang have been covered or quoted by the Financial Times (Tech Tonic), MIT Technology Review, New York Post, BioWorld, Longevity.Technology, BioSpectrum Asia, pharmaphorum, Inside Precision Medicine, Labiotech, Drug Discovery World, 36Kr (36氪), 21st Century Business Herald (21世纪经济报道), Yicai (第一财经) and others.\n\n## Pages\n\n- [Home](https://www.id.life/): Immortal Dragons is a purpose-driven longevity fund headquartered in Singapore.\n- [Portfolio](https://www.id.life/portfolio): Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.\n- [Spectrum](https://www.id.life/spectrum): Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.\n- [Disease Management](https://www.id.life/spectrum/disease-management): 可治疗与可控制疾病列表 A list of curable and manageable diseases\n- [Influence Network](https://www.id.life/spectrum/influence-network): 长寿领域人物影响力与关系图 Longevity influencer network and relationship map\n- [Digital Twin](https://www.id.life/digitaltwin): Medical digital twin and clinical intelligence built for comprehensive biomarker analysis and preliminary diagnostic suggestions.\n- [Presence](https://www.id.life/presence): A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.\n- [Insights](https://www.id.life/insights): Immortal Dragons Insights: news, talks, features, and podcasts spotlighting longevity progress across our ecosystem.\n- [News](https://www.id.life/news): Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.\n- [Podcast](https://www.id.life/podcast): 不朽真龙 Immortal Dragons Podcast and [龙门阵 Long Talk Podcast](https://www.id.life/podcast?c=lt)\n- [Connect](https://www.id.life/connect): Immortal Dragons' connect and commitment to global longevity awareness, east/west longevity access, moonshot ventures and radical life extension.\n- [不朽真龙介绍](https://www.id.life/news/immortal-dragons-news-and-updates): 介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。\n- [Immortal Dragons: Milestones and Portfolio](https://www.id.life/news/immortal-dragons-milestones-and-portfolio): 不朽真龙的重要事件与投资组合概览，涵盖基金发布、产业投资和行业参与。\n";
 
 export const LLMS_CHINESE_SUMMARY = `## 中文简介
 
 ${ARTICLE_SUMMARY_ZH.join('\n\n')}
 `;
 
-/** One `## heading` section of LLMS_HEADER (heading included), up to the next `## `. */
 export function llmsSection(heading: string) {
   const start = LLMS_HEADER.indexOf(`## ${heading}\n`);
   if (start === -1) return '';

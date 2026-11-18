@@ -26,6 +26,7 @@ const OWNER_TEXT = {
   "Immortal Dragon's (possessive of the fund is Immortal Dragons')": [
     'src/app/spectrum/_components/spectrumData.tsx',
     'src/content/pages.ts',
+    'src/content/profile.ts',
   ],
   'apex-domain URL (canonical host is www.id.life)': ['src/content/articles/immortal-dragons-news-and-updates.md'],
 };

@@ -1,6 +1,5 @@
 // Each route's metadata topic, tab title and meta description. The layouts pass these to buildMetadata and their
-// JSON-LD and server summaries, and llms.txt's Pages list quotes the same descriptions (metaDescription), so they
-// cannot drift (CON-16). Every description is the one the owner's site serves for that page, word for word and uncut
+// JSON-LD and server summaries. (llms.txt keeps its own Pages list, as the owner's file has it: src/content/profile.ts.) Every description is the one the owner's site serves for that page, word for word and uncut
 // (2026-11-18: a description his site serves is text he put on his website, so it stays as it is).
 import { live } from './approval';
 import { FUND } from './fund';

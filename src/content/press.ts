@@ -1,6 +1,7 @@
 // Press releases and syndicated coverage about Immortal Dragons and its portfolio companies.
 // Titles and dates are copied from the published pages.
 import { live } from './approval';
+import { FUND } from './fund';
 import type { PressItem } from './schema';
 
 export type { PressItem } from './schema';
@@ -47,8 +48,12 @@ export const FUND_PRESS = PRESS.filter((item) => item.subject === 'fund');
 export const PORTFOLIO_PRESS = PRESS.filter((item) => item.subject === 'portfolio');
 
 /**
- * llms.txt lines: the headline as the site's news list shows it, with its link. No source or date: the list shows
- * another date (a day later) or another source name for some, and no launch date is stated in hidden data (owner,
- * 2026-11-18, questions 12a and 12b).
+ * llms.txt lines, as the owner's site writes them (headline, link, source and date), except the date of the launch
+ * release: no launch date is stated in hidden data (owner, 2026-11-18, question 12a). The launch release is the one
+ * dated as the fund size's source (./fund.ts, fundSize.asOf).
  */
-export const pressMarkdownLines = (items: PressItem[]) => items.map(({ title, url }) => `- [${title}](${url})`);
+export const pressMarkdownLines = (items: PressItem[]) =>
+  items.map(
+    ({ title, source, url, date }) =>
+      `- [${title}](${url}) — ${[source, date !== FUND.fundSize.asOf ? date : undefined].filter(Boolean).join(', ')}`,
+  );
