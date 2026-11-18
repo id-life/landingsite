@@ -100,7 +100,7 @@ export const SpectrumLink = memo(
             labelClassName,
           )}
         >
-          {hasLink ? <span className="pointer-events-auto py-[3px]">{label}</span> : label}
+          {hasLink ? <span className="pointer-events-auto py-[3px] mobile:py-[0.1875rem]">{label}</span> : label}
         </p>
         {isComingSoon && (
           <span className="flex-center inline-block h-5 whitespace-nowrap rounded-sm bg-white/20 px-1 font-display text-xs capitalize text-white/50 backdrop-blur-2xl">

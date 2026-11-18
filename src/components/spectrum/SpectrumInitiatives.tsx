@@ -301,9 +301,10 @@ function Initiative({
                     : { duration: DURATION.base, delay: extra ? (index - restCount) * 0.05 : 0, ease: EASE.out }
                 }
                 className={cn(
-                  // The original's link sizes. On the phone deck with a touch screen each link is a 44 px tall box
-                  // (RWD-06); the laptop deck keeps its line boxes on every pointer.
-                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center mobile:coarse:[&_a]:flex mobile:coarse:[&_a]:min-h-[44px] mobile:coarse:[&_a]:items-center',
+                  // The original's link sizes. On the phone deck with a touch screen each link is a box 44 px tall in the deck's
+                  // unit (RWD-06), so an upright tablet keeps the phone's picture at its factor; the laptop deck keeps its
+                  // line boxes on every pointer.
+                  'min-w-0 text-white/80 [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-white [&_a]:block [&_a]:rounded-sm mobile:[&_a]:flex mobile:[&_a]:min-h-9 mobile:[&_a]:items-center mobile:coarse:[&_a]:flex mobile:coarse:[&_a]:min-h-[2.75rem] mobile:coarse:[&_a]:items-center',
                   // The laptop deck with a touch screen (a tablet on its side): the picture stays exactly the laptop's.
                   // Each link only gets an invisible touch area reaching a quarter of a unit above and below its row,
                   // no more than half the gap to the next row, so two areas never meet.
@@ -338,7 +339,7 @@ function Initiative({
             {item.links.map((link) => (
               <li
                 key={link.label}
-                className="min-w-0 mobile:coarse:flex mobile:coarse:min-h-[44px] mobile:coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
+                className="min-w-0 mobile:coarse:flex mobile:coarse:min-h-[2.75rem] mobile:coarse:items-center [&_.spectrum-link-text]:!whitespace-normal [&_.spectrum-link-text]:!text-[12px] [&_.spectrum-link-text]:!normal-case [&_.spectrum-link-text]:!leading-[1.6] mobile:[&_.spectrum-link-text]:!text-[0.8125rem] desktop2k:[&_.spectrum-link-text]:!text-sm"
               >
                 <SpectrumLink item={{ ...link, link: undefined }} />
               </li>
