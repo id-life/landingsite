@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { noteRowPage, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
+import { noteRowPage, rowSwiperCreated, useKeptRowPage } from '@/hooks/insights/useKeptRowPage';
 import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import YouTubeThumbnail from '@/app/insights/_components/YouTubeThumbnail';
 import VideoModal from '@/app/insights/_components/VideoModal';
@@ -289,7 +289,10 @@ export default function NewsAndTalksSection({
             setIsMobileBeginning(swiper.isBeginning);
             setIsMobileEnd(swiper.isEnd);
           }}
-          onBeforeInit={(swiper) => (mobileSwiperRef.current = swiper)}
+          onBeforeInit={(swiper) => {
+            mobileSwiperRef.current = swiper;
+            rowSwiperCreated(swiper);
+          }}
           slidesPerView={1}
           spaceBetween={16}
         >
@@ -319,7 +322,10 @@ export default function NewsAndTalksSection({
           setIsBeginning(swiper.isBeginning);
           setIsEnd(swiper.isEnd);
         }}
-        onBeforeInit={(swiper) => (swiperRef.current = swiper)}
+        onBeforeInit={(swiper) => {
+          swiperRef.current = swiper;
+          rowSwiperCreated(swiper);
+        }}
         slidesPerView={1}
         spaceBetween={24}
       >

@@ -12,7 +12,7 @@ import {
 import { jotaiStore } from '@/atoms/store';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
-import { phonePresenceEntered } from '@/hooks/anim/useMobileEngagementAnim';
+import { onPhonePresenceEntered, phonePresenceEntered } from '@/hooks/anim/useMobileEngagementAnim';
 import { noteInnerPage, registerInnerPage, type InnerValue } from '@/motion/innerPages';
 import { useEffect } from 'react';
 import { type EngagementClickPointType, useEngagementClickPoint } from './useEngagementClickPoint';
@@ -60,7 +60,8 @@ export function useKeptMapCard(phone: boolean) {
       else jotaiStore.set(CLICK_OPEN[kind], true);
       return true;
     };
-    const unregister = registerInnerPage(SECTION, 'card', read, apply);
+    // Tried again when the phone's entrance has run (it closes every card first); the laptop's map is ready at once.
+    const unregister = registerInnerPage(SECTION, 'card', read, apply, 0, onPhonePresenceEntered);
     const note = () => noteInnerPage(SECTION);
     const unsubscribe = [...Object.values(ACTIVE), ...Object.values(CLICK_OPEN), tourOpenedDotAtom].map((atom) =>
       jotaiStore.sub(atom, note),

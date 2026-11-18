@@ -24,7 +24,19 @@ const AUTO_PLAY_CONFIG = {
  * left: a card put back from the history entry (NAV-02) is opened only then, so the entrance cannot close it again.
  */
 let presenceEntered = false;
+const enteredChanged = new Set<() => void>();
+const setPresenceEntered = (value: boolean) => {
+  presenceEntered = value;
+  enteredChanged.forEach((onChange) => onChange());
+};
 export const phonePresenceEntered = () => presenceEntered;
+/** Calls back when the phone's Presence entrance has run or the section is left; returns the unsubscribe function. */
+export const onPhonePresenceEntered = (onChange: () => void) => {
+  enteredChanged.add(onChange);
+  return () => {
+    enteredChanged.delete(onChange);
+  };
+};
 
 export function useMobileEngagementAnim() {
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
@@ -326,12 +338,12 @@ export function useMobileEngagementAnim() {
     }, '+=0.3');
 
     const cleanup = setupEventListeners();
-    presenceEntered = true;
+    setPresenceEntered(true);
 
     // Leaving the section stops the tour and closes its card. The tour used to run on behind the hidden panel, so a
     // return (by Back, Forward or the menu) showed the card it had reached for a moment before the entrance closed it.
     return () => {
-      presenceEntered = false;
+      setPresenceEntered(false);
       cleanup?.();
       enterTL.kill();
       stopAutoShowDot();
