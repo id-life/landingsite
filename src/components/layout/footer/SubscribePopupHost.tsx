@@ -3,7 +3,9 @@
 import dynamic from 'next/dynamic';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
+import { mayOpenSubscribeByItself } from '@/atoms/auto-subscribe';
 import { isSubscribeShowAtom, subscribePopupAtom } from '@/atoms/footer';
+import { isReducedMotion } from '@/motion/preference';
 import { announceSubscribeState, SUBSCRIBE_REQUEST_EVENT, type SubscribeRequest } from '@/components/site/subscribe-events';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
@@ -37,6 +39,21 @@ export function useSubscribeBridge(first?: SubscribeRequest) {
     window.addEventListener('scroll', close, { passive: true, once: true });
     return () => window.removeEventListener('scroll', close);
   }, [open, dispatch]);
+}
+
+/**
+ * The experience's popup opens by itself once, when `arrived` turns true (the end of the intro, so never over the
+ * loader or during a move), as on the original (the owner's answer 5c): on both decks and on every section a visit
+ * lands on, until a close is remembered (mayOpenSubscribeByItself), and not with the reduced-motion preference.
+ */
+export function useSubscribeOnArrival(arrived: boolean) {
+  const dispatch = useSetAtom(subscribePopupAtom);
+  const done = useRef(false);
+  useEffect(() => {
+    if (!arrived || done.current) return;
+    done.current = true;
+    if (mayOpenSubscribeByItself(isReducedMotion())) dispatch({ type: 'open', placement: 'auto' });
+  }, [arrived, dispatch]);
 }
 
 /** The content pages' popup, loaded on the first request: the phone or desktop popup by the phone tree query. */

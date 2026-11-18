@@ -5,7 +5,7 @@
  * the popup's code until the visitor asks for it.
  */
 export type SubscribeRequest =
-  | { type: 'toggle' | 'open'; placement: 'nav' | 'content' }
+  | { type: 'toggle' | 'open'; placement: 'nav' | 'content' | 'auto' }
   | { type: 'close'; method: 'scroll' | 'x' };
 
 export const SUBSCRIBE_REQUEST_EVENT = 'idl:subscribe';

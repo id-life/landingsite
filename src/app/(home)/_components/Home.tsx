@@ -33,7 +33,8 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SCROLL_SMOOTHER_DEFAULTS } from '@/utils/gsap-config';
 import { reportError } from '@/lib/report';
-import { useSubscribeBridge } from '@/components/layout/footer/SubscribePopupHost';
+import { useSubscribeBridge, useSubscribeOnArrival } from '@/components/layout/footer/SubscribePopupHost';
+import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import LinkTracker from '@/components/site/LinkTracker';
 import MotionPreferenceConfig from '@/components/common/MotionPreferenceConfig';
 
@@ -85,6 +86,8 @@ export default function Home({ deck }: { deck: Deck }) {
   useExperienceLifecycle();
   // The header's SUBSCRIBE buttons are plain DOM events (NAV-04, PERF-10); this connects them to the popup.
   useSubscribeBridge();
+  // The popup also opens by itself when the intro ends (the owner's answer 5c).
+  useSubscribeOnArrival(useAtomValue(fadeInAnimCompletedAtom));
   // Each deck's driver for the section controller and its inputs (MOT-01): on the desktop deck wheel, keys and touch
   // step one section; on the phone the arrows and vertical swipes do.
   useDesktopSections(desktop);
