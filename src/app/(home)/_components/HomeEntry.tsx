@@ -7,7 +7,8 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { retryImport } from '@/utils/retry-import';
 import HeroPoster from '@/components/gl/HeroPoster';
 import { useExperienceMode } from '@/hooks/useExperienceMode';
-import { type ComponentType, createElement, lazy, Suspense } from 'react';
+import { type ComponentType, createElement, lazy, Suspense, useEffect } from 'react';
+import { loadBrandFace } from '@/lib/brand-fonts';
 import '@/utils/gsap-plugins';
 import type { Deck } from './Home';
 
@@ -56,6 +57,9 @@ export default function HomeEntry() {
     if (webgl) void load('canvas').catch(() => {});
     void load('home').catch(() => {});
   }
+  // START (phone) and SCROLL / BACK (desktop) are set in Migrena and appear as the intro ends; the browser would request
+  // the face only once they are laid out, so they were drawn in the fallback first. Request it with the experience.
+  useEffect(() => loadBrandFace('--font-migrena'), []);
 
   return (
     <>

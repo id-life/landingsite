@@ -2,7 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { loadBrandFace, whenIdleAfterLoad } from '@/lib/brand-fonts';
+import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 // The phone menu sheet (GSAP stagger, the section controller) loads on its first open, on every route.
 const SiteMenu = dynamic(() => import('./SiteMenu'), { ssr: false });
@@ -17,12 +19,15 @@ export default function MenuToggle({
   closeIcon,
   currentId,
   inExperience = false,
+  experiencePage = false,
 }: {
   className?: string;
   openIcon: ReactNode;
   closeIcon: ReactNode;
   currentId: string | null;
   inExperience?: boolean;
+  /** The 3D pages' header (overlay): the menu face waits for the experience to be ready. */
+  experiencePage?: boolean;
 }) {
   const pathname = usePathname();
   const [open, setOpenState] = useState(false);
@@ -43,6 +48,22 @@ export default function MenuToggle({
     }
   }
 
+  // The sheet is set in TT Lakes: request the face ahead of its first opening (the phone tree only, where this button
+  // shows), so the sheet is not drawn in the fallback first: when the page is idle after load, and on the 3D pages only
+  // once the experience is ready (not to share the link with what the loader waits for); at the latest when a finger
+  // lands on the button.
+  useEffect(() => {
+    if (!window.matchMedia(PHONE_TREE_QUERY).matches) return;
+    let cancel = () => {};
+    const start = () => (cancel = whenIdleAfterLoad(() => loadBrandFace('--font-tt')));
+    if (!experiencePage || performance.getEntriesByName('experience_ready').length) start();
+    else window.addEventListener('idl:experience_ready', start, { once: true });
+    return () => {
+      window.removeEventListener('idl:experience_ready', start);
+      cancel();
+    };
+  }, [experiencePage]);
+
   return (
     <>
       <button
@@ -50,6 +71,7 @@ export default function MenuToggle({
         aria-label="Menu"
         aria-expanded={open}
         aria-controls="mobile-nav-menu"
+        onPointerDown={() => loadBrandFace('--font-tt')}
         onClick={() => setOpen(!open)}
         className={className}
       >

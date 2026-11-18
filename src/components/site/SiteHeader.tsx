@@ -193,6 +193,7 @@ export default function SiteHeader({
             <MenuToggle
               currentId={currentId}
               inExperience={inExperience}
+              experiencePage={overlay}
               // 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px.
               className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex"
               openIcon={<MenuOpenSVG className="h-10" />}
