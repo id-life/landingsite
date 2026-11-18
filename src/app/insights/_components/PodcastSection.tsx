@@ -9,6 +9,7 @@ import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { PodcastCard } from '@/app/insights/_components/PodcastCard';
 import { fetchPodcastList } from '@/apis';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
+import { usePhoneDeckGap } from '@/hooks/usePhoneDeckGap';
 import { PCNavigationArrowButton, MobileNavigationArrowButton } from '@/app/insights/_components/NavigationArrowButton';
 import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDots';
 import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_components/ViewAllButton';
@@ -37,6 +38,8 @@ type PodcastSectionProps = {
 const COMPACT_ITEMS_PER_PAGE = 2;
 
 export default function PodcastSection({ isMobile = false, compact = false, isVisible = true }: PodcastSectionProps) {
+  // The phone rows' gap between slides (seen during a swipe), in the deck's unit (RWD-02).
+  const phoneGap = usePhoneDeckGap(16);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
@@ -146,7 +149,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
             rowSwiperCreated(swiper);
           }}
           slidesPerView={1}
-          spaceBetween={16}
+          spaceBetween={phoneGap}
         >
           {Array.from({ length: totalCompactPages }).map((_, pageIndex) => {
             const pageItems = podcastData.slice(pageIndex * COMPACT_ITEMS_PER_PAGE, (pageIndex + 1) * COMPACT_ITEMS_PER_PAGE);
@@ -179,7 +182,7 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
             noteRowPage();
           }}
           slidesPerView={1}
-          spaceBetween={16}
+          spaceBetween={phoneGap}
         >
           {Array.from({ length: totalPages }).map((_, pageIndex) => {
             const pageItems = podcastData.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);

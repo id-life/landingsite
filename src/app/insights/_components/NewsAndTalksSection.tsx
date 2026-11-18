@@ -18,6 +18,7 @@ import { InsightItem } from '@/hooks/insights/fetch';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { usePhoneDeckGap } from '@/hooks/usePhoneDeckGap';
 import { layoutUnitPx } from '@/utils/layout-unit';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
@@ -171,6 +172,8 @@ export default function NewsAndTalksSection({
   isMobile = false,
   isVisible = true,
 }: NewsAndTalksSectionProps) {
+  // The phone rows' gap between slides (seen during a swipe), in the deck's unit (RWD-02).
+  const phoneGap = usePhoneDeckGap(16);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isMobileBeginning, setIsMobileBeginning] = useState(true);
@@ -294,7 +297,7 @@ export default function NewsAndTalksSection({
             rowSwiperCreated(swiper);
           }}
           slidesPerView={1}
-          spaceBetween={16}
+          spaceBetween={phoneGap}
         >
           {Array.from({ length: totalMobilePages }).map((_, pageIndex) => {
             const pageItems = items.slice(pageIndex * mobileItemCount, (pageIndex + 1) * mobileItemCount);
