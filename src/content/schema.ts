@@ -223,11 +223,6 @@ export const PageMeta = z.object({
   /** The browser tab title (and og:title) exactly as the owner's site has it (question 5i, 2026-11-18). */
   tabTitle: z.string().min(1),
   description: z.string().min(1),
-  /**
-   * Serve the description whole, never cut: it is the owner's own text as his site serves it, which stays word for
-   * word ("Don't change the text regarding this", question 12g).
-   */
-  whole: z.boolean().optional(),
   /** The link text of the route in llms.txt's Pages list; absent leaves the route out of that list. */
   llmsLabel: z.string().min(1).optional(),
   ...shippable,

@@ -102,12 +102,20 @@ describe('sponsored bodies', () => {
   });
 });
 
-// CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description, and a description continued with a
-// page's own text quotes that text word for word.
+// CON-16 / SEO-06: llms.txt's Pages list quotes each page's meta description; every description is the owner's own,
+// as his site serves it (2026-11-18), word for word.
 describe('page descriptions', async () => {
-  const { ARTICLE_OPENINGS, DISEASE_MANAGEMENT_HEADINGS, PAGES, metaDescription } = await import('@/content/pages');
-  const { diseaseManagementStatusItems } = await import('@/constants/disease-management');
-  const flat = (text) => text.replace(/\\([._-])/g, '$1').replace(/\s+/g, ' ');
+  const { PAGES, metaDescription } = await import('@/content/pages');
+  const HIS = {
+    portfolio:
+      "Immortal Dragons' purpose-driven investment portfolio supporting moonshot and radical life extension technologies. Backing technologies like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.",
+    spectrum:
+      "Explore Immortal Dragon's variety of longevity initiatives on insight sharing, sponsorships, literature translation and publication, podcast channel, digital twin and clinical intelligence.",
+    presence:
+      "A global map of Immortal Dragons' presence --bridging East and West to advance longevity through events, partnerships, and community.",
+    news: "Explore the latest news and coverage on Immortal Dragons' longevity investments, partnerships, insights and sharing.",
+    'article-profile': '介绍不朽真龙基金的投资主题、投资组合、行业赞助和行业点评。',
+  };
 
   test("every Pages line of llms.txt is that page's meta description", () => {
     const lines = [...llmsSection('Pages').matchAll(/^- \[([^\]]+)\]\(https:\/\/www\.id\.life([^)]*)\): (.*)$/gm)];
@@ -117,47 +125,8 @@ describe('page descriptions', async () => {
     expect(lines.map((m) => m[2])).not.toContain('/about');
   });
 
-  test("the article openings are the articles' own first paragraphs", () => {
-    for (const [slug, key] of [
-      ['immortal-dragons-news-and-updates', 'profile'],
-      ['immortal-dragons-milestones-and-portfolio', 'milestones'],
-    ]) {
-      const md = flat(readFileSync(`src/content/articles/${slug}.md`, 'utf8'));
-      expect(md).toContain(flat(ARTICLE_OPENINGS[key]));
-    }
-  });
-
-  // The owner's answer to question 11 (2026-11-18): each description only from words the same page shows.
-  test('every description is words its page shows', async () => {
-    const src = (file) =>
-      readFileSync(file, 'utf8')
-        .replace(/\{' '\}/g, ' ')
-        .replace(/<[^>]+>/g, '')
-        .replace(/\s+/g, ' ');
-    const byId = Object.fromEntries(PAGES.map((page) => [page.id, page.description]));
-    const { PRESENCE_EVENTS } = await import('@/content/pages');
-    const engagement = readFileSync('src/constants/engagement.tsx', 'utf8').replace(/\\n/g, ' ');
-    for (const event of PRESENCE_EVENTS) expect(engagement, event).toContain(`'${event}'`);
-    expect(byId.presence).toBe(PRESENCE_EVENTS.join(', '));
-    const influence = src('src/components/character-relation/BePartOfIt.tsx');
-    expect(influence).toContain('This page is a derived work from');
-    expect(influence).toContain('For more comprehensive information, please visit the original website.');
-    for (const heading of ['NEWS & TALKS', 'PODCAST', '长生周报'])
-      expect(
-        src('src/app/insights/_components/NewsAndTalksSection.tsx') +
-          src('src/app/insights/_components/PodcastSection.tsx') +
-          src('src/app/insights/_components/LongevitySection.tsx'),
-        heading,
-      ).toContain(heading);
-    expect(src('src/app/news/_components/SubTitle.tsx')).toMatch(/For priority access to pioneer research/);
-    expect(byId['disease-management']).toBe(DISEASE_MANAGEMENT_HEADINGS.join(' '));
-    const { CONNECT_LINES } = await import('@/content/pages');
-    for (const line of CONNECT_LINES) expect(src('src/app/connect/FixedConnectPage1.tsx'), line).toContain(line);
-    expect(byId['article-profile']).toBe(ARTICLE_OPENINGS.profile);
-    expect(byId['article-milestones']).toBe(ARTICLE_OPENINGS.milestones);
-  });
-
-  test("the Disease Management headings are the page's own", () => {
-    expect(DISEASE_MANAGEMENT_HEADINGS).toEqual(diseaseManagementStatusItems.map((item) => item.title));
+  test("the descriptions are the owner's own, word for word and uncut", () => {
+    for (const [id, text] of Object.entries(HIS)) expect(PAGES.find((page) => page.id === id).description, id).toBe(text);
+    for (const page of PAGES) expect(metaDescription(page)).toBe(page.description);
   });
 });

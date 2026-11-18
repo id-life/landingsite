@@ -59,7 +59,7 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
     };
   }
 
-  // The full show notes stay on the page; the meta description is cut at a sentence end (SEO-06).
+  // The meta description is the episode's own notes, whole, as the owner's site serves them (2026-11-18).
   const metadata = buildMetadata({
     path: `/podcast/${canonicalId(id)}`,
     title: data.title,

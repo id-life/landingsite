@@ -22,6 +22,8 @@ const hits = (pattern) => corpus.filter(({ text }) => pattern.test(text)).map(({
 // The owner's published text stays as he wrote it (his rule of 2026-11-16: no wording of his is changed for a style
 // rule). His article gives the website as https://id.life, so that one file is exempt from the apex-domain rule.
 const OWNER_TEXT = {
+  // The owner's own Spectrum description, served word for word as his site serves it (2026-11-18).
+  "Immortal Dragon's (possessive of the fund is Immortal Dragons')": ['src/content/pages.ts'],
   'apex-domain URL (canonical host is www.id.life)': ['src/content/articles/immortal-dragons-news-and-updates.md'],
 };
 
