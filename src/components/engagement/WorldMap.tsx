@@ -77,6 +77,8 @@ export const WorldMap = memo(function WorldMapComponent({
   const [scrollLeft, setScrollLeft] = useState(0);
   // The layer of the points' tap areas, first in the map so every dot is drawn above it (MapPointHit).
   const [hitLayer, setHitLayer] = useState<HTMLDivElement | null>(null);
+  // Phone only: the layer of the drawn points' own tap targets, above every dot and below every card (MapPointHit).
+  const [pointLayer, setPointLayer] = useState<HTMLDivElement | null>(null);
   const [hitCentres, setHitCentres] = useState<Record<string, Point>>({});
   const registerHit = useCallback((id: string, centre: Point | null) => {
     setHitCentres((prev) => {
@@ -89,8 +91,8 @@ export const WorldMap = memo(function WorldMapComponent({
     });
   }, []);
   const hitContext = useMemo(
-    () => ({ layer: hitLayer, centres: hitCentres, register: registerHit }),
-    [hitLayer, hitCentres, registerHit],
+    () => ({ layer: hitLayer, pointLayer: phone ? pointLayer : null, centres: hitCentres, register: registerHit }),
+    [hitLayer, pointLayer, phone, hitCentres, registerHit],
   );
   const hitLayerEl = <div ref={setHitLayer} className="pointer-events-none absolute left-0 top-0" />;
 
@@ -355,11 +357,12 @@ export const WorldMap = memo(function WorldMapComponent({
             />
             {regionDotsPoints}
             {points}
+            {/* opacity 0: the targets take taps and draw nothing (transparent but visible ones changed how a dimmed neighbour under them is rasterised, by up to 13 levels in a 4 px circle). */}
+            <div ref={setPointLayer} className="pointer-events-none absolute left-0 top-0 z-[25] opacity-0" />
             {filterDefs}
           </div>
           {/* Cards sit outside the scroller (so they are not clipped) and follow its scroll. */}
           <div
-            data-card-layer
             className="pointer-events-none absolute inset-0 overflow-visible"
             style={{ transform: `translateX(-${scrollLeft}px)` }}
           >

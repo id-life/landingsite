@@ -1,4 +1,3 @@
-import { ACTIVE_DOT_SCALE } from '@/hooks/anim/cardFit';
 import { activeSponsorDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapSponsorDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
@@ -28,7 +27,7 @@ import { DURATION, EASE } from '@/motion/tokens';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
-  active: { scale: ACTIVE_DOT_SCALE },
+  active: { scale: 1.2 },
 };
 
 const badgeMotion = {
@@ -185,7 +184,7 @@ export function WorldMapSponsorDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
-        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
           ref={pointRef}
           containerClassName={phone ? MOBILE_MAP_SCALE.dotContainerSize : 'size-6'}
