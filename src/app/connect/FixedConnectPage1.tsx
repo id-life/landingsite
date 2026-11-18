@@ -385,7 +385,7 @@ export default function FixedConnectPage1() {
           </svg>
         </div>
         {/* Room for ACCESS, drawn by the absolute connect-title2 above (top-8, about 4 units tall). */}
-        <p className="mt-42 w-[35rem] text-right text-xl/6 font-semibold [@media(min-width:840px)_and_(max-height:800px)]:leading-snug">
+        <p className="mt-42 w-[35rem] text-right text-xl/6 font-semibold">
           Deep Roots in Both East & West, a Conduit that Bridges Markets, Capital, Institutions and More
         </p>
       </div>
