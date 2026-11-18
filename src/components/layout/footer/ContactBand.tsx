@@ -78,7 +78,11 @@ export default function ContactBand() {
 
   return (
     <>
-      <FloatingPortal>
+      {/* preserveTabOrder off: the band is no floating element and has no anchor to keep an order around, and the
+          portal's own focus management gave its controls tabindex -1 as soon as the focus left them, so Tab could
+          never come back in (forward or backward; checker B). In the document it follows the page, so Tab reaches
+          it after the experience's sections, as it did on the first visit. */}
+      <FloatingPortal preserveTabOrder={false}>
         {/* Portalled out of the sections, the band says which section it belongs to: a control in it reached by Tab
             brings the deck to Connect, where the band is shown (useSkipToSection). */}
         <div
