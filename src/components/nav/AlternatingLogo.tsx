@@ -21,7 +21,9 @@ const SWAP_MS = 8000;
  *
  * Both marks share one grid cell, so the box always holds the wider of the two and nothing beside it moves when they
  * swap: on the laptop deck the original's 55 x 10 unit box, the wordmark 10 units high and the lockup 8; on the phone
- * deck both 5 units high (the lockup is the wider, 6.6 x 5 units against 4.8 x 5).
+ * deck both 5 units high (the lockup is the wider, 6.6 x 5 units against 4.8 x 5). Where the row is too narrow for
+ * the lockup beside SUBSCRIBE and the menu (phones under about 335 px; the original lets them touch there), the box
+ * gives way and the mark is drawn smaller inside it rather than over SUBSCRIBE.
  */
 export default function AlternatingLogo({
   toggle = false,
@@ -52,19 +54,22 @@ export default function AlternatingLogo({
     <>
       <LogoSVGen
         className={clsx(
-          'h-10 w-auto transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
+          'h-10 w-auto max-w-full transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
           mark === 'en' ? 'opacity-100' : 'opacity-0',
         )}
       />
       <LogoSVGcn
         className={clsx(
-          'h-8 w-auto transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
+          'h-8 w-auto max-w-full transition-opacity duration-500 [grid-area:1/1] mobile:h-5',
           mark === 'cn' ? 'opacity-100' : 'opacity-0',
         )}
       />
     </>
   );
-  const box = clsx('relative grid h-10 w-55 cursor-pointer items-center justify-items-start tap-area mobile:w-auto', className);
+  const box = clsx(
+    'relative grid h-10 w-55 min-w-0 cursor-pointer grid-cols-[minmax(0,1fr)] items-center justify-items-start tap-area mobile:w-auto',
+    className,
+  );
 
   return toggle ? (
     // The name is the two names the original's title gives the site; the marks themselves are pictures.
