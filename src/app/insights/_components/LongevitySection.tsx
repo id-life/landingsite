@@ -9,6 +9,7 @@ import MobilePaginationDots from '@/app/insights/_components/MobilePaginationDot
 import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_components/ViewAllButton';
 import { STORAGE_KEY } from '@/constants/storage';
 import { useMobileItemsPerPage } from '@/hooks/useMobileItemsPerPage';
+import { usePhoneDeckGap } from '@/hooks/usePhoneDeckGap';
 import { cn } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
@@ -78,6 +79,8 @@ function LongevityCard({ item }: { item: LongevityItem }) {
 }
 
 export default function LongevitySection({ isMobile = false, compact = false, isVisible = true }: LongevitySectionProps) {
+  // The phone rows' gap between slides (seen during a swipe), in the deck's unit (RWD-02).
+  const phoneGap = usePhoneDeckGap(16);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [isCompactBeginning, setIsCompactBeginning] = useState(true);
@@ -194,7 +197,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
             rowSwiperCreated(swiper);
           }}
           slidesPerView={1}
-          spaceBetween={16}
+          spaceBetween={phoneGap}
         >
           {Array.from({ length: totalCompactPages }).map((_, pageIndex) => {
             const pageItems = longevityData.slice(pageIndex * COMPACT_ITEMS_PER_PAGE, (pageIndex + 1) * COMPACT_ITEMS_PER_PAGE);
@@ -226,7 +229,7 @@ export default function LongevitySection({ isMobile = false, compact = false, is
             noteRowPage();
           }}
           slidesPerView={1}
-          spaceBetween={16}
+          spaceBetween={phoneGap}
         >
           {Array.from({ length: totalPages }).map((_, pageIndex) => {
             const pageItems = longevityData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
