@@ -76,7 +76,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   return (
     // Two buttons (they were clickable divs, unreachable by keyboard): play / pause, whose name switches between
     // "Play music" and "Pause music", and the playlist, which opens the playlist dialog. Both have 44 px tall
-    // touch targets through ::before. Sound starts only from the play button.
+    // touch targets through ::before. Sound also starts at the first tap anywhere on the page (useCurrentAudio).
     <div
       ref={pillRef}
       onPointerDown={onIntent}
