@@ -17,6 +17,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { DURATION } from '@/motion/tokens';
 
+const QUAD_OUT = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+const QUAD_IN = 'cubic-bezier(0.55, 0.085, 0.68, 0.53)';
+
 type Inputs = {
   EMAIL: string;
   website: string;
@@ -28,7 +31,16 @@ type Inputs = {
  * dialog: role="dialog" labelled by its heading, focus moves to the email field and stays inside, Escape,
  * the X or a click outside close it, and focus returns to the button that opened it.
  */
-export default function SubscribeStrip() {
+export default function SubscribeStrip({
+  ease = 'quad',
+}: {
+  /**
+   * The curve of the GSAP timeline this replaces, fitted to its frames on both kinds of page: on the experience the
+   * motion token 'out' that src/motion/gsap.ts makes GSAP's default (0.3 s; reversed, its mirror 'in'); on the content
+   * pages, where those defaults are not loaded, GSAP's own power1.out (a quadratic ease-out) and its mirror.
+   */
+  ease?: 'token' | 'quad';
+} = {}) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const placement = useAtomValue(subscribeTypeAtom);
@@ -84,7 +96,11 @@ export default function SubscribeStrip() {
     const frame = requestAnimationFrame(() => setDrawn(true));
     return () => cancelAnimationFrame(frame);
   }, [isSubscribeShow, portalReady]);
-  const motionStyle = { transitionDuration: `${DURATION.base}s` };
+  // Up on the timeline's ease, down on the same run backwards (its mirror), as the timeline played and reversed.
+  const motionStyle = {
+    transitionDuration: `${DURATION.base}s`,
+    transitionTimingFunction: ease === 'token' ? (drawn ? 'var(--ease-out)' : 'var(--ease-in)') : drawn ? QUAD_OUT : QUAD_IN,
+  };
 
   useEffect(() => {
     if (!isSubscribeShow) return;
@@ -128,7 +144,7 @@ export default function SubscribeStrip() {
           ref={footerRef}
           style={motionStyle}
           className={clsx(
-            'page-footer pointer-events-none fixed z-[52] flex h-52 w-full items-center justify-center transition-[bottom] ease-out mobile:inset-x-5 mobile:h-auto mobile:w-auto',
+            'page-footer pointer-events-none fixed z-[52] flex h-52 w-full items-center justify-center transition-[bottom] mobile:inset-x-5 mobile:h-auto mobile:w-auto',
             drawn ? 'bottom-9' : '-bottom-40',
           )}
         >
@@ -140,8 +156,10 @@ export default function SubscribeStrip() {
               {...closedProps}
               style={motionStyle}
               className={clsx(
-                'footer-box-clip pointer-events-auto relative overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md transition-[width,height] ease-out mobile:px-4 mobile:py-7.5',
-                drawn ? 'h-[13rem] w-[40rem]' : 'h-0 w-0',
+                'footer-box-clip pointer-events-auto relative overflow-visible border-2 border-[var(--subscribe-border)] bg-[var(--subscribe-bg)] px-7.5 py-9 text-[var(--foreground)] backdrop-blur-md transition-[width,height] mobile:px-4 mobile:py-7.5',
+                // Closed, the box is its padding and border (what h-0 w-0 drew): the transition runs from that size, as
+                // the timeline did from the computed size, and not from a zero the padding hides.
+                drawn ? 'h-[13rem] w-[40rem]' : 'h-[calc(4.5rem_+_4px)] w-[calc(3.75rem_+_4px)]',
               )}
             >
               <span className="absolute left-0 top-0 block rotate-90 border-[1.02rem] border-[var(--subscribe-border)] border-r-transparent border-t-transparent" />
