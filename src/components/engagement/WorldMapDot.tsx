@@ -1,4 +1,3 @@
-import { ACTIVE_DOT_SCALE } from '@/hooks/anim/cardFit';
 import { activeMeetingDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
@@ -27,7 +26,7 @@ import { track, slugId, youtubeId } from '@/lib/analytics/track';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
-  active: { scale: ACTIVE_DOT_SCALE },
+  active: { scale: 1.2 },
 };
 
 /**
@@ -117,7 +116,7 @@ export function WorldMapDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
-        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
           ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}

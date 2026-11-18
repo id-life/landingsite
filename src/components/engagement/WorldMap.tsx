@@ -80,6 +80,9 @@ export const WorldMap = memo(function WorldMapComponent({
   const [scrollLeft, setScrollLeft] = useState(0);
   // The layer of the points' tap areas, first in the map so every dot is drawn above it (MapPointHit).
   const [hitLayer, setHitLayer] = useState<HTMLDivElement | null>(null);
+  // Phone only: the layer of the drawn points' own tap targets, above every dot and below every card (MapPointHit).
+  const [pointLayer, setPointLayer] = useState<HTMLDivElement | null>(null);
+  const [cardLayer, setCardLayer] = useState<HTMLDivElement | null>(null);
   const [hitCentres, setHitCentres] = useState<Record<string, Point>>({});
   const registerHit = useCallback((id: string, centre: Point | null) => {
     setHitCentres((prev) => {
@@ -92,8 +95,8 @@ export const WorldMap = memo(function WorldMapComponent({
     });
   }, []);
   const hitContext = useMemo(
-    () => ({ layer: hitLayer, centres: hitCentres, register: registerHit }),
-    [hitLayer, hitCentres, registerHit],
+    () => ({ layer: hitLayer, pointLayer: phone ? pointLayer : null, centres: hitCentres, register: registerHit }),
+    [hitLayer, pointLayer, phone, hitCentres, registerHit],
   );
   const hitLayerEl = <div ref={setHitLayer} className="pointer-events-none absolute left-0 top-0" />;
 
@@ -113,6 +116,129 @@ export const WorldMap = memo(function WorldMapComponent({
   );
   const { activeBookDot, activeMeetingDot, activeSponsorDot } = useEngagementClickPoint();
   const isAnyActive = activeBookDot !== null || activeMeetingDot !== null || activeSponsorDot !== null;
+
+  // Phone: an open card takes every tap that lands on it, also where a point lies beneath. The point targets
+  // (MapPointHit) are in a layer above the dots (z 25) so a point reached by a neighbour's risen icon still takes its
+  // tap; but the card layer is its own stacking context at z 0 (it is moved by a transform), so a z 30 card sits below
+  // that layer and the target of a point under a card took the tap (39 of 39 places, 9 of them on a card's link).
+  // Moving the card layer up would draw the cards over the open dot, which the original draws on top. Instead a target
+  // whose point lies under the open card stops taking taps while it is open. Decided from the card as it will stand
+  // when grown in (a tap where the card is about to be belongs to the card): in the frame after it opens or closes,
+  // the card's grow-in transforms (inline, all ending at none) are set aside for the reading and put back at once, so
+  // nothing is drawn in between. Read again in the frame after that, when the grow-in's transitions and animations
+  // end (their own end events and the animations' finish), and after the strip moves while a target within a card's
+  // extent was off the screen at the last reading (elsewhere the targets and the cards move together). No loop: a few
+  // readings per change, a hit test only for a target within an open card's extent. While the page is paused frames
+  // are held, so nothing is requested.
+  useEffect(() => {
+    if (!phone || !pointLayer) return;
+    const cards = [
+      activeMeetingDot !== null && `.world-map-dot-content-${activeMeetingDot}`,
+      activeBookDot !== null && `.world-map-dot-book-content-${activeBookDot}`,
+      activeSponsorDot !== null && `.world-map-dot-sponsor-content-${activeSponsorDot}`,
+    ]
+      .filter(Boolean)
+      .join(', ');
+    let offScreen = false;
+    const check = () => {
+      const targets = [...pointLayer.children] as HTMLElement[];
+      for (const t of targets) t.style.removeProperty('pointer-events');
+      offScreen = false;
+      const open = cards ? [...document.querySelectorAll<HTMLElement>(`[data-card-layer] :is(${cards})`)] : [];
+      if (!open.length) return;
+      const grown: [HTMLElement, string][] = [];
+      for (const card of open)
+        for (const e of [card, ...card.querySelectorAll<HTMLElement>('[style*="transform"]')])
+          if (e.style.transform && e.style.transform !== 'none') {
+            grown.push([e, e.style.transform]);
+            e.style.transform = 'none';
+          }
+      try {
+        // Each open card's extent (its own box and every box inside it): a target outside all of them is not covered,
+        // with no hit test.
+        const extents = open.map((card) => {
+          let [l, t, r, b] = [Infinity, Infinity, -Infinity, -Infinity];
+          for (const e of [card, ...card.querySelectorAll('*')]) {
+            const q = e.getBoundingClientRect();
+            if (q.width === 0 && q.height === 0) continue;
+            [l, t, r, b] = [Math.min(l, q.left), Math.min(t, q.top), Math.max(r, q.right), Math.max(b, q.bottom)];
+          }
+          return [l, t, r, b];
+        });
+        for (const t of targets) {
+          const r = t.getBoundingClientRect();
+          if (r.width === 0) continue;
+          const x = r.left + r.width / 2;
+          const y = r.top + r.height / 2;
+          if (!extents.some(([l, top, right, b]) => x >= l && x <= right && y >= top && y <= b)) continue;
+          if (x < 0 || y < 0 || x > innerWidth || y > innerHeight) {
+            offScreen = true;
+            continue;
+          }
+          const under = document.elementsFromPoint(x, y);
+          if (under.some((e) => e !== t && open.some((card) => card.contains(e)))) t.style.pointerEvents = 'none';
+        }
+      } finally {
+        for (const [e, transform] of grown) e.style.transform = transform;
+      }
+    };
+    let gone = false;
+    let frame = requestAnimationFrame(() => {
+      check();
+      // From the frame after, a card that grows in by its height (the meetings' cards) has started to, and the grow-in's
+      // animations exist: read again, and once more when they have all finished.
+      frame = requestAnimationFrame(() => {
+        check();
+        const running = cards
+          ? [...document.querySelectorAll<HTMLElement>(`[data-card-layer] :is(${cards})`)].flatMap((card) =>
+              card.getAnimations({ subtree: true }),
+            )
+          : [];
+        if (running.length)
+          void Promise.allSettled(running.map((a) => a.finished)).then(() => {
+            if (!gone) check();
+          });
+      });
+    });
+    let againFrame = 0;
+    const again = () => {
+      if (againFrame) return;
+      againFrame = requestAnimationFrame(() => {
+        againFrame = 0;
+        check();
+      });
+    };
+    // A card's CSS transitions (its height grows in) end on their own events, which can come before the frame above.
+    const onEnd = (e: Event) => {
+      if (cards && e.target instanceof Element && e.target.closest(cards)) again();
+    };
+    cardLayer?.addEventListener('transitionend', onEnd);
+    cardLayer?.addEventListener('animationend', onEnd);
+    const scroller = mapContainerRef.current;
+    const onScroll = () => {
+      if (offScreen) again();
+    };
+    scroller?.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      gone = true;
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(againFrame);
+      cardLayer?.removeEventListener('transitionend', onEnd);
+      cardLayer?.removeEventListener('animationend', onEnd);
+      scroller?.removeEventListener('scroll', onScroll);
+    };
+  }, [phone, pointLayer, cardLayer, activeMeetingDot, activeBookDot, activeSponsorDot]);
+
+  // A touch is not taken by what is under the finger alone: the browser moves it onto a nearby element that answers
+  // taps when the element under it does not. A card's picture answers none, so a tap on Oxford's picture where Aix lies
+  // beneath went to Oxford's own dot 9 px away and closed the card. A click listener on the card layer makes every
+  // part of a card answer taps; the layer itself takes none (pointer-events none), so the map around it is unchanged.
+  useEffect(() => {
+    if (!phone || !cardLayer) return;
+    const take = () => {};
+    cardLayer.addEventListener('click', take);
+    return () => cardLayer.removeEventListener('click', take);
+  }, [phone, cardLayer]);
 
   const regionDotsPoints = useMemo(() => {
     if (!regionDots?.length) return null;
@@ -358,10 +484,13 @@ export const WorldMap = memo(function WorldMapComponent({
             />
             {regionDotsPoints}
             {points}
+            {/* opacity 0: the targets take taps and draw nothing (transparent but visible ones changed how a dimmed neighbour under them is rasterised, by up to 13 levels in a 4 px circle). */}
+            <div ref={setPointLayer} className="pointer-events-none absolute left-0 top-0 z-[25] opacity-0" />
             {filterDefs}
           </div>
           {/* Cards sit outside the scroller (so they are not clipped) and follow its scroll. */}
           <div
+            ref={setCardLayer}
             data-card-layer
             className="pointer-events-none absolute inset-0 overflow-visible"
             style={{ transform: `translateX(-${scrollLeft}px)` }}
