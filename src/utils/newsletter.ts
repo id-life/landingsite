@@ -10,7 +10,7 @@ import { subscribeNewsletter, SubscribeFields, SubscribeResult } from '@/utils/s
  * - footer: the subscribe form at the foot of the news pages.
  * There is no automatic placement: nothing opens the popup without a request.
  */
-export type NewsletterPlacement = 'nav' | 'content' | 'connect' | 'footer';
+export type NewsletterPlacement = 'nav' | 'content' | 'connect' | 'footer' | 'auto';
 
 /** How an open popup was closed: its X, Escape, a press outside it, a page scroll, or its SUBSCRIBE button again. */
 export type NewsletterCloseMethod = 'x' | 'escape' | 'outside' | 'scroll' | 'toggle';

@@ -174,12 +174,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
       className={cn(
         isMobile ? '' : 'be-part-of-it-clip',
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
-        // Never wider than the window; on a medium window it takes the width right of the legend.
+        // Never wider than the window.
         '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
-        // Below 1440 px on the desktop tree (a fixed 12 px layout unit) the panel sits beside the legend at the bottom
-        // right, so both show with the form open and it covers no more of the graph than it must.
-        '[@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:left-auto [@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:right-3 [@media(min-width:600px)_and_(min-height:480px)_and_(max-width:1439.98px)]:translate-x-0',
-        'medium:w-[calc(100vw_-_252px)] medium:p-6',
         // A phone in landscape: the original's laptop arrangement (one row of inputs, Confirm beside the note), a
         // panel to the right of the legend and clear of the header, not the portrait phone's full-screen stack.
         'shortScreen:left-auto shortScreen:right-4 shortScreen:w-[44rem] shortScreen:max-w-[calc(100vw_-_2rem)] shortScreen:translate-x-0 shortScreen:p-5 shortScreen:pt-4',
@@ -224,26 +220,21 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <HoneypotField {...form.register('website')} />
         {/* Medium windows (600-839 px): the two inputs share the panel's width instead of keeping 409 px each, which
             pushed the second one out of the window at 820 px. */}
-        <div
-          className={cn(
-            'flex w-full gap-x-[4.75rem]',
-            'mobile:flex-col medium:gap-x-6 shortScreen:flex-row shortScreen:gap-x-4',
-          )}
-        >
+        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col shortScreen:flex-row shortScreen:gap-x-4')}>
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
             placeholder="Enter your name"
             value={character}
             disabled={isMutationPending || isMutationSuccess}
-            wrapperClassName={cn('medium:min-w-0 medium:flex-1', form.formState.errors.visitor && 'mobile:mt-5')}
+            wrapperClassName={cn(form.formState.errors.visitor && 'mobile:mt-5')}
             error={form.formState.errors.visitor}
             {...form.register('visitor', {
               required: REQUIRED_ERROR_MESSAGE,
               onChange: (e) => setCharacter(e.target.value),
             })}
           />
-          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col medium:min-w-0 medium:flex-1 shortScreen:flex-row')}>
+          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col shortScreen:flex-row')}>
             {relation.map((rel, i) => (
               <BePartOfItInput
                 key={`introducer-input-${i}`}

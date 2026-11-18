@@ -1,4 +1,4 @@
-import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 // Page-level rules, as a plain <style> built from the device classes (RWD-02): the phone and desktop rules follow the
 // tree queries (src/styles/device-classes.ts), the same queries that decide which experience is mounted.
@@ -15,8 +15,8 @@ const CSS = `
   }
 
   /* The layout unit (RWD-01): the original drew these pages at a root of 0.8333vw (12 px at 1440, 16 at 1920), so
-     on the desktop tree layout and text written in rem scale as they did from 1200 px up (the owner's rule on font
-     sizes), with a fixed 12 px unit (the original's 1440 size) below 1200.
+     on the laptop deck layout and text written in rem scale as they did, at every width of the deck (two versions,
+     RWD-02; the owner's rule on font sizes).
      Type in the roles is real rem and keeps its floors. */
   @media ${DESKTOP_TREE_QUERY} {
     :root {
@@ -24,10 +24,12 @@ const CSS = `
     }
   }
 
-  /* Below 1200 px (the tablet tier) the unit holds the original's 1440 size: 12 px. */
-  @media ${DESKTOP_TREE_QUERY} and (max-width: 1199.98px) {
+
+  /* The phone deck: the phone layout in the deck's unit (16 px up to 599 px, then growing with the window); a phone
+     in landscape keeps the 12 px unit below. */
+  @media ${PHONE_TREE_QUERY} {
     :root {
-      --u: 12px;
+      --u: ${PHONE_LAYOUT_UNIT};
     }
   }
 

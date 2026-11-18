@@ -65,7 +65,7 @@ export const SECTION_IDS = [
   'connect_page',
 ] as const;
 
-export const NEWSLETTER_PLACEMENTS = ['nav', 'content', 'connect', 'footer'] as const;
+export const NEWSLETTER_PLACEMENTS = ['nav', 'content', 'connect', 'footer', 'auto'] as const;
 export const NEWSLETTER_ERROR_CODES = [
   'already_subscribed',
   'invalid_email',

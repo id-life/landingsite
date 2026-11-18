@@ -1,6 +1,7 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import BilingualText from '@/components/common/BilingualText';
+import AlternatingLogo from '@/components/nav/AlternatingLogo';
 import Logo from '@/components/nav/Logo';
 import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
@@ -38,7 +39,6 @@ export type SiteHeaderProps = {
   /** False while the experience's intro hides its fixed UI. */
   shown?: boolean;
   inExperience?: boolean;
-  onLogoClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   onItemClick?: (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => void;
   /**
    * The page's own links beside the logo, as its original header had them (the podcast's two show tabs). On the
@@ -65,7 +65,6 @@ export default function SiteHeader({
   id,
   shown = true,
   inExperience = false,
-  onLogoClick,
   onItemClick,
   pageLinks,
 }: SiteHeaderProps) {
@@ -82,11 +81,11 @@ export default function SiteHeader({
         className={clsx(
           'flex w-full items-center text-foreground',
           overlay
-            ? // The experience: one row from 1200 px, with the original's padding and gaps; below, the navigation takes
-              // its own row under the logo row.
-              'fixed left-0 top-0 z-50 flex-wrap gap-x-15 gap-y-2 px-10 pb-2 pt-6 mobile:z-[60] mobile:flex-nowrap mobile:gap-0 mobile:p-5 navRow:flex-nowrap navRow:p-10 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:gap-y-[14px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:px-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:pt-[24px]'
+            ? // The experience: one row with the original's padding and gaps on every laptop-deck window, scaled with
+              // the window (two versions only, RWD-02); the phone deck's bar.
+              'fixed left-0 top-0 z-50 flex-nowrap gap-x-15 p-10 mobile:z-[60] mobile:gap-0 mobile:p-5'
             : // Content pages: the logo and the page's action, as their original headers had them.
-              'flex-wrap gap-x-6 gap-y-4 navRow:flex-nowrap',
+              'flex-wrap gap-x-6 gap-y-4 notMobile:flex-nowrap',
           // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
           // On phones the bar lets taps through to the page (its controls take them).
           // It fades in; it hides at once (a fade-out from the server-painted bar would read as "visible" for 300 ms).
@@ -99,13 +98,26 @@ export default function SiteHeader({
       >
         {!onItemClick && <LinkTracker />}
         <div className={live}>
-          <Logo
-            onClick={onLogoClick}
-            {...trackNav(NAV.vision_page.id, 'logo')}
-            {...(currentId === 'podcast'
-              ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' }
-              : {})}
-          />
+          {/* As on the original (the owner's answer 1A), per page kind and deck: the experience and /news alternate the
+              Chinese lockup and the English wordmark on both decks (on the experience a press only swaps them); the
+              Spectrum tool pages show the still lockup on the laptop deck and alternate on the phone deck; the
+              podcast pages show the still wordmark on both. */}
+          {overlay || currentId === 'news' ? (
+            <AlternatingLogo toggle={overlay} {...(overlay ? {} : trackNav(NAV.vision_page.id, 'logo'))} />
+          ) : action === 'exit' ? (
+            <>
+              <Logo mark="cn" className="mobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
+              <AlternatingLogo className="notMobile:hidden" {...trackNav(NAV.vision_page.id, 'logo')} />
+            </>
+          ) : (
+            <Logo
+              mark="en"
+              {...trackNav(NAV.vision_page.id, 'logo')}
+              {...(currentId === 'podcast'
+                ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' }
+                : {})}
+            />
+          )}
         </div>
         {pageLinks && (
           <div className="flex items-center mobile:order-last mobile:basis-full mobile:[&>nav]:w-full">{pageLinks}</div>
@@ -117,24 +129,15 @@ export default function SiteHeader({
             aria-label="Main"
             className={clsx(
               'main-nav-links flex gap-x-8 text-sm font-semibold mobile:hidden',
-              // Below 1200 px a row of its own (never a sideways scroller: its items would be cut by the window).
-              'order-last w-full flex-wrap gap-y-1 navRow:order-none navRow:w-auto navRow:flex-nowrap navGrid:gap-x-6 navGrid:gap-y-0',
+              // In the logo's row, as on the original at every laptop width (it scales with the window).
+              'flex-nowrap',
               // Where wave 0 put the first item: 16.67 % of the window from its left edge, centred on the logo row.
               live,
             )}
           >
-            {SECTION_NAV.map((item, index) => {
+            {SECTION_NAV.map((item) => {
               const current = currentId === item.id;
               return [
-                index === 4 && (
-                  <span
-                    key="row-break"
-                    aria-hidden="true"
-                    // A flex line of its own that is the row gap (the nav has none here: a zero-height line would add
-                    // the gap twice, and a negative margin cannot shrink a flex line below zero).
-                    className="hidden h-1 basis-full navGrid:block"
-                  />
-                ),
                 <Link
                   key={item.id}
                   prefetch={false}
@@ -160,13 +163,16 @@ export default function SiteHeader({
         )}
         <div
           id={overlay ? 'subscribe-btn' : undefined}
-          className="flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5 navRow:items-start"
+          className={clsx(
+            'flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5',
+            'notMobile:items-start',
+          )}
         >
           {action === 'exit' ? (
             <Link
               prefetch={false}
               href="/"
-              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5 [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]"
+              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
               ID.LIFE
@@ -178,8 +184,6 @@ export default function SiteHeader({
                 // podcast pages; a 44 px hit area on touch screens (tap-area) instead of a bigger frame.
                 'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
                 overlay ? 'w-33' : 'w-34',
-                // The tablet tiers draw the header at its 1440 px size (text there is at its 1440 size too).
-                '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:h-[30px] [@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[99px]',
                 currentId === 'podcast' && 'tracking-[0.1em] mobile:tracking-normal',
                 live,
               )}

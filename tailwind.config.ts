@@ -7,6 +7,7 @@ import {
   COMPACT_HEIGHT_QUERY,
   DESKTOP_TREE_QUERY,
   PHONE_TREE_QUERY,
+  PHONE_SCALED_QUERY,
   WIDTH_CLASS_QUERY,
 } from './src/styles/device-classes';
 
@@ -43,6 +44,9 @@ const config: Config = {
         // short one, so a phone in landscape too), `notMobile` the desktop tree. Same queries as useDeviceProfile.
         mobile: { raw: PHONE_TREE_QUERY },
         notMobile: { raw: DESKTOP_TREE_QUERY },
+        // The phone deck where its unit grows (from 600 px wide, an upright tablet): parts whose size follows the
+        // window's width rather than the unit get a box in units here, to keep their phone proportions.
+        phoneScaled: { raw: PHONE_SCALED_QUERY },
         // Window size classes, without overlaps, and input (RWD-02, RWD-06).
         compact: { raw: WIDTH_CLASS_QUERY.compact },
         medium: { raw: WIDTH_CLASS_QUERY.medium },

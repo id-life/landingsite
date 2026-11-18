@@ -91,11 +91,8 @@ const CarouselWrapper = memo(() => {
         itemHeight={48}
         duration={5}
         transition={0.6}
-        // The original's 25 units; in the tablet tiers its 1440 px width (300 px), as the text there is its 1440 size.
-        className={cn(
-          'scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]',
-          '[@media(min-width:600px)_and_(max-width:1199.98px)_and_(min-height:480px)]:w-[300px]',
-        )}
+        // The original's 25 units, scaled with the deck.
+        className={cn('scroll-title pointer-events-none fixed bottom-10 left-10 z-30 w-[25rem]')}
       >
         {CAROUSEL_ITEMS?.map((item) => (
           <CarouselItem key={item.cnText ?? item.text} {...item} />

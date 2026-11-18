@@ -21,19 +21,19 @@ const MobileConnectSinglePage = () => {
       className={cn(
         // invisible until Connect is entered (ConnectGL on the phone deck sets visibility), so this scroll box never catches
         // taps meant for the other sections.
-        'invisible fixed inset-x-0 top-[80px] z-30 flex flex-col overflow-y-auto overscroll-contain px-4 opacity-0 transition-[bottom] duration-300 ease-out',
+        'invisible fixed inset-x-0 top-[5rem] z-30 flex flex-col overflow-y-auto overscroll-contain px-4 opacity-0 transition-[bottom] duration-300 ease-out',
         // With the contact panel open the box ends at the panel and scrolls: its lower edge fades, so the line it
         // clips reads as more text below rather than text under the panel.
         isContactShow
           ? 'bottom-[calc(var(--connect-panel-h,310px)+0.5rem)] [mask-image:linear-gradient(to_bottom,black_calc(100%_-_2.5rem),transparent)]'
-          : 'bottom-[80px]',
+          : 'bottom-[5rem]',
       )}
     >
       <div className="my-auto font-display font-semibold uppercase tracking-[-4%]">
         {/* Section 1: EVANGELISM */}
         <div className="relative text-left">
-          <span className="connect-text-en whitespace-nowrap text-[28px]/[28px] text-accent">Evangelism</span>
-          <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[40px]/[60px] font-bold text-accent opacity-0">
+          <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[1.75rem] text-accent">Evangelism</span>
+          <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0">
             {CONNECT_EVANGELISM_CN}
           </span>
           <div className="connect-text-en text-[1.75rem]/[1.75rem]">
@@ -45,9 +45,9 @@ const MobileConnectSinglePage = () => {
 
         {/* Section 2: EAST & WEST ACCESS */}
         <div className="relative mt-4 text-left">
-          <span className="connect-text-en whitespace-nowrap text-[28px]/[46px]">East & West</span>
-          <span className="connect-text-en whitespace-pre-wrap text-[28px]/[46px] text-accent">Access</span>
-          <span className="connect-text-cn bilingual-font absolute -top-3 left-[190px] text-[40px]/[60px] font-bold text-accent opacity-0">
+          <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem]">East & West</span>
+          <span className="connect-text-en whitespace-pre-wrap text-[1.75rem]/[2.875rem] text-accent">Access</span>
+          <span className="connect-text-cn bilingual-font absolute -top-3 left-[11.875rem] text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0">
             {CONNECT_BRIDGE_CN}
           </span>
           <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">

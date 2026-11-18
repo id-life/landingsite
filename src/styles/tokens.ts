@@ -292,6 +292,34 @@ export const typeRoles = {
   display: ['clamp(2.75rem, 6vw, 6.875rem)', '1'],
 } as const;
 
+/**
+ * A role's size in px at a window width (16 px root), from its definition above: clamp(min, preferred, max), rem, vw,
+ * a sum, and var(--read-body) times a factor. The experience's decks restate each role from this (Style.tsx): its
+ * size at the deck's reference width, scaled by the deck's unit, so text follows the deck's scale (the owner's rule on
+ * font sizes: his sizes at 1440 px and on the phone, everything else those two scaled).
+ */
+export function roleSizePx(role: keyof typeof typeRoles, widthPx: number): number {
+  const len = (expr: string): number => {
+    const e = expr.trim();
+    if (e.startsWith('clamp(')) {
+      const [a, b, c] = e.slice(6, -1).split(',').map(len);
+      return Math.min(Math.max(b, a), c);
+    }
+    if (e.startsWith('calc(')) return len(e.slice(5, -1));
+    if (e.includes('*')) {
+      const [x, k] = e.split('*');
+      return len(x) * Number(k);
+    }
+    if (e.includes('+')) return e.split('+').reduce((sum, part) => sum + len(part), 0);
+    if (e === 'var(--read-body)') return len(readBody);
+    if (e.endsWith('rem')) return Number.parseFloat(e) * 16;
+    if (e.endsWith('vw')) return (Number.parseFloat(e) * widthPx) / 100;
+    if (e.endsWith('px')) return Number.parseFloat(e);
+    throw new Error(`roleSizePx: cannot read "${e}"`);
+  };
+  return len(typeRoles[role][0]);
+}
+
 /* ----------------------------------------------------------------------------------------------------------------
  * Space and grid
  * ------------------------------------------------------------------------------------------------------------- */

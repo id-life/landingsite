@@ -88,7 +88,7 @@ export default function FooterContactForm({ placement }: { placement: Newsletter
           }}
         />
       </div>
-      <div className="footer-submit-clip relative h-11 w-[90px] bg-accent text-white">
+      <div className="footer-submit-clip relative h-11 w-[5.625rem] bg-accent text-white">
         {isSubmitting ? (
           <div className="absolute left-0 top-0 z-[20] flex h-full w-full items-center justify-center">
             <LoadingSVG className="w-6 animate-spin stroke-white stroke-[3]" />

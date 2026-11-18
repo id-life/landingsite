@@ -19,7 +19,7 @@ export default function NewsLayout({ children }: { children: ReactNode }) {
           <NewsFooter />
         </SiteFooter>
       </div>
-      <SubscribePopup />
+      <SubscribePopup openOnArrival />
     </>
   );
 }

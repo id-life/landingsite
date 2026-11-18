@@ -38,7 +38,7 @@ const portfolioNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
  * - motion: the desktop deck is a continuous deck, so the section is pinned and its entrance is scrubbed by the scroll
  *   (ScrollTrigger); the paged deck plays the entrance and exit when the section becomes or stops being the current
  *   page, and steps between inner pages (PAGE_STEP) through the inner-page atoms the SectionPager drives;
- * - layout: two rows of eight (four on a medium window) on the desktop deck; inner pages of six, six and the rest in
+ * - layout: two rows of eight on the desktop deck (at every laptop width, scaled); inner pages of six, six and the rest in
  *   two columns on the paged deck (one row of tiles on a short window);
  * - particles: one field behind the whole grid on the desktop deck, showing the company under the mouse; one field per
  *   tile on the paged deck;
@@ -165,10 +165,9 @@ function DesktopPortfolio() {
         <h2 className="page2-title font-title text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</h2>
         <div className="page2-fund mb-2.5 mt-12 w-full max-w-[152rem] px-12 [@media(max-height:760px)]:mt-6">
           <div className="flex flex-col gap-8 [@media(max-height:760px)]:gap-4">
-            {/* Eight columns from 840 px; four on a medium (portrait tablet) window, so names and one-liners at their
-                role sizes are not squeezed into 90 px columns (RWD-01, RWD-02). */}
-            <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.firstRow}</div>
-            <div className="grid grid-cols-8 justify-items-center gap-y-8 medium:grid-cols-4">{portfolioItems.secondRow}</div>
+            {/* Eight columns, as on the original at every laptop width (two versions only, RWD-02). */}
+            <div className="grid grid-cols-8 justify-items-center gap-y-8">{portfolioItems.firstRow}</div>
+            <div className="grid grid-cols-8 justify-items-center gap-y-8">{portfolioItems.secondRow}</div>
           </div>
         </div>
         {/* On short windows the column reaches the bottom of the window, where the section arrows sit at its centre:

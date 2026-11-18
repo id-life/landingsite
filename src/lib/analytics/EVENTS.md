@@ -22,7 +22,7 @@ The subscribe popup is opened on request
 
 | parameter | type | required | meaning |
 |---|---|---|---|
-| `placement` | `nav` \| `content` \| `connect` \| `footer` | yes | Which control opened it |
+| `placement` | `nav` \| `content` \| `connect` \| `footer` \| `auto` | yes | Which control opened it |
 | `previously_dismissed` | number | yes | The visitor had explicitly dismissed the prompt before (1 = yes, 0 = no) |
 
 ### `newsletter_close`
@@ -31,7 +31,7 @@ The open popup is closed
 
 | parameter | type | required | meaning |
 |---|---|---|---|
-| `placement` | `nav` \| `content` \| `connect` \| `footer` | yes | Which control had opened it |
+| `placement` | `nav` \| `content` \| `connect` \| `footer` \| `auto` | yes | Which control had opened it |
 | `method` | `x` \| `escape` \| `outside` \| `scroll` \| `toggle` | yes | How it was closed |
 
 ### `newsletter_submit`
@@ -40,7 +40,7 @@ A subscribe form is submitted with a well-formed address
 
 | parameter | type | required | meaning |
 |---|---|---|---|
-| `placement` | `nav` \| `content` \| `connect` \| `footer` | yes | Which form |
+| `placement` | `nav` \| `content` \| `connect` \| `footer` \| `auto` | yes | Which form |
 
 ### `newsletter_subscribe` (key event)
 
@@ -48,7 +48,7 @@ The subscribe route confirmed a new address (subscribed, or pending under double
 
 | parameter | type | required | meaning |
 |---|---|---|---|
-| `placement` | `nav` \| `content` \| `connect` \| `footer` | yes | Which form |
+| `placement` | `nav` \| `content` \| `connect` \| `footer` \| `auto` | yes | Which form |
 | `status` | `subscribed` \| `pending` | yes | Mailchimp status of the new member |
 
 ### `newsletter_error`
@@ -57,7 +57,7 @@ A submit did not add a new address
 
 | parameter | type | required | meaning |
 |---|---|---|---|
-| `placement` | `nav` \| `content` \| `connect` \| `footer` | yes | Which form |
+| `placement` | `nav` \| `content` \| `connect` \| `footer` \| `auto` | yes | Which form |
 | `error_code` | `already_subscribed` \| `invalid_email` \| `rate_limited` \| `spam_check` \| `upstream_error` \| `timeout` \| `error` | yes | Typed result of the subscribe route |
 
 ### `contact_intent` (key event)

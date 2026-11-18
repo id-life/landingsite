@@ -19,7 +19,7 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
           {children}
         </div>
       </div>
-      <SubscribePopup />
+      <SubscribePopup openOnArrival />
     </div>
   );
 }

@@ -66,7 +66,7 @@ const BePartOfItInput = forwardRef<HTMLInputElement, BePartOfItInputProps>((prop
             // The original's 12-unit entry; 16 px on touch screens, where iOS zooms into a smaller input on focus.
             'h-11 w-[25.5625rem] border-[.0938rem] border-solid border-black bg-transparent p-3 pr-14 font-text text-xs/5 font-semibold tracking-normal coarse:text-[16px]',
             'disabled:cursor-not-allowed data-[error=true]:border-accent',
-            'mobile:w-full medium:w-full shortScreen:w-[20rem]',
+            'mobile:w-full shortScreen:w-[20rem]',
             className,
           )}
           autoComplete={autoComplete}

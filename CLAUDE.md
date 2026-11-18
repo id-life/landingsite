@@ -175,7 +175,8 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
 
 - `/news` and `/podcast` layouts are server components. Client code there is limited to islands: the headers, the
   footer form, the cards, the player and the transcript's delegated timeline click. The SUBSCRIBE popup
-  (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`).
+  (`SubscribePopup`), the phone menus, the video modal and the comments load on first use (`next/dynamic`); on
+  /news and /podcast the popup's first use is the page's arrival (it opens by itself, as on the original).
 - Not in the content pages' first-load JavaScript (PERF-10; `npm run perf:budget` measures it): the Sentry SDK (lazy,
   above), React Query (`ReactQueryProvider` is mounted by the experience, the Influence Network tool and the podcast
   comments, around themselves, sharing one client; not by the root providers), react-hook-form, the consent and
@@ -242,7 +243,10 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
 - Newsletter: every form posts to `POST /api/subscribe` (`src/app/api/subscribe`: validation, honeypot, rate limit,
   optional Turnstile, Mailchimp upstream with double opt-in) through `submitNewsletter` (`src/utils/newsletter.ts`);
   the browser never contacts Mailchimp. Typed result codes in `src/lib/newsletter/result.ts`, 6 s browser timeout.
-  The popup opens only on request.
+  The popup opens on request and, as on the original (owner's answer 5c), by itself on arrival: on the experience
+  when the intro ends, on /news and /podcast at once, never on the Spectrum tools. Any value stored under
+  `subscribe_popup_dismissed_v2` (written by every close but the SUBSCRIBE button again) stops that for good; so does
+  the reduced-motion preference.
 - Security headers (CSP, HSTS, COOP, CORP) come from `security-headers.mjs`; a new third-party host must be added
   there (CSP is enforced outside production, report-only in production until `CSP_MODE=enforce`).
 - Incidents, rollback and uptime checks: `RUNBOOK.md`.
