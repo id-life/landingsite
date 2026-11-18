@@ -9,6 +9,9 @@ import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 import { u } from '@/utils/layout-unit';
 
+/** The original's turn into Chinese: each glyph fades in 0.05 s (STAGGER.glyph apart, the original's 0.02 s). */
+const GLYPH_TURN = 0.05;
+
 /** The hold after Connect's rest label (see restAndHold). */
 export const CONNECT_REST_HOLD = beats(0.25);
 
@@ -141,9 +144,34 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
       gsap.to(item, { opacity: 1, duration: DURATION.micro, delay: cnDuration + index * STAGGER.glyph, overwrite: 'auto' });
     });
   };
+  // The red English words turn into Chinese, letter by letter, as on the original (the owner's answer 1A, reversing
+  // CON-12): the English glyphs go out one after another, then the Chinese paths come in, at the original's timings
+  // (0.05 s each, 0.02 s apart). playFooterLeaveAnim brings the English back when the visitor leaves Connect.
+  const playEnToCnAnim = () => {
+    const title1 = gsap.utils.toArray('.connect-title1 *');
+    const title1cn = gsap.utils.toArray('.connect-title1cn path');
+    const title2 = gsap.utils.toArray('.connect-title2 *');
+    const title2cn = gsap.utils.toArray('.connect-title2cn path');
+    const title3 = gsap.utils.toArray('.connect-title3 *');
+    const title3cn = getTitle3CnElements();
+    const allEnTitles = [...title1, ...title2, ...title3];
+    const allCnTitles = [...title1cn, ...title2cn, ...title3cn];
+    gsap.killTweensOf(allEnTitles);
+    gsap.killTweensOf(allCnTitles);
+    const enDuration = allEnTitles.length * STAGGER.glyph;
+    allEnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 0, duration: GLYPH_TURN, delay: index * STAGGER.glyph, overwrite: 'auto' });
+    });
+    allCnTitles.forEach((item, index) => {
+      if (!item) return;
+      gsap.to(item, { opacity: 1, duration: GLYPH_TURN, delay: enDuration + index * STAGGER.glyph, overwrite: 'auto' });
+    });
+  };
   return {
     createPage1CrossAnim,
     playFooterEnterAnim,
     playFooterLeaveAnim,
+    playEnToCnAnim,
   };
 };

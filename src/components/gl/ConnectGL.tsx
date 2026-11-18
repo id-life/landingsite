@@ -8,14 +8,16 @@ import { useConnectCrossAnimations } from '@/hooks/connectGL/useConnectCrossAnim
 import { useGSAP } from '@gsap/react';
 import { Center, Svg } from '@react-three/drei';
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import { useSetAtom, useAtom } from 'jotai';
-import { memo, RefObject, useRef, useEffect, useMemo } from 'react';
+import { memo, RefObject, useCallback, useRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import { CONNECT_PAGE_INDEX } from '@/constants/config';
 import { useThree } from '@react-three/fiber';
 import { DURATION, EASE } from '@/motion/tokens';
+import { isReducedMotion } from '@/motion/preference';
 
 type TitleProps = {
   titleRef: RefObject<THREE.Group | null>;
@@ -43,11 +45,30 @@ function ConnectGLImpl() {
   // below the screen. The timeline is rebuilt whenever the camera changes.
   const camera = useThree((state) => state.camera);
 
-  // The headlines stay in English: they used to turn into Chinese word by word 1 s after Connect
-  // appeared (playEnToCnAnim), so a reader lost the sentence being read (CON-12).
-  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim } = useConnectCrossAnimations({
+  // 1 s after Connect appears its red English words turn into Chinese, as on the original (the owner's answer 1A,
+  // reversing CON-12); not with the reduced-motion preference, where nothing changes language by itself. Leaving
+  // Connect cancels a pending turn.
+  const { createPage1CrossAnim, playFooterEnterAnim, playFooterLeaveAnim, playEnToCnAnim } = useConnectCrossAnimations({
     modelRef,
   });
+  const [currentPage] = useAtom(currentPageAtom);
+  const currentPageRef = useRef(currentPage);
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
+  const turnRef = useRef<gsap.core.Tween | null>(null);
+  const cancelTurn = () => {
+    turnRef.current?.kill();
+    turnRef.current = null;
+  };
+  const scheduleTurn = () => {
+    cancelTurn();
+    if (isReducedMotion()) return;
+    turnRef.current = gsap.delayedCall(1, () => {
+      turnRef.current = null;
+      if (currentPageRef.current?.id === 'connect_page') playEnToCnAnim();
+    });
+  };
 
   useGSAP(
     () => {
@@ -64,18 +85,22 @@ function ConnectGLImpl() {
             // 立即显示底栏. (It also used to pause the smoother and auto-scroll for 3 s to the end of this
             // trigger; the section controller now lands on the timeline's 'rest' label, MOT-01.)
             playFooterEnterAnim();
+            scheduleTurn();
           },
           onEnterBack: () => {
             if (isLayoutRefreshing()) return;
+            cancelTurn();
             playFooterLeaveAnim();
           },
           onLeave: () => {
             if (isLayoutRefreshing()) return;
             // 立即显示底栏
             playFooterEnterAnim();
+            scheduleTurn();
           },
           onLeaveBack: () => {
             if (isLayoutRefreshing()) return;
+            cancelTurn();
             playFooterLeaveAnim();
           },
         },
@@ -94,6 +119,12 @@ function ConnectGLImpl() {
 
 const DesktopConnectGL = memo(ConnectGLImpl);
 
+gsap.registerPlugin(SplitText);
+
+/** The original's phone turn into Chinese: each letter fades in 0.05 s, 0.05 s after the one before. */
+const TURN_FADE = 0.05;
+const TURN_STAGGER = 0.05;
+
 const centerPoint = new THREE.Vector3(0, -10, 0);
 
 // The single-page phone layout (the criteria and values are in flow inside it).
@@ -111,8 +142,30 @@ function MobileConnectGL() {
   useEffect(() => {
     onConnectRef.current = currentPage.id === NAV_LIST[CONNECT_PAGE_INDEX].id;
   }, [currentPage]);
-  // The headlines stay in English. Their red words used to turn into Chinese letter by letter 1 s
-  // after Connect appeared (playMobileEnToCnAnim), so each line read half in one language (CON-12).
+  // The red words turn into Chinese letter by letter 1 s after Connect's entry has run, as on the original (the
+  // owner's answer 1A, reversing CON-12): the English letters go out 0.05 s apart, then the Chinese come in. Not with
+  // the reduced-motion preference. Each entry starts again from English.
+  const splitsRef = useRef<SplitText[]>([]);
+  const turnRef = useRef<gsap.core.Tween | null>(null);
+  const resetTurn = useCallback(() => {
+    turnRef.current?.kill();
+    turnRef.current = null;
+    splitsRef.current.forEach((split) => split.revert());
+    splitsRef.current = [];
+  }, []);
+  const playTurn = useCallback(() => {
+    resetTurn();
+    gsap.set('#mobile-connect-content .connect-text-cn', { opacity: 1 });
+    const en = new SplitText('#mobile-connect-content .connect-text-en.text-accent', { type: 'chars' });
+    const cn = new SplitText('#mobile-connect-content .connect-text-cn', { type: 'chars' });
+    splitsRef.current.push(en, cn);
+    gsap.set(cn.chars, { opacity: 0 });
+    const enTotal = en.chars.length * TURN_STAGGER + TURN_FADE;
+    en.chars.forEach((char, i) => gsap.to(char, { opacity: 0, duration: TURN_FADE, delay: i * TURN_STAGGER, ease: EASE.out }));
+    cn.chars.forEach((char, i) =>
+      gsap.to(char, { opacity: 1, duration: TURN_FADE, delay: enTotal + i * TURN_STAGGER, ease: EASE.out }),
+    );
+  }, [resetTurn]);
 
   // Setup entry animation timeline
   useEffect(() => {
@@ -181,12 +234,22 @@ function MobileConnectGL() {
       gsap.set(CONNECT_FIXED_ELEMENTS, { visibility: 'visible' });
 
       // English visible, Chinese hidden
+      resetTurn();
       gsap.set('#mobile-connect-content .connect-text-en.text-accent', { opacity: 1 });
       gsap.set('#mobile-connect-content .connect-text-cn', { opacity: 0 });
 
-      // Reset and play entry animation
-      startAnimTLRef.current?.restart();
+      // Reset and play entry animation, then the turn into Chinese 1 s after it.
+      const tl = startAnimTLRef.current;
+      tl?.restart();
+      tl?.eventCallback('onComplete', () => {
+        if (isReducedMotion()) return;
+        turnRef.current = gsap.delayedCall(1, () => {
+          turnRef.current = null;
+          if (onConnectRef.current) playTurn();
+        });
+      });
     } else {
+      resetTurn();
       // Reset scroll position when leaving Connect page
       gsap.to(window, { scrollTo: 0 });
       // Hide FixedConnect elements immediately
@@ -202,7 +265,7 @@ function MobileConnectGL() {
         tl.reverse();
       } else gsap.set('#vision-canvas', { clearProps: 'opacity' });
     }
-  }, [currentPage, setIsSubscribeShow]);
+  }, [currentPage, setIsSubscribeShow, playTurn, resetTurn]);
 
   return (
     <group>

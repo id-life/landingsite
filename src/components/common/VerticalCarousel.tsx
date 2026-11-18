@@ -1,4 +1,6 @@
 import { mobileCurrentPageAtom } from '@/atoms';
+import { useIsMounted } from '@/hooks/useIsMounted';
+import { shuffle } from 'lodash-es';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { cn } from '@/utils';
 import gsap from 'gsap';
@@ -50,8 +52,13 @@ export default function VerticalCarousel({
   const isMobile = useIsMobile();
   const mobileCurrentPage = useAtomValue(mobileCurrentPageAtom);
 
-  // Fixed order (it used to shuffle on every mount, so each visit read the slogans in a new order).
-  const items = children;
+  // A new order on every visit, as on the original (the owner's answer 1A). Shuffled after mounting, so the server
+  // HTML and the first client render agree.
+  const isMounted = useIsMounted();
+  // The order is drawn once per mount (not on every render of the parent).
+  const count = children.length;
+  const order = useMemo(() => (isMounted ? shuffle(Array.from({ length: count }, (_, i) => i)) : null), [isMounted, count]);
+  const items = order ? order.map((i) => children[i]) : children;
 
   const reduced = useReducedMotionPref();
   const tlRef = useRef<gsap.core.Timeline | null>(null);

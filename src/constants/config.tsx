@@ -59,17 +59,17 @@ const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
   },
 };
 
-/** Every hero slogan, English and Chinese. The Chinese lines are kept for the /zh locale. */
+/** Every hero slogan, English and Chinese. */
 export const ALL_CAROUSEL_ITEMS: CarouselItemData[] = SLOGANS.map(({ id, locale, text }) => ({
   ...(locale === 'en' ? { text } : { cnText: text }),
   ...SLOGAN_VIEW[id],
 }));
 
 /**
- * The hero carousel shows the English slogans only, in this fixed order. It used to alternate English
- * and Chinese lines in a shuffled order, so the slogan changed language while it was read (CON-12).
+ * The hero carousel: all twelve slogans, six English and six Chinese, which VerticalCarousel shuffles on every visit,
+ * as on the original (the owner's answer 1A, reversing CON-12).
  */
-export const CAROUSEL_ITEMS: CarouselItemData[] = ALL_CAROUSEL_ITEMS.filter((item) => item.text);
+export const CAROUSEL_ITEMS: CarouselItemData[] = ALL_CAROUSEL_ITEMS;
 
 export const CONNECT_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'connect_page');
 export const SPECTRUM_PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === 'spectrum_page');

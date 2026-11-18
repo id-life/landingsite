@@ -1,6 +1,7 @@
 import MenuCloseSVG from '@/../public/svgs/menu-close.svg?component';
 import SubscribeBorderSVG from '@/../public/svgs/subscribe-border.svg?component';
 import BilingualText from '@/components/common/BilingualText';
+import AlternatingLogo from '@/components/nav/AlternatingLogo';
 import Logo from '@/components/nav/Logo';
 import { NAV } from '@/components/nav/nav';
 import MenuOpenSVG from '@/components/svg/MenuOpenSVG';
@@ -38,7 +39,6 @@ export type SiteHeaderProps = {
   /** False while the experience's intro hides its fixed UI. */
   shown?: boolean;
   inExperience?: boolean;
-  onLogoClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   onItemClick?: (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => void;
   /**
    * The page's own links beside the logo, as its original header had them (the podcast's two show tabs). On the
@@ -65,7 +65,6 @@ export default function SiteHeader({
   id,
   shown = true,
   inExperience = false,
-  onLogoClick,
   onItemClick,
   pageLinks,
 }: SiteHeaderProps) {
@@ -99,13 +98,20 @@ export default function SiteHeader({
       >
         {!onItemClick && <LinkTracker />}
         <div className={live}>
-          <Logo
-            onClick={onLogoClick}
-            {...trackNav(NAV.vision_page.id, 'logo')}
-            {...(currentId === 'podcast'
-              ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' }
-              : {})}
-          />
+          {/* As on the original (the owner's answer 1A): the experience and /news alternate the Chinese lockup and the
+              English wordmark (on the experience a press only swaps them); the podcast pages show the wordmark and
+              the Spectrum tool pages the lockup, still. */}
+          {overlay || currentId === 'news' ? (
+            <AlternatingLogo toggle={overlay} {...(overlay ? {} : trackNav(NAV.vision_page.id, 'logo'))} />
+          ) : (
+            <Logo
+              mark={action === 'exit' ? 'cn' : 'en'}
+              {...trackNav(NAV.vision_page.id, 'logo')}
+              {...(currentId === 'podcast'
+                ? { className: 'h-auto w-auto', markClassName: 'h-auto w-50 mobile:w-[7.75rem]' }
+                : {})}
+            />
+          )}
         </div>
         {pageLinks && (
           <div className="flex items-center mobile:order-last mobile:basis-full mobile:[&>nav]:w-full">{pageLinks}</div>

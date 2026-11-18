@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import type { MouseEvent } from 'react';
+import LogoSVGcn from '@/components/svg/LogoSVGcn';
 import LogoSVGen from '@/components/svg/LogoSVGen';
 
 /** Still read by the hero's CenterLogo (src/components/gl, owned by the 3D group). */
@@ -16,15 +17,17 @@ export enum LogoType {
  * letting Next re-render the route; modifier-clicks stay the browser's (new tab), so the href is always real.
  * No hooks, so content pages render it (and its wordmark) on the server.
  *
- * One static wordmark. The Chinese lockup (LogoSVGcn) was deleted as unreachable (ENG-16); for the /zh locale and
- * the bilingual lockup system (VIS-11) restore it with `git show 2e2c2cd:src/components/svg/LogoSVGcn.tsx`.
+ * One still mark: the English wordmark (the podcast pages) or the Chinese lockup (the Spectrum tool pages), as the
+ * original draws them there. The experience and /news alternate the two (AlternatingLogo).
  */
 export default function Logo({
   className,
   markClassName,
+  mark = 'en',
   onClick,
   ...rest
 }: {
+  mark?: 'en' | 'cn';
   className?: string;
   /** Classes for the wordmark itself (the podcast pages' original header set it by width: 12.5 units, 124 px on phones). */
   markClassName?: string;
@@ -42,7 +45,12 @@ export default function Logo({
       className={clsx('relative flex h-10 w-55 items-start tap-area mobile:w-auto mobile:items-center', className)}
     >
       {/* In flow (not absolute), so the link box holds the wordmark on phones too. */}
-      <LogoSVGen className={clsx(markClassName ?? 'h-10 w-auto mobile:h-5')} />
+      {mark === 'cn' ? (
+        // The original's lockup box: 8 units high in the 10-unit row, centred; 5 units on phones.
+        <LogoSVGcn className={clsx(markClassName ?? 'h-8 w-auto self-center mobile:h-5')} />
+      ) : (
+        <LogoSVGen className={clsx(markClassName ?? 'h-10 w-auto mobile:h-5')} />
+      )}
     </Link>
   );
 }

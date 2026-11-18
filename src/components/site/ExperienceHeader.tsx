@@ -35,13 +35,6 @@ export default function ExperienceHeader() {
       ? (NAV_LIST[target]?.id ?? null)
       : (NAV_LIST.find((s) => s.href === pathname)?.id ?? null);
 
-  const onLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    track('nav_click', { target_section: NAV.vision_page.id, source: 'logo' });
-    if (!experienceMounted || !isPlainClick(event)) return;
-    event.preventDefault();
-    goToSection(NAV.vision_page.id, 'nav');
-  };
-
   const onItemClick = (event: MouseEvent<HTMLAnchorElement>, item: SiteNavItem) => {
     track('nav_click', { target_section: item.id, source: 'nav' });
     if (!experienceMounted || !isSection(item) || !isPlainClick(event)) return;
@@ -82,7 +75,6 @@ export default function ExperienceHeader() {
       shown={shown}
       currentId={currentId}
       inExperience={experienceMounted}
-      onLogoClick={onLogoClick}
       onItemClick={onItemClick}
     />
   );
