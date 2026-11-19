@@ -7,6 +7,7 @@ import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
 import { getElementOffsetTop } from '@/utils';
 import { FLY_IN_FROM, flyInHoldPose, INTRO, shouldSkipIntro, whenElementMounted } from './intro';
+import { useTransmissionBuffer } from './transmissionBuffer';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -70,6 +71,8 @@ function DesktopDragonModel() {
     }),
     [budget.transmissionSamples],
   );
+  // The scene behind the glass, drawn as the original's drei 9 did (transmissionBuffer.ts).
+  const transmissionBuffer = useTransmissionBuffer(meshRef, TRANSMISSION_RESOLUTION.desktop, backgroundRef);
   // 使用 useGSAP 来处理 GSAP 动画，确保在客户端正确执行
   const { contextSafe } = useGSAP();
   const pathname = usePathname();
@@ -248,7 +251,7 @@ function DesktopDragonModel() {
       {...flyInHoldPose(!globalLoaded, [0, 0, 0], [0, INIT_ROTATION, 0])}
     >
       <mesh ref={meshRef} geometry={geometry}>
-        <MeshTransmissionMaterial {...materialConfig} />
+        <MeshTransmissionMaterial {...materialConfig} buffer={transmissionBuffer} />
       </mesh>
     </group>
   );
@@ -270,6 +273,8 @@ function PhoneDragonModel(props: {}) {
   const meshRef = useRef<THREE.Mesh>(null);
   // The same look as the desktop dragon for this page load (heroGlass draws once per page load).
   const glass = useMemo(() => heroGlass(), []);
+  // The scene behind the glass, drawn as the original's drei 9 did (transmissionBuffer.ts).
+  const transmissionBuffer = useTransmissionBuffer(meshRef, TRANSMISSION_RESOLUTION.phone, backgroundRef);
   const fixedUIHasTriggered = useRef(false);
   const { contextSafe } = useGSAP();
   const setFadeInAnimCompleted = useSetAtom(fadeInAnimCompletedAtom);
@@ -426,6 +431,7 @@ function PhoneDragonModel(props: {}) {
           samples={budget.transmissionSamples}
           background={backgroundRef.current}
           {...glass}
+          buffer={transmissionBuffer}
         />
       </mesh>
     </group>
