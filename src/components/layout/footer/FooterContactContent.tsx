@@ -75,11 +75,13 @@ export default function FooterContactContent({ placement = 'connect' }: { placem
       {/* The email is a mailto link (it was the uppercase literal CONTACT@ID.LIFE in a span). */}
       <address className="mt-4 flex flex-col gap-1.5 font-display text-xs/[0.9375rem] font-bold uppercase not-italic">
         <div className="flex items-center gap-1">
-          <HomeSVG aria-hidden="true" className="size-5" />
+          {/* viewBox passed here: the SVG loader drops one equal to the width and height, so on an upright tablet the
+              drawing stayed 20 px while its box grew with the phone version. */}
+          <HomeSVG aria-hidden="true" viewBox="0 0 20 20" className="size-5" />
           <span>{ORG_ADDRESS_TEXT}</span>
         </div>
         <a href={ORG_MAILTO} data-track-placement={placement} className="relative flex w-fit items-center gap-1 tap-area">
-          <ContactEmailSVG aria-hidden="true" className="size-5" />
+          <ContactEmailSVG aria-hidden="true" viewBox="0 0 20 20" className="size-5" />
           <span>{ORG_EMAIL}</span>
         </a>
       </address>
