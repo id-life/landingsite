@@ -232,16 +232,19 @@ export function WorldMapSponsorDotContent({
   dot,
   index,
   calcPoint,
+  measure = false,
 }: {
   deck: MapDeck;
   dot: MapSponsorDotData;
   index: number;
   calcPoint: CalcPoint;
+  /** A copy for the map's measure layer (cardFit): always open, never drawn, without the card's own classes. */
+  measure?: boolean;
 }) {
   const phone = deck === 'phone';
   const { data, lat, lng, mobileLat, mobileLng, title } = dot;
   const { handleMouseLeave, activeSponsorDot } = useEngagementClickPoint();
-  const isActive = activeSponsorDot === index;
+  const isActive = measure || activeSponsorDot === index;
   const activeSponsorDotClickOpen = useAtomValue(activeSponsorDotClickOpenAtom);
   const pLat = phone ? (mobileLat ?? lat) : lat;
   const pLng = phone ? (mobileLng ?? lng) : lng;
@@ -270,11 +273,12 @@ export function WorldMapSponsorDotContent({
       {isActive && (
         <div
           className={cn(
-            `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index}`,
+            !measure && `world-map-dot-sponsor-content world-map-dot-sponsor-content-${index}`,
             'pointer-events-auto absolute z-30 flex h-20 flex-col overflow-visible',
             phone ? 'translate-y-4' : 'translate-y-5',
           )}
           style={{ left: `${left}px`, top: `${top}px` }}
+          data-card-key={measure ? `sponsor-${index}` : undefined}
         >
           <div className="flex items-center">
             {data.map((item, itemIndex) => (

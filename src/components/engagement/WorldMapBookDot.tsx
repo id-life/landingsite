@@ -172,17 +172,20 @@ export function WorldMapBookDotContent({
   dot,
   index,
   calcPoint,
+  measure = false,
 }: {
   deck: MapDeck;
   dot: MapBookDotData;
   index: number;
   calcPoint: CalcPoint;
+  /** A copy for the map's measure layer (cardFit): always open, never drawn, without the card's own classes. */
+  measure?: boolean;
 }) {
   const phone = deck === 'phone';
   const { title, desc, coverUrl, videoUrl, lat, lng, link, bookTitle, containerClass } = dot;
   const activeBookDot = useAtomValue(activeBookDotAtom);
   const { handleMouseLeave } = useEngagementClickPoint();
-  const isActive = activeBookDot === index;
+  const isActive = measure || activeBookDot === index;
   const activeBookDotClickOpen = useAtomValue(activeBookDotClickOpenAtom);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
   const onClick = (e: React.MouseEvent) => {
@@ -209,11 +212,12 @@ export function WorldMapBookDotContent({
       {isActive && (
         <div
           className={cn(
-            `world-map-dot-book-content world-map-dot-book-content-${index}`,
+            !measure && `world-map-dot-book-content world-map-dot-book-content-${index}`,
             'pointer-events-none absolute flex h-20 flex-col overflow-visible',
             phone ? 'z-30 translate-y-4' : 'z-20 -mt-2',
           )}
           style={{ left: `${left}px`, top: `${top}px` }}
+          data-card-key={measure ? `book-${index}` : undefined}
         >
           <a
             href={link || undefined}

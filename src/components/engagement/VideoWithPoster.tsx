@@ -1,7 +1,8 @@
 import { useAlphaClips } from '@/hooks/useSupportsWebm';
 import { cn } from '@/utils';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { CardMeasureContext } from '@/hooks/anim/cardFit';
 import { DURATION, EASE } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
 
@@ -19,6 +20,8 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
   const { playable: supportsWebm, url: clip } = useAlphaClips();
   // Reduced motion (MOT-02): the still cover instead of a looping clip.
   const reduced = useReducedMotionPref();
+  // The map's measure layer: a box of the picture's size, nothing fetched.
+  const measure = useContext(CardMeasureContext);
 
   return (
     <motion.div
@@ -43,10 +46,13 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >
       <div className={cn('flex-center relative -mt-5 overflow-hidden', containerClass)}>
-        {coverUrl && (!videoLoaded || reduced) && (
+        {measure && (coverUrl || videoUrl) && (
+          <span data-card-picture className={cn('block size-[calc(var(--t)*15.5)]', coverUrl ? coverClass : videoClass)} />
+        )}
+        {!measure && coverUrl && (!videoLoaded || reduced) && (
           <img src={coverUrl} alt={title} className={cn('size-[calc(var(--t)*15.5)] object-contain', coverClass)} />
         )}
-        {supportsWebm && !reduced && videoUrl && (
+        {!measure && supportsWebm && !reduced && videoUrl && (
           <video
             src={clip(videoUrl)}
             autoPlay

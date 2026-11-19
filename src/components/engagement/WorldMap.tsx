@@ -11,7 +11,17 @@ import { useKeptMapCard } from '@/hooks/engagement/useKeptMapCard';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { throttle } from 'lodash-es';
-import { memo, useCallback, useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from 'react';
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type TouchEvent as ReactTouchEvent,
+} from 'react';
 import { useMeasure } from 'react-use';
 import { NAV } from '../nav/nav';
 import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
@@ -24,6 +34,7 @@ import type { Point } from './tapCut';
 import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
+import { CardMeasureContext, measureIsRequested, onMeasureRequest, takeCardMeasures } from '@/hooks/anim/cardFit';
 
 const svgViewBox = { w: 756, h: 360 };
 const parallaxFactor = 20; // largest parallax shift in px (mouse deck)
@@ -300,6 +311,31 @@ export const WorldMap = memo(function WorldMapComponent({
     [deck, dots, bookDots, sponsorDots, calcPoint],
   );
 
+  // Phone: every card measured when the section is entered (cardFit), as copies that are never drawn (invisible,
+  // hidden from assistive technology, inert) and fetch nothing (their pictures are empty boxes); taken down at once.
+  const measuring = useSyncExternalStore(onMeasureRequest, measureIsRequested, () => false);
+  const [measureLayer, setMeasureLayer] = useState<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    if (measuring && measureLayer) takeCardMeasures(measureLayer);
+  }, [measuring, measureLayer]);
+  const measureContents = useMemo(
+    () =>
+      phone && measuring ? (
+        <CardMeasureContext.Provider value>
+          {dots?.map((dot, i) => (
+            <WorldMapDotContent key={`m-${i}`} deck={deck} dot={dot} calcPoint={calcPoint} index={i} measure />
+          ))}
+          {bookDots?.map((dot, i) => (
+            <WorldMapBookDotContent key={`mb-${i}`} deck={deck} dot={dot} calcPoint={calcPoint} index={i} measure />
+          ))}
+          {sponsorDots?.map((dot, i) => (
+            <WorldMapSponsorDotContent key={`ms-${i}`} deck={deck} dot={dot} calcPoint={calcPoint} index={i} measure />
+          ))}
+        </CardMeasureContext.Provider>
+      ) : null,
+    [phone, measuring, deck, dots, bookDots, sponsorDots, calcPoint],
+  );
+
   // A tap or click on the map background closes the open card.
   const handleBackgroundClick = useCallback(() => {
     setActiveBookDot(null);
@@ -438,6 +474,16 @@ export const WorldMap = memo(function WorldMapComponent({
           >
             {contents}
           </div>
+          {measureContents && (
+            <div
+              ref={setMeasureLayer}
+              aria-hidden
+              inert
+              className="pointer-events-none invisible absolute inset-0 overflow-visible"
+            >
+              {measureContents}
+            </div>
+          )}
         </div>
       </MapHitLayerContext.Provider>
     );

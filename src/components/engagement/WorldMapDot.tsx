@@ -159,11 +159,14 @@ export function WorldMapDotContent({
   dot,
   index,
   calcPoint,
+  measure = false,
 }: {
   deck: MapDeck;
   dot: MapDotData;
   index: number;
   calcPoint: CalcPoint;
+  /** A copy for the map's measure layer (cardFit): always open, never drawn, without the card's own classes. */
+  measure?: boolean;
 }) {
   const phone = deck === 'phone';
   const {
@@ -186,7 +189,7 @@ export function WorldMapDotContent({
     period,
   } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
-  const isActive = activeMeetingDot === index;
+  const isActive = measure || activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -243,12 +246,13 @@ export function WorldMapDotContent({
       {isActive && (
         <div
           className={cn(
-            `world-map-dot-content world-map-dot-content-${index}`,
+            !measure && `world-map-dot-content world-map-dot-content-${index}`,
             'pointer-events-none absolute z-30 flex flex-col overflow-visible',
             // In the text unit (--t), so on tablets the card keeps the size its text has (the original's 1440 px size).
             'max-h-[calc(var(--t)*42.5)]',
           )}
           style={{ left: `${left}px`, top: `${top}px` }}
+          data-card-key={measure ? `meeting-${index}` : undefined}
         >
           {/* Mouse deck: the hover-out area, the hot areas around the card and the Talk link beside it. */}
           {!phone && (
