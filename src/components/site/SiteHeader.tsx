@@ -81,13 +81,14 @@ export default function SiteHeader({
         id={id}
         data-experience-header={overlay ? '' : undefined}
         className={clsx(
-          'flex w-full items-center text-foreground',
+          'flex w-full items-center',
           overlay
             ? // The experience: one row with the original's padding and gaps on every laptop-deck window, scaled with
               // the window (two versions only, RWD-02); the phone deck's bar.
-              'fixed left-0 top-0 z-50 flex-nowrap gap-x-15 p-10 mobile:z-[60] mobile:gap-0 mobile:p-5'
-            : // Content pages: the logo and the page's action, as their original headers had them.
-              'flex-wrap gap-x-6 gap-y-4 notMobile:flex-nowrap',
+              'fixed left-0 top-0 z-50 flex-nowrap gap-x-15 p-10 text-foreground mobile:z-[60] mobile:gap-0 mobile:p-5'
+            : // Content pages: the logo and the page's action, as their original headers had them, in the page's text
+              // colour (#222) as theirs were; on phones the podcast's show tabs wrap under the 40 px row, 20 px below it.
+              'flex-wrap gap-x-6 gap-y-5 notMobile:flex-nowrap',
           // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
           // On phones the bar lets taps through to the page (its controls take them).
           // It fades in. On the laptop deck its opacity also eases over 300 ms while hidden, as the original's bar did
@@ -181,7 +182,7 @@ export default function SiteHeader({
             <Link
               prefetch={false}
               href="/"
-              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
+              className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-foreground transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
               ID.LIFE
@@ -210,8 +211,13 @@ export default function SiteHeader({
               experiencePage={overlay}
               // A 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px. Both
               // in the deck's unit (2.5 and 2.75), so on an upright tablet the round button grows with the bar and SUBSCRIBE
-              // beside it keeps its place; 40 and 44 px wherever the unit is 16.
-              className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
+              // beside it keeps its place; 40 and 44 px wherever the unit is 16. On the content pages the box takes the
+              // icon's 40 px in the row (a negative margin), so the row, SUBSCRIBE and the icon sit where the original's
+              // 40 px button put them, and the touch box stays 44 px.
+              className={clsx(
+                "pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]",
+                !overlay && 'mobile:-m-0.5',
+              )}
               openIcon={<MenuOpenSVG className="size-10" />}
               closeIcon={<MenuCloseSVG aria-hidden="true" className="size-10" />}
             />
