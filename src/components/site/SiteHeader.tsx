@@ -171,8 +171,10 @@ export default function SiteHeader({
         <div
           id={overlay ? 'subscribe-btn' : undefined}
           className={clsx(
-            'flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5',
-            'notMobile:items-start',
+            'flex flex-1 items-center justify-end gap-8 mobile:gap-5',
+            // The experience's action box is the original #subscribe-btn, 48 px high with SUBSCRIBE at its top. The
+            // content pages' original headers had no such box: their row is as high as the logo, SUBSCRIBE centred in it.
+            overlay && 'h-12 mobile:h-auto notMobile:items-start',
           )}
         >
           {action === 'exit' ? (
