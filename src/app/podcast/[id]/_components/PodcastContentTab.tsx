@@ -66,7 +66,7 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
       </div>
       <div className="mt-7.5">
         <div className={clsx(activeTab === 0 ? 'block' : 'hidden')}>
-          <div className="markdown-body text-[0.875rem]/5 mobile:text-[0.75rem]" onClick={handleTranscriptClick}>
+          <div className="markdown-body text-[0.875rem]/5 mobile:text-[0.75rem]/[1.125rem]" onClick={handleTranscriptClick}>
             {children}
           </div>
         </div>

@@ -163,13 +163,6 @@ html[data-webgl='0'] header[data-experience-header] {
 }
 
 @layer components {
-  /* A reading column measured in characters of the reading size, so it widens with the type on large screens:
-     48 of them is about the 800 px the podcast pages used at 1440 px. */
-  .reading-column {
-    width: 100%;
-    max-width: calc(var(--read-body) * 48);
-  }
-
   .nav-item,
   .nav-page-item {
     &::after {

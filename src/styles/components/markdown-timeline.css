@@ -14,10 +14,9 @@
   word-wrap: break-word;
 
   color: var(--color-tone-800);
-  /* Size: the original's 14 px (12 on phones), set on the container (PodcastContentTab). */
+  /* Size and line height: the original's 14/20 px (12/18 on phones), set on the container (PodcastContentTab). */
   font-style: normal;
   font-weight: 500;
-  line-height: 1.7;
 }
 
 .markdown-body .octicon {

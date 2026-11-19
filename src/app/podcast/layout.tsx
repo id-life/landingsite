@@ -14,7 +14,8 @@ export default function PodcastLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <style>{PODCAST_CSS}</style>
       <div className="flex w-full flex-col items-center px-10 mobile:px-5">
-        <div className="reading-column">
+        {/* The original's 50rem column on every width. */}
+        <div className="w-full max-w-[50rem]">
           {/* The original podcast header: the logo, the two show tabs beside it, Subscribe (tabs under it on phones). */}
           <SiteHeader
             variant="solid"

@@ -171,8 +171,10 @@ export default function SiteHeader({
         <div
           id={overlay ? 'subscribe-btn' : undefined}
           className={clsx(
-            'flex h-12 flex-1 items-center justify-end gap-8 mobile:h-auto mobile:gap-5',
-            'notMobile:items-start',
+            'flex flex-1 items-center justify-end gap-8 mobile:gap-5',
+            // The experience's action box is the original #subscribe-btn, 48 px high with SUBSCRIBE at its top. The
+            // content pages' original headers had no such box: their row is as high as the logo, SUBSCRIBE centred in it.
+            overlay && 'h-12 mobile:h-auto notMobile:items-start',
           )}
         >
           {action === 'exit' ? (
@@ -187,15 +189,16 @@ export default function SiteHeader({
           ) : (
             <SubscribeTrigger
               className={clsx(
+                // Red while the popup is open on the phone only, as his: his laptop bar keeps SUBSCRIBE black then.
                 // The original frame and weight: 33 units by 10 on the experience, 34 on the content pages, wider-spaced on the
                 // podcast pages; a 44 px hit area on touch screens (tap-area) instead of a bigger frame.
-                'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent data-[open=true]:stroke-accent data-[open=true]:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5',
+                'group relative flex h-10 cursor-pointer items-center justify-center whitespace-nowrap text-sm font-semibold uppercase duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5 mobile:data-[open=true]:stroke-accent mobile:data-[open=true]:text-accent',
                 overlay ? 'w-33' : 'w-34',
                 currentId === 'podcast' && 'tracking-[0.1em] mobile:tracking-normal',
                 live,
               )}
             >
-              <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent group-data-[open=true]:stroke-accent" />
+              <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent mobile:group-data-[open=true]:stroke-accent" />
               Subscribe
             </SubscribeTrigger>
           )}
