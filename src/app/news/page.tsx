@@ -78,7 +78,7 @@ export default async function NewsPage() {
     <>
       <JsonLd data={jsonLd} />
       {/* Not on the screen, as on the original page (the owner shows no heading here). */}
-      <h1 className="sr-only">News</h1>
+      <h1 className="sr-only">News 新闻</h1>
       {insightsItems === null ? (
         <p role="status" className="py-24 text-center font-text text-body font-medium text-black/60 mobile:py-16">
           新闻暂时无法加载，请稍后再来。The news could not be loaded right now; please check back soon.

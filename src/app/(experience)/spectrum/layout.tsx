@@ -11,7 +11,8 @@ import HeroPreloads from '@/components/gl/HeroPreloads';
 
 // Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('spectrum');
-const PAGE_TITLE = 'Spectrum 谱系';
+// His site's own h1 for the section, word for word.
+const PAGE_TITLE = 'Immortal Dragons Spectrum - Longevity Initiatives';
 const PAGE_DESCRIPTION = PAGE.description;
 
 // The owner's own tab title (src/content/pages.ts tabTitle), og:title the same, no keywords (SEO-06).

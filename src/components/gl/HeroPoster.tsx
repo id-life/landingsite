@@ -33,7 +33,8 @@ export default function HeroPoster() {
   // technology. Without WebGL the inline probe marks <html data-webgl="0"> during parsing, so the poster is drawn from
   // the first paint (globals.css); without JavaScript a <noscript> rule draws it (HomeEntry).
   const shown = onHero && mode !== 'full';
-  // The poster is the page's h1 (CON-05): its accessible name is what it draws, the wordmark and the tagline. Once the
+  // The poster is the page's h1 (CON-05): its text is his h1's, in a visually hidden span; the two pictures are hidden
+  // from assistive technology so the name is read once. Once the
   // 3D hero draws the same composition the poster fades to opacity 0 but stays in the accessibility tree on the hero,
   // so the page keeps its heading; on the other sections it is hidden entirely (they have their own headings), and it
   // is not a heading there: a section route served directly would otherwise carry two h1 elements.
@@ -51,23 +52,15 @@ export default function HeroPoster() {
       )}
     >
       <Heading className="contents">
-        <svg
-          role="img"
-          aria-label="Immortal Dragons 不朽真龙: a purpose-driven longevity fund"
-          className="block size-full mobile:hidden"
-          viewBox="0 0 1577 1000"
-          preserveAspectRatio="xMidYMid meet"
-        >
+        {/* The heading's text, his site's own h1 on / ("Immortal Dragons 不朽真龙"): real text in the document, read
+            once, not drawn (the pictures below draw the wordmark), and no hover tooltip (no <title>, no title
+            attribute). */}
+        <span className="sr-only">Immortal Dragons 不朽真龙</span>
+        <svg aria-hidden className="block size-full mobile:hidden" viewBox="0 0 1577 1000" preserveAspectRatio="xMidYMid meet">
           <LogoEnSVG x={110.25} y={358} width={1356.5} height={284} />
           <TaglineSVG x={512.7} y={809.2} width={551.6} height={22.9} />
         </svg>
-        <svg
-          role="img"
-          aria-label="Immortal Dragons 不朽真龙: a purpose-driven longevity fund"
-          className="hidden size-full mobile:block"
-          viewBox="0 0 1000 2164"
-          preserveAspectRatio="xMidYMid meet"
-        >
+        <svg aria-hidden className="hidden size-full mobile:block" viewBox="0 0 1000 2164" preserveAspectRatio="xMidYMid meet">
           <LogoEnSVG x={70} y={992} width={860} height={180} />
           <TaglineSVG x={225} y={1288.5} width={550} height={22.9} />
         </svg>
