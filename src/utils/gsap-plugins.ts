@@ -18,8 +18,9 @@ import '@/motion/gsap';
  * every frame for as long as the page lives (_rafBugFix: "in some browsers (like Firefox), screen repaints weren't
  * consistent unless we had SOMETHING queued up"). The GSAP ticker already runs every frame whenever anything moves,
  * so at rest that loop only doubled the page's frame callbacks (124 a second on Mission). It is the only frame
- * ScrollTrigger queues while it registers, so that one frame is cancelled and the loop never starts. The 60 s idle
- * pause (src/motion/runtime.ts) still holds frames as before.
+ * ScrollTrigger queues while it registers, so that one frame is cancelled and the loop never starts; GSAP's ticker is
+ * then woken, since its own frame may have been queued in the same window. The 60 s idle pause
+ * (src/motion/runtime.ts) still holds frames as before.
  */
 function registerScrollTrigger() {
   if (typeof window === 'undefined') {
@@ -39,6 +40,13 @@ function registerScrollTrigger() {
     window.requestAnimationFrame = request;
   }
   queued.forEach((id) => window.cancelAnimationFrame(id));
+  // GSAP's own ticker can be among those frames: registering ScrollTrigger wakes the ticker when it is asleep, and its
+  // next frame was cancelled with ScrollTrigger's, leaving a ticker that believes it is running and never ticks again
+  // (no tween, no ScrollSmoother, no canvas frame: the 3D loader then waited for its 15 s fallback and the first
+  // screen stayed empty). Whenever these plugins are first registered while GSAP is already loaded (the phone menu's
+  // code on a content page, then the experience), that was every time. Waking it requests its frame afresh: a running
+  // ticker is restarted in the same frame, an asleep one ticks until GSAP's own idle sleep.
+  gsap.ticker.wake();
 }
 
 registerScrollTrigger();
