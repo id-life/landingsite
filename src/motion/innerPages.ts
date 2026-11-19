@@ -116,12 +116,23 @@ function write(section: string) {
   window.history.replaceState(after, '', window.location.href);
 }
 
+const changeListeners = new Set<(section: string) => void>();
+/** Called whenever an inner page changes (before it is written to history); for parts that lay out around it. */
+export function onInnerPageChange(listener: (section: string) => void) {
+  changeListeners.add(listener);
+  return () => {
+    changeListeners.delete(listener);
+  };
+}
+
 /**
  * Something inside `section` changed. Written to the current history entry once the view rests on that section, and
  * not while a restore of it is still being applied (the half-restored state would overwrite the kept one).
  */
 export function noteInnerPage(section: string) {
-  if (typeof window === 'undefined' || scheduled.has(section)) return;
+  if (typeof window === 'undefined') return;
+  for (const listener of changeListeners) listener(section);
+  if (scheduled.has(section)) return;
   scheduled.add(section);
   setTimeout(() => {
     scheduled.delete(section);

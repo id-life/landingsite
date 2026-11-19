@@ -67,7 +67,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   // The play button is not the popover's trigger, so Radix counts a press on it as outside the playlist. It plays or
   // pauses and leaves the playlist open (the whole pill used to be the trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
-  usePlayerTapAreas(pillRef);
+  usePlayerTapAreas(pillRef, isOpen);
 
   // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
   // the home page from another page of the site) keeps the track and playlist the visitor had.

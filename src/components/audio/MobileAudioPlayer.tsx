@@ -46,7 +46,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   // The play button sits beside the playlist button, outside the dialog: pressing it while the playlist is open plays
   // or pauses and leaves the playlist open (the whole pill used to be the dialog's trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
-  usePlayerTapAreas(pillRef);
+  usePlayerTapAreas(pillRef, isOpen);
   const closesPlaylist = useCallback((event: MouseEvent) => !pillRef.current?.contains(event.target as Node), []);
 
   // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
