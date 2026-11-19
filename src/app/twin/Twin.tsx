@@ -1,6 +1,13 @@
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { TWIN_FEATURES, TWIN_FEATURES_CN, TWIN_ONTOLOGY } from '@/content/twin';
-import { chooseTwinModel, currentModelAtom, currentModelTypeAtom, newTwinChoice, PredictionModel } from '@/atoms/twin';
+import {
+  chooseTwinModel,
+  currentModelAtom,
+  currentModelTypeAtom,
+  newTwinChoice,
+  PredictionModel,
+  twinWasPressed,
+} from '@/atoms/twin';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV_LIST } from '@/components/nav/nav';
@@ -20,7 +27,7 @@ import SwitchAnatomyCamera from './_components/SwitchAnatomyCamera';
 import SwitchModel from './_components/SwitchModel';
 import SwitchSkin from './_components/SwitchSkin';
 import YTBDemo from './_components/YTBDemo';
-import { showTwinOpening, TWIN_AVATAR, TWIN_OFFSTAGE_CLASS, type TwinAvatar } from './twin-deck';
+import { showTwinOpening, TWIN_AVATAR, TWIN_OFFSTAGE_CLASS, twinModelRestTop, type TwinAvatar } from './twin-deck';
 
 const PAGE_ID = 'twin_page';
 const PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === PAGE_ID);
@@ -169,6 +176,19 @@ function PhoneTwin({ avatar }: { avatar: TwinAvatar }) {
   useEffect(() => {
     if (currentPage.id !== PAGE_ID) resetModel();
   }, [currentPage, resetModel]);
+
+  // The model column's resting place reads DEMO's and its own height (twinModelRestTop), which a hidden panel does not
+  // have: placed again once the panel is shown, and on every resize or turn while nothing has been pressed, so a load
+  // and a turn give the same layout.
+  useEffect(() => {
+    if (currentPage.id !== PAGE_ID) return;
+    const place = () => {
+      if (!twinWasPressed()) gsap.set('#switch-model', { top: twinModelRestTop(), y: '-50%' });
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [currentPage]);
 
   const titleItem = 'twin-title-item absolute left-[-80rem] top-20';
   return (
