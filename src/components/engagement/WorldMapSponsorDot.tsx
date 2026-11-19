@@ -156,7 +156,10 @@ export function WorldMapSponsorDotPoint({
     <motion.div
       className={cn(
         `world-map-dot-sponsor world-map-dot-sponsor-${index}`,
-        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        // Phone: only what is drawn takes a tap for this point (its circle, its name, its badges); the rest of the dot's
+        // box lets the tap through to what lies beneath (the point targets and 44 px areas, MapPointHit; a card).
+        phone ? 'pointer-events-none' : 'pointer-events-auto',
+        'absolute origin-[center_left] cursor-pointer overflow-visible',
         isActive && 'z-20',
       )}
       data-active={isActive ? 'true' : undefined}
@@ -186,6 +189,7 @@ export function WorldMapSponsorDotPoint({
       >
         <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
+          tapOnDrawn={phone}
           ref={pointRef}
           containerClassName={phone ? MOBILE_MAP_SCALE.dotContainerSize : 'size-6'}
           svgSize={svgSize}
@@ -197,7 +201,7 @@ export function WorldMapSponsorDotPoint({
           isActive={isActive}
           svgClassName={phone ? `${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}` : undefined}
         />
-        <motion.p className={cn('flex items-center', MAP_LABEL_CLASS[deck])}>
+        <motion.p className={cn('flex items-center', MAP_LABEL_CLASS[deck], phone && 'pointer-events-auto')}>
           {title}
           <AnimatePresence>
             {isActive ? (

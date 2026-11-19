@@ -250,14 +250,19 @@ export const WorldMap = memo(function WorldMapComponent({
       return (
         <div
           key={`points-group-${i}`}
-          className="world-map-region flex-center pointer-events-auto absolute size-7 cursor-pointer text-3xl opacity-0"
+          // Phone: a region's flag answers no tap (it has no action), so it lets a tap through to the points' tap areas
+          // beneath, where the nearest point wins; it took the taps between London and Oxford when the dots did.
+          className={cn(
+            'world-map-region flex-center absolute size-7 cursor-pointer text-3xl opacity-0',
+            phone ? 'pointer-events-none' : 'pointer-events-auto',
+          )}
           style={{ left, top, filter: 'url(#black-overlay)' }}
         >
           <div className={cn({ 'opacity-80': isAnyActive })}>{dot.icon}</div>
         </div>
       );
     });
-  }, [regionDots, calcPoint, isAnyActive]);
+  }, [regionDots, calcPoint, isAnyActive, phone]);
 
   const points = useMemo(
     () => (
