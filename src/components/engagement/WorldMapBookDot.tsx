@@ -212,7 +212,8 @@ export function WorldMapBookDotContent({
   };
 
   return (
-    <AnimatePresence mode="wait">
+    // A measure copy stands grown in from its first frame (cardFit reads its grown boxes).
+    <AnimatePresence mode="wait" initial={!measure}>
       {isActive && (
         <div
           className={cn(

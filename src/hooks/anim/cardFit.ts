@@ -100,8 +100,11 @@ function drawn(el: Element): DOMRect[] {
 const span = (rects: DOMRect[]): Span | null =>
   rects.length ? [Math.min(...rects.map((r) => r.left)), Math.max(...rects.map((r) => r.right))] : null;
 
-// ------------------------------------------------------------------ the cards' widths, measured at section entry
+// ------------------------------------------------------------------ the cards, measured at section entry
 const cardSpans = new Map<string, Span>();
+/** Each card's boxes that take a tap (pointer-events not none), grown in: [left, top, right, bottom], card layer px. */
+const cardHits = new Map<string, (readonly [number, number, number, number])[]>();
+let measuresVersion = 0;
 let measureRequested = false;
 let waiting: (() => void)[] = [];
 const requestListeners = new Set<() => void>();
@@ -123,18 +126,41 @@ export const onMeasureRequest = (listener: () => void) => {
   return () => void requestListeners.delete(listener);
 };
 export const measureIsRequested = () => measureRequested;
+/** Changes whenever the cards have been measured again (useSyncExternalStore with onMeasureRequest). */
+export const cardMeasuresVersion = () => measuresVersion;
+/** The boxes of a card that take a tap, as the card stands when grown in, in the card layer's own coordinates. */
+export const cardHitBoxes = (kind: CardKind, index: number) => cardHits.get(cardKey(kind, index));
 
 /**
- * Called by the map with its measure layer drawn: each copy's letters and picture boxes, in the strip's content
- * coordinates (the layer is not moved by the strip's scroll, so its own left edge is the content's origin).
+ * Called by the map with its measure layer drawn (the copies stand grown in: their grow-in does not run): each copy's
+ * letters and picture boxes, and the boxes that take a tap, in the strip's content coordinates (the layer is not moved
+ * by the strip's scroll, so its own corner is the content's origin).
  */
 export function takeCardMeasures(layer: HTMLElement) {
-  const origin = layer.getBoundingClientRect().left;
+  const box = layer.getBoundingClientRect();
   cardSpans.clear();
+  cardHits.clear();
   for (const copy of layer.querySelectorAll<HTMLElement>('[data-card-key]')) {
+    const key = copy.dataset.cardKey ?? '';
     const s = span(drawn(copy));
-    if (s) cardSpans.set(copy.dataset.cardKey ?? '', [s[0] - origin, s[1] - origin]);
+    if (s) cardSpans.set(key, [s[0] - box.left, s[1] - box.left]);
+    const hits: (readonly [number, number, number, number])[] = [];
+    for (const e of [copy, ...copy.querySelectorAll('*')]) {
+      const r = e.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0 || getComputedStyle(e).pointerEvents === 'none') continue;
+      // Cut by every box above it in the card that clips (the meetings' scrolling photo list).
+      let [l, t, rr, b] = [r.left, r.top, r.right, r.bottom];
+      for (let q = e.parentElement; q && copy.contains(q); q = q.parentElement) {
+        const cs = getComputedStyle(q);
+        if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+        const c = q.getBoundingClientRect();
+        [l, t, rr, b] = [Math.max(l, c.left), Math.max(t, c.top), Math.min(rr, c.right), Math.min(b, c.bottom)];
+      }
+      if (rr > l && b > t) hits.push([l - box.left, t - box.top, rr - box.left, b - box.top]);
+    }
+    cardHits.set(key, hits);
   }
+  measuresVersion += 1;
   measureRequested = false;
   requestListeners.forEach((listener) => listener());
   const done = waiting;
