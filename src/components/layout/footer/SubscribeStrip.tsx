@@ -12,7 +12,7 @@ import { submitNewsletter } from '@/utils/newsletter';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { FloatingFocusManager, FloatingPortal, useMergeRefs } from '@floating-ui/react';
 import { useAtomValue } from 'jotai';
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
 import { DURATION } from '@/motion/tokens';
@@ -55,8 +55,6 @@ export default function SubscribeStrip({
     closedProps,
   } = useSubscribeDialog();
   useReturnFocusWithoutScroll(isSubscribeShow);
-  // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
-  const emailId = useId();
   const footerRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -194,19 +192,16 @@ export default function SubscribeStrip({
                   </span>
                 )}
                 <HoneypotField {...register('website')} />
-                <div className="relative flex h-11 flex-1 items-center justify-center p-2">
+                <div className="relative flex h-11 flex-1 justify-center p-2">
                   <div
                     className={clsx(
                       'absolute inset-0 -z-10 border-[.0938rem] border-foreground opacity-50',
                       errors.EMAIL && 'border-accent opacity-100',
                     )}
                   />
-                  <label htmlFor={emailId} className="mr-2 shrink-0 text-xs/5 font-semibold opacity-70">
-                    Email
-                  </label>
                   <input
                     className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600 coarse:text-[16px]"
-                    id={emailId}
+                    aria-label="Please enter email"
                     placeholder="Please enter email"
                     type="email"
                     inputMode="email"
