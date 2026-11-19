@@ -58,7 +58,6 @@ export default function HeroPoster() {
           viewBox="0 0 1577 1000"
           preserveAspectRatio="xMidYMid meet"
         >
-          <title>Immortal Dragons 不朽真龙: a purpose-driven longevity fund</title>
           <LogoEnSVG x={110.25} y={358} width={1356.5} height={284} />
           <TaglineSVG x={512.7} y={809.2} width={551.6} height={22.9} />
         </svg>
@@ -69,7 +68,6 @@ export default function HeroPoster() {
           viewBox="0 0 1000 2164"
           preserveAspectRatio="xMidYMid meet"
         >
-          <title>Immortal Dragons 不朽真龙: a purpose-driven longevity fund</title>
           <LogoEnSVG x={70} y={992} width={860} height={180} />
           <TaglineSVG x={225} y={1288.5} width={550} height={22.9} />
         </svg>

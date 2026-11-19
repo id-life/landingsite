@@ -7,10 +7,11 @@ import { DEPLOY_ENV } from '@/constants/env';
  * They are agent drafts written from what the code actually does (GA4 under Consent Mode v2, error reports,
  * hosting logs); they are not legal advice and have not been reviewed by counsel.
  *
- * While `status` is 'draft', production builds render NONE of this: no banner and no "Privacy choices" link.
+ * While `status` is 'draft', no build renders any of this (SHOW_DRAFT_CONSENT_COPY below is off): no banner and no
+ * "Privacy choices" link.
  * Analytics then stays off in opt-in regions (there is nobody to ask) and runs with the stored or regional default
- * elsewhere. Non-production builds render the drafts with a visible "Draft text" marker so the mechanism can be
- * tested. To ship: the owner (and counsel) approve or rewrite the strings below, set `status` to 'approved' and
+ * elsewhere. With SHOW_DRAFT_CONSENT_COPY on, non-production builds render the drafts with a visible "Draft text"
+ * marker so the mechanism can be tested. To ship: the owner (and counsel) approve or rewrite the strings below, set `status` to 'approved' and
  * set `privacyPath` once the /privacy page (CON-02) exists.
  */
 export const CONSENT_COPY = {
@@ -36,6 +37,15 @@ export const CONSENT_COPY = {
   draftMarker: 'Draft text, not approved',
 } as const;
 
-/** Production never renders draft copy; other builds render it, marked as a draft. */
-export const canRenderConsentCopy = () => CONSENT_COPY.status === 'approved' || DEPLOY_ENV !== 'production';
+/**
+ * The one switch for showing the draft copy in non-production builds: off. The owner reviews the preview builds,
+ * and this text is a draft he has not seen (his answer on legal pages, question 20: "not needed for now"), so no
+ * build renders the banner or the "Privacy choices" link until the copy is approved. Turn it on only to test the
+ * banner by hand.
+ */
+export const SHOW_DRAFT_CONSENT_COPY = false;
+
+/** Only approved copy is rendered; draft copy only in a non-production build with the switch on, marked as a draft. */
+export const canRenderConsentCopy = () =>
+  CONSENT_COPY.status === 'approved' || (SHOW_DRAFT_CONSENT_COPY && DEPLOY_ENV !== 'production');
 export const isDraftCopy = () => CONSENT_COPY.status !== 'approved';
