@@ -98,7 +98,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
           </div>
           <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg">{data.title}</h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
-          <div className={`article-body markdown-body mobile:[&_p]:text-sm`}>
+          <div className={`markdown-body mobile:[&_p]:text-sm`}>
             <Markdown remarkPlugins={markdownRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
               {data.content}
             </Markdown>
