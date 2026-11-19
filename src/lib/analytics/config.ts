@@ -16,6 +16,14 @@ export const VERCEL_INSIGHTS_ENABLED = ANALYTICS_ENABLED && process.env.NEXT_PUB
 export const VERCEL_EVENTS_ENABLED = VERCEL_INSIGHTS_ENABLED && process.env.NEXT_PUBLIC_VERCEL_EVENTS === '1';
 
 /**
+ * The owner's decision of 2026-11-20 (question 26, answer B, his words: "B for now. I can do the compliance later."):
+ * every visitor is counted without asking, as on his site, whatever the region. No banner is drawn and the region
+ * changes nothing. The regional consent below (DATA-01) and its banner stay in the code, out of the path: set this
+ * to false, and approve the banner text (consent-copy.ts), to bring them back.
+ */
+export const COUNT_EVERY_VISITOR = true;
+
+/**
  * Countries where analytics waits for an explicit Accept (Consent Mode v2 basic mode): the EEA (EU 27, Iceland,
  * Liechtenstein, Norway), the UK, Switzerland and mainland China. An unknown country counts as opt-in.
  */

@@ -2,6 +2,7 @@ import {
   ANALYTICS_ENABLED,
   CONSENT_COOKIE,
   CONSENT_MAX_AGE_S,
+  COUNT_EVERY_VISITOR,
   isOptInRegion,
   POLICY_VERSION,
   REGION_OVERRIDE_ALLOWED,
@@ -17,7 +18,7 @@ import { canRenderConsentCopy } from './consent-copy';
  * localStorage, and each answer is logged by POST /api/consent with that id and no IP, so a visitor's own choice
  * can be demonstrated without identifying anyone.
  */
-export type ConsentReason = 'pending' | 'stored' | 'region' | 'gpc' | 'automation' | 'disabled';
+export type ConsentReason = 'pending' | 'stored' | 'region' | 'gpc' | 'automation' | 'disabled' | 'everyone';
 export type ConsentState = {
   analytics: 'granted' | 'denied' | 'unset';
   reason: ConsentReason;
@@ -152,6 +153,8 @@ export async function startConsent() {
   started = true;
   if (!ANALYTICS_ENABLED || isExcludedPath()) return setState({ analytics: 'denied', reason: 'disabled' });
   if (isAutomated()) return setState({ analytics: 'denied', reason: 'automation' });
+  // The owner's decision (question 26, B): every visitor is counted without asking, as on his site; no region lookup.
+  if (COUNT_EVERY_VISITOR) return setState({ analytics: 'granted', reason: 'everyone', region: null, optIn: false });
   const region = await lookupRegion();
   const optIn = isOptInRegion(region);
   if (hasGlobalPrivacyControl()) return setState({ analytics: 'denied', reason: 'gpc', region, optIn });
