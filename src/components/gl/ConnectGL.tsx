@@ -156,9 +156,20 @@ function MobileConnectGL() {
   const playTurn = useCallback(() => {
     resetTurn();
     gsap.set('#mobile-connect-content .connect-text-cn', { opacity: 1 });
-    const en = new SplitText('#mobile-connect-content .connect-text-en.text-accent', { type: 'chars' });
-    const cn = new SplitText('#mobile-connect-content .connect-text-cn', { type: 'chars' });
+    // Screen readers read each red word once, in the language drawn (CON-12 with 1A): the Chinese spans are
+    // aria-hidden in the markup until the turn; at the turn the English goes hidden and the Chinese is read. The
+    // splitter itself adds no accessible text (aria: 'none'; its default puts an aria-label on each span, which ARIA
+    // prohibits on a span), and its letters are spans, read as the word they spell. A revert restores the markup's
+    // state (English read, Chinese hidden), which is what each entry starts from.
+    const en = new SplitText('#mobile-connect-content .connect-text-en.text-accent', {
+      type: 'chars',
+      aria: 'none',
+      tag: 'span',
+    });
+    const cn = new SplitText('#mobile-connect-content .connect-text-cn', { type: 'chars', aria: 'none', tag: 'span' });
     splitsRef.current.push(en, cn);
+    en.elements.forEach((el) => el.setAttribute('aria-hidden', 'true'));
+    cn.elements.forEach((el) => el.removeAttribute('aria-hidden'));
     gsap.set(cn.chars, { opacity: 0 });
     const enTotal = en.chars.length * TURN_STAGGER + TURN_FADE;
     en.chars.forEach((char, i) => gsap.to(char, { opacity: 0, duration: TURN_FADE, delay: i * TURN_STAGGER, ease: EASE.out }));

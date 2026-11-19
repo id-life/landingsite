@@ -44,7 +44,10 @@ const MobileConnectSinglePage = () => {
         {/* Section 1: EVANGELISM */}
         <div className="relative text-left">
           <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[1.75rem] text-accent">Evangelism</span>
-          <span className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0">
+          <span
+            aria-hidden="true"
+            className="connect-text-cn bilingual-font absolute -top-5 left-0 text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0"
+          >
             {CONNECT_EVANGELISM_CN}
           </span>
           <div className="connect-text-en text-[1.75rem]/[1.75rem]">
@@ -58,7 +61,10 @@ const MobileConnectSinglePage = () => {
         <div className="relative mt-4 text-left">
           <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem]">East & West</span>
           <span className="connect-text-en whitespace-pre-wrap text-[1.75rem]/[2.875rem] text-accent">Access</span>
-          <span className="connect-text-cn bilingual-font absolute -top-3 left-[11.875rem] text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0">
+          <span
+            aria-hidden="true"
+            className="connect-text-cn bilingual-font absolute -top-3 left-[11.875rem] text-[2.5rem]/[3.75rem] font-bold text-accent opacity-0"
+          >
             {CONNECT_BRIDGE_CN}
           </span>
           <p className="connect-text-en text-xs/4 font-semibold normal-case tracking-normal">
@@ -73,7 +79,10 @@ const MobileConnectSinglePage = () => {
           <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal text-accent">
             MOONSHOT
           </span>
-          <span className="connect-text-cn absolute left-0 top-0 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal opacity-0">
+          <span
+            aria-hidden="true"
+            className="connect-text-cn absolute left-0 top-0 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal opacity-0"
+          >
             MOONSHOT
           </span>
           <span className="connect-text-en ml-3 whitespace-nowrap text-[1.75rem]/[2.875rem] tracking-normal">VENTURES</span>
