@@ -9,9 +9,13 @@ const MobileConnectSinglePage = () => {
   const isContactShow = useAtomValue(isMobileFooterContactShowAtom);
 
   return (
-    // Scrolls on its own (a swipe past its end changes section): the headlines and their lines
-    // in normal flow. The inner my-auto wrapper centres the content when it fits and starts it at the top when
-    // it does not (justify-content: center would push the overflow above the scroll origin).
+    // Scrolls on its own (a swipe past its end changes section): the headlines and their lines in normal flow. Two
+    // spacers place them where the original does, centred between the header and 310 px above the window's bottom
+    // (his box ended there with the contact panel open), while this box ends at the panel itself: the top spacer starts
+    // at the difference and both grow, so with room to spare the block sits where his does; with less, the top spacer
+    // gives way first and the block's last line stays above the panel (his ran under it on a 667 px screen); with too
+    // little, both are 0 and the box scrolls from the top (justify-content: center would push the overflow above the
+    // scroll origin).
     <div
       id="mobile-connect-content"
       // Focusable, so keyboard users can scroll it too (axe scrollable-region-focusable).
@@ -29,7 +33,14 @@ const MobileConnectSinglePage = () => {
           : 'bottom-[5rem]',
       )}
     >
-      <div className="my-auto font-display font-semibold uppercase tracking-[-4%]">
+      <div
+        aria-hidden
+        className={cn(
+          'shrink grow',
+          isContactShow ? 'basis-[max(0px,calc(var(--connect-panel-h,19.375rem)_+_0.5rem_-_19.375rem))]' : 'basis-0',
+        )}
+      />
+      <div className="shrink-0 font-display font-semibold uppercase tracking-[-4%]">
         {/* Section 1: EVANGELISM */}
         <div className="relative text-left">
           <span className="connect-text-en whitespace-nowrap text-[1.75rem]/[1.75rem] text-accent">Evangelism</span>
@@ -71,6 +82,7 @@ const MobileConnectSinglePage = () => {
           </p>
         </div>
       </div>
+      <div aria-hidden className="shrink grow basis-0" />
     </div>
   );
 };
