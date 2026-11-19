@@ -39,6 +39,19 @@ html[data-webgl='0'] header[data-experience-header] {
   border-radius: 6px;
 }
 
+/* The music player's touch areas (RWD-06): sized to the room around the player (src/components/audio/tapRoom.ts), so they
+   never reach over a neighbouring control. Touch screens only; nothing is drawn. */
+@media (pointer: coarse) {
+  .player-tap::before {
+    content: '';
+    position: absolute;
+    top: calc(-1 * var(--tap-t, 0px));
+    right: calc(-1 * var(--tap-r, 0px));
+    bottom: calc(-1 * var(--tap-b, 0px));
+    left: calc(-1 * var(--tap-l, 0px));
+  }
+}
+
 /* 44 px tall to touch, like every control (RWD-06). */
 @media (pointer: coarse) {
   .skip-link {
