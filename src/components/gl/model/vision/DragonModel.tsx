@@ -77,8 +77,8 @@ function DesktopDragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
-    // As on the original: the nav fades in, then the fixed UI (one after the other, each INTRO.uiFadeSeconds.laptop with
-    // GSAP's default ease), as its timeline did.
+    // As on the original: INTRO.laptopUiOffsetSeconds after the trigger the nav fades in, then the fixed UI (one after
+    // the other, each INTRO.uiFadeSeconds.laptop with GSAP's default ease), as its timeline did.
     const tl = gsap.timeline({
       defaults: { duration: shouldSkipIntro() ? DURATION.instant : INTRO.uiFadeSeconds.laptop, ease: INTRO.defaultEase },
       onComplete: () => {
@@ -87,13 +87,15 @@ function DesktopDragonModel() {
     });
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
-    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 });
+    const offset = shouldSkipIntro() ? 0 : INTRO.laptopUiOffsetSeconds;
+    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 }, offset);
     // Above the canvas while it fades, so SCROLL takes a press from its first frame (FIXED_UI_REVEAL).
     if (element)
       tl.fromTo(
         element,
         { opacity: 0 },
         { opacity: 1, onStart: FIXED_UI_REVEAL.onStart, onComplete: () => FIXED_UI_REVEAL.clear(element) },
+        nav ? '>' : offset,
       );
     tl.play();
   });

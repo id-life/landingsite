@@ -21,6 +21,13 @@ export const INTRO = {
   wordmarkFadeSeconds: 0.84,
   wordmarkFadeEase: 'power2.out',
   uiFadeSeconds: { laptop: 0.5, phone: 0.21 },
+  /**
+   * Where the laptop's bar fade begins inside its timeline. The original created that timeline with { duration: 0.21 }
+   * among the timeline's own vars: GSAP takes it as the timeline's initial length, and a child added without a position
+   * goes to the timeline's end, so the bar's fade began 0.21 s after the trigger, the fixed controls' after it. Measured
+   * on the original: the timeline is created 1.25 s after the loader goes, the bar's fade begins 0.24 s later.
+   */
+  laptopUiOffsetSeconds: 0.21,
   /** GSAP's own default ease, which the original's fades used (this site sets other defaults). */
   defaultEase: 'power1.out',
   /** The settled hero's fade for a reduced-motion visitor (the tokens read 0 then; this is the original's 0.3 s). */
