@@ -1,6 +1,7 @@
 import { layoutUnitPx, u } from '@/utils/layout-unit';
 import { gsap } from 'gsap';
 import { forgetTwinPress } from '@/atoms/twin';
+import { COMPACT_HEIGHT_QUERY } from '@/styles/device-classes';
 
 /** Which deck the Digital Twin section is drawn for (RWD-02): the scrolled laptop deck or the paged phone deck. */
 export type TwinDeck = 'desktop' | 'phone';
@@ -45,6 +46,25 @@ export function showTwinDemo(deck: TwinDeck, shown: boolean) {
 }
 
 /**
+ * Phone: where the model column's centre rests in the opening arrangement. 32 units down a tall phone (the phone
+ * deck's unit, larger on an upright tablet), at most 60 % of the window; and in an upright window never so high that
+ * the column reaches DEMO above it: its top edge at least 0.75 units below DEMO's bottom (on 3:4 windows and at 375x667
+ * and 360x740 the 60 % cap put the column over DEMO). On a phone in landscape the column stands beside DEMO, on the
+ * right, and keeps the 60 % rule.
+ */
+export function twinModelRestTop() {
+  const unit = layoutUnitPx();
+  const capped = Math.min(32 * unit, innerHeight * 0.6);
+  if (window.matchMedia(COMPACT_HEIGHT_QUERY).matches) return capped;
+  const column = document.querySelector<HTMLElement>('#switch-model');
+  const demo = document.querySelector<HTMLElement>('#ytb-demo');
+  if (!column || !demo) return capped;
+  // DEMO's place in its panel (the titles' wrapper) and the column's in the fixed layer are both counted from the top of
+  // the window when the panel rests; read from the layout, not the screen, so a panel still sliding in reads the same.
+  return Math.max(capped, demo.offsetTop + demo.offsetHeight + 0.75 * unit + column.offsetHeight / 2);
+}
+
+/**
  * The section's opening arrangement, as on a fresh load: the headline (and on the desktop the feature list) and DEMO
  * shown, every title off stage, the switches at their resting places. Leaving the section returns to it, as on the
  * original.
@@ -63,9 +83,9 @@ export function showTwinOpening(deck: TwinDeck) {
   gsap.to(items, { left: u(-80) });
   gsap.to('.twin-tag', { left: u(-80) });
   // 32 / 30 units down a tall phone (the phone deck's unit, larger on an upright tablet); on a phone in landscape
-  // (390 px tall) that is below the window, so at most 60 %.
+  // (390 px tall) that is below the window, so at most 60 %; the model column never over DEMO (twinModelRestTop).
   gsap.to('#switch-model', {
-    top: () => `${Math.min(32 * layoutUnitPx(), innerHeight * 0.6)}px`,
+    top: () => `${twinModelRestTop()}px`,
     y: '-50%',
     overwrite: 'auto',
   });
