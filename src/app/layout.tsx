@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://id-platform.id.life" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.id.life" />
         <link rel="dns-prefetch" href="https://resources.id.life" />
-        <a href="#content-start" className="skip-link">
+        <a href="#content-start" className="skip-link" data-both-versions>
           Skip to content
         </a>
         <Providers>

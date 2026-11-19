@@ -55,6 +55,7 @@ export default function ExperienceCanvas() {
     <GLBoundary canvas="vision">
       <Canvas
         id="vision-canvas"
+        data-both-versions
         frameloop="never"
         onCreated={onCanvasCreated('vision')}
         className={clsx(phone && 'pointer-events-none', phone && !shownOnPhone && 'invisible opacity-0')}
