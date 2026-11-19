@@ -14,31 +14,17 @@ vi.mock('@/../public/svgs/subscribe-border.svg?component', () => ({ default: () 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: () => {} }), usePathname: () => '/missing' }));
 
 const hrefs = (html) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((m) => m[1]);
-// No site header on the 404: the original 404 had none, and its labels would be text that page never showed.
-const HEADER = [];
-const afterHeader = (html) => {
-  const all = hrefs(html);
-  expect(all.slice(0, HEADER.length)).toEqual(HEADER);
-  return all.slice(HEADER.length);
-};
 
 describe('error pages', () => {
-  test('the 404 keeps its 11 links and its heading, without a site header', () => {
+  // The owner's rule (no text he has not shown): the 404 draws what his site's 404 draws, "404" and "This page could
+  // not be found.", under the site header (his logo and SUBSCRIBE: the way home his default page lacked).
+  test('the 404 says only what his 404 says, under the site header', async () => {
     const html = renderToStaticMarkup(createElement(NotFound));
-    expect(html).toContain('<h1');
-    expect(html).toContain('Page not found');
-    expect(afterHeader(html)).toEqual([
-      '/',
-      '/',
-      '/portfolio',
-      '/insights',
-      '/spectrum',
-      '/presence',
-      '/digitaltwin',
-      '/connect',
-      '/news',
-      '/podcast',
-    ]);
+    expect(html).toMatch(/<h1[^>]*>404<\/h1>/);
+    expect(html).toMatch(/<h2[^>]*>This page could not be found\.<\/h2>/);
+    expect(html).toContain('<header');
+    for (const text of ['Page not found', 'PAGE NOT FOUND', '页面不存在', 'does not exist or has moved', 'Site sections'])
+      expect(html).not.toContain(text);
   });
 
   test('the route error page has one sentence, Try again and links to Home, News, Podcast and Connect', () => {

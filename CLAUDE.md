@@ -51,8 +51,9 @@ Each job is its own status check. Run the same commands locally before pushing.
   hosted feed, which the show and its episodes also name in the head (`PODCAST_FEED_URL`, `podcast/_components/constant.ts`).
 - Route handlers: `robots.ts`, `sitemap.ts` (ISR hourly; only canonical URLs, dates from content), `llms.txt/route.ts`,
   `api/revalidate` (the CMS publish webhook: regenerates pages and pings IndexNow and Baidu; 404 without
-  `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx`, `error.tsx`,
-  `global-error.tsx`, all using `src/components/common/ErrorState.tsx`.
+  `REVALIDATE_SECRET`). The IndexNow key file is `public/<key>.txt` (`src/lib/indexnow.ts`). Error UI: `not-found.tsx` (the site header, then only
+  "404" and "This page could not be found.", the owner's own 404 words), `error.tsx` and `global-error.tsx` (both
+  using `src/components/common/ErrorState.tsx`).
 - `src/app/twin` and `src/app/vision` hold section components, not routes. Unreachable modules are deleted rather
   than kept: `npm run knip` fails on an unused file or dependency.
 
