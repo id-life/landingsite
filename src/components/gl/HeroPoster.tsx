@@ -42,6 +42,7 @@ export default function HeroPoster() {
   return (
     <div
       id="hero-poster"
+      data-both-versions
       data-shown={shown ? 'true' : undefined}
       aria-hidden={onHero ? undefined : true}
       className={cn(
