@@ -5,12 +5,25 @@ import type { Metadata } from 'next';
  * - the <title> is the owner's own tab title for the page (question 5i, 2026-11-18: his titles exactly, e.g.
  *   "Portfolio 投资", "News 新闻 | Immortal Dragons"); pages his site titles by rule get "<topic> | Immortal Dragons";
  * - og:title is the same text, as on his site;
- * - no keywords meta (search engines ignore it; one 9-word list was pasted into eleven files);
+ * - the keywords meta as the owner's site serves it: a page's own list, or the site's (src/app/layout.tsx);
  * - the description is served as given, whole: the owner's own descriptions, word for word (2026-11-18).
  * Wording beyond these mechanical rules is the owner's: drafts are not shipped from here.
  */
 
 const BRAND = { en: 'Immortal Dragons', zh: '不朽真龙' } as const;
+
+/** The site's keywords meta, as the owner's site serves it on every page without a list of its own. */
+export const SITE_KEYWORDS = [
+  'Longevity',
+  'anti-aging',
+  'life extension',
+  'investment fund',
+  'innovation',
+  'biotech',
+  'pharmaceutical',
+  'healthcare',
+  'Immortal Dragons',
+];
 
 /** The title his site gives an address that does not exist (Next's default 404 title). */
 export const NOT_FOUND_TITLE = '404: This page could not be found.';
@@ -38,17 +51,28 @@ export type MetadataInput = {
    */
   tabTitle?: string;
   description: string;
+  /** The page's own keywords, as the owner's site serves them; absent, the site's list applies. */
+  keywords?: string[];
   /** The page's own image; null for a page his site gives none (no image is declared). */
   image?: string | null;
   type?: 'website' | 'article';
 };
 
-export function buildMetadata({ path, title, tabTitle, description, image, type = 'website' }: MetadataInput): Metadata {
+export function buildMetadata({
+  path,
+  title,
+  tabTitle,
+  description,
+  keywords,
+  image,
+  type = 'website',
+}: MetadataInput): Metadata {
   const text = description;
   const full = tabTitle ?? `${title} | ${BRAND.en}`;
   return {
     title: { absolute: full },
     description: text,
+    ...(keywords !== undefined && { keywords }),
     alternates: { canonical: path },
     openGraph: {
       title: full,

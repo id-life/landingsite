@@ -10,7 +10,7 @@ import { useReturnFocusWithoutScroll } from '@/hooks/useReturnFocusWithoutScroll
 import { cn } from '@/utils';
 import { FloatingFocusManager, FloatingPortal } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useId } from 'react';
+import { useEffect } from 'react';
 import HoneypotField from '@/components/forms/HoneypotField';
 import { useForm } from 'react-hook-form';
 import { SUBSCRIBE_PROMISE } from '@/content/subscribe';
@@ -41,8 +41,6 @@ export default function SubscribeSheet() {
     closedProps,
   } = useSubscribeDialog();
   useReturnFocusWithoutScroll(isSubscribeShow);
-  // ENG-09: the email field has a visible label (it had only a placeholder, then an aria-label).
-  const emailId = useId();
 
   const {
     register,
@@ -113,12 +111,9 @@ export default function SubscribeSheet() {
                     errors.EMAIL && 'border-accent opacity-100',
                   )}
                 />
-                <label htmlFor={emailId} className="mr-2 shrink-0 text-xs/5 font-semibold opacity-70">
-                  Email
-                </label>
                 <input
                   className="w-full bg-transparent text-xs/5 font-semibold placeholder:text-tone-600 mobile:text-[16px]/5"
-                  id={emailId}
+                  aria-label="Please enter email"
                   placeholder="Please enter email"
                   type="email"
                   inputMode="email"

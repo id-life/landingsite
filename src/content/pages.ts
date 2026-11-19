@@ -42,6 +42,16 @@ export const PAGES: PageMeta[] = [
     title: 'Disease Management & Cure Status',
     tabTitle: 'Disease Management & Cure Status | Immortal Dragons',
     description: '可治疗与可控制疾病列表 A list of curable and manageable diseases',
+    keywords: [
+      'curable diseases',
+      'manageable diseases',
+      'disease management status',
+      'disease cure status',
+      'disease wikipedia',
+      '疾病百科',
+      '可治愈疾病列表',
+      '可控制疾病列表',
+    ],
     llmsLabel: 'Disease Management',
     approval: live(),
   },
@@ -51,6 +61,19 @@ export const PAGES: PageMeta[] = [
     title: 'Influence Network',
     tabTitle: 'Influence Network | Immortal Dragons',
     description: '长寿领域人物影响力与关系图 Longevity influencer network and relationship map',
+    keywords: [
+      '长寿',
+      '长寿影响力',
+      '长寿领域领军人物',
+      '长寿领域人物关系',
+      '长寿领域核心人物',
+      'longevity',
+      'longevity influencer',
+      'longevity mentor',
+      'longevity leaders',
+      'longevity key opinion leaders',
+      'longevity key people',
+    ],
     llmsLabel: 'Influence Network',
     approval: live(),
   },
@@ -102,6 +125,7 @@ export const PAGES: PageMeta[] = [
     tabTitle: 'Podcast 播客 | Immortal Dragons 不朽真龙',
     description:
       '解码长寿革命。聚焦前沿科技，洞察投资先机。Decoding the longevity revolution. A deep dive into breakthrough science, tech, and investments.',
+    keywords: ['Longevity', 'Health', 'Science', 'Tech', 'Investment', 'Biotech', '长寿', '健康', '科技', '投资', '生物科技'],
     llmsLabel: 'Podcast',
     approval: live(),
   },
@@ -112,6 +136,18 @@ export const PAGES: PageMeta[] = [
     tabTitle: '龙门阵 Long Talk Podcast | Immortal Dragons',
     description:
       '包罗万象的随性漫谈。记录不朽真龙团队在茶水间的灵感碎片！A casual conversation exploring everything. Join the Immortal Dragons team as we chase our curiosity down the rabbit hole.',
+    keywords: [
+      'Behind the Scenes',
+      'Rabbit Hole',
+      'Random Thoughts',
+      'General Knowledge',
+      'Team Chat',
+      '幕后故事',
+      '兔子洞',
+      '奇思妙想',
+      '知识分享',
+      '团队闲聊',
+    ],
     llmsLabel: 'Long Talk Podcast',
     approval: live(),
   },
@@ -153,5 +189,11 @@ export const metaDescription = (page: Pick<PageMeta, 'description'>) => page.des
 export function pageMeta(id: string) {
   const page = PAGES.find((item) => item.id === id);
   if (!page) throw new Error(`content/pages.ts: no page "${id}"`);
-  return { path: page.path, title: page.title, tabTitle: page.tabTitle, description: page.description };
+  return {
+    path: page.path,
+    title: page.title,
+    tabTitle: page.tabTitle,
+    description: page.description,
+    keywords: page.keywords,
+  };
 }

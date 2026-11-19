@@ -1,4 +1,4 @@
-// SEO-06: the owner's tab titles (og:title the same), no keywords, and his descriptions served whole.
+// SEO-06: the owner's tab titles (og:title the same), his keywords, and his descriptions served whole.
 import { describe, expect, test } from 'vitest';
 import { buildMetadata } from '@/lib/seo/metadata';
 
@@ -38,6 +38,26 @@ describe('titles', () => {
   });
 });
 
+describe('keywords', () => {
+  test("a page's own keywords are served as given; without them the site's list (root layout) applies", async () => {
+    const { pageMeta } = await import('@/content/pages');
+    expect(buildMetadata(pageMeta('podcast')).keywords).toEqual([
+      'Longevity',
+      'Health',
+      'Science',
+      'Tech',
+      'Investment',
+      'Biotech',
+      '长寿',
+      '健康',
+      '科技',
+      '投资',
+      '生物科技',
+    ]);
+    expect(buildMetadata(pageMeta('portfolio'))).not.toHaveProperty('keywords');
+  });
+});
+
 describe('descriptions', () => {
   test('a description is served whole, never cut', () => {
     const long = `${"One sentence of the owner's own description. ".repeat(10)}`.trim();
@@ -54,7 +74,7 @@ describe('metadata', () => {
     description: 'A short description of the page that is long enough to be a description.',
   });
 
-  test('absolute title, canonical, og:title the same as the title, site name, no keywords', () => {
+  test('absolute title, canonical, og:title the same as the title, site name; no keywords of its own unless given', () => {
     expect(m.title).toEqual({ absolute: 'Portfolio | Immortal Dragons' });
     expect(m.alternates).toEqual({ canonical: '/portfolio' });
     expect(m.openGraph).toMatchObject({
