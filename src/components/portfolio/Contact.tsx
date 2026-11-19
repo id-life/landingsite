@@ -29,11 +29,12 @@ export default function Contact({ onCopy }: ContactProps) {
   return (
     // The original chip at the original's sizes: 13 units wide, the address and the copy icon on its right; on phones
     // 7.125 units, the address at 10 px in capitals, clear of the section arrows. Touch targets are hit areas
-    // (tap-area), so the chip keeps its size.
+    // (tap-area), so the chip keeps its size; on the laptop deck its area does not grow upward or downward, because the
+    // companies' tiles sit right above it.
     <button
       type="button"
       onClick={handleCopy}
-      className="group relative block w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 tap-area mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-accent"
+      className="group relative block w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 tap-area mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-accent notMobile:coarse:before:h-full"
     >
       <SubscribeBorderSVG
         preserveAspectRatio="none"
