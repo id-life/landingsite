@@ -1,46 +1,42 @@
 import { isReducedMotion } from '@/motion/preference';
 
-import { DURATION, EASE } from '@/motion/tokens';
-
 /**
- * The hero intro (the dragon flies in while the loader fades out). It runs once per browser: repeat
- * visits, and visitors who ask for reduced motion, get the settled hero after a short fade instead
- * (people should not wait for an animation they see every time).
- */
-/**
- * From the motion tokens (MOT-08): the fly-in is a camera-length move (was 1.2 s with expo.out, now 1 s with the
- * site's entrance ease); the wordmark fades over the same length on a first visit (was 0.84 s) and over the base UI
- * duration on a skipped intro (0.3 s, unchanged).
+ * The hero intro, as on the original site (the owner's answer 7A: "keep your full-screen loader and intro"). Every value
+ * is the original's own (its DragonModel, MobileDragonModel, CenterLogo and ProgressLoader); they are not motion tokens,
+ * because the intro is his and stays his whatever the tokens become. It plays on every visit; only a visitor whose
+ * system asks for reduced motion gets the settled hero (the skip below).
+ *
+ * Sequence after the hero's assets are in: the loader's bar fills to the end (loaderFillSeconds, linear), the loader
+ * fades out (loaderFadeSeconds), and only then does the intro start: the wordmark fades in (wordmarkFadeSeconds), and
+ * after flyInDelaySeconds the dragon flies in from the camera (flyInSeconds); the navigation and the fixed controls
+ * fade in when the fly-in is half way (laptop: one after the other, each uiFadeSeconds.laptop) or 85 % of the way
+ * (phone: together, each uiFadeSeconds.phone).
  */
 export const INTRO = {
-  /** Dragon fly-in; it starts as the loader begins to fade, so the two overlap. */
-  flyInSeconds: DURATION.camera,
-  flyInEase: EASE.out,
-  /** Wordmark fade-in on a first visit, and on a skipped intro. */
-  wordmarkFadeSeconds: DURATION.camera,
-  skippedFadeSeconds: DURATION.base,
+  loaderFillSeconds: 0.5,
+  loaderFadeSeconds: 0.3,
+  flyInSeconds: 2.1,
+  flyInDelaySeconds: 0.21,
+  flyInEase: 'power3.out',
+  wordmarkFadeSeconds: 0.84,
+  wordmarkFadeEase: 'power2.out',
+  uiFadeSeconds: { laptop: 0.5, phone: 0.21 },
+  /**
+   * Where the laptop's bar fade begins inside its timeline. The original created that timeline with { duration: 0.21 }
+   * among the timeline's own vars: GSAP takes it as the timeline's initial length, and a child added without a position
+   * goes to the timeline's end, so the bar's fade began 0.21 s after the trigger, the fixed controls' after it. Measured
+   * on the original: the timeline is created 1.25 s after the loader goes, the bar's fade begins 0.24 s later.
+   */
+  laptopUiOffsetSeconds: 0.21,
+  /** GSAP's own default ease, which the original's fades used (this site sets other defaults). */
+  defaultEase: 'power1.out',
+  /** The settled hero's fade for a reduced-motion visitor (the tokens read 0 then; this is the original's 0.3 s). */
+  skippedFadeSeconds: 0.3,
 } as const;
 
-const SEEN_KEY = 'intro_seen_v1';
-
-/** True on a repeat visit in this browser or with prefers-reduced-motion: no fly-in. */
+/** True for a visitor whose system asks for reduced motion: no fly-in, the settled hero. Every other visit plays it. */
 export function shouldSkipIntro(): boolean {
-  let seen = false;
-  try {
-    seen = window.localStorage.getItem(SEEN_KEY) === '1';
-  } catch {
-    // Storage blocked (private mode, disabled cookies): treat as a first visit.
-  }
-  return seen || isReducedMotion();
-}
-
-/** Called when the fly-in has played to the end. */
-export function markIntroSeen() {
-  try {
-    window.localStorage.setItem(SEEN_KEY, '1');
-  } catch {
-    // Storage blocked: the intro simply plays again next time.
-  }
+  return isReducedMotion();
 }
 
 /**
@@ -50,4 +46,27 @@ export function markIntroSeen() {
 export function whenElementMounted(selector: string, callback: () => void, framesLeft = 120) {
   if (document.querySelector(selector) || framesLeft <= 0) callback();
   else requestAnimationFrame(() => whenElementMounted(selector, callback, framesLeft - 1));
+}
+
+/** Where the dragon starts its fly-in (the original's gsap.from values): at the camera, turned over. */
+export const FLY_IN_FROM = {
+  position: { x: 0, y: 0, z: 10 },
+  rotation: { x: Math.PI, y: (Math.PI * 3) / 2, z: Math.PI },
+} as const;
+
+/**
+ * The dragon's pose props: while the loader is on screen (the intro still to come) it waits, not drawn, at the start
+ * of its fly-in. On the original nothing of the scene shows behind the fading loader, and the intro begins only once
+ * the loader has gone, from that start pose; drawn at rest instead, the dragon showed through the fading loader and
+ * then jumped to the start of the fly-in.
+ */
+export function flyInHoldPose(
+  waiting: boolean,
+  position: [number, number, number],
+  rotation: [number, number, number],
+): { position: [number, number, number]; rotation: [number, number, number]; visible: boolean } {
+  if (!waiting) return { position, rotation, visible: true };
+  if (shouldSkipIntro()) return { position, rotation, visible: false };
+  const { position: p, rotation: r } = FLY_IN_FROM;
+  return { position: [p.x, p.y, p.z], rotation: [r.x, r.y, r.z], visible: false };
 }

@@ -4,7 +4,6 @@ import { experienceMountedAtom, initialRouteHandledAtom } from '@/atoms';
 import { fadeInAnimCompletedAtom } from '@/atoms/geo';
 import { NAV, NAV_LIST } from '@/components/nav/nav';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useIsMounted } from '@/hooks/useIsMounted';
 import { track } from '@/lib/analytics/track';
 import { goToSection, sectionStateAtom } from '@/motion/sectionController';
 import { useAtomValue } from 'jotai';
@@ -20,15 +19,15 @@ import { isPlainClick, isSection, type SiteNavItem } from './site-nav';
  */
 export default function ExperienceHeader() {
   const isMobile = useIsMobile();
-  const mounted = useIsMounted();
   const pathname = usePathname();
   const experienceMounted = useAtomValue(experienceMountedAtom);
   const routeApplied = useAtomValue(initialRouteHandledAtom);
   const { target } = useAtomValue(sectionStateAtom);
-  // The experience reveals its fixed UI when the intro ends. Before hydration the bar is visible, so it paints
-  // from the server HTML.
+  // The experience reveals its fixed UI as the intro plays, as on the original; before that nothing of the first screen
+  // is drawn, the server HTML included (owner's answer 7A). Without WebGL or JavaScript the bar is drawn from the first
+  // paint by globals.css and HomeEntry's <noscript> rule.
   const uiVisible = useAtomValue(fadeInAnimCompletedAtom);
-  const shown = !mounted || uiVisible;
+  const shown = uiVisible;
 
   const currentId =
     experienceMounted && routeApplied
