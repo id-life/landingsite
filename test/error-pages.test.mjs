@@ -51,4 +51,22 @@ describe('error pages', () => {
     expect(hrefs(html)).toEqual([]);
     for (const text of REMOVED) expect(html).not.toContain(text);
   });
+  // The section, chunk and podcast-list failures draw only his "Reload" (his rule: no text he has not shown).
+  test('no error state anywhere draws our old sentences or "Try again"', async () => {
+    const files = [
+      'src/components/common/ErrorState.tsx',
+      'src/components/common/ClientChunkBoundary.tsx',
+      'src/components/common/SectionLoadError.tsx',
+      'src/app/podcast/_components/PodcastList.tsx',
+      'src/app/error.tsx',
+      'src/app/global-error.tsx',
+      'src/app/not-found.tsx',
+    ];
+    const gone = [...REMOVED, '加载失败', 'Could not load this content', '暂时无法加载', 'could not be loaded right now'];
+    for (const file of files)
+      for (const text of gone) expect(readFileSync(file, 'utf8'), `${file}: ${text}`).not.toContain(text);
+    const { default: SectionLoadError } = await import('@/components/common/SectionLoadError');
+    const html = renderToStaticMarkup(createElement(SectionLoadError, { onRetry: () => {} }));
+    expect(html.replace(/<[^>]+>/g, '')).toBe('Reload');
+  });
 });

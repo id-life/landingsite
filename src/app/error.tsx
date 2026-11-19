@@ -4,6 +4,7 @@ import { captureException } from '@/lib/sentry-client';
 import { useRouter } from 'next/navigation';
 import { startTransition, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { ReloadButton } from '@/components/common/ErrorState';
 
 // Loaded only when a route fails: this boundary is in every route's initial JavaScript, the header and the popup
 // are not (PERF-10).
@@ -39,13 +40,7 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
           tabIndex={-1}
           className="flex min-h-[60svh] items-center justify-center text-black outline-none"
         >
-          <button
-            type="button"
-            className="rounded-full border border-current px-6 py-2 font-text text-sm font-semibold uppercase"
-            onClick={retry}
-          >
-            Reload
-          </button>
+          <ReloadButton onClick={retry} />
         </main>
       </div>
       <SubscribePopup />
