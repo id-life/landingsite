@@ -20,6 +20,7 @@ import { rowKeyboardProps } from '@/app/insights/_components/rowKeyboard';
 import { safeHref } from '@/utils/safe-href';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import SectionLoadError from '@/components/common/SectionLoadError';
+import PlatformLink from '@/app/insights/_components/PlatformLink';
 
 type LongevityItem = {
   id: number;
@@ -280,35 +281,17 @@ export default function LongevitySection({ isMobile = false, compact = false, is
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>长生周报</h2>
-            {/* Each grows its hit area to 44 px on coarse pointers (RWD-06, tap-area); the boxes keep the original's size, so the row fits beside its heading as drawn. */}
+            {/* On a touch screen each hit area grows towards 44 px into space that is nobody's (PlatformLink); the boxes keep the original's size, so the row fits beside its heading as drawn. */}
             <div className="flex items-center gap-1.5">
-              <a
-                href={WECHAT_LINK}
-                aria-label="WeChat"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              <PlatformLink href={WECHAT_LINK} label="WeChat">
                 <WechatSVG className="size-6 fill-black" />
-              </a>
-              <a
-                href={REDBOOK_LINK}
-                aria-label="Xiaohongshu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              </PlatformLink>
+              <PlatformLink href={REDBOOK_LINK} label="Xiaohongshu">
                 <RedbookSVG className="size-6 fill-black" />
-              </a>
-              <a
-                href={ZHIHU_LINK}
-                aria-label="Zhihu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              </PlatformLink>
+              <PlatformLink href={ZHIHU_LINK} label="Zhihu">
                 <ZhihuSVG className="size-6 fill-black" />
-              </a>
+              </PlatformLink>
             </div>
           </div>
           <ViewAllButton href={WECHAT_LINK} external={!isMobile} onClick={handleViewAllClick} isMobile={isMobile} />

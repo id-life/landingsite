@@ -1,5 +1,6 @@
 import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrumData';
 import { cn } from '@/utils';
+import { FITTED_TAP_AREA, useFittedTapArea } from '@/hooks/useFittedTapArea';
 import { AnimatePresence, motion } from 'motion/react';
 import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo } from 'react';
 import { atom, useAtom } from 'jotai';
@@ -67,6 +68,8 @@ export const SpectrumLink = memo(
     loadImage?: boolean;
   }) => {
     const { key, label, link, isComingSoon, icon, labelClassName, routeKey, size } = item;
+    // A logo's touch area reaches only into space that is nobody's: never over the logo beside or below it.
+    const logoRef = useFittedTapArea<HTMLAnchorElement>();
     const hasLink = Boolean(link);
     const anchorProps = spectrumLinkProps({
       link,
@@ -110,10 +113,15 @@ export const SpectrumLink = memo(
       </div>
     );
 
-    // A logo link keeps its box and grows its hit area to 44 px on coarse pointers (RWD-06).
+    // A logo link keeps its box and grows its hit area towards 44 px on coarse pointers (RWD-06), only into space that is
+    // nobody's (useFittedTapArea).
     return anchorProps ? (
       // With a mouse, a text link's own box takes no press either (only its words do, above).
-      <a {...anchorProps} className={icon ? 'relative block tap-area' : 'pointer-events-none coarse:pointer-events-auto'}>
+      <a
+        {...anchorProps}
+        ref={icon ? logoRef : undefined}
+        className={icon ? `relative block tap-area ${FITTED_TAP_AREA}` : 'pointer-events-none coarse:pointer-events-auto'}
+      >
         {content}
       </a>
     ) : (
