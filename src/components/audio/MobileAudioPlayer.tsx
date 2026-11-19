@@ -26,6 +26,7 @@ import DesktopAudioSiriWave from './DesktopAudioSiriWave';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { PLAY_TRIGGER } from '@/atoms/audio-player';
+import { usePlayerTapAreas } from './usePlayerTapAreas';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   const { retryIfFailed: retryAudioList } = useFetchAudioData();
@@ -45,6 +46,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
   // The play button sits beside the playlist button, outside the dialog: pressing it while the playlist is open plays
   // or pauses and leaves the playlist open (the whole pill used to be the dialog's trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
+  usePlayerTapAreas(pillRef, isOpen);
   const closesPlaylist = useCallback((event: MouseEvent) => !pillRef.current?.contains(event.target as Node), []);
 
   // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
@@ -89,7 +91,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
         onClick={handleChangePlayStatus}
         // A 44 px hit area on touch screens (RWD-06) without growing the pill: the player keeps the original geometry,
         // clear of START's ring.
-        className="relative flex cursor-pointer items-center justify-center gap-1 tap-area"
+        className="player-tap relative flex cursor-pointer items-center justify-center gap-1"
       >
         <span aria-hidden="true">
           <DesktopAudioSiriWave className="w-6 overflow-hidden" />
@@ -123,7 +125,7 @@ function MobileAudioPlayer({ className }: { className?: string }) {
           type="button"
           aria-label="Playlist"
           // A 44 px hit area on touch screens (RWD-06); the icon and the pill keep their size.
-          className="relative flex size-5 cursor-pointer items-center justify-center tap-area"
+          className="player-tap relative flex size-5 cursor-pointer items-center justify-center"
         >
           <PlayListSVG aria-hidden="true" className="size-5 fill-white" />
         </button>

@@ -4,8 +4,9 @@ import { useEventBus } from '@/components/event-bus/useEventBus';
 import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useSetAtom } from 'jotai';
-import { useCallback, useRef } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
+import { cardKey, fittedStop, measureCards, type CardKind } from './cardFit';
 import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 import { isMotionPaused } from '@/motion/runtime';
@@ -36,6 +37,9 @@ export const onPhonePresenceEntered = (onChange: () => void) => {
   };
 };
 
+/** The card a pan was last asked for (the tour, a kept card, a link from Spectrum): that pan already fits it. */
+let panFor: string | null = null;
+
 export function useMobileEngagementAnim() {
   const autoScrollRef = useRef<gsap.core.Tween | null>(null);
   const dotShowIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -45,6 +49,9 @@ export function useMobileEngagementAnim() {
   const setActiveMeetingDot = useSetAtom(activeMeetingDotAtom);
   const setActiveSponsorDot = useSetAtom(activeSponsorDotAtom);
   const setTourOpenedDot = useSetAtom(tourOpenedDotAtom);
+  const activeMeetingDot = useAtomValue(activeMeetingDotAtom);
+  const activeBookDot = useAtomValue(activeBookDotAtom);
+  const activeSponsorDot = useAtomValue(activeSponsorDotAtom);
 
   const { contextSafe } = useGSAP();
 
@@ -70,9 +77,38 @@ export function useMobileEngagementAnim() {
       const eleEl = activeEle as HTMLDivElement;
       // Auto-center the element on screen, with custom offset
       const targetScrollLeft = eleEl.offsetLeft - containerEl.clientWidth / 2 + eleEl.offsetWidth / 2 + offsetX;
-      containerEl.scrollTo({ behavior: 'smooth', left: Math.max(0, targetScrollLeft) });
+      // One pan: where the point is centred today, moved only as far as its card and place name need to be whole
+      // (cardFit, from the cards measured at the section's entry).
+      panFor = cardKey(type, index);
+      containerEl.scrollTo({ behavior: 'smooth', left: fittedStop(type, index, eleEl, containerEl, targetScrollLeft) });
     }
   }, []);
+
+  // A card opened by a tap on its point (no pan asked for): the strip stays where it is unless the card or its place
+  // name is not whole there, and then moves once, by as little as that takes.
+  useEffect(() => {
+    const open: [CardKind, number] | null =
+      activeMeetingDot !== null
+        ? ['meeting', activeMeetingDot]
+        : activeBookDot !== null
+          ? ['book', activeBookDot]
+          : activeSponsorDot !== null
+            ? ['sponsor', activeSponsorDot]
+            : null;
+    if (!open) return;
+    const key = cardKey(...open);
+    if (panFor === key) {
+      panFor = null;
+      return;
+    }
+    if (!userInteractedRef.current) return;
+    const scroller = document.querySelector<HTMLElement>('.world-map-container');
+    const prefix = open[0] === 'meeting' ? '' : `${open[0]}-`;
+    const dot = document.querySelector<HTMLElement>(`.world-map-dot-${prefix}${open[1]}`);
+    if (!scroller || !dot) return;
+    const stop = fittedStop(open[0], open[1], dot, scroller, scroller.scrollLeft);
+    if (Math.abs(stop - scroller.scrollLeft) >= 0.5) scroller.scrollTo({ behavior: 'smooth', left: stop });
+  }, [activeMeetingDot, activeBookDot, activeSponsorDot]);
 
   const stopAutoShowDot = useCallback(() => {
     if (autoScrollRef.current) {
@@ -257,6 +293,8 @@ export function useMobileEngagementAnim() {
 
     const cleanup = setupEventListeners();
     setPresenceEntered(true);
+    // Every card's width, while the entrance runs (the tour starts after it): so each pan ends where its card is whole.
+    void measureCards();
 
     // Leaving the section stops the tour and closes its card. The tour used to run on behind the hidden panel, so a
     // return (by Back, Forward or the menu) showed the card it had reached for a moment before the entrance closed it.

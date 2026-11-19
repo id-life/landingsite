@@ -28,6 +28,7 @@ import PlayListSVG from '@/../public/svgs/player/play_list.svg?component';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { PLAY_TRIGGER } from '@/atoms/audio-player';
+import { usePlayerTapAreas } from './usePlayerTapAreas';
 
 export const motionVariants = {
   visible: {
@@ -66,6 +67,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
   // The play button is not the popover's trigger, so Radix counts a press on it as outside the playlist. It plays or
   // pauses and leaves the playlist open (the whole pill used to be the trigger, which never closes it).
   const pillRef = useRef<HTMLDivElement>(null);
+  usePlayerTapAreas(pillRef, isOpen);
 
   // The first track becomes current once, when the list first arrives. A player mounting again (the visitor back on
   // the home page from another page of the site) keeps the track and playlist the visitor had.
@@ -120,7 +122,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
           type="button"
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
           onClick={handleChangePlayStatus}
-          className="relative flex cursor-pointer items-center rounded-full tap-area"
+          className="player-tap relative flex cursor-pointer items-center rounded-full"
         >
           <span aria-hidden="true" className="px-[8px]">
             <DesktopAudioSiriWave />
@@ -134,7 +136,7 @@ function DesktopAudioPlayer({ className }: { className?: string }) {
             type="button"
             // The name contains the visible title (WCAG 2.5.3 label in name).
             aria-label={`${title || 'Music'}, playlist`}
-            className="relative mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px] tap-area"
+            className="player-tap relative mx-[4px] flex cursor-pointer select-none items-center gap-[8px] rounded-full pr-[4px]"
           >
             <AudioTitle width={148} title={title || 'Music'} />
             <span aria-hidden="true" className="h-[14px] w-px bg-tone-650" />

@@ -87,7 +87,10 @@ export function WorldMapDotPoint({
     <motion.div
       className={cn(
         `world-map-dot world-map-dot-${index}`,
-        'pointer-events-auto absolute origin-[center_left] cursor-pointer overflow-visible',
+        // Phone: only what is drawn takes a tap for this point (its circle, its name, its badges); the rest of the dot's
+        // box lets the tap through to what lies beneath (the point targets and 44 px areas, MapPointHit; a card).
+        phone ? 'pointer-events-none' : 'pointer-events-auto',
+        'absolute origin-[center_left] cursor-pointer overflow-visible',
         isActive && 'z-20',
       )}
       data-active={isActive ? 'true' : undefined}
@@ -118,6 +121,7 @@ export function WorldMapDotPoint({
       >
         <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
+          tapOnDrawn={phone}
           ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}
           svgSize={svgSize}
@@ -129,7 +133,7 @@ export function WorldMapDotPoint({
           isActive={isActive}
           svgClassName={phone ? `${MOBILE_MAP_SCALE.dotSvgPosition} ${MOBILE_MAP_SCALE.dotSvgSize}` : undefined}
         />
-        <Label className={cn('flex flex-col items-start', MAP_LABEL_CLASS[deck])}>
+        <Label className={cn('flex flex-col items-start', MAP_LABEL_CLASS[deck], phone && 'pointer-events-auto')}>
           {label ? `${label}, ` : ''}
           {country}
           {phone ? (
@@ -159,11 +163,14 @@ export function WorldMapDotContent({
   dot,
   index,
   calcPoint,
+  measure = false,
 }: {
   deck: MapDeck;
   dot: MapDotData;
   index: number;
   calcPoint: CalcPoint;
+  /** A copy for the map's measure layer (cardFit): always open, never drawn, without the card's own classes. */
+  measure?: boolean;
 }) {
   const phone = deck === 'phone';
   const {
@@ -186,7 +193,7 @@ export function WorldMapDotContent({
     period,
   } = dot;
   const { activeMeetingDot, handleMouseLeave, handleClickPoint } = useEngagementClickPoint();
-  const isActive = activeMeetingDot === index;
+  const isActive = measure || activeMeetingDot === index;
   const [activeMeetingDotClickOpen, setActiveMeetingDotClickOpen] = useAtom(activeMeetingDotClickOpenAtom);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { left, top } = useMemo(() => calcPoint(lat, lng), [calcPoint, lat, lng]);
@@ -239,16 +246,18 @@ export function WorldMapDotContent({
   const Section = phone ? MobileContentSection : ContentSection;
   const Extra = phone ? MobileExtraSponsorSection : ExtraSponsorSection;
   return (
-    <AnimatePresence mode="wait">
+    // A measure copy stands grown in from its first frame (cardFit reads its grown boxes).
+    <AnimatePresence mode="wait" initial={!measure}>
       {isActive && (
         <div
           className={cn(
-            `world-map-dot-content world-map-dot-content-${index}`,
+            !measure && `world-map-dot-content world-map-dot-content-${index}`,
             'pointer-events-none absolute z-30 flex flex-col overflow-visible',
             // In the text unit (--t), so on tablets the card keeps the size its text has (the original's 1440 px size).
             'max-h-[calc(var(--t)*42.5)]',
           )}
           style={{ left: `${left}px`, top: `${top}px` }}
+          data-card-key={measure ? `meeting-${index}` : undefined}
         >
           {/* Mouse deck: the hover-out area, the hot areas around the card and the Talk link beside it. */}
           {!phone && (

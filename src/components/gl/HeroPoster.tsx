@@ -2,7 +2,6 @@
 
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
-import { globalLoadedAtom } from '@/atoms/geo';
 import { experienceModeAtom } from '@/hooks/useExperienceMode';
 import { cn } from '@/utils';
 import LogoEnSVG from '@/../public/svgs/logo-en.svg?component';
@@ -12,8 +11,8 @@ import TaglineSVG from '@/../public/svgs/main-description.svg?component';
  * The hero as plain DOM (ENG-02, VIS-03): the IMMORTAL DRAGONS wordmark and the tagline, drawn from the same vector
  * files as the WebGL hero and laid out where the WebGL planes sit, on a full-viewport layer exactly like the hero
  * canvas. Rendered by HomeEntry outside the client-only 3D tree, so it is in the server HTML:
- * - first paint: the wordmark is on screen before any JavaScript or WebGL;
- * - healthy WebGL: it fades out once the 3D hero is ready (the loader covers the hand-over);
+ * - without WebGL or without JavaScript: it is drawn from the first paint;
+ * - healthy WebGL: it is never drawn (the loader and the 3D hero are the first screen, owner's answer 7A);
  * - no WebGL ('static'), a lost hero context or a failed hero scene ('poster'): it stays, and is the hero.
  *
  * Interim art direction from existing assets only; the designed poster is a VIS deliverable (owner ask).
@@ -26,10 +25,14 @@ import TaglineSVG from '@/../public/svgs/main-description.svg?component';
  */
 export default function HeroPoster() {
   const mode = useAtomValue(experienceModeAtom);
-  const globalLoaded = useAtomValue(globalLoadedAtom);
   // Mission is the only section whose URL is '/' (the experience keeps the address bar on the visible section).
   const onHero = usePathname() === '/';
-  const shown = onHero && (mode !== 'full' || !globalLoaded);
+  // Drawn only when it is the hero: no WebGL ('static') or a lost or failed hero scene ('poster'). While the 3D hero
+  // loads nothing of the first screen is drawn before the loader (owner's answer 7A: his site shows its blank
+  // background, then his loader); the markup stays in the document, the page's h1 for crawlers and assistive
+  // technology. Without WebGL the inline probe marks <html data-webgl="0"> during parsing, so the poster is drawn from
+  // the first paint (globals.css); without JavaScript a <noscript> rule draws it (HomeEntry).
+  const shown = onHero && mode !== 'full';
   // The poster is the page's h1 (CON-05): its accessible name is what it draws, the wordmark and the tagline. Once the
   // 3D hero draws the same composition the poster fades to opacity 0 but stays in the accessibility tree on the hero,
   // so the page keeps its heading; on the other sections it is hidden entirely (they have their own headings), and it
@@ -39,6 +42,7 @@ export default function HeroPoster() {
   return (
     <div
       id="hero-poster"
+      data-shown={shown ? 'true' : undefined}
       aria-hidden={onHero ? undefined : true}
       className={cn(
         'pointer-events-none fixed inset-0 z-[1] transition-[opacity,visibility] duration-300 motion-reduce:transition-none',

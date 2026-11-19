@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { Group } from 'three';
 import gsap from 'gsap';
 import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
-import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { COARSE_POINTER_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
 import { u } from '@/utils/layout-unit';
 
 /** The original's turn into Chinese: each glyph fades in 0.05 s (STAGGER.glyph apart, the original's 0.02 s). */
@@ -99,10 +99,11 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     gsap.killTweensOf('.page-footer-contact');
     gsap.killTweensOf('.scroll-title');
 
-    // The phone deck's panel floats 5 units above the bottom edge (it read the user agent before; the deck is the
-    // device profile's, RWD-02).
-    const phoneDeck = window.matchMedia(PHONE_TREE_QUERY).matches;
-    gsap.to('.page-footer-contact', { bottom: phoneDeck ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
+    // The band floats 5 units above the bottom edge wherever the original's user-agent test called the device mobile:
+    // the phone deck, and a touch screen on the laptop deck (a tablet on its side, where his band sits 5 units higher
+    // than at the same window with a mouse). Read from the deck and the pointer (RWD-02), not the user agent.
+    const raised = window.matchMedia(PHONE_TREE_QUERY).matches || window.matchMedia(COARSE_POINTER_QUERY).matches;
+    gsap.to('.page-footer-contact', { bottom: raised ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
     gsap.to('.scroll-title', { opacity: 0, duration: DURATION.moderate });
   };
 

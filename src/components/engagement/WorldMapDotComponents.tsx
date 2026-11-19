@@ -187,6 +187,7 @@ export function PulseDot({
   containerClassName,
   svgClassName = 'absolute -left-full -top-full size-18',
   ref,
+  tapOnDrawn = false,
 }: {
   svgSize: number;
   centerPoint: number;
@@ -199,6 +200,8 @@ export function PulseDot({
   svgClassName?: string;
   /** The point's box, for its tap area (MapPointHit). */
   ref?: Ref<HTMLDivElement>;
+  /** Phone: only the drawn circle takes a tap; the point's 20 px box and the 56 px svg around it let it through. */
+  tapOnDrawn?: boolean;
 }) {
   // Reduced motion (MOT-02): the pulse rings hold still.
   const reduced = useReducedMotionPref();
@@ -207,12 +210,19 @@ export function PulseDot({
       ref={ref}
       className={cn(
         'pulse-dot relative',
+        tapOnDrawn && 'pointer-events-none',
         containerClassName ?? MOBILE_MAP_SCALE.dotContainerSize,
         isActive ? 'overflow-visible' : 'overflow-hidden',
       )}
     >
       <svg width={svgSize} height={svgSize} viewBox={`0 0 ${svgSize} ${svgSize}`} className={svgClassName}>
-        <circle cx={centerPoint} cy={centerPoint} r={centerRadius} fill={color} />
+        <circle
+          cx={centerPoint}
+          cy={centerPoint}
+          r={centerRadius}
+          fill={color}
+          style={tapOnDrawn ? { pointerEvents: 'auto' } : undefined}
+        />
         {isActive && (
           <>
             {/* 使用SVG animate元素来创建平滑的波纹效果 */}
