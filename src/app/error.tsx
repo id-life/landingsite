@@ -3,10 +3,19 @@
 import { captureException } from '@/lib/sentry-client';
 import { useRouter } from 'next/navigation';
 import { startTransition, useEffect } from 'react';
-import ErrorState, { ERROR_LINKS, ERROR_MESSAGE, TryAgainButton } from '@/components/common/ErrorState';
+import dynamic from 'next/dynamic';
 
-// Route-level error page. It renders inside the root layout, so the document keeps its title,
-// canonical and metadata; global-error.tsx (which replaces the whole document) stays as the last resort.
+// Loaded only when a route fails: this boundary is in every route's initial JavaScript, the header and the popup
+// are not (PERF-10).
+const SiteHeader = dynamic(() => import('@/components/site/SiteHeader'));
+const SubscribePopup = dynamic(() => import('@/components/layout/footer/SubscribePopup'));
+
+// Route-level error page. It renders inside the root layout, so the document keeps its title, canonical and
+// metadata; global-error.tsx (which replaces the whole document) stays as the last resort.
+//
+// It draws what the owner's site draws when a route fails: one "Reload" button, nothing else (his rule: no text he has
+// not shown). Above it, the site's header as the content pages have it (his logo and SUBSCRIBE): the way home his
+// page lacked, a defect fix.
 export default function RouteError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const router = useRouter();
 
@@ -22,12 +31,24 @@ export default function RouteError({ error, reset }: { error: Error & { digest?:
     });
 
   return (
-    <ErrorState
-      code="Error"
-      title="Something went wrong"
-      message={ERROR_MESSAGE}
-      links={ERROR_LINKS}
-      action={<TryAgainButton onClick={retry} />}
-    />
+    <>
+      <div className="mx-auto w-[80rem] mobile:w-auto mobile:px-5">
+        <SiteHeader variant="solid" currentId={null} className="relative py-5" />
+        <main
+          id="content-start"
+          tabIndex={-1}
+          className="flex min-h-[60svh] items-center justify-center text-black outline-none"
+        >
+          <button
+            type="button"
+            className="rounded-full border border-current px-6 py-2 font-text text-sm font-semibold uppercase"
+            onClick={retry}
+          >
+            Reload
+          </button>
+        </main>
+      </div>
+      <SubscribePopup />
+    </>
   );
 }
