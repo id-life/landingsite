@@ -23,7 +23,7 @@ import { ModelType } from '@/components/twin/model/type';
 import { gsap } from 'gsap';
 import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
@@ -64,6 +64,8 @@ const CLONES = [
 export default function SwitchModel({ deck }: { deck: TwinDeck }) {
   const phone = deck === 'phone';
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
+  // Drawn again on a press, so the chosen model's label shows by touch even when the press keeps the same model.
+  const [, showPressedLabel] = useReducer((n: number) => n + 1, 0);
   const currentModelType = useAtomValue(currentModelTypeAtom);
   const setModelLoadingItem = useSetAtom(modelLoadingItemAtom);
   const setCurrentAnatomyCamera = useSetAtom(currentAnatomyCameraAtom);
@@ -176,6 +178,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
   const pressModel = (model: PredictionModel, counted: boolean) => {
     if (counted) trackTwin('model', twinModelId(model) ?? String(model));
     markTwinPressed();
+    showPressedLabel();
     chooseTwinModel(model);
     if (phone) handleSwitchModelPhone(model);
     else handleSwitchModelDesktop(model);
@@ -218,6 +221,9 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
   const select = phone
     ? 'absolute -right-6 bottom-0 top-0 my-auto animate-move-right'
     : 'absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right';
+  // A model's label shows on hover; by touch (no hover) the label of the model the visitor chose stays shown while it is
+  // chosen, so a tap shows what a pointer's hover shows, in its place (nothing before a press, as with a mouse at rest).
+  const touchShown = twinWasPressed() ? '[@media(hover:none)]:opacity-100' : undefined;
   const codeOverlay =
     'flex-center absolute inset-0 bg-accent/20 font-semibold text-white opacity-0 backdrop-blur-sm transition-all duration-150 hover:opacity-100';
   const original = currentModel === PredictionModel.M0;
@@ -253,7 +259,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
         ) : (
           <div className="relative size-[56px]">
             <img src="/imgs/twin/avatar-model0.png" className="size-full object-contain" alt="" />
-            <div className={cn(codeOverlay, 'size-[56px]')}>ORG</div>
+            <div className={cn(codeOverlay, 'size-[56px]', original && touchShown)}>ORG</div>
           </div>
         )}
       </motion.div>
@@ -290,7 +296,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
             {currentModel === model && (
               <div className={cn('absolute bottom-0 w-full bg-accent', phone ? 'h-[0.1875rem]' : 'h-[3px]')} />
             )}
-            {!phone && <div className={cn(codeOverlay, 'left-0 top-0')}>{code}</div>}
+            {!phone && <div className={cn(codeOverlay, 'left-0 top-0', currentModel === model && touchShown)}>{code}</div>}
             {currentModel === model && <SelectSVG className={select} />}
           </motion.div>
         ))}
