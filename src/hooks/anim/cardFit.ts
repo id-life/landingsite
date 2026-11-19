@@ -8,8 +8,9 @@
  * on the screen there:
  * - everything fits the window: the least move that leaves a margin (8 px, less when the card is nearly as wide as the
  *   window) on both sides;
- * - it does not fit: the place name whole at the window's edge on its side (margin 0), so the card comes as far into
- *   the window as it goes on the other side; a place name is never cut.
+ * - it does not fit: the point's drawn circle and its place name whole at the window's edge on their side (margin 0),
+ *   so the card comes as far into the window as it goes on the other side; a point or its name is never cut (Berkeley's
+ *   point had been 11 px off the screen with its name at the edge).
  * A card that is already whole where the strip stops today does not move at all.
  */
 
@@ -31,6 +32,7 @@ export function fitStripStop({
   card,
   maxScroll,
   margin = 8,
+  point,
 }: {
   /** Where the strip stops today (scrollLeft). */
   intended: number;
@@ -38,13 +40,17 @@ export function fitStripStop({
   viewport: number;
   /** The place name's letters, in the strip's content coordinates. */
   name: Span;
+  /** The point's drawn circle, in the strip's content coordinates (whole first, before the name and the card). */
+  point?: Span;
   /** The card's letters, pictures and videos, in the strip's content coordinates. */
   card: Span;
   maxScroll: number;
   margin?: number;
 }): number {
-  const left = Math.min(name[0], card[0]);
-  const right = Math.max(name[1], card[1]);
+  // What must be whole, in order: the drawn point, then the place name; the card as far as it goes.
+  const must: Span = point ? [Math.min(point[0], name[0]), Math.max(point[1], name[1])] : name;
+  const left = Math.min(must[0], card[0]);
+  const right = Math.max(must[1], card[1]);
   const clamp = (s: number) => Math.max(0, Math.min(maxScroll, s));
   // Whole where it stops today: no move.
   if (left - intended >= 0 && right - intended <= viewport) return clamp(intended);
@@ -56,10 +62,10 @@ export function fitStripStop({
     if (right - s > viewport - m) s = right - (viewport - m);
     return clamp(s);
   }
-  // Too wide: the place name whole at its edge, the card cut on the far side.
-  const nameOnRight = (name[0] + name[1]) / 2 > (card[0] + card[1]) / 2;
-  // Whole pixels outward, so a fraction of the name's last or first letter is never cut.
-  return clamp(nameOnRight ? Math.ceil(name[1]) - viewport : Math.floor(name[0]));
+  // Too wide: the point and its place name whole at their edge, the card cut on the far side.
+  const nameOnRight = (must[0] + must[1]) / 2 > (card[0] + card[1]) / 2;
+  // Whole pixels outward, so a fraction of the point or of the name's last or first letter is never cut.
+  return clamp(nameOnRight ? Math.ceil(must[1]) - viewport : Math.floor(must[0]));
 }
 
 /** The letters of an element's own text nodes (not its children's), as viewport rects. */
@@ -138,8 +144,9 @@ export function takeCardMeasures(layer: HTMLElement) {
 
 /**
  * The stop for a point's card: where the strip would stop today (`intended`), moved only as far as the card and the
- * point's place name need to be whole. The place name is read from the point as it is (at its present scale, taken to
- * the open scale about its left edge); the card from the entry's measures. Without a measure, `intended`.
+ * point and its place name need to be whole. The point's circle and its place name are read from the point as it is
+ * (at its present scale, taken to the open scale about its left edge); the card from the entry's measures. Without a
+ * measure, `intended`.
  */
 export function fittedStop(kind: CardKind, index: number, dot: HTMLElement, scroller: HTMLElement, intended: number) {
   const maxScroll = scroller.scrollWidth - scroller.clientWidth;
@@ -152,5 +159,7 @@ export function fittedStop(kind: CardKind, index: number, dot: HTMLElement, scro
   const dotLeft = parseFloat(dot.style.left) || 0;
   const toRest = (x: number) => dotLeft + ((x - dotBox.left) / now) * ACTIVE_DOT_SCALE;
   const name: Span = [toRest(nameSpan[0]), toRest(nameSpan[1])];
-  return fitStripStop({ intended, viewport: scroller.clientWidth, name, card, maxScroll });
+  const circle = dot.querySelector('svg circle')?.getBoundingClientRect();
+  const point: Span | undefined = circle && circle.width > 0 ? [toRest(circle.left), toRest(circle.right)] : undefined;
+  return fitStripStop({ intended, viewport: scroller.clientWidth, name, point, card, maxScroll });
 }

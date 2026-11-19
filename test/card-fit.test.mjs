@@ -35,6 +35,15 @@ describe('fitStripStop', () => {
     expect(fitStripStop({ ...base, intended: 900, name: [1150, 1222], card: [774, 1111] })).toBe(1222 - 390);
   });
 
+  test('too wide, the point left of its name: the point at the left edge, the name whole, the card cut on the right', () => {
+    // Berkeley-like: the drawn circle 14 px left of the name's first letter.
+    expect(fitStripStop({ ...base, intended: 300, point: [388, 396], name: [402, 465], card: [498, 802] })).toBe(388);
+  });
+
+  test('the point is part of what fits: a card that fits with its name but not with its point moves for the point', () => {
+    expect(fitStripStop({ ...base, intended: 400, point: [396, 404], name: [410, 470], card: [480, 760] })).toBe(396 - 8);
+  });
+
   test('the stop stays inside the strip', () => {
     expect(fitStripStop({ ...base, intended: 10, name: [20, 60], card: [-40, 300] })).toBe(0);
     expect(fitStripStop({ ...base, maxScroll: 600, intended: 600, name: [700, 760], card: [800, 1100] })).toBe(600);
