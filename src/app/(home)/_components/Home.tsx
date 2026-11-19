@@ -27,7 +27,7 @@ import { useSectionUrlSync } from '@/hooks/useSectionUrlSync';
 import { useExperienceLifecycle } from '@/hooks/useExperienceLifecycle';
 import { useGSAP } from '@gsap/react';
 import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useSkipToSection } from '@/hooks/useSkipToSection';
 import { useNavigation } from '@/hooks/useNavigation';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -121,6 +121,16 @@ export default function Home({ deck }: { deck: Deck }) {
   });
 
   useSkipToSection();
+
+  // The version this experience mounted, on <html> in the same commit that mounts it (before paint), for Style's rule
+  // that hides a version drawn in the other version's sizing while the window's query and the mounted version disagree.
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.dataset.deck = deck;
+    return () => {
+      if (root.dataset.deck === deck) delete root.dataset.deck;
+    };
+  }, [deck]);
 
   const sections = (
     <>
