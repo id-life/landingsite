@@ -211,15 +211,12 @@ export default function SiteHeader({
               experiencePage={overlay}
               // A 40 px icon in a 44 px box on touch screens; the ::before pseudo-element extends the target to 48 px. Both
               // in the deck's unit (2.5 and 2.75), so on an upright tablet the round button grows with the bar and SUBSCRIBE
-              // beside it keeps its place; 40 and 44 px wherever the unit is 16. On the content pages the box takes the
-              // icon's 40 px in the row (a negative margin), so the row, SUBSCRIBE and the icon sit where the original's
+              // beside it keeps its place; 40 and 44 px wherever the unit is 16. The box takes the icon's 40 px in the row
+              // (a negative margin of 0.125 units each side), so the row, SUBSCRIBE and the icon sit where the original's
               // 40 px button put them, and the touch box stays 44 px.
-              className={clsx(
-                "pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:flex mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]",
-                !overlay && 'mobile:-m-0.5',
-              )}
+              className="pointer-events-auto relative hidden items-center justify-center tap before:absolute before:-inset-1 before:content-[''] mobile:-m-0.5 mobile:flex mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
               openIcon={<MenuOpenSVG className="size-10" />}
-              closeIcon={<MenuCloseSVG aria-hidden="true" className="size-10" />}
+              closeIcon={<MenuCloseSVG aria-hidden="true" viewBox="0 0 40 40" className="size-10" />}
             />
           )}
         </div>

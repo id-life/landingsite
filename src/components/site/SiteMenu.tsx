@@ -86,13 +86,17 @@ export default function SiteMenu({
               type="button"
               aria-label="Close menu"
               onClick={close}
-              className="flex items-center justify-center tap mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
+              // The menu button's box and place (SiteHeader): 44 px, taking 40 px in the row, at the row's top (on a
+              // phone the 44 px SUBSCRIBE beside it makes the row 44 px; centred, the button would sit 2 px lower).
+              className="flex items-center justify-center self-start tap mobile:-m-0.5 mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
             >
-              <MenuCloseSVG aria-hidden="true" className="size-10 cursor-pointer" />
+              <MenuCloseSVG aria-hidden="true" viewBox="0 0 40 40" className="size-10 cursor-pointer" />
             </button>
           </div>
           {/* The seven sections only, as the original phone menus listed (no News, Podcast or About). */}
-          <nav aria-label="Sections" className="mt-16 font-menu">
+          {/* The sections stay where they were when the close button took 44 px of the row: the row is now as high as
+              the larger of the 44 px SUBSCRIBE and the 40 px button, so the margin adds back what the row lost. */}
+          <nav aria-label="Sections" className="mt-[calc(4rem_+_max(44px,2.75rem)_-_max(44px,2.5rem))] font-menu">
             {sections.map((item) => (
               <MenuLink key={item.id} item={item} current={currentId === item.id} onClick={onItem} />
             ))}
