@@ -99,6 +99,9 @@ export default function ContactBand() {
               <div className="mt-7">
                 {mediaRows.map((row, rowIndex) => (
                   <div key={rowIndex} className={clsx('flex gap-5', rowIndex === 1 && 'mt-4')}>
+                    {/* On touch screens each link's touch area grows to 44 px tall but never past half of the 1-unit gap
+                    between the two rows, so it reaches only space that is nobody's (at 1024x768 the links are 21 px
+                    tall and 8.5 px apart, and a full 44 px area reached 3 px into the other row's link). */}
                     {row.map(({ type, label, Icon, iconClassName }) => (
                       <a
                         key={type}
@@ -106,7 +109,7 @@ export default function ContactBand() {
                         href={Links[type]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap-area hover:text-accent"
+                        className="group relative flex h-10 w-[123px] cursor-pointer items-center justify-center gap-1 transition duration-300 tap-area hover:text-accent coarse:before:h-[min(max(100%,44px),calc(100%_+_1rem))]"
                       >
                         <CornerBorder />
                         <Icon className={clsx(iconClassName, 'fill-black transition duration-300 group-hover:fill-accent')} />
@@ -137,7 +140,7 @@ export default function ContactBand() {
                 <a
                   href={ORG_MAILTO}
                   data-track-placement="connect"
-                  className="mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 tap-area hover:text-accent"
+                  className="relative mt-3 flex w-fit items-center justify-start gap-1.5 transition duration-300 tap-area hover:text-accent"
                 >
                   <img src="/svgs/contact-email.svg" alt="" />
                   {ORG_EMAIL}

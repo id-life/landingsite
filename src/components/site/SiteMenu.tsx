@@ -86,7 +86,7 @@ export default function SiteMenu({
               type="button"
               aria-label="Close menu"
               onClick={close}
-              className="flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center tap"
+              className="flex items-center justify-center tap mobile:min-h-[2.75rem] mobile:min-w-[2.75rem]"
             >
               <MenuCloseSVG aria-hidden="true" className="size-10 cursor-pointer" />
             </button>

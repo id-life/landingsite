@@ -18,6 +18,25 @@ import '@/styles/loading.css';
 // tree queries (src/styles/device-classes.ts), the same queries that decide which experience is mounted.
 // No characters React would escape (<, >, &, quotes) may appear in CSS.
 const CSS = `
+  /* Crossing the line between the two versions (F7): the window's query flips at once, the mounted version only once it
+     has settled (useDeviceProfile, 200 ms) and the other version has mounted. In between, the version still mounted
+     would be drawn in the other version's sizing, so its content is not drawn (the background and the canvases stay)
+     until the right one is mounted. The experience names the version it mounted on html[data-deck]; before scripts
+     the attribute is absent and neither rule applies; at rest the name and the query agree. Opacity, not visibility, so
+     a control keeps the focus it had. */
+  @media ${PHONE_TREE_QUERY} {
+    html[data-deck=desktop] :is(#nav, #wrapper, #pc-fixed-ui, [data-floating-ui-portal]) {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+  @media ${DESKTOP_TREE_QUERY} {
+    html[data-deck=phone] :is(#mobile-nav, #wrapper, #mobile-fixed-ui, [data-floating-ui-portal]) {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+
   /* RWD-01: a fixed root (100 %: 16 px, or the setting the visitor chose) on every route and width. */
   :root {
     font-size: 100%;
