@@ -79,6 +79,7 @@ export default function SiteHeader({
     <>
       <header
         id={id}
+        data-experience-header={overlay ? '' : undefined}
         className={clsx(
           'flex w-full items-center text-foreground',
           overlay
@@ -89,11 +90,12 @@ export default function SiteHeader({
               'flex-wrap gap-x-6 gap-y-4 notMobile:flex-nowrap',
           // Never dimmed or disabled during a section transition (MOT-01); before the UI is revealed it takes no input.
           // On phones the bar lets taps through to the page (its controls take them).
-          // It fades in; it hides at once (a fade-out from the server-painted bar would read as "visible" for 300 ms).
+          // It fades in. On the laptop deck its opacity also eases over 300 ms while hidden, as the original's bar did
+          // (its CSS transition smoothed the intro's fade-in tween); the phone's bar had none.
           overlay &&
             (shown
               ? 'pointer-events-auto opacity-100 transition-opacity duration-300 mobile:pointer-events-none'
-              : 'pointer-events-none opacity-0'),
+              : 'pointer-events-none opacity-0 notMobile:transition-opacity notMobile:duration-300'),
           className,
         )}
       >

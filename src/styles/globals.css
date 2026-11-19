@@ -12,6 +12,17 @@
   outline-offset: 2px;
 }
 
+/* Without WebGL (the inline probe sets <html data-webgl="0"> while the page is parsed) the poster is the hero and the
+   experience's bar is drawn from the first paint; with WebGL nothing of the first screen is drawn before the loader
+   (owner's answer 7A), so both wait for the experience. */
+html[data-webgl='0'] #hero-poster {
+  visibility: visible;
+  opacity: 1;
+}
+html[data-webgl='0'] header[data-experience-header] {
+  opacity: 1;
+}
+
 .skip-link {
   position: fixed;
   left: 1rem;

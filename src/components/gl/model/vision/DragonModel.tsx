@@ -6,7 +6,7 @@ import { TRANSMISSION_RESOLUTION, useGpuTier } from '@/motion/gpuTier';
 import { useHeroGLTF } from '@/components/gl/heroAssets';
 import { NAV_LIST } from '@/components/nav/nav';
 import { getElementOffsetTop } from '@/utils';
-import { INTRO, markIntroSeen, shouldSkipIntro, whenElementMounted } from './intro';
+import { FLY_IN_FROM, flyInHoldPose, INTRO, shouldSkipIntro, whenElementMounted } from './intro';
 import { useGSAP } from '@gsap/react';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -77,24 +77,23 @@ function DesktopDragonModel() {
 
   // 使用 contextSafe 包装动画函数，确保在正确的 GSAP 上下文中执行
   const triggerFadeInAnimation = contextSafe(() => {
-    // The nav and the fixed UI fade in together in DURATION.fast. (A duration among the timeline's own vars is
-    // ignored by GSAP: the two default 0.5 s fades ran one after the other, 1.21 s instead of 0.21 s; MOT-08.)
+    // As on the original: the nav fades in, then the fixed UI (one after the other, each INTRO.uiFadeSeconds.laptop with
+    // GSAP's default ease), as its timeline did.
     const tl = gsap.timeline({
-      defaults: { duration: DURATION.fast },
+      defaults: { duration: shouldSkipIntro() ? DURATION.instant : INTRO.uiFadeSeconds.laptop, ease: INTRO.defaultEase },
       onComplete: () => {
         setFadeInAnimCompleted(true);
       },
     });
     const element = document.querySelector('#pc-fixed-ui');
     const nav = document.querySelector('#nav');
-    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 }, 0);
+    if (nav) tl.fromTo(nav, { opacity: 0 }, { opacity: 1 });
     // Above the canvas while it fades, so SCROLL takes a press from its first frame (FIXED_UI_REVEAL).
     if (element)
       tl.fromTo(
         element,
         { opacity: 0 },
         { opacity: 1, onStart: FIXED_UI_REVEAL.onStart, onComplete: () => FIXED_UI_REVEAL.clear(element) },
-        0,
       );
     tl.play();
   });
@@ -193,12 +192,13 @@ function DesktopDragonModel() {
         return;
       }
 
-      gsap.from(modelRef.current.position, {
+      gsap.fromTo(modelRef.current.position, FLY_IN_FROM.position, {
         x: 0,
         y: 0,
-        z: 10,
+        z: 0,
         ease: INTRO.flyInEase,
         duration: INTRO.flyInSeconds,
+        delay: INTRO.flyInDelaySeconds,
         onUpdate: function () {
           const progress = this.progress();
           if (progress >= 0.5 && !fixedUIHasTriggered.current) {
@@ -209,15 +209,15 @@ function DesktopDragonModel() {
         },
       });
 
-      gsap.from(modelRef.current.rotation, {
-        x: Math.PI,
-        y: (Math.PI * 3) / 2,
-        z: Math.PI,
+      gsap.fromTo(modelRef.current.rotation, FLY_IN_FROM.rotation, {
+        x: 0,
+        y: INIT_ROTATION,
+        z: 0,
         ease: INTRO.flyInEase,
         duration: INTRO.flyInSeconds,
+        delay: INTRO.flyInDelaySeconds,
         onComplete: () => {
           autoSwingRef.current = true;
-          markIntroSeen();
         },
       });
     },
@@ -239,7 +239,12 @@ function DesktopDragonModel() {
   }, [geometry]);
 
   return (
-    <group {...(bind() as any)} ref={modelRef} scale={DESKTOP_SCALE} position={[0, 0, 0]} rotation={[0, INIT_ROTATION, 0]}>
+    <group
+      {...(bind() as any)}
+      ref={modelRef}
+      scale={DESKTOP_SCALE}
+      {...flyInHoldPose(!globalLoaded, [0, 0, 0], [0, INIT_ROTATION, 0])}
+    >
       <mesh ref={meshRef} geometry={geometry}>
         <MeshTransmissionMaterial {...materialConfig} />
       </mesh>
@@ -278,14 +283,17 @@ function PhoneDragonModel(props: {}) {
   const triggerFadeInAnimation = contextSafe(() => {
     const element = document.querySelector('#mobile-fixed-ui');
     const nav = document.querySelector('#mobile-nav');
-    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: DURATION.fast });
+    // As on the original: both fade in together, each INTRO.uiFadeSeconds.phone with GSAP's default ease.
+    const uiFade = shouldSkipIntro() ? DURATION.instant : INTRO.uiFadeSeconds.phone;
+    if (nav) gsap.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: uiFade, ease: INTRO.defaultEase });
     if (element)
       gsap.fromTo(
         element,
         { opacity: 0 },
         {
           opacity: 1,
-          duration: DURATION.fast,
+          duration: uiFade,
+          ease: INTRO.defaultEase,
           // Above the canvas while it fades, so START takes a press from its first frame (FIXED_UI_REVEAL).
           onStart: FIXED_UI_REVEAL.onStart,
           onComplete: () => {
@@ -356,12 +364,13 @@ function PhoneDragonModel(props: {}) {
         return;
       }
 
-      gsap.from(modelRef.current.position, {
+      gsap.fromTo(modelRef.current.position, FLY_IN_FROM.position, {
         x: 0,
         y: 0,
-        z: 10,
+        z: 0,
         ease: INTRO.flyInEase,
         duration: INTRO.flyInSeconds,
+        delay: INTRO.flyInDelaySeconds,
         onUpdate: function () {
           const progress = this.progress();
           if (progress >= 0.85 && !fixedUIHasTriggered.current) {
@@ -372,15 +381,15 @@ function PhoneDragonModel(props: {}) {
         },
       });
 
-      gsap.from(modelRef.current.rotation, {
-        x: Math.PI,
-        y: (Math.PI * 3) / 2,
-        z: Math.PI,
+      gsap.fromTo(modelRef.current.rotation, FLY_IN_FROM.rotation, {
+        x: 0,
+        y: InitRotation,
+        z: 0,
         ease: INTRO.flyInEase,
         duration: INTRO.flyInSeconds,
+        delay: INTRO.flyInDelaySeconds,
         onComplete: () => {
           autoSwingRef.current = true;
-          markIntroSeen();
         },
       });
     },
@@ -402,7 +411,13 @@ function PhoneDragonModel(props: {}) {
   }, [geometry]);
 
   return (
-    <group {...(bind() as any)} ref={modelRef} {...props} scale={0.14} position={[0, 0, 0]} rotation={[0, InitRotation, 0]}>
+    <group
+      {...(bind() as any)}
+      ref={modelRef}
+      {...props}
+      scale={0.14}
+      {...flyInHoldPose(!globalLoaded, [0, 0, 0], [0, InitRotation, 0])}
+    >
       <mesh ref={meshRef} geometry={geometry}>
         <MeshTransmissionMaterial
           resolution={TRANSMISSION_RESOLUTION.phone}

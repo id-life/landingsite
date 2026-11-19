@@ -14,15 +14,14 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { experienceModeAtom, markHeroSceneFailed } from '@/hooks/useExperienceMode';
 import { EASE } from '@/motion/tokens';
+import { INTRO } from '@/components/gl/model/vision/intro';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
 const LOADING_MAX = 95;
-// Exit: the bar fills, then the overlay fades while the dragon starts to fly in underneath it
-// (MOT-04: the intro overlaps the loader exit instead of following it).
-const FILL_SECONDS = 0.2;
-const FADE_SECONDS = 0.3;
+// Exit, as on the original (owner's answer 7A): the bar fills to the end, the overlay fades out, and only then is the
+// experience marked loaded, which starts the intro (src/components/gl/model/vision/intro.ts).
 
 /**
  * Reveals the fixed UI (nav, arrows, player) at once, as the hero's intro would: used when the intro cannot run (no
@@ -129,16 +128,18 @@ export const OuterLoader = memo(function OuterLoader() {
     if (!heroReady || !show || exitingRef.current) return;
     exitingRef.current = true;
     reportExperienceReady({ failOpen: false, mountedAt: mountedAtRef.current });
-    loaderRef.current?.animateTo(100, FILL_SECONDS, () => {
-      setIsLoadingUI(true);
-      setGlobalLoaded(true);
+    loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, () => {
+      const finish = () => {
+        setIsLoadingUI(true);
+        setGlobalLoaded(true);
+        setShow(false);
+      };
       const overlay = loaderRef.current?.overlay;
       if (!overlay) {
-        setShow(false);
+        finish();
         return;
       }
-      overlay.style.pointerEvents = 'none';
-      gsap.to(overlay, { opacity: 0, duration: FADE_SECONDS, onComplete: () => setShow(false) });
+      gsap.to(overlay, { opacity: 0, duration: INTRO.loaderFadeSeconds, ease: INTRO.defaultEase, onComplete: finish });
     });
   }, [heroReady, setGlobalLoaded, setIsLoadingUI, show]);
 

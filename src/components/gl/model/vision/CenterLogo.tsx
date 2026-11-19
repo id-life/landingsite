@@ -155,7 +155,7 @@ function DesktopCenterLogo() {
         gsap.to([logoMaterial, descMaterial], {
           opacity: 1,
           duration: shouldSkipIntro() ? INTRO.skippedFadeSeconds : INTRO.wordmarkFadeSeconds,
-          ease: EASE.out,
+          ease: INTRO.wordmarkFadeEase,
         });
       }
     }
@@ -308,8 +308,9 @@ function PhoneCenterLogo() {
     langRef.current === 'cn' && readyRef.current && !pendingRef.current ? cnLogoRef.current : enLogoRef.current,
   );
 
+  // Drawn once the loader has gone, as on the original (its phone scene showed nothing behind the fading loader).
   return (
-    <group>
+    <group visible={globalLoaded}>
       <group onClick={handleClick}>
         <Center scale={0.7} position={[0, 0, -5]}>
           <MergedSvg ref={enLogoRef} scale={0.06} src="/svgs/logo-en.svg" />
