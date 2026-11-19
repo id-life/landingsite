@@ -219,7 +219,9 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     ? '[--corner-border-size:0.375rem] [--corner-border-width:0.09375rem]'
     : '[--corner-border-size:8px] [--corner-border-width:2.5px]';
   const select = phone
-    ? 'absolute -right-6 bottom-0 top-0 my-auto animate-move-right'
+    ? // 16 px in the deck's unit, so it grows with the phone version on an upright tablet (its viewBox is passed at the
+      // use: the SVG loader drops one that equals the width and height, and the drawing would stay 16 px).
+      'absolute -right-6 bottom-0 top-0 my-auto size-4 animate-move-right'
     : 'absolute -right-[32px] bottom-0 top-0 my-auto animate-move-right';
   // A model's label shows on hover; by touch (no hover) the label of the model the visitor chose stays shown while it is
   // chosen, so a tap shows what a pointer's hover shows, in its place (nothing before a press, as with a mouse at rest).
@@ -253,7 +255,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
         >
           <span className={cn('absolute inset-0 -z-10', { 'before:!border-accent after:!border-accent': original })}></span>
         </motion.div>
-        {original && <SelectSVG className={select} />}
+        {original && <SelectSVG viewBox="0 0 16 16" className={select} />}
         {phone ? (
           <img src="/imgs/twin/avatar-model0.png" alt="" />
         ) : (
@@ -297,7 +299,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
               <div className={cn('absolute bottom-0 w-full bg-accent', phone ? 'h-[0.1875rem]' : 'h-[3px]')} />
             )}
             {!phone && <div className={cn(codeOverlay, 'left-0 top-0', currentModel === model && touchShown)}>{code}</div>}
-            {currentModel === model && <SelectSVG className={select} />}
+            {currentModel === model && <SelectSVG viewBox="0 0 16 16" className={select} />}
           </motion.div>
         ))}
       </motion.div>
