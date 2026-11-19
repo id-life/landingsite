@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { RELOAD_BUTTON_CLASS } from '@/components/common/ErrorState';
 import { PODCAST_NAV_LIST, PodcastCategory } from '@/app/podcast/_components/constant';
 import PodcastListItem from '@/app/podcast/_components/PodcastListItem';
 import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
@@ -14,11 +15,11 @@ export default async function PodcastList(props: PodcastListProps) {
   if (!list) {
     const retry = PODCAST_NAV_LIST.find((item) => item.id === category)?.link ?? '/podcast';
     return (
-      <div role="status" className="py-16 text-center font-text text-body font-medium text-black/60 mobile:py-12">
-        <p>节目列表暂时无法加载。The episode list could not be loaded right now.</p>
-        {/* A full reload fetches the page again; it regenerates on the server every 5 minutes. */}
-        <a href={retry} className="mt-4 inline-block text-label font-semibold uppercase text-accent underline">
-          Try again 重试
+      // The owner's "Reload" and nothing else (his rule: no text he has not shown). A full reload fetches the page
+      // again; it regenerates on the server every 5 minutes.
+      <div role="status" className="py-16 text-center text-black mobile:py-12">
+        <a href={retry} className={`inline-block ${RELOAD_BUTTON_CLASS}`}>
+          Reload
         </a>
       </div>
     );
