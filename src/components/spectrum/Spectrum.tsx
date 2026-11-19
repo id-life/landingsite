@@ -25,7 +25,7 @@ import ParticleGL from '../gl/particle/ParticleGL';
 import SpectrumInitiatives from './SpectrumInitiatives';
 import SpectrumItem from './SpectrumItem';
 import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
-import { PAPERS_GROUP, spectrumPhonePages } from './phonePages';
+import { movePager, PAGER_START, PAPERS_GROUP, spectrumPhonePages } from './phonePages';
 import { fitScale, type FitScale } from './fitScale';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 
@@ -445,8 +445,10 @@ function PhoneSpectrum() {
   const setInnerPageIndex = useSetAtom(innerPageIndexAtom);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
   const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [pager, setPager] = useState(PAGER_START);
+  const { index: pageIndex, direction, epoch } = pager;
+  // False until the pager has drawn a frame since it mounted: a move before that is a jump (movePager).
+  const presentedRef = useRef(false);
   const reduceMotion = useReducedMotionPref();
   const { spectrumMainItems, spectrumSponsorItem, executeSpectrumRoute, updateUrlAndExecute, routeConfigs } = useSpectrumData();
   const pages = useMemo(() => spectrumPhonePages(spectrumSponsorItem.links.length), [spectrumSponsorItem.links.length]);
@@ -459,7 +461,7 @@ function PhoneSpectrum() {
     if (!active) return;
     // The first page, or the page this history entry kept when Back, Forward or a reload brought it back (NAV-02).
     const start = keptStartPage(PAGE_ID, totalPages);
-    setPageIndex(start);
+    setPager((now) => movePager(now, start, presentedRef.current));
     setInnerPageIndex(start);
     setInnerPageTotal(totalPages);
   }, [active, totalPages, setInnerPageIndex, setInnerPageTotal]);
@@ -468,12 +470,20 @@ function PhoneSpectrum() {
   useEffect(() => {
     if (!active || innerPageNavigateTo === null) return;
     if (innerPageNavigateTo >= 0 && innerPageNavigateTo < totalPages) {
-      setDirection(innerPageNavigateTo > pageIndex ? 1 : -1);
-      setPageIndex(innerPageNavigateTo);
-      setInnerPageIndex(innerPageNavigateTo);
+      const to = innerPageNavigateTo;
+      setPager((now) => movePager(now, to, presentedRef.current));
+      setInnerPageIndex(to);
     }
     setInnerPageNavigateTo(null);
-  }, [active, innerPageNavigateTo, pageIndex, totalPages, setInnerPageIndex, setInnerPageNavigateTo]);
+  }, [active, innerPageNavigateTo, totalPages, setInnerPageIndex, setInnerPageNavigateTo]);
+
+  // After the effects above: the pager counts as presented from its first frame after it mounted.
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      presentedRef.current = true;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <div id={PAGE_ID} className={cn('page-container-mobile relative text-white', { hidden: !active })}>
@@ -501,7 +511,8 @@ function PhoneSpectrum() {
           aria-hidden="true"
         />
         <div className="relative min-h-0 flex-1 overflow-clip">
-          <AnimatePresence initial={false} mode="wait" custom={direction}>
+          {/* A jump starts a new transition generation (movePager): a new AnimatePresence, drawing its page at once. */}
+          <AnimatePresence key={epoch} initial={false} mode="wait" custom={direction}>
             <motion.div
               key={pageIndex}
               custom={direction}
