@@ -36,7 +36,8 @@ export type CalcPoint = (lat: number, lng: number) => { x: number; y: number; le
 /** Map labels at the original's sizes: scaled with the layout on the scrolled deck, 8 px on the phone map. */
 export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
   desktop: 'map-label -ml-1.5 whitespace-nowrap font-display text-base/6 font-semibold capitalize text-white',
-  phone: 'map-label whitespace-nowrap font-display text-[8px]/[12px] font-semibold capitalize text-white',
+  phone:
+    'map-label whitespace-nowrap font-display text-[8px]/[12px] phoneScaled:text-[0.5rem]/[0.75rem] font-semibold capitalize text-white',
 };
 
 /**
@@ -52,11 +53,23 @@ export const MAP_LABEL_CLASS: Record<MapDeck, string> = {
 export type MapHitLayer = {
   /** The layer the tap areas are portalled into. */
   layer: HTMLElement | null;
+  /**
+   * The phone strip's layer above every dot and label and below every card (z 25: an open dot is z 20, a card z 30):
+   * each drawn point's own circle is a tap target there, so a tap on a drawn point reaches that point even in the
+   * instant the tour opens a neighbour, whose dot rises (z 20, scale 1.2) and whose icon or label then lies over the
+   * point (London's icon over Aix's and Oxford's points, Aix's label over Lustica's). Null on the laptop deck.
+   */
+  pointLayer?: HTMLElement | null;
   /** Every point's centre in the map, by tap area, so each area can be cut at the half-way line to its neighbours. */
   centres: Readonly<Record<string, Point>>;
   register: (id: string, centre: Point | null) => void;
 };
-export const MapHitLayerContext = createContext<MapHitLayer>({ layer: null, centres: {}, register: () => {} });
+export const MapHitLayerContext = createContext<MapHitLayer>({
+  layer: null,
+  pointLayer: null,
+  centres: {},
+  register: () => {},
+});
 
 /**
  * A point's 44 x 44 px tap area, centred on the drawn point, in the hit layer under every dot (coarse pointers only).
@@ -69,15 +82,20 @@ export function MapPointHit({
   top,
   pointRef,
   onClick,
+  open = false,
 }: {
   left: number;
   top: number;
   pointRef: RefObject<HTMLDivElement | null>;
   onClick: (e: MouseEvent) => void;
+  /** The dot is open: it is drawn above every other dot, so its own point needs no target above it. */
+  open?: boolean;
 }) {
-  const { layer, centres, register } = useContext(MapHitLayerContext);
+  const { layer, pointLayer, centres, register } = useContext(MapHitLayerContext);
   const id = useId();
   const [centre, setCentre] = useState<Point | null>(null);
+  // The drawn circle's radius, for the point target (the circle itself, not more).
+  const [radius, setRadius] = useState(0);
   useLayoutEffect(() => {
     const point = pointRef.current;
     if (!point) return;
@@ -89,6 +107,7 @@ export function MapPointHit({
     const circleBox = circle?.getBoundingClientRect();
     const atRest = dot && dotBox && Math.abs(dotBox.width - dot.offsetWidth) < 0.5;
     if (atRest && circleBox && circleBox.width > 0) {
+      setRadius(circleBox.width / 2);
       setCentre([
         left + circleBox.left + circleBox.width / 2 - dotBox.left,
         top + circleBox.top + circleBox.height / 2 - dotBox.top,
@@ -110,14 +129,30 @@ export function MapPointHit({
     return cut ? polygonClipPath(cut) : undefined;
   }, [centre, centres, id]);
   if (!layer || !centre) return null;
-  return createPortal(
-    <span
-      aria-hidden
-      className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
-      style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, clipPath }}
-      onClick={onClick}
-    />,
-    layer,
+  return (
+    <>
+      {createPortal(
+        <span
+          aria-hidden
+          className="pointer-events-auto absolute hidden size-[44px] -translate-x-1/2 -translate-y-1/2 cursor-pointer coarse:block"
+          style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, clipPath }}
+          onClick={onClick}
+        />,
+        layer,
+      )}
+      {pointLayer &&
+        radius > 0 &&
+        !open &&
+        createPortal(
+          <span
+            aria-hidden
+            className="pointer-events-auto absolute hidden -translate-x-1/2 -translate-y-1/2 rounded-full coarse:block"
+            style={{ left: `${centre[0]}px`, top: `${centre[1]}px`, width: `${2 * radius}px`, height: `${2 * radius}px` }}
+            onClick={onClick}
+          />,
+          pointLayer,
+        )}
+    </>
   );
 }
 
@@ -574,10 +609,10 @@ export function MobileConferenceBadgesWithVideo({
           exit={{ opacity: 0, scale: 0.5 }}
           className="pointer-events-auto flex cursor-pointer flex-col"
         >
-          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:6px]">
-            <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:6px]">
+          <div className="clip-talk-content -ml-1 bg-white p-px [--clip-offset:0.375rem]">
+            <div className="clip-talk-content flex items-center gap-0.5 bg-tone-970 px-1.5 py-1 [--clip-offset:0.375rem]">
               <YoutubeSVG className="size-3 fill-white" />
-              <span className="inline-block text-[10px]/3 font-semibold text-white">Talk</span>
+              <span className="inline-block text-[10px]/3 font-semibold text-white phoneScaled:text-[0.625rem]/3">Talk</span>
               <ArrowSVG className="size-2.5 -rotate-90 fill-white" />
             </div>
           </div>

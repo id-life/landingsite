@@ -24,12 +24,15 @@ function MobileScrollProgressBar() {
   const maxOffset = SCROLL_PROGRESS_CONFIG.trackWidth - SCROLL_PROGRESS_CONFIG.thumbWidth;
   return (
     <div
-      className="fixed bottom-[90px] left-1/2 z-10 h-[2px] -translate-x-1/2 rounded-full bg-white/20"
-      style={{ width: `${SCROLL_PROGRESS_CONFIG.trackWidth}px` }}
+      className="fixed bottom-[5.625rem] left-1/2 z-10 h-[0.125rem] -translate-x-1/2 rounded-full bg-white/20"
+      style={{ width: `calc(var(--u) * ${SCROLL_PROGRESS_CONFIG.trackWidth / 16})` }}
     >
       <div
         className="h-full rounded-full bg-white/40 transition-transform duration-100"
-        style={{ width: `${SCROLL_PROGRESS_CONFIG.thumbWidth}px`, transform: `translateX(${progress * maxOffset}px)` }}
+        style={{
+          width: `calc(var(--u) * ${SCROLL_PROGRESS_CONFIG.thumbWidth / 16})`,
+          transform: `translateX(calc(var(--u) * ${(progress * maxOffset) / 16}))`,
+        }}
       />
     </div>
   );
@@ -120,14 +123,14 @@ function PhonePresence() {
     >
       {/* A phone in landscape (compact height) gets a compact title, so the map strip keeps its height. */}
       <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">
-        <h2 className="font-title text-[26px] capitalize leading-[30px] text-white shortScreen:text-[20px] shortScreen:leading-[24px]">
+        <h2 className="font-title text-[26px] capitalize leading-[30px] text-white phoneScaled:text-[1.625rem] phoneScaled:leading-[1.875rem] shortScreen:text-[20px] shortScreen:leading-[24px]">
           Presence
         </h2>
         {/* Compact heights: an open card's title rises to this line (the strip is under 260 px tall), so the line fades
             while a card is open; the heading stays (RWD-02 A3). */}
         <p
           className={cn(
-            'mt-2 font-display text-[14px] font-bold uppercase leading-[20px] text-white transition-opacity duration-fast shortScreen:mt-0.5',
+            'mt-2 font-display text-[14px] font-bold uppercase leading-[20px] text-white transition-opacity duration-fast phoneScaled:text-[0.875rem] phoneScaled:leading-[1.25rem] shortScreen:mt-0.5',
             cardOpen && 'shortScreen:opacity-0',
           )}
         >

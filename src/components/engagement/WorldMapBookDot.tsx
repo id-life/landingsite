@@ -1,4 +1,3 @@
-import { ACTIVE_DOT_SCALE } from '@/hooks/anim/cardFit';
 import { activeBookDotAtom, activeBookDotClickOpenAtom } from '@/atoms/engagement';
 import { DEFAULT_PULSE_CONFIG, MapBookDotData, MOBILE_MAP_SCALE, PulseConfig } from '@/constants/engagement';
 import { useEngagementClickPoint } from '@/hooks/engagement/useEngagementClickPoint';
@@ -28,7 +27,7 @@ import { DURATION, EASE } from '@/motion/tokens';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
-  active: { scale: ACTIVE_DOT_SCALE },
+  active: { scale: 1.2 },
 };
 
 /**
@@ -121,7 +120,7 @@ export function WorldMapBookDotPoint({
           { 'map-dot-dim-strong': isDarker },
         )}
       >
-        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} />
+        <MapPointHit left={left} top={top} pointRef={pointRef} onClick={handleClick} open={isActive} />
         <PulseDot
           ref={pointRef}
           containerClassName={phone ? undefined : 'size-6'}
@@ -261,9 +260,13 @@ export function WorldMapBookDotContent({
                     className={cn(phone ? 'size-2' : 'size-[calc(var(--t)*1)]', 'fill-data-sky', { 'fill-tone-400': !link })}
                   />
                   <p
-                    className={cn('ml-1 font-medium text-data-sky', phone ? 'whitespace-nowrap text-[8px]/3' : 'text-xs/3', {
-                      'text-tone-400': !link,
-                    })}
+                    className={cn(
+                      'ml-1 font-medium text-data-sky',
+                      phone ? 'whitespace-nowrap text-[8px]/3 phoneScaled:text-[0.5rem]/3' : 'text-xs/3',
+                      {
+                        'text-tone-400': !link,
+                      },
+                    )}
                   >
                     {desc}
                   </p>

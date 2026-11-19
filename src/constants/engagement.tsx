@@ -55,13 +55,13 @@ export const MOBILE_MAP_SCALE = {
 
   // Dot SVG positioning and size for mobile (used in PulseDot component)
   dotSvgSize: 'size-14', // 56px - SVG element size for mobile dots
-  dotSvgPosition: 'absolute left-[-16px] top-[-18px]', // SVG positioning to center the pulse effect
+  dotSvgPosition: 'absolute left-[-1rem] top-[-1.125rem]', // SVG positioning to center the pulse effect
 
   // Region icon size (Tailwind class: size-X)
   regionIconSize: 'size-4', // 16px
 
   // Badge text: the original's 8 px. Labels: MAP_LABEL_CLASS.
-  badgeTextClass: 'text-[8px]/[10px]',
+  badgeTextClass: 'text-[8px]/[10px] phoneScaled:text-[0.5rem]/[0.625rem]',
 
   // Badge icon size (Tailwind class: size-X)
   badgeIconSize: 'size-2.5', // 10px

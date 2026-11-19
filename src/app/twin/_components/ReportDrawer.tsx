@@ -49,7 +49,7 @@ export default function ReportDrawer({
         <Drawer.Content
           className={clsx(
             'fixed bottom-0 left-0 z-[100] flex bg-white outline-none',
-            phone ? 'top-[200px] w-full' : 'top-0 w-[max(42rem,min(504px,100vw))]',
+            phone ? 'top-[12.5rem] w-full' : 'top-0 w-[max(42rem,min(504px,100vw))]',
           )}
         >
           <div className={clsx('flex h-full w-full grow flex-col', phone ? 'flex-1 overflow-y-auto p-4' : 'p-10')}>

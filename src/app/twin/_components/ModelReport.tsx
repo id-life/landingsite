@@ -10,9 +10,7 @@ import ReportM03 from './ReportM03';
 export default function ModelReport() {
   return (
     <>
-      <div
-        className={`twin-title-item twin-title-M1 absolute bottom-[calc(var(--t)*8)] z-20 max-w-[calc(var(--t)*31.25)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
-      >
+      <div className={`twin-title-item twin-title-M1 absolute bottom-32 z-20 max-w-[31.25rem] ${TWIN_OFFSTAGE_CLASS}`}>
         <p className="text-xl/6 font-semibold">30 YEARS</p>
         <div className="mt-5 text-base font-medium">
           Living State:Gets up at 11 AM daily, continues sleeping after lunch until 2 PM before starting the day&apos;s
@@ -22,9 +20,7 @@ export default function ModelReport() {
           生活状态：每天早上11点起床，午饭后继续睡觉，直到下午2点才开始一天的活动。长期不规律的生活模式，经常熬夜到3-4点……
         </p>
       </div>
-      <div
-        className={`twin-title-item twin-title-M2 absolute bottom-[calc(var(--t)*8)] z-20 max-w-[calc(var(--t)*31.25)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
-      >
+      <div className={`twin-title-item twin-title-M2 absolute bottom-32 z-20 max-w-[31.25rem] ${TWIN_OFFSTAGE_CLASS}`}>
         <p className="text-xl/6 font-semibold">5 YEARS</p>
         <div className="mt-5 text-base font-medium">
           Balanced and healthy lifestyle. Starts the day at 7 AM with 500ml of warm water, followed by 15 minutes of room
@@ -35,9 +31,7 @@ export default function ModelReport() {
           保持均衡健康的生活方式。每天早上7点起床，先喝500ml温水，然后进行15分钟的房间整理和简单拉伸，8点左右到达办公室。
         </p>
       </div>
-      <div
-        className={`twin-title-item twin-title-M3 absolute bottom-[calc(var(--t)*8)] z-20 max-w-[calc(var(--t)*31.25)] expanded:bottom-32 large:bottom-32 ${TWIN_OFFSTAGE_CLASS}`}
-      >
+      <div className={`twin-title-item twin-title-M3 absolute bottom-32 z-20 max-w-[31.25rem] ${TWIN_OFFSTAGE_CLASS}`}>
         <p className="text-xl/6 font-semibold">3 MONTHS</p>
         <div className="mt-5 text-base font-medium">
           Living State: Wakes up at 7 AM, starts with 10-minute posture assessment and weight recording,Performs 30 minutes of
