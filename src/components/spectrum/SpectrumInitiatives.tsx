@@ -1,3 +1,4 @@
+import { FITTED_TAP_AREA, useFittedTapArea } from '@/hooks/useFittedTapArea';
 import { SpectrumItemInfo } from '@/hooks/spectrum/useSpectrumData';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { jotaiStore } from '@/atoms/store';
@@ -102,14 +103,17 @@ function MoreToggle({
   controls: string;
   onToggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
+  // On a touch screen the hit area grows towards 44 px only into space that is nobody's: never into the link row below.
+  const ref = useFittedTapArea<HTMLButtonElement>();
   return (
     <button
+      ref={ref}
       type="button"
       aria-expanded={expanded}
       aria-controls={controls}
       aria-label={expanded ? 'Show fewer' : undefined}
       onClick={onToggle}
-      className="spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[0.8125rem] desktop2k:text-sm"
+      className={`spectrum-more relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center gap-px self-baseline rounded-sm p-1.5 font-text text-[12px]/5 font-medium text-white/80 transition-colors tap-area hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white mobile:text-[0.8125rem] desktop2k:text-sm ${FITTED_TAP_AREA}`}
     >
       {!expanded && <span>more</span>}
       <svg

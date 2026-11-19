@@ -26,3 +26,21 @@ export function spectrumPhonePages(sponsorCount: number): SpectrumPhonePage[] {
     { kind: 'groups', items: PAPERS_PAGE },
   ];
 }
+
+/** The phone pager's place: the page shown, the way a step travels, and the generation of its page transition. */
+export type PagerState = { index: number; direction: 1 | -1; epoch: number };
+
+export const PAGER_START: PagerState = { index: 0, direction: 1, epoch: 0 };
+
+/**
+ * A move of the phone pager to page `to`. A step the visitor sees is animated (direction from the pages). A move
+ * before the pager has drawn its first frame (the page kept in the history entry, taken as it mounts, as when a turned
+ * tablet mounts the phone deck again) is a jump: a new transition generation, so the page is drawn at once instead of
+ * animating out of a page that was never shown (an exit started in the mount's own task never completes, and the new
+ * page would never be drawn).
+ */
+export function movePager(state: PagerState, to: number, animate: boolean): PagerState {
+  if (to === state.index) return state;
+  if (!animate) return { index: to, direction: state.direction, epoch: state.epoch + 1 };
+  return { index: to, direction: to > state.index ? 1 : -1, epoch: state.epoch };
+}

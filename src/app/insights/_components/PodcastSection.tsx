@@ -16,6 +16,7 @@ import ViewAllButton, { HEADING, HEADING_PHONE } from '@/app/insights/_component
 import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/utils';
 import SectionLoadError from '@/components/common/SectionLoadError';
+import PlatformLink from '@/app/insights/_components/PlatformLink';
 
 export type PodcastItem = {
   id: number;
@@ -235,32 +236,17 @@ export default function PodcastSection({ isMobile = false, compact = false, isVi
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className={cn(HEADING, isMobile && HEADING_PHONE)}>PODCAST</h2>
-            {/* Platform logos: each grows its hit area to 44 px on coarse pointers (RWD-06, tap-area); the boxes keep the original's size. */}
+            {/* Platform logos: on a touch screen each hit area grows towards 44 px into space that is nobody's (PlatformLink); the boxes keep the original's size. */}
             <div className="flex items-center gap-1.5">
-              <a
-                href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              <PlatformLink href="https://www.xiaoyuzhoufm.com/podcast/68244dd700fe41f83952e9d8">
                 <img src="/svgs/podcast/fm_xyz_fill.svg" alt="Xiaoyuzhou FM" className="size-6" />
-              </a>
-              <a
-                href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              </PlatformLink>
+              <PlatformLink href="https://open.spotify.com/show/5j7IvewaR6znPMk4XC4Bvu">
                 <img src="/svgs/podcast/fm_spotify_fill.svg" alt="Spotify" className="size-6" />
-              </a>
-              <a
-                href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center opacity-100 transition-opacity tap-area hover:opacity-80"
-              >
+              </PlatformLink>
+              <PlatformLink href="https://podcasts.apple.com/cn/podcast/%E4%B8%8D%E6%9C%BD%E7%9C%9F%E9%BE%99-immortaldragons/id1815210084?l=en-GB">
                 <img src="/svgs/podcast/fm_podcast_fill.svg" alt="Apple Podcasts" className="size-6" />
-              </a>
+              </PlatformLink>
             </div>
           </div>
           <ViewAllButton href="/podcast" onClick={handleViewAllClick} isMobile={isMobile} />

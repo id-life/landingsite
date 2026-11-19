@@ -27,8 +27,18 @@ function fitTouchArea(button: HTMLButtonElement, direction: 'prev' | 'next') {
   const row = holder?.querySelector('.swiper')?.getBoundingClientRect();
   const width = b.width;
   const need = Math.max(0, TOUCH - width);
-  // The cards' edge on the arrow's inner side, and the nearest other row arrow on its outer side.
-  const inner = row ? (direction === 'next' ? row.right : row.left) : direction === 'next' ? b.left : b.right;
+  // The cards' edge on the arrow's inner side, and the nearest other row arrow on its outer side. A card in view can end
+  // a fraction of a pixel past the row's box (its own rounding), so the edge is the outermost card in view, rounded
+  // outwards.
+  let inner = row ? (direction === 'next' ? row.right : row.left) : direction === 'next' ? b.left : b.right;
+  if (row) {
+    for (const card of holder?.querySelectorAll<HTMLElement>('.swiper a[href]') ?? []) {
+      const c = card.getBoundingClientRect();
+      if (!c.width || c.left >= row.right || c.right <= row.left) continue;
+      inner = direction === 'next' ? Math.max(inner, c.right) : Math.min(inner, c.left);
+    }
+    inner = direction === 'next' ? Math.ceil(inner) : Math.floor(inner);
+  }
   let outer = direction === 'next' ? window.innerWidth : 0;
   for (const other of document.querySelectorAll<HTMLElement>('[data-row-arrow]')) {
     if (other === button) continue;
