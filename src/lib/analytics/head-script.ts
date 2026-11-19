@@ -1,4 +1,4 @@
-import { CONSENT_COOKIE, OPT_IN_COUNTRIES } from './config';
+import { CONSENT_COOKIE, COUNT_EVERY_VISITOR, OPT_IN_COUNTRIES } from './config';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 /**
@@ -14,13 +14,18 @@ import { PHONE_TREE_QUERY } from '@/styles/device-classes';
  *  5. tracks the load stage and, if the visitor leaves before the experience is ready and analytics is allowed,
  *     sends one cookieless load_abandon beacon to /api/t.
  * No identifier is read or written here.
+ *
+ * With COUNT_EVERY_VISITOR (the owner's decision, question 26, B) analytics storage is granted from the start for
+ * every visitor, as on his site, and no region is looked up: steps 1's denied default and 4 apply only when the
+ * regional consent is switched back on. Advertising storage stays denied.
  */
-export function analyticsHeadScript() {
+export function analyticsHeadScript({ everyone = COUNT_EVERY_VISITOR }: { everyone?: boolean } = {}) {
   const optIn = JSON.stringify(OPT_IN_COUNTRIES);
   const cookie = JSON.stringify(CONSENT_COOKIE);
+  const analyticsDefault = everyone ? 'granted' : 'denied';
   return `(function(){var w=window,d=document,n=navigator;
 if(!w.dataLayer)w.dataLayer=[];function gtag(){w.dataLayer.push(arguments);}w.gtag=gtag;
-gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'${analyticsDefault}',wait_for_update:500});
 gtag('set','allow_google_signals',false);gtag('set','allow_ad_personalization_signals',false);gtag('set','ads_data_redaction',true);
 w.__landing={href:location.href,referrer:d.referrer,title:d.title,t0:Math.round(performance.now())};
 var I=w.__idl=w.__idl||{stage:'html'};
@@ -28,12 +33,13 @@ I.experience=/^\\/(portfolio|insights|spectrum|presence|digitaltwin|connect)?\\/
 I.bot=n.webdriver===true||/Headless/i.test(n.userAgent||'');
 I.off=/^\\/content-review(\\/|$)/.test(location.pathname);
 I.gpc=n.globalPrivacyControl===true;
+I.everyone=${everyone};
 I.choice=null;try{var m=d.cookie.match(new RegExp('(?:^|; )'+${cookie}+'=([^;]*)'));if(m){var c=JSON.parse(decodeURIComponent(m[1]));I.choice=c.a==='g'?'granted':c.a==='d'?'denied':null;}}catch(e){}
 if(I.choice==='granted'&&!I.gpc&&!I.bot)gtag('consent','update',{analytics_storage:'granted'});
 var OPT=${optIn};
 try{var r=sessionStorage.getItem('idl_region');if(r!==null)I.region=r;}catch(e){}
-if(I.region===undefined&&w.fetch){I.geo=fetch('/api/geo',{credentials:'same-origin',cache:'no-store'}).then(function(res){return res.ok?res.json():{};}).then(function(j){I.region=typeof j.country==='string'?j.country.toUpperCase():'';try{sessionStorage.setItem('idl_region',I.region);}catch(e){}return I.region;},function(){I.region='';return '';});}
-function allowed(){if(I.bot||I.gpc||I.off)return false;if(I.choice)return I.choice==='granted';return typeof I.region==='string'&&I.region!==''&&OPT.indexOf(I.region)<0;}
+if(!I.everyone&&I.region===undefined&&w.fetch){I.geo=fetch('/api/geo',{credentials:'same-origin',cache:'no-store'}).then(function(res){return res.ok?res.json():{};}).then(function(j){I.region=typeof j.country==='string'?j.country.toUpperCase():'';try{sessionStorage.setItem('idl_region',I.region);}catch(e){}return I.region;},function(){I.region='';return '';});}
+function allowed(){if(I.bot||I.off)return false;if(I.everyone)return true;if(I.gpc)return false;if(I.choice)return I.choice==='granted';return typeof I.region==='string'&&I.region!==''&&OPT.indexOf(I.region)<0;}
 var sent=false;function abandon(){if(sent||I.stage==='ready')return;sent=true;if(!allowed()||!n.sendBeacon)return;
 var b=JSON.stringify({e:'load_abandon',stage:I.stage,ms:Math.round(performance.now()),layout:w.matchMedia&&w.matchMedia(${JSON.stringify(PHONE_TREE_QUERY)}).matches?'mobile':'desktop',conn:(n.connection&&n.connection.effectiveType)||''});
 try{n.sendBeacon('/api/t',new Blob([b],{type:'application/json'}));}catch(e){}}

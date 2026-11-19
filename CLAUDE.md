@@ -230,8 +230,10 @@ data-pointer>`); `useIsMobile()` is a wrapper. Never write `max-width: 768px` ag
   on its load event (`stream.ts`); every later change is GA4's own page_view on history events, so set
   `document.title` before changing the URL and never send a manual page_view for it. Config holds nothing
   page-specific (config values stick to every hit). GA4 queues hits after the first and sends them in batches
-  (about 5 s, or at once when the page is hidden): a test reading the wire must hide the page first. Consent (`consent.ts`): opt-in in the EEA, UK, CH, CN and unknown regions, opt-out
-  elsewhere, GPC and automated browsers (navigator.webdriver, headless UA) are refusals; `/api/geo` gives the
+  (about 5 s, or at once when the page is hidden): a test reading the wire must hide the page first. Consent (`consent.ts`): the owner's decision of 2026-11-20 (question 26, B,
+  `COUNT_EVERY_VISITOR` in `config.ts`) counts every visitor without asking, as on his site, whatever the region;
+  automated browsers (navigator.webdriver, headless UA) are still left out. With the switch off, the regional consent
+  comes back: opt-in in the EEA, UK, CH, CN and unknown regions, opt-out elsewhere, GPC a refusal; `/api/geo` gives the
   country (`idl_region` cookie overrides it outside production). Banner text is a draft in `consent-copy.ts` and is
   not rendered by production builds until approved. The banner itself is `src/components/consent/ConsentBanner.tsx`: Tailwind scans
   `src/{app,components,hooks,constants,pages}` only, so a component with classes must not live in `src/lib`. Vercel Analytics and Speed Insights render only with
