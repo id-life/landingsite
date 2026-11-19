@@ -7,7 +7,7 @@ import { migrena, oxanium, poppins, sourceHanSansCN, ttLakes, xirod } from '@/st
 import { color } from '@/styles/tokens';
 import type { Metadata, Viewport } from 'next';
 import { SITE_URL } from '@/constants/site';
-import { DEFAULT_OG_IMAGE } from '@/lib/seo/metadata';
+import { DEFAULT_OG_IMAGE, SITE_KEYWORDS } from '@/lib/seo/metadata';
 import { ANALYTICS_ENABLED } from '@/constants/env';
 import HeadScript from '@/lib/analytics/HeadScript';
 import { AnalyticsBootLazy, VercelInsightsLazy } from '@/lib/analytics/lazy';
@@ -30,9 +30,10 @@ export const metadata: Metadata = {
   },
   // Defaults for pages without their own metadata (error pages). The description is the one the owner's site serves
   // by default, word for word (question 12g). Routes build theirs with src/lib/seo/metadata.ts:
-  // the owner's tab titles, no keywords (SEO-06).
+  // the owner's tab titles, and his keywords (SEO-06).
   title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons' },
   description: ORG_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
   openGraph: {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',

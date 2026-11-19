@@ -64,6 +64,8 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
     path: `/podcast/${canonicalId(id)}`,
     title: data.title,
     description: data.description,
+    // The episode's own keywords, as his site serves them.
+    keywords: data.keywords ?? [],
     // The episode's own picture, as his site declares it; none when it has none (no fallback to the show's).
     image: data.detailMedia || null,
     type: 'article',

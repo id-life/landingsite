@@ -8,6 +8,7 @@ import Markdown from 'react-markdown';
 import { markdownRehypePlugins, markdownRemarkPlugins } from '@/utils/markdown';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { fetchNewsContent } from '@/apis';
+import { formatKeywords } from '@/utils';
 import { NOT_FOUND_TITLE } from '@/lib/seo/metadata';
 import { isApiNotFound } from '@/apis/request';
 import 'github-markdown-css/github-markdown-light.css';
@@ -51,6 +52,8 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     // His site titles an article "<title> - Immortal Dragons" (title and og:title).
     tabTitle: `${data.title} - Immortal Dragons`,
     description: data.description || data.content.slice(0, 200),
+    // The article's own keywords, as his site serves them (an article without any carries none).
+    keywords: formatKeywords(data.keyWords) || [],
     type: 'article',
   });
 }

@@ -222,6 +222,8 @@ export const PageMeta = z.object({
   title: z.string().min(1),
   /** The browser tab title (and og:title) exactly as the owner's site has it (question 5i, 2026-11-18). */
   tabTitle: z.string().min(1),
+  /** The page's own keywords meta, as the owner's site serves it; absent, the page carries the site's (src/app/layout.tsx). */
+  keywords: z.array(z.string().min(1)).optional(),
   description: z.string().min(1),
   /** The link text of the route in llms.txt's Pages list; absent leaves the route out of that list. */
   llmsLabel: z.string().min(1).optional(),
