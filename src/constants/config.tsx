@@ -18,44 +18,44 @@ type CarouselItemData = { text?: string; cnText?: string; icon: ReactNode; textC
  */
 const SLOGAN_VIEW: Record<string, Omit<CarouselItemData, 'text' | 'cnText'>> = {
   'purpose-driven-fund': {
-    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:size-10" />,
     textClass: 'mobile:w-[16.25rem] w-[18.125em]',
   },
   'crack-immortality-code': {
-    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_1 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'igniting-revolution': {
-    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'decode-eternal-life': {
-    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_2 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'catalysing-revolution': {
-    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'break-aging-frontiers': {
-    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_3 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'setting-forth-lifespan': {
-    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:size-10" />,
     textClass: 'mobile:w-[15.125rem] w-[17.25em]',
   },
   'reshape-lifespan-limit': {
-    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_4 className="size-[48px] fill-foreground mobile:size-10" />,
   },
   'global-awareness': {
-    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:size-10" />,
     textClass: 'mobile:w-[13.625rem] w-[17.125em]',
   },
   'connect-innovation-network': {
-    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_5 className="size-[48px] fill-foreground stroke-foreground mobile:size-10" />,
   },
   'collective-recognition': {
-    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:size-10" />,
     textClass: 'mobile:w-[17.375rem] w-[19.875em]',
   },
   'accelerate-longevity-tech': {
-    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:h-10 mobile:w-[40px]" />,
+    icon: <VisionDecorationLogo_6 className="size-[48px] fill-foreground mobile:size-10" />,
   },
 };
 
