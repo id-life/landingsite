@@ -10,6 +10,8 @@ import { useNavigation } from '../useNavigation';
 import { SPECTRUM_HASH_ROUTES, SpectrumHashRoute } from './spectrum-routes';
 import { SpectrumRouteConfig, useSpectrumRouter } from './useSpectrumRouter';
 import { afterSectionSettles } from '@/motion/sectionController';
+import { onPhonePresenceEntered, phonePresenceEntered } from '../anim/useMobileEngagementAnim';
+import { measureCards } from '../anim/cardFit';
 
 export type SpectrumLinkItem = SpectrumLinkData & {
   key?: string;
@@ -38,8 +40,7 @@ export const useSpectrumData = () => {
         }
         if (!dot) return;
         const { type, index } = dot;
-        // The dot opens once the section transition has landed (it used to be a fixed 300 ms after an instant jump).
-        afterSectionSettles(() => {
+        const openDot = () => {
           handleClickPoint(type, index, true);
           if (isMobile) {
             eventBus.next({
@@ -47,6 +48,19 @@ export const useSpectrumData = () => {
               payload: { type, index },
             });
           }
+        };
+        // The dot opens once the section transition has landed (it used to be a fixed 300 ms after an instant jump).
+        // On the phone, Presence's entrance closes every card and starts the tour, so the dot waits for it: then it opens,
+        // the pan to it (which stops the tour) ends where its card is whole, as measured just before (cardFit).
+        afterSectionSettles(() => {
+          if (!isMobile || section !== 'engagement_page') return openDot();
+          const openAfterEntrance = () => void measureCards().then(openDot);
+          if (phonePresenceEntered()) return openAfterEntrance();
+          const off = onPhonePresenceEntered(() => {
+            if (!phonePresenceEntered()) return;
+            off();
+            openAfterEntrance();
+          });
         });
       };
     },
