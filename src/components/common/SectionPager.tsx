@@ -188,7 +188,8 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const label = useArrowLabel(Boolean(isUp));
   // On a touch screen the hit area is 44 px, reaching only into space that is nobody's: where the other arrow (12 px
   // away) or another control stands closer, each takes at most half the gap (NAV-06, RWD-06). Nothing drawn changes.
-  const ref = useFittedTapArea<HTMLButtonElement>();
+  // Fitted again at every step (the label names the step): the arrow's border and its neighbours change with the page.
+  const ref = useFittedTapArea<HTMLButtonElement>(label);
 
   return (
     <button
