@@ -1,5 +1,4 @@
 import { cn } from '@/utils';
-import { ItemList, WithContext } from 'schema-dts';
 
 export type PortfolioItemInfo = {
   title: string;
@@ -232,29 +231,6 @@ export const portfolio: PortfolioItemInfo[] = [
     logoUrl: '/imgs/investments/eonark.svg',
   },
 ];
-
-/** Markdown list lines ("- [Name](link): description") for text renderings such as llms.txt and the homepage profile. */
-export const portfolioMarkdownLines = () =>
-  portfolio.map(({ title, description, link }) => `- ${link ? `[${title}](${link})` : title}: ${description}`);
-
-export const getPortfolioJsonLd = (): WithContext<ItemList> => ({
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: 'IMMORTAL DRAGONS Portfolio',
-  url: 'https://id.life/portfolio',
-  numberOfItems: portfolio.length,
-  itemListElement: portfolio.map((item, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    item: {
-      '@type': 'Organization',
-      name: item.title,
-      description: item.description,
-      logo: `https://id.life${item.logoUrl}`,
-      ...(item.link && { url: item.link }),
-    },
-  })),
-});
 
 // Mobile particle scale multiplier - adjust this to uniformly control mobile particle size
 // Higher = larger particles, Lower = smaller particles

@@ -1,6 +1,6 @@
 import ArticleExcerpt from '@/components/seo/ArticleExcerpt';
 import EnglishProfileExcerpt from '@/components/seo/EnglishProfileExcerpt';
-import { portfolio } from './portfolioData';
+import { portfolioEntries } from './portfolioProfiles';
 
 // Hidden crawler text for the 3D portfolio page. Company sites are linked from the visible cards,
 // so they are not repeated here as (hidden) outbound links.
@@ -14,10 +14,16 @@ export default function PortfolioSEO() {
           like wholebody replacement, 3D bioprinting, gene therapy, artificial womb technology and more.
         </p>
         <ul>
-          {portfolio.map((item) => (
+          {portfolioEntries().map((item) => (
             <li key={item.title}>
-              <h2>{item.title}</h2>
+              <h2>{item.name}</h2>
               <p>{item.description}</p>
+              {item.profile && (
+                <>
+                  <p>{item.profile.en}</p>
+                  <p lang="zh-CN">{item.profile.zh}</p>
+                </>
+              )}
             </li>
           ))}
         </ul>

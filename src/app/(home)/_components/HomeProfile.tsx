@@ -5,7 +5,7 @@ import {
   getArticleContent,
   stripImages,
 } from '@/app/news/immortal-dragons-news-and-updates/content';
-import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioData';
+import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioProfiles';
 import HiddenMarkdown from '@/components/seo/HiddenMarkdown';
 
 // Server-rendered bilingual profile for crawlers on the 3D homepage (visually hidden, sr-only).
