@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import DMStyle from '@/app/spectrum/_components/DMStyle';
 import '@/styles/components/disease-management-page.css';
 import SiteHeader from '@/components/site/SiteHeader';
+import HiddenSectionsNav from '@/components/site/HiddenSectionsNav';
 import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 import SiteFooter from '@/components/site/SiteFooter';
 import type { Metadata } from 'next';
@@ -54,6 +55,7 @@ export default function DiseaseManagementLayout({ children }: { children: ReactN
         action="exit"
         className="relative p-10 mobile:p-5"
       />
+      <HiddenSectionsNav />
       <SubscribePopup />
       <div className="hide-scrollbar disease-management-content flex-1 overflow-y-auto px-10 pb-10 opacity-0 mobile:px-5 mobile:pb-5">
         {children}
