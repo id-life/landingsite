@@ -1,33 +1,19 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-
 type Where = 'route' | 'section' | 'global';
 
 /**
- * Test hook for the error states, compiled only into non-production builds: with ?force-error=<where> in the address,
- * the copy of this component placed at <where> throws while rendering in the browser, on a first load and on a client
- * navigation alike (it reads the address the router is rendering, not window.location, which still holds the previous
- * address while a navigation renders). So a test reaches the same error page every time:
+ * Test hook for the error states: throws while rendering when the address asks for this place
+ * (?force-error=route|section|global). Never imported statically: ./ForcedErrorGate loads it only when the address
+ * carries "force-error", so a build without the parameter in the address never downloads it, and a production build
+ * has none of it (each placement requires the gate behind the compile-time NEXT_PUBLIC_DEPLOY_ENV check).
  * - route: placed under the route's layout, inside app/error.tsx (the route error page: the site header and Reload);
  * - section: placed inside the experience's ClientChunkBoundary (its Reload, the experience header kept);
  * - global: placed in the root layout, outside app/error.tsx (app/global-error.tsx).
- * Each placement imports it only when NEXT_PUBLIC_DEPLOY_ENV is not 'production' (a compile-time constant), so a
- * production build has no chunk, module or string of it; the check below is a second guard.
  */
 export default function ForcedError({ where }: { where: Where }) {
-  if (process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production') return null;
-  // A static page's server render does not know the query, so the hook is rendered in the browser only (the Suspense
-  // boundary keeps that to this empty subtree).
-  return (
-    <Suspense fallback={null}>
-      <Thrower where={where} />
-    </Suspense>
-  );
-}
-
-function Thrower({ where }: { where: Where }) {
-  if (useSearchParams()?.get('force-error') === where) throw new Error(`force-error test hook: ${where}`);
+  if (new URLSearchParams(window.location.search).get('force-error') === where) {
+    throw new Error(`force-error test hook: ${where}`);
+  }
   return null;
 }

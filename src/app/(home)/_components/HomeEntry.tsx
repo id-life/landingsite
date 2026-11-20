@@ -1,7 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
 import { isNull } from 'lodash-es';
 import ClientChunkBoundary from '@/components/common/ClientChunkBoundary';
 import { ReactQueryProvider } from '@/providers/react-query-provider';
@@ -14,10 +12,15 @@ import { loadBrandFace } from '@/lib/brand-fonts';
 import '@/utils/gsap-plugins';
 import type { Deck } from './Home';
 
-// Non-production test hook: ?force-error=section (src/components/common/ForcedError.tsx). A production build drops
-// this branch and its import while compiling, so no byte of the hook ships (the build's chunks are checked for it).
-const ForcedError =
-  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' ? null : dynamic(() => import('@/components/common/ForcedError'));
+import type ForcedErrorGate from '@/components/common/ForcedErrorGate';
+
+// Non-production test hook: ?force-error=section (src/components/common/ForcedErrorGate.tsx). The compile-time
+// constant drops the require from a production build.
+const SectionErrorGate: typeof ForcedErrorGate | null =
+  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production'
+    ? null
+    : // eslint-disable-next-line @typescript-eslint/no-require-imports -- a static import would survive into production
+      require('@/components/common/ForcedErrorGate').default;
 
 type Chunk = { default: ComponentType };
 // One Home for both decks (RWD-02): a change of deck needs no other code.
@@ -80,7 +83,7 @@ export default function HomeEntry() {
       {!isNull(isMobile) && (
         <ReactQueryProvider>
           <ClientChunkBoundary>
-            {ForcedError && <ForcedError where="section" />}
+            {SectionErrorGate && <SectionErrorGate where="section" />}
             {/* One canvas above both decks (RWD-02): a deck change keeps the same <canvas> and WebGL context. The
                 canvas and the deck commit together (one Suspense boundary), so the deck's timelines find the canvas
                 (Portfolio fades #vision-canvas) and the canvas's intro finds the deck's fixed UI. */}

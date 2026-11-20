@@ -1,5 +1,4 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
 import { clsx } from 'clsx';
 import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
@@ -22,10 +21,16 @@ import '@/styles/globals.css';
 // CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
 import '@/content/validate';
 
-// Non-production test hook: ?force-error=global (src/components/common/ForcedError.tsx). A production build drops
-// this branch and its import while compiling, so no byte of the hook ships (the build's chunks are checked for it).
-const ForcedError =
-  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' ? null : dynamic(() => import('@/components/common/ForcedError'));
+import type ForcedErrorGate from '@/components/common/ForcedErrorGate';
+
+// Non-production test hook: ?force-error=global (src/components/common/ForcedErrorGate.tsx). The compile-time constant
+// drops the require from a production build; this layout requires its own client file, so the framework lists it
+// with this layout's chunks only.
+const RootErrorGate: typeof ForcedErrorGate | null =
+  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production'
+    ? null
+    : // eslint-disable-next-line @typescript-eslint/no-require-imports -- a static import would survive into production
+      require('@/components/common/forced-error-gate/root').default;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -88,7 +93,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           {ANALYTICS_ENABLED && <AnalyticsBootLazy />}
           <ExperienceRouter />
-          {ForcedError && <ForcedError where="global" />}
+          {RootErrorGate && <RootErrorGate where="global" />}
           <main id="main-content">{children}</main>
           <Background />
         </Providers>
