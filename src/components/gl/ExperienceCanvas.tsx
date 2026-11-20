@@ -44,10 +44,10 @@ export default function ExperienceCanvas() {
   preloadHeroAssets(variant);
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const shownOnPhone = currentPage.id === NAV.vision_page.id || currentPage.id === NAV.connect_page.id;
-  // Every device starts at the original's quality (src/motion/gpuTier.ts); the pixel ratio steps down only after the
-  // canvas has failed to hold its frame rate for a sustained period (AdaptiveDpr). Context attributes as originally.
+  // Every device starts at the original's quality (src/motion/gpuTier.ts); the pixel ratio steps down once the canvas
+  // has failed to hold 30 fps for 2 s and back up when it holds 50 fps (AdaptiveDpr). Context attributes as originally.
   const { tier, budget } = useGpuTier();
-  const { dpr, decline, incline } = useAdaptiveDpr(budget);
+  const { dpr, max, decline, incline } = useAdaptiveDpr(budget);
   // Unknown before hydration: the deck is not mounted either.
   if (!profile) return null;
 
@@ -66,7 +66,7 @@ export default function ExperienceCanvas() {
         dpr={dpr}
       >
         <FrameDriver />
-        <AdaptiveDprMonitor decline={decline} incline={incline} />
+        <AdaptiveDprMonitor dpr={dpr} max={max} decline={decline} incline={incline} />
         <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={40} />
         <directionalLight position={[0, 5, 5]} intensity={Math.PI / 2} />
         <ambientLight position={[0, 0, 5]} intensity={Math.PI / 2} />

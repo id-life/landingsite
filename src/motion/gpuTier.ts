@@ -44,8 +44,8 @@ const ORIGINAL_QUALITY: TierBudget = {
 
 /**
  * Every tier starts at the original's quality (owner, 2026-11-16: "just keep the original glass effect", with no
- * device named). A device pays less only adaptively: AdaptiveDpr steps the pixel ratio down after the canvas has
- * failed to hold its frame rate for a sustained period, never in its first seconds. The tier itself is still
+ * device named). A device pays less only adaptively: AdaptiveDpr steps the pixel ratio down once the canvas has
+ * failed to hold 30 fps for 2 s, never before the hero's intro has played, and back up when it recovers. The tier itself is still
  * detected, for analytics and error reports.
  */
 export const TIER_BUDGETS: Record<GpuTier, TierBudget> = {
