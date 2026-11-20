@@ -6,8 +6,18 @@
 // link, a figure) drops it back to `legacy` until the script proves it again. A record with any word that is not his
 // is never stamped and the script lists it for him, unless those words are exactly what a named ruling of his set
 // (the proof's second origin kind, with the ruling and its date). A record awaiting one of his rulings is never stamped.
-import proof from './origin-proof.json';
+import type ProofFile from './origin-proof.json';
 import type { ShippableApproval } from './schema';
+
+// The proof is read where approvals are checked: the server (build, prerender, the content tests and the proving
+// script). A browser never reads an approval, so the client bundles get an empty proof and carry none of it (the
+// compiler turns `typeof window` into a constant and drops the require; it was 3.6 KB gzip in every chunk holding
+// content). Records in a browser therefore keep their `legacy` state, which renders the same.
+const proof: typeof ProofFile =
+  typeof window === 'undefined'
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports -- a static import would ship the proof to browsers
+      require('./origin-proof.json')
+    : { origin: '', provedAt: '', records: {}, rulings: {} };
 
 type Rec = { approval: ShippableApproval } & Record<string, unknown>;
 
@@ -64,6 +74,8 @@ const ruled: Record<string, { fingerprint: string; ruling: string; rulingAt: str
 
 /** Stamps the records in `value` that the origin proof covers, unchanged since it, as approved by origin. */
 export function byOrigin<T>(name: string, value: T): T {
+  // In a browser nothing reads an approval (see `proof` above), so nothing is stamped and none of this code ships.
+  if (typeof window !== 'undefined') return value;
   eachRecord(name, value, (key, record) => {
     const { approval } = record;
     if (approval.status !== 'legacy' || approval.pendingRuling) return;

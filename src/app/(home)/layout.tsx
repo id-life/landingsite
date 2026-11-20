@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 import ExperienceHeader from '@/components/site/ExperienceHeader';
 import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
@@ -11,10 +10,16 @@ import PageSEOContent from '@/components/seo/PageSEOContent';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
 
-// Non-production test hook: ?force-error=route (src/components/common/ForcedError.tsx). A production build drops
-// this branch and its import while compiling, so no byte of the hook ships (the build's chunks are checked for it).
-const ForcedError =
-  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' ? null : dynamic(() => import('@/components/common/ForcedError'));
+import type ForcedErrorGate from '@/components/common/ForcedErrorGate';
+
+// Non-production test hook: ?force-error=route (src/components/common/ForcedErrorGate.tsx). The compile-time constant
+// drops the require from a production build; this layout requires its own client file, so the framework lists it
+// with this layout's chunks only.
+const HomeErrorGate: typeof ForcedErrorGate | null =
+  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production'
+    ? null
+    : // eslint-disable-next-line @typescript-eslint/no-require-imports -- a static import would survive into production
+      require('@/components/common/forced-error-gate/home').default;
 
 // The home title is the owner's own, "Immortal Dragons 不朽真龙" (question 5i); the description is the one his site serves
 // for the home page, whole (question 12g). From the content layer (src/content/pages.ts), shared with llms.txt.
@@ -31,7 +36,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       {/* The page's h1 is the hero itself (HeroPoster: the wordmark and its tagline as drawn), so the crawler summary
           below starts at h2. The header, then the experience (whose music player is an early Tab stop). */}
       <ExperienceHeader />
-      {ForcedError && <ForcedError where="route" />}
+      {HomeErrorGate && <HomeErrorGate where="route" />}
       {children}
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
