@@ -20,6 +20,7 @@ import '@/styles/tokens.css';
 import '@/styles/globals.css';
 // CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
 import '@/content/validate';
+import ForcedError from '@/components/common/ForcedError';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -82,6 +83,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           {ANALYTICS_ENABLED && <AnalyticsBootLazy />}
           <ExperienceRouter />
+          {/* Non-production test hook: ?force-error=global (src/components/common/ForcedError.tsx). */}
+          <ForcedError where="global" />
           <main id="main-content">{children}</main>
           <Background />
         </Providers>

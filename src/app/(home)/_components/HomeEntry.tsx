@@ -11,6 +11,7 @@ import { type ComponentType, createElement, lazy, Suspense, useEffect } from 're
 import { loadBrandFace } from '@/lib/brand-fonts';
 import '@/utils/gsap-plugins';
 import type { Deck } from './Home';
+import ForcedError from '@/components/common/ForcedError';
 
 type Chunk = { default: ComponentType };
 // One Home for both decks (RWD-02): a change of deck needs no other code.
@@ -73,6 +74,8 @@ export default function HomeEntry() {
       {!isNull(isMobile) && (
         <ReactQueryProvider>
           <ClientChunkBoundary>
+            {/* Non-production test hook: ?force-error=section (src/components/common/ForcedError.tsx). */}
+            <ForcedError where="section" />
             {/* One canvas above both decks (RWD-02): a deck change keeps the same <canvas> and WebGL context. The
                 canvas and the deck commit together (one Suspense boundary), so the deck's timelines find the canvas
                 (Portfolio fades #vision-canvas) and the canvas's intro finds the deck's fixed UI. */}

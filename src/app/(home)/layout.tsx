@@ -9,6 +9,7 @@ import { pageMeta } from '@/content/pages';
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroPreloads from '@/components/gl/HeroPreloads';
+import ForcedError from '@/components/common/ForcedError';
 
 // The home title is the owner's own, "Immortal Dragons 不朽真龙" (question 5i); the description is the one his site serves
 // for the home page, whole (question 12g). From the content layer (src/content/pages.ts), shared with llms.txt.
@@ -25,6 +26,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
       {/* The page's h1 is the hero itself (HeroPoster: the wordmark and its tagline as drawn), so the crawler summary
           below starts at h2. The header, then the experience (whose music player is an early Tab stop). */}
       <ExperienceHeader />
+      {/* Non-production test hook: ?force-error=route (src/components/common/ForcedError.tsx). */}
+      <ForcedError where="route" />
       {children}
       <PageSEOContent
         title="Immortal Dragons 不朽真龙"
