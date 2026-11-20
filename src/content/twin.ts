@@ -1,8 +1,9 @@
 // The Digital Twin section's copy. Shared by Twin (3D page) and the server-rendered page summary.
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { TwinCopy } from './schema';
 
-export const TWIN: TwinCopy = {
+export const TWIN: TwinCopy = byOrigin('content/twin.ts', {
   features: [
     { en: 'High-Precision Digital Twin Model Creation', zh: '高精度数字孪生' },
     { en: 'Predictive Models', zh: 'AI预测克隆体' },
@@ -17,7 +18,7 @@ export const TWIN: TwinCopy = {
     },
   },
   approval: live(),
-};
+});
 
 export const TWIN_FEATURES = TWIN.features.map((feature) => feature.en);
 

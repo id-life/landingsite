@@ -1,5 +1,7 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { isNull } from 'lodash-es';
 import ClientChunkBoundary from '@/components/common/ClientChunkBoundary';
 import { ReactQueryProvider } from '@/providers/react-query-provider';
@@ -11,6 +13,11 @@ import { type ComponentType, createElement, lazy, Suspense, useEffect } from 're
 import { loadBrandFace } from '@/lib/brand-fonts';
 import '@/utils/gsap-plugins';
 import type { Deck } from './Home';
+
+// Non-production test hook: ?force-error=section (src/components/common/ForcedError.tsx). A production build drops
+// this branch and its import while compiling, so no byte of the hook ships (the build's chunks are checked for it).
+const ForcedError =
+  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' ? null : dynamic(() => import('@/components/common/ForcedError'));
 
 type Chunk = { default: ComponentType };
 // One Home for both decks (RWD-02): a change of deck needs no other code.
@@ -73,6 +80,7 @@ export default function HomeEntry() {
       {!isNull(isMobile) && (
         <ReactQueryProvider>
           <ClientChunkBoundary>
+            {ForcedError && <ForcedError where="section" />}
             {/* One canvas above both decks (RWD-02): a deck change keeps the same <canvas> and WebGL context. The
                 canvas and the deck commit together (one Suspense boundary), so the deck's timelines find the canvas
                 (Portfolio fades #vision-canvas) and the canvas's intro finds the deck's fixed UI. */}

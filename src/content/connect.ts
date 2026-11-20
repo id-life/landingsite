@@ -2,9 +2,10 @@
 // Rendered visibly by FixedConnect / FixedConnectPage1 (English) and in full by the server-rendered summary.
 // Wording edits are owner drafts (src/content/drafts/copy-edits.ts).
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { Copy, CopyList } from './schema';
 
-export const CONNECT_VALUES: Copy[] = [
+export const CONNECT_VALUES: Copy[] = byOrigin('content/connect.ts#values', [
   {
     id: 'a-new-dawn',
     title: { en: 'A New Dawn', zh: '曙光' },
@@ -41,9 +42,9 @@ export const CONNECT_VALUES: Copy[] = [
     },
     approval: live(),
   },
-];
+]);
 
-export const CONNECT_CRITERIA: CopyList = {
+export const CONNECT_CRITERIA: CopyList = byOrigin('content/connect.ts#criteria', {
   id: 'early-stage-ventures',
   title: { en: 'Promising Early-Stage Ventures', zh: '聚焦早期企业投资' },
   items: [
@@ -57,9 +58,9 @@ export const CONNECT_CRITERIA: CopyList = {
     },
   ],
   approval: live(),
-};
+});
 
-export const CONNECT_STRENGTHS: Copy[] = [
+export const CONNECT_STRENGTHS: Copy[] = byOrigin('content/connect.ts#strengths', [
   {
     id: 'east-west-access',
     title: { en: 'East & West Access', zh: '贯通东西' },
@@ -87,4 +88,4 @@ export const CONNECT_STRENGTHS: Copy[] = [
     },
     approval: live(),
   },
-];
+]);

@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { clsx } from 'clsx';
 import Providers from '@/providers/root';
 import Background from '@/components/common/Background';
@@ -20,6 +21,11 @@ import '@/styles/tokens.css';
 import '@/styles/globals.css';
 // CON-16: validates every content record while the build prerenders (server only; zod never reaches the browser).
 import '@/content/validate';
+
+// Non-production test hook: ?force-error=global (src/components/common/ForcedError.tsx). A production build drops
+// this branch and its import while compiling, so no byte of the hook ships (the build's chunks are checked for it).
+const ForcedError =
+  process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production' ? null : dynamic(() => import('@/components/common/ForcedError'));
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -82,6 +88,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           {ANALYTICS_ENABLED && <AnalyticsBootLazy />}
           <ExperienceRouter />
+          {ForcedError && <ForcedError where="global" />}
           <main id="main-content">{children}</main>
           <Background />
         </Providers>

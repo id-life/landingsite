@@ -4,9 +4,10 @@
 // Facts awaiting a ruling carry it in their approval (see ./approval.ts): when the owner rules, record the
 // decision here with its date and remove the ruling key.
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { FundFacts } from './schema';
 
-export const FUND: FundFacts = {
+export const FUND: FundFacts = byOrigin('content/fund.ts', {
   name: { en: 'Immortal Dragons', zh: '不朽真龙' },
   legalName: {
     label: { en: 'Legal name' },
@@ -56,7 +57,7 @@ export const FUND: FundFacts = {
     approval: live(),
   },
   approval: live(),
-};
+});
 
 /** "3 Biopolis Dr, #01-15, Singapore 138623", as the site shows the address on one line. */
 export const FUND_ADDRESS_LINE = `${FUND.address.streetAddress}, ${FUND.address.addressLocality} ${FUND.address.postalCode}`;

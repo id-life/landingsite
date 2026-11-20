@@ -1,9 +1,10 @@
 // People named on the site. The founder's name and education are published in llms.txt, the JSON-LD and the
 // 不朽真龙介绍 article; whether he is the sole founder awaits the owner's ruling (CON-11 #3).
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { Person } from './schema';
 
-export const PEOPLE: Person[] = [
+export const PEOPLE: Person[] = byOrigin('content/people.ts', [
   {
     slug: 'boyang-wang',
     name: { en: 'Boyang Wang', zh: '朢舶洋' },
@@ -11,7 +12,7 @@ export const PEOPLE: Person[] = [
     alumniOf: ['National University of Singapore', 'Yale University'],
     approval: live(),
   },
-];
+]);
 
 export const personBySlug = (slug: string) => {
   const person = PEOPLE.find((entry) => entry.slug === slug);

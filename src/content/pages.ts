@@ -2,10 +2,11 @@
 // JSON-LD and server summaries. (llms.txt keeps its own Pages list, as the owner's file has it: src/content/profile.ts.) Every description is the one the owner's site serves for that page, word for word and uncut
 // (2026-11-18: a description his site serves is text he put on his website, so it stays as it is).
 import { live } from './approval';
+import { byOrigin } from './origin';
 import { FUND } from './fund';
 import type { PageMeta } from './schema';
 
-export const PAGES: PageMeta[] = [
+export const PAGES: PageMeta[] = byOrigin('content/pages.ts', [
   {
     id: 'home',
     path: '/',
@@ -180,7 +181,7 @@ export const PAGES: PageMeta[] = [
     llmsLabel: 'Immortal Dragons: Milestones and Portfolio',
     approval: live(),
   },
-];
+]);
 
 /** The meta description a page carries: its description, whole, as the owner's site serves it. llms.txt quotes this. */
 export const metaDescription = (page: Pick<PageMeta, 'description'>) => page.description;

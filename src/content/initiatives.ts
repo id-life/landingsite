@@ -2,17 +2,18 @@
 // the papers, and (in ./grants.ts) the sponsored bodies. Presentation (icons, sizes, grids) stays in
 // src/app/spectrum/_components/spectrumData.tsx, keyed by these slugs.
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { Book, Copy, Lab, Paper } from './schema';
 
-export const SPECTRUM_GROUPS: Copy[] = [
+export const SPECTRUM_GROUPS: Copy[] = byOrigin('content/initiatives.ts#groups', [
   { id: 'translation-publishing', text: { en: 'Translation & Publishing', zh: '翻译与出版' }, approval: live() },
   { id: 'evangelism', text: { en: 'Evangelism', zh: '布道者' }, approval: live() },
   { id: 'digital-twin', text: { en: 'Digital Twin', zh: '数字孪生' }, approval: live() },
   { id: 'papers-reviews', text: { en: 'Papers & Reviews', zh: '论文与综述' }, approval: live() },
   { id: 'proudly-supporting', text: { en: 'Proudly Supporting', zh: '本机构赞助支持' }, approval: live() },
-];
+]);
 
-export const BOOKS: Book[] = [
+export const BOOKS: Book[] = byOrigin('content/initiatives.ts#books', [
   { slug: 'bio-acc-manifesto', title: 'Bio/Acc Manifesto', url: 'https://bioacc.life/zh/', approval: live() },
   {
     slug: 'the-case-against-death',
@@ -38,9 +39,9 @@ export const BOOKS: Book[] = [
     url: 'https://link.springer.com/book/9783032327222',
     approval: live(),
   },
-];
+]);
 
-export const LABS: Lab[] = [
+export const LABS: Lab[] = byOrigin('content/initiatives.ts#labs', [
   { slug: 'influence-network', title: 'Influence Network', url: '/spectrum/influence-network', approval: live() },
   { slug: 'disease-management', title: 'Disease Management', url: '/spectrum/disease-management', approval: live() },
   {
@@ -51,11 +52,11 @@ export const LABS: Lab[] = [
   },
   // A section of the experience: a plain click moves there through the digital-twin hash route.
   { slug: 'digital-twin', title: 'Access Digital Twin', url: '/digitaltwin', routeKey: 'digital-twin', approval: live() },
-];
+]);
 
 // `citations` is each paper's count at Crossref ("is-referenced-by-count"), read on 2026-11-17; OpenAlex and Semantic
 // Scholar gave the same order that day. Refresh with: node scripts/paper-citations.mjs (it prints what changed).
-export const PAPERS: Paper[] = [
+export const PAPERS: Paper[] = byOrigin('content/initiatives.ts#papers', [
   {
     slug: 'mitochondrial-quality-control',
     title: 'Mitochondrial quality control as a central pharmacological target in aging',
@@ -104,7 +105,7 @@ export const PAPERS: Paper[] = [
     citations: 0,
     approval: live(),
   },
-];
+]);
 
 /**
  * The papers with the most cited first; papers with the same count keep the order they are listed in above.
