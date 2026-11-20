@@ -6,6 +6,7 @@ import DotCount from '@/components/disease-management/DotCount';
 import { DataTable } from '@/components/common/Table/data-table';
 import { DiseaseManagementStatusItemType } from '@/constants/disease-management';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
+import { useFittedTapArea } from '@/hooks/useFittedTapArea';
 
 /**
  * One disease table with its dot picture and counts, one component for phones and wider windows (RWD-02; it was
@@ -26,6 +27,7 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
   pdf,
 }) => {
   const phone = useDeviceProfile()?.tree === 'phone';
+  const csvRef = useFittedTapArea<HTMLAnchorElement>();
   const [showAmount, setShowAmount] = useState(4);
   const rows = useMemo(() => (phone ? data.slice(0, showAmount) : data), [phone, data, showAmount]);
 
@@ -46,13 +48,19 @@ export const DiseaseManagementStatusItem: FC<DiseaseManagementStatusItemType> = 
         download
         target="_blank"
         rel="noopener noreferrer"
+        ref={csvRef}
         className="corner-button-top relative ml-auto flex items-center gap-1 px-1.5 py-2 text-xs font-medium mobile:ml-0 mobile:p-2"
       >
         <FileSVG />
         <span>Download CSV</span>
-        {/* The hit area grows to 44 px on touch screens (RWD-06) while the bracketed box, and its corners, keep the
-            original's size. */}
-        <span aria-hidden="true" className="absolute -inset-y-[6px] inset-x-0 hidden coarse:block" />
+        {/* The hit area grows towards 44 px on touch screens (RWD-06) into space that is nobody's (useFittedTapArea),
+            while the bracketed box, and its corners, keep the original's size. The table's header row starts right
+            below the link and is drawn over anything there, so the whole growth goes upwards, where the page is
+            free; raising the link above the header instead would change how the page is drawn. */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-0 left-[calc(-1*var(--tap-left,0px))] right-[calc(-1*var(--tap-right,0px))] top-[calc(-1*var(--tap-up,0px))] hidden coarse:block"
+        />
       </a>
       {phone ? (
         <DataTable
