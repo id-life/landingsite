@@ -31,11 +31,6 @@ export const FUND: FundFacts = byOrigin('content/fund.ts', {
     asOf: '2025-07-16',
     approval: live(),
   },
-  geography: {
-    label: { en: 'Geography' },
-    value: { en: 'geographically agnostic', zh: '不限地域' },
-    approval: live(),
-  },
   lpPositions: {
     label: { en: 'LP positions' },
     value: { en: 'Also invests as an LP in other longbio funds' },

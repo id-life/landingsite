@@ -100,6 +100,7 @@
     "content/slogans.ts[connect-innovation-network]": "fbc86116570e2701",
     "content/slogans.ts[collective-recognition]": "dd1be2005836decb",
     "content/slogans.ts[accelerate-longevity-tech]": "5b209f59b529b2d4",
+    "content/connect.ts#values[a-new-dawn]": "5eb40f03957c58ac",
     "content/connect.ts#values[as-an-evangelist]": "d8e9c20bbd97aca2",
     "content/connect.ts#values[a-moral-endeavor]": "6d24d877200da564",
     "content/connect.ts#values[a-virtuous-cycle]": "5773e8725d56f47f",
@@ -109,5 +110,17 @@
     "content/twin.ts": "21de98a7cc61a858",
     "content/subscribe.ts[priority-access]": "6cda8155e56b2d4c",
     "content/subscribe.ts[latest-insights]": "b88961aeaf664b41"
+  },
+  "rulings": {
+    "content/initiatives.ts#groups[papers-reviews]": {
+      "fingerprint": "d82110a6877b45b5",
+      "ruling": "the owner's ruling of 2026-11-17: the heading becomes \"Papers & Reviews 论文与综述\"",
+      "rulingAt": "2026-11-17"
+    },
+    "content/connect.ts#criteria": {
+      "fingerprint": "7ad75ca809750859",
+      "ruling": "the owner's ruling of 2026-11-18 (answer 12j): delete the text that says which stage the fund invests in",
+      "rulingAt": "2026-11-18"
+    }
   }
 }

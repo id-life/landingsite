@@ -25,9 +25,25 @@ describe('approval by origin', () => {
             approvedAt: proof.provedAt,
           });
           stamped.push(key);
+        } else if (key in proof.rulings) {
+          const { ruling, rulingAt } = proof.rulings[key];
+          expect(rec.approval).toMatchObject({ status: 'approved', approvedBy: `by ${ruling}`, approvedAt: rulingAt });
+          stamped.push(key);
         } else expect(rec.approval.status).toBe('legacy');
       });
-    expect(stamped.length).toBe(Object.keys(proof.records).length);
+    expect(stamped.length).toBe(Object.keys(proof.records).length + Object.keys(proof.rulings).length);
+  });
+
+  test('a ruling entry names the ruling and its date, and an edit to the record drops it', async () => {
+    for (const entry of Object.values(proof.rulings)) {
+      expect(entry.ruling).toMatch(new RegExp(`^the owner's ruling of ${entry.rulingAt}\\b`));
+      expect(entry.fingerprint).toMatch(/^[0-9a-f]{16}$/);
+    }
+    const { CONNECT_CRITERIA } = await import('@/content/connect');
+    expect(CONNECT_CRITERIA.approval.status).toBe('approved');
+    const edited = { ...structuredClone({ ...CONNECT_CRITERIA, approval: undefined }), approval: legacy() };
+    edited.items[0].en = 'Partnering with Pre-Seed to Series-A startups under $100m valuations.';
+    expect(byOrigin('content/connect.ts#criteria', edited).approval.status).toBe('legacy');
   });
 
   test('a record changed since the proof, or not in it, stays legacy', async () => {

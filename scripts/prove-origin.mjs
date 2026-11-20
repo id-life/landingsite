@@ -4,7 +4,8 @@
 // A record is proven when every piece of its drawn text (each text field; not links, image paths, slugs or ISO dates,
 // which are data) is found, word for word, in the origin: the original's source tree and/or the pages the owner's site
 // serves. Whitespace runs, HTML entities and JavaScript string escapes are normalised on both sides; nothing else is.
-// A record with any text not found is not proven, and is listed with the text that differs.
+// A record whose differing words are exactly the ones a ruling of the owner sets (RULINGS below) is proven by that
+// ruling instead. A record with any other text not found is not proven, and is listed with the text that differs.
 //
 //   node scripts/prove-origin.mjs --label "<origin, as it should read in the approval>" \
 //     [--source <the original's source tree>] [--served <base URL of the owner's site>] [--report <file.json>]
@@ -105,7 +106,24 @@ function drawnText(value, path = '', key = '') {
   );
 }
 
+// The owner's rulings that set a record's words himself (a second origin kind). Each names the ruling and its date and
+// gives the exact words it sets, field by field; a record is proven by a ruling only when every word of it is either
+// found in the origin or is exactly what a ruling of his sets.
+const RULINGS = {
+  'content/initiatives.ts#groups[papers-reviews]': {
+    ruling: 'the owner\'s ruling of 2026-11-17: the heading becomes "Papers & Reviews 论文与综述"',
+    rulingAt: '2026-11-17',
+    sets: { 'text.en': 'Papers & Reviews', 'text.zh': '论文与综述' },
+  },
+  'content/connect.ts#criteria': {
+    ruling: "the owner's ruling of 2026-11-18 (answer 12j): delete the text that says which stage the fund invests in",
+    rulingAt: '2026-11-18',
+    sets: { 'items[0].en': 'Partnering with startups under $100m valuations.', 'items[0].zh': '与估值1亿美元以下的企业合作' },
+  },
+};
+
 const records = {};
+const rulings = {};
 const unproven = [];
 const awaitingRuling = [];
 for (const [name, , data] of CONTENT_ENTRIES) {
@@ -116,20 +134,26 @@ for (const [name, , data] of CONTENT_ENTRIES) {
     }
     const texts = drawnText(record);
     const differing = texts.filter(([, value]) => !found(value)).map(([field, value]) => ({ field, text: value }));
+    const ruling = RULINGS[key];
+    const setByRuling = (d) => ruling && ruling.sets[d.field] === d.text;
     if (texts.length > 0 && differing.length === 0) records[key] = fingerprint(record);
+    else if (texts.length > 0 && differing.every(setByRuling))
+      rulings[key] = { fingerprint: fingerprint(record), ruling: ruling.ruling, rulingAt: ruling.rulingAt };
     else unproven.push({ key, differing: texts.length ? differing : [{ field: '-', text: '(no drawn text)' }] });
   });
 }
 
 const provedAt = new Date().toISOString().slice(0, 10);
 const proofPath = join(root, 'src/content/origin-proof.json');
-writeFileSync(proofPath, `${JSON.stringify({ origin: args.label, provedAt, records }, null, 2)}\n`);
-const report = { origin: args.label, provedAt, proven: Object.keys(records), unproven, awaitingRuling };
+writeFileSync(proofPath, `${JSON.stringify({ origin: args.label, provedAt, records, rulings }, null, 2)}\n`);
+const report = { origin: args.label, provedAt, proven: Object.keys(records), byRuling: rulings, unproven, awaitingRuling };
 if (args.report) writeFileSync(args.report, `${JSON.stringify(report, null, 1)}\n`);
-const total = Object.keys(records).length + unproven.length + awaitingRuling.length;
+const proven = Object.keys(records).length + Object.keys(rulings).length;
+const total = proven + unproven.length + awaitingRuling.length;
 console.log(
-  `${Object.keys(records).length} of ${total} records proven; ${unproven.length} not proven; ${awaitingRuling.length} awaiting a ruling`,
+  `${proven} of ${total} records proven (${Object.keys(rulings).length} by his ruling); ${unproven.length} not proven; ${awaitingRuling.length} awaiting a ruling`,
 );
+for (const [key, r] of Object.entries(rulings)) console.log(`  ${key}  by ${r.ruling}`);
 for (const item of unproven)
   for (const d of item.differing) console.log(`  ${item.key}  ${d.field}: ${JSON.stringify(d.text)}`);
 for (const item of awaitingRuling) console.log(`  ${item.key}  awaiting: ${item.ruling}`);

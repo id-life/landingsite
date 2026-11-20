@@ -17,10 +17,10 @@ export const COPY_EDIT_DRAFTS = defineDrafts('copy-edits.ts', [
     approval: {
       status: 'draft',
       replaces:
-        'Our dedication is to a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
+        'Our dedication is a world where emerging breakthroughs in science and medicine enable flourishing lifespans for all.',
       sources: [{ ref: 'src/content/connect.ts (a-new-dawn)' }, FIGURE],
       questions: [
-        'The live line now reads "Our dedication is to a world where ..." (a grammar fix). Use this fuller rewrite as the mission statement on /about?',
+        'The live line is his own, unchanged: "Our dedication is a world where ...". Use this fuller rewrite instead?',
       ],
     },
   },
