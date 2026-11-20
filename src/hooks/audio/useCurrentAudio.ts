@@ -21,7 +21,6 @@ import type { AudioDataItem } from '@/apis/types';
 import { firstClickStarts, isOnMedia, otherSoundInPage, startAtLoad } from '@/hooks/audio/firstClick';
 import { NAV_LIST } from '@/components/nav/nav';
 import { controlShowsPause } from '@/hooks/audio/controlState';
-import { wakeMotion } from '@/motion/runtime';
 
 // Created on first use, not at import: an AudioContext made before any user gesture starts
 // suspended and logs an autoplay warning on every page load.
@@ -347,17 +346,16 @@ export default function useCurrentAudio() {
       playNextTrack();
     };
 
-    // A track starting or stopping changes what the player shows, also when no input caused it (the next track of
-    // the playlist, a hardware media key): the experience's idle pause wakes for it (MOT-03).
+    // A track starting or stopping does not wake the experience's idle pause (MOT-03: only an input does, music
+    // playing or not). What it changes in the player (the control, the title) is drawn by React without animation
+    // frames, so it shows while paused; without this, every track change ran the page for another minute.
     audio.onplay = () => {
       pausedByVisitor = false;
       // Whatever started it (a press, a hardware media key, the next track), the control shows it.
       setPlayStatus(controlShowsPause(audio));
-      wakeMotion();
     };
 
     audio.onpause = () => {
-      wakeMotion();
       // The pause that precedes 'ended' is the track finishing, not the visitor.
       if (!audio.ended) pausedByVisitor = true;
       dispatch({ type: AUDIO_DISPATCH.PAUSE });

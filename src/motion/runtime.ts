@@ -15,7 +15,8 @@ import { useSyncExternalStore } from 'react';
  *   they arrived on a page that had stopped drawing), and the browser's own events that change what is shown
  *   without an input: popstate, pageshow (a page restored from the back/forward cache), resize and orientationchange
  *   (the layout changes under the ticker), focusin (focus moved by a script or an assistive technology, which can
- *   scroll the deck), and a track of the player starting or stopping. None of these is something the experience does
+ *   scroll the deck). A track of the player starting or stopping does not wake it: music playing is no exception to
+ *   the minute, and what a track change shows in the player needs no animation frame. None of these is something the experience does
  *   by itself while nobody looks (the smoother's scroll events, the hero's swing, the Presence tour and its videos'
  *   own resize events are not counted), so the page still pauses a minute after the last of them.
  *
