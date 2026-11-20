@@ -105,6 +105,8 @@ export function registerInnerPage(
   };
 }
 
+const changeListeners = new Set<(section: string) => void>();
+
 function write(section: string) {
   if (typeof window === 'undefined') return;
   const values: Record<string, InnerValue | undefined> = {};
@@ -114,10 +116,13 @@ function write(section: string) {
   if (sameInner(before, innerOf(after)[section] ?? {})) return;
   // The same address: only this entry's state changes (no new entry, no section view).
   window.history.replaceState(after, '', window.location.href);
+  for (const listener of changeListeners) listener(section);
 }
 
-const changeListeners = new Set<(section: string) => void>();
-/** Called whenever an inner page changes (before it is written to history); for parts that lay out around it. */
+/**
+ * Called when an inner page has really changed (its new value is written to the history entry, about 120 ms after the
+ * change); for parts that lay out around it. A part that reports a change that changes nothing calls no one.
+ */
 export function onInnerPageChange(listener: (section: string) => void) {
   changeListeners.add(listener);
   return () => {
@@ -130,9 +135,7 @@ export function onInnerPageChange(listener: (section: string) => void) {
  * not while a restore of it is still being applied (the half-restored state would overwrite the kept one).
  */
 export function noteInnerPage(section: string) {
-  if (typeof window === 'undefined') return;
-  for (const listener of changeListeners) listener(section);
-  if (scheduled.has(section)) return;
+  if (typeof window === 'undefined' || scheduled.has(section)) return;
   scheduled.add(section);
   setTimeout(() => {
     scheduled.delete(section);

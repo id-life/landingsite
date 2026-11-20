@@ -7,9 +7,53 @@ import { tapReach, type Box } from './tapRoom';
 
 const CONTROLS = 'a[href], button, input:not([type=hidden]), textarea, select, [role="button"], [role="link"], [role="tab"]';
 const box = (r: DOMRect): Box => ({ left: r.left, top: r.top, right: r.right, bottom: r.bottom });
-/** A change settles when the room has been the same for this many frames; never longer than MAX_FRAMES. */
-const STABLE_FRAMES = 3;
-const MAX_FRAMES = 60;
+/**
+ * The part of a control a finger can actually reach beside the pill, or null: its box cut by every ancestor that clips
+ * its overflow (a card of a paged list runs on below its page, unseen), then tested where it is nearest the pill, outside
+ * the pill: if something else is on top there (another layer, the page's frame), the control is not reachable there.
+ */
+function reachablePart(el: Element, r: DOMRect, pill: Box, pillEl: Element): Box | null {
+  let part: Box = box(r);
+  for (let k = el.parentElement; k && k !== document.documentElement; k = k.parentElement) {
+    const cs = getComputedStyle(k);
+    if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+    const c = k.getBoundingClientRect();
+    part = {
+      left: Math.max(part.left, c.left),
+      top: Math.max(part.top, c.top),
+      right: Math.min(part.right, c.right),
+      bottom: Math.min(part.bottom, c.bottom),
+    };
+    if (part.right - part.left < 1 || part.bottom - part.top < 1) return null;
+  }
+  // Points of that part just outside each edge of the pill (where a touch area would reach), and its centre.
+  const inPart = (x: number, y: number) => x > part.left && x < part.right && y > part.top && y < part.bottom;
+  const midX = Math.min(Math.max((pill.left + pill.right) / 2, part.left + 1), part.right - 1);
+  const midY = Math.min(Math.max((pill.top + pill.bottom) / 2, part.top + 1), part.bottom - 1);
+  const points = [
+    [midX, pill.top - 2],
+    [midX, pill.bottom + 2],
+    [pill.left - 2, midY],
+    [pill.right + 2, midY],
+    [(part.left + part.right) / 2, (part.top + part.bottom) / 2],
+  ].filter(([x, y]) => inPart(x, y) && !(x >= pill.left && x <= pill.right && y >= pill.top && y <= pill.bottom));
+  // Nothing of it outside the pill near its edges: the pill covers what there is of it.
+  if (!points.length) return null;
+  return points.some(([x, y]) => {
+    // The topmost thing there other than the player itself (its own touch areas must not hide a neighbour).
+    const hit = document.elementsFromPoint(x, y).find((e) => !pillEl.contains(e));
+    return !!hit && (hit === el || el.contains(hit));
+  })
+    ? part
+    : null;
+}
+
+/**
+ * A change has settled when what is around the player (its own box and every reachable neighbour, to the pixel) has
+ * not moved for this many frames; a section's or card's entrance can ease out slowly. Never longer than MAX_FRAMES.
+ */
+const STABLE_FRAMES = 10;
+const MAX_FRAMES = 120;
 
 /**
  * Sizes the touch areas of the player's buttons (marked `player-tap`) to the room around the pill (tapRoom.ts), on
@@ -26,7 +70,7 @@ export function usePlayerTapAreas(pillRef: RefObject<HTMLElement | null>, playli
     let frame = 0;
     let lastKey = '';
 
-    /** One measurement; returns a key of the result, so a settling change can tell when it has stopped. */
+    /** One measurement; returns a key of what it saw (the boxes around the player), so a settle can tell when it stops. */
     const measure = () => {
       const pill = pillRef.current;
       if (!pill || !coarse.matches) return '';
@@ -39,12 +83,22 @@ export function usePlayerTapAreas(pillRef: RefObject<HTMLElement | null>, playli
         if (pill.contains(el)) continue;
         const r = el.getBoundingClientRect();
         if (r.width <= 0 || r.height <= 0 || r.bottom < 0 || r.top > innerHeight) continue;
+        // Only controls near enough to matter (a touch area never reaches 44 px past the pill).
+        if (
+          r.right < pillBox.left - 44 ||
+          r.left > pillBox.right + 44 ||
+          r.bottom < pillBox.top - 44 ||
+          r.top > pillBox.bottom + 44
+        )
+          continue;
         const cs = getComputedStyle(el);
         if (cs.visibility === 'hidden' || cs.pointerEvents === 'none') continue;
-        others.push(box(r));
+        const reachable = reachablePart(el, r, pillBox, pill);
+        if (reachable) others.push(reachable);
       }
       const boxes = buttons.map((b) => box(b.getBoundingClientRect()));
-      let key = '';
+      const px = (b: Box) => `${Math.round(b.left)},${Math.round(b.top)},${Math.round(b.right)},${Math.round(b.bottom)}`;
+      let key = `${px(pillBox)}|${others.map(px).join('|')}|`;
       buttons.forEach((b, i) => {
         const reach = tapReach(
           boxes[i],
@@ -101,12 +155,35 @@ export function usePlayerTapAreas(pillRef: RefObject<HTMLElement | null>, playli
       const margin = [r.top - 44, innerWidth - r.right - 44, innerHeight - r.bottom - 44, r.left - 44]
         .map((n) => `${-Math.max(0, Math.floor(n))}px`)
         .join(' ');
-      let first = true;
+      // A settle only when what is in the strip changes, compared by what a control is and where (its name and box),
+      // not by element: a section that re-renders the same control in the same place (one that keeps replacing it at
+      // rest) changes nothing, nor does a control added or removed elsewhere on the page.
+      const inStrip = new Map<Element, string>();
+      let lastSet = '';
+      let reported = false;
       strip = new IntersectionObserver(
-        () => {
-          // The first callback reports every observed control once; the mount's own settle covers it.
-          if (first) first = false;
-          else settle();
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting && e.target.isConnected) {
+              const r = e.boundingClientRect;
+              const name = e.target.getAttribute('aria-label') ?? e.target.textContent?.slice(0, 40) ?? '';
+              inStrip.set(
+                e.target,
+                `${name}|${Math.round(r.left)},${Math.round(r.top)},${Math.round(r.width)},${Math.round(r.height)}|${Math.round(e.intersectionRatio * 4)}`,
+              );
+            } else inStrip.delete(e.target);
+          }
+          for (const el of inStrip.keys()) if (!el.isConnected) inStrip.delete(el);
+          const set = [...inStrip.values()].sort().join(';');
+          // The first report lists what is already there (the mount's own settle measured it).
+          if (!reported) {
+            reported = true;
+            lastSet = set;
+            return;
+          }
+          if (set === lastSet) return;
+          lastSet = set;
+          settle();
         },
         { rootMargin: margin, threshold: [0, 0.25, 0.5, 0.75, 1] },
       );
