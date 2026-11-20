@@ -1,5 +1,5 @@
-// Item 17: the re-encoded transparent clips. While ALPHA_CLIPS_BASE is unset every clip keeps its original address;
-// once it is set, every clip the source names maps to a listed path, so nothing can point at a file that was not
+// Item 17: the re-encoded transparent clips. ALPHA_CLIPS_BASE is set (the files are uploaded under v2/); every clip
+// the source names maps to a listed path, so nothing can point at a file that was not
 // uploaded (the upload covers exactly ALPHA_CLIP_PATHS, both formats).
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -18,8 +18,8 @@ const clipsInSource = [
 ].sort();
 
 describe('transparent clips', () => {
-  test('the switch is off until the files are uploaded', () => {
-    expect(ALPHA_CLIPS_BASE).toBeNull();
+  test('the switch is on, at the uploaded v2/ prefix', () => {
+    expect(ALPHA_CLIPS_BASE).toBe('https://resources.id.life/v2');
   });
 
   test('off: every clip keeps its original address', () => {
