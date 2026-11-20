@@ -78,7 +78,6 @@ export const FundFacts = z.object({
   }),
   founder: slug,
   fundSize: Fact,
-  geography: Fact,
   lpPositions: Fact,
   /** The owner's own wording of the investment count ('15+'); the computed count comes from the portfolio. */
   statedInvestments: Fact,

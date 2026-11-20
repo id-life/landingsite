@@ -4,7 +4,8 @@
 // origin it compared with, the date, and a fingerprint of every record whose every word was found there. A record is
 // stamped approved here only while its fingerprint still matches that proof, so any later change to it (a word, a
 // link, a figure) drops it back to `legacy` until the script proves it again. A record with any word that is not his
-// is never stamped and the script lists it for him. A record awaiting one of his rulings is never stamped either.
+// is never stamped and the script lists it for him, unless those words are exactly what a named ruling of his set
+// (the proof's second origin kind, with the ruling and its date). A record awaiting one of his rulings is never stamped.
 import proof from './origin-proof.json';
 import type { ShippableApproval } from './schema';
 
@@ -58,19 +59,31 @@ export function eachRecord(name: string, value: unknown, visit: (key: string, re
 }
 
 const proven: Record<string, string> = proof.records;
+// Records whose words the owner set himself by a ruling: the ruling is named, with its date, never a bare flag.
+const ruled: Record<string, { fingerprint: string; ruling: string; rulingAt: string }> = proof.rulings;
 
 /** Stamps the records in `value` that the origin proof covers, unchanged since it, as approved by origin. */
 export function byOrigin<T>(name: string, value: T): T {
   eachRecord(name, value, (key, record) => {
     const { approval } = record;
     if (approval.status !== 'legacy' || approval.pendingRuling) return;
-    if (proven[key] !== fingerprint(record)) return;
-    record.approval = {
-      status: 'approved',
-      approvedBy: `by origin: ${proof.origin}`,
-      approvedAt: proof.provedAt,
-      sources: [{ ref: proof.origin, note: `the record's drawn text, word for word (scripts/prove-origin.mjs)` }],
-    };
+    const print = fingerprint(record);
+    if (proven[key] === print) {
+      record.approval = {
+        status: 'approved',
+        approvedBy: `by origin: ${proof.origin}`,
+        approvedAt: proof.provedAt,
+        sources: [{ ref: proof.origin, note: `the record's drawn text, word for word (scripts/prove-origin.mjs)` }],
+      };
+    } else if (ruled[key]?.fingerprint === print) {
+      const { ruling, rulingAt } = ruled[key];
+      record.approval = {
+        status: 'approved',
+        approvedBy: `by ${ruling}`,
+        approvedAt: rulingAt,
+        sources: [{ ref: ruling, note: `his words elsewhere, proven against ${proof.origin} on ${proof.provedAt}` }],
+      };
+    }
   });
   return value;
 }
