@@ -13,8 +13,8 @@ type Where = 'route' | 'section' | 'global';
  * - route: placed under the route's layout, inside app/error.tsx (the route error page: the site header and Reload);
  * - section: placed inside the experience's ClientChunkBoundary (its Reload, the experience header kept);
  * - global: placed in the root layout, outside app/error.tsx (app/global-error.tsx).
- * In a production build NEXT_PUBLIC_DEPLOY_ENV is 'production' at compile time, so the component is `return null` and
- * the rest is dropped by the minifier (test/forced-error.test.mjs and the production build's chunks prove it).
+ * Each placement imports it only when NEXT_PUBLIC_DEPLOY_ENV is not 'production' (a compile-time constant), so a
+ * production build has no chunk, module or string of it; the check below is a second guard.
  */
 export default function ForcedError({ where }: { where: Where }) {
   if (process.env.NEXT_PUBLIC_DEPLOY_ENV === 'production') return null;
