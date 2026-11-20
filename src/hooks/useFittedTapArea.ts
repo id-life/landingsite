@@ -55,8 +55,12 @@ function fit(element: HTMLElement) {
   const box = element.getBoundingClientRect();
   if (!box.width) return;
   const grow = fitTapArea(box, neighbours(element, box));
+  // The ::before is laid out from the padding edge, inside any border: a bordered control (the phone's pager arrows on
+  // the light sections) would otherwise come out short of its fitted area by the border's width on each side.
+  const style = getComputedStyle(element);
   for (const side of ['left', 'top', 'right', 'bottom'] as const) {
-    element.style.setProperty(`--tap-${side}`, `${grow[side].toFixed(1)}px`);
+    const border = parseFloat(style.getPropertyValue(`border-${side}-width`)) || 0;
+    element.style.setProperty(`--tap-${side}`, `${(grow[side] + border).toFixed(1)}px`);
   }
 }
 

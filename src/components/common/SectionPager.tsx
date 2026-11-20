@@ -7,7 +7,8 @@ import {
   mobileCurrentPageIndexAtom,
 } from '@/atoms';
 import { useMobileNavigation } from '@/hooks/useMobileNavigation';
-import { getSectionState, type SectionSource } from '@/motion/sectionController';
+import { FITTED_TAP_AREA, useFittedTapArea } from '@/hooks/useFittedTapArea';
+import { getSectionState, sectionStateAtom, type SectionSource } from '@/motion/sectionController';
 import { cn } from '@/utils';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -82,12 +83,21 @@ function resolveStep(
 }
 
 /**
- * Minimum time between two steps; a step asked for sooner is ignored, as on the original. Shared by every arrow
- * and the swipe (module scope): on Connect a tap on the one arrow brings in a second arrow under the finger, and a
- * second quick tap must not be taken by a control that was not there when it began.
+ * Minimum time between two steps; a step asked for sooner is ignored, as on the original, unless it is a second tap on
+ * the arrow of the same direction (NAV-06). Shared by every arrow and the swipe (module scope): on Connect a tap on the
+ * one arrow brings in a second arrow under the finger, and a second quick tap must not be taken by a control that was
+ * not there when it began (it points the other way, so it is still ignored).
  */
 const STEP_SPACING_MS = 500;
 let lastStepAt = 0;
+/** The last step's direction and input: within the spacing, a second tap on the same arrow is a second step. */
+let lastStep: { up: boolean; source: SectionSource } | null = null;
+/**
+ * A step asked for while a section change is still running: kept, one at most (the latest wins),
+ * and taken once the running step has landed and the section reached knows its inner pages (NAV-06: a second tap
+ * during a transition is not lost; on the original it was dropped).
+ */
+let queuedStep: { up: boolean } | null = null;
 
 /** One step through the phone experience, shared by the arrow buttons and the swipe gesture. */
 export function useSectionStep() {
@@ -108,10 +118,12 @@ export function useSectionStep() {
   });
   stateRef.current = { currentPage, currentPageIndex, innerPageIndex, innerPageTotal, mobileNavChange, setInnerPageNavigateTo };
 
-  return useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
+  const runRef = useRef<((up: boolean) => void) | null>(null);
+  const step = useCallback((isUp: boolean, source: SectionSource = 'arrow') => {
     const run = (up: boolean) => {
       const s = stateRef.current;
       lastStepAt = performance.now();
+      lastStep = { up, source };
       const step = resolveStep(up, {
         pageId: s.currentPage.id,
         pageIndex: s.currentPageIndex,
@@ -122,12 +134,34 @@ export function useSectionStep() {
       if (step.kind === 'inner') s.setInnerPageNavigateTo(step.index);
       else s.mobileNavChange(NAV_LIST[step.index], source);
     };
-    // As the original: a tap while a step is still running (or within the spacing after one) is ignored, not
-    // queued, so two quick taps move one section on both decks.
-    if (getSectionState().phase === 'moving') return;
-    if (performance.now() - lastStepAt < STEP_SPACING_MS) return;
+    runRef.current = run;
+    // A tap while a section change is still running waits for it (queuedStep) instead of being dropped as on the
+    // original, so two quick taps move two steps.
+    if (getSectionState().phase === 'moving') {
+      queuedStep = { up: isUp };
+      return;
+    }
+    // Within the spacing after a step a tap is still ignored when it is the tap of a control that came under the finger
+    // as the step ended (Connect's up arrow, where the down arrow was) or a swipe; a second tap on the arrow of the
+    // same direction is a second step (NAV-06: two taps, two steps).
+    const sameArrow = source === 'arrow' && lastStep?.source === 'arrow' && lastStep.up === isUp;
+    if (performance.now() - lastStepAt < STEP_SPACING_MS && !sameArrow) return;
     run(isUp);
   }, []);
+
+  // The waiting step is taken when the step before it has landed (the controller is idle) and the section reached
+  // knows its inner pages (a paged section sets their count as it is entered): that is when one step from it can be
+  // resolved. Every arrow and the swipe run this; the first to see the step ready takes it.
+  const phase = useAtomValue(sectionStateAtom).phase;
+  useEffect(() => {
+    if (!queuedStep || phase !== 'idle') return;
+    if (hasInnerPage(currentPage.id) && innerPageTotal === 0) return;
+    const { up } = queuedStep;
+    queuedStep = null;
+    runRef.current?.(up);
+  }, [phase, currentPage, innerPageIndex, innerPageTotal]);
+
+  return step;
 }
 
 /** The accessible name of an arrow: it names where the step goes. Ends in "section" (one section or a page of it). */
@@ -152,15 +186,20 @@ function ArrowItem({ isUp }: { isUp?: boolean }) {
   const currentPage = useAtomValue(mobileCurrentPageAtom);
   const step = useSectionStep();
   const label = useArrowLabel(Boolean(isUp));
+  // On a touch screen the hit area is 44 px, reaching only into space that is nobody's: where the other arrow (12 px
+  // away) or another control stands closer, each takes at most half the gap (NAV-06, RWD-06). Nothing drawn changes.
+  const ref = useFittedTapArea<HTMLButtonElement>();
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={label}
       className={cn(
-        // 44 px visible circle; the ::before pseudo-element extends the touch target to 52 px.
-        // The original's 40 px circles, 12 px apart; a 44 px hit area around each (tap-area), not a bigger circle.
+        // The original's 40 px circles, 12 px apart; a fitted 44 px hit area around each (tap-area with the fitted
+        // sides of useFittedTapArea), not a bigger circle.
         'flex-center relative h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm tap-area',
+        FITTED_TAP_AREA,
         hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={() => step(Boolean(isUp))}
