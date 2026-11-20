@@ -5,6 +5,8 @@ const config = {
   plugins: {
     tailwindcss: {},
     './scripts/postcss-layout-unit.js': {},
+    // Every hand-written :hover rule inside @media (hover: hover) (CON-15 A7, scripts/postcss-hover-media.js).
+    './scripts/postcss-hover-media.js': {},
   },
 };
 
