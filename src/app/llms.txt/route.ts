@@ -1,5 +1,5 @@
 import { fetchInsightsWithGeo, fetchPodcastList } from '@/apis';
-import { portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioData';
+import { portfolioChineseMarkdownLines, portfolioMarkdownLines } from '@/app/portfolio/_components/portfolioProfiles';
 import { PODCAST_COVER, PODCAST_METADATA, PODCAST_NAV_LIST, type PodcastNavItem } from '@/app/podcast/_components/constant';
 import { FUND_PRESS, PORTFOLIO_PRESS, pressMarkdownLines } from '@/constants/press';
 import { absoluteUrl } from '@/constants/site';
@@ -62,12 +62,13 @@ export async function GET() {
 
   const body = [
     LLMS_HEADER,
-    section('Portfolio', portfolioMarkdownLines()),
+    section('Portfolio', portfolioMarkdownLines({ detailed: true })),
     section('Press releases', pressMarkdownLines(FUND_PRESS)),
     section('Portfolio company news', pressMarkdownLines(PORTFOLIO_PRESS)),
     section('Latest news', news),
     podcasts,
     LLMS_CHINESE_SUMMARY,
+    section('投资组合公司', portfolioChineseMarkdownLines()),
   ]
     .filter(Boolean)
     .join('\n');

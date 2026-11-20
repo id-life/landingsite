@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import Style from '@/app/(home)/_components/Style';
 import ClientNav from '@/components/nav/CilentNav';
 import type { Metadata } from 'next';
-import { getPortfolioJsonLd } from './_components/portfolioData';
+import { getPortfolioJsonLd } from './_components/portfolioProfiles';
 import PortfolioSEO from './_components/PortfolioSEO';
 
 export const metadata: Metadata = {
