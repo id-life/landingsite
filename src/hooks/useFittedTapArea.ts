@@ -83,10 +83,19 @@ const onTouchStart = () => {
 /**
  * Keeps a small control's touch area (tap-area, ::before) to the space that is nobody's (fitTapArea), measured from
  * the page on mount, one and three seconds later, when its parent changes size, on every window resize, and at the
- * start of every touch. Pair it with FITTED_TAP_AREA. Until it has measured, the area is the control's own box.
+ * start of every touch, and when `refitKey` changes. Pair it with FITTED_TAP_AREA. Until it has measured, the area is the control's own box.
  */
-export function useFittedTapArea<T extends HTMLElement>() {
+export function useFittedTapArea<T extends HTMLElement>(refitKey?: string) {
   const ref = useRef<T>(null);
+  // A control whose own look changes with the page without changing its size (the phone's pager arrows take a border on
+  // the light sections) is fitted again when that changes: its key changes with it. Nothing else would refit it then
+  // (no resize of it or its parent), and the area kept the previous section's border (2 px short, or 2 px over).
+  useEffect(() => {
+    const element = ref.current;
+    if (refitKey === undefined || !element) return;
+    const frame = requestAnimationFrame(() => fit(element));
+    return () => cancelAnimationFrame(frame);
+  }, [refitKey]);
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
