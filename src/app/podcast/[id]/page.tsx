@@ -20,7 +20,7 @@ export const revalidate = 300; // 5min
 export const dynamicParams = true;
 export const dynamic = 'force-static';
 
-// Episode ids are numbers. Anything else (/podcast/abc, /podcast/56abc, /podcast/1.5, /podcast/rss) is a 404
+// Episode ids are numbers. Anything else (/podcast/abc, /podcast/56abc, /podcast/1.5, /podcast/feed) is a 404
 // without asking the API, which answers those with HTTP 400 (that used to surface as a 500).
 const EPISODE_ID = /^\d+$/;
 
