@@ -3,9 +3,10 @@
 // Both are kept exactly as published through `inProfile` / `onSpectrum` until the owner rules (CON-11 #5, #8);
 // test/content-parity.test.mjs names the entries that differ.
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { Grant } from './schema';
 
-export const GRANTS: Grant[] = [
+export const GRANTS: Grant[] = byOrigin('content/grants.ts', [
   {
     slug: 'ardd',
     name: 'ARDD',
@@ -246,7 +247,7 @@ export const GRANTS: Grant[] = [
     onSpectrum: false,
     approval: live(),
   },
-];
+]);
 
 /** The profile's list (llms.txt, the article): 21 entries at the baseline. */
 export const PROFILE_GRANTS = GRANTS.filter((grant) => grant.inProfile);

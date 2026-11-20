@@ -2,9 +2,10 @@
 // The organisation description still lists six areas (owner ruling pending, CON-11 #7); the plan's recommendation is
 // the four themes, so new placements use these.
 import { live } from './approval';
+import { byOrigin } from './origin';
 import type { Theme } from './schema';
 
-export const THEMES: Theme[] = [
+export const THEMES: Theme[] = byOrigin('content/themes.ts', [
   { slug: 'replacement-strategy', order: 1, name: { en: 'Replacement Strategy', zh: '替换策略' }, approval: live() },
   {
     slug: 'neuro-brain-rejuvenation',
@@ -14,4 +15,4 @@ export const THEMES: Theme[] = [
   },
   { slug: 'cells-gene-therapy', order: 3, name: { en: 'Cells and Gene Therapy', zh: '细胞与基因疗法' }, approval: live() },
   { slug: 'reproduction-technology', order: 4, name: { en: 'Reproduction Technology', zh: '生殖技术' }, approval: live() },
-];
+]);

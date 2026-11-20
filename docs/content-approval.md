@@ -43,4 +43,14 @@ statement. It is `noindex` and linked from nowhere.
    decision and its date in a comment beside the value.
 4. `npm test` and `npm run build`. The parity tests tell you which other copies must change in the same commit.
 
+## Approved by origin
+
+The owner's own unchanged words are approved by origin (lead's ruling, 2026-11-20). Nobody writes such an approval:
+`node scripts/prove-origin.mjs --label "<origin>" --source <the original's source tree> --served <his site's URL>`
+compares each record's drawn text with the origin, word for word, and writes `src/content/origin-proof.json` (the
+origin, the date, a fingerprint per proven record). `src/content/origin.ts` stamps a record `approved`
+(`approvedBy: "by origin: <origin>"`, `approvedAt: <date of the proof>`) only while its fingerprint matches, so any
+edit drops it back to `legacy` until the script is run again. A record with a word that is not his, or one awaiting a
+ruling, is never stamped; the script lists them. `test/content-origin.test.mjs` proves the rules.
+
 Approvals are recorded in git history: the commit that flips a record to `approved` is the audit trail.
