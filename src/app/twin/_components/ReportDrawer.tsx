@@ -1,4 +1,6 @@
 import { Drawer } from 'vaul';
+// After vaul: its injected :hover rule moves inside @media (hover: hover) (CON-15 A7).
+import '@/lib/vaul-hover-media';
 import { useState, type ReactNode } from 'react';
 import clsx from 'clsx';
 import SwitchLanguage from './SwitchLanguage';

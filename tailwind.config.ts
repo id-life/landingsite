@@ -20,6 +20,9 @@ const motionEases = Object.fromEntries([...Object.keys(EASE_POINTS), 'linear'].m
 // Tailwind's palette (theme.extend would keep it: red-600 would silently fall back to #dc2626), so a colour that is
 // not a token has no utility. The markdown palette (md-*) is CSS-only.
 const config: Config = {
+  // CON-15 A7: hover variants only where the primary pointer can hover ((hover: hover) and (pointer: fine)), so a tap
+  // on a touch screen never leaves a hover state behind; hand-written :hover rules: scripts/postcss-hover-media.js.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
