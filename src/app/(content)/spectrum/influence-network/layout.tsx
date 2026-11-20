@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import INStyle from '@/app/spectrum/_components/INStyle';
 import SiteHeader from '@/components/site/SiteHeader';
+import HiddenSectionsNav from '@/components/site/HiddenSectionsNav';
 import SubscribePopup from '@/components/layout/footer/SubscribePopup';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -49,6 +50,7 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
           action="exit"
           className="fixed left-0 top-0 z-[100] p-10 mobile:p-5"
         />
+        <HiddenSectionsNav />
         <SubscribePopup />
         {children}
       </div>

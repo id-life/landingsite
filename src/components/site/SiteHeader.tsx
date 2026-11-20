@@ -179,9 +179,14 @@ export default function SiteHeader({
           )}
         >
           {action === 'exit' ? (
+            // The site's same-tab rule gives way to the original here: his ID.LIFE opens the site in a new tab (the
+            // owner's answer 5d, "open new tab", and his site the reference for this link).
+            // eslint-disable-next-line no-restricted-syntax
             <Link
               prefetch={false}
               href="/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group pointer-events-auto relative flex h-10 w-33 cursor-pointer items-center justify-center text-sm font-semibold uppercase text-foreground transition-colors duration-300 tap-area hover:stroke-accent hover:text-accent mobile:h-8 mobile:w-24 mobile:text-xs/5"
             >
               <SubscribeBorderSVG className="absolute left-0 top-0 size-full stroke-foreground duration-300 group-hover:stroke-accent" />
