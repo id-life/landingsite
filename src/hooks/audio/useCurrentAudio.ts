@@ -190,10 +190,12 @@ export default function useCurrentAudio() {
       primedAudio = null;
       audio.src = currentAudio.url;
     } else {
-      // preload 'none': nothing is downloaded until the visitor presses play (the first track is 5.6 MB).
+      // The first track of a page load asks only for its metadata (the start of the file), so that the first click can
+      // start it at once; nothing more is downloaded until it plays. Any other track is created as it is chosen or
+      // reached and plays at once, so it asks for nothing ahead of that.
       audio = new Audio();
       audio.crossOrigin = 'anonymous';
-      audio.preload = 'none';
+      audio.preload = firstOfPageLoad && !startOnLoad ? 'metadata' : 'none';
       audio.src = currentAudio.url;
     }
 
@@ -280,7 +282,9 @@ export default function useCurrentAudio() {
         source.connect(analyser);
         analyser.connect(audioContext.destination);
       }
-      if (!pausedByVisitor) dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.AUTO });
+      // Only an element that was asked to play goes on playing here (metadata now arrives for the first track before
+      // any input, and must not start it).
+      if (!pausedByVisitor && !audio.paused) dispatch({ type: AUDIO_DISPATCH.PLAY, value: PLAY_TRIGGER.AUTO });
     };
 
     if (isPreloaded && audio.readyState >= 1) {
