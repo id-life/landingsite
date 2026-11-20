@@ -19,11 +19,11 @@ export default function Breadcrumb({ items, className }: { items: Crumb[]; class
           return (
             <Fragment key={`${item.label}-${index}`}>
               {index > 0 && (
-                <li aria-hidden="true" className="text-ink-muted">
+                <li aria-hidden="true" className="text-black/50">
                   &gt;
                 </li>
               )}
-              <li className={cn(current && index > 0 && 'text-ink-muted')} aria-current={current ? 'page' : undefined}>
+              <li className={cn(current && index > 0 && 'text-black/50')} aria-current={current ? 'page' : undefined}>
                 {item.href ? (
                   <Link prefetch={false} href={item.href}>
                     {item.label}
