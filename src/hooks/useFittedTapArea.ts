@@ -55,9 +55,19 @@ function fit(element: HTMLElement) {
   const box = element.getBoundingClientRect();
   if (!box.width) return;
   const grow = fitTapArea(box, neighbours(element, box));
+  // The area (a ::before or an absolute child) is placed from the padding edge, so each side's border is added back.
+  const style = getComputedStyle(element);
+  const border = {
+    left: style.borderLeftWidth,
+    top: style.borderTopWidth,
+    right: style.borderRightWidth,
+    bottom: style.borderBottomWidth,
+  };
   for (const side of ['left', 'top', 'right', 'bottom'] as const) {
-    element.style.setProperty(`--tap-${side}`, `${grow[side].toFixed(1)}px`);
+    element.style.setProperty(`--tap-${side}`, `${(grow[side] + (parseFloat(border[side]) || 0)).toFixed(2)}px`);
   }
+  // The whole vertical growth taken upwards, for an area whose bottom is covered by what is drawn below it.
+  element.style.setProperty('--tap-up', `${(grow.top + grow.bottom + (parseFloat(border.top) || 0)).toFixed(2)}px`);
 }
 
 /**
