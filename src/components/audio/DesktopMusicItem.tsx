@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
 import WaveSurfer from 'wavesurfer.js';
 import { AudioDataItem } from '@/apis/types';
-import { audioControlsAtom, currentPlayStatusAtom } from '@/atoms/audio-player';
+import { currentPlayStatusAtom, currentTimeAtom } from '@/atoms/audio-player';
+import { jotaiStore } from '@/atoms';
 
 import { color } from '@/styles/tokens';
 
@@ -16,7 +17,6 @@ type DesktopMusicItemProps = {
 };
 
 function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }: DesktopMusicItemProps) {
-  const controls = useAtomValue(audioControlsAtom);
   const playStatus = useAtomValue(currentPlayStatusAtom);
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -52,12 +52,13 @@ function DesktopMusicItem({ onClick, data, currentMusicId, onSeekTo, className }
     [],
   );
 
+  // The waveform follows the playing time without re-rendering the row: the time is read from the store as it changes.
   useEffect(() => {
-    if (!wavesurferRef.current) return;
-    if (playStatus && isCurrent) {
-      wavesurferRef.current.setTime(controls.currentTime);
-    }
-  }, [playStatus, isCurrent, controls.currentTime]);
+    if (!playStatus || !isCurrent) return;
+    const follow = () => wavesurferRef.current?.setTime(jotaiStore.get(currentTimeAtom));
+    follow();
+    return jotaiStore.sub(currentTimeAtom, follow);
+  }, [playStatus, isCurrent]);
 
   return (
     <div className={className}>

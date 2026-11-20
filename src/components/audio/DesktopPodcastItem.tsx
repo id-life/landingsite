@@ -4,7 +4,8 @@ import dayjs from 'dayjs';
 import { useAtomValue } from 'jotai';
 import { AudioDataItem } from '@/apis/types';
 import dayjsDuration from 'dayjs/plugin/duration';
-import { audioControlsAtom } from '@/atoms/audio-player';
+import { currentTimeAtom, durationAtom, progressAtom } from '@/atoms/audio-player';
+import { jotaiStore } from '@/atoms';
 import OutboundLink from '@/lib/analytics/outbound';
 import { safeHref } from '@/utils/safe-href';
 
@@ -18,15 +19,52 @@ type DesktopPodcastItemProps = {
   className?: string;
 };
 
+/**
+ * The current episode's progress bar and times: the only part of a row that changes as the episode plays, so the only
+ * part that reads the playing time (about four updates a second). The rest of the list does not re-render with it.
+ */
+function EpisodeProgress({ onSeek }: { onSeek: (event: React.MouseEvent<HTMLDivElement>) => void }) {
+  const progress = useAtomValue(progressAtom);
+  const currentTime = useAtomValue(currentTimeAtom);
+  const duration = useAtomValue(durationAtom);
+  return (
+    <>
+      <div
+        onClick={onSeek}
+        className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start mobile:mt-[0.375rem] mobile:h-[1rem]"
+      >
+        <div className="relative h-[2px] w-full bg-tone-650 mobile:h-[0.125rem]">
+          <div
+            style={{ width: `${progress * 100}%` }}
+            className="absolute left-0 top-0 h-[2px] bg-accent mobile:h-[0.125rem]"
+          />
+          <div
+            style={{
+              left: `${progress * 100}%`,
+              background:
+                'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
+            }}
+            className="absolute top-1/2 h-[16px] w-[2px] -translate-y-1/2 mobile:h-[1rem] mobile:w-[0.125rem]"
+          />
+        </div>
+      </div>
+      <div className="mt-[4px] flex items-center justify-between text-xs/[16px] font-medium text-tone-350 mobile:mt-[0.25rem] mobile:text-xs/[1rem]">
+        <p>{dayjs.duration(currentTime, 'seconds').format('mm:ss')}</p>
+        <p>{dayjs.duration(duration, 'seconds').format('mm:ss')}</p>
+      </div>
+    </>
+  );
+}
+EpisodeProgress.displayName = 'EpisodeProgress';
+
 function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className }: DesktopPodcastItemProps) {
   const isCurrent = useMemo(() => currentMusicId === data.id, [currentMusicId, data.id]);
-  const controls = useAtomValue(audioControlsAtom);
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - left;
     const progress = x / width;
-    const seekTo = progress * controls.duration;
+    const seekTo = progress * jotaiStore.get(durationAtom);
     onSeekTo?.(seekTo);
   };
 
@@ -51,33 +89,7 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
           <div className="mt-[2px] line-clamp-2 text-xs/[16px] text-tone-350 mobile:mt-[0.125rem] mobile:text-xs/[1rem]">
             {data.description}
           </div>
-          {isCurrent ? (
-            <>
-              <div
-                onClick={handleProgressChange}
-                className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start mobile:mt-[0.375rem] mobile:h-[1rem]"
-              >
-                <div className="relative h-[2px] w-full bg-tone-650 mobile:h-[0.125rem]">
-                  <div
-                    style={{ width: `${controls.progress * 100}%` }}
-                    className="absolute left-0 top-0 h-[2px] bg-accent mobile:h-[0.125rem]"
-                  />
-                  <div
-                    style={{
-                      left: `${controls.progress * 100}%`,
-                      background:
-                        'linear-gradient(180deg, rgba(193, 17, 17, 0) 0%, var(--color-accent) 50%, rgba(193, 17, 17, 0) 100%)',
-                    }}
-                    className="absolute top-1/2 h-[16px] w-[2px] -translate-y-1/2 mobile:h-[1rem] mobile:w-[0.125rem]"
-                  />
-                </div>
-              </div>
-              <div className="mt-[4px] flex items-center justify-between text-xs/[16px] font-medium text-tone-350 mobile:mt-[0.25rem] mobile:text-xs/[1rem]">
-                <p>{dayjs.duration(controls.currentTime, 'seconds').format('mm:ss')}</p>
-                <p>{dayjs.duration(controls.duration, 'seconds').format('mm:ss')}</p>
-              </div>
-            </>
-          ) : null}
+          {isCurrent ? <EpisodeProgress onSeek={handleProgressChange} /> : null}
           <div className="mt-[8px] flex items-center justify-between mobile:mt-[0.5rem]">
             <div className="flex-center gap-[4px] text-xs/[16px] font-medium text-tone-500 mobile:gap-[0.25rem] mobile:text-xs/[1rem]">
               <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>

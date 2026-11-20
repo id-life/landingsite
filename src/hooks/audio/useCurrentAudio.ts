@@ -120,7 +120,9 @@ export default function useCurrentAudio() {
   const setDuration = useSetAtom(durationAtom);
   const setPlayStatus = useSetAtom(currentPlayStatusAtom);
 
-  const [controls, dispatch] = useAtom(audioControlsAtom);
+  // Writes only: the time and progress change about four times a second while music plays, and the player itself shows
+  // neither; the components that draw them (the playlist's current row) read them on their own.
+  const dispatch = useSetAtom(audioControlsAtom);
   const playNextTrack = useSetAtom(playNextTrackAtom);
   const determineNextTrack = useSetAtom(determineNextTrackAtom);
 
@@ -460,8 +462,8 @@ export default function useCurrentAudio() {
       get audioContext() {
         return getAudioContext();
       },
-      ...controls,
+      isPlaying: playStatus,
     }),
-    [controls, currentAudio, dispatch],
+    [currentAudio, dispatch, playStatus],
   );
 }
