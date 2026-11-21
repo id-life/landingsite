@@ -522,7 +522,11 @@ function PhoneSpectrum() {
               animate="visible"
               exit="exit"
               transition={reduceMotion ? MOTION.instant : MOTION.pageStep}
-              className="absolute inset-0 flex flex-col [justify-content:safe_center]"
+              // On a short window (under 480 px tall) a page can hold more than its frame: the papers page with
+              // "more" pressed has six papers in two rows under 140 px of frame at 640x360, at his 13 px. There the
+              // page scrolls inside its frame (the deck's swipe scrolls a scroller before it changes the section, as
+              // Insights' column does); safe centring keeps its top in reach. Taller windows are unchanged.
+              className="absolute inset-0 flex flex-col [justify-content:safe_center] shortScreen:overflow-y-auto"
             >
               {page.kind === 'sponsors' ? (
                 <MobileSpectrumSponsorPage
