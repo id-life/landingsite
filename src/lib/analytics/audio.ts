@@ -52,7 +52,7 @@ export function bindAudioAnalytics(audio: MediaLike, target: AudioTarget, state:
     if (audio.paused || audio.seeking) return;
     if (step > 0 && step <= MAX_STEP_S) state.listened += step;
     const total = duration();
-    if (!state.played && state.listened >= Math.min(PLAY_AFTER_S, total > 0 ? total / 2 : PLAY_AFTER_S)) {
+    if (!state.played && state.listened >= PLAY_AFTER_S) {
       state.played = true;
       track('podcast_play', { episode_id, show, source });
     }

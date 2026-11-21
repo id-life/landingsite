@@ -119,14 +119,6 @@ describe('podcast listening from the media element', () => {
     expect(names().filter((n) => n === 'podcast_play')).toHaveLength(1);
   });
 
-  test('a short episode counts as played at half its length', () => {
-    const a = fakeAudio(20);
-    bindAudioAnalytics(a, target, newListenState());
-    a.play();
-    a.advance(11);
-    expect(names()).toContain('podcast_play');
-  });
-
   test('after the teardown nothing is listened to', () => {
     const a = fakeAudio(100);
     const stop = bindAudioAnalytics(a, target, newListenState());
