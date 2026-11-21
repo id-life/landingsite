@@ -3,6 +3,7 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { currentPageIndexAtom } from '@/atoms/nav';
+import { globalLoadedAtom } from '@/atoms/geo';
 import { NAV_LIST } from '@/components/nav/nav';
 import { sectionStateAtom } from '@/motion/sectionController';
 
@@ -28,7 +29,14 @@ export function useTwinStageWanted(): boolean {
   const { index, target } = useAtomValue(sectionStateAtom);
   // The section a scroll or a section's own trigger reports, which can run ahead of the controller's index.
   const current = useAtomValue(currentPageIndexAtom);
-  const wanted = twinStageNear({ index, target }) || twinStageNear({ index: current, target: current });
+  // Before the loader leaves, the section state has not followed a direct landing yet (it still reads Mission): the
+  // landed address counts, so the avatar loads behind the loader as before MOT-09, not after it.
+  const revealed = useAtomValue(globalLoadedAtom);
+  const landed = typeof window === 'undefined' ? -1 : NAV_LIST.findIndex((item) => item.href === window.location.pathname);
+  const wanted =
+    twinStageNear({ index, target }) ||
+    twinStageNear({ index: current, target: current }) ||
+    (!revealed && landed >= 0 && twinStageNear({ index: landed, target: landed }));
   // Kept for TWIN_STAGE_RELEASE_MS after the last reason ends; not mounted at all if there never was one.
   const [expired, setExpired] = useState(!wanted);
   if (wanted && expired) setExpired(false);
