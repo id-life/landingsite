@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { Particle } from './particle-stuct';
 import { loadParticlePoints, ParticlePoints, samplePixels } from './particle-points';
 import { isReducedMotion } from '@/motion/preference';
-import { particleTouchBudget } from './particle-device';
+import { particlePhoneBudget } from './particle-device';
 
 export const fundLogoLength = 2;
 
@@ -44,7 +44,7 @@ const DynamicParticleGL = ({
         if (target && canvas.elt.parentElement !== target) canvas.parent(target);
       };
       const allParticles: Particle[] = [];
-      const IS_MOBILE = particleTouchBudget();
+      const IS_MOBILE = particlePhoneBudget();
       const defaultConfig = {
         scaleNum: 1,
         loadPercentage: 0.0007,
