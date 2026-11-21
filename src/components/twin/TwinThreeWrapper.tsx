@@ -1,6 +1,6 @@
 'use client';
 
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
 import EnvironmentGroup, { preloadEnvironmentGroup } from '@/components/twin/EnvironmentGroup';
@@ -41,8 +41,11 @@ import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import FrameDriver from '@/components/gl/FrameDriver';
 import { useGpuTier } from '@/motion/gpuTier';
-import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
-import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
+import GLBoundary, { ModelBoundary, onCanvasCreated, ReleaseOnUnmount } from '@/components/gl/GLBoundary';
+import { TWIN, useTwinStageWanted } from './twinStage';
+import { isTwinAvatarDrawn, setTwinAvatarDrawn, TWIN_COVER_LIMIT_MS, whenTwinAvatarDrawn } from './twinReady';
+import { registerCoverHold } from '@/motion/coverHold';
+import { DeferredSettled, useDeferredAssets, useDeferredWarm, useFirstInputAfterReveal } from '@/hooks/useDeferredAssets';
 
 /** The avatar's field of view: the original's 45 degrees, 15 units away, on every window of the laptop deck. */
 const TWIN_FOV = 45;
@@ -56,14 +59,35 @@ export default function TwinThreeWrapper() {
   // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
   // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
   const deferredReady = useDeferredAssets('twin');
+  // MOT-09: the canvas (a second WebGL context) exists only at or next to the Twin, or on the way there.
+  const stageWanted = useTwinStageWanted();
   // The twin canvas renders as the original did on every device: pixel ratio up to 2, antialiased.
   const { tier, budget } = useGpuTier();
+  // Warmed two sections ahead, or from the visitor's first real input (useDeferredWarm), in idle time so it never
+  // competes with the transition that input started.
   const warm = useDeferredWarm('twin');
   useEffect(() => {
     if (!warm) return;
-    preloadModel0Out();
-    preloadEnvironmentGroup();
+    const start = () => {
+      preloadModel0Out();
+      preloadEnvironmentGroup();
+    };
+    if (typeof window.requestIdleCallback !== 'function') return void setTimeout(start, 200);
+    const id = window.requestIdleCallback(start, { timeout: 2000 });
+    return () => window.cancelIdleCallback(id);
   }, [warm]);
+  // Once the visitor has used the page, the Views mount whenever the canvas does (at a far jump's click, not on
+  // arrival), and never wait behind Connect's jellyfish (useDeferredAssets' 15 s wait for the nearer group).
+  const used = useFirstInputAfterReveal();
+  const viewsReady = deferredReady || (stageWanted && used);
+  // A far jump to the Twin keeps its cover until the avatar has been drawn, within TWIN_COVER_LIMIT_MS.
+  useEffect(
+    () =>
+      registerCoverHold(TWIN, (limited) =>
+        isTwinAvatarDrawn() ? null : whenTwinAvatarDrawn(limited ? TWIN_COVER_LIMIT_MS : Infinity),
+      ),
+    [],
+  );
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
@@ -271,28 +295,31 @@ export default function TwinThreeWrapper() {
         }}
       >
         <GLBoundary canvas="twin">
-          <Canvas
-            id="model-canvas"
-            frameloop="never"
-            onCreated={onCanvasCreated('twin')}
-            dpr={[1, budget.dprCap]}
-            data-tier={tier}
-            data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
-            gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
-            style={{
-              pointerEvents: 'none',
-              position: 'absolute',
-              top: '0px',
-              height: '100vh',
-            }}
-          >
-            <FrameDriver />
-            <Suspense fallback={<Loader />}>
-              <View.Port />
-            </Suspense>
-          </Canvas>
+          {stageWanted && (
+            <Canvas
+              id="model-canvas"
+              frameloop="never"
+              onCreated={onCanvasCreated('twin')}
+              dpr={[1, budget.dprCap]}
+              data-tier={tier}
+              data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
+              gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
+              style={{
+                pointerEvents: 'none',
+                position: 'absolute',
+                top: '0px',
+                height: '100vh',
+              }}
+            >
+              <FrameDriver />
+              <ReleaseOnUnmount />
+              <Suspense fallback={<Loader />}>
+                <View.Port />
+              </Suspense>
+            </Canvas>
+          )}
           {/* Avatar, anatomy models and the HDR load on approach (about 6 MB), never with the hero. */}
-          {deferredReady && (
+          {viewsReady && (
             <>
               {currentModel && (
                 <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
@@ -313,6 +340,7 @@ export default function TwinThreeWrapper() {
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[0]} />
                   <DeferredSettled group="twin" />
+                  <AvatarDrawn />
                 </View>
               )}
               {currentModel === PredictionModel.M1 && (
@@ -381,4 +409,35 @@ export default function TwinThreeWrapper() {
       </div>
     </div>
   );
+}
+
+/**
+ * Inside the avatar's View: the View's content mounts only once everything in it has loaded (one Suspense for the
+ * whole canvas), so the second frame this component sees is a frame drawn with the avatar. It tells the far-jump
+ * cover (twinReady) and leaves a performance mark for probes; unmounted (the canvas released), the avatar is gone.
+ */
+function AvatarDrawn() {
+  const frames = useRef(0);
+  const advance = useThree((state) => state.advance);
+  useFrame(() => {
+    frames.current += 1;
+    if (frames.current !== 2) return;
+    setTwinAvatarDrawn(true);
+    performance.mark('twin-avatar-drawn');
+  });
+  // The frame driver draws only a canvas that can be seen, and behind the first-visit loader the stage is still
+  // hidden: the first two frames are drawn here once, whatever the stage's visibility, so the shaders and textures are
+  // ready (and the cover or loader waiting for them can lift) before the stage is shown. Two frames, once per mount:
+  // nothing keeps drawing, so the idle rule is untouched.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      if (frames.current >= 2) return;
+      const now = performance.now() / 1000;
+      advance(now);
+      advance(now + 1 / 60);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [advance]);
+  useEffect(() => () => setTwinAvatarDrawn(false), []);
+  return null;
 }

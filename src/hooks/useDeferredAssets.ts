@@ -1,7 +1,8 @@
 'use client';
 
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { onFirstInput } from '@/components/twin/twinReady';
 import { globalLoadedAtom } from '@/atoms/geo';
 import { DeferredGroup, deferredSettledAtom, furthestSectionAtom } from '@/atoms/loading';
 import { currentPageIndexAtom, mobileCurrentPageIndexAtom } from '@/atoms/nav';
@@ -84,14 +85,48 @@ export function useDeferredAssets(group: DeferredGroup) {
   return startedRef.current;
 }
 
+// The visitor's first real input after the loader has left (a press, a key, a wheel step or a touch; a pointer that
+// only moves does not count). Listening starts when the loader leaves, so nothing done before it counts.
+let firstInput = false;
+let listening = false;
+const firstInputListeners = new Set<() => void>();
+function subscribeFirstInput(listener: () => void) {
+  firstInputListeners.add(listener);
+  return () => void firstInputListeners.delete(listener);
+}
+function listenForFirstInput() {
+  if (listening || firstInput || typeof window === 'undefined') return;
+  listening = true;
+  onFirstInput(window, () => {
+    firstInput = true;
+    firstInputListeners.forEach((listener) => listener());
+  });
+}
+
+/** True once the visitor has used the page (a press, a key, a wheel step or a touch) after the loader left. */
+export function useFirstInputAfterReveal() {
+  const globalLoaded = useAtomValue(globalLoadedAtom);
+  useEffect(() => {
+    if (globalLoaded) listenForFirstInput();
+  }, [globalLoaded]);
+  return useSyncExternalStore(
+    subscribeFirstInput,
+    () => firstInput,
+    () => false,
+  );
+}
+
 /**
- * True when the visitor is two sections away from `group` and moving forward, on a connection
- * without Save-Data: time to warm its files into the loader cache before they are mounted.
+ * True when it is time to warm `group`'s files into the loader cache before they are mounted, on a connection
+ * without Save-Data: the visitor is two sections away and moving forward, or, for the Digital Twin, has used the page
+ * at all (MOT-09: a far jump from the menu moves the furthest section straight to the Twin, so the approach rule fired
+ * only as the jump began and the stage was uncovered empty; the original has the avatar loaded by then).
  */
 export function useDeferredWarm(group: DeferredGroup) {
   const globalLoaded = useAtomValue(globalLoadedAtom);
   const furthest = useFurthestSection();
-  return globalLoaded && furthest >= SECTION[group] - 2 && !saveData();
+  const used = useFirstInputAfterReveal();
+  return globalLoaded && (furthest >= SECTION[group] - 2 || (group === 'twin' && used)) && !saveData();
 }
 
 /** Rendered inside a group's Suspense boundary: marks the group loaded once its content commits. */

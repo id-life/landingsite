@@ -1,5 +1,6 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { heroReadyAtom, serverLoaderHandedOverAtom } from '@/atoms/loading';
+import { landingReadiness } from '@/motion/coverHold';
 import { jotaiStore } from '@/atoms/store';
 import { ensureDesktopUIVisible, ensureMobileUIVisible } from '@/utils/ui';
 import Background from '@/components/common/Background';
@@ -132,7 +133,15 @@ export const OuterLoader = memo(function OuterLoader() {
     if (!heroReady || !show || exitingRef.current) return;
     exitingRef.current = true;
     reportExperienceReady({ failOpen: false, mountedAt: mountedAtRef.current });
-    loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, () => {
+    // As on his site, the fill starts only once what the mounted scenes need is in: on a direct landing on a section
+    // that has its own readiness (the Digital Twin: its avatar's first frames, drawn behind the loader), the hero's AND
+    // that section's. Then his fill, fade and intro run exactly as on every other address. No limit here: the loader's
+    // own fail-open (LOADER_TIMEOUT_MS) covers a load that never ends.
+    const landing = landingReadiness();
+    const fill = () => loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, leave);
+    if (landing) void landing.then(fill);
+    else fill();
+    function leave() {
       const finish = () => {
         setIsLoadingUI(true);
         setGlobalLoaded(true);
@@ -144,7 +153,7 @@ export const OuterLoader = memo(function OuterLoader() {
         return;
       }
       gsap.to(logo, { opacity: 0, duration: INTRO.loaderFadeSeconds, ease: INTRO.defaultEase, onComplete: finish });
-    });
+    }
   }, [heroReady, setGlobalLoaded, setIsLoadingUI, show]);
 
   useEffect(() => {

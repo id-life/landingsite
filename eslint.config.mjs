@@ -57,7 +57,71 @@ const restrictedSyntax = [
   },
 ];
 
+// MOT-10: GSAP animates transform and opacity only. A layout property (width, height, left, top, right, bottom) in a
+// tween makes the browser lay the page out again on every frame; x, y, scale and clip-path move the same pixels on
+// the compositor.
+const GSAP_LAYOUT_KEY = '/^(width|height|left|top|right|bottom)$/';
+const GSAP_LAYOUT_MESSAGE =
+  'No GSAP tween of a layout property (MOT-10): animate x, y, scale or clip-path instead of width, height, left, top, right or bottom.';
+export const GSAP_LAYOUT_RULES = [
+  {
+    selector: `CallExpression[callee.property.name=/^(to|from|fromTo|set)$/] > ObjectExpression > Property[key.name=${GSAP_LAYOUT_KEY}]`,
+    message: GSAP_LAYOUT_MESSAGE,
+  },
+  {
+    selector: `CallExpression[callee.property.name=/^(to|from|fromTo|set)$/] > ObjectExpression > Property[key.value=${GSAP_LAYOUT_KEY}]`,
+    message: GSAP_LAYOUT_MESSAGE,
+  },
+  {
+    selector: `CallExpression[callee.property.name=/^(quickTo|quickSetter)$/] > Literal:nth-child(2)[value=${GSAP_LAYOUT_KEY}]`,
+    message: GSAP_LAYOUT_MESSAGE,
+  },
+];
+restrictedSyntax.push(...GSAP_LAYOUT_RULES);
+const isGsapLayoutRule = (rule) => GSAP_LAYOUT_RULES.includes(rule);
+
+// The layout tweens that predate the rule (2026-11-21), by file. Each is converted to transform or clip-path (MOT-10)
+// and its file leaves this list; test/gsap-layout-keys.test.mjs fails while a listed file has none left.
+export const GSAP_LAYOUT_TWEEN_FILES = [
+  // The Digital Twin's stage and controls (image height, controls' left, top and bottom).
+  'src/app/twin/Twin.tsx',
+  'src/app/twin/_components/SwitchModel.tsx',
+  'src/app/twin/_components/SwitchSkin.tsx',
+  'src/app/twin/twin-deck.ts',
+  'src/components/twin/Loader.tsx',
+  // The Influence Network form's panels (bottom, top).
+  'src/components/character-relation/BePartOfIt.tsx',
+  'src/components/character-relation/CharacterRelation.tsx',
+  // The scroll and START ripples (width, height).
+  'src/components/common/ScrollButton.tsx',
+  'src/components/common/StartButton.tsx',
+  // The comparison slider (width).
+  'src/components/compare/compare.tsx',
+  // Connect's contact band (bottom).
+  'src/hooks/connectGL/useConnectCrossAnimations.ts',
+];
+
 const isMotionRule = (rule) => /MOT-08/.test(rule.message);
+
+// Positional NAV_LIST[<number>] lookups that predate the ban (2026-11-15). They point at the right sections today;
+// convert each to NAV.<id> and remove the file from this list.
+const NAV_LIST_FILES = [
+  'src/app/connect/Connect.tsx',
+  'src/app/portfolio/_components/Portfolio.tsx',
+  'src/app/vision/_components/MobileVision.tsx',
+  'src/atoms/nav.ts',
+  'src/components/common/StartButton.tsx',
+  'src/components/common/FixedUI.tsx',
+  'src/components/common/ScrollButton.tsx',
+  'src/components/common/VerticalCarousel.tsx',
+  'src/components/gl/ConnectGL.tsx',
+  'src/components/gl/MobileThreeWrapper.tsx',
+  'src/components/gl/MobileVisionGL.tsx',
+  'src/components/gl/VisionGL.tsx',
+  'src/components/gl/model/vision/DragonModel.tsx',
+  'src/hooks/anim/useHomeAnimations.tsx',
+  'src/hooks/useMobileNavigation.tsx',
+];
 
 // Every rule above except the NAV_LIST one (a later config replaces the whole rule).
 const restrictedSyntaxWithoutNavList = restrictedSyntax.filter(
@@ -128,27 +192,22 @@ export default defineConfig([
     rules: { 'no-restricted-imports': 'off' },
   },
   {
-    // Positional NAV_LIST[<number>] lookups that predate the ban (2026-11-15). They point at the right
-    // sections today; convert each to NAV.<id> and remove the file from this list.
-    files: [
-      'src/app/connect/Connect.tsx',
-      'src/app/portfolio/_components/Portfolio.tsx',
-      'src/app/vision/_components/MobileVision.tsx',
-      'src/atoms/nav.ts',
-      'src/components/common/StartButton.tsx',
-      'src/components/common/FixedUI.tsx',
-      'src/components/common/ScrollButton.tsx',
-      'src/components/common/VerticalCarousel.tsx',
-      'src/components/gl/ConnectGL.tsx',
-      'src/components/gl/MobileThreeWrapper.tsx',
-      'src/components/gl/MobileVisionGL.tsx',
-      'src/components/gl/VisionGL.tsx',
-      'src/components/gl/model/vision/DragonModel.tsx',
-      'src/hooks/anim/useHomeAnimations.tsx',
-      'src/hooks/useMobileNavigation.tsx',
-    ],
+    files: NAV_LIST_FILES,
     rules: { 'no-restricted-syntax': ['error', ...restrictedSyntaxWithoutNavList] },
   },
+  // A listed file keeps every other rule (and, where it is also on the NAV_LIST list, still skips that one).
+  ...GSAP_LAYOUT_TWEEN_FILES.map((file) => ({
+    files: [file],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...restrictedSyntax.filter(
+          (rule) =>
+            !isGsapLayoutRule(rule) && !(NAV_LIST_FILES.includes(file) && !restrictedSyntaxWithoutNavList.includes(rule)),
+        ),
+      ],
+    },
+  })),
   {
     // The motion token module defines the literals everyone else uses.
     files: ['src/motion/**'],
