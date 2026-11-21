@@ -43,9 +43,9 @@ import FrameDriver from '@/components/gl/FrameDriver';
 import { useGpuTier } from '@/motion/gpuTier';
 import GLBoundary, { ModelBoundary, onCanvasCreated, ReleaseOnUnmount } from '@/components/gl/GLBoundary';
 import { TWIN, useTwinStageWanted } from './twinStage';
-import { isTwinAvatarDrawn, onFirstInput, setTwinAvatarDrawn, TWIN_COVER_LIMIT_MS, whenTwinAvatarDrawn } from './twinReady';
+import { isTwinAvatarDrawn, setTwinAvatarDrawn, TWIN_COVER_LIMIT_MS, whenTwinAvatarDrawn } from './twinReady';
 import { registerCoverHold } from '@/motion/coverHold';
-import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
+import { DeferredSettled, useDeferredAssets, useDeferredWarm, useFirstInputAfterReveal } from '@/hooks/useDeferredAssets';
 
 /** The avatar's field of view: the original's 45 degrees, 15 units away, on every window of the laptop deck. */
 const TWIN_FOV = 45;
@@ -63,31 +63,23 @@ export default function TwinThreeWrapper() {
   const stageWanted = useTwinStageWanted();
   // The twin canvas renders as the original did on every device: pixel ratio up to 2, antialiased.
   const { tier, budget } = useGpuTier();
+  // Warmed two sections ahead, or from the visitor's first real input (useDeferredWarm), in idle time so it never
+  // competes with the transition that input started.
   const warm = useDeferredWarm('twin');
   useEffect(() => {
     if (!warm) return;
-    preloadModel0Out();
-    preloadEnvironmentGroup();
+    const start = () => {
+      preloadModel0Out();
+      preloadEnvironmentGroup();
+    };
+    if (typeof window.requestIdleCallback !== 'function') return void setTimeout(start, 200);
+    const id = window.requestIdleCallback(start, { timeout: 2000 });
+    return () => window.cancelIdleCallback(id);
   }, [warm]);
-  // The avatar and its HDR also start loading at the visitor's first real input (a press, a key, a wheel step or a
-  // touch), in idle time so they never compete with the transition that input started; a visitor who never touches
-  // the page loads nothing more. Once started, the Views mount whenever the canvas does, so a jump from far away
-  // finds the avatar loaded or on its way instead of starting it on arrival.
-  const [inputStarted, setInputStarted] = useState(false);
-  useEffect(
-    () =>
-      onFirstInput(window, () => {
-        const start = () => {
-          preloadModel0Out();
-          preloadEnvironmentGroup();
-          setInputStarted(true);
-        };
-        if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(start, { timeout: 2000 });
-        else setTimeout(start, 200);
-      }),
-    [],
-  );
-  const viewsReady = deferredReady || (stageWanted && inputStarted);
+  // Once the visitor has used the page, the Views mount whenever the canvas does (at a far jump's click, not on
+  // arrival), and never wait behind Connect's jellyfish (useDeferredAssets' 15 s wait for the nearer group).
+  const used = useFirstInputAfterReveal();
+  const viewsReady = deferredReady || (stageWanted && used);
   // A far jump to the Twin keeps its cover until the avatar has been drawn, within TWIN_COVER_LIMIT_MS.
   useEffect(() => registerCoverHold(TWIN, () => (isTwinAvatarDrawn() ? null : whenTwinAvatarDrawn(TWIN_COVER_LIMIT_MS))), []);
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
