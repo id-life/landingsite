@@ -22,6 +22,10 @@ import { readImageInfo } from '@/lib/seo/image-info';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
+import { zhLang } from '@/utils/lang';
+
+/** The episode title's look (the h1 stays one line in the source: og-image-alt reads it there). */
+const TITLE_CLASS = 'text-center text-xl font-semibold mobile:text-base';
 
 export const revalidate = 300; // 5min
 export const dynamicParams = true;
@@ -103,6 +107,8 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
     ]),
   ];
 
+  // The title's language for screen readers (ENG-03): zh-CN where it is mostly Chinese; the page's stays en.
+  const titleProps = { lang: zhLang(data.title), className: TITLE_CLASS };
   return (
     <>
       <JsonLd data={jsonLd} />
@@ -110,11 +116,16 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
-          <h1 className="text-center text-xl font-semibold mobile:text-base">{data.title}</h1>
+          <h1 {...titleProps}>{data.title}</h1>
           <PodcastLinks data={data} />
         </div>
         {data?.detailMedia ? <img className="mx-auto h-75 object-cover mobile:h-45" alt="" src={data.detailMedia} /> : null}
-        <div className="my-9 mt-7.5 text-sm font-medium mobile:mb-7.5 mobile:mt-6 mobile:text-xs/4.5">{data.description}</div>
+        <div
+          lang={zhLang(data.description)}
+          className="my-9 mt-7.5 text-sm font-medium mobile:mb-7.5 mobile:mt-6 mobile:text-xs/4.5"
+        >
+          {data.description}
+        </div>
         <PodcastContentTab id={data.id.toString()}>
           <Markdown remarkPlugins={transcriptRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
             {data.transcript}

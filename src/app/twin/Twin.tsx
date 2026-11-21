@@ -129,7 +129,9 @@ function DesktopTwin() {
               <li key={feature}>- {feature}</li>
             ))}
           </ul>
-          <p lang="zh-Hans">{TWIN_FEATURES_CN}</p>
+          <p lang="zh-CN" className="zh-run">
+            {TWIN_FEATURES_CN}
+          </p>
         </div>
         <div className={cn(titleItem, 'twin-title-M0', titleTop)}>
           <img className="w-[325px] xl:w-[363px] 2xl:w-[403px]" src="/svgs/twin/title-ontology.svg" alt="" />

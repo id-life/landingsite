@@ -54,7 +54,7 @@ export default function ConsentBanner() {
             )}
           </h2>
           <p className="mt-1">{en.body}</p>
-          <p lang="zh-CN" className="mt-1">
+          <p lang="zh-CN" className="zh-run mt-1">
             {zh.body}
           </p>
           {CONSENT_COPY.privacyPath && (

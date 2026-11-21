@@ -21,7 +21,14 @@ export const markdownSchema: Schema = {
   tagNames: [...(defaultSchema.tagNames ?? []), 'iframe'],
   attributes: {
     ...defaultSchema.attributes,
-    span: [...(defaultSchema.attributes?.span ?? []), ['className', 'custom-timeline'], 'dataCustomType', 'dataCustomParam'],
+    span: [
+      ...(defaultSchema.attributes?.span ?? []),
+      ['className', 'custom-timeline'],
+      'dataCustomType',
+      'dataCustomParam',
+      ['role', 'button'],
+      'tabIndex',
+    ],
     iframe: [
       ['src', /^https:\/\/www\.youtube(?:-nocookie)?\.com\/embed\//],
       'title',
@@ -48,8 +55,26 @@ function rehypeDropEmptyFrames() {
   return (tree: HastNode) => prune(tree);
 }
 
+/**
+ * ENG-03: a table is a keyboard stop (tabindex 0). On phones the article tables scroll sideways in their own box, and a
+ * scroll box that nothing in it can focus is out of a keyboard user's reach (axe scrollable-region-focusable). Nothing
+ * is drawn until the table has the focus.
+ */
+function rehypeFocusableTables() {
+  const walk = (node: HastNode) => {
+    if (node.type === 'element' && node.tagName === 'table') node.properties = { ...node.properties, tabIndex: 0 };
+    node.children?.forEach(walk);
+  };
+  return (tree: HastNode) => walk(tree);
+}
+
 export const markdownRemarkPlugins: RemarkPlugins = [remarkGfm];
-export const markdownRehypePlugins: RehypePlugins = [rehypeRaw, [rehypeSanitize, markdownSchema], rehypeDropEmptyFrames];
+export const markdownRehypePlugins: RehypePlugins = [
+  rehypeRaw,
+  [rehypeSanitize, markdownSchema],
+  rehypeDropEmptyFrames,
+  rehypeFocusableTables,
+];
 
 type MdNode = {
   type: string;
@@ -62,14 +87,23 @@ type MdNode = {
 
 const TOKEN = /@\[(\w+)]\(([^)]+)\)/;
 
-/** The element the transcript shows for @[type](param): a span whose text is the param. */
+/**
+ * The element the transcript shows for @[type](param): a span whose text is the param, a button for assistive
+ * technology and the keyboard (role button, a Tab stop; Enter and Space act as a click: PodcastContentTab).
+ */
 function timelineNode(type: string, param: string): MdNode {
   return {
     type: 'timeline',
     children: [{ type: 'text', value: param }],
     data: {
       hName: 'span',
-      hProperties: { className: ['custom-timeline'], dataCustomType: type, dataCustomParam: param },
+      hProperties: {
+        className: ['custom-timeline'],
+        dataCustomType: type,
+        dataCustomParam: param,
+        role: 'button',
+        tabIndex: 0,
+      },
     },
   };
 }
