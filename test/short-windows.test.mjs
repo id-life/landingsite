@@ -66,4 +66,14 @@ describe('short windows by the original phone width', () => {
     // A map wider than the window (a near-square short window) is never pushed left of 0.
     expect(offset(500, 470)).toBe(0);
   });
+  test('Influence Network: no compact-height unit or form arrangement of its own, the form over the header', () => {
+    const style = read('src/app/spectrum/_components/INStyle.tsx');
+    expect(style).not.toMatch(/--u:\s*12px/);
+    expect(style).not.toContain('COMPACT_HEIGHT_QUERY');
+    // Only its stacking order is compact-height: the full-window panel lies over the header, as on the original.
+    expect(read('src/components/character-relation/BePartOfIt.tsx').match(/short(Screen|Wide|Narrow):[^\s'"]+/g)).toEqual([
+      'shortScreen:z-[101]',
+    ]);
+    expect(read('src/components/character-relation/BePartOfItInput.tsx')).not.toMatch(/short(Screen|Wide|Narrow):/);
+  });
 });
