@@ -5,9 +5,10 @@ import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { Group } from 'three';
 import gsap from 'gsap';
-import { beats, DURATION, EASE, MAX_TILT, STAGGER } from '@/motion/tokens';
+import { beats, STAGGER } from '@/motion/tokens';
 import { COARSE_POINTER_QUERY, PHONE_TREE_QUERY } from '@/styles/device-classes';
 import { u } from '@/utils/layout-unit';
+import { SECTIONS, TILT } from '@/motion/original';
 
 /** The original's turn into Chinese: each glyph fades in 0.05 s (STAGGER.glyph apart, the original's 0.02 s). */
 const GLYPH_TURN = 0.05;
@@ -44,14 +45,14 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
       motionPath: {
         path: [{ x: -2.38, y: -11.5, z: -4.4 }, { x: -4.8, y: -12.5, z: -4.1 }, { ...page1Config.to.camera.position }],
       },
-      ease: EASE.out,
+      ease: SECTIONS.connectCameraEase,
       duration: beats(30),
     });
     tl.to(camera.rotation, { ...page1Config.to.camera.rotation, duration: beats(30) }, '<');
     tl.fromTo(
       '#fixed-connect-page-1',
       {
-        rotationX: -MAX_TILT,
+        rotationX: -TILT.connectPage,
         rotationY: 0,
         rotationZ: -30,
         z: 100,
@@ -103,8 +104,12 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     // the phone deck, and a touch screen on the laptop deck (a tablet on its side, where his band sits 5 units higher
     // than at the same window with a mouse). Read from the deck and the pointer (RWD-02), not the user agent.
     const raised = window.matchMedia(PHONE_TREE_QUERY).matches || window.matchMedia(COARSE_POINTER_QUERY).matches;
-    gsap.to('.page-footer-contact', { bottom: raised ? u(5) : u(0), duration: DURATION.moderate, ease: EASE.out });
-    gsap.to('.scroll-title', { opacity: 0, duration: DURATION.moderate });
+    gsap.to('.page-footer-contact', {
+      bottom: raised ? u(5) : u(0),
+      duration: SECTIONS.connectFooter.duration,
+      ease: SECTIONS.connectFooter.ease,
+    });
+    gsap.to('.scroll-title', { opacity: 0, duration: SECTIONS.connectFooter.duration });
   };
 
   const playFooterLeaveAnim = () => {
@@ -116,10 +121,10 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     // peeked over the hero on tablets).
     gsap.to('.page-footer-contact', {
       bottom: (_: number, el: HTMLElement) => -(el.offsetHeight + 16),
-      duration: DURATION.moderate,
-      ease: EASE.out,
+      duration: SECTIONS.connectFooter.duration,
+      ease: SECTIONS.connectFooter.ease,
     });
-    gsap.to('.scroll-title', { opacity: 1, duration: DURATION.moderate });
+    gsap.to('.scroll-title', { opacity: 1, duration: SECTIONS.connectFooter.duration });
 
     // 中文标题一个一个消失，然后英文标题一个一个出现
     const title1 = gsap.utils.toArray('.connect-title1 *');
@@ -138,11 +143,16 @@ export const useConnectCrossAnimations = ({ modelRef }: { modelRef: React.RefObj
     const cnDuration = allCnTitles.length * STAGGER.glyph;
     allCnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 0, duration: DURATION.micro, delay: index * STAGGER.glyph, overwrite: 'auto' });
+      gsap.to(item, { opacity: 0, duration: SECTIONS.connectGlyph, delay: index * STAGGER.glyph, overwrite: 'auto' });
     });
     allEnTitles.forEach((item, index) => {
       if (!item) return;
-      gsap.to(item, { opacity: 1, duration: DURATION.micro, delay: cnDuration + index * STAGGER.glyph, overwrite: 'auto' });
+      gsap.to(item, {
+        opacity: 1,
+        duration: SECTIONS.connectGlyph,
+        delay: cnDuration + index * STAGGER.glyph,
+        overwrite: 'auto',
+      });
     });
   };
   // The red English words turn into Chinese, letter by letter, as on the original (the owner's answer 1A, reversing

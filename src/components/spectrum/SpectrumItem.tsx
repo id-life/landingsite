@@ -10,7 +10,8 @@ import { spectrumLinkProps } from './spectrumLinkProps';
 import ArrowSVG from '@/../public/svgs/arrow.svg?component';
 import { SpectrumRouteConfig } from '@/hooks/spectrum/useSpectrumRouter';
 import { trackSpectrumLink } from '@/lib/analytics/spectrum';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
+import { SECTIONS } from '@/motion/original';
 
 /**
  * The page of each group's links ("more" steps through them, 21 at a time), by group title: one of Spectrum's inner
@@ -193,7 +194,7 @@ const SpectrumItem = memo(
             transition={{
               duration: DURATION.base,
               delay: index * 0.05,
-              ease: EASE.out,
+              ease: SECTIONS.spectrumLinksEase,
             }}
           >
             <SpectrumLink
@@ -218,7 +219,7 @@ const SpectrumItem = memo(
             transition={{
               duration: DURATION.base,
               delay: index * 0.05,
-              ease: EASE.out,
+              ease: SECTIONS.spectrumLinksEase,
             }}
           >
             <SpectrumLink

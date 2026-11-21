@@ -5,7 +5,7 @@ import {
   innerPageTotalAtom,
   mobileCurrentPageAtom,
 } from '@/atoms';
-import { PHONE } from '@/motion/original';
+import { PHONE, TILT } from '@/motion/original';
 import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 import Toast from '@/components/common/Toast';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
@@ -15,7 +15,7 @@ import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimatio
 import { useRetimer } from '@/hooks/useRetimer';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 import { isLayoutRefreshing } from '@/motion/sectionController';
-import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
+import { beats } from '@/motion/tokens';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -116,20 +116,31 @@ function DesktopPortfolio() {
       },
     });
     tl.to('#vision-canvas', { zIndex: -1, opacity: 0, duration: beats(2) });
-    // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
+    // As the original: each line rises its own height (the fund a third, the contact a half), tilting in from 45 and 15
+    // degrees.
     tl.fromTo(
       '.page2-title',
-      { y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: (_: number, el: HTMLElement) => el.offsetHeight, rotateX: TILT.entrance.x, rotateY: TILT.entrance.y, opacity: 0 },
       { delay: beats(0.5), y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
     );
     tl.fromTo(
       '.page2-fund',
-      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      {
+        y: (_: number, el: HTMLElement) => el.offsetHeight / 3,
+        rotateX: TILT.entrance.x,
+        rotateY: TILT.entrance.y,
+        opacity: 0,
+      },
       { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
     );
     tl.fromTo(
       '.page2-contact',
-      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      {
+        y: (_: number, el: HTMLElement) => el.offsetHeight / 2,
+        rotateX: TILT.entrance.x,
+        rotateY: TILT.entrance.y,
+        opacity: 0,
+      },
       { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
     );
     // Every arrival lands here (MOT-01): the entrance complete, contact fully shown. A short hold follows, so the

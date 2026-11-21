@@ -8,8 +8,8 @@ import { useAtomValue } from 'jotai';
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { layoutUnitPx } from '@/utils/layout-unit';
 import { NAV_LIST } from '../nav/nav';
-import { EASE } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
+import { SECTIONS } from '@/motion/original';
 
 interface VerticalCarouselProps {
   children: ReactNode[];
@@ -100,7 +100,7 @@ export default function VerticalCarousel({
             {
               opacity: 0,
               duration: transition / 2,
-              ease: EASE.inOut,
+              ease: SECTIONS.carouselEase,
             },
             `item${index}-start`,
           );
@@ -112,7 +112,7 @@ export default function VerticalCarousel({
           {
             y: `-${index * itemHeight}px`,
             duration: transition,
-            ease: EASE.inOut,
+            ease: SECTIONS.carouselEase,
           },
           index > 0 ? `item${index}-start` : undefined,
         )
@@ -129,7 +129,7 @@ export default function VerticalCarousel({
         {
           opacity: 0,
           duration: transition / 2,
-          ease: EASE.inOut,
+          ease: SECTIONS.carouselEase,
         },
         'loop-start',
       );
@@ -140,7 +140,7 @@ export default function VerticalCarousel({
         {
           y: `-${totalItems * itemHeight}px`,
           duration: transition,
-          ease: EASE.inOut,
+          ease: SECTIONS.carouselEase,
           onComplete: () => {
             // 动画完成后立即重置位置到顶部，但不显示这个过程
             if (containerRef.current) {
@@ -160,7 +160,7 @@ export default function VerticalCarousel({
         tl.to(containerRef.current, {
           y: `-${index * itemHeight}px`,
           duration: transition,
-          ease: EASE.inOut,
+          ease: SECTIONS.carouselEase,
         }).to(containerRef.current, {
           duration: duration,
         });
@@ -170,7 +170,7 @@ export default function VerticalCarousel({
       tl.to(containerRef.current, {
         y: `-${totalItems * itemHeight}px`,
         duration: transition,
-        ease: EASE.inOut,
+        ease: SECTIONS.carouselEase,
         onComplete: () => {
           // 动画完成后立即重置位置到顶部，但不显示这个过程
           if (containerRef.current) {

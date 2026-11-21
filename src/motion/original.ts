@@ -39,3 +39,37 @@ export const PHONE = reducible({
   /** The dragon's return to its swing after a drag. */
   dragonRecovery: 1.5,
 } as const);
+
+/** The laptop's sections (and what both decks share). */
+export const SECTIONS = reducible({
+  /** Connect: the camera's long glide in, on the scroll. */
+  connectCameraEase: 'power1.out',
+  /** Connect: the contact footer rising and the scroll title fading as the visitor arrives, and back. */
+  connectFooter: { duration: 0.5, ease: 'power2.out' },
+  /** Connect: each glyph's fade when the Chinese turns back into English. */
+  connectGlyph: 0.05,
+  /** Insights: the content rises in and leaves, on the scroll. */
+  insightsInEase: 'power2.out',
+  insightsOutEase: 'power2.in',
+  /** Presence: the map's points come in and go, on the scroll. */
+  presencePointsEase: 'power2.out',
+  /** Presence: the map following the pointer. */
+  presenceParallax: { duration: 1.5, ease: 'power2.out' },
+  /** Presence: each ring of a map point's pulse. */
+  mapPulse: 1.5,
+  /** Portfolio: a fund's hover. */
+  portfolioHover: { duration: 0.3, ease: 'power2.out' },
+  /** The hero's rolling words. */
+  carouselEase: 'power2.inOut',
+  /** motion's named eases where his components use them: Spectrum's links, the map's dots and cards. */
+  spectrumLinksEase: 'easeOut',
+  mapDotEase: 'easeInOut',
+} as const);
+
+/** Entrance tilts in degrees (not durations: unchanged under reduced motion). */
+export const TILT = {
+  /** Portfolio's and Spectrum's lines tilt in from 45 degrees about X and 15 about Y, each rising its own height. */
+  entrance: { x: 45, y: 15 },
+  /** Connect's first page tilts in from 30 degrees. */
+  connectPage: 30,
+} as const;

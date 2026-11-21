@@ -2,7 +2,6 @@
 
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { DURATION, EASE } from '@/motion/tokens';
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, mobileMapScrollProgressAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
@@ -34,6 +33,7 @@ import type { Point } from './tapCut';
 import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
+import { SECTIONS } from '@/motion/original';
 import {
   CardMeasureContext,
   cardHitBoxes,
@@ -387,8 +387,8 @@ export const WorldMap = memo(function WorldMapComponent({
         y: -normalizedY * parallaxFactor,
         rotateX: -normalizedY,
         rotateY: normalizedX * 2,
-        duration: DURATION.camera,
-        ease: EASE.out,
+        duration: SECTIONS.presenceParallax.duration,
+        ease: SECTIONS.presenceParallax.ease,
         overwrite: 'auto',
       });
     },
