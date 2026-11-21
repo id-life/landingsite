@@ -75,7 +75,7 @@ const SPONSOR_VIEW: Record<string, Required<Pick<SpectrumLinkData, 'icon' | 'siz
     size: 'h-15',
     mobileSize: 'h-10.5',
   },
-  'vitalist-bay-summit': { icon: '/imgs/investments/sponsors/vitalist-bay.png', size: 'h-12', mobileSize: 'h-8' },
+  'vitalist-bay-summit': { icon: '/imgs/investments/sponsors/vitalist_bay.png', size: 'h-12', mobileSize: 'h-8' },
   'copenhagen-aging-brain-rejuvenation': {
     icon: '/imgs/investments/sponsors/aging-brain.png',
     size: 'h-18',

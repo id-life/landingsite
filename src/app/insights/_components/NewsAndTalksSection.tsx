@@ -76,7 +76,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         >
           {/* Image */}
           <div className="relative h-[4.25rem] w-full overflow-hidden">
-            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
+            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} />
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
@@ -116,7 +116,7 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
       >
         {/* Image */}
         <div className="relative h-[9.25rem] w-full overflow-hidden">
-          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
+          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} />
         </div>
         {/* Card content */}
         {/* The original's sizes (the owner's rule on font sizes), scaled with the window. The source and date never
