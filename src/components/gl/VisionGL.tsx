@@ -1,6 +1,7 @@
 'use client';
 
 import { useThree, useLoader } from '@react-three/fiber';
+import { PHONE } from '@/motion/original';
 import { useMemo, useRef, useEffect } from 'react';
 import CenterLogo from './model/vision/CenterLogo';
 import DragonModel from './model/vision/DragonModel';
@@ -14,7 +15,6 @@ import { fitHeroScale, LOGO_PLANE_HEIGHT, PHONE_LOGO, svgInkSize } from './model
 import { mobileCurrentPageAtom } from '@/atoms';
 import { useAtomValue } from 'jotai';
 import { SVGLoader } from 'three-stdlib';
-import { DURATION, EASE } from '@/motion/tokens';
 
 function DesktopVisionGL() {
   const size = useThree((state) => state.size);
@@ -88,15 +88,15 @@ function PhoneVisionGL() {
         timelineRef.current
           .to(modelRef.current.position, {
             z: 0,
-            duration: DURATION.camera,
-            ease: EASE.out,
+            duration: PHONE.heroIn.position,
+            ease: PHONE.heroIn.positionEase,
           })
           .to(
             modelRef.current.rotation,
             {
               y: 0,
-              duration: DURATION.camera,
-              ease: EASE.out,
+              duration: PHONE.heroIn.rotation,
+              ease: PHONE.heroIn.rotationEase,
             },
             '<',
           )
@@ -106,8 +106,8 @@ function PhoneVisionGL() {
               x: 1,
               y: 1,
               z: 1,
-              duration: DURATION.camera,
-              ease: EASE.out,
+              duration: PHONE.heroIn.scale,
+              ease: PHONE.heroIn.scaleEase,
             },
             '<0.1',
           );
@@ -127,11 +127,11 @@ function PhoneVisionGL() {
           .to(modelRef.current.position, {
             y: 10,
             z: 10,
-            duration: DURATION.camera,
-            ease: EASE.in,
+            duration: PHONE.heroOut.duration,
+            ease: PHONE.heroOut.ease,
           })
           // (A Group has no opacity: the old opacity tween here only made GSAP warn, MOT-14.)
-          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: DURATION.camera, ease: EASE.in }, '<');
+          .to(modelRef.current.rotation, { x: -Math.PI / 4, duration: PHONE.heroOut.duration, ease: PHONE.heroOut.ease }, '<');
       }
     }
 

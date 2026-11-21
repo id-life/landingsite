@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import { motion, useAnimation } from 'motion/react';
 import { DURATION } from '@/motion/tokens';
 import { color } from '@/styles/tokens';
+import { TWIN } from '@/motion/original';
 
 type ParticlesProps = {
   id?: string;
@@ -81,7 +82,7 @@ export const SparklesCore = (props: ParticlesProps) => {
                 },
                 repulse: {
                   distance: 200,
-                  duration: DURATION.moderate,
+                  duration: TWIN.sparkleFlicker,
                 },
               },
             },

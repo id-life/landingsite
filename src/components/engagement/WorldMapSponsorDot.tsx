@@ -23,7 +23,8 @@ import {
 } from './WorldMapDotComponents';
 import { trackOutbound } from '@/lib/analytics/outbound';
 import { slugId } from '@/lib/analytics/track';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
+import { SECTIONS } from '@/motion/original';
 
 const pointVariants: Variants = {
   initial: { scale: 1 },
@@ -346,7 +347,7 @@ const SponsorItem = memo(
         transition={{
           staggerChildren: 0.05,
           duration: DURATION.base,
-          ease: EASE.inOut,
+          ease: SECTIONS.mapDotEase,
         }}
       >
         <VideoWithPoster

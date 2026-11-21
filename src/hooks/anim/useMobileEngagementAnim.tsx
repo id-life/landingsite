@@ -1,4 +1,5 @@
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, tourOpenedDotAtom } from '@/atoms/engagement';
+import { PHONE } from '@/motion/original';
 import { MessageType } from '@/components/event-bus/messageType';
 import { useEventBus } from '@/components/event-bus/useEventBus';
 import { getMobileDotShowInfo, MOBILE_DOT_SHOW_ORDER } from '@/constants/engagement';
@@ -283,7 +284,7 @@ export function useMobileEngagementAnim() {
       opacity: 1,
       scale: 1,
       duration: DURATION.base,
-      ease: EASE.out,
+      ease: PHONE.presencePointsEase,
       stagger: 0.02,
     });
 

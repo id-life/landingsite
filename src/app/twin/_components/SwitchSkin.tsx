@@ -22,6 +22,7 @@ import { useEffect, useRef } from 'react';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { u } from '@/utils/layout-unit';
 import { showTwinDemo, stopTwinTitleMoves, twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
+import { DURATION, EASE } from '@/motion/tokens';
 
 // Phone deck: the pair of icons breathes with the model picker's border (mobileBorderAnimationStateAtom).
 const BORDER_ANIMATION_CONFIG = { scaleDuration: 1.5, scaleValue: 1.1 };
@@ -67,7 +68,8 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
       stopTwinTitleMoves();
       // The other avatars' titles out too: an ORG press in anatomy moves them out only after a delay, which this press
       // has just stopped, so a clone's title stayed beside ORG's.
-      gsap.to('.twin-title-item:not(.twin-title-M0)', { left: twinOffstage() });
+      // The roadmap's own tween (the original had no such move): its 0.3 s and quint out, written out.
+      gsap.to('.twin-title-item:not(.twin-title-M0)', { left: twinOffstage(), duration: DURATION.base, ease: EASE.out });
       gsap.to('.twin-title', { opacity: 0, overwrite: 'auto' });
       showTwinDemo('desktop', false);
       gsap.to('#switch-skin', { bottom: u(8), overwrite: 'auto' });

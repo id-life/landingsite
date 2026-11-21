@@ -3,8 +3,9 @@ import { cn } from '@/utils';
 import { motion } from 'motion/react';
 import { useContext, useState } from 'react';
 import { CardMeasureContext } from '@/hooks/anim/cardFit';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
+import { SECTIONS } from '@/motion/original';
 
 interface VideoWithPosterProps {
   coverUrl?: string;
@@ -41,7 +42,7 @@ export function VideoWithPoster({ coverUrl, videoUrl, title, containerClass, cov
       }}
       transition={{
         duration: DURATION.base,
-        ease: EASE.inOut,
+        ease: SECTIONS.mapDotEase,
       }}
       // className={cn('flex-center relative -mt-5 overflow-hidden')}
     >

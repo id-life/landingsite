@@ -12,6 +12,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useEffect } from 'react';
+import { SECTIONS } from '@/motion/original';
 
 const PAGE_ID = 'engagement_page';
 const engagementNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -75,7 +76,13 @@ function DesktopPresence() {
     const factor = 10;
     const entranceDuration = beats(2) * factor;
     tl.to('.world-map-img', { y: 0, opacity: 1, ease: EASE.linear, duration: entranceDuration });
-    tl.to(items, { opacity: 1, scale: 1, ease: EASE.out, stagger: entranceDuration * 0.05, duration: entranceDuration });
+    tl.to(items, {
+      opacity: 1,
+      scale: 1,
+      ease: SECTIONS.presencePointsEase,
+      stagger: entranceDuration * 0.05,
+      duration: entranceDuration,
+    });
 
     // Every arrival lands here (MOT-01): the map and its dots fully in, no meeting card open.
     tl.addLabel('rest');
@@ -83,7 +90,7 @@ function DesktopPresence() {
     const exitDuration = beats(2) * factor;
     tl.to(
       ['.world-map-dot', '.world-map-dot-book', '.world-map-dot-sponsor', '.world-map-region'],
-      { opacity: 0, ease: EASE.out, stagger: exitDuration * 0.1, duration: exitDuration },
+      { opacity: 0, ease: SECTIONS.presencePointsEase, stagger: exitDuration * 0.1, duration: exitDuration },
       `+=${beats(105)}`,
     );
   }, []);

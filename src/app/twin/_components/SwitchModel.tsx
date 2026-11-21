@@ -28,9 +28,9 @@ import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { useStaggerAnimation } from '@/hooks/useStaggerAnimation';
 import { trackTwin, twinModelId } from '@/lib/analytics/twin';
 import { reportError } from '@/lib/report';
-import { DURATION, EASE } from '@/motion/tokens';
 import { u } from '@/utils/layout-unit';
 import { showTwinDemo, stopTwinTitleMoves, twinOffstage, type TwinDeck } from '@/app/twin/twin-deck';
+import { TWIN } from '@/motion/original';
 
 // The avatars' attention cycle: each scales up and down in turn (useStaggerAnimation; never with reduced motion).
 const ANIMATION_CONFIG = { interval: 4000, staggerDelay: 400, scaleDuration: 0.5, scaleValue: 1.1 };
@@ -83,7 +83,10 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
 
   const runStaggeredAnimation = useCallback(() => {
     const controls = [avatar1Controls, avatar2Controls, avatar3Controls];
-    containerControls.start({ scale: 1.03, transition: { duration: ANIMATION_CONFIG.scaleDuration * 0.8, ease: EASE.out } });
+    containerControls.start({
+      scale: 1.03,
+      transition: { duration: ANIMATION_CONFIG.scaleDuration * 0.8, ease: TWIN.tileEase },
+    });
     // The desktop avatars also open a 4 px gap while scaled.
     const margin = (px: number) => (phone ? {} : { marginBottom: px, marginTop: px });
     controls.forEach((control, i) => {
@@ -92,12 +95,12 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
           await control.start({
             scale: ANIMATION_CONFIG.scaleValue,
             ...margin(4),
-            transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: EASE.out },
+            transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: TWIN.tileEase },
           });
           await control.start({
             scale: 1,
             ...margin(0),
-            transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: EASE.out },
+            transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: TWIN.tileEase },
           });
         } catch (error) {
           reportError(error, { area: 'animation', step: 'twin_avatar' });
@@ -106,7 +109,7 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     });
     const total = (controls.length - 1) * ANIMATION_CONFIG.staggerDelay + ANIMATION_CONFIG.scaleDuration * 2 * 1000;
     setTimeout(() => {
-      containerControls.start({ scale: 1, transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: EASE.out } });
+      containerControls.start({ scale: 1, transition: { duration: ANIMATION_CONFIG.scaleDuration, ease: TWIN.tileEase } });
     }, total);
   }, [phone, avatar1Controls, avatar2Controls, avatar3Controls, containerControls]);
 
@@ -144,14 +147,14 @@ export default function SwitchModel({ deck }: { deck: TwinDeck }) {
     const list = gsap.utils.toArray('.twin-title-item');
     const showTitle = () => gsap.to(`.twin-title-${model}`, { left: u(5), delay: 0.3 });
     if (currentModelType === ModelType.Skin) {
-      gsap.to(list, { left: twinOffstage(), duration: DURATION.moderate }).then(showTitle);
+      gsap.to(list, { left: twinOffstage(), duration: TWIN.titlesOut }).then(showTitle);
       newTwinChoice();
       setCurrentModel(model);
       eventBus.next({ type: MessageType.SWITCH_CAMERA, payload: { index: AnatomyCamera.CAMERA0 } });
       eventBus.next({ type: MessageType.RESET_ANIMATION });
     }
     if (currentModelType === ModelType.Anatomy) {
-      gsap.to(list, { left: twinOffstage(), delay: 0.5, duration: DURATION.moderate }).then(showTitle);
+      gsap.to(list, { left: twinOffstage(), delay: 0.5, duration: TWIN.titlesOut }).then(showTitle);
       // The stage applies the model once its camera is at rest, unless a newer choice has been made (newTwinChoice).
       eventBus.next({ type: MessageType.SWITCH_MODEL, payload: { type: ModelType.Skin, model } });
     }

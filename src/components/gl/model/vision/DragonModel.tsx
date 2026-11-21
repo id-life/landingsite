@@ -1,6 +1,7 @@
 'use client';
 
 import { fadeInAnimCompletedAtom, globalLoadedAtom } from '@/atoms/geo';
+import { PHONE } from '@/motion/original';
 import { heroGlass } from '@/components/gl/config/visionGLConfig';
 import { TRANSMISSION_RESOLUTION, useGpuTier } from '@/motion/gpuTier';
 import { useHeroGLTF } from '@/components/gl/heroAssets';
@@ -342,7 +343,7 @@ function PhoneDragonModel(props: {}) {
           gsap.to(modelRef.current.rotation, {
             y: rY,
             x: rX,
-            duration: DURATION.camera,
+            duration: PHONE.dragonRecovery,
             onComplete: () => {
               autoSwingRef.current = true;
               isRecoveringRef.current = false;

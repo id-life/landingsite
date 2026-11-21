@@ -2,7 +2,6 @@
 
 import { MapBookDotData, MapDotData, MapRegionDotData, MapSponsorDotData } from '@/constants/engagement';
 import { cn } from '@/utils';
-import { DURATION, EASE } from '@/motion/tokens';
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
 import { activeBookDotAtom, activeMeetingDotAtom, activeSponsorDotAtom, mobileMapScrollProgressAtom } from '@/atoms/engagement';
 import { globalLoadedAtom } from '@/atoms/geo';
@@ -35,6 +34,7 @@ import type { Point } from './tapCut';
 import { useCompactLabelRule } from './useCompactLabelRule';
 import { color } from '@/styles/tokens';
 import { isReducedMotion } from '@/motion/preference';
+import { SECTIONS } from '@/motion/original';
 import {
   CardMeasureContext,
   cardHitBoxes,
@@ -315,6 +315,14 @@ export const WorldMap = memo(function WorldMapComponent({
     setActiveMeetingDot(null);
   }, [setActiveBookDot, setActiveSponsorDot, setActiveMeetingDot]);
 
+  // Escape closes the open card, the keyboard's counterpart of a press on the map's background.
+  const handleMapKey = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Escape') handleBackgroundClick();
+    },
+    [handleBackgroundClick],
+  );
+
   // Leaving the section closes the open card.
   useEffect(() => {
     if (!globalLoaded) return;
@@ -388,8 +396,8 @@ export const WorldMap = memo(function WorldMapComponent({
         y: -normalizedY * parallaxFactor,
         rotateX: -normalizedY,
         rotateY: normalizedX * 2,
-        duration: DURATION.camera,
-        ease: EASE.out,
+        duration: SECTIONS.presenceParallax.duration,
+        ease: SECTIONS.presenceParallax.ease,
         overwrite: 'auto',
       });
     },
@@ -415,10 +423,20 @@ export const WorldMap = memo(function WorldMapComponent({
           ref={phoneMapRef}
           className="absolute inset-x-0 top-[5dvh] mt-[11.25rem] h-[var(--map-h)] w-full overflow-x-clip [--map-h:55vh] shortScreen:top-0 shortScreen:mt-[8.5rem] shortScreen:[--map-h:calc(100svh_-_12.25rem)]"
         >
+          {/* ENG-03: the strip scrolls sideways, so it is a keyboard stop (the arrow keys scroll it) and a named region,
+              "Map" (axe scrollable-region-focusable). Escape closes an open card, as a press on the map's background
+              does. Nothing drawn changes. A scrolling region is the one non-interactive element that must take the
+              focus (WAI-ARIA; jsx-a11y's own docs name it), so its two rules are set aside for this element. */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={mapContainerRef}
+            role="region"
+            aria-label="Map"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+            tabIndex={0}
             className="world-map-container hide-scrollbar relative h-full w-full touch-none overflow-x-auto overflow-y-hidden bg-black/20 font-sans opacity-0"
             onClick={handleBackgroundClick}
+            onKeyDown={handleMapKey}
             onScroll={handleScroll}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -471,7 +489,15 @@ export const WorldMap = memo(function WorldMapComponent({
         onMouseMove={handleMouseMove}
         style={{ perspective: '1000px' }}
       >
-        <div ref={mapContainerRef} className="size-full" onClick={handleBackgroundClick}>
+        {/* A press on the map's background closes an open card; for the keyboard, Escape does (the points inside are the
+            controls; this box is not one). */}
+        <div
+          ref={mapContainerRef}
+          role="presentation"
+          className="size-full"
+          onClick={handleBackgroundClick}
+          onKeyDown={handleMapKey}
+        >
           <div ref={mapContentRef} className="relative -left-14 size-full">
             <WorldMapAnimBackground className="absolute left-0 top-0 size-full" ref={ref} />
             {hitLayerEl}

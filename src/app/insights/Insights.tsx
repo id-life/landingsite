@@ -5,7 +5,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { isLayoutRefreshing } from '@/motion/sectionController';
 import NewsAndTalksSection from '@/app/insights/_components/NewsAndTalksSection';
 import LongevitySection from '@/app/insights/_components/LongevitySection';
-import { beats, EASE } from '@/motion/tokens';
+import { beats } from '@/motion/tokens';
 import { useGSAP } from '@gsap/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { gsap } from 'gsap';
@@ -16,6 +16,7 @@ import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { cn } from '@/utils';
 import { ensureMobileUIVisible } from '@/utils/ui';
 import PodcastSection from './_components/PodcastSection';
+import { SECTIONS } from '@/motion/original';
 
 const PAGE_ID = 'insights_page';
 const insightsNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -63,7 +64,11 @@ export default function Insights() {
       const factor = 10; // 动画因子，与 Engagement 保持一致
 
       // Entrance from below, with explicit end values (MOT-02: scrubbed entrances are fromTo).
-      tl.fromTo('.insights-content', { y: 50, opacity: 0 }, { y: 0, opacity: 1, ease: EASE.out, duration: beats(2) * factor });
+      tl.fromTo(
+        '.insights-content',
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, ease: SECTIONS.insightsInEase, duration: beats(2) * factor },
+      );
       // Every arrival lands here (MOT-01): the content fully in.
       tl.addLabel('rest');
 
@@ -71,7 +76,7 @@ export default function Insights() {
       tl.to({}, { duration: beats(0.5) * factor });
 
       // 出场动画（向下滚动时淡出）
-      tl.to('.insights-content', { y: -50, opacity: 0, ease: EASE.in, duration: beats(2) * factor });
+      tl.to('.insights-content', { y: -50, opacity: 0, ease: SECTIONS.insightsOutEase, duration: beats(2) * factor });
     },
     { dependencies: [phone] },
   );

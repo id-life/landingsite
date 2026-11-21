@@ -4,7 +4,8 @@ import { isBePartOfItShowAtom } from '@/atoms/character-relation';
 import { useAtom } from 'jotai';
 import { motion } from 'motion/react';
 import { track } from '@/lib/analytics/track';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
+import { CONTENT } from '@/motion/original';
 import { cn } from '@/utils';
 import CharacterRelationLegend from './CharacterRelationLegend';
 
@@ -40,7 +41,7 @@ export default function CharacterRelationControls() {
           opacity: isBePartOfItShow ? 0 : 1,
           pointerEvents: isBePartOfItShow ? 'none' : 'auto',
         }}
-        transition={{ duration: DURATION.base, ease: EASE.inOut }}
+        transition={{ duration: DURATION.base, ease: CONTENT.bePartOfItEase }}
       >
         <span className="mobile:hidden">BE PART OF IT +</span>
         <span className="hidden mobile:inline">JOIN +</span>

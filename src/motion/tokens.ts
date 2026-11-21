@@ -46,6 +46,23 @@ export const DURATION = Object.defineProperties(
 );
 
 /**
+ * The same rule for the original site's own values (src/motion/original.ts): every number in `values` (durations,
+ * delays, overlaps, in seconds) is read when a tween is created and reads 0 while motion is reduced. Eases pass
+ * through unchanged.
+ */
+export function reducible<T extends object>(values: T): T {
+  const out = {} as Record<string, unknown>;
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value === 'number') {
+      Object.defineProperty(out, key, { enumerable: true, get: () => (tokensReduced ? 0 : value) });
+    } else {
+      out[key] = value !== null && typeof value === 'object' ? reducible(value) : value;
+    }
+  }
+  return out as T;
+}
+
+/**
  * Eases as cubic-bezier control points, defined once. GSAP plays them through CustomEase under the same names,
  * CSS as cubic-bezier(), motion as a bezier array, so one token name is one curve everywhere. (GSAP's power3 is
  * the quart family: power3.out would not match (0.22, 1, 0.36, 1), which is easeOutQuint.)
@@ -110,6 +127,12 @@ export const EASE = {
 } as const;
 
 /** Stagger between items of one group, in seconds. */
+/**
+ * GSAP's own defaults, which the original site played for every tween that names no duration or ease (it set no
+ * gsap.defaults). Not a choice of this site's: kept so that such tweens play as on the original.
+ */
+export const GSAP_DEFAULT = { duration: 0.5, ease: 'power1.out' } as const;
+
 export const STAGGER = {
   glyph: 0.02,
   item: 0.04,
