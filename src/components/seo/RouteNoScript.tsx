@@ -188,11 +188,15 @@ const NOSCRIPT_CSS = [
   `@media ${DESKTOP_TREE_QUERY}{.route-noscript .ns-phone{display:none}}`,
 ].join('');
 
+// The home route's poster is fixed to the window; without JavaScript it stays with the first screen instead, so the
+// text below it scrolls into view clear of the wordmark.
+const NOSCRIPT_HOME_CSS = '#hero-poster{position:absolute;height:100svh}';
+
 /** The route's text for a visitor without JavaScript (see the file's comment). Render it from the route's page. */
 export default async function RouteNoScript({ route }: { route: ExperienceRoute }) {
   return (
     <noscript>
-      <style>{NOSCRIPT_CSS}</style>
+      <style>{route === 'home' ? NOSCRIPT_CSS + NOSCRIPT_HOME_CSS : NOSCRIPT_CSS}</style>
       {/* Below the first screen on the home route (the poster is the hero there), at the top elsewhere. */}
       <main className={route === 'home' ? 'route-noscript route-noscript--home' : 'route-noscript'}>
         <Lines route={route} />
