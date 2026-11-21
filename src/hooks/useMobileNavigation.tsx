@@ -13,9 +13,12 @@ import {
 import { DURATION } from '@/motion/tokens';
 import gsap from 'gsap';
 import { useCallback, useEffect } from 'react';
+import { noteLeftInnerPage } from '@/motion/phoneHandover';
 
 /** Show a section on the phone tree (the visible change; the URL is the controller's). */
 function show(item: NavItem) {
+  // The section being left keeps showing its own inner page during its exit (MOT-05, src/motion/phoneHandover.ts).
+  noteLeftInnerPage(jotaiStore.get(innerPageIndexAtom));
   jotaiStore.set(mobileCurrentPageAtom, item);
   jotaiStore.set(innerPageIndexAtom, 0); // 切换页面时重置内页索引
   if (item.id !== NAV.connect_page.id) {
