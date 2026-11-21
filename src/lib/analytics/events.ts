@@ -96,6 +96,9 @@ export const EXPERIENCE_ERROR_KINDS = [
   'loader_timeout',
 ] as const;
 
+export const PODCAST_PLATFORMS = ['xiaoyuzhou', 'spotify', 'apple_podcasts'] as const;
+export const AUDIO_SOURCES = ['episode_page', 'site_player'] as const;
+
 const placement = str('Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)');
 
 export const EVENTS = {
@@ -146,6 +149,8 @@ export const EVENTS = {
     item_id: str('Stable id of the item (slug, episode id or platform name)'),
     link_domain: str('Host of the destination'),
     placement,
+    platform: oneOf(PODCAST_PLATFORMS, 'podcast_platform only: which listening platform', { optional: true }),
+    episode_id: str('podcast_platform only: the episode the link is for (absent for a whole show)', { optional: true }),
   }),
   nav_click: ev('The visitor uses the section navigation', {
     target_section: str('Section id or route the control leads to'),
@@ -178,12 +183,28 @@ export const EVENTS = {
   }),
   file_download: ev('Not sent by code: GA4 enhanced measurement records clicks on PDF and CSV links', {}),
 
-  // Podcast and music (DATA-podcast replaces these with media-element analytics in wave 2).
-  episode_play: ev('Play or pause on the episode page player', {
+  // Podcast listening (DATA-12): read from the audio element, whatever started it (lib/analytics/audio.ts).
+  podcast_play: ev(
+    'An episode has played for 30 s (seeks do not count); once per episode per page',
+    {
+      episode_id: str('Episode id'),
+      show: str('Show id (the episode category: podcast_id or podcast_lt)'),
+      source: oneOf(AUDIO_SOURCES, 'Which player: the episode page or the site player'),
+    },
+    { key: true },
+  ),
+  podcast_progress: ev('Playback of an episode reaches 25, 50 or 75 percent; each once per episode per page', {
     episode_id: str('Episode id'),
-    action: oneOf(['start', 'pause'], 'Button pressed'),
+    show: str('Show id'),
+    source: oneOf(AUDIO_SOURCES, 'Which player'),
+    percent: num('Share of the episode reached', { unit: 'percent' }),
   }),
-  episode_end: ev('The episode audio ends', { episode_id: str('Episode id') }),
+  podcast_complete: ev('An episode plays to its end; once per episode per page', {
+    episode_id: str('Episode id'),
+    show: str('Show id'),
+    source: oneOf(AUDIO_SOURCES, 'Which player'),
+  }),
+  // Podcast and music controls.
   timeline_jump: ev('A timestamp in the show notes is clicked', {
     episode_id: str('Episode id'),
     position_s: num('Target position', { unit: 'seconds' }),

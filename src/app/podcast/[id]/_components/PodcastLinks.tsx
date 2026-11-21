@@ -15,7 +15,7 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
     { id: 'xiaoyuzhou', name: 'Xiaoyuzhou', link: data.xyzLink, icon: '/imgs/podcast/fm_xyz.png' },
     { id: 'spotify', name: 'Spotify', link: data.spotifyLink, icon: '/imgs/podcast/fm_spotify.png' },
     { id: 'apple_podcasts', name: 'Apple Podcasts', link: data.podcastLink, icon: '/imgs/podcast/fm_podcast.png' },
-  ];
+  ] as const;
 
   return (
     <div className="flex-center gap-2">
@@ -34,7 +34,13 @@ export default function PodcastLinks({ data }: PodcastLinkProps) {
             href={url}
             aria-label={name}
             event="outbound_click"
-            params={{ link_type: 'podcast_platform', item_id: id, placement: 'episode_page' }}
+            params={{
+              link_type: 'podcast_platform',
+              item_id: id,
+              placement: 'episode_page',
+              platform: id,
+              episode_id: String(data.id),
+            }}
           >
             {img}
           </OutboundLink>

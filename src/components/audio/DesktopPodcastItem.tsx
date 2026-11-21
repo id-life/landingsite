@@ -102,7 +102,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   href={xyzUrl}
                   aria-label="Xiaoyuzhou"
                   event="outbound_click"
-                  params={{ link_type: 'podcast_platform', item_id: 'xiaoyuzhou', placement: 'site_player' }}
+                  params={{
+                    link_type: 'podcast_platform',
+                    item_id: 'xiaoyuzhou',
+                    placement: 'site_player',
+                    platform: 'xiaoyuzhou',
+                    episode_id: String(data.id),
+                  }}
                 >
                   <img className="w-[16px] cursor-pointer mobile:w-[1rem]" src="/imgs/player/fm_xiaoyuzhou.png" alt="" />
                 </OutboundLink>
@@ -112,7 +118,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   href={appleUrl}
                   aria-label="Apple Podcasts"
                   event="outbound_click"
-                  params={{ link_type: 'podcast_platform', item_id: 'apple_podcasts', placement: 'site_player' }}
+                  params={{
+                    link_type: 'podcast_platform',
+                    item_id: 'apple_podcasts',
+                    placement: 'site_player',
+                    platform: 'apple_podcasts',
+                    episode_id: String(data.id),
+                  }}
                 >
                   <img className="w-[16px] cursor-pointer mobile:w-[1rem]" src="/imgs/player/fm_podcast.png" alt="" />
                 </OutboundLink>

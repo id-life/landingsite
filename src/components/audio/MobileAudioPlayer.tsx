@@ -27,10 +27,13 @@ import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { PLAY_TRIGGER } from '@/atoms/audio-player';
 import { usePlayerTapAreas } from './usePlayerTapAreas';
+import { useSitePlayerAnalytics } from '@/hooks/audio/useAudioAnalytics';
 
 function MobileAudioPlayer({ className }: { className?: string }) {
   const { retryIfFailed: retryAudioList } = useFetchAudioData();
   const { data, isPlaying, dispatch } = useCurrentMusicControl();
+  // The site player's episodes are counted from its audio element (DATA-12); music is not.
+  useSitePlayerAnalytics();
   const musicList = useAtomValue(musicListAtom);
   const [isOpen, setIsOpen] = useState(false);
   const setPlaylistAtom = useSetAtom(playlistAtom);

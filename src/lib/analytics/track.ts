@@ -4,7 +4,12 @@ import { ANALYTICS_ENABLED, INTERNAL_FLAG_KEY, VERCEL_EVENTS_ENABLED } from './c
 import type { EventName, EventParams, Layout } from './events';
 
 /** The key events (mirrored to Vercel custom events when enabled); test/analytics-events.test.mjs checks the list. */
-export const KEY_EVENT_NAMES: readonly EventName[] = ['newsletter_subscribe', 'contact_intent', 'portfolio_outbound_click'];
+export const KEY_EVENT_NAMES: readonly EventName[] = [
+  'newsletter_subscribe',
+  'contact_intent',
+  'portfolio_outbound_click',
+  'podcast_play',
+];
 
 /**
  * The one way to send an analytics event (DATA-11). Names and parameters are checked against the catalog in
