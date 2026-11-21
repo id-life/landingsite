@@ -37,6 +37,8 @@ export const NOT_FOUND_TITLE = '404: This page could not be found.';
  */
 export const DEFAULT_OG_IMAGE = { url: '/og-cover.jpg', width: 1200, height: 630, type: 'image/jpeg' };
 
+export type OgImage = { url: string; width?: number; height?: number; type?: string };
+
 const CJK = /[㐀-鿿豈-﫿]/;
 
 export type MetadataInput = {
@@ -53,8 +55,11 @@ export type MetadataInput = {
   description: string;
   /** The page's own keywords, as the owner's site serves them; absent, the site's list applies. */
   keywords?: string[];
-  /** The page's own image; null for a page his site gives none (no image is declared). */
-  image?: string | null;
+  /**
+   * The page's own image: its address, or its address with the size and type read from the file; null for a page his
+   * site gives none (no image is declared).
+   */
+  image?: string | OgImage | null;
   type?: 'website' | 'article';
 };
 
@@ -80,7 +85,7 @@ export function buildMetadata({
       siteName: BRAND.en,
       url: path,
       type,
-      images: image === null ? [] : [image ? { url: image } : DEFAULT_OG_IMAGE],
+      images: image === null ? [] : [typeof image === 'string' ? { url: image } : (image ?? DEFAULT_OG_IMAGE)],
     },
   };
 }

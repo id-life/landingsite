@@ -54,6 +54,16 @@ export const PODCAST_FEED_URL = 'https://feed.xyzfm.space/6cxxmuh36xcc';
 export const podcastFeedAlternate = (category: string) =>
   category === PODCAST_NAV_LIST[0].id ? { 'application/rss+xml': PODCAST_FEED_URL } : undefined;
 
+/**
+ * The link-preview picture of an episode that has no picture of its own (SEO-07; the lead's ruling of 2026-11-21 under
+ * question 9, "A"): its show's picture, made 1200x630 by scripts/build-share-images.mjs from the show's own square
+ * cover (scaled to 630 px and extended left and right by its own edge columns; nothing drawn or cropped).
+ */
+export const PODCAST_SHARE_IMAGE: Record<PodcastCategory, { url: string; width: number; height: number; type: string }> = {
+  [PODCAST_NAV_LIST[0].id]: { url: '/og/podcast-id.jpg', width: 1200, height: 630, type: 'image/jpeg' },
+  [PODCAST_NAV_LIST[1].id]: { url: '/og/podcast-lt.jpg', width: 1200, height: 630, type: 'image/jpeg' },
+};
+
 export const COMMENTS_TYPE = {
   XYZ: 'xyz',
 } as const;

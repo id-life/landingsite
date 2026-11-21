@@ -6,7 +6,7 @@ import { PODCAST_NAV_LIST } from '@/app/podcast/_components/constant';
 // the Long Talk show moved from /podcast?c=lt to /podcast/long-talk (src/proxy.ts answers the old URL 308).
 export const revalidate = 300; // 5min
 
-export const metadata = podcastShowMetadata(PODCAST_NAV_LIST[0].id);
+export const generateMetadata = () => podcastShowMetadata(PODCAST_NAV_LIST[0].id);
 
 export default function PodcastPage() {
   return <PodcastShowPage category={PODCAST_NAV_LIST[0].id} />;
