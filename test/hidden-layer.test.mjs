@@ -3,7 +3,8 @@
 // against the recorded copy of his (test/fixtures/his-hidden-layer.json, read from his production site):
 // - every hidden text of his is in the build's hidden layer, unless an answer of his named below took it out;
 // - every hidden text of the build is his, or one of the roadmap's named additions below, or what an answer put in.
-// A new hidden text, or a missing one of his, fails here until it is named with its reason.
+// A new hidden text, or a missing one of his, fails here until it is named with its reason. And text he has ruled out
+// (the fixture's ruledOut) must appear nowhere in a built page.
 // Reads the prerendered pages of the last `next build` (.next/server/app). With no build it is skipped, and says so; with
 // a build older than the checked-out commit it fails and says that, rather than reporting a stale page's differences
 // (CI runs it in the build job, after the build).
@@ -11,7 +12,7 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 import his from './fixtures/his-hidden-layer.json';
-import { hiddenLayer, norm, runText } from './helpers/hidden-layer.mjs';
+import { decode, hiddenLayer, norm, runText } from './helpers/hidden-layer.mjs';
 import { diseaseManagementStatusItems } from '@/constants/disease-management';
 
 const FILES = {
@@ -176,7 +177,32 @@ export function holdHiddenLayer(route, html) {
   return { missing, unnamed };
 }
 
+/**
+ * Text his site serves that he has ruled out (the fixture's ruledOut: sentences from the beginning, middle and end of
+ * an article the home page used to inject). It must appear nowhere in a built page: not in its HTML, not in its flight
+ * payload (the RSC data in the page and the route's .rsc file), whitespace and escapes aside.
+ */
+const flat = (raw) =>
+  decode(
+    raw
+      .replace(/\\u0027/g, "'")
+      .replace(/\\n/g, ' ')
+      .replace(/\\"/g, '"')
+      .replace(/&apos;/g, "'"),
+  ).replace(/\s+/g, ' ');
+export function ruledOutFound(raw) {
+  const text = flat(raw);
+  return his.ruledOut.texts.filter((sentence) => text.includes(sentence));
+}
+
 describe('the hold itself', () => {
+  test('finds a ruled-out sentence however the page carries it', () => {
+    const [first] = his.ruledOut.texts;
+    expect(ruledOutFound(`<p class="sr-only">${first.replace(/'/g, '&#x27;').replace(/ /g, '\n  ')}</p>`)).toEqual([first]);
+    expect(ruledOutFound(`self.__next_f.push([1,"${first.replace(/'/g, '\\u0027')}"])`)).toEqual([first]);
+    expect(ruledOutFound('<p>Immortal Dragons</p>')).toEqual([]);
+  });
+
   test('exempts the route-noscript block by its container, and still catches hidden text anywhere else', () => {
     const html =
       '<body><noscript data-route-noscript=""><main class="route-noscript"><p>Any line of the route</p></main></noscript>' +
@@ -200,7 +226,14 @@ describe.skipIf(!haveBuild)('the hidden layer against his (built pages)', () => 
     test(route, () => {
       if (buildAge().stale)
         throw new Error('the build in .next is older than HEAD: rebuild before reading it (see the test above)');
-      expect(holdHiddenLayer(route, readFileSync(built(route), 'utf8'))).toEqual({ missing: [], unnamed: [] });
+      const html = readFileSync(built(route), 'utf8');
+      const rsc = built(route).replace(/\.html$/, '.rsc');
+      const payload = existsSync(rsc) ? readFileSync(rsc, 'utf8') : '';
+      expect({ ...holdHiddenLayer(route, html), ruledOut: ruledOutFound(html + payload) }).toEqual({
+        missing: [],
+        unnamed: [],
+        ruledOut: [],
+      });
     });
   }
 });

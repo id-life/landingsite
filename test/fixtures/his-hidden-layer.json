@@ -1,5 +1,13 @@
 {
   "source": "the owner's production site, read 2026-11-21",
+  "ruledOut": {
+    "reason": "left out by the owner's decision, 2026-11-21",
+    "texts": [
+      "In today's rapidly evolving biotechnology landscape, an emerging force is quietly transforming humanity's understanding of lifespan and health.",
+      "Immortal Dragons values infrastructure projects that can accelerate clinical trials and research, such as special economic zones.",
+      "Through Immortal Dragons' efforts, the ancient dream of immortality is gradually becoming scientific reality, and this mission-driven longevity revolution will surely leave a significant mark in human development history."
+    ]
+  },
   "routes": {
     "/": [
       "aria-label: Immortal Dragons 不朽真龙",
