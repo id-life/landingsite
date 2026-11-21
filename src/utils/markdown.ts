@@ -48,8 +48,26 @@ function rehypeDropEmptyFrames() {
   return (tree: HastNode) => prune(tree);
 }
 
+/**
+ * ENG-03: a table is a keyboard stop (tabindex 0). On phones the article tables scroll sideways in their own box, and a
+ * scroll box that nothing in it can focus is out of a keyboard user's reach (axe scrollable-region-focusable). Nothing
+ * is drawn until the table has the focus.
+ */
+function rehypeFocusableTables() {
+  const walk = (node: HastNode) => {
+    if (node.type === 'element' && node.tagName === 'table') node.properties = { ...node.properties, tabIndex: 0 };
+    node.children?.forEach(walk);
+  };
+  return (tree: HastNode) => walk(tree);
+}
+
 export const markdownRemarkPlugins: RemarkPlugins = [remarkGfm];
-export const markdownRehypePlugins: RehypePlugins = [rehypeRaw, [rehypeSanitize, markdownSchema], rehypeDropEmptyFrames];
+export const markdownRehypePlugins: RehypePlugins = [
+  rehypeRaw,
+  [rehypeSanitize, markdownSchema],
+  rehypeDropEmptyFrames,
+  rehypeFocusableTables,
+];
 
 type MdNode = {
   type: string;
