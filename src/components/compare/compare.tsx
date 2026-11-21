@@ -10,6 +10,7 @@ import { reportMediaError } from '@/lib/report';
 import { DURATION, EASE } from '@/motion/tokens';
 
 import { color } from '@/styles/tokens';
+import { TWIN } from '@/motion/original';
 
 interface CompareProps {
   firstImage?: string;
@@ -118,14 +119,14 @@ export const Compare = ({
                   if (fillRef.current) {
                     gsap.to(fillRef.current, {
                       width: '100%',
-                      duration: DURATION.moderate,
+                      duration: TWIN.compareGlide,
                       ease: EASE.linear,
                     });
                   }
                   if (inverseTextRef.current) {
                     gsap.to(inverseTextRef.current, {
                       clipPath: 'inset(0 0% 0 0)',
-                      duration: DURATION.moderate,
+                      duration: TWIN.compareGlide,
                       ease: EASE.linear,
                     });
                   }

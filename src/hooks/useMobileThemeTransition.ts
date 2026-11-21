@@ -1,10 +1,10 @@
 import { mobileCurrentThemeAtom, mobileThemeTransitioningAtom } from '@/atoms';
+import { PHONE } from '@/motion/original';
 import { BACKGROUND_COLORS, BackgroundTheme } from '@/constants/config';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom } from 'jotai';
 import { useRef } from 'react';
-import { DURATION } from '@/motion/tokens';
 
 export function useMobileThemeTransition() {
   const [currentTheme, setCurrentTheme] = useAtom(mobileCurrentThemeAtom);
@@ -49,7 +49,7 @@ export function useMobileThemeTransition() {
     // 执行主题切换动画
     tl.set('.base-background2', { opacity: 0 }).to(root, {
       ...BACKGROUND_COLORS[theme],
-      duration: DURATION.moderate,
+      duration: PHONE.themeTurn.duration,
     });
   });
 

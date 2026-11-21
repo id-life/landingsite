@@ -13,7 +13,7 @@ import { isLayoutRefreshing, sectionStateAtom } from '@/motion/sectionController
 import { spectrumGetSourceImgInfos, useSpectrumData } from '@/hooks/spectrum/useSpectrumData';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { cn } from '@/utils';
-import { beats, DISTANCE, DURATION, EASE, MAX_TILT } from '@/motion/tokens';
+import { beats, DURATION, EASE } from '@/motion/tokens';
 import { MOTION } from '@/motion/presets';
 import { useReducedMotionPref } from '@/motion/preference';
 import { useGSAP } from '@gsap/react';
@@ -28,6 +28,7 @@ import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 import { movePager, PAGER_START, PAPERS_GROUP, spectrumPhonePages } from './phonePages';
 import { fitScale, type FitScale } from './fitScale';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
+import { TILT } from '@/motion/original';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -331,15 +332,20 @@ function DeckSpectrum() {
         },
       },
     });
-    // Entrances rise 16-24 px with a tilt of at most 8 degrees (MOT-08; they tilted 45 and 15 degrees).
+    // As the original: the title rises its own height and the fund a third of its, tilting in from 45 and 15 degrees.
     tl.fromTo(
       '.spectrum-title',
-      { y: DISTANCE.md, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      { y: (_: number, el: HTMLElement) => el.offsetHeight, rotateX: TILT.entrance.x, rotateY: TILT.entrance.y, opacity: 0 },
       { delay: beats(1), y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
     );
     tl.fromTo(
       '.spectrum-fund',
-      { y: DISTANCE.sm, rotateX: MAX_TILT, rotateY: MAX_TILT / 2, opacity: 0 },
+      {
+        y: (_: number, el: HTMLElement) => el.offsetHeight / 3,
+        rotateX: TILT.entrance.x,
+        rotateY: TILT.entrance.y,
+        opacity: 0,
+      },
       { y: 0, rotateX: 0, rotateY: 0, opacity: 1 },
     );
 

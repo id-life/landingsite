@@ -22,8 +22,9 @@ import MeetingSVG from '@/../public/svgs/engagement/meeting.svg?component';
 import SponsorSVG from '@/../public/svgs/engagement/sponsor.svg?component';
 import FeatherImg from './FeatherImg';
 import { VideoWithPoster } from './VideoWithPoster';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
 import { useReducedMotionPref } from '@/motion/preference';
+import { SECTIONS } from '@/motion/original';
 
 // ============================================================================
 // Shared Components (Desktop & Mobile)
@@ -393,7 +394,7 @@ export function ContentSection({
       transition={{
         staggerChildren: 0.1,
         duration: DURATION.base,
-        ease: EASE.inOut,
+        ease: SECTIONS.mapDotEase,
       }}
       className={cn('flex h-full w-[calc(var(--t)*20.25)] origin-top-left flex-col items-center gap-4 font-display')}
     >
@@ -463,7 +464,7 @@ export function ExtraSponsorSection({
       transition={{
         staggerChildren: 0.05,
         duration: DURATION.base,
-        ease: EASE.inOut,
+        ease: SECTIONS.mapDotEase,
       }}
     >
       <h4 className="-mx-10 whitespace-pre-wrap text-center text-xl/6 font-semibold capitalize text-white">
@@ -680,7 +681,7 @@ export function MobileContentSection({
       transition={{
         staggerChildren: 0.1,
         duration: DURATION.base,
-        ease: EASE.inOut,
+        ease: SECTIONS.mapDotEase,
       }}
       className={cn('flex h-full', MOBILE_MAP_SCALE.contentMaxWidth, 'flex-col items-center gap-3 font-display')}
     >
@@ -755,7 +756,7 @@ export function MobileExtraSponsorSection({
       transition={{
         staggerChildren: 0.05,
         duration: DURATION.base,
-        ease: EASE.inOut,
+        ease: SECTIONS.mapDotEase,
       }}
     >
       <h4
