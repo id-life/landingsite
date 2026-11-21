@@ -1,12 +1,12 @@
 {
-  "total": 111,
+  "total": 110,
   "byRule": {
     "@typescript-eslint/no-unused-expressions": 3,
     "jsx-a11y/anchor-has-content": 2,
     "jsx-a11y/click-events-have-key-events": 26,
     "jsx-a11y/media-has-caption": 1,
     "jsx-a11y/no-noninteractive-tabindex": 1,
-    "jsx-a11y/no-static-element-interactions": 27,
+    "jsx-a11y/no-static-element-interactions": 26,
     "react-hooks/immutability": 13,
     "react-hooks/incompatible-library": 1,
     "react-hooks/preserve-manual-memoization": 1,
