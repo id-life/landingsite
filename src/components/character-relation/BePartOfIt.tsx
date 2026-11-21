@@ -199,9 +199,10 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         </span>
       </div>
 
-      {/* close */}
-      <div
-        // A 44 px box on a touch screen (RWD-06).
+      {/* close: a real button (keyboard and name), drawn as the div was; a 44 px box on a touch screen (RWD-06) */}
+      <button
+        type="button"
+        aria-label="Close"
         className={cn(
           'absolute right-6 top-6 flex cursor-pointer items-center justify-center fill-black tap',
           isMutationPending && 'cursor-not-allowed',
@@ -209,8 +210,8 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         onClick={handleClose}
         onPointerDown={() => (isSubmittingRef.current = true)}
       >
-        <CloseSVG className="size-5" />
-      </div>
+        <CloseSVG className="size-5" aria-hidden="true" />
+      </button>
 
       <Form
         control={form.control}
