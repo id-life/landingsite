@@ -174,8 +174,9 @@ function DesktopPortfolio() {
     <div ref={wrapperRef} id={PAGE_ID} className="page-container text-white">
       <ParticleGLWrapper />
       {/* On short windows the column is centred in the space under the header, which publishes its height (a
-          1366x641 or 1280x720 laptop put the heading under the two-row header). */}
-      <div className="relative flex h-[100svh] flex-col items-center justify-center [@media(max-height:760px)]:pt-[var(--site-header-h,0px)]">
+          1366x641 or 1280x720 laptop put the heading under the two-row header). A very wide window gets the same
+          layout (portfolio-wide: globals.css, Portfolio on a very wide window). */}
+      <div className="portfolio-wide relative flex h-[100svh] flex-col items-center justify-center [@media(max-height:760px)]:pt-[var(--site-header-h,0px)]">
         <ParticleGLContainer />
         <h2 className="page2-title font-title text-[2.5rem]/[4.5rem] font-bold uppercase">Portfolio</h2>
         <div className="page2-fund mb-2.5 mt-12 w-full max-w-[152rem] px-12 [@media(max-height:760px)]:mt-6">

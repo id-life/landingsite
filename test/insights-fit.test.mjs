@@ -33,4 +33,20 @@ describe('Insights short-laptop fit', () => {
     expect(before).not.toMatch(/\.insights-fit\s*\{/);
     expect(before).not.toMatch(/--insights-[\w-]+:/);
   });
+
+  test('on a very wide window the gaps start to give exactly where the media query does', () => {
+    const wide = css.match(
+      /@media \(min-width: 1920px\) and \(max-height: calc\(2 \* \(([\d.]+) \+ ([\d.]+) \+ ([\d.]+)\) \* ([\d.]+)vw\)\)/,
+    );
+    expect(wide, 'the wide-window media query in globals.css').not.toBeNull();
+    const [, above, nav, gap, unit] = wide;
+    // The give is 0 at the media query's edge: (above + nav + gap) units less half the window.
+    expect(css).toContain(`calc((var(--u) * (${above} + ${nav} + ${gap}) - 50vh) * 2 / 0.85)`);
+    expect(unit).toBe(desktopUnit?.[1]);
+    // 0.85 is his wrapper scale from 1920 px wide (desktop2k).
+    expect(Number(tailwind.match(/desktop2k: \{ min: '(\d+)px' \}/)?.[1])).toBe(1920);
+    expect(readFileSync(new URL('../src/app/insights/Insights.tsx', import.meta.url), 'utf8')).toContain(
+      'desktop2k:scale-[0.85]',
+    );
+  });
 });
