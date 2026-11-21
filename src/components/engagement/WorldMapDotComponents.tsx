@@ -522,7 +522,10 @@ export function ContentHotAreas({
         ></a>
       ) : null}
       <div className="pointer-events-auto absolute -inset-10 cursor-pointer"></div>
+      {/* An invisible pointer area beside the open card that pins it as a click on its point does (the point is the
+          control); it draws nothing and holds nothing, so it is hidden from assistive technology (ENG-03). */}
       <div
+        aria-hidden
         className={cn('pointer-events-auto absolute -right-80 left-full h-20', pcDotHotAreaClass, {
           'top-[22dvh] h-36': videoUrl,
         })}

@@ -7,11 +7,18 @@ import { markdownRehypePlugins, markdownRemarkPlugins, remarkTimeline } from '@/
 import '@/styles/components/markdown-timeline.css';
 import PodcastLinks from '@/app/podcast/[id]/_components/PodcastLinks';
 import PodcastPlayer from '@/app/podcast/[id]/_components/PodcastPlayer';
-import { PODCAST_COVER, PODCAST_NAV_LIST, podcastFeedAlternate } from '@/app/podcast/_components/constant';
+import {
+  PODCAST_COVER,
+  PODCAST_NAV_LIST,
+  PODCAST_SHARE_IMAGE,
+  podcastFeedAlternate,
+  podcastShowWords,
+} from '@/app/podcast/_components/constant';
 import { categoryOf, podcastEpisodeJsonLd } from '@/app/podcast/_components/jsonLd';
 import { ORG_REF, breadcrumbJsonLd } from '@/constants/entity';
 import type { Metadata } from 'next';
 import { buildMetadata, NOT_FOUND_TITLE } from '@/lib/seo/metadata';
+import { readImageInfo } from '@/lib/seo/image-info';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
@@ -67,8 +74,12 @@ export async function generateMetadata(props: PodcastPlayerProps): Promise<Metad
     description: data.description,
     // The episode's own keywords, as his site serves them.
     keywords: data.keywords ?? [],
-    // The episode's own picture, as his site declares it; none when it has none (no fallback to the show's).
-    image: data.detailMedia || null,
+    // The episode's own picture, as his site declares it (same address and file), with its size and type read from
+    // the file; an episode without one gets its show's picture, made 1200x630 (the lead's ruling of 2026-11-21).
+    // Its alt is the episode's title (its h1), or the show's words with the show's picture.
+    image: data.detailMedia
+      ? { url: data.detailMedia, ...(await readImageInfo(data.detailMedia, revalidate)), alt: data.title }
+      : { ...PODCAST_SHARE_IMAGE[categoryOf(data)], alt: podcastShowWords(categoryOf(data)) },
     type: 'article',
   });
   // An episode of the main show names the show's feed, as the show page does (question 22).
