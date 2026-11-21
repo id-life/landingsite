@@ -61,12 +61,26 @@ export function watchModals() {
   });
 }
 
+const CONTROL = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** Whether a part holds a control a visitor can reach now (laid out, not hidden, not inert). */
+function holdsControl(part: HTMLElement) {
+  if (part.inert || part.closest('[inert]')) return false;
+  return [...part.querySelectorAll<HTMLElement>(CONTROL)].some(
+    (el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden' && !el.closest('[inert]'),
+  );
+}
+
 /**
- * Focus a section without scrolling: it takes focus only for that moment (its tabindex is removed when it loses
- * focus), so a press on its text never focuses it, and the next Tab is its first control.
+ * Focus a section without scrolling, so the next Tab is its first control: the section itself, or, when its controls
+ * are drawn in a part rendered elsewhere (the Digital Twin's stage and Connect's contact band are outside their
+ * section in the document, after the deck's own arrows), the first such part that holds one. The focused element
+ * takes focus only for that moment (its tabindex is removed when it loses focus), so a press on its text never
+ * focuses it.
  */
 export function focusSection(id: string) {
-  const section = document.getElementById(id);
+  const parts = partsOf(id);
+  const section = parts.find(holdsControl) ?? parts[0];
   if (!section) return false;
   section.setAttribute('tabindex', '-1');
   section.addEventListener('blur', () => section.removeAttribute('tabindex'), { once: true });
