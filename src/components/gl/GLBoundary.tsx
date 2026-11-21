@@ -2,7 +2,7 @@
 
 import { PropsWithChildren, Suspense, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import type { RootState } from '@react-three/fiber';
+import { type RootState, useThree } from '@react-three/fiber';
 import { probeWebGL, reportExperienceError, watchWebGLContext } from '@/lib/analytics/experience';
 import { reportError } from '@/lib/report';
 import { gpuReportTags } from '@/motion/gpuTier';
@@ -63,12 +63,34 @@ export function ModelBoundary({
 export function onCanvasCreated(canvas: string) {
   const watch = watchWebGLContext(canvas);
   return (state: RootState) => {
-    watch(state);
     const el = state.gl.domElement;
+    // First of the canvas's listeners: the loss React Three Fiber causes when it releases a canvas unmounted on
+    // purpose (<ReleaseOnUnmount>) is a release, not a failure, so no poster and no report follow it.
+    el.addEventListener(
+      'webglcontextlost',
+      (event) => {
+        if (released.has(el)) event.stopImmediatePropagation();
+      },
+      { capture: true },
+    );
+    watch(state);
     el.addEventListener('webglcontextlost', () => setContextLost(canvas, true));
     el.addEventListener('webglcontextrestored', () => {
       setContextLost(canvas, false);
       state.invalidate();
     });
   };
+}
+
+const released = new WeakSet<HTMLCanvasElement>();
+
+/**
+ * Rendered inside a <Canvas> that is unmounted on purpose (MOT-09: the Twin's canvas away from the Twin). Its cleanup
+ * runs before React Three Fiber's teardown, which disposes the renderer and forces the context's loss to give it back
+ * at once; the canvas is marked so that loss is not taken for a failure.
+ */
+export function ReleaseOnUnmount() {
+  const gl = useThree((state) => state.gl);
+  useEffect(() => () => void released.add(gl.domElement), [gl]);
+  return null;
 }

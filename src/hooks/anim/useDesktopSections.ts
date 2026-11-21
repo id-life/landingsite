@@ -18,6 +18,7 @@ import {
 } from '@/motion/sectionController';
 import { sweepStops } from '@/motion/sweepStops';
 import { DURATION, EASE, REDUCED_FADE, SECTION_COVER } from '@/motion/tokens';
+import { coverHoldFor } from '@/motion/coverHold';
 import { SMOOTHER_LAG, THEME_TRANSITIONS } from '@/utils/gsap-config';
 import { getRestScroll } from '@/utils/section-step';
 
@@ -183,6 +184,17 @@ const desktopDriver: SectionDriver = {
     tl.set(el, { backgroundColor: themeColour(to), visibility: 'visible' });
     tl.to(el, { opacity: 1, duration: fade, ease: EASE.out });
     tl.call(() => jumpTo(y));
+    // A section may keep the cover until it is ready (src/motion/coverHold.ts; the Digital Twin until its avatar is
+    // drawn, within a limit). The jump resumes only if it is still the controller's move: a newer move clears its
+    // callbacks and kills it.
+    tl.call(() => {
+      const hold = coverHoldFor(to);
+      if (!hold) return;
+      tl.pause();
+      void hold.then(() => {
+        if (tl.eventCallback('onComplete')) tl.resume();
+      });
+    });
     // A short hold so the sections and canvases under the cover render the new position before it lifts.
     tl.to(el, { opacity: 0, duration: fade, ease: EASE.inOut }, `+=${DURATION.micro}`);
     tl.set(el, { visibility: 'hidden' });

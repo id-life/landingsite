@@ -1,6 +1,7 @@
 import { cn } from '@/utils';
-import { forwardRef, memo, useEffect, useRef, useState } from 'react';
-import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
+import { forwardRef, memo, useEffect, useId, useRef } from 'react';
+// The map's 3,085 dots as one path (scripts/merge-map-dots.mjs, MOT-11): the same pixels as world-map.svg's circles.
+import WorldMapSVG from '@/../public/svgs/engagement/world-map-path.svg?component';
 
 interface WorldMapAnimBackgroundProps {
   className?: string;
@@ -17,28 +18,33 @@ export const WorldMapAnimBackground = memo(
     ref, // This ref is for the WorldMapSVG itself
   ) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [isMouseInside, setIsMouseInside] = useState(false);
-    const filterId = `pulse-filter-${Math.random().toString(36).substr(2, 9)}`;
+    const layerRef = useRef<HTMLDivElement>(null);
+    const spotRef = useRef<SVGCircleElement>(null);
+    // MOT-11: one id for the life of the map (it was a new random id on every render, so every pointer move
+    // re-resolved the filter and the mask).
+    const filterId = `pulse-filter-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
-    // Handle mouse movement
+    // The spotlight layer is always mounted and hidden while the pointer is outside the map (it used to mount a second
+    // copy of the map on enter, and set React state on every move). A move only places the mask's circle, in the
+    // container's pixels, measured at each move as before (the map can move under a still pointer mid-transition).
     useEffect(() => {
       const container = containerRef.current;
-      if (!container) return;
-
+      const layer = layerRef.current;
+      const spot = spotRef.current;
+      if (!container || !layer || !spot) return;
       const handleMouseMove = (e: MouseEvent) => {
         const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        setMousePosition({ x, y });
+        spot.setAttribute('cx', String(e.clientX - rect.left));
+        spot.setAttribute('cy', String(e.clientY - rect.top));
       };
 
-      const handleMouseEnter = () => {
-        setIsMouseInside(true);
+      const handleMouseEnter = (e: MouseEvent) => {
+        handleMouseMove(e);
+        layer.style.visibility = 'visible';
       };
 
       const handleMouseLeave = () => {
-        setIsMouseInside(false);
+        layer.style.visibility = 'hidden';
       };
 
       container.addEventListener('mousemove', handleMouseMove);
@@ -64,93 +70,87 @@ export const WorldMapAnimBackground = memo(
         />
 
         {/* Effect layer - only visible in circular area around mouse */}
-        {isMouseInside && (
-          <div className="absolute inset-0">
-            {/* SVG for filters and masks */}
-            <svg className="pointer-events-none absolute inset-0 size-0">
-              <defs>
-                {/* Pulse filter */}
-                <filter id={filterId} x="-100%" y="-100%" width="300%" height="300%">
-                  {/* Convert everything to pure white with moderate intensity */}
-                  <feColorMatrix
-                    in="SourceGraphic"
-                    type="matrix"
-                    values="0 0 0 0 0.6
+        <div ref={layerRef} className="absolute inset-0" style={{ visibility: 'hidden' }}>
+          {/* SVG for filters and masks */}
+          <svg className="pointer-events-none absolute inset-0 size-0">
+            <defs>
+              {/* Pulse filter */}
+              <filter id={filterId} x="-100%" y="-100%" width="300%" height="300%">
+                {/* Convert everything to pure white with moderate intensity */}
+                <feColorMatrix
+                  in="SourceGraphic"
+                  type="matrix"
+                  values="0 0 0 0 0.6
                           0 0 0 0 0.6
                           0 0 0 0 0.6
                           0 0 0 8 0"
-                    result="pureWhite"
-                  />
+                  result="pureWhite"
+                />
 
-                  {/* Create a tight glow for size enhancement - larger but still crisp */}
-                  <feGaussianBlur in="pureWhite" stdDeviation="0.9" result="tightGlow" />
+                {/* Create a tight glow for size enhancement - larger but still crisp */}
+                <feGaussianBlur in="pureWhite" stdDeviation="0.9" result="tightGlow" />
 
-                  {/* Create a medium glow for smoothing */}
-                  <feGaussianBlur in="pureWhite" stdDeviation="1.3" result="mediumGlow" />
+                {/* Create a medium glow for smoothing */}
+                <feGaussianBlur in="pureWhite" stdDeviation="1.3" result="mediumGlow" />
 
-                  {/* Moderate brightness for tight glow */}
-                  <feColorMatrix
-                    in="tightGlow"
-                    type="matrix"
-                    values="1 0 0 0 0
+                {/* Moderate brightness for tight glow */}
+                <feColorMatrix
+                  in="tightGlow"
+                  type="matrix"
+                  values="1 0 0 0 0
                           0 1 0 0 0
                           0 0 1 0 0
                           0 0 0 3.5 0"
-                    result="brightTightGlow"
-                  />
+                  result="brightTightGlow"
+                />
 
-                  {/* Subtle brightness for medium glow */}
-                  <feColorMatrix
-                    in="mediumGlow"
-                    type="matrix"
-                    values="1 0 0 0 0
+                {/* Subtle brightness for medium glow */}
+                <feColorMatrix
+                  in="mediumGlow"
+                  type="matrix"
+                  values="1 0 0 0 0
                           0 1 0 0 0
                           0 0 1 0 0
                           0 0 0 1 0"
-                    result="brightMediumGlow"
-                  />
+                  result="brightMediumGlow"
+                />
 
-                  {/* Layer effects: original particles + enhanced glows for bigger appearance */}
-                  <feComposite in="pureWhite" in2="brightTightGlow" operator="screen" result="layer1" />
-                  <feComposite in="layer1" in2="brightMediumGlow" operator="screen" />
-                </filter>
+                {/* Layer effects: original particles + enhanced glows for bigger appearance */}
+                <feComposite in="pureWhite" in2="brightTightGlow" operator="screen" result="layer1" />
+                <feComposite in="layer1" in2="brightMediumGlow" operator="screen" />
+              </filter>
 
-                {/* Radial gradient for soft circular mask */}
-                <radialGradient id={`pulse-gradient-${filterId}`}>
-                  <stop offset="0%" stopColor="white" stopOpacity="1" />
-                  <stop offset="25%" stopColor="white" stopOpacity="1" />
-                  <stop offset="40%" stopColor="white" stopOpacity="0.6" />
-                  <stop offset="55%" stopColor="white" stopOpacity="0.5" />
-                  <stop offset="70%" stopColor="white" stopOpacity="0.2" />
-                  <stop offset="85%" stopColor="white" stopOpacity="0.05" />
-                  <stop offset="100%" stopColor="white" stopOpacity="0" />
-                </radialGradient>
+              {/* Radial gradient for soft circular mask */}
+              <radialGradient id={`pulse-gradient-${filterId}`}>
+                <stop offset="0%" stopColor="white" stopOpacity="1" />
+                <stop offset="25%" stopColor="white" stopOpacity="1" />
+                <stop offset="40%" stopColor="white" stopOpacity="0.6" />
+                <stop offset="55%" stopColor="white" stopOpacity="0.5" />
+                <stop offset="70%" stopColor="white" stopOpacity="0.2" />
+                <stop offset="85%" stopColor="white" stopOpacity="0.05" />
+                <stop offset="100%" stopColor="white" stopOpacity="0" />
+              </radialGradient>
 
-                {/* Soft circular mask using radial gradient */}
-                <mask id={`pulse-mask-${filterId}`}>
-                  <rect width="100%" height="100%" fill="black" />
-                  <circle
-                    cx={mousePosition.x}
-                    cy={mousePosition.y}
-                    r={radius * 1.0}
-                    fill={`url(#pulse-gradient-${filterId})`}
-                  />
-                </mask>
-              </defs>
-            </svg>
+              {/* Soft circular mask using radial gradient */}
+              <mask id={`pulse-mask-${filterId}`}>
+                <rect width="100%" height="100%" fill="black" />
+                <circle ref={spotRef} cx={0} cy={0} r={radius * 1.0} fill={`url(#pulse-gradient-${filterId})`} />
+              </mask>
+            </defs>
+          </svg>
 
-            {/* Enhanced WorldMapSVG layer with white effect */}
-            <WorldMapSVG
-              className={cn(
-                'world-map-img pointer-events-none absolute inset-0 select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
-              )}
-              style={{
-                filter: `url(#${filterId})`,
-                mask: `url(#pulse-mask-${filterId})`,
-              }}
-            />
-          </div>
-        )}
+          {/* Enhanced WorldMapSVG layer with white effect */}
+          {/* Not .world-map-img: the section's entrance tween never reached this copy, which mounted after it. */}
+          <WorldMapSVG
+            className={cn(
+              'pointer-events-none absolute inset-0 select-none bg-top [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)]',
+            )}
+            style={{
+              filter: `url(#${filterId})`,
+              mask: `url(#pulse-mask-${filterId})`,
+            }}
+          />
+        </div>
       </div>
     );
   }),

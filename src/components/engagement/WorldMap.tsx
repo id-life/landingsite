@@ -24,7 +24,8 @@ import {
 } from 'react';
 import { useMeasure } from 'react-use';
 import { NAV } from '../nav/nav';
-import WorldMapSVG from '@/../public/svgs/engagement/world-map.svg?component';
+// The map's 3,085 dots as one path (scripts/merge-map-dots.mjs, MOT-11): the same pixels as world-map.svg's circles.
+import WorldMapSVG from '@/../public/svgs/engagement/world-map-path.svg?component';
 import { WorldMapAnimBackground } from './WorldMapAnimBackground';
 import { WorldMapBookDotContent, WorldMapBookDotPoint } from './WorldMapBookDot';
 import { WorldMapDotContent, WorldMapDotPoint } from './WorldMapDot';
