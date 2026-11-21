@@ -95,3 +95,10 @@ export const CHROME = reducible({
 
 /** The phone menus' items: 50 px of travel, 0.1 s apart (layout, not durations: unchanged under reduced motion). */
 export const MENU_ITEMS = { travel: 50, stagger: 0.1 } as const;
+
+/** The Twin. */
+export const TWIN = reducible({
+  /** The avatars' titles moving off stage when the Twin opens: his tween names no timing, so GSAP's own 0.5 s and
+   * power1.out (written out here so that no site-wide default can change it). */
+  titlesReset: { duration: 0.5, ease: 'power1.out' },
+} as const);

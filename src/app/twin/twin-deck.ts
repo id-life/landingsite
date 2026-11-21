@@ -2,6 +2,7 @@ import { layoutUnitPx, u } from '@/utils/layout-unit';
 import { gsap } from 'gsap';
 import { forgetTwinPress } from '@/atoms/twin';
 import { COMPACT_HEIGHT_QUERY } from '@/styles/device-classes';
+import { TWIN } from '@/motion/original';
 
 /** Which deck the Digital Twin section is drawn for (RWD-02): the scrolled laptop deck or the paged phone deck. */
 export type TwinDeck = 'desktop' | 'phone';
@@ -76,11 +77,11 @@ export function showTwinOpening(deck: TwinDeck) {
   gsap.to('.twin-title', { opacity: 1, overwrite: 'auto' });
   showTwinDemo(deck, true);
   if (deck === 'desktop') {
-    gsap.to(items, { left: twinOffstage() });
+    gsap.to(items, { left: twinOffstage(), ...TWIN.titlesReset });
     gsap.to('#switch-skin', { bottom: skinRestBottom(), overwrite: 'auto' });
     return;
   }
-  gsap.to(items, { left: u(-80) });
+  gsap.to(items, { left: u(-80), ...TWIN.titlesReset });
   gsap.to('.twin-tag', { left: u(-80) });
   // 32 / 30 units down a tall phone (the phone deck's unit, larger on an upright tablet); on a phone in landscape
   // (390 px tall) that is below the window, so at most 60 %; the model column never over DEMO (twinModelRestTop).
