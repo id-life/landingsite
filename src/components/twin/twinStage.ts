@@ -14,7 +14,6 @@ import { sectionStateAtom } from '@/motion/sectionController';
  * canvas starts in, so a remount shows what the visitor would have seen.
  */
 const TWIN = NAV_LIST.findIndex((item) => item.id === 'twin_page');
-const TWIN_HREF = NAV_LIST[TWIN]?.href ?? '/digitaltwin';
 
 /** How long the canvas outlives the last reason to keep it, so a quick step back does not remount it. */
 export const TWIN_STAGE_RELEASE_MS = 1000;
@@ -24,36 +23,12 @@ export function twinStageNear(state: { index: number; target: number }, twin: nu
   return Math.abs(state.index - twin) <= 1 || Math.abs(state.target - twin) <= 1;
 }
 
-/** True while a link to the Twin has the pointer over it or the focus: an earlier start for a jump from the menu. */
-function useTwinLinkIntent() {
-  const [intent, setIntent] = useState(false);
-  useEffect(() => {
-    const isTwinLink = (target: EventTarget | null) =>
-      target instanceof Element && target.closest(`a[href="${TWIN_HREF}"]`) !== null;
-    const enter = (event: Event) => isTwinLink(event.target) && setIntent(true);
-    const leave = (event: Event) => isTwinLink(event.target) && setIntent(false);
-    const options = { capture: true, passive: true } as const;
-    document.addEventListener('pointerover', enter, options);
-    document.addEventListener('focusin', enter, options);
-    document.addEventListener('pointerout', leave, options);
-    document.addEventListener('focusout', leave, options);
-    return () => {
-      document.removeEventListener('pointerover', enter, options);
-      document.removeEventListener('focusin', enter, options);
-      document.removeEventListener('pointerout', leave, options);
-      document.removeEventListener('focusout', leave, options);
-    };
-  }, []);
-  return intent;
-}
-
 /** Whether the Twin's canvas should exist now. */
 export function useTwinStageWanted(): boolean {
   const { index, target } = useAtomValue(sectionStateAtom);
   // The section a scroll or a section's own trigger reports, which can run ahead of the controller's index.
   const current = useAtomValue(currentPageIndexAtom);
-  const linkIntent = useTwinLinkIntent();
-  const wanted = twinStageNear({ index, target }) || twinStageNear({ index: current, target: current }) || linkIntent;
+  const wanted = twinStageNear({ index, target }) || twinStageNear({ index: current, target: current });
   // Kept for TWIN_STAGE_RELEASE_MS after the last reason ends; not mounted at all if there never was one.
   const [expired, setExpired] = useState(!wanted);
   if (wanted && expired) setExpired(false);
