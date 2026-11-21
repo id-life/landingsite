@@ -5,6 +5,7 @@ import {
   innerPageTotalAtom,
   mobileCurrentPageAtom,
 } from '@/atoms';
+import { PHONE } from '@/motion/original';
 import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 import Toast from '@/components/common/Toast';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
@@ -14,7 +15,7 @@ import { usePortfolioItemAnimation } from '@/hooks/anim/usePortfolioItemAnimatio
 import { useRetimer } from '@/hooks/useRetimer';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 import { isLayoutRefreshing } from '@/motion/sectionController';
-import { beats, DISTANCE, DURATION, EASE, MAX_TILT } from '@/motion/tokens';
+import { beats, DISTANCE, MAX_TILT } from '@/motion/tokens';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -235,27 +236,31 @@ function PhonePortfolio() {
     const tl = gsap.timeline();
     timelineRef.current = tl;
 
-    tl.fromTo(wrapperRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: DURATION.camera, ease: EASE.out });
+    tl.fromTo(
+      wrapperRef.current,
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: PHONE.portfolioIn.duration, ease: PHONE.portfolioIn.ease },
+    );
 
     tl.fromTo(
       '.page2-title',
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
-      `<${DURATION.moderate}`,
+      { opacity: 1, y: 0, duration: PHONE.portfolioItem.duration, ease: PHONE.portfolioItem.ease },
+      `-=${PHONE.portfolioItem.overlap}`,
     );
 
     tl.fromTo(
       '.page2-fund',
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
-      `<${DURATION.fast}`,
+      { opacity: 1, y: 0, duration: PHONE.portfolioItem.duration, ease: PHONE.portfolioItem.ease },
+      `-=${PHONE.portfolioItem.overlap}`,
     );
 
     tl.fromTo(
       '.page2-contact',
       { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: DURATION.section, ease: EASE.out },
-      `<${DURATION.fast}`,
+      { opacity: 1, y: 0, duration: PHONE.portfolioItem.duration, ease: PHONE.portfolioItem.ease },
+      `-=${PHONE.portfolioItem.overlap}`,
     );
 
     return tl;
@@ -274,8 +279,8 @@ function PhonePortfolio() {
     tl.to(wrapperRef.current, {
       opacity: 0,
       y: -50,
-      duration: DURATION.section,
-      ease: EASE.inOut,
+      duration: PHONE.portfolioOut.duration,
+      ease: PHONE.portfolioOut.ease,
     });
 
     return tl;
@@ -364,7 +369,7 @@ function PhonePortfolio() {
               key={pageIdx}
               className={cn(
                 // The phone inner-page step (MOT-08): the same 0.25 s ease-out as Spectrum's pages.
-                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-page ease-token-out shortScreen:px-2',
+                'absolute inset-x-0 bottom-12 top-2 grid grid-cols-2 gap-0 px-4 transition-all duration-500 ease-in-out shortScreen:px-2',
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
                 pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32 [@media(max-height:699.98px)]:py-0',
                 'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',

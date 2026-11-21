@@ -1,8 +1,8 @@
 import { useGSAP } from '@gsap/react';
+import { PHONE } from '@/motion/original';
 import gsap from 'gsap';
 import { useCallback } from 'react';
 import { ensureMobileUIVisible } from '@/utils/ui';
-import { DURATION, EASE } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 
 export function useMobileInsightsAnim() {
@@ -20,7 +20,7 @@ export function useMobileInsightsAnim() {
     }
 
     const tl = gsap.timeline({
-      delay: DURATION.moderate, // 等待上一页退出动画 (the previous page's exit)
+      delay: PHONE.insightsIn.delay, // 等待上一页退出动画 (the previous page's exit)
     });
 
     // 设置初始状态
@@ -33,8 +33,8 @@ export function useMobileInsightsAnim() {
     tl.to('.mobile-insights-content', {
       opacity: 1,
       y: 0,
-      duration: DURATION.moderate,
-      ease: EASE.out,
+      duration: PHONE.insightsIn.duration,
+      ease: PHONE.insightsIn.ease,
     });
 
     return tl;

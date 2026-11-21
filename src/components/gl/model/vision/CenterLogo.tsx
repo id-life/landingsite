@@ -12,6 +12,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { INTRO, shouldSkipIntro } from './intro';
 import { DURATION, EASE } from '@/motion/tokens';
+import { PHONE } from '@/motion/original';
 import { isReducedMotion } from '@/motion/preference';
 import MergedSvg from './MergedSvg';
 import {
@@ -230,7 +231,7 @@ function fadeLockup(root: THREE.Object3D | null, share: number, delay: number) {
     const material = (object as THREE.Mesh).material as THREE.MeshBasicMaterial | undefined;
     if (!material || !('opacity' in material)) return;
     const full = Number(material.userData?.fillOpacity ?? 1);
-    gsap.to(material, { opacity: full * share, duration: DURATION.base + DURATION.fast, delay });
+    gsap.to(material, { opacity: full * share, duration: PHONE.wordmarkSwap.duration, delay });
   });
 }
 
@@ -290,7 +291,7 @@ function PhoneCenterLogo() {
             [enLogoRef, enDescRef],
           ];
     from.forEach((ref) => fadeLockup(ref.current, 0, 0));
-    to.forEach((ref) => fadeLockup(ref.current, 1, DURATION.base));
+    to.forEach((ref) => fadeLockup(ref.current, 1, PHONE.wordmarkSwap.inDelay));
   }, []);
   const onCnReady = useCallback(() => {
     readyRef.current = true;

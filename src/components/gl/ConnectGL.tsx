@@ -1,6 +1,7 @@
 'use client';
 
 import { currentPageAtom, mobileCurrentPageAtom } from '@/atoms';
+import { PHONE } from '@/motion/original';
 import AnimalModel from '@/components/gl/model/connect/AnimalModel';
 import { NAV_LIST } from '@/components/nav/nav';
 import { isLayoutRefreshing } from '@/motion/sectionController';
@@ -16,7 +17,7 @@ import { CONNECT_GL_CONFIG } from '@/components/gl/config/ConnectGLConfig';
 import { isMobileFooterContactShowAtom } from '@/atoms/footer';
 import { CONNECT_PAGE_INDEX } from '@/constants/config';
 import { useThree } from '@react-three/fiber';
-import { DURATION, EASE } from '@/motion/tokens';
+import { DURATION } from '@/motion/tokens';
 import { isReducedMotion } from '@/motion/preference';
 
 type TitleProps = {
@@ -172,9 +173,11 @@ function MobileConnectGL() {
     cn.elements.forEach((el) => el.removeAttribute('aria-hidden'));
     gsap.set(cn.chars, { opacity: 0 });
     const enTotal = en.chars.length * TURN_STAGGER + TURN_FADE;
-    en.chars.forEach((char, i) => gsap.to(char, { opacity: 0, duration: TURN_FADE, delay: i * TURN_STAGGER, ease: EASE.out }));
+    en.chars.forEach((char, i) =>
+      gsap.to(char, { opacity: 0, duration: TURN_FADE, delay: i * TURN_STAGGER, ease: PHONE.connectTurnEase }),
+    );
     cn.chars.forEach((char, i) =>
-      gsap.to(char, { opacity: 1, duration: TURN_FADE, delay: enTotal + i * TURN_STAGGER, ease: EASE.out }),
+      gsap.to(char, { opacity: 1, duration: TURN_FADE, delay: enTotal + i * TURN_STAGGER, ease: PHONE.connectTurnEase }),
     );
   }, [resetTurn]);
 
@@ -204,8 +207,8 @@ function MobileConnectGL() {
       { ...page1Config.from.model.position },
       {
         ...page1Config.to.model.position,
-        duration: DURATION.section,
-        ease: EASE.out,
+        duration: PHONE.connectModel.duration,
+        ease: PHONE.connectModel.ease,
       },
       0.5,
     );
@@ -214,14 +217,14 @@ function MobileConnectGL() {
       { ...page1Config.from.model.rotation },
       {
         ...page1Config.to.model.rotation,
-        duration: DURATION.section,
-        ease: EASE.out,
+        duration: PHONE.connectModel.duration,
+        ease: PHONE.connectModel.ease,
       },
       '<',
     );
 
     // Fade in content
-    tl.to('#mobile-connect-content', { opacity: 1, duration: DURATION.moderate }, 0.2);
+    tl.to('#mobile-connect-content', { opacity: 1, duration: PHONE.connectContent.duration }, 0.2);
 
     startAnimTLRef.current = tl;
     // A rebuild while Connect is showing (a deep link lands there before the camera is final) plays at once.
