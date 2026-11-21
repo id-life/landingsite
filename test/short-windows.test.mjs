@@ -42,4 +42,28 @@ describe('short windows by the original phone width', () => {
     expect(config).toMatch(/shortNarrow: \{ raw: SHORT_NARROW_QUERY \}/);
     expect(config).toMatch(/shortWide: \{ raw: SHORT_WIDE_QUERY \}/);
   });
+  test('Presence: the phone strip starts a quarter of the free room in, only where the original phone version draws', () => {
+    const source = read('src/components/engagement/Engagement.tsx');
+    const rule = source.match(/shortNarrow:\[&_:has\(>\.world-map-container\)\]:left-\[([^\]]+)\]/);
+    expect(rule, 'the offset rule').not.toBeNull();
+    expect(rule[1]).toBe('max(0px,calc((100%_-_var(--map-h)*63/30)/4))');
+    expect(source).toContain('shortNarrow:[&_:has(>.world-map-container)]:w-auto');
+    expect(source).toContain('shortNarrow:[&_:has(>.world-map-container)]:overflow-x-visible');
+    // The strip's height at compact heights (WorldMap.tsx): the window less 12.25 units, 16 px each there.
+    expect(read('src/components/engagement/WorldMap.tsx')).toContain('shortScreen:[--map-h:calc(100svh_-_12.25rem)]');
+    const offset = (width, height) => Math.max(0, (width - ((height - 196) * 63) / 30) / 4);
+    // Measured on the cards: from 0.20 F to 0.34 F no card is cut more than on the original at all three windows.
+    for (const [width, height, x] of [
+      [640, 360, 73.9],
+      [667, 375, 72.8],
+      [720, 450, 46.7],
+    ]) {
+      expect(matches(SHORT_NARROW_QUERY, { width, height })).toBe(true);
+      expect(offset(width, height)).toBeCloseTo(x, 1);
+    }
+    // Wider than 768 px the map stays at 0.
+    expect(matches(SHORT_NARROW_QUERY, { width: 844, height: 390 })).toBe(false);
+    // A map wider than the window (a near-square short window) is never pushed left of 0.
+    expect(offset(500, 470)).toBe(0);
+  });
 });
