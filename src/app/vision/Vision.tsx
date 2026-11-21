@@ -59,10 +59,10 @@ export default function Vision() {
             scaleWithUnit
             duration={5}
             transition={0.6}
-            // On a short window (under 480 px tall) the slogans sit at the bottom left, under the tagline and beside
-            // START: their box ends 6 px before START (half the window less START's 61 px half-width, the 20 px margin
-            // and the gap), and its top is below the tagline; a slogan wraps to at most its two lines there.
-            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-1 shortScreen:left-5 shortScreen:right-auto shortScreen:top-auto shortScreen:w-[calc(50%_-_5.4375rem)] shortScreen:translate-y-0"
+            // On a short window (under 480 px tall) the slogans keep their centred column but sit just above the hero
+            // tagline (which the hero draws at 84 % of the window's height, measured), instead of under START: no
+            // slogan letter under START or over the tagline, and a slogan keeps its full width (at most two lines).
+            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-[calc(16.2svh_+_0.25rem)] shortScreen:top-auto shortScreen:translate-y-0"
           >
             {CAROUSEL_ITEMS.map((item) => (
               <CarouselItem key={item.cnText ?? item.text} {...item} />
