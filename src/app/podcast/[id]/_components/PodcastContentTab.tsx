@@ -17,7 +17,7 @@ type PodcastContentTabProps = {
   id: string;
   /** The transcript, rendered to markup on the server (src/app/podcast/[id]/page.tsx). */
   children: ReactNode;
-  /** The transcript's language when it is not the page's (ENG-03: zh-Hans for a Chinese transcript). */
+  /** The transcript's language when it is not the page's (ENG-03: zh-CN for a Chinese transcript). */
   transcriptLang?: string;
 };
 

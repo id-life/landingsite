@@ -142,7 +142,7 @@ html[data-webgl='0'] header[data-experience-header] {
 
   /* Chinese runs: CJK punctuation spacing on, Latin-only letter-spacing and case transforms off. Only on .zh-run
      (the Chinese half of a bilingual label and the few Chinese lines that had it), not on every part marked
-     lang="zh-Hans": marking a part for screen readers (ENG-03) restyles nothing. */
+     lang="zh-CN": marking a part for screen readers (ENG-03) restyles nothing. */
   .zh-run {
     text-autospace: normal;
     letter-spacing: 0;
