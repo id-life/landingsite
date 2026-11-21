@@ -42,6 +42,9 @@ const LOGO_CLASS: Record<string, string> = {
   eonark: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
 };
 
+/** Tiles on the phone version's first Portfolio page (the page a visitor arrives on). */
+export const PORTFOLIO_PHONE_FIRST_PAGE = 6;
+
 export const portfolio: PortfolioItemInfo[] = COMPANIES.map((company) => ({
   slug: company.slug,
   title: company.name,
