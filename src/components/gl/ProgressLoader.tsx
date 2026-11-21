@@ -1,5 +1,6 @@
 import { fadeInAnimCompletedAtom, globalLoadedAtom, isLoadingUIAtom } from '@/atoms/geo';
 import { heroReadyAtom } from '@/atoms/loading';
+import { coverHoldForLanding } from '@/motion/coverHold';
 import { jotaiStore } from '@/atoms/store';
 import { ensureDesktopUIVisible, ensureMobileUIVisible } from '@/utils/ui';
 import Background from '@/components/common/Background';
@@ -132,6 +133,13 @@ export const OuterLoader = memo(function OuterLoader() {
     exitingRef.current = true;
     reportExperienceReady({ failOpen: false, mountedAt: mountedAtRef.current });
     loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, () => {
+      // A direct landing on a section that holds its cover (the Digital Twin until its avatar is drawn, within a
+      // limit: src/motion/coverHold.ts) keeps the full bar until then, so the loader never uncovers it empty.
+      const hold = coverHoldForLanding();
+      if (hold) void hold.then(leave);
+      else leave();
+    });
+    function leave() {
       const finish = () => {
         setIsLoadingUI(true);
         setGlobalLoaded(true);
@@ -143,7 +151,7 @@ export const OuterLoader = memo(function OuterLoader() {
         return;
       }
       gsap.to(logo, { opacity: 0, duration: INTRO.loaderFadeSeconds, ease: INTRO.defaultEase, onComplete: finish });
-    });
+    }
   }, [heroReady, setGlobalLoaded, setIsLoadingUI, show]);
 
   useEffect(() => {

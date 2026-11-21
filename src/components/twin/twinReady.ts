@@ -30,10 +30,16 @@ export function onFirstInput(target: EventTarget, run: () => void): () => void {
 }
 
 /**
- * How long a far jump's cover waits for the avatar before it lifts anyway. PROVISIONAL: to be derived from the
- * measured cold case (its 95th percentile plus a margin) before the cover's timeline asks for it.
+ * How long a far jump's cover (and the first-visit loader on a direct landing) waits for the avatar before it lifts
+ * anyway, counted from the moment the page has jumped under the cover. Derived 2026-11-21 from 10 cold far jumps from
+ * Mission on the laptop version, with the models fetched over a throttled connection of 20 Mbit/s and 40 ms latency:
+ * the avatar's first frame came 0.83 to 0.87 s after the jump (95th percentile about 0.87 s); that plus a quarter is
+ * 1,100 ms. On that connection no frame shows the stage without the avatar. A slower connection (5 Mbit/s, 150 ms:
+ * about 3.4 s) is deliberately not waited for: a blank cover for that long reads as a page that has stopped, and by a
+ * menu jump the first-input preload has usually loaded the models already. Re-derive from the same measurement if the
+ * avatar's files change.
  */
-export const TWIN_COVER_LIMIT_MS = 2500;
+export const TWIN_COVER_LIMIT_MS = 1100;
 
 let drawn = false;
 const waiters = new Set<() => void>();
