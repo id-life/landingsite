@@ -3,6 +3,9 @@ import { atom } from 'jotai';
 /** The hero (dragon model and wordmark textures) has loaded and committed: the loader may leave. */
 export const heroReadyAtom = atom<boolean>(false);
 
+/** The client's loader is in the document: the server's copy of it (ServerLoader) may leave. */
+export const serverLoaderHandedOverAtom = atom<boolean>(false);
+
 /** Furthest experience section (NAV_LIST index) the visitor has reached in this tab. */
 export const furthestSectionAtom = atom<number>(0);
 
