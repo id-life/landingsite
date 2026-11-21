@@ -2,7 +2,7 @@ import { spectrumBaseData, SpectrumItemData, SpectrumLinkData } from '@/app/spec
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { NAV, SectionId } from '@/components/nav/nav';
-import { HTMLAttributes, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useEngagementClickPoint } from '../engagement/useEngagementClickPoint';
 import { useIsMobile } from '../useIsMobile';
 import { useMobileNavigation } from '../useMobileNavigation';
@@ -19,9 +19,7 @@ export type SpectrumLinkItem = SpectrumLinkData & {
   className?: string;
 };
 
-export type SpectrumItemInfo = SpectrumItemData & {
-  onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
-};
+export type SpectrumItemInfo = SpectrumItemData;
 
 export const useSpectrumData = () => {
   const isMobile = useIsMobile();

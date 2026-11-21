@@ -116,7 +116,8 @@ export default function VideoModal({ isOpen, onClose, videoId, title, placement 
               <CloseIcon />
             </button>
 
-            <div ref={refs.setFloating} className="relative" onClick={(e) => e.stopPropagation()}>
+            {/* Not a control: it only keeps a click on the video from reaching the backdrop, which closes it. */}
+            <div ref={refs.setFloating} role="presentation" className="relative" onClick={(e) => e.stopPropagation()}>
               <div className="relative aspect-video w-[80vw] max-w-[960px] overflow-hidden rounded-lg bg-black shadow-2xl">
                 <iframe
                   ref={frameRef}
