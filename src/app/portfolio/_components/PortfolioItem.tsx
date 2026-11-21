@@ -45,9 +45,12 @@ const PortfolioItem = memo(
           className={cn(
             'flex items-center justify-center notMobile:px-3 notMobile:[&>img]:max-h-full notMobile:[&>img]:max-w-full notMobile:[&>img]:object-contain',
             // A phone window under 660 px tall (360x640) has three rows of 130 px for six tiles: the logo box is 48 px
-            // there instead of 60, or a one-liner reached 2 to 6 px into the next row's logos.
+            // there instead of 60, or a one-liner reached 2 to 6 px into the next row's logos. Where the rows are
+            // shorter still (106 px at 320x568) the box follows its tile: the tile's height less the 76 px its title,
+            // tagline and their gaps take, between 28 and 48 px (30 px at 320x568), so the next row's logo stays off the tagline above
+            // (on his site too each row's logo lay on it). At 360x640 that is exactly 48 px, as before (RWD-03).
             isGridMode
-              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:px-1 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:h-12 [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:max-h-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:object-contain [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_svg]:max-h-full'
+              ? 'h-12 mobile:h-15 shortScreen:h-10 shortScreen:px-1 shortScreen:[&_img]:max-h-full shortScreen:[&_img]:max-w-full shortScreen:[&_img]:object-contain shortScreen:[&_svg]:max-h-full shortScreen:[&_svg]:max-w-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:h-[clamp(1.75rem,calc(100%-4.75rem),3rem)] [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:max-h-full [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_img]:object-contain [@media(min-height:480px)_and_(max-height:659.98px)]:mobile:[&_svg]:max-h-full'
               : 'h-20 mobile:h-15',
           )}
         >
