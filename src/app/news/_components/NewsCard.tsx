@@ -45,7 +45,6 @@ export default function NewsCard({ data }: { data: NewsPageItem }) {
             pic={data.cover || '/imgs/news/insights-bg.webp'}
             videoId={data.videoId ?? ''}
             title={data.title}
-            onClick={() => {}}
             sizes="(max-width: 768px) 92vw, 30vw"
           />
         </div>

@@ -57,7 +57,7 @@ export default function SectionPager({ className }: SectionPagerProps) {
 }
 
 /** English section name for labels: 'digital twin 孪生' -> 'Digital Twin'. */
-function sectionName(title: string) {
+export function sectionName(title: string) {
   return title
     .replace(/[㐀-鿿]+/g, '')
     .trim()

@@ -40,6 +40,8 @@ export function catalogMarkdown() {
     'Generated from `src/lib/analytics/events.ts` (`UPDATE_ANALYTICS_DOCS=1 npm test` rewrites this file; `npm test` fails',
     'while it is stale). Send events only with `track()` from `src/lib/analytics/track.ts`.',
     '',
+    'What the podcast pages and the player sent before, and the event that carries each fact now: [BEFORE-AND-NOW.md](./BEFORE-AND-NOW.md).',
+    '',
     `Key events (mark them in GA4 Admin): ${KEY_EVENTS.map((k) => `\`${k}\``).join(', ')}.`,
     '',
     '## Context added to every event',

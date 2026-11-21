@@ -2,7 +2,7 @@ import { SpectrumItemInfo, SpectrumLinkItem } from '@/hooks/spectrum/useSpectrum
 import { cn } from '@/utils';
 import { FITTED_TAP_AREA, useFittedTapArea } from '@/hooks/useFittedTapArea';
 import { AnimatePresence, motion } from 'motion/react';
-import { cloneElement, forwardRef, HTMLAttributes, memo, useCallback, useMemo } from 'react';
+import { cloneElement, forwardRef, memo, useCallback, useMemo } from 'react';
 import { atom, useAtom } from 'jotai';
 import { jotaiStore } from '@/atoms/store';
 import { noteInnerPage, registerInnerPage } from '@/motion/innerPages';
@@ -42,7 +42,6 @@ interface SpectrumItemProps {
   item: SpectrumItemInfo;
   link?: string;
   className?: string;
-  onClick?: HTMLAttributes<HTMLDivElement>['onClick'];
   onHover?: () => void;
   executeSpectrumRoute?: (key: string) => void;
   updateUrlAndExecute?: (key: string) => void;
@@ -135,17 +134,7 @@ SpectrumLink.displayName = 'SpectrumLink';
 const SpectrumItem = memo(
   forwardRef<HTMLDivElement, SpectrumItemProps>(
     (
-      {
-        item,
-        onClick,
-        onHover,
-        className,
-        executeSpectrumRoute,
-        updateUrlAndExecute,
-        routeConfigs,
-        isSponsor,
-        loadImages = true,
-      },
+      { item, onHover, className, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, isSponsor, loadImages = true },
       ref,
     ) => {
       const { title, titleCn, icon, links, linksClassName, className: itemClassName } = item;
@@ -244,9 +233,9 @@ const SpectrumItem = memo(
       }, [isSponsor, visibleLinks, safePage, executeSpectrumRoute, updateUrlAndExecute, routeConfigs, loadImages]);
 
       return (
+        // Not a control: its links and "more" are. (It took a click handler that no item ever set.)
         <div
           ref={ref}
-          onClick={onClick}
           onMouseEnter={onMouseEnter}
           className={cn(
             'spectrum-item relative cursor-pointer overflow-visible p-4 text-foreground',

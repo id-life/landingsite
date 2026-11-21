@@ -7,7 +7,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import PodcastSiriWave from '@/app/podcast/[id]/_components/PodcastSiriWave';
-import { track } from '@/lib/analytics/track';
+import { useAudioAnalytics } from '@/hooks/audio/useAudioAnalytics';
 import { formatPlaybackTime } from '@/utils/podcast';
 
 type PodcastPlayerProps = {
@@ -18,6 +18,13 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
   const [playStatus, setPlayStatus] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [progress, setProgress] = useState(0);
+  // Listening is counted from the element (DATA-12): the button, the progress bar and a show-notes timestamp alike.
+  useAudioAnalytics(audioRef, {
+    episode_id: String(data.id),
+    show: data.category,
+    source: 'episode_page',
+    duration: data.duration,
+  });
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -27,16 +34,25 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
     handleSeekTo(seekTo);
   };
 
+  const handleProgressKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const now = audioRef.current?.currentTime ?? 0;
+    const step = ({ ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 } as Record<string, number>)[event.key];
+    let to: number | null = step === undefined ? null : Math.min(data.duration, Math.max(0, now + step));
+    if (event.key === 'Home') to = 0;
+    if (event.key === 'End') to = data.duration;
+    if (to === null) return;
+    event.preventDefault();
+    handleSeekTo(to);
+  };
+
   const handlePlayClick = () => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
 
     if (audio.paused) {
-      track('episode_play', { episode_id: String(data.id), action: 'start' });
       audio.play().then();
       setPlayStatus(true);
     } else {
-      track('episode_play', { episode_id: String(data.id), action: 'pause' });
       audio.pause();
       setPlayStatus(false);
     }
@@ -51,9 +67,8 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
   }, []);
 
   const handlePlayEnd = useCallback(() => {
-    track('episode_end', { episode_id: String(data.id) });
     setPlayStatus(false);
-  }, [data.id]);
+  }, []);
 
   const handleSeekTo = (time: number) => {
     if (!audioRef.current) return;
@@ -93,11 +108,31 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
           <source src={data.url} />
         </audio>
         <PodcastSiriWave status={playStatus} />
-        <div onClick={handlePlayClick} className="size-7.5 cursor-pointer">
-          {playStatus ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
-        </div>
+        {/* A button (Tab stop, Enter and Space), drawn as the div it was. */}
+        <button
+          type="button"
+          aria-label={playStatus ? 'Pause episode' : 'Play episode'}
+          onClick={handlePlayClick}
+          className="size-7.5 cursor-pointer"
+        >
+          {playStatus ? (
+            <PauseSVG aria-hidden="true" className="size-full fill-white" />
+          ) : (
+            <PlaySVG aria-hidden="true" className="size-full fill-white" />
+          )}
+        </button>
+        {/* A slider for assistive technology and the keyboard: the arrow keys step 5 s, Home and End go to the ends (a
+            seek plays a paused episode, as a click on the bar does). */}
         <div
+          role="slider"
+          tabIndex={0}
+          aria-label="Episode position"
+          aria-valuemin={0}
+          aria-valuemax={Math.round(data.duration)}
+          aria-valuenow={Math.round(progress * data.duration) || 0}
+          aria-valuetext={`${formatPlaybackTime(audioRef.current?.currentTime ?? 0)} of ${formatPlaybackTime(data.duration)}`}
           onClick={handleProgressChange}
+          onKeyDown={handleProgressKey}
           className="mx-3 flex h-4 w-full max-w-75 flex-1 cursor-pointer items-center justify-start mobile:h-3"
         >
           <div className="relative h-0.5 w-full bg-tone-650">

@@ -17,7 +17,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
     { id: 'xiaoyuzhou', name: 'Xiaoyuzhou', link: data.xyzLink, icon: '/imgs/podcast/fm_xyz.png' },
     { id: 'spotify', name: 'Spotify', link: data.spotifyLink, icon: '/imgs/podcast/fm_spotify.png' },
     { id: 'apple_podcasts', name: 'Apple Podcasts', link: data.podcastLink, icon: '/imgs/podcast/fm_podcast.png' },
-  ];
+  ] as const;
 
   return (
     <div>
@@ -43,7 +43,7 @@ export default function PodcastCover({ category }: PodcastCoverProps) {
                   href={url}
                   aria-label={name}
                   event="outbound_click"
-                  params={{ link_type: 'podcast_platform', item_id: id, placement: 'podcast_page' }}
+                  params={{ link_type: 'podcast_platform', item_id: id, placement: 'podcast_page', platform: id }}
                 >
                   <img className="w-7.5 cursor-pointer mobile:w-6" src={icon} alt="" />
                 </OutboundLink>

@@ -1,7 +1,13 @@
 import PageSEOContent from '@/components/seo/PageSEOContent';
 import { ORG_ADDRESS, ORG_EMAIL } from '@/constants/entity';
-import { CONNECT_STRENGTHS } from '@/content/connect';
+import { CONNECT_CRITERIA, CONNECT_STRENGTHS, CONNECT_VALUES } from '@/content/connect';
 
+/**
+ * His Connect summary, hidden as on his site and in his structure (his ConnectSummary: the four values, the criteria
+ * in English and Chinese, the three strengths, the contact lines), read from the content layer, where the words are his
+ * as amended by his answers (the criteria without the investment stage, 12j). His answer to question 25 (2026-11-20):
+ * "A: leave them hidden, as your site does today (the default) for now".
+ */
 export default function ConnectSummary({ title, description }: { title: string; description: string }) {
   const { streetAddress, addressLocality, postalCode } = ORG_ADDRESS;
   return (
@@ -10,13 +16,25 @@ export default function ConnectSummary({ title, description }: { title: string; 
       <PageSEOContent
         title={title}
         intro={[description]}
-        // Only text the Connect section shows on at least one deck of the owner's site (his rule of 2026-11-18, question
-        // 12b): the East & West line. The investment criteria, the four values and the other two strengths were never
-        // drawn there (opacity 0 on his phone deck, absent on the laptop), so they are not repeated here.
         sections={[
+          ...CONNECT_VALUES.map((item) => ({
+            heading: `${item.title?.en} ${item.title?.zh}`,
+            text: [`${item.text.en}\n${item.text.zh}`],
+          })),
+          { heading: CONNECT_CRITERIA.title.en, text: CONNECT_CRITERIA.items.map((item) => item.en) },
           {
-            heading: CONNECT_STRENGTHS[0].title?.en ?? '',
-            text: [CONNECT_STRENGTHS[0].text.en],
+            heading: CONNECT_CRITERIA.title.zh ?? '',
+            text: CONNECT_CRITERIA.items.map((item) => ({ text: item.zh ?? '', lang: 'zh-CN' })),
+          },
+          {
+            heading: CONNECT_STRENGTHS.map((item) => item.title?.en).join(' · '),
+            items: [
+              ...CONNECT_STRENGTHS.map((item) => ({ title: item.title?.en ?? '', text: [item.text.en] })),
+              ...CONNECT_STRENGTHS.map((item) => ({
+                title: item.title?.zh ?? '',
+                text: [{ text: item.text.zh ?? '', lang: 'zh-CN' }],
+              })),
+            ],
           },
           {
             heading: 'Contact',

@@ -23,14 +23,38 @@ type DesktopPodcastItemProps = {
  * The current episode's progress bar and times: the only part of a row that changes as the episode plays, so the only
  * part that reads the playing time (about four updates a second). The rest of the list does not re-render with it.
  */
-function EpisodeProgress({ onSeek }: { onSeek: (event: React.MouseEvent<HTMLDivElement>) => void }) {
+function EpisodeProgress({
+  onSeek,
+  onSeekTo,
+}: {
+  onSeek: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onSeekTo?: (value: number) => void;
+}) {
   const progress = useAtomValue(progressAtom);
   const currentTime = useAtomValue(currentTimeAtom);
   const duration = useAtomValue(durationAtom);
+  // A slider for assistive technology and the keyboard (ENG-03): the arrow keys step 5 s, Home and End go to the ends.
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 }[event.key];
+    let to: number | null = step === undefined ? null : Math.min(duration, Math.max(0, currentTime + step));
+    if (event.key === 'Home') to = 0;
+    if (event.key === 'End') to = duration;
+    if (to === null) return;
+    event.preventDefault();
+    onSeekTo?.(to);
+  };
   return (
     <>
       <div
+        role="slider"
+        tabIndex={0}
+        aria-label="Episode position"
+        aria-valuemin={0}
+        aria-valuemax={Math.round(duration)}
+        aria-valuenow={Math.round(currentTime)}
+        aria-valuetext={`${dayjs.duration(currentTime, 'seconds').format('mm:ss')} of ${dayjs.duration(duration, 'seconds').format('mm:ss')}`}
         onClick={onSeek}
+        onKeyDown={onKeyDown}
         className="mt-[6px] flex h-[16px] cursor-pointer items-center justify-start mobile:mt-[0.375rem] mobile:h-[1rem]"
       >
         <div className="relative h-[2px] w-full bg-tone-650 mobile:h-[0.125rem]">
@@ -77,19 +101,21 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
       <div className="flex flex-1 items-start gap-[2px] overflow-hidden mobile:w-[calc(100%_-_3.75rem)] mobile:gap-[0.125rem]">
         {isCurrent ? <img className="w-[16px] mobile:w-[1rem]" src="/svgs/player/play_status.svg" alt="" /> : null}
         <div className="w-full overflow-hidden">
-          <div
+          {/* A button (Tab stop, Enter and Space), drawn as the block of text it was: block, left-aligned. */}
+          <button
+            type="button"
             onClick={onClick}
             className={clsx(
-              'w-full cursor-pointer truncate text-[12px]/[20px] font-semibold hover:text-accent mobile:text-[0.75rem]/[1.25rem]',
+              'block w-full cursor-pointer truncate text-left text-[12px]/[20px] font-semibold hover:text-accent mobile:text-[0.75rem]/[1.25rem]',
               isCurrent && 'text-accent',
             )}
           >
             {data.title}
-          </div>
+          </button>
           <div className="mt-[2px] line-clamp-2 text-xs/[16px] text-tone-350 mobile:mt-[0.125rem] mobile:text-xs/[1rem]">
             {data.description}
           </div>
-          {isCurrent ? <EpisodeProgress onSeek={handleProgressChange} /> : null}
+          {isCurrent ? <EpisodeProgress onSeek={handleProgressChange} onSeekTo={onSeekTo} /> : null}
           <div className="mt-[8px] flex items-center justify-between mobile:mt-[0.5rem]">
             <div className="flex-center gap-[4px] text-xs/[16px] font-medium text-tone-500 mobile:gap-[0.25rem] mobile:text-xs/[1rem]">
               <span>{dayjs.duration(data.duration, 'seconds').format('m')}min</span>
@@ -102,7 +128,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   href={xyzUrl}
                   aria-label="Xiaoyuzhou"
                   event="outbound_click"
-                  params={{ link_type: 'podcast_platform', item_id: 'xiaoyuzhou', placement: 'site_player' }}
+                  params={{
+                    link_type: 'podcast_platform',
+                    item_id: 'xiaoyuzhou',
+                    placement: 'site_player',
+                    platform: 'xiaoyuzhou',
+                    episode_id: String(data.id),
+                  }}
                 >
                   <img className="w-[16px] cursor-pointer mobile:w-[1rem]" src="/imgs/player/fm_xiaoyuzhou.png" alt="" />
                 </OutboundLink>
@@ -112,7 +144,13 @@ function DesktopPodcastItem({ data, onClick, currentMusicId, onSeekTo, className
                   href={appleUrl}
                   aria-label="Apple Podcasts"
                   event="outbound_click"
-                  params={{ link_type: 'podcast_platform', item_id: 'apple_podcasts', placement: 'site_player' }}
+                  params={{
+                    link_type: 'podcast_platform',
+                    item_id: 'apple_podcasts',
+                    placement: 'site_player',
+                    platform: 'apple_podcasts',
+                    episode_id: String(data.id),
+                  }}
                 >
                   <img className="w-[16px] cursor-pointer mobile:w-[1rem]" src="/imgs/player/fm_podcast.png" alt="" />
                 </OutboundLink>

@@ -36,10 +36,13 @@ function PodcastSelected({ className }: PodcastSelectedProps) {
 
   return (
     <div className="relative w-full">
-      <div
+      {/* A button that opens the two shows (Tab stop, Enter and Space; aria-expanded), drawn as the full-width block it was. */}
+      <button
+        type="button"
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className={clsx(
-          'relative cursor-pointer select-none gap-[4px] rounded-full bg-white/10 p-[8px] text-center text-[12px]/[14px] font-semibold mobile:gap-[0.25rem] mobile:p-[0.5rem] mobile:text-[0.75rem]/[0.875rem]',
+          'relative block w-full cursor-pointer select-none gap-[4px] rounded-full bg-white/10 p-[8px] text-center text-[12px]/[14px] font-semibold mobile:gap-[0.25rem] mobile:p-[0.5rem] mobile:text-[0.75rem]/[0.875rem]',
           className,
         )}
       >
@@ -50,17 +53,18 @@ function PodcastSelected({ className }: PodcastSelectedProps) {
             isOpen && 'rotate-180',
           )}
         />
-      </div>
+      </button>
       {isOpen && (
         <div className="absolute left-0 top-[38px] isolate z-10 w-full bg-white/5 text-center text-[12px]/[12px] font-semibold shadow-lg backdrop-blur-2xl mobile:top-[2.375rem] mobile:text-[0.75rem]/[0.75rem]">
           {PodcastCategoryList.map((key) => (
-            <div
+            <button
+              type="button"
               key={key}
-              className="cursor-pointer text-nowrap px-[8px] py-[14px] hover:bg-white/10 mobile:px-[0.5rem] mobile:py-[0.875rem]"
+              className="block w-full cursor-pointer text-nowrap px-[8px] py-[14px] hover:bg-white/10 mobile:px-[0.5rem] mobile:py-[0.875rem]"
               onClick={() => handleChangePodcast(key)}
             >
               {PodcastCategoryMap[key]}
-            </div>
+            </button>
           ))}
         </div>
       )}

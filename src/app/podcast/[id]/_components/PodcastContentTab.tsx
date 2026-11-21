@@ -1,11 +1,12 @@
 'use client';
 
-import React, { MouseEvent, ReactNode, useState } from 'react';
+import React, { KeyboardEvent, MouseEvent, ReactNode, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { clsx } from 'clsx';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { track } from '@/lib/analytics/track';
+import NoComment from '@/app/podcast/[id]/_components/NoComment';
 
 // Comments are fetched from the API in the browser; their code and request wait until the tab is opened.
 const PodcastComments = dynamic(() => import('@/app/podcast/[id]/_components/PodcastComments'), { ssr: false });
@@ -33,7 +34,7 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
   // The comments load the first time their tab is shown; set while rendering, not in an effect.
   if (activeTab === 1 && !commentsOpened) setCommentsOpened(true);
 
-  const handleTranscriptClick = (event: MouseEvent<HTMLDivElement>) => {
+  const handleTranscriptClick = (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
     const marker = (event.target as Element).closest?.('[data-custom-type]');
     if (!marker) return;
     const type = marker.getAttribute('data-custom-type');
@@ -41,6 +42,14 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
     if (type !== 'timeline' || !param) return;
     track('timeline_jump', { episode_id: id, position_s: toSeconds(param) });
     eventBus.next({ type: MessageType.PODCAST_DURATION, payload: param });
+  };
+
+  // A focused marker (role button) acts on Enter and Space, as a button does.
+  const handleTranscriptKey = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (!(event.target as Element).closest?.('[data-custom-type]')) return;
+    event.preventDefault();
+    handleTranscriptClick(event);
   };
 
   // tab_select only for a real switch (DATA-11: the load-time section_view is gone).
@@ -51,9 +60,13 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
 
   return (
     <div>
-      <div className="flex gap-4">
+      {/* Two tabs: buttons (a Tab stop each, Enter and Space), named by their own text. */}
+      <div className="flex gap-4" role="tablist">
         {TABS.map((tab, index) => (
-          <div
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === index}
             key={index}
             onClick={() => selectTab(index)}
             className={clsx('podcast-tab-item relative flex cursor-pointer text-sm/3.5 font-bold', {
@@ -61,16 +74,32 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
             })}
           >
             {tab}
-          </div>
+          </button>
         ))}
       </div>
       <div className="mt-7.5">
         <div className={clsx(activeTab === 0 ? 'block' : 'hidden')}>
-          <div className="markdown-body text-[0.875rem]/5 mobile:text-[0.75rem]/[1.125rem]" onClick={handleTranscriptClick}>
+          {/* One delegated handler for the markers (each a role="button" Tab stop): the box itself is not a control. */}
+          <div
+            role="presentation"
+            className="markdown-body text-[0.875rem]/5 mobile:text-[0.75rem]/[1.125rem]"
+            onClick={handleTranscriptClick}
+            onKeyDown={handleTranscriptKey}
+          >
             {children}
           </div>
         </div>
-        <div className={clsx(activeTab === 1 ? 'block' : 'hidden')}>{commentsOpened && <PodcastComments id={id} />}</div>
+        <div className={clsx(activeTab === 1 ? 'block' : 'hidden')}>
+          {/* Until the tab is opened, the hidden tab holds what his site serves there: the list in its empty state ("No
+              comment"). Opening it loads the comments (and shows no "No comment" while they load, ENG-08). */}
+          {commentsOpened ? (
+            <PodcastComments id={id} />
+          ) : (
+            <div className="grid gap-7 mobile:gap-5">
+              <NoComment />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

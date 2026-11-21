@@ -15,6 +15,7 @@ import { isInternalHref } from '@/constants/site';
 import { cn } from '@/utils';
 import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
+import { NEWS_ROW_PAGE_LAPTOP } from '@/hooks/insights/insightItems';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
@@ -25,6 +26,7 @@ import { trackOutbound } from '@/lib/analytics/outbound';
 import { track } from '@/lib/analytics/track';
 import SectionLoadError from '@/components/common/SectionLoadError';
 import { youtubeWatchUrl } from '@/utils/youtube';
+import { zhLang } from '@/utils/lang';
 
 type NewsAndTalksSectionProps = {
   items?: InsightItem[];
@@ -36,7 +38,7 @@ type NewsAndTalksSectionProps = {
   isVisible?: boolean;
 };
 
-const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
+const ITEMS_PER_PAGE_DESKTOP = NEWS_ROW_PAGE_LAPTOP; // 4x2 grid
 
 function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,12 +76,14 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
         >
           {/* Image */}
           <div className="relative h-[4.25rem] w-full overflow-hidden">
-            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
+            <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} />
           </div>
           {/* Card content */}
           <div className="flex flex-col gap-0.5 bg-white p-2 pt-1.5">
             {/* The original's phone sizes: title 12 px, source and date 10 px. */}
-            <h3 className="line-clamp-1 font-text text-xs/4 font-medium text-black">{item.title}</h3>
+            <h3 lang={zhLang(item.title)} className="line-clamp-1 font-text text-xs/4 font-medium text-black">
+              {item.title}
+            </h3>
             <div className="flex w-full flex-col text-left font-text text-[0.625rem]/3 text-black/60">
               {item.publisher && <p className="line-clamp-1">{item.publisher}</p>}
               {item.publishDate ? <p>{dayjs(item.publishDate).format('MMM DD, YYYY')}</p> : <br />}
@@ -112,13 +116,18 @@ function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: bo
       >
         {/* Image */}
         <div className="relative h-[9.25rem] w-full overflow-hidden">
-          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} onClick={() => {}} />
+          <YouTubeThumbnail pic={thumbnailPic} videoId={item.videoId ?? ''} title={item.title} />
         </div>
         {/* Card content */}
         {/* The original's sizes (the owner's rule on font sizes), scaled with the window. The source and date never
             truncate: where they do not fit one line the date moves to the next. */}
         <div className="flex flex-col gap-3 bg-white/80 p-4 backdrop-blur-sm">
-          <h3 className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1">{item.title}</h3>
+          <h3
+            lang={zhLang(item.title)}
+            className="line-clamp-2 font-text text-lg/6 font-semibold text-black desktop:line-clamp-1"
+          >
+            {item.title}
+          </h3>
           <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 font-text text-sm/5 font-medium text-black/60">
             {item.publisher && <span>{item.publisher}</span>}
             {item.publisher && item.publishDate && <span>·</span>}

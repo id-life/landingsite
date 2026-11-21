@@ -1,16 +1,16 @@
 {
-  "total": 117,
+  "total": 65,
   "byRule": {
     "@typescript-eslint/no-unused-expressions": 3,
     "jsx-a11y/anchor-has-content": 2,
-    "jsx-a11y/click-events-have-key-events": 29,
+    "jsx-a11y/click-events-have-key-events": 2,
     "jsx-a11y/media-has-caption": 1,
     "jsx-a11y/no-noninteractive-tabindex": 1,
-    "jsx-a11y/no-static-element-interactions": 30,
+    "jsx-a11y/no-static-element-interactions": 2,
     "react-hooks/immutability": 13,
     "react-hooks/incompatible-library": 1,
     "react-hooks/preserve-manual-memoization": 1,
-    "react-hooks/refs": 27,
+    "react-hooks/refs": 30,
     "react-hooks/set-state-in-effect": 9
   }
 }

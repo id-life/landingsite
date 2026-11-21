@@ -13,6 +13,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
 import { hasBlackArrow, hasInnerPage, NAV_LIST } from '../nav/nav';
 import { useConnectShowEvent } from '@/hooks/connectGL/useConnectShowEvent';
+import { sectionName } from './SectionPager';
 
 interface PageArrowsProps {
   className?: string;
@@ -89,15 +90,22 @@ function ArrowItem({ isUp, onClick }: { isUp?: boolean; onClick?: () => void }) 
     setNavigateTo(NAV_LIST[currentPageIndex + (isUp ? -1 : 1)]);
   }, throttleTime);
 
+  // Named as the phone version's arrows are (SectionPager): the section a press goes to.
+  const target = NAV_LIST[currentPageIndex + (isUp ? -1 : 1)];
+  const label = `${isUp ? 'Previous' : 'Next'}${target ? `: ${sectionName(target.title)}` : ''} section`;
+
+  // A button (a Tab stop; Enter and Space press it), drawn as the div it was.
   return (
-    <div
+    <button
+      type="button"
+      aria-label={label}
       className={cn(
         'flex-center h-10 w-10 cursor-pointer rounded-full bg-black/65 bg-opacity-65 backdrop-blur-sm',
         hasBlackArrow(currentPage.id) ? 'border border-white/25 bg-white/10' : 'bg-black/65',
       )}
       onClick={handleClick}
     >
-      <ArrowDownSVG className={cn('h-5 w-5 fill-white', { 'rotate-180': isUp })} />
-    </div>
+      <ArrowDownSVG aria-hidden="true" className={cn('h-5 w-5 fill-white', { 'rotate-180': isUp })} />
+    </button>
   );
 }

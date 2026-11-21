@@ -35,3 +35,11 @@ export function llmsSection(heading: string) {
   const next = LLMS_HEADER.indexOf('\n## ', start + 3);
   return LLMS_HEADER.slice(start, next === -1 ? undefined : next).trim();
 }
+
+/** The summary paragraphs of his file (its '>' lines), as his site's hidden English profile on / reads them. */
+export function llmsIntro() {
+  return LLMS_HEADER.split('\n')
+    .filter((line) => line.startsWith('>'))
+    .map((line) => line.replace(/^>\s?/, ''))
+    .join('\n');
+}

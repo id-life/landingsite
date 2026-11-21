@@ -416,9 +416,6 @@ function DeckSpectrum() {
                   executeSpectrumRoute={executeSpectrumRoute}
                   updateUrlAndExecute={updateUrlAndExecute}
                   routeConfigs={routeConfigs}
-                  onClick={(e) => {
-                    sponsorItem.onClick?.(e);
-                  }}
                   onHover={() => setImageIdx(5)}
                 />
               </motion.div>

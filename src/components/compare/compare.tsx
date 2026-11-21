@@ -274,9 +274,26 @@ export const Compare = ({
     [handleMove, autoplay],
   );
 
+  // The keyboard's way to the same comparison (ENG-03): arrows step the divide by 5 %, Home and End go to the ends.
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const step = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 }[e.key];
+    const to = e.key === 'Home' ? 0 : e.key === 'End' ? 100 : null;
+    if (step === undefined && to === null) return;
+    e.preventDefault();
+    setSliderXPercent((x) => Math.min(100, Math.max(0, to ?? x + (step ?? 0))));
+  }, []);
+
   return (
+    // A slider (ENG-03): named "Compare" for screen readers (nothing drawn), its value the divide's place in percent.
     <div
       ref={sliderRef}
+      role="slider"
+      tabIndex={0}
+      aria-label="Compare"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(sliderXPercent)}
+      onKeyDown={handleKeyDown}
       className={cn('h-[400px] w-[400px] overflow-hidden', className)}
       style={{
         position: 'relative',
