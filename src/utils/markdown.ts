@@ -21,7 +21,14 @@ export const markdownSchema: Schema = {
   tagNames: [...(defaultSchema.tagNames ?? []), 'iframe'],
   attributes: {
     ...defaultSchema.attributes,
-    span: [...(defaultSchema.attributes?.span ?? []), ['className', 'custom-timeline'], 'dataCustomType', 'dataCustomParam'],
+    span: [
+      ...(defaultSchema.attributes?.span ?? []),
+      ['className', 'custom-timeline'],
+      'dataCustomType',
+      'dataCustomParam',
+      ['role', 'button'],
+      'tabIndex',
+    ],
     iframe: [
       ['src', /^https:\/\/www\.youtube(?:-nocookie)?\.com\/embed\//],
       'title',
@@ -80,14 +87,23 @@ type MdNode = {
 
 const TOKEN = /@\[(\w+)]\(([^)]+)\)/;
 
-/** The element the transcript shows for @[type](param): a span whose text is the param. */
+/**
+ * The element the transcript shows for @[type](param): a span whose text is the param, a button for assistive
+ * technology and the keyboard (role button, a Tab stop; Enter and Space act as a click: PodcastContentTab).
+ */
 function timelineNode(type: string, param: string): MdNode {
   return {
     type: 'timeline',
     children: [{ type: 'text', value: param }],
     data: {
       hName: 'span',
-      hProperties: { className: ['custom-timeline'], dataCustomType: type, dataCustomParam: param },
+      hProperties: {
+        className: ['custom-timeline'],
+        dataCustomType: type,
+        dataCustomParam: param,
+        role: 'button',
+        tabIndex: 0,
+      },
     },
   };
 }

@@ -91,11 +91,14 @@ describe('markdown pipeline', () => {
 describe('podcast timeline markers', () => {
   const transcript = (md) => render(md, [...markdownRemarkPlugins, remarkTimeline]);
 
-  test('@[timeline](mm:ss) becomes a clickable span with its two data attributes', () => {
+  // ENG-03: each marker is also a button for assistive technology and a Tab stop (role button, tabindex 0).
+  test('@[timeline](mm:ss) becomes a clickable span with its two data attributes, a button and a Tab stop', () => {
     const html = transcript('Intro @[timeline](01:07) and **@[timeline](12:34)**');
-    expect(html).toContain('<span class="custom-timeline" data-custom-type="timeline" data-custom-param="01:07">01:07</span>');
     expect(html).toContain(
-      '<strong><span class="custom-timeline" data-custom-type="timeline" data-custom-param="12:34">12:34</span></strong>',
+      '<span class="custom-timeline" data-custom-type="timeline" data-custom-param="01:07" role="button" tabindex="0">01:07</span>',
+    );
+    expect(html).toContain(
+      '<strong><span class="custom-timeline" data-custom-type="timeline" data-custom-param="12:34" role="button" tabindex="0">12:34</span></strong>',
     );
     expect(html).not.toContain('@');
   });
@@ -105,7 +108,13 @@ describe('podcast timeline markers', () => {
     // The payloads survive only as text and as quoted, escaped attribute values.
     expect(attributeNames(html).filter((name) => /^on/i.test(name))).toEqual([]);
     expect(html).not.toMatch(/<img/i);
-    expect([...new Set(attributeNames(html))].sort()).toEqual(['class', 'data-custom-param', 'data-custom-type']);
+    expect([...new Set(attributeNames(html))].sort()).toEqual([
+      'class',
+      'data-custom-param',
+      'data-custom-type',
+      'role',
+      'tabindex',
+    ]);
   });
 });
 

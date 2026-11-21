@@ -2,17 +2,16 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { PodcastItem } from '@/apis/types';
 import { formatDuration } from '@/utils/podcast';
-import EpisodeClickTracker from '@/app/podcast/_components/EpisodeClickTracker';
 
 type PodcastListItemProps = {
   data: PodcastItem;
 };
 
-// A server component: dates and durations are formatted here, so the list ships no date library; the click
-// event is the only client code (EpisodeClickTracker).
+// A server component: dates and durations are formatted here, so the list ships no date library. Its link and click
+// event are EpisodeClickTracker's (PodcastList).
 export default function PodcastListItem({ data }: PodcastListItemProps) {
   return (
-    <EpisodeClickTracker episodeId={String(data.id)} channel={data.category}>
+    <div className="group flex cursor-pointer gap-4">
       {/* Square artwork: the box is reserved before the image loads, so the list does not shift (CLS). */}
       <img className="aspect-square w-16 shrink-0 self-start rounded object-cover mobile:w-21" src={data.album} alt="" />
       <div className="flex-1 overflow-hidden">
@@ -31,6 +30,6 @@ export default function PodcastListItem({ data }: PodcastListItemProps) {
           <span>{dayjs(data.createdAt).format('YYYY/MM/DD')}</span>
         </div>
       </div>
-    </EpisodeClickTracker>
+    </div>
   );
 }

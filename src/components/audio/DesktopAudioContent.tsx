@@ -25,6 +25,14 @@ import clsx from 'clsx';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import React from 'react';
 import DesktopAudioSiriWave from './DesktopAudioSiriWave';
+
+/** The play-mode button's name, per mode (its icon alone shows the mode). */
+const PLAY_MODE_LABEL: Record<(typeof PlayMode)[keyof typeof PlayMode], string> = {
+  [PlayMode.ORDER]: 'Play mode: in order',
+  [PlayMode.SHUFFLE]: 'Play mode: shuffle',
+  [PlayMode.REPEAT_ALL]: 'Play mode: repeat all',
+  [PlayMode.REPEAT_ONE]: 'Play mode: repeat one',
+};
 import DesktopMusicItem from './DesktopMusicItem';
 import DesktopPodcastItem from './DesktopPodcastItem';
 import { getAudioContext } from '@/hooks/audio/useCurrentAudio';
@@ -78,7 +86,7 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
     }
   };
 
-  const handleChangePlayStatus = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleChangePlayStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     const audioContext = getAudioContext();
     if (audioContext.state === 'suspended') {
@@ -93,30 +101,44 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
   return (
     <div className="text-white">
       <div className="flex items-center justify-between">
-        <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold mobile:gap-3 mobile:text-xs/3">
-          <div
+        {/* The two lists: tabs (buttons: Tab stops, Enter and Space), named by their own text. */}
+        <div className="flex-center gap-[16px] text-[14px]/[14px] font-bold mobile:gap-3 mobile:text-xs/3" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentList === PlayList.MUSIC}
             className={clsx('audio-tab-item relative cursor-pointer', currentList === PlayList.MUSIC && 'audio-tab-active')}
             onClick={() => handleChangeList(PlayList.MUSIC)}
           >
             TRACKS 专辑
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentList !== PlayList.MUSIC}
             className={clsx('audio-tab-item relative cursor-pointer', currentList !== PlayList.MUSIC && 'audio-tab-active')}
             onClick={() => handleChangeList(currentPlayPodcast)}
           >
             PODCAST 播客
-          </div>
+          </button>
         </div>
         <div className="flex items-center gap-2.5">
           <div className="z-[101] flex h-[26px] cursor-pointer items-center gap-[8px] rounded-full bg-white/10 px-[8px] transition duration-300 mobile:h-[1.625rem] mobile:gap-[0.5rem] mobile:px-[0.5rem]">
-            <div onClick={handleChangePlayStatus} className="flex items-center gap-[8px] mobile:gap-[0.5rem]">
+            <button
+              type="button"
+              aria-label={isPlaying ? 'Pause music' : 'Play music'}
+              onClick={handleChangePlayStatus}
+              className="flex items-center gap-[8px] mobile:gap-[0.5rem]"
+            >
               <DesktopAudioSiriWave className="w-[33px] overflow-hidden mobile:h-[1.375rem] mobile:w-[2.0625rem]" />
               <div className="size-[22px] mobile:size-[1.375rem]">
                 {isPlaying ? <PauseSVG className="size-full fill-white" /> : <PlaySVG className="size-full fill-white" />}
               </div>
-            </div>
+            </button>
           </div>
-          <div
+          <button
+            type="button"
+            aria-label={PLAY_MODE_LABEL[playMode]}
             onClick={handleChangePlayMode}
             className="flex-center h-[26px] cursor-pointer select-none gap-[2px] rounded-full bg-white/10 px-[8px] text-center text-xs/[14px] font-semibold mobile:h-[1.625rem] mobile:gap-[0.125rem] mobile:px-[0.5rem] mobile:text-xs/[0.875rem]"
           >
@@ -124,7 +146,7 @@ export default function DesktopMusicContent({ isPlaying }: { isPlaying: boolean 
             {playMode === PlayMode.SHUFFLE && <PlayShuffleSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
             {playMode === PlayMode.REPEAT_ALL && <PlayRepeatSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
             {playMode === PlayMode.REPEAT_ONE && <PlayRepeatOneSVG className="w-[16px] stroke-white mobile:w-[1rem]" />}
-          </div>
+          </button>
         </div>
       </div>
       {currentList !== PlayList.MUSIC && (
