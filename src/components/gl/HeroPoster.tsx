@@ -1,5 +1,7 @@
 'use client';
 
+import { HOME_HEADING } from '@/constants/home-heading';
+
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
 import { experienceModeAtom } from '@/hooks/useExperienceMode';
@@ -45,6 +47,8 @@ export default function HeroPoster() {
       id="hero-poster"
       data-both-versions
       data-shown={shown ? 'true' : undefined}
+      // The route it is the hero of: only there does the no-JavaScript rule draw it (HomeEntry).
+      data-hero-route={onHero ? 'true' : undefined}
       aria-hidden={onHero ? undefined : true}
       className={cn(
         'pointer-events-none fixed inset-0 z-[1] transition-[opacity,visibility] duration-300 motion-reduce:transition-none',
@@ -55,7 +59,7 @@ export default function HeroPoster() {
         {/* The heading's text, his site's own h1 on / ("Immortal Dragons 不朽真龙"): real text in the document, read
             once, not drawn (the pictures below draw the wordmark), and no hover tooltip (no <title>, no title
             attribute). */}
-        <span className="sr-only">Immortal Dragons 不朽真龙</span>
+        <span className="sr-only">{HOME_HEADING}</span>
         <svg aria-hidden className="block size-full mobile:hidden" viewBox="0 0 1577 1000" preserveAspectRatio="xMidYMid meet">
           <LogoEnSVG x={110.25} y={358} width={1356.5} height={284} />
           <TaglineSVG x={512.7} y={809.2} width={551.6} height={22.9} />

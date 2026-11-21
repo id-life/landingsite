@@ -23,7 +23,9 @@ describe('analytics event catalog', () => {
   });
 
   test('exactly the four planned key events', () => {
-    expect([...KEY_EVENTS].sort()).toEqual(['contact_intent', 'newsletter_subscribe', 'portfolio_outbound_click'].sort());
+    expect([...KEY_EVENTS].sort()).toEqual(
+      ['contact_intent', 'newsletter_subscribe', 'portfolio_outbound_click', 'podcast_play'].sort(),
+    );
     expect([...KEY_EVENT_NAMES].sort()).toEqual([...KEY_EVENTS].sort());
   });
 

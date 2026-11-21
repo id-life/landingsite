@@ -20,14 +20,14 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { portfolio, portfolioGetSourceImgInfos } from './portfolioData';
+import { PORTFOLIO_PHONE_FIRST_PAGE, portfolio, portfolioGetSourceImgInfos } from './portfolioData';
 import PortfolioItem from './PortfolioItem';
 
 const PAGE_ID = 'portfolio_page';
 // The desktop deck: the first row's company count.
 const FIRST_ROW_COUNT = 8;
 // The paged deck: the companies on its first and second inner pages.
-const FIRST_PAGE_COUNT = 6;
+const FIRST_PAGE_COUNT = PORTFOLIO_PHONE_FIRST_PAGE;
 const SECOND_PAGE_COUNT = 6;
 const portfolioNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
 

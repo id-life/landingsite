@@ -140,9 +140,11 @@ const nextConfig = {
       { source: '/vision', destination: '/presence', permanent: true },
       { source: '/value', destination: '/connect', permanent: true },
       { source: '/mission', destination: '/', permanent: true },
-      // Question 22: /podcast/rss points to the main show's hosted feed (the one Apple Podcasts lists), permanently
-      // (308), as ENG-07 promises for the site's moved addresses.
-      { source: '/podcast/rss', destination: 'https://feed.xyzfm.space/6cxxmuh36xcc', permanent: true },
+      // Question 22: /podcast/rss points to the main show's hosted feed (the one Apple Podcasts lists). Deliberately
+      // temporary (307): a podcast app that subscribes through the site's own address keeps that address and follows the
+      // feed if it ever moves host, whereas a permanent redirect would hand the subscription to the host's URL for good.
+      // ENG-07's permanent redirects are for pages of this site that moved; this address has not moved, it delegates.
+      { source: '/podcast/rss', destination: 'https://feed.xyzfm.space/6cxxmuh36xcc', permanent: false },
     ];
   },
   async rewrites() {

@@ -6,12 +6,8 @@ import BePartOfIt from './BePartOfIt';
 import gsap from 'gsap';
 import CharacterRelationGraph from './CharacterRelationGraph';
 import { useFetchCharacterRelation } from '@/hooks/useFetchCharacterRelation';
-import CharacterRelationLegend from './CharacterRelationLegend';
 import { cn } from '@/utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { track } from '@/lib/analytics/track';
-import { motion } from 'motion/react';
-import { DURATION, EASE } from '@/motion/tokens';
 import { u } from '@/utils/layout-unit';
 
 export type IndividualType = 'visitor' | 'introducer' | 'all';
@@ -61,44 +57,18 @@ const CharacterRelation = () => {
   // the graph mounted. Leaving the page closes it, so it is closed on the next visit.
   useEffect(() => () => setIsBePartOfItShow(false), [setIsBePartOfItShow]);
 
-  const showBePartOfItBtnText = isMobile ? 'JOIN +' : 'BE PART OF IT +';
-
   const handleBePartOfItClose = () => {
     setIsBePartOfItShow(false);
   };
 
-  const handleBePartOfItOpen = () => {
-    setIsBePartOfItShow(true);
-    track('relation_form_open');
-  };
-
+  // The legend and the button that opens the form render on the server, beside this chunk (CharacterRelationControls).
   return (
     <>
       <div className="h-full w-full">
         <div className={cn('h-full w-full px-10 py-[6.5rem]', 'mobile:px-0 mobile:pb-6 mobile:pt-20')}>
           {data && <CharacterRelationGraph data={data} />}
         </div>
-        <CharacterRelationLegend />
       </div>
-
-      <motion.button
-        className={cn(
-          'fixed bottom-10 left-1/2 z-[10] -translate-x-1/2',
-          'w-[11.625rem] rounded-full bg-accent py-3 text-center font-text text-base/5 font-bold tracking-normal text-white',
-          'mobile:bottom-6 mobile:left-[auto] mobile:right-5 mobile:w-[7.125rem] mobile:-translate-x-0',
-        )}
-        onClick={handleBePartOfItOpen}
-        // Faded out (and click-through) while the form is open: out of the Tab order and the accessibility tree too.
-        tabIndex={isBePartOfItShow ? -1 : undefined}
-        aria-hidden={isBePartOfItShow || undefined}
-        animate={{
-          opacity: isBePartOfItShow ? 0 : 1,
-          pointerEvents: isBePartOfItShow ? 'none' : 'auto',
-        }}
-        transition={{ duration: DURATION.base, ease: EASE.inOut }}
-      >
-        {showBePartOfItBtnText}
-      </motion.button>
 
       <BePartOfIt
         key="be-part-of-it-comp"

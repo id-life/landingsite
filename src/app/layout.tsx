@@ -45,6 +45,12 @@ export const metadata: Metadata = {
   title: { default: 'Immortal Dragons 不朽真龙', template: '%s | Immortal Dragons' },
   description: ORG_DESCRIPTION,
   keywords: SITE_KEYWORDS,
+  // The tab icon exactly as his site links it (href "/favicon.ico", type, sizes); a file in src/app would get a hashed
+  // href. The home-screen icon (question 9) sits beside it in public/ for the same reason.
+  icons: {
+    icon: [{ url: '/favicon.ico', type: 'image/x-icon', sizes: '96x96' }],
+    apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
+  },
   openGraph: {
     title: 'Immortal Dragons 不朽真龙',
     siteName: 'Immortal Dragons',

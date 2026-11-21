@@ -11,6 +11,7 @@ import PageSEOContent from '@/components/seo/PageSEOContent';
 import { CollectionPage, WithContext } from 'schema-dts';
 import JsonLd from '@/components/seo/JsonLd';
 import { getSpectrumJsonLd } from '@/app/spectrum/_components/spectrumData';
+import SpectrumSEO from '@/app/spectrum/_components/SpectrumSEO';
 
 // Title topic and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('influence-network');
@@ -41,6 +42,8 @@ export default function InfluenceNetworkLayout({ children }: { children: ReactNo
       <JsonLd data={[getSpectrumJsonLd(), jsonLd, breadcrumb]} />
       {/* The page's one h1 (it used to inherit the Spectrum section's), until the visible content layer ships. */}
       <PageSEOContent title={PAGE_TITLE} intro={[PAGE_DESCRIPTION]} />
+      {/* His Spectrum hidden list, inherited here on his site; his h1 is an h2 (one h1 per page). */}
+      <SpectrumSEO nested />
       <INStyle />
       <div className="relative h-full w-full">
         <SiteHeader

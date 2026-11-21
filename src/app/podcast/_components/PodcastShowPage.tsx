@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { readImageInfo } from '@/lib/seo/image-info';
 import PodcastList from '@/app/podcast/_components/PodcastList';
 import PodcastCover from '@/app/podcast/_components/PodcastCover';
 import {
@@ -9,6 +10,7 @@ import {
   PODCAST_PAGE_ID,
   PodcastCategory,
   podcastFeedAlternate,
+  podcastShowWords,
 } from '@/app/podcast/_components/constant';
 import { pageMeta } from '@/content/pages';
 import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
@@ -19,7 +21,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const navOf = (category: PodcastCategory) => PODCAST_NAV_LIST.find((item) => item.id === category) ?? PODCAST_NAV_LIST[0];
 
 /** Each show has its own path (/podcast, /podcast/long-talk), so each page is static and its own canonical. */
-export function podcastShowMetadata(category: PodcastCategory): Metadata {
+export async function podcastShowMetadata(category: PodcastCategory): Promise<Metadata> {
   const { title, tabTitle, description, keywords } = pageMeta(PODCAST_PAGE_ID[category]);
   const metadata = buildMetadata({
     path: navOf(category).link,
@@ -27,7 +29,12 @@ export function podcastShowMetadata(category: PodcastCategory): Metadata {
     tabTitle,
     description,
     keywords,
-    image: PODCAST_COVER[category].cover,
+    // The show's own picture, as his site declares it, with its size and type read from the file.
+    image: {
+      url: PODCAST_COVER[category].cover,
+      ...(await readImageInfo(PODCAST_COVER[category].cover, 300)),
+      alt: podcastShowWords(category),
+    },
   });
   const types = podcastFeedAlternate(category);
   return types ? { ...metadata, alternates: { ...metadata.alternates, types } } : metadata;

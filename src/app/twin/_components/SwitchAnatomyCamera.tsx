@@ -114,19 +114,25 @@ export default function SwitchAnatomyCamera({ deck }: { deck: TwinDeck }) {
     >
       {currentModelType === ModelType.Anatomy && views && (
         <div className={clsx('flex bg-white/10 backdrop-blur', phone ? 'gap-4 p-2' : 'gap-7 p-3')}>
-          {views.map(([Icon, camera]) => (
-            <span
+          {/* Buttons (ENG-03), named "View 1", "View 2" ... in their drawn order for screen readers only; flex items,
+              so they draw as the spans did. */}
+          {views.map(([Icon, camera], i) => (
+            <button
+              type="button"
               key={camera}
+              aria-label={`View ${i + 1}`}
+              aria-pressed={currentAnatomyCamera === camera}
               className="flex-center relative cursor-pointer tap-area"
               onClick={() => handleSwitchAnatomyCamera(camera)}
             >
               <Icon
+                aria-hidden
                 className={clsx(
                   phone ? 'w-6' : 'h-[32px] w-[32px]',
                   currentAnatomyCamera === camera ? 'fill-accent' : 'fill-black',
                 )}
               />
-            </span>
+            </button>
           ))}
         </div>
       )}

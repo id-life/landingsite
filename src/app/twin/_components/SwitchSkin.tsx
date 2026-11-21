@@ -122,12 +122,25 @@ export default function SwitchSkin({ deck }: { deck: TwinDeck }) {
         initial={{ scale: 1 }}
         animate={borderControls}
       >
-        <div className="relative cursor-pointer tap-area" onClick={() => handleModelTypeChange(ModelType.Skin)}>
-          <SkinSVG className={iconClass(ModelType.Skin)} />
-        </div>
-        <div className="relative cursor-pointer tap-area" onClick={() => handleModelTypeChange(ModelType.Anatomy)}>
-          <AnatomySVG className={iconClass(ModelType.Anatomy)} />
-        </div>
+        {/* Buttons (ENG-03), named for screen readers only; grid items, so they draw as the divs did. */}
+        <button
+          type="button"
+          aria-label="Skin"
+          aria-pressed={currentModelType === ModelType.Skin}
+          className="relative cursor-pointer tap-area"
+          onClick={() => handleModelTypeChange(ModelType.Skin)}
+        >
+          <SkinSVG aria-hidden className={iconClass(ModelType.Skin)} />
+        </button>
+        <button
+          type="button"
+          aria-label="Anatomy"
+          aria-pressed={currentModelType === ModelType.Anatomy}
+          className="relative cursor-pointer tap-area"
+          onClick={() => handleModelTypeChange(ModelType.Anatomy)}
+        >
+          <AnatomySVG aria-hidden className={iconClass(ModelType.Anatomy)} />
+        </button>
       </motion.div>
     </div>
   );

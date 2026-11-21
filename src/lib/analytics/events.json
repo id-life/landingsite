@@ -9,7 +9,8 @@
   "keyEvents": [
     "newsletter_subscribe",
     "contact_intent",
-    "portfolio_outbound_click"
+    "portfolio_outbound_click",
+    "podcast_play"
   ],
   "events": {
     "newsletter_view": {
@@ -218,6 +219,21 @@
           "type": "string",
           "required": true,
           "doc": "Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news)"
+        },
+        "platform": {
+          "type": "string",
+          "required": false,
+          "doc": "podcast_platform only: which listening platform",
+          "values": [
+            "xiaoyuzhou",
+            "spotify",
+            "apple_podcasts"
+          ]
+        },
+        "episode_id": {
+          "type": "string",
+          "required": false,
+          "doc": "podcast_platform only: the episode the link is for (absent for a whole show)"
         }
       }
     },
@@ -350,8 +366,33 @@
       "key": false,
       "params": {}
     },
-    "episode_play": {
-      "when": "Play or pause on the episode page player",
+    "podcast_play": {
+      "when": "An episode has played for 30 s (seeks do not count); once per episode per page",
+      "key": true,
+      "params": {
+        "episode_id": {
+          "type": "string",
+          "required": true,
+          "doc": "Episode id"
+        },
+        "show": {
+          "type": "string",
+          "required": true,
+          "doc": "Show id (the episode category: podcast_id or podcast_lt)"
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "doc": "Which player: the episode page or the site player",
+          "values": [
+            "episode_page",
+            "site_player"
+          ]
+        }
+      }
+    },
+    "podcast_progress": {
+      "when": "Playback of an episode reaches 25, 50 or 75 percent; each once per episode per page",
       "key": false,
       "params": {
         "episode_id": {
@@ -359,25 +400,50 @@
           "required": true,
           "doc": "Episode id"
         },
-        "action": {
+        "show": {
           "type": "string",
           "required": true,
-          "doc": "Button pressed",
+          "doc": "Show id"
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "doc": "Which player",
           "values": [
-            "start",
-            "pause"
+            "episode_page",
+            "site_player"
           ]
+        },
+        "percent": {
+          "type": "number",
+          "required": true,
+          "doc": "Share of the episode reached",
+          "unit": "percent"
         }
       }
     },
-    "episode_end": {
-      "when": "The episode audio ends",
+    "podcast_complete": {
+      "when": "An episode plays to its end; once per episode per page",
       "key": false,
       "params": {
         "episode_id": {
           "type": "string",
           "required": true,
           "doc": "Episode id"
+        },
+        "show": {
+          "type": "string",
+          "required": true,
+          "doc": "Show id"
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "doc": "Which player",
+          "values": [
+            "episode_page",
+            "site_player"
+          ]
         }
       }
     },

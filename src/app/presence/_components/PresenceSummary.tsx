@@ -1,3 +1,5 @@
+import ArticleExcerpt from '@/components/seo/ArticleExcerpt';
+import EnglishProfileExcerpt from '@/components/seo/EnglishProfileExcerpt';
 import PageSEOContent, { type SEOItem } from '@/components/seo/PageSEOContent';
 import { MAP_BOOK_DOTS, MAP_SPONSOR_DOTS, WORLD_MAP_DOTS } from '@/constants/engagement';
 
@@ -28,19 +30,21 @@ function sponsorItems(): SEOItem[] {
   );
 }
 
-// The events, books and sponsored bodies the map shows. The route's description stays in its metadata only: it is not
-// text the section shows (CON-01 hidden-text budget, /presence <= 1,050). `description` is accepted and unused.
-export default function PresenceSummary({ title }: { title: string; description?: string }) {
+export default function PresenceSummary({ title, description }: { title: string; description: string }) {
   return (
     <>
       <PageSEOContent
         title={title}
+        intro={[description]}
         sections={[
           { heading: 'Conference', items: eventItems() },
           { heading: 'Translation & Publishing 翻译与出版', items: bookItems() },
           { heading: 'Sponsorship & Research', items: sponsorItems() },
         ]}
       />
+      {/* The map only names events and sponsors; the profile article says what each one is. */}
+      <EnglishProfileExcerpt sections={['advocacy', 'sponsorships']} />
+      <ArticleExcerpt headings={['行业布道', '三、行业赞助']} />
     </>
   );
 }
