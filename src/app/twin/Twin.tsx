@@ -129,7 +129,7 @@ function DesktopTwin() {
               <li key={feature}>- {feature}</li>
             ))}
           </ul>
-          <p lang="zh-Hans" className="zh-run">
+          <p lang="zh-CN" className="zh-run">
             {TWIN_FEATURES_CN}
           </p>
         </div>
