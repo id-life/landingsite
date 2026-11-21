@@ -36,6 +36,8 @@ export const PHONE = reducible({
   connectModel: { duration: 0.8, ease: 'power3.out' },
   connectContent: { duration: 0.5 },
   connectTurnEase: 'power2.out',
+  /** Spectrum: one inner page out, then the next in (each 0.2 s, motion's default curve; 24 px of travel). */
+  spectrumPage: { duration: 0.2 },
   /** The dragon's return to its swing after a drag. */
   dragonRecovery: 1.5,
 } as const);
