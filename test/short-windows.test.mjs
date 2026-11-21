@@ -81,4 +81,9 @@ describe('short windows by the original phone width', () => {
     expect(style).not.toMatch(/--u:\s*12px/);
     expect(style).not.toContain('COMPACT_HEIGHT_QUERY');
   });
+  test('News: the featured picture keeps the original phone height up to 768 px wide', () => {
+    const topic = read('src/app/news/_components/Topic.tsx');
+    expect(topic).not.toMatch(/max-height:\s*500px/);
+    expect(topic).toContain('mobile:h-[12.5rem] shortWide:h-[35svh]');
+  });
 });
