@@ -47,6 +47,8 @@ export default function HeroPoster() {
       id="hero-poster"
       data-both-versions
       data-shown={shown ? 'true' : undefined}
+      // The route it is the hero of: only there does the no-JavaScript rule draw it (HomeEntry).
+      data-hero-route={onHero ? 'true' : undefined}
       aria-hidden={onHero ? undefined : true}
       className={cn(
         'pointer-events-none fixed inset-0 z-[1] transition-[opacity,visibility] duration-300 motion-reduce:transition-none',

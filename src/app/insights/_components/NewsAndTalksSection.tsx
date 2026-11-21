@@ -15,6 +15,7 @@ import { isInternalHref } from '@/constants/site';
 import { cn } from '@/utils';
 import { STORAGE_KEY } from '@/constants/storage';
 import { InsightItem } from '@/hooks/insights/fetch';
+import { NEWS_ROW_PAGE_LAPTOP } from '@/hooks/insights/insightItems';
 import { useContainerResize } from '@/hooks/useContainerResize';
 import { useDeviceProfile } from '@/hooks/useDeviceProfile';
 import { useWindowResize } from '@/hooks/useWindowResize';
@@ -36,7 +37,7 @@ type NewsAndTalksSectionProps = {
   isVisible?: boolean;
 };
 
-const ITEMS_PER_PAGE_DESKTOP = 8; // 4x2 grid
+const ITEMS_PER_PAGE_DESKTOP = NEWS_ROW_PAGE_LAPTOP; // 4x2 grid
 
 function NewsCard({ item, isMobile = false }: { item: InsightItem; isMobile?: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

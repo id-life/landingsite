@@ -76,9 +76,10 @@ export default function HomeEntry() {
       {/* Server-rendered: the page's h1, and the hero itself without WebGL (ENG-02, VIS-03). With WebGL it is not drawn:
           nothing of the first screen shows before the loader (owner's answer 7A). */}
       <HeroPoster />
-      {/* Without JavaScript nothing would ever reveal them: draw the poster and the bar from the first paint. */}
+      {/* Without JavaScript nothing would ever reveal them: draw the bar, and on the home route the poster (it is that
+          route's hero; elsewhere it would sit over the route's own text, RouteNoScript), from the first paint. */}
       <noscript>
-        <style>{'#hero-poster{visibility:visible;opacity:1}header[data-experience-header]{opacity:1}'}</style>
+        <style>{'#hero-poster[data-hero-route]{visibility:visible;opacity:1}header[data-experience-header]{opacity:1}'}</style>
       </noscript>
       {!isNull(isMobile) && (
         <ReactQueryProvider>
