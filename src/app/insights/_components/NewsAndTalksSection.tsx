@@ -346,7 +346,7 @@ export default function NewsAndTalksSection({
 
           return (
             <SwiperSlide key={pageIndex}>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-x-4 gap-y-[var(--insights-card-gap,1rem)]">
                 {pageItems.map((item) => (
                   <NewsCard key={item.id} item={item} />
                 ))}
@@ -371,7 +371,14 @@ export default function NewsAndTalksSection({
         {/* Content with arrow navigation */}
         {/* Phone deck in landscape: the cards are inset by the arrows' width (four across, the 44 px arrows would cover
             the first and last card's text). */}
-        <div className={cn('relative mt-5', !isMobile && 'flex-1', isMobile && totalMobilePages > 1 && 'shortScreen:px-6')}>
+        {/* On the laptop the heading-to-cards gap gives way on a short window (globals.css, Insights on a short laptop window); his 1.25 units elsewhere. */}
+        <div
+          className={cn(
+            'relative',
+            isMobile ? 'mt-5' : 'mt-[var(--insights-news-gap,1.25rem)] flex-1',
+            isMobile && totalMobilePages > 1 && 'shortScreen:px-6',
+          )}
+        >
           {/* Desktop left arrow */}
           {!isMobile && totalPages > 1 && (
             <PCNavigationArrowButton onClick={handlePrev} disabled={isBeginning} direction="prev" />

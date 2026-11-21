@@ -129,16 +129,17 @@ export default function Insights() {
 
   return (
     <div id={PAGE_ID} className="page-container insights h-screen">
-      <div className="desktop:scale-[0.95] desktop2k:origin-center desktop2k:scale-[0.85]">
+      {/* insights-fit: on a short laptop window the column's gaps give way, then it scales and moves (globals.css, Insights on a short laptop window).
+          The wrapper carries the scale and the move: the column itself is the entrance tween's target, and GSAP would
+          fold a scale set on it into its own transform and apply it twice. */}
+      <div className="insights-fit desktop:scale-[0.95] desktop2k:origin-center desktop2k:scale-[0.85]">
         {/* The column keeps its scaled margins at every width of the laptop deck. */}
         <div
           className={cn(
-            'insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]',
-            // A short laptop window (up to 760 px tall): his box and margins, but content taller than the box starts
-            // at its top rather than above it, so NEWS & TALKS never runs under the header (1366x641). Moving the
-            // whole box down to 132 px (fcb9206) also pushed the bottom rows onto the slogan where his column fits
-            // (1280x720); with safe centring a column that fits is drawn exactly where his is.
-            '[@media(max-height:760px)]:[justify-content:safe_center]',
+            // His box and margins at every height. Where his column does not fit between the nav and the slogan (a
+            // short laptop window, 1366x641), its gaps give way, then it scales and moves just enough: globals.css, Insights on a short laptop window
+            // (RWD-03). The column gap is his 2.25 units wherever it fits.
+            'insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-[var(--insights-col-gap,2.25rem)] px-[20rem]',
           )}
         >
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
