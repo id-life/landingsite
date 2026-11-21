@@ -7,7 +7,7 @@ import { portfolio } from '@/app/portfolio/_components/portfolioData';
 import { WORLD_MAP_DOTS } from '@/constants/engagement';
 import dayjs from 'dayjs';
 import { fetchInsightsWithGeo } from '@/apis';
-import { toInsightItems } from '@/hooks/insights/insightItems';
+import { NEWS_ROW_PAGE_LAPTOP, toInsightItems } from '@/hooks/insights/insightItems';
 
 /**
  * PERF-03 A1 / SEO-01 A1: what an experience route shows, for a visitor without JavaScript. Inside <noscript>, so a
@@ -15,8 +15,8 @@ import { toInsightItems } from '@/hooks/insights/insightItems';
  *
  * Every string is one the route's own section draws with JavaScript, on the laptop or the phone version (read from
  * both on his site and on this build: the audit's drawn-text listing), taken from the same data the section renders:
- * the slogans, which the hero and the laptop's fixed controls rotate through on every section; the portfolio tiles;
- * the News & Talks row (the same request and order as the row); Spectrum's groups and books; the Presence map's
+ * the slogans, which the hero and the laptop's fixed controls rotate through on every section; the portfolio tiles'
+ * names; the News & Talks row's first page (the same request and order as the row); Spectrum's groups and books; the Presence map's
  * places; the Digital Twin's features; Connect's MOONSHOT page and contact block. The few headings that are written
  * in the section's markup are repeated here word for word; test/route-noscript.test.mjs checks each against that file.
  * Nothing here is new text, and nothing the route does not show.
@@ -66,17 +66,15 @@ async function Body({ route }: { route: ExperienceRoute }) {
           <h2>{SECTION_HEADINGS.portfolio}</h2>
           <ul>
             {portfolio.map((item) => (
-              <li key={item.slug}>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </li>
+              <li key={item.slug}>{item.title}</li>
             ))}
           </ul>
           <p>{FUND.email}</p>
         </>
       );
     case 'insights': {
-      const news = await newsCards();
+      // The row's first page, as it is drawn on arrival; later pages are behind its arrows.
+      const news = (await newsCards()).slice(0, NEWS_ROW_PAGE_LAPTOP);
       return (
         <>
           <h2>{SECTION_HEADINGS.insights}</h2>
