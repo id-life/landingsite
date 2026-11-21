@@ -7,7 +7,7 @@ import { MessageType } from '@/components/event-bus/messageType';
 import PlaySVG from '@/../public/svgs/player/play.svg?component';
 import PauseSVG from '@/../public/svgs/player/pause.svg?component';
 import PodcastSiriWave from '@/app/podcast/[id]/_components/PodcastSiriWave';
-import { track } from '@/lib/analytics/track';
+import { useAudioAnalytics } from '@/hooks/audio/useAudioAnalytics';
 import { formatPlaybackTime } from '@/utils/podcast';
 
 type PodcastPlayerProps = {
@@ -18,6 +18,13 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
   const [playStatus, setPlayStatus] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [progress, setProgress] = useState(0);
+  // Listening is counted from the element (DATA-12): the button, the progress bar and a show-notes timestamp alike.
+  useAudioAnalytics(audioRef, {
+    episode_id: String(data.id),
+    show: data.category,
+    source: 'episode_page',
+    duration: data.duration,
+  });
 
   const handleProgressChange = (event: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -32,11 +39,9 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
     const audio = audioRef.current;
 
     if (audio.paused) {
-      track('episode_play', { episode_id: String(data.id), action: 'start' });
       audio.play().then();
       setPlayStatus(true);
     } else {
-      track('episode_play', { episode_id: String(data.id), action: 'pause' });
       audio.pause();
       setPlayStatus(false);
     }
@@ -51,9 +56,8 @@ export default function PodcastPlayer({ data }: PodcastPlayerProps) {
   }, []);
 
   const handlePlayEnd = useCallback(() => {
-    track('episode_end', { episode_id: String(data.id) });
     setPlayStatus(false);
-  }, [data.id]);
+  }, []);
 
   const handleSeekTo = (time: number) => {
     if (!audioRef.current) return;

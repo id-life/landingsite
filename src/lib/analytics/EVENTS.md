@@ -3,7 +3,7 @@
 Generated from `src/lib/analytics/events.ts` (`UPDATE_ANALYTICS_DOCS=1 npm test` rewrites this file; `npm test` fails
 while it is stale). Send events only with `track()` from `src/lib/analytics/track.ts`.
 
-Key events (mark them in GA4 Admin): `newsletter_subscribe`, `contact_intent`, `portfolio_outbound_click`.
+Key events (mark them in GA4 Admin): `newsletter_subscribe`, `contact_intent`, `portfolio_outbound_click`, `podcast_play`.
 
 ## Context added to every event
 
@@ -89,6 +89,8 @@ The visitor opens an external link (press, talk, sponsor, initiative, social, po
 | `item_id` | string | yes | Stable id of the item (slug, episode id or platform name) |
 | `link_domain` | string | yes | Host of the destination |
 | `placement` | string | yes | Where on the site the control sits (e.g. footer, connect, portfolio_grid, insights_news) |
+| `platform` | `xiaoyuzhou` \| `spotify` \| `apple_podcasts` | no | podcast_platform only: which listening platform |
+| `episode_id` | string | no | podcast_platform only: the episode the link is for (absent for a whole show) |
 
 ### `nav_click`
 
@@ -160,22 +162,36 @@ Not sent by code: GA4 enhanced measurement records clicks on PDF and CSV links
 
 No parameters.
 
-### `episode_play`
+### `podcast_play` (key event)
 
-Play or pause on the episode page player
-
-| parameter | type | required | meaning |
-|---|---|---|---|
-| `episode_id` | string | yes | Episode id |
-| `action` | `start` \| `pause` | yes | Button pressed |
-
-### `episode_end`
-
-The episode audio ends
+An episode has played for 30 s (half its length if shorter); once per episode per page
 
 | parameter | type | required | meaning |
 |---|---|---|---|
 | `episode_id` | string | yes | Episode id |
+| `show` | string | yes | Show id (the episode category: podcast_id or podcast_lt) |
+| `source` | `episode_page` \| `site_player` | yes | Which player: the episode page or the site player |
+
+### `podcast_progress`
+
+Playback of an episode reaches 25, 50 or 75 percent; each once per episode per page
+
+| parameter | type | required | meaning |
+|---|---|---|---|
+| `episode_id` | string | yes | Episode id |
+| `show` | string | yes | Show id |
+| `source` | `episode_page` \| `site_player` | yes | Which player |
+| `percent` | number (percent) | yes | Share of the episode reached |
+
+### `podcast_complete`
+
+An episode plays to its end; once per episode per page
+
+| parameter | type | required | meaning |
+|---|---|---|---|
+| `episode_id` | string | yes | Episode id |
+| `show` | string | yes | Show id |
+| `source` | `episode_page` \| `site_player` | yes | Which player |
 
 ### `timeline_jump`
 
