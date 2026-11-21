@@ -93,12 +93,13 @@ const PortfolioItem = memo(
             className={cn(
               'fund-desc mx-auto text-xs/5 notMobile:max-w-full notMobile:px-3',
               isGridMode
-                ? // In the phone grid a tagline is never wider than its tile (half the window less the grid's 16 px
-                  // edges): one longer than the tile (on his site too: "Small Molecule Therapy for ALS" was cut 9 px at
-                  // 390, five taglines at 320 to 360) wraps into the second line its box already keeps (min-h-8), so
-                  // no tile grows. Only the tagline is capped: the title row (with its two hidden selection marks) and
-                  // a tagline that fits keep their places (RWD-11). The phone on its side has its own columns.
-                  'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium mobile:max-w-[calc(50vw-1rem)] shortScreen:mt-1 shortScreen:line-clamp-3 shortScreen:max-w-none shortScreen:px-0'
+                ? // In the phone grid a tagline, centred on its tile, never reaches past the window's edge: it is at
+                  // most its tile's width plus twice the grid's 16 px edge (half the window plus 1 unit). One that
+                  // would (on his site too: "Small Molecule Therapy for ALS" was cut 9 px at 390, five taglines at 320
+                  // to 360) wraps into the second line its box already keeps (min-h-8), so no tile grows; a tagline
+                  // that stays inside the window, even one wider than its tile, keeps its line and place, and so does
+                  // the title row (RWD-11). The phone on its side has its own columns.
+                  'mt-3 line-clamp-2 min-h-8 w-full px-2 text-[.625rem]/4 font-medium mobile:max-w-[calc(50vw+1rem)] shortScreen:mt-1 shortScreen:line-clamp-3 shortScreen:max-w-none shortScreen:px-0'
                 : 'mt-4 min-h-10 w-72 mobile:mt-2 mobile:min-h-5',
             )}
           >
