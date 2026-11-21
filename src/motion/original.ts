@@ -73,3 +73,9 @@ export const TILT = {
   /** Connect's first page tilts in from 30 degrees. */
   connectPage: 30,
 } as const;
+
+/** The content pages. */
+export const CONTENT = {
+  /** Influence network: the "Be part of it" button fading as its form opens and closes (motion's named ease). */
+  bePartOfItEase: 'easeInOut',
+} as const;
