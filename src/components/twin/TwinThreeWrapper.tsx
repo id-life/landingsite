@@ -1,6 +1,6 @@
 'use client';
 
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
 import EnvironmentGroup, { preloadEnvironmentGroup } from '@/components/twin/EnvironmentGroup';
@@ -412,12 +412,26 @@ export default function TwinThreeWrapper() {
  */
 function AvatarDrawn() {
   const frames = useRef(0);
+  const advance = useThree((state) => state.advance);
   useFrame(() => {
     frames.current += 1;
     if (frames.current !== 2) return;
     setTwinAvatarDrawn(true);
     performance.mark('twin-avatar-drawn');
   });
+  // The frame driver draws only a canvas that can be seen, and behind the first-visit loader the stage is still
+  // hidden: the first two frames are drawn here once, whatever the stage's visibility, so the shaders and textures are
+  // ready (and the cover or loader waiting for them can lift) before the stage is shown. Two frames, once per mount:
+  // nothing keeps drawing, so the idle rule is untouched.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      if (frames.current >= 2) return;
+      const now = performance.now() / 1000;
+      advance(now);
+      advance(now + 1 / 60);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [advance]);
   useEffect(() => () => setTwinAvatarDrawn(false), []);
   return null;
 }
