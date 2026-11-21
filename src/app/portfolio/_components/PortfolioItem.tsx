@@ -56,7 +56,10 @@ const PortfolioItem = memo(
         <div
           className={cn(
             'text-center font-semibold shortScreen:w-full shortScreen:min-w-0',
-            isGridMode ? 'mt-2 mobile:mt-3' : 'mt-7 mobile:mt-3',
+            // In the phone grid the text is never wider than its tile: a tagline longer than the tile (on his site too:
+            // "Small Molecule Therapy for ALS" was cut 9 px at 390, five taglines at 320 to 360) wraps into the second
+            // line its box already keeps (min-h-8), so no tile grows; a tile whose text fits is unchanged (RWD-11).
+            isGridMode ? 'mt-2 mobile:mt-3 mobile:max-w-full' : 'mt-7 mobile:mt-3',
           )}
         >
           <h3
