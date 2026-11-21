@@ -94,6 +94,8 @@ jobs:
       # A local build (webpack, like Vercel's `npm run build`): analytics and Sentry are compiled out (DEPLOY_ENV is
       # not production).
       - run: npm run build
+      # SEO-08 A2's host clause reads the built pages' structured data (skipped in the test job, which has no build).
+      - run: npx vitest run test/jsonld-hosts.test.mjs
       # Bundle check (initial JS per route, gzipped) and first-visit weight per device against perf-budget.json. Chrome ships on the
       # runner image; the runner has no GPU, so WebGL runs on SwiftShader, and the check fails if the experience
       # gets no WebGL context (the no-WebGL path would pass for the wrong reason).
