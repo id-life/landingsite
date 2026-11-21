@@ -18,7 +18,7 @@ import { experienceModeAtom, markHeroSceneFailed } from '@/hooks/useExperienceMo
 import { EASE } from '@/motion/tokens';
 import { INTRO } from '@/components/gl/model/vision/intro';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
-import { loaderStepSeconds } from '@/motion/original';
+import { LOADER_CREEP, loaderStepSeconds } from '@/motion/original';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -120,7 +120,12 @@ export const OuterLoader = memo(function OuterLoader() {
       const seconds = loaderStepSeconds(percent - lastPercent, now - lastAt);
       lastAt = now;
       lastPercent = Math.max(lastPercent, percent);
-      loaderRef.current?.animateTo((LOADING_MAX * loaded) / total, seconds);
+      const shown = (LOADING_MAX * loaded) / total;
+      // Then, as his bar does while it waits for the next report, it creeps on: up to 5 points over 5 s, never past
+      // LOADING_MAX. A new report (or the fill) replaces the creep, as it replaces a step.
+      const creep = () =>
+        loaderRef.current?.animateTo(Math.min(shown + LOADER_CREEP.points, LOADING_MAX), LOADER_CREEP.seconds);
+      loaderRef.current?.animateTo(shown, seconds, shown < LOADING_MAX ? creep : undefined);
     };
     heroLoadingManager.onError = (url) => {
       reportAssetFailed(url);

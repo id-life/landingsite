@@ -36,6 +36,8 @@ export const PHONE = reducible({
   connectModel: { duration: 0.8, ease: 'power3.out' },
   connectContent: { duration: 0.5 },
   connectTurnEase: 'power2.out',
+  /** Spectrum: one inner page out, then the next in (each 0.2 s, motion's default curve; 24 px of travel). */
+  spectrumPage: { duration: 0.2 },
   /** The dragon's return to its swing after a drag. */
   dragonRecovery: 1.5,
 } as const);
@@ -122,6 +124,9 @@ export const TWIN = reducible({
  * motion: the bar is the loader's reading, which reduced motion left as it was.
  */
 export const LOADER_STEP = { fallback: 0.5, min: 0.3, max: 1.5, scale: 0.8 / 150 } as const;
+
+/** After each step, while no new report has come, his bar creeps on by up to 5 points over 5 s (linear). */
+export const LOADER_CREEP = { points: 5, seconds: 5 } as const;
 
 /** His step length for a progress change of `percent` points over `ms` milliseconds. */
 export function loaderStepSeconds(percent: number, ms: number): number {

@@ -28,7 +28,7 @@ import MobileSpectrumSponsorPage from './MobileSpectrumSponsorPage';
 import { movePager, PAGER_START, PAPERS_GROUP, spectrumPhonePages } from './phonePages';
 import { fitScale, type FitScale } from './fitScale';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
-import { TILT } from '@/motion/original';
+import { PHONE, TILT } from '@/motion/original';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -527,7 +527,8 @@ function PhoneSpectrum() {
               initial="enter"
               animate="visible"
               exit="exit"
-              transition={reduceMotion ? MOTION.instant : MOTION.pageStep}
+              // His step: 0.2 s, on motion's own default curve (his transition names no ease).
+              transition={reduceMotion ? MOTION.instant : PHONE.spectrumPage}
               // On a short window (under 480 px tall) a page can hold more than its frame: the papers page with
               // "more" pressed has six papers in two rows under 140 px of frame at 640x360, at his 13 px. There the
               // page scrolls inside its frame (the deck's swipe scrolls a scroller before it changes the section, as

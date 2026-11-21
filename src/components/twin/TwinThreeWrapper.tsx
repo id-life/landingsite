@@ -7,6 +7,7 @@ import EnvironmentGroup, { preloadEnvironmentGroup } from '@/components/twin/Env
 import ExtendedCameraControls from '@/components/twin/ExtendedCameraControls';
 import LightGroup from '@/components/twin/LightGroup';
 import SwitchModel from '@/app/twin/_components/SwitchModel';
+import { NAV } from '@/components/nav/nav';
 import { useAtom, useSetAtom } from 'jotai';
 import {
   AnatomyCamera,
@@ -278,7 +279,13 @@ export default function TwinThreeWrapper() {
   });
 
   return (
-    <div id="twin-three-wrapper" className="invisible fixed left-0 top-0 z-0 grid h-screen w-screen grid-cols-1 opacity-0">
+    // Drawn outside the Twin section, the stage says which section it belongs to: focus after a keyboard move or the
+    // skip link lands on its first control, and a control in it reached by Tab brings the deck to the Twin.
+    <div
+      id="twin-three-wrapper"
+      data-section-of={NAV.twin_page.id}
+      className="invisible fixed left-0 top-0 z-0 grid h-screen w-screen grid-cols-1 opacity-0"
+    >
       <SwitchModel deck="desktop" />
       <SwitchSkin deck="desktop" />
       <SwitchAnatomyCamera deck="desktop" />
