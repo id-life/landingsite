@@ -123,6 +123,9 @@ export const TWIN = reducible({
  */
 export const LOADER_STEP = { fallback: 0.5, min: 0.3, max: 1.5, scale: 0.8 / 150 } as const;
 
+/** After each step, while no new report has come, his bar creeps on by up to 5 points over 5 s (linear). */
+export const LOADER_CREEP = { points: 5, seconds: 5 } as const;
+
 /** His step length for a progress change of `percent` points over `ms` milliseconds. */
 export function loaderStepSeconds(percent: number, ms: number): number {
   if (!(ms > 0 && percent > 0)) return LOADER_STEP.fallback;
