@@ -126,7 +126,7 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
         >
           {data.description}
         </div>
-        <PodcastContentTab id={data.id.toString()} transcriptLang={zhLang(data.transcript)}>
+        <PodcastContentTab id={data.id.toString()}>
           <Markdown remarkPlugins={transcriptRemarkPlugins} rehypePlugins={markdownRehypePlugins}>
             {data.transcript}
           </Markdown>
