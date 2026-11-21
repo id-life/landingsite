@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { HOME_HEADING } from '@/constants/home-heading';
 
 /**
  * Titles, descriptions and Open Graph tags for every route (SEO-06). One rule set:
@@ -35,9 +36,17 @@ export const NOT_FOUND_TITLE = '404: This page could not be found.';
  * LinkedIn needs at least 1200x627 and Apple's Messages 900 px wide, which the 800x400 original is not; some
  * previewers do not take WebP.
  */
-export const DEFAULT_OG_IMAGE = { url: '/og-cover.jpg', width: 1200, height: 630, type: 'image/jpeg' };
+export const DEFAULT_OG_IMAGE = {
+  url: '/og-cover.jpg',
+  width: 1200,
+  height: 630,
+  type: 'image/jpeg',
+  // og:image:alt (SEO-07; the lead's ruling of 2026-11-21): the words the page already shows, his h1 on /.
+  alt: HOME_HEADING,
+};
 
-export type OgImage = { url: string; width?: number; height?: number; type?: string };
+/** A link-preview image; `alt` is words its page already shows (the lead's ruling of 2026-11-21). */
+export type OgImage = { url: string; width?: number; height?: number; type?: string; alt?: string };
 
 const CJK = /[㐀-鿿豈-﫿]/;
 

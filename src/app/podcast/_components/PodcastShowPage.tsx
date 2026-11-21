@@ -10,6 +10,7 @@ import {
   PODCAST_PAGE_ID,
   PodcastCategory,
   podcastFeedAlternate,
+  podcastShowWords,
 } from '@/app/podcast/_components/constant';
 import { pageMeta } from '@/content/pages';
 import { getPodcastEpisodes } from '@/app/podcast/_components/episodes';
@@ -29,7 +30,11 @@ export async function podcastShowMetadata(category: PodcastCategory): Promise<Me
     description,
     keywords,
     // The show's own picture, as his site declares it, with its size and type read from the file.
-    image: { url: PODCAST_COVER[category].cover, ...(await readImageInfo(PODCAST_COVER[category].cover, 300)) },
+    image: {
+      url: PODCAST_COVER[category].cover,
+      ...(await readImageInfo(PODCAST_COVER[category].cover, 300)),
+      alt: podcastShowWords(category),
+    },
   });
   const types = podcastFeedAlternate(category);
   return types ? { ...metadata, alternates: { ...metadata.alternates, types } } : metadata;

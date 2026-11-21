@@ -64,6 +64,10 @@ export const PODCAST_SHARE_IMAGE: Record<PodcastCategory, { url: string; width: 
   [PODCAST_NAV_LIST[1].id]: { url: '/og/podcast-lt.jpg', width: 1200, height: 630, type: 'image/jpeg' },
 };
 
+/** A show's words as its page draws them ("<title> <enTitle>", PodcastCover): the alt of the show's picture. */
+export const podcastShowWords = (category: PodcastCategory) =>
+  `${PODCAST_COVER[category].title} ${PODCAST_COVER[category].enTitle}`;
+
 export const COMMENTS_TYPE = {
   XYZ: 'xyz',
 } as const;
