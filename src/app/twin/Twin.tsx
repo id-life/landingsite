@@ -200,7 +200,13 @@ function PhoneTwin({ avatar }: { avatar: TwinAvatar }) {
       <div className="twin-title-wrapper relative h-[31.25rem]">
         <YTBDemo deck="phone" />
         <h2 className="twin-title absolute left-5 top-20 w-screen">
-          <img src="/svgs/twin/mobile/title-page.svg" alt={HEADLINE_ALT} className="w-[20.9375rem]" />
+          {/* His lettering at its size, and on phones narrower than it (320 to 360 px) no wider than the window less its
+              margins, so it is never cut at the right edge; from 375 px on its width is unchanged. */}
+          <img
+            src="/svgs/twin/mobile/title-page.svg"
+            alt={HEADLINE_ALT}
+            className="w-[20.9375rem] max-w-[calc(100vw_-_2.5rem)]"
+          />
         </h2>
         <div className={cn(titleItem, 'twin-title-M0')}>
           <img src="/svgs/twin/title-ontology.svg" alt="" className="h-[7.25rem] w-auto" />
