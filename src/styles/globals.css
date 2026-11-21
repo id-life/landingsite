@@ -500,3 +500,80 @@ html[data-webgl='0'] header[data-experience-header] {
     }
   }
 }
+
+/*
+ * Insights on a short laptop window (RWD-03): the column fits between the nav and the footer slogan, continuously, with
+ * no step at any height. Kept here, in the one style sheet the layout loads: a style sheet imported by the component
+ * reordered the compiled CSS chunks and moved other rules by a pixel.
+ *
+ * Only where the original's column does not fit there. The whole block sits behind one media query that is exactly that
+ * condition, on the laptop deck below 1540 px wide (where the wrapper has no scale of its own): the column's text
+ * (INSIGHTS_TEXT units) plus the nav and slogan bands (7.75 units and 48 px) is taller than the window, with the unit
+ * 0.8333vw. Everywhere else nothing below applies, not even an identity scale (a scale of 1 still makes the wrapper its
+ * own layer, and the browser rasterises the dot background under it a shade differently).
+ *
+ * 1. The room: the nav's drawn bottom is 5.25 units; the slogan is 2.5 units from the bottom and 48 px tall.
+ * 2. The shortfall: the column's drawn text height minus the room.
+ * 3. Spacing first, on the three real gaps only, down to his smallest gap (0.75 units, his heading-to-cards in the
+ *    bottom rows), in fixed shares of the 2.25 units they can give: the column gap 2.25 -> 0.75, NEWS & TALKS heading to
+ *    cards 1.25 -> 0.75, the news card row gap 1 -> 0.75. The news slide's height is not spacing and is untouched.
+ * 4. Then a uniform scale of the column for what spacing cannot give, room / text, never below 0.935. A length ratio
+ *    in pure CSS: tan(atan2(a, b)) = a / b (Safari 15.4, Chrome 111, Firefox 108); a browser without it gets the spacing
+ *    alone.
+ * 5. Then the column moves (translate) only as far as needed to keep its text between the nav and the slogan. Below the
+ *    floor the text starts under the nav and the rest stays under the slogan (1366 wide: under about 639 px tall; 1280
+ *    wide: under about 602 px).
+ *
+ * INSIGHTS_TEXT = 49.51 units: the column's drawn text height at full spacing, from the NEWS & TALKS heading's top to
+ * the last line of the bottom rows, measured on the original and the build (563.6 px at 1366 wide). It is written twice,
+ * in the media query (a media query cannot read a custom property) and in --insights-text; test/insights-fit.test.mjs
+ * keeps the two equal. It is tied to the feed: the news slide is as tall as the tallest news page, today page 6 with
+ * 199.2 px cards where the others have 185. If a longer title makes that page's cards taller, the column is that much
+ * taller than this constant says and the fit is off by as much: at 1366x641 a card may grow by about 1 px before the
+ * text reaches the nav or the slogan again. Re-measure it at 1366x641 on the tallest news page when the feed changes.
+ */
+@media screen(notMobile) {
+  @media (max-width: 1539.98px) and (max-height: calc((49.51 + 7.75) * 0.8333vw + 48px)) {
+    .insights-fit {
+      --insights-text: calc(var(--u) * 49.51);
+      /* Where the text lies against the column's content box: it starts 2.24 units above it (the news row's pull-up
+         less the heading's own line) and ends 1.22 units above its bottom (the bottom cards' inner room). */
+      --insights-text-above: calc(var(--u) * 2.24);
+      --insights-text-below: calc(var(--u) * 1.22);
+
+      --insights-room: calc(100vh - var(--u) * 7.75 - 48px);
+      --insights-short: max(0px, calc(var(--insights-text) - var(--insights-room)));
+      --insights-give: min(var(--insights-short), calc(var(--u) * 2.25));
+      --insights-col-gap: calc(var(--u) * 2.25 - var(--insights-give) * 1.5 / 2.25);
+      --insights-news-gap: calc(var(--u) * 1.25 - var(--insights-give) * 0.5 / 2.25);
+      --insights-card-gap: calc(var(--u) - var(--insights-give) * 0.25 / 2.25);
+      --insights-fit: 1;
+    }
+
+    @supports (scale: tan(atan2(1px, 1px))) {
+      .insights-fit {
+        --insights-fit: clamp(0.935, tan(atan2(var(--insights-room), calc(var(--insights-text) - var(--insights-give)))), 1);
+      }
+    }
+
+    .insights-fit {
+      /* The content box after spacing, its centre on the column's centre (the original's), and the text's reach above
+         and below that centre once scaled. */
+      --insights-box: calc(
+        var(--insights-text) - var(--insights-give) - var(--insights-text-above) + var(--insights-text-below)
+      );
+      --insights-up: calc(var(--insights-fit) * (var(--insights-box) / 2 + var(--insights-text-above)));
+      --insights-down: calc(var(--insights-fit) * (var(--insights-box) / 2 - var(--insights-text-below)));
+      --insights-centre: calc(50vh + var(--u) * 0.5);
+      /* On the column's wrapper, which is the column's box (the column's top margin collapses into it), so the scale
+         is about the column's centre. */
+      translate: 0
+        clamp(
+          calc(var(--u) * 5.25 - var(--insights-centre) + var(--insights-up)),
+          0px,
+          calc(100vh - var(--u) * 2.5 - 48px - var(--insights-centre) - var(--insights-down))
+        );
+      scale: var(--insights-fit);
+    }
+  }
+}
