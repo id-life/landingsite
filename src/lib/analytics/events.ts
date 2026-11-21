@@ -185,7 +185,7 @@ export const EVENTS = {
 
   // Podcast listening (DATA-12): read from the audio element, whatever started it (lib/analytics/audio.ts).
   podcast_play: ev(
-    'An episode has played for 30 s (half its length if shorter); once per episode per page',
+    'An episode has played for 30 s (seeks do not count); once per episode per page',
     {
       episode_id: str('Episode id'),
       show: str('Show id (the episode category: podcast_id or podcast_lt)'),

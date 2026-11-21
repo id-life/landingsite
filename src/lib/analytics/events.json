@@ -367,7 +367,7 @@
       "params": {}
     },
     "podcast_play": {
-      "when": "An episode has played for 30 s (half its length if shorter); once per episode per page",
+      "when": "An episode has played for 30 s (seeks do not count); once per episode per page",
       "key": true,
       "params": {
         "episode_id": {
