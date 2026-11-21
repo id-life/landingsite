@@ -195,7 +195,8 @@ const NOSCRIPT_HOME_CSS = '#hero-poster{position:absolute;height:100svh}';
 /** The route's text for a visitor without JavaScript (see the file's comment). Render it from the route's page. */
 export default async function RouteNoScript({ route }: { route: ExperienceRoute }) {
   return (
-    <noscript>
+    // data-route-noscript: the container test/hidden-layer.test.mjs exempts as this route's drawn text (named there).
+    <noscript data-route-noscript="">
       <style>{route === 'home' ? NOSCRIPT_CSS + NOSCRIPT_HOME_CSS : NOSCRIPT_CSS}</style>
       {/* Below the first screen on the home route (the poster is the hero there), at the top elsewhere. */}
       <main className={route === 'home' ? 'route-noscript route-noscript--home' : 'route-noscript'}>

@@ -4,9 +4,11 @@
 // - every hidden text of his is in the build's hidden layer, unless an answer of his named below took it out;
 // - every hidden text of the build is his, or one of the roadmap's named additions below, or what an answer put in.
 // A new hidden text, or a missing one of his, fails here until it is named with its reason.
-// Reads the prerendered pages of the last `next build` (.next/server/app); skipped when there is none (CI runs it in
-// the build job after the build).
-import { existsSync, readFileSync } from 'node:fs';
+// Reads the prerendered pages of the last `next build` (.next/server/app). With no build it is skipped, and says so; with
+// a build older than the checked-out commit it fails and says that, rather than reporting a stale page's differences
+// (CI runs it in the build job, after the build).
+import { execSync } from 'node:child_process';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 import his from './fixtures/his-hidden-layer.json';
 import { hiddenLayer, norm, runText } from './helpers/hidden-layer.mjs';
@@ -29,6 +31,25 @@ const FILES = {
 };
 const built = (route) => `.next/server/app/${FILES[route]}.html`;
 const haveBuild = existsSync(built('/'));
+
+/** Which build is read: its time against the checked-out commit's (null when git is not at hand). */
+function buildAge() {
+  const builtAt = statSync('.next/BUILD_ID').mtimeMs;
+  let committedAt = null;
+  try {
+    committedAt = Number(execSync('git log -1 --format=%ct HEAD', { encoding: 'utf8' }).trim()) * 1000;
+  } catch {
+    /* no git: nothing to compare */
+  }
+  return { builtAt: new Date(builtAt).toISOString(), committedAt, stale: committedAt !== null && builtAt < committedAt };
+}
+
+/**
+ * PERF-03 A1 (merge/w2, approved by the lead): each experience route's own drawn text for a visitor without JavaScript,
+ * inside one <noscript data-route-noscript> block (src/components/seo/RouteNoScript.tsx; its strings are held by
+ * test/route-noscript.test.mjs). Exempt here by its container, not by its strings, which follow his data.
+ */
+const ROUTE_NOSCRIPT = /<noscript data-route-noscript=""[^>]*>[\s\S]*?<\/noscript>/g;
 
 /** His answers that take hidden text of his out, each with the text it takes out and the text it puts in. */
 const ANSWERS = [
@@ -131,34 +152,59 @@ DISEASE_DRAWN.add('see more');
 
 const matches = (patterns, text) => patterns.some((p) => p.test(text));
 
+/** The held comparison for one route's built HTML: his hidden texts missing, and hidden texts nobody named. */
+export function holdHiddenLayer(route, html) {
+  const mine = hiddenLayer(html.replace(ROUTE_NOSCRIPT, ''));
+  const mineText = ` ${mine.map(runText).join(' ')} `;
+  const hisRuns = his.routes[route] ?? [];
+  const hisText = ` ${hisRuns.map(runText).join(' ')} `;
+  const outPatterns = ANSWERS.flatMap((a) => a.out);
+  const inPatterns = ANSWERS.flatMap((a) => a.in);
+  const additions = new Set(ADDITIONS.flatMap((a) => a.runs));
+  const missing = [...new Set(hisRuns)].filter((run) => {
+    const text = runText(run);
+    return !mineText.includes(` ${text} `) && !mineText.includes(text) && !matches(outPatterns, text);
+  });
+  const unnamed = [...new Set(mine)].filter((run) => {
+    const text = runText(run);
+    if (hisText.includes(text) || additions.has(run) || matches(inPatterns, text)) return false;
+    if (route === '/spectrum/disease-management' && run.startsWith('tw-invisible: ') && DISEASE_DRAWN.has(text.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
+  return { missing, unnamed };
+}
+
+describe('the hold itself', () => {
+  test('exempts the route-noscript block by its container, and still catches hidden text anywhere else', () => {
+    const html =
+      '<body><noscript data-route-noscript=""><main class="route-noscript"><p>Any line of the route</p></main></noscript>' +
+      '<noscript><p>A noscript line outside the block</p></noscript><div class="sr-only">A stray hidden line</div></body>';
+    expect(holdHiddenLayer('/news', html).unnamed).toEqual([
+      'noscript: A noscript line outside the block',
+      'sr-only: A stray hidden line',
+    ]);
+  });
+});
+
 describe.skipIf(!haveBuild)('the hidden layer against his (built pages)', () => {
+  test('the build read is not older than the checked-out commit', () => {
+    const age = buildAge();
+    expect(
+      age.stale,
+      `.next was built at ${age.builtAt}, before HEAD (${new Date(age.committedAt).toISOString()}): rebuild before reading it`,
+    ).toBe(false);
+  });
   for (const route of Object.keys(FILES)) {
     test(route, () => {
-      const html = readFileSync(built(route), 'utf8');
-      const mine = hiddenLayer(html);
-      const mineText = ` ${mine.map(runText).join(' ')} `;
-      const hisRuns = his.routes[route];
-      const hisText = ` ${hisRuns.map(runText).join(' ')} `;
-      const outPatterns = ANSWERS.flatMap((a) => a.out);
-      const inPatterns = ANSWERS.flatMap((a) => a.in);
-      const additions = new Set(ADDITIONS.flatMap((a) => a.runs));
-
-      const missing = [...new Set(hisRuns)].filter((run) => {
-        const text = runText(run);
-        return !mineText.includes(` ${text} `) && !mineText.includes(text) && !matches(outPatterns, text);
-      });
-      const unnamed = [...new Set(mine)].filter((run) => {
-        const text = runText(run);
-        if (hisText.includes(text) || additions.has(run) || matches(inPatterns, text)) return false;
-        if (
-          route === '/spectrum/disease-management' &&
-          run.startsWith('tw-invisible: ') &&
-          DISEASE_DRAWN.has(text.toLowerCase())
-        )
-          return false;
-        return true;
-      });
-      expect({ missing, unnamed }).toEqual({ missing: [], unnamed: [] });
+      if (buildAge().stale)
+        throw new Error('the build in .next is older than HEAD: rebuild before reading it (see the test above)');
+      expect(holdHiddenLayer(route, readFileSync(built(route), 'utf8'))).toEqual({ missing: [], unnamed: [] });
     });
   }
+});
+
+describe.skipIf(haveBuild)('the hidden layer against his (no build in .next: run `next build` first)', () => {
+  test.skip('skipped: no prerendered pages to read', () => {});
 });
