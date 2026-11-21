@@ -79,3 +79,19 @@ export const CONTENT = {
   /** Influence network: the "Be part of it" button fading as its form opens and closes (motion's named ease). */
   bePartOfItEase: 'easeInOut',
 } as const;
+
+/** The chrome: the phone menus and the footer's sheets. */
+export const CHROME = reducible({
+  /** The phone menus (experience, /news, /podcast): items rise in 0.6 s on power4.out, starting 0.06 s early... */
+  menuOpen: { duration: 0.6, ease: 'power4.out', delay: -0.06 },
+  /** ...and drop out in 0.3 s on power4.in, starting 0.2 s early. */
+  menuClose: { duration: 0.3, ease: 'power4.in', delay: -0.2 },
+  /** The subscribe sheet growing from and shrinking to the bottom edge (motion's named ease). */
+  subscribeSheet: { duration: 0.5, ease: 'easeInOut' },
+  /** The contact panel opening, and the collapsed contact button (motion's named ease). */
+  contactPanel: { duration: 0.25, ease: 'easeOut' },
+  contactButtonEase: 'easeOut',
+} as const);
+
+/** The phone menus' items: 50 px of travel, 0.1 s apart (layout, not durations: unchanged under reduced motion). */
+export const MENU_ITEMS = { travel: 50, stagger: 0.1 } as const;
