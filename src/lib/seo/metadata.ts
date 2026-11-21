@@ -46,7 +46,7 @@ export const DEFAULT_OG_IMAGE = {
 };
 
 /** A link-preview image; `alt` is words its page already shows (the lead's ruling of 2026-11-21). */
-export type OgImage = { url: string; width?: number; height?: number; type?: string; alt?: string };
+type OgImage = { url: string; width?: number; height?: number; type?: string; alt?: string };
 
 const CJK = /[㐀-鿿豈-﫿]/;
 

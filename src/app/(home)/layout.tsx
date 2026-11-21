@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import ExperienceHeader from '@/components/site/ExperienceHeader';
+import HomeProfile from '@/app/(home)/_components/HomeProfile';
 import Style from '@/app/(home)/_components/Style';
 import type { Graph } from 'schema-dts';
 import { ORG_DESCRIPTION, ORGANIZATION, WEBSITE } from '@/constants/entity';
@@ -50,6 +51,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
           { text: ORG_DESCRIPTION, lang: 'en' },
         ]}
       />
+      {/* His hidden bilingual profile, placed where his layout places it (after the summary). */}
+      <HomeProfile />
       <HeroPreloads />
       <JsonLd data={jsonLd} />
       <Style />
