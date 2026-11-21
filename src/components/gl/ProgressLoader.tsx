@@ -18,6 +18,7 @@ import { experienceModeAtom, markHeroSceneFailed } from '@/hooks/useExperienceMo
 import { EASE } from '@/motion/tokens';
 import { INTRO } from '@/components/gl/model/vision/intro';
 import { PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { loaderStepSeconds } from '@/motion/original';
 
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
@@ -109,8 +110,17 @@ export const OuterLoader = memo(function OuterLoader() {
       // A later-section asset that fails after the loader has left must not leave the UI hidden either.
       if (failed.length && !showRef.current) requestFailOpen('asset');
     });
+    // Each step as long as his (loaderStepSeconds): quicker while the files arrive fast, slower when they trickle.
+    let lastAt = performance.now();
+    let lastPercent = 0;
     heroLoadingManager.onProgress = (url, loaded, total) => {
-      if (total > 0) loaderRef.current?.animateTo((LOADING_MAX * loaded) / total, 0.4);
+      if (total <= 0) return;
+      const percent = (100 * loaded) / total;
+      const now = performance.now();
+      const seconds = loaderStepSeconds(percent - lastPercent, now - lastAt);
+      lastAt = now;
+      lastPercent = Math.max(lastPercent, percent);
+      loaderRef.current?.animateTo((LOADING_MAX * loaded) / total, seconds);
     };
     heroLoadingManager.onError = (url) => {
       reportAssetFailed(url);

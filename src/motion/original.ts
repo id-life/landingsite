@@ -101,4 +101,23 @@ export const TWIN = reducible({
   /** The avatars' titles moving off stage when the Twin opens: his tween names no timing, so GSAP's own 0.5 s and
    * power1.out (written out here so that no site-wide default can change it). */
   titlesReset: { duration: 0.5, ease: 'power1.out' },
+  /** The Twin's scrubbed entrance: the picture grows to the window (his default curve), the 3D stage fades in on
+   * power3.out, and fades out again at 'twin-show' (his default curve). */
+  entranceGrowEase: 'power1.out',
+  entranceStageInEase: 'power3.out',
+  entranceStageOutEase: 'power1.out',
 } as const);
+
+/**
+ * The first-visit loader's bar following the files' progress (owner's answer 7A: his loader). Each step is linear and
+ * as long as his: 0.8 / (rate x 150) seconds, where rate is the progress made per millisecond since the last step
+ * (percent of the files), held between 0.3 s and 1.5 s; 0.5 s when no rate can be read. Not made 0 under reduced
+ * motion: the bar is the loader's reading, which reduced motion left as it was.
+ */
+export const LOADER_STEP = { fallback: 0.5, min: 0.3, max: 1.5, scale: 0.8 / 150 } as const;
+
+/** His step length for a progress change of `percent` points over `ms` milliseconds. */
+export function loaderStepSeconds(percent: number, ms: number): number {
+  if (!(ms > 0 && percent > 0)) return LOADER_STEP.fallback;
+  return Math.max(LOADER_STEP.min, Math.min(LOADER_STEP.max, LOADER_STEP.scale / (percent / ms)));
+}

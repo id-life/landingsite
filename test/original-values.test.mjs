@@ -33,3 +33,17 @@ describe("the original's values", () => {
     expect(PHONE.heroIn.position).toBe(1.2);
   });
 });
+
+describe("the loader bar's steps (his rate rule)", () => {
+  test('0.5 s with no rate, 0.8 / (rate x 150) between 0.3 s and 1.5 s otherwise', async () => {
+    const { loaderStepSeconds } = await import('@/motion/original');
+    expect(loaderStepSeconds(0, 100)).toBe(0.5);
+    expect(loaderStepSeconds(10, 0)).toBe(0.5);
+    // 10 points in 200 ms: 0.05 per ms, 0.8 / 7.5 = 0.107 s, held at 0.3 s.
+    expect(loaderStepSeconds(10, 200)).toBe(0.3);
+    // 10 points in 1500 ms: 0.8 / 1 = 0.8 s.
+    expect(loaderStepSeconds(10, 1500)).toBeCloseTo(0.8, 6);
+    // 1 point in 5 s: held at 1.5 s.
+    expect(loaderStepSeconds(1, 5000)).toBe(1.5);
+  });
+});

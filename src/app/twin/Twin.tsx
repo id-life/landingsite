@@ -14,7 +14,7 @@ import { NAV_LIST } from '@/components/nav/nav';
 import { ModelType } from '@/components/twin/model/type';
 import { useSectionNear } from '@/hooks/useDeferredAssets';
 import { isLayoutRefreshing } from '@/motion/sectionController';
-import { beats, EASE } from '@/motion/tokens';
+import { beats } from '@/motion/tokens';
 import { cn } from '@/utils';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
@@ -28,6 +28,7 @@ import SwitchModel from './_components/SwitchModel';
 import SwitchSkin from './_components/SwitchSkin';
 import YTBDemo from './_components/YTBDemo';
 import { showTwinOpening, TWIN_AVATAR, TWIN_OFFSTAGE_CLASS, twinModelRestTop, type TwinAvatar } from './twin-deck';
+import { TWIN } from '@/motion/original';
 
 const PAGE_ID = 'twin_page';
 const PAGE_INDEX = NAV_LIST.findIndex((item) => item.id === PAGE_ID);
@@ -87,9 +88,9 @@ function DesktopTwin() {
         },
       },
     });
-    tl.to(imageContainerRef.current, { height: '100svh', duration: beats(0.5) });
-    tl.to('#twin-three-wrapper', { opacity: 1, duration: beats(1), ease: EASE.out });
-    tl.to('#twin-three-wrapper', { opacity: 0, duration: beats(1) }, 'twin-show');
+    tl.to(imageContainerRef.current, { height: '100svh', duration: beats(0.5), ease: TWIN.entranceGrowEase });
+    tl.to('#twin-three-wrapper', { opacity: 1, duration: beats(1), ease: TWIN.entranceStageInEase });
+    tl.to('#twin-three-wrapper', { opacity: 0, duration: beats(1), ease: TWIN.entranceStageOutEase }, 'twin-show');
     // Every arrival lands where the model is fully shown (MOT-01).
     tl.addLabel('rest', 'twin-show');
   }, []);
