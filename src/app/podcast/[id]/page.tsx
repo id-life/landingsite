@@ -104,6 +104,8 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
     ]),
   ];
 
+  // The title's language for screen readers (ENG-03): zh-CN where it is mostly Chinese; the page's stays en.
+  const titleLang = zhLang(data.title);
   return (
     <>
       <JsonLd data={jsonLd} />
@@ -111,7 +113,7 @@ export default async function PodcastContentPage(props: PodcastPlayerProps) {
       <div className="pb-24 mobile:pb-16">
         <img className="mx-auto aspect-square w-24 rounded-lg object-cover mobile:w-21" src={data.album} alt="" />
         <div className="flex-center mb-7.5 mt-6 flex-col gap-3 mobile:my-6 mobile:mt-5 mobile:flex-col">
-          <h1 lang={zhLang(data.title)} className="text-center text-xl font-semibold mobile:text-base">
+          <h1 lang={titleLang} className="text-center text-xl font-semibold mobile:text-base">
             {data.title}
           </h1>
           <PodcastLinks data={data} />
