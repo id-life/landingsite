@@ -28,13 +28,15 @@ export default function Contact({ onCopy }: ContactProps) {
 
   return (
     // The original chip at the original's sizes: 13 units wide, the address and the copy icon on its right; on phones
-    // 7.125 units, the address at 10 px in capitals, clear of the section arrows. Touch targets are hit areas
+    // 7.125 units, the address at 10 px in capitals, clear of the section arrows; under 360 px wide, where the centred
+    // pair of arrows reaches 134 px from the left (114 px at 320), 6.375 units, so it ends where the arrows begin
+    // (RWD-11; its place, 12 px from the edge, is Portfolio's). Touch targets are hit areas
     // (tap-area), so the chip keeps its size; on the laptop deck its area does not grow upward or downward, because the
     // companies' tiles sit right above it.
     <button
       type="button"
       onClick={handleCopy}
-      className="group relative block w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 tap-area mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-accent notMobile:coarse:before:h-full"
+      className="group relative block w-52 cursor-pointer bg-white/10 py-3.5 text-center text-base/5 font-semibold backdrop-blur duration-300 tap-area mobile:w-[7.125rem] mobile:text-xs/5 notMobile:hover:text-accent notMobile:coarse:before:h-full [@media(max-width:359.98px)]:w-[6.375rem]"
     >
       <SubscribeBorderSVG
         preserveAspectRatio="none"

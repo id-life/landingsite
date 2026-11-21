@@ -381,7 +381,9 @@ function PhonePortfolio() {
             </div>
           ))}
         </div>
-        <div className="page2-contact fixed bottom-6 left-5 z-10">
+        {/* Under 360 px wide the chip sits 12 px from the edge (and is 6.375 units wide, Contact), so it never meets the
+            centred section arrows, which begin 114 px from the left at 320 px (RWD-11). */}
+        <div className="page2-contact fixed bottom-6 left-5 z-10 [@media(max-width:359.98px)]:left-3">
           <Contact onCopy={handleCopy} />
         </div>
       </div>
