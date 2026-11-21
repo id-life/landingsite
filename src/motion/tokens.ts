@@ -110,6 +110,12 @@ export const EASE = {
 } as const;
 
 /** Stagger between items of one group, in seconds. */
+/**
+ * GSAP's own defaults, which the original site played for every tween that names no duration or ease (it set no
+ * gsap.defaults). Not a choice of this site's: kept so that such tweens play as on the original.
+ */
+export const GSAP_DEFAULT = { duration: 0.5, ease: 'power1.out' } as const;
+
 export const STAGGER = {
   glyph: 0.02,
   item: 0.04,
