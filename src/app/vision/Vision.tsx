@@ -62,6 +62,8 @@ export default function Vision() {
             // On a short window (under 480 px tall) the slogans keep their centred column but sit just above the hero
             // tagline (which the hero draws at 84 % of the window's height, measured), instead of under START: no
             // slogan letter under START or over the tagline, and a slogan keeps its full width (at most two lines).
+            // Tied to the 3D scene: the tagline is PhoneCenterLogo's <Center position={[0, -2.6, 0]}> (CenterLogo.tsx)
+            // under the camera at z 10, fov 40 (ExperienceCanvas.tsx). If either moves, re-measure and move this bottom.
             className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-[calc(16.2svh_+_0.25rem)] shortScreen:top-auto shortScreen:translate-y-0"
           >
             {CAROUSEL_ITEMS.map((item) => (
