@@ -101,6 +101,13 @@ export const TWIN = reducible({
   /** The avatars' titles moving off stage when the Twin opens: his tween names no timing, so GSAP's own 0.5 s and
    * power1.out (written out here so that no site-wide default can change it). */
   titlesReset: { duration: 0.5, ease: 'power1.out' },
+  /** An avatar press: the titles move off stage in 0.5 s (0.5 s later when the press also turns the model). */
+  titlesOut: 0.5,
+  /** An avatar's tile scaling as it is pressed and chosen (motion's named ease). */
+  tileEase: 'easeOut',
+  /** The compare slider gliding to a side; each sparkle's flicker. */
+  compareGlide: 0.5,
+  sparkleFlicker: 0.4,
   /** The Twin's scrubbed entrance: the picture grows to the window (his default curve), the 3D stage fades in on
    * power3.out, and fades out again at 'twin-show' (his default curve). */
   entranceGrowEase: 'power1.out',
