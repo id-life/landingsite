@@ -51,16 +51,17 @@ export default function ImmortalDragonsNewsAndUpdatesPage() {
       <ReadDepth itemId={'immortal-dragons-news-and-updates'} />
       <div>
         <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
-        {/* The article's language for screen readers (ENG-03); the page's stays en, as on his site. */}
-        <article
-          lang={zhLang(articleContent)}
-          className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3"
-        >
+        <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
           <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
             Immortal Dragons
           </div>
-          <h1 className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg">
+          {/* The title's language for screen readers (ENG-03). The body is not marked: its system font stack has no named
+              Chinese face, and a zh mark makes Chrome draw it in another Chinese face than the original's (measured). */}
+          <h1
+            lang={zhLang(articleTitle)}
+            className="mt-5 text-center text-[2.375rem]/[3.75rem] font-semibold mobile:mt-3 mobile:text-lg"
+          >
             {articleTitle}
           </h1>
           <div className="mx-auto mb-15 mt-10 max-w-80 border-b border-dashed border-black mobile:mb-10 mobile:mt-7.5" />
