@@ -5,7 +5,9 @@ import { TWIN_FEATURES, TWIN_FEATURES_CN } from '@/content/twin';
 import { CONNECT_STRENGTHS } from '@/content/connect';
 import { portfolio } from '@/app/portfolio/_components/portfolioData';
 import { WORLD_MAP_DOTS } from '@/constants/engagement';
-import { newsItems } from '@/app/insights/_components/InsightsSummary';
+import dayjs from 'dayjs';
+import { fetchInsightsWithGeo } from '@/apis';
+import { toInsightItems } from '@/hooks/insights/insightItems';
 
 /**
  * PERF-03 A1 / SEO-01 A1: what an experience route shows, for a visitor without JavaScript. Inside <noscript>, so a
@@ -44,6 +46,16 @@ function Slogans() {
   );
 }
 
+/** The NEWS & TALKS row's cards, as the row draws them (toInsightItems; source and date as on the card). */
+async function newsCards() {
+  try {
+    const res = await fetchInsightsWithGeo();
+    return res.code === 200 && Array.isArray(res.data) ? toInsightItems(res.data) : [];
+  } catch {
+    return [];
+  }
+}
+
 async function Body({ route }: { route: ExperienceRoute }) {
   switch (route) {
     case 'home':
@@ -64,17 +76,21 @@ async function Body({ route }: { route: ExperienceRoute }) {
         </>
       );
     case 'insights': {
-      const news = await newsItems();
+      const news = await newsCards();
       return (
         <>
           <h2>{SECTION_HEADINGS.insights}</h2>
           <ul>
             {news.map((item) => (
-              <li key={`${item.title}-${item.href ?? ''}`}>
-                <h3>{item.href ? <a href={item.href}>{item.title}</a> : item.title}</h3>
-                {item.text?.map((line) => (
-                  <p key={String(line)}>{typeof line === 'string' ? line : line.text}</p>
-                ))}
+              <li key={item.id}>
+                <h3>
+                  {item.url.startsWith('/') || item.url.startsWith('http') ? <a href={item.url}>{item.title}</a> : item.title}
+                </h3>
+                <p>
+                  {[item.publisher, item.publishDate && dayjs(item.publishDate).format('MMM DD, YYYY')]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
               </li>
             ))}
           </ul>

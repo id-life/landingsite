@@ -6,9 +6,8 @@ import { absoluteUrl } from '@/constants/site';
 
 const MAX_ITEMS = 20;
 
-// Same source and order as the News & Talks section; an API failure only drops the list. Also the route's text
-// without JavaScript (src/components/seo/RouteNoScript.tsx).
-export async function newsItems(): Promise<SEOItem[]> {
+// Same source and order as the News & Talks section; an API failure only drops the list.
+async function newsItems(): Promise<SEOItem[]> {
   try {
     const res = await fetchInsightsWithGeo();
     if (res.code !== 200 || !Array.isArray(res.data)) return [];
