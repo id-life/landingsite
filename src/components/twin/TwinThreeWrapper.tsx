@@ -41,7 +41,8 @@ import YTBDemo from '@/app/twin/_components/YTBDemo';
 import Loader from '@/components/twin/Loader';
 import FrameDriver from '@/components/gl/FrameDriver';
 import { useGpuTier } from '@/motion/gpuTier';
-import GLBoundary, { ModelBoundary, onCanvasCreated } from '@/components/gl/GLBoundary';
+import GLBoundary, { ModelBoundary, onCanvasCreated, ReleaseOnUnmount } from '@/components/gl/GLBoundary';
+import { useTwinStageWanted } from './twinStage';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
 /** The avatar's field of view: the original's 45 degrees, 15 units away, on every window of the laptop deck. */
@@ -56,6 +57,8 @@ export default function TwinThreeWrapper() {
   // The avatar and its HDR (about 6 MB) mount when the visitor comes within one section of the
   // twin (or lands on /digitaltwin), and are warmed into the cache one section earlier.
   const deferredReady = useDeferredAssets('twin');
+  // MOT-09: the canvas (a second WebGL context) exists only at or next to the Twin, or on the way there.
+  const stageWanted = useTwinStageWanted();
   // The twin canvas renders as the original did on every device: pixel ratio up to 2, antialiased.
   const { tier, budget } = useGpuTier();
   const warm = useDeferredWarm('twin');
@@ -271,26 +274,29 @@ export default function TwinThreeWrapper() {
         }}
       >
         <GLBoundary canvas="twin">
-          <Canvas
-            id="model-canvas"
-            frameloop="never"
-            onCreated={onCanvasCreated('twin')}
-            dpr={[1, budget.dprCap]}
-            data-tier={tier}
-            data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
-            gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
-            style={{
-              pointerEvents: 'none',
-              position: 'absolute',
-              top: '0px',
-              height: '100vh',
-            }}
-          >
-            <FrameDriver />
-            <Suspense fallback={<Loader />}>
-              <View.Port />
-            </Suspense>
-          </Canvas>
+          {stageWanted && (
+            <Canvas
+              id="model-canvas"
+              frameloop="never"
+              onCreated={onCanvasCreated('twin')}
+              dpr={[1, budget.dprCap]}
+              data-tier={tier}
+              data-dpr={Math.min(budget.dprCap, typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1)}
+              gl={{ alpha: true, antialias: true, powerPreference: budget.powerPreference }}
+              style={{
+                pointerEvents: 'none',
+                position: 'absolute',
+                top: '0px',
+                height: '100vh',
+              }}
+            >
+              <FrameDriver />
+              <ReleaseOnUnmount />
+              <Suspense fallback={<Loader />}>
+                <View.Port />
+              </Suspense>
+            </Canvas>
+          )}
           {/* Avatar, anatomy models and the HDR load on approach (about 6 MB), never with the hero. */}
           {deferredReady && (
             <>
