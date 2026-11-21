@@ -6,6 +6,7 @@ import { clsx } from 'clsx';
 import { eventBus } from '@/components/event-bus/eventBus';
 import { MessageType } from '@/components/event-bus/messageType';
 import { track } from '@/lib/analytics/track';
+import NoComment from '@/app/podcast/[id]/_components/NoComment';
 
 // Comments are fetched from the API in the browser; their code and request wait until the tab is opened.
 const PodcastComments = dynamic(() => import('@/app/podcast/[id]/_components/PodcastComments'), { ssr: false });
@@ -70,7 +71,17 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
             {children}
           </div>
         </div>
-        <div className={clsx(activeTab === 1 ? 'block' : 'hidden')}>{commentsOpened && <PodcastComments id={id} />}</div>
+        <div className={clsx(activeTab === 1 ? 'block' : 'hidden')}>
+          {/* Until the tab is opened, the hidden tab holds what his site serves there: the list in its empty state ("No
+              comment"). Opening it loads the comments (and shows no "No comment" while they load, ENG-08). */}
+          {commentsOpened ? (
+            <PodcastComments id={id} />
+          ) : (
+            <div className="grid gap-7 mobile:gap-5">
+              <NoComment />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -31,6 +31,10 @@ interface DataTableProps<TData> {
   renderRowExtra?: (row: Row<TData>) => React.ReactNode;
   renderEmpty?: () => React.ReactNode;
   initialSort?: SortingState;
+  /** Extra classes for a body row, from its index in `data` (not its sorted place). */
+  rowClassByIndex?: (index: number) => string | undefined;
+  /** Render on the server too (the default waits for mount): for a table whose text belongs in the page's HTML. */
+  renderOnServer?: boolean;
 }
 
 function DataTableInner<TData>(
@@ -50,6 +54,8 @@ function DataTableInner<TData>(
     renderRowExtra,
     renderEmpty,
     initialSort = [],
+    rowClassByIndex,
+    renderOnServer = false,
   }: DataTableProps<TData>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -81,7 +87,7 @@ function DataTableInner<TData>(
     enableSorting: true,
   });
 
-  if (!isMounted) return null;
+  if (!isMounted && !renderOnServer) return null;
 
   const rows = table.getRowModel().rows;
 
@@ -120,6 +126,7 @@ function DataTableInner<TData>(
                       'bg-red/10 hover:bg-red/10': isRowEditing && isRowEditing(row.original),
                     },
                     rowClass,
+                    rowClassByIndex?.(row.index),
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (
