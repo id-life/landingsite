@@ -16,6 +16,15 @@ export const WIDTH_CLASS_QUERY = {
 export const COMPACT_HEIGHT_QUERY = '(max-height: 479.98px)';
 
 /**
+ * The compact-height windows split at the original's own phone width (its `mobile` screen was max-width: 768px; the
+ * same 768.98 / 769 px edge as PHONE_TREE_QUERY and DESKTOP_TREE_QUERY, no new breakpoint). At most 768 px wide the
+ * original drew its phone version, which is the reference there, so a compact rule that only changes its sizes belongs
+ * to SHORT_WIDE_QUERY: wider, the original drew its laptop version while this build draws the phone version.
+ */
+export const SHORT_NARROW_QUERY = `(max-width: 768.98px) and ${COMPACT_HEIGHT_QUERY}`;
+export const SHORT_WIDE_QUERY = `(min-width: 769px) and ${COMPACT_HEIGHT_QUERY}`;
+
+/**
  * Two decks, nothing else (RWD-02; the owner's decision of 2026-11-18, question 23: "NO MORE VERSIONS. it's more
  * elegant just mobile and desktop"). The phone deck (the paged deck with no document scroll) is mounted for a window
  * at most 768 px wide, under 480 px tall (a phone on its side), or taller than wide and at most 1024 px wide (a tablet

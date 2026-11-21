@@ -1,4 +1,4 @@
-import { COMPACT_HEIGHT_QUERY, DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
+import { DESKTOP_TREE_QUERY, PHONE_LAYOUT_UNIT, PHONE_TREE_QUERY } from '@/styles/device-classes';
 
 // Page-level rules, as a plain <style> built from the device classes (RWD-02): the phone and desktop rules follow the
 // tree queries (src/styles/device-classes.ts), the same queries that decide which experience is mounted.
@@ -25,19 +25,12 @@ const CSS = `
   }
 
 
-  /* The phone deck: the phone layout in the deck's unit (16 px up to 599 px, then growing with the window); a phone
-     in landscape keeps the 12 px unit below. */
+  /* The phone deck: the phone layout in the deck's unit (16 px up to 599 px, then growing with the window), a phone
+     on its side included: at most 768 px wide that is the original's phone version, and wider it mends nothing
+     (measured at 844x390 and 932x430), so no compact-height unit of its own. */
   @media ${PHONE_TREE_QUERY} {
     :root {
       --u: ${PHONE_LAYOUT_UNIT};
-    }
-  }
-
-  /* A phone in landscape: the same fixed 12 px unit as a small laptop window, so the picture and table are drawn at
-     the laptop's scale, not the portrait phone's. */
-  @media ${COMPACT_HEIGHT_QUERY} {
-    :root {
-      --u: 12px;
     }
   }
 
