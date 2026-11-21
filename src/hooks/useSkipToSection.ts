@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { NAV_LIST } from '@/components/nav/nav';
 import { getSectionState, goToSection } from '@/motion/sectionController';
 import { createTabIntent } from '@/motion/tabIntent';
+import { focusSection } from '@/motion/sectionFocus';
 
 /**
  * Skip to content on the experience (both decks): the link's target, #content-start, sits after the header, and every
@@ -15,11 +16,7 @@ export function useSkipToSection() {
   useEffect(() => {
     const onFocusIn = (event: FocusEvent) => {
       if (!(event.target instanceof HTMLElement) || event.target.id !== 'content-start') return;
-      const section = document.getElementById(NAV_LIST[getSectionState().index]?.id ?? '');
-      if (!section) return;
-      section.setAttribute('tabindex', '-1');
-      section.addEventListener('blur', () => section.removeAttribute('tabindex'), { once: true });
-      section.focus({ preventScroll: true });
+      focusSection(NAV_LIST[getSectionState().index]?.id ?? '');
     };
     // Reached by the Tab key, a section other than the one in view is brought to its rest pose, so its focused
     // control is drawn (it was left at the start of its entrance, its text at opacity 0); through the controller's
