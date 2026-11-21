@@ -29,6 +29,7 @@ import { movePager, PAGER_START, PAPERS_GROUP, spectrumPhonePages } from './phon
 import { fitScale, type FitScale } from './fitScale';
 import { keptStartPage, useKeptInnerPage } from '@/hooks/useKeptInnerPage';
 import { PHONE, TILT } from '@/motion/original';
+import { HANDOVER_LIMIT_MS, HANDOVER_TARGETS, onEntrance } from '@/motion/phoneHandover';
 
 const PAGE_ID = 'spectrum_page';
 const spectrumNavItem = NAV_LIST.find((item) => item.id === PAGE_ID)!;
@@ -457,6 +458,30 @@ function PhoneSpectrum() {
   const pages = useMemo(() => spectrumPhonePages(spectrumSponsorItem.links.length), [spectrumSponsorItem.links.length]);
   const totalPages = pages.length;
   const active = currentPage.id === PAGE_ID;
+  // MOT-05: being left, Spectrum (which has no exit of its own in the original) stays drawn until the next section's
+  // own entrance starts, then is hidden (src/motion/phoneHandover.ts); the next section's wait and entrance unchanged.
+  // Only where the next section's entrance starts after a wait, and says so (HANDOVER_TARGETS: Insights, its 0.5 s);
+  // elsewhere the next section draws from its first frame and Spectrum is hidden at once, as before. Noted while
+  // rendering the change itself (React's pattern for state that follows a change of props), so the frame that shows
+  // the next section never lacks Spectrum.
+  const [wasActive, setWasActive] = useState(active);
+  const [leavingTo, setLeavingTo] = useState<string | null>(null);
+  if (wasActive !== active) {
+    setWasActive(active);
+    setLeavingTo(!active && HANDOVER_TARGETS.has(currentPage.id) ? currentPage.id : null);
+  }
+  useEffect(() => {
+    if (!leavingTo) return;
+    const off = onEntrance((id) => {
+      if (id === leavingTo) setLeavingTo(null);
+    });
+    const limit = setTimeout(() => setLeavingTo(null), HANDOVER_LIMIT_MS);
+    return () => {
+      off();
+      clearTimeout(limit);
+    };
+  }, [leavingTo]);
+  const leaving = !active && leavingTo !== null;
   const page = pages[pageIndex] ?? pages[0];
 
   // Use the same inner-page navigation contract as MobilePortfolio.
@@ -489,7 +514,16 @@ function PhoneSpectrum() {
   }, []);
 
   return (
-    <div id={PAGE_ID} className={cn('page-container-mobile relative text-white', { hidden: !active })}>
+    <div
+      id={PAGE_ID}
+      className={cn('page-container-mobile relative text-white', {
+        hidden: !active && !leaving,
+        // Kept drawn while it is being left (MOT-05): over the next section, out of the flow, not interactive.
+        'pointer-events-none !fixed inset-x-0 top-0 z-[1]': !active && leaving,
+      })}
+      inert={!active && leaving ? true : undefined}
+      aria-hidden={!active && leaving ? true : undefined}
+    >
       {active && (
         <ParticleGL
           isStatic

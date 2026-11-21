@@ -6,6 +6,8 @@ import {
   mobileCurrentPageAtom,
 } from '@/atoms';
 import { PHONE, TILT } from '@/motion/original';
+import { announceEntrance, HANDOVER_TARGETS, leftInnerPage } from '@/motion/phoneHandover';
+import { isReducedMotion } from '@/motion/preference';
 import { activeAnimAtom, imageIdxAtom } from '@/atoms/portfolio';
 import Toast from '@/components/common/Toast';
 import ParticleGL from '@/components/gl/particle/ParticleGL';
@@ -198,8 +200,24 @@ function PhonePortfolio() {
   const [showToast, setShowToast] = useState(false);
   const setInnerPageTotal = useSetAtom(innerPageTotalAtom);
   const [innerPageIndex, setInnerPageIndex] = useAtom(innerPageIndexAtom);
-  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
+  // The inner page on screen. While the panel is being left (MOT-05), the one the visitor left, as it stood: the inner
+  // page index is shared by the deck's paged sections and reset in the same update that shows the next section, which
+  // slid this panel's page strip to another page during its exit (leftInnerPage, noted just before that reset).
   const currentPage = useAtomValue(mobileCurrentPageAtom);
+  const [leftOnPage, setLeftOnPage] = useState(innerPageIndex);
+  // Being left, while its exit plays (MOT-05). Set while rendering the change itself (React's pattern for state that
+  // follows a change of props), so the frame that shows the next section never lacks the panel; cleared when the exit
+  // ends.
+  const [leaving, setLeaving] = useState(false);
+  const [wasShown, setWasShown] = useState(currentPage.id === PAGE_ID);
+  if (wasShown !== (currentPage.id === PAGE_ID)) {
+    setWasShown(currentPage.id === PAGE_ID);
+    const leave = wasShown && HANDOVER_TARGETS.has(currentPage.id) && !isReducedMotion();
+    setLeaving(leave);
+    if (leave) setLeftOnPage(leftInnerPage());
+  }
+  const shownPage = leaving && currentPage.id !== PAGE_ID ? leftOnPage : innerPageIndex;
+  const [innerPageNavigateTo, setInnerPageNavigateTo] = useAtom(innerPageNavigateToAtom);
   const [particleActive, setParticleActive] = useState(false);
   const retimer = useRetimer();
 
@@ -216,12 +234,12 @@ function PhonePortfolio() {
   }, [pageItemIndices]);
 
   const totalPages = pageItems.length;
-  const currentItems = pageItems[innerPageIndex] ?? [];
+  const currentItems = pageItems[shownPage] ?? [];
   const currentGridRows = currentItems.length > 4 ? 'grid-rows-3' : 'grid-rows-2';
 
   // Calculate particle indices for all grid cells on current page
   const getParticleIndices = () => {
-    const currentPageIndices = pageItemIndices[innerPageIndex] ?? [];
+    const currentPageIndices = pageItemIndices[shownPage] ?? [];
     return currentPageIndices.map((index) => index + 1);
   };
   const particleIndices = getParticleIndices();
@@ -243,6 +261,7 @@ function PhonePortfolio() {
     if (timelineRef.current) {
       timelineRef.current.kill();
     }
+    announceEntrance(PAGE_ID);
 
     const tl = gsap.timeline();
     timelineRef.current = tl;
@@ -277,7 +296,7 @@ function PhonePortfolio() {
     return tl;
   }, []);
 
-  const createExitAnimation = useCallback(() => {
+  const createExitAnimation = useCallback((keepDrawn: boolean) => {
     if (!wrapperRef.current) return;
 
     if (timelineRef.current) {
@@ -293,6 +312,10 @@ function PhonePortfolio() {
       duration: PHONE.portfolioOut.duration,
       ease: PHONE.portfolioOut.ease,
     });
+    // MOT-05: the panel stays drawn while this, the original's exit, plays (it ran on a hidden panel before), and is
+    // hidden when it ends (src/motion/phoneHandover.ts).
+    if (keepDrawn) tl.eventCallback('onComplete', () => setLeaving(false));
+    else setLeaving(false);
 
     return tl;
   }, []);
@@ -307,6 +330,7 @@ function PhonePortfolio() {
   }, [innerPageNavigateTo, currentPage.id, setInnerPageNavigateTo, setInnerPageIndex]);
 
   // Page enter/exit animations and reset state
+  const shownRef = useRef(false);
   useEffect(() => {
     if (currentPage.id === PAGE_ID) {
       setParticleActive(true);
@@ -316,8 +340,11 @@ function PhonePortfolio() {
       createEnterAnimation();
     } else {
       setParticleActive(false);
-      createExitAnimation();
+      // Only a panel that was on screen plays its exit (not every section change elsewhere in the deck); it is kept
+      // drawn for it only where the next section waits before its entrance (Insights), where the screen was empty.
+      if (shownRef.current) createExitAnimation(HANDOVER_TARGETS.has(currentPage.id));
     }
+    shownRef.current = currentPage.id === PAGE_ID;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, totalPages]);
 
@@ -326,8 +353,12 @@ function PhonePortfolio() {
       ref={wrapperRef}
       id={PAGE_ID}
       className={cn('page-container-mobile text-white', {
-        hidden: currentPage?.id !== PAGE_ID,
+        hidden: currentPage?.id !== PAGE_ID && !leaving,
+        // Kept drawn while it is being left (MOT-05): over the next section, out of the flow, not interactive.
+        'pointer-events-none !fixed inset-x-0 top-0 z-[1]': currentPage?.id !== PAGE_ID && leaving,
       })}
+      inert={currentPage?.id !== PAGE_ID && leaving ? true : undefined}
+      aria-hidden={currentPage?.id !== PAGE_ID && leaving ? true : undefined}
     >
       {/* Render ParticleGL instances for each grid cell */}
       {particleIndices.map((imageIdx, i) => (
@@ -356,7 +387,7 @@ function PhonePortfolio() {
               currentGridRows,
               // Inner pages of four tiles sit in a narrower band, where the window has the height for it: under 700 px tall the
               // band would be shorter than two rows of tiles and the second row was drawn over the first (375x667).
-              innerPageIndex >= 1 && currentGridRows === 'grid-rows-2' && 'py-24 [@media(max-height:699.98px)]:py-0',
+              shownPage >= 1 && currentGridRows === 'grid-rows-2' && 'py-24 [@media(max-height:699.98px)]:py-0',
               'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
             )}
             data-layout={currentGridRows === 'grid-rows-3' ? '2x3' : '2x2'}
@@ -384,9 +415,9 @@ function PhonePortfolio() {
                 pageItems[pageIdx].length > 4 ? 'grid-rows-3' : 'grid-rows-2',
                 pageIdx >= 1 && pageItems[pageIdx].length <= 4 && 'py-32 [@media(max-height:699.98px)]:py-0',
                 'shortScreen:auto-cols-fr shortScreen:grid-flow-col shortScreen:grid-cols-none shortScreen:grid-rows-1 shortScreen:py-0',
-                innerPageIndex === pageIdx
+                shownPage === pageIdx
                   ? 'translate-y-0 opacity-100'
-                  : innerPageIndex > pageIdx
+                  : shownPage > pageIdx
                     ? '-translate-y-full opacity-0'
                     : 'translate-y-full opacity-0',
               )}
