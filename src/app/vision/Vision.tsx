@@ -59,8 +59,10 @@ export default function Vision() {
             scaleWithUnit
             duration={5}
             transition={0.6}
-            // In landscape (compact height) the slogans move to the bottom left, clear of START and the tagline.
-            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-5 shortScreen:left-5 shortScreen:right-auto shortScreen:top-auto shortScreen:translate-y-0"
+            // On a short window (under 480 px tall) the slogans sit at the bottom left, under the tagline and beside
+            // START: their box ends 6 px before START (half the window less START's 61 px half-width, the 20 px margin
+            // and the gap), and its top is below the tagline; a slogan wraps to at most its two lines there.
+            className="fixed-logo pointer-events-none fixed inset-x-0 top-[calc(60dvh_+_7.5rem)] w-auto -translate-y-1/2 shortScreen:bottom-1 shortScreen:left-5 shortScreen:right-auto shortScreen:top-auto shortScreen:w-[calc(50%_-_5.4375rem)] shortScreen:translate-y-0"
           >
             {CAROUSEL_ITEMS.map((item) => (
               <CarouselItem key={item.cnText ?? item.text} {...item} />
