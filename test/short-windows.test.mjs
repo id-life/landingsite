@@ -76,4 +76,9 @@ describe('short windows by the original phone width', () => {
     ]);
     expect(read('src/components/character-relation/BePartOfItInput.tsx')).not.toMatch(/short(Screen|Wide|Narrow):/);
   });
+  test('Disease Management: no compact-height unit of its own', () => {
+    const style = read('src/app/spectrum/_components/DMStyle.tsx');
+    expect(style).not.toMatch(/--u:\s*12px/);
+    expect(style).not.toContain('COMPACT_HEIGHT_QUERY');
+  });
 });
