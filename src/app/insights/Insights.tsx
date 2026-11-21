@@ -129,13 +129,15 @@ export default function Insights() {
         <div
           className={cn(
             'insights-content mt-30 flex h-[calc(100dvh-14rem)] flex-col justify-center gap-9 px-[20rem]',
-            // A short laptop window (up to 760 px tall): the box starts below the header (126 px at 1366x641) and
-            // content taller than it starts at its top rather than above it.
-            '[@media(max-height:760px)]:mt-[132px] [@media(max-height:760px)]:h-[calc(100dvh-212px)] [@media(max-height:760px)]:[justify-content:safe_center]',
+            // A short laptop window (up to 760 px tall): his box and margins, but content taller than the box starts
+            // at its top rather than above it, so NEWS & TALKS never runs under the header (1366x641). Moving the
+            // whole box down to 132 px (fcb9206) also pushed the bottom rows onto the slogan where his column fits
+            // (1280x720); with safe centring a column that fits is drawn exactly where his is.
+            '[@media(max-height:760px)]:[justify-content:safe_center]',
           )}
         >
           {/* NEWS & TALKS section (top) - takes most of the space for 4x2 grid */}
-          <div className="-mt-10 [@media(max-height:760px)]:mt-0">
+          <div className="-mt-10">
             <NewsAndTalksSection
               items={insightItems}
               isLoading={isInsightsLoading}
