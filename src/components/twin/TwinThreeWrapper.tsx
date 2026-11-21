@@ -81,7 +81,13 @@ export default function TwinThreeWrapper() {
   const used = useFirstInputAfterReveal();
   const viewsReady = deferredReady || (stageWanted && used);
   // A far jump to the Twin keeps its cover until the avatar has been drawn, within TWIN_COVER_LIMIT_MS.
-  useEffect(() => registerCoverHold(TWIN, () => (isTwinAvatarDrawn() ? null : whenTwinAvatarDrawn(TWIN_COVER_LIMIT_MS))), []);
+  useEffect(
+    () =>
+      registerCoverHold(TWIN, (limited) =>
+        isTwinAvatarDrawn() ? null : whenTwinAvatarDrawn(limited ? TWIN_COVER_LIMIT_MS : Infinity),
+      ),
+    [],
+  );
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);

@@ -55,7 +55,7 @@ export function isTwinAvatarDrawn() {
   return drawn;
 }
 
-/** Resolves 'drawn' once the avatar has been drawn (at once if it has), or 'timeout' after limitMs. */
+/** Resolves 'drawn' once the avatar has been drawn (at once if it has), or 'timeout' after limitMs (Infinity: never). */
 export function whenTwinAvatarDrawn(limitMs: number): Promise<'drawn' | 'timeout'> {
   if (drawn) return Promise.resolve('drawn');
   return new Promise((resolve) => {
@@ -64,10 +64,13 @@ export function whenTwinAvatarDrawn(limitMs: number): Promise<'drawn' | 'timeout
       clearTimeout(timer);
       resolve('drawn');
     };
-    const timer = setTimeout(() => {
-      waiters.delete(wake);
-      resolve('timeout');
-    }, limitMs);
+    // Infinity: no limit (setTimeout would read it as 0).
+    const timer = Number.isFinite(limitMs)
+      ? setTimeout(() => {
+          waiters.delete(wake);
+          resolve('timeout');
+        }, limitMs)
+      : undefined;
     waiters.add(wake);
   });
 }

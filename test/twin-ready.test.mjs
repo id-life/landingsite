@@ -46,7 +46,31 @@ describe('avatar drawn signal (twinReady)', () => {
   });
 });
 
+describe('readiness without a limit (twinReady)', () => {
+  test('Infinity never times out: it waits for the draw', async () => {
+    vi.useFakeTimers();
+    setTwinAvatarDrawn(false);
+    let settled = null;
+    whenTwinAvatarDrawn(Infinity).then((v) => (settled = v));
+    vi.advanceTimersByTime(60_000);
+    await Promise.resolve();
+    expect(settled).toBeNull();
+    setTwinAvatarDrawn(true);
+    await Promise.resolve();
+    expect(settled).toBe('drawn');
+    setTwinAvatarDrawn(false);
+    vi.useRealTimers();
+  });
+});
+
 describe('cover holds (coverHold)', () => {
+  test('the cover asks with its limit, the landing without', () => {
+    const asked = [];
+    const off = registerCoverHold(5, (limited) => (asked.push(limited), null));
+    coverHoldFor(5);
+    expect(asked).toEqual([true]);
+    off();
+  });
   test('a section with a hold returns its promise; others none; unregistering removes it', async () => {
     const off = registerCoverHold(5, () => Promise.resolve('drawn'));
     expect(coverHoldFor(4)).toBeNull();
