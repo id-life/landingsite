@@ -12,6 +12,7 @@ import '@/styles/markdown.css';
 import JsonLd from '@/components/seo/JsonLd';
 import ReadDepth from '@/lib/analytics/ReadDepth';
 import Breadcrumb from '@/components/site/Breadcrumb';
+import { zhLang } from '@/utils/lang';
 
 // Title and description from the content layer (src/content/pages.ts), shared with llms.txt.
 const PAGE = pageMeta('article-milestones');
@@ -59,7 +60,11 @@ export default function ImmortalDragonsMilestonesAndPortfolioPage() {
       <ReadDepth itemId={'immortal-dragons-milestones-and-portfolio'} />
       <div>
         <Breadcrumb className="mt-5 mobile:mt-3.5" items={[{ label: 'News', href: '/news' }, { label: 'Article' }]} />
-        <article className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3">
+        {/* The article's language for screen readers (ENG-03); the page's stays en, as on his site. */}
+        <article
+          lang={zhLang(articleContent)}
+          className="mt-10 rounded-3xl bg-white p-20 mobile:mt-3 mobile:rounded-lg mobile:p-3"
+        >
           <div className="flex items-center justify-center gap-2 text-sm/5 font-semibold">
             <img src="/imgs/news/article_logo.webp" className="size-7" alt="" />
             Immortal Dragons

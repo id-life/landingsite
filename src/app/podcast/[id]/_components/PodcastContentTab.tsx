@@ -17,6 +17,8 @@ type PodcastContentTabProps = {
   id: string;
   /** The transcript, rendered to markup on the server (src/app/podcast/[id]/page.tsx). */
   children: ReactNode;
+  /** The transcript's language when it is not the page's (ENG-03: zh-Hans for a Chinese transcript). */
+  transcriptLang?: string;
 };
 
 /** "mm:ss" or "h:mm:ss" in seconds. */
@@ -27,7 +29,7 @@ const toSeconds = (param: string) => param.split(':').reduce((total, part) => to
  * is one delegated click handler for its @[timeline](mm:ss) markers (span.custom-timeline), which seek the
  * player. It used to run react-markdown and its plugins in the browser.
  */
-export default function PodcastContentTab({ id, children }: PodcastContentTabProps) {
+export default function PodcastContentTab({ id, children, transcriptLang }: PodcastContentTabProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [commentsOpened, setCommentsOpened] = useState(false);
   // The comments load the first time their tab is shown; set while rendering, not in an effect.
@@ -81,6 +83,7 @@ export default function PodcastContentTab({ id, children }: PodcastContentTabPro
           {/* One delegated handler for the markers (each a role="button" Tab stop): the box itself is not a control. */}
           <div
             role="presentation"
+            lang={transcriptLang}
             className="markdown-body text-[0.875rem]/5 mobile:text-[0.75rem]/[1.125rem]"
             onClick={handleTranscriptClick}
             onKeyDown={handleTranscriptKey}

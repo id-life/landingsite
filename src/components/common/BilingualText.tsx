@@ -10,7 +10,9 @@ export default function BilingualText({ text }: { text: string }) {
     <>
       {m[1]}
       {m[2]}
-      <span lang="zh-Hans">{m[3]}</span>
+      <span lang="zh-Hans" className="zh-run">
+        {m[3]}
+      </span>
     </>
   );
 }

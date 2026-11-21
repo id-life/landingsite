@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PodcastItem } from '@/app/insights/_components/PodcastSection';
+import { zhLang } from '@/utils/lang';
 
 type PodcastCardProps = {
   item: PodcastItem;
@@ -29,7 +30,10 @@ export function PodcastCard({ item }: PodcastCardProps) {
       <div className="podcast-card-clip-inner bg-tone-50 p-4 mobile:p-3">
         <div className="flex items-center justify-between gap-3 mobile:gap-2">
           {/* The original's sizes at every width (the owner's rule on font sizes). */}
-          <h3 className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5">
+          <h3
+            lang={zhLang(item.title)}
+            className="line-clamp-1 flex-1 font-text text-xl/8 font-bold mobile:line-clamp-2 mobile:text-xs/4.5"
+          >
             {item.title}
           </h3>
           <img
