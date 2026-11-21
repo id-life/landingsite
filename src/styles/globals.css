@@ -577,3 +577,33 @@ html[data-webgl='0'] header[data-experience-header] {
     }
   }
 }
+
+/*
+ * Portfolio on a very wide window (RWD-03). The column scales with the width and is centred on the window's height, so
+ * a window wider than 2.188:1 (2560x1080, 3440x1440) is short for it the way a short laptop window is: the original's
+ * heading runs under the nav labels and its contact pill under the section arrows. There, and only there, the column
+ * takes the short-window layout of Portfolio.tsx: it is centred under the header, its heading and row gaps close to
+ * half, and the pill moves right of the arrows, by 12.25 units (half the arrows, half the pill and the 2.9-unit gap
+ * that 140 px leaves at 1366 wide). 2.188 is where the pill meets the arrows, measured in units of the laptop deck
+ * (0.8333vw): the pill's bottom is 22.17 units below the window's centre and the arrows' top 5.25 units above its
+ * bottom, so they meet where the window is 2 x 27.42 = 54.84 units tall (the heading meets the nav later, from 2.31).
+ * Written here rather than as Tailwind variants in Portfolio.tsx: those variants reordered the compiled utilities and
+ * moved unrelated text by a fraction of a pixel.
+ */
+@media screen(notMobile) {
+  @media (max-height: calc(54.84 * 0.8333vw)) {
+    .portfolio-wide {
+      padding-top: var(--site-header-h, 0px);
+    }
+    .portfolio-wide > .page2-fund {
+      margin-top: calc(var(--u) * 1.5);
+    }
+    .portfolio-wide > .page2-fund > div {
+      gap: var(--u);
+    }
+    .portfolio-wide > .page2-contact {
+      position: relative;
+      left: calc(var(--u) * 12.25);
+    }
+  }
+}
