@@ -13,7 +13,7 @@ import { sectionStateAtom } from '@/motion/sectionController';
  * and goes. Leaving the section already puts the demo back to the original avatar and camera, the state a fresh
  * canvas starts in, so a remount shows what the visitor would have seen.
  */
-const TWIN = NAV_LIST.findIndex((item) => item.id === 'twin_page');
+export const TWIN = NAV_LIST.findIndex((item) => item.id === 'twin_page');
 
 /** How long the canvas outlives the last reason to keep it, so a quick step back does not remount it. */
 export const TWIN_STAGE_RELEASE_MS = 1000;

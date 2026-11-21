@@ -1,6 +1,6 @@
 'use client';
 
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { CameraControls, PerspectiveCamera, useGLTF, View } from '@react-three/drei';
 import EnvironmentGroup, { preloadEnvironmentGroup } from '@/components/twin/EnvironmentGroup';
@@ -42,7 +42,9 @@ import Loader from '@/components/twin/Loader';
 import FrameDriver from '@/components/gl/FrameDriver';
 import { useGpuTier } from '@/motion/gpuTier';
 import GLBoundary, { ModelBoundary, onCanvasCreated, ReleaseOnUnmount } from '@/components/gl/GLBoundary';
-import { useTwinStageWanted } from './twinStage';
+import { TWIN, useTwinStageWanted } from './twinStage';
+import { isTwinAvatarDrawn, onFirstInput, setTwinAvatarDrawn, TWIN_COVER_LIMIT_MS, whenTwinAvatarDrawn } from './twinReady';
+import { registerCoverHold } from '@/motion/coverHold';
 import { DeferredSettled, useDeferredAssets, useDeferredWarm } from '@/hooks/useDeferredAssets';
 
 /** The avatar's field of view: the original's 45 degrees, 15 units away, on every window of the laptop deck. */
@@ -67,6 +69,27 @@ export default function TwinThreeWrapper() {
     preloadModel0Out();
     preloadEnvironmentGroup();
   }, [warm]);
+  // The avatar and its HDR also start loading at the visitor's first real input (a press, a key, a wheel step or a
+  // touch), in idle time so they never compete with the transition that input started; a visitor who never touches
+  // the page loads nothing more. Once started, the Views mount whenever the canvas does, so a jump from far away
+  // finds the avatar loaded or on its way instead of starting it on arrival.
+  const [inputStarted, setInputStarted] = useState(false);
+  useEffect(
+    () =>
+      onFirstInput(window, () => {
+        const start = () => {
+          preloadModel0Out();
+          preloadEnvironmentGroup();
+          setInputStarted(true);
+        };
+        if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(start, { timeout: 2000 });
+        else setTimeout(start, 200);
+      }),
+    [],
+  );
+  const viewsReady = deferredReady || (stageWanted && inputStarted);
+  // A far jump to the Twin keeps its cover until the avatar has been drawn, within TWIN_COVER_LIMIT_MS.
+  useEffect(() => registerCoverHold(TWIN, () => (isTwinAvatarDrawn() ? null : whenTwinAvatarDrawn(TWIN_COVER_LIMIT_MS))), []);
   const modelRefs = [useRef<ModelRef>(null), useRef<ModelRef>(null)];
   const [currentModel, setCurrentModel] = useAtom(currentModelAtom);
   const setCurrentModelType = useSetAtom(currentModelTypeAtom);
@@ -298,7 +321,7 @@ export default function TwinThreeWrapper() {
             </Canvas>
           )}
           {/* Avatar, anatomy models and the HDR load on approach (about 6 MB), never with the hero. */}
-          {deferredReady && (
+          {viewsReady && (
             <>
               {currentModel && (
                 <View index={1} style={{ overflow: 'hidden', width: '100%', height: '100vh' }}>
@@ -319,6 +342,7 @@ export default function TwinThreeWrapper() {
                   <LightGroup ambientIntensity={1.6} />
                   <ExtendedCameraControls ref={controlRefs[0]} />
                   <DeferredSettled group="twin" />
+                  <AvatarDrawn />
                 </View>
               )}
               {currentModel === PredictionModel.M1 && (
@@ -387,4 +411,21 @@ export default function TwinThreeWrapper() {
       </div>
     </div>
   );
+}
+
+/**
+ * Inside the avatar's View: the View's content mounts only once everything in it has loaded (one Suspense for the
+ * whole canvas), so the second frame this component sees is a frame drawn with the avatar. It tells the far-jump
+ * cover (twinReady) and leaves a performance mark for probes; unmounted (the canvas released), the avatar is gone.
+ */
+function AvatarDrawn() {
+  const frames = useRef(0);
+  useFrame(() => {
+    frames.current += 1;
+    if (frames.current !== 2) return;
+    setTwinAvatarDrawn(true);
+    performance.mark('twin-avatar-drawn');
+  });
+  useEffect(() => () => setTwinAvatarDrawn(false), []);
+  return null;
 }
