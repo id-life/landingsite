@@ -8,6 +8,8 @@ import {
   DESKTOP_TREE_QUERY,
   PHONE_TREE_QUERY,
   PHONE_SCALED_QUERY,
+  SHORT_NARROW_QUERY,
+  SHORT_WIDE_QUERY,
   WIDTH_CLASS_QUERY,
 } from './src/styles/device-classes';
 
@@ -56,6 +58,10 @@ const config: Config = {
         expanded: { raw: WIDTH_CLASS_QUERY.expanded },
         large: { raw: WIDTH_CLASS_QUERY.large },
         shortScreen: { raw: COMPACT_HEIGHT_QUERY },
+        // The compact-height windows on either side of the original's phone width (device-classes.ts): where its
+        // phone version is the reference, and where it drew its laptop version.
+        shortNarrow: { raw: SHORT_NARROW_QUERY },
+        shortWide: { raw: SHORT_WIDE_QUERY },
         coarse: { raw: COARSE_POINTER_QUERY },
         // The site header: one row (logo, the seven sections, the action) from 1200 px on the desktop deck, at the original's sizes, where
         // the seven fit at 14 px beside the logo and Subscribe; below 700 px its navigation row breaks after the

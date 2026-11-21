@@ -114,12 +114,25 @@ function PhonePresence() {
 
   // No CSS animation here (e.g. animate-fade-in): it creates a stacking context that breaks the badges'
   // backdrop-filter. enterAnimate() fades the map in with GSAP.
+  //
+  // A phone on its side at most 768 px wide (shortNarrow, where the original's phone version is the reference): the
+  // compact strip's map is narrower than the window and would sit at its left edge, so the cards that hang left of
+  // their points (London, Shanghai) were cut more than on the original. The whole strip (map, points, cards and their
+  // tap areas together, so their shared origin holds) starts a quarter of the free room in: F / 4, where F is the
+  // window less the map (--map-h × 63 / 30), never below 0. A quarter, not the middle: from 0.20 F to 0.34 F every
+  // card's pictures and letters are cut no more than on the original at 640x360, 667x375 and 720x450, no place name is
+  // cut, and no more letters lie under the section arrows than at 0 (centred puts book-1's title under the arrows at
+  // 720x450). The strip's x clip is lifted there, else it would cut those cards at the strip's new left edge: with the
+  // map narrower than the strip there is nothing to pan, so no card reaches past the window's right edge. Wider
+  // windows keep the map at 0 (no reference of the original there, and moving it puts more letters under the arrows).
   return (
     <div
       id={PAGE_ID}
-      className={cn('relative h-[calc(100dvh-10.875rem)] w-full text-white transition-all duration-100', {
-        hidden: currentPage?.id !== PAGE_ID,
-      })}
+      className={cn(
+        'relative h-[calc(100dvh-10.875rem)] w-full text-white transition-all duration-100',
+        'shortNarrow:[&_:has(>.world-map-container)]:left-[max(0px,calc((100%_-_var(--map-h)*63/30)/4))] shortNarrow:[&_:has(>.world-map-container)]:w-auto shortNarrow:[&_:has(>.world-map-container)]:overflow-x-visible',
+        { hidden: currentPage?.id !== PAGE_ID },
+      )}
     >
       {/* A phone in landscape (compact height) gets a compact title, so the map strip keeps its height. */}
       <div className="fixed inset-x-0 top-[5.25rem] z-40 text-center">

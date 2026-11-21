@@ -176,9 +176,9 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         'fixed -bottom-[16.5rem] left-1/2 z-[20] translate-x-[-50%] border-2 border-solid border-white bg-white/40 p-10 pt-9 backdrop-blur',
         // Never wider than the window.
         '-bottom-full max-w-[calc(100vw_-_2rem)] mobile:w-full mobile:max-w-none mobile:p-8 mobile:py-5',
-        // A phone in landscape: the original's laptop arrangement (one row of inputs, Confirm beside the note), a
-        // panel to the right of the legend and clear of the header, not the portrait phone's full-screen stack.
-        'shortScreen:left-auto shortScreen:right-4 shortScreen:w-[44rem] shortScreen:max-w-[calc(100vw_-_2rem)] shortScreen:translate-x-0 shortScreen:p-5 shortScreen:pt-4',
+        // A phone on its side: the panel fills the window and reaches the page's header (z 100), so it lies over it,
+        // as on the original's phone version (else the logo is drawn over its title and the menu over its close).
+        'shortScreen:z-[101]',
         isMobile && isMutationSuccess && 'mobile:z-[30]',
       )}
     >
@@ -213,15 +213,11 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
         <CloseSVG className="size-5" aria-hidden="true" />
       </button>
 
-      <Form
-        control={form.control}
-        className="relative mt-6 flex w-full flex-col items-end mobile:mt-4 shortScreen:mt-3"
-        onSubmit={onFormSubmit}
-      >
+      <Form control={form.control} className="relative mt-6 flex w-full flex-col items-end mobile:mt-4" onSubmit={onFormSubmit}>
         <HoneypotField {...form.register('website')} />
         {/* Medium windows (600-839 px): the two inputs share the panel's width instead of keeping 409 px each, which
             pushed the second one out of the window at 820 px. */}
-        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col shortScreen:flex-row shortScreen:gap-x-4')}>
+        <div className={cn('flex w-full gap-x-[4.75rem]', 'mobile:flex-col')}>
           <BePartOfItInput
             key="visitor-input"
             mode="visitor"
@@ -235,7 +231,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
               onChange: (e) => setCharacter(e.target.value),
             })}
           />
-          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col shortScreen:flex-row')}>
+          <div className={cn('flex items-center gap-x-6', 'mobile:flex-col')}>
             {relation.map((rel, i) => (
               <BePartOfItInput
                 key={`introducer-input-${i}`}
@@ -258,9 +254,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           </div>
         </div>
 
-        <div
-          className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse shortScreen:flex-row')}
-        >
+        <div className={cn('flex w-full items-center justify-between gap-x-10', 'mobile:flex-col-reverse')}>
           <div className="font-text text-xs font-medium tracking-normal text-ink-muted mobile:mt-3">
             This page is a derived work from{' '}
             <a
@@ -282,7 +276,7 @@ const BePartOfIt = forwardRef<HTMLDivElement, BePartOfItProps>((props, ref) => {
           <div
             className={cn(
               'footer-submit-clip relative mt-1.5 w-[10.5rem] flex-shrink-0 bg-accent text-white mobile:w-[5.625rem]',
-              'mobile:mt-3.5 mobile:w-full shortScreen:mt-1.5 shortScreen:w-[10.5rem]',
+              'mobile:mt-3.5 mobile:w-full',
             )}
             onPointerDown={() => (isSubmittingRef.current = true)}
           >

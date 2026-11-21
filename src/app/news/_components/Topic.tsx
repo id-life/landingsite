@@ -37,9 +37,10 @@ export default function Topic({ data }: { data?: NewsPageItem }) {
         linkFallback={isYouTube ? youtubeWatchUrl(data.videoId!) : undefined}
         className="group block cursor-pointer"
       >
-        {/* On a short screen (a phone held sideways) the hero takes about a third of the height, so the headline and
-            the subscribe heading stay on the first screen; unchanged on screens taller than 500 px. */}
-        <div className="relative h-87 overflow-hidden mobile:h-[12.5rem] [@media(max-height:500px)]:h-[35svh]">
+        {/* A phone on its side wider than 768 px (shortWide, where the original drew its laptop version): the hero
+            takes about a third of the height, so the subscribe panel's button stays on the first screen at 844x390.
+            At most 768 px wide the original's phone version keeps its 200 px picture. */}
+        <div className="relative h-87 overflow-hidden mobile:h-[12.5rem] shortWide:h-[35svh]">
           <CoverImage
             src={data.cover || '/imgs/news/insights-bg.webp'}
             alt={data.title}
