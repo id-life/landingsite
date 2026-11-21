@@ -41,8 +41,9 @@ export default function FixedUI({ deck }: { deck: 'desktop' | 'phone' }) {
   if (deck === 'phone') {
     return (
       <div id="mobile-fixed-ui" className={uiVisible ? 'opacity-100' : 'opacity-0'}>
+        {/* On a short window START sits 2 px from the bottom: whole, and below the hero tagline (it touched it at 640x360). */}
         {onHero ? (
-          <StartButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7 shortScreen:bottom-2" />
+          <StartButton className="fixed bottom-11 left-1/2 -translate-x-1/2 mobile:bottom-7 shortScreen:bottom-0.5" />
         ) : (
           <SectionPager className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2" />
         )}
