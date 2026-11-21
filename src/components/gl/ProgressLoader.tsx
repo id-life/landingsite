@@ -22,6 +22,8 @@ import { PHONE_TREE_QUERY } from '@/styles/device-classes';
 const LOADER_TIMEOUT_MS = 15000;
 // While the hero is still loading the bar stops short of full; it fills when the scene is ready.
 const LOADING_MAX = 95;
+/** The bar's last stretch after a landing hold resolves (MOT-09): short, so the loader leaves soon after. */
+const HOLD_FINISH_SECONDS = 0.15;
 // Exit, as on the original (owner's answer 7A): the bar fills to the end, the logo fades out over the loader's still
 // opaque background, and only then is the experience marked loaded, which starts the intro
 // (src/components/gl/model/vision/intro.ts) in the same update that removes the loader.
@@ -133,13 +135,27 @@ export const OuterLoader = memo(function OuterLoader() {
     if (!heroReady || !show || exitingRef.current) return;
     exitingRef.current = true;
     reportExperienceReady({ failOpen: false, mountedAt: mountedAtRef.current });
-    loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, () => {
-      // A direct landing on a section that holds its cover (the Digital Twin until its avatar is drawn, within a
-      // limit: src/motion/coverHold.ts) keeps the full bar until then, so the loader never uncovers it empty.
-      const hold = coverHoldForLanding();
-      if (hold) void hold.then(leave);
-      else leave();
-    });
+    // A direct landing on a section that holds its cover (the Digital Twin until its avatar is drawn, within a limit:
+    // src/motion/coverHold.ts) must not be uncovered empty. The hold runs alongside the bar's fill, and the bar stops
+    // short of the end until it resolves, then completes: the bar never stands full and frozen while it waits.
+    const hold = coverHoldForLanding();
+    if (!hold) {
+      loaderRef.current?.animateTo(100, INTRO.loaderFillSeconds, leave);
+    } else {
+      let filled = false;
+      let held = false;
+      const complete = () => {
+        if (filled && held) loaderRef.current?.animateTo(100, HOLD_FINISH_SECONDS, leave);
+      };
+      loaderRef.current?.animateTo(LOADING_MAX, INTRO.loaderFillSeconds, () => {
+        filled = true;
+        complete();
+      });
+      void hold.then(() => {
+        held = true;
+        complete();
+      });
+    }
     function leave() {
       const finish = () => {
         setIsLoadingUI(true);
