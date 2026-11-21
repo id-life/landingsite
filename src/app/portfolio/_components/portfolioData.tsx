@@ -32,7 +32,14 @@ const LOGO_CLASS: Record<string, string> = {
   'cyclarity-therapeutics': cn('w-[12.5rem]', mobileImageClassName),
   kindbio: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
   'mito-health': cn(mobileImageClassName, 'w-36 mobile:w-[6rem]'),
-  'kangaroo-biomedical': cn(mobileImageClassName, 'h-12 mobile:-mt-3 mobile:h-10'),
+  // Its mark sits 12 px high in its box on a phone. Where a six-tile page's rows are shorter than 130 px (under 660 px
+  // tall, the logo boxes following their tiles in PortfolioItem) that lift shrinks with the row, to nothing at 106 px
+  // (320x568), so the logo stays off the tagline above; at 360x640 it is the 12 px it always was (RWD-03).
+  'kangaroo-biomedical': cn(
+    mobileImageClassName,
+    'h-12 mobile:-mt-3 mobile:h-10',
+    '[@media(min-height:480px)_and_(max-height:659.98px)]:mobile:mt-[clamp(-0.75rem,calc((106px-(100svh-250px)/3)/2),0rem)]',
+  ),
   'renewal-bio': cn(mobileImageClassName, 'w-[10.625rem] mobile:h-auto mobile:w-[7.5rem]'),
   domayn: cn(mobileImageClassName, 'w-[11.25rem] mobile:w-[7.5rem]'),
   'oisin-biotechnologies': cn(mobileImageClassName, 'w-[11.25rem] mobile:h-11'),
