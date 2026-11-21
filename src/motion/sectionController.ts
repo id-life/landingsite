@@ -6,6 +6,13 @@ import { SPECTRUM_HASH_ROUTES } from '@/hooks/spectrum/spectrum-routes';
 import { noteSectionView } from '@/lib/analytics/section-view';
 import { applyInnerRestore, dropInnerRestore, setRestingSectionReader } from './innerPages';
 import { isReducedMotion } from './preference';
+import {
+  applySectionInert,
+  focusSection,
+  listenForKeyboardActivation,
+  takeKeyboardActivation,
+  watchModals,
+} from './sectionFocus';
 import { wakeMotion } from './runtime';
 
 /**
@@ -115,10 +122,19 @@ const write = (next: SectionState) => {
     root.dataset.sectionPhase = next.phase;
     root.dataset.sectionTarget = NAV_LIST[next.target]?.id ?? '';
   }
+  // What cannot be shown during a move takes inert (NAV-05): see sectionFocus.
+  applySectionInert(next);
 };
+
+/** Sources a keyboard user can ask for a section with (a nav link, an arrow, the menu, a link, by Enter or Space). */
+const FOCUS_SOURCES = new Set<SectionSource>(['nav', 'arrow', 'menu', 'link']);
+/** The section reached by the running change takes focus when it lands (it was asked for from the keyboard). */
+let focusOnLand = false;
 
 /** Register the mounted tree's driver; returns the unregister function. */
 export function registerSectionDriver(next: SectionDriver) {
+  watchModals();
+  listenForKeyboardActivation();
   stopRunning();
   driver = next;
   write({ ...IDLE, index: next.current(), target: next.current() });
@@ -194,6 +210,9 @@ function finish(index: number, source: SectionSource) {
   // The inner pages: put back what the entry kept (Back, Forward, reload), or keep what the view now shows.
   const id = NAV_LIST[index]?.id;
   if (id) applyInnerRestore(id);
+  // Asked for from the keyboard: the section reached takes focus, so the next Tab is inside it (NAV-05 A1).
+  if (focusOnLand && id) focusSection(id);
+  focusOnLand = false;
 }
 
 /**
@@ -207,6 +226,7 @@ export function goToSection(target: number | string, source: SectionSource): boo
   // later caller wake the idle pause here, by construction, not by a list of events.
   wakeMotion();
   if (!KEEPS_RESTORE.has(source)) dropInnerRestore();
+  focusOnLand = FOCUS_SOURCES.has(source) && takeKeyboardActivation();
   const state = read();
   if (running && state.phase === 'moving') {
     if (index === state.target) return true;
