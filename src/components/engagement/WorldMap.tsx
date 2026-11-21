@@ -487,13 +487,14 @@ export const WorldMap = memo(function WorldMapComponent({
         ref={desktopMapRef}
         className="relative mt-18 aspect-[63/30] h-[88svh] justify-center overflow-hidden font-sans"
         onMouseMove={handleMouseMove}
-        style={{ perspective: '1000px' }}
       >
         {/* A press on the map's background closes an open card; for the keyboard, Escape does (the points inside are the
-            controls; this box is not one). */}
+            controls; this box is not one). It carries the perspective: CSS perspective acts only on its own children,
+            and the parallax tilts its child, the map's content (as on the original, where this box was the outer one). */}
         <div
           ref={mapContainerRef}
           role="presentation"
+          style={{ perspective: '1000px' }}
           className="size-full"
           onClick={handleBackgroundClick}
           onKeyDown={handleMapKey}
